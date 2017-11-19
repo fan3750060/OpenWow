@@ -5,9 +5,6 @@
     <ClCompile Include="TexturesMgr.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Textures</Filter>
-    </ClCompile>
     <ClCompile Include="FontsMgr.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
@@ -32,12 +29,6 @@
     <ClCompile Include="OpenGL.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="RenderDevice.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="GPUTimer.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Render.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -59,15 +50,18 @@
     <ClCompile Include="Techniques\Technique.cpp">
       <Filter>Techniques</Filter>
     </ClCompile>
+    <ClCompile Include="RenderDevice.cpp">
+      <Filter>RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="GPUTimer.cpp">
+      <Filter>RenderCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="..\shared\owRender.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TexturesMgr.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
       <Filter>Textures</Filter>
     </ClInclude>
     <ClInclude Include="FontsMgr.h">
@@ -121,18 +115,6 @@
     <ClInclude Include="Techniques\UI_Color.h">
       <Filter>Techniques\UI</Filter>
     </ClInclude>
-    <ClInclude Include="RenderDevice.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="GPUTimer.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderEnums.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTypes.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -178,6 +160,18 @@
     <ClInclude Include="Techniques\Debug_Normals.h">
       <Filter>Techniques\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="RenderDevice.h">
+      <Filter>RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderEnums.h">
+      <Filter>RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTypes.h">
+      <Filter>RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUTimer.h">
+      <Filter>RenderCore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">
@@ -206,6 +200,9 @@
     </Filter>
     <Filter Include="Techniques\Shaders">
       <UniqueIdentifier>{4f764ab4-cbb8-4e5e-a319-2e3029ed2fb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderCore">
+      <UniqueIdentifier>{86c8b07c-1ebc-4ea6-a076-c4c41bc71d04}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -159,7 +159,7 @@ void MDX::initCommon(File& f)
 	// m_DiffuseTextures
 	if (header.textures.size)
 	{
-		m_Textures = new Texture*[header.textures.size];
+		m_Textures = new R_Texture*[header.textures.size];
 		m_M2Textures = (M2Texture*)(f.GetData() + header.textures.offset);
 
 		

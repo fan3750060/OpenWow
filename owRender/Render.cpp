@@ -103,7 +103,7 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
     _TechniquesMgr->m_UI_Texture->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
 
     // State
-    r->setTexture(10, _image->GetTexture()->GetObj(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+    r->setTexture(10, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
     r->setGeometry(_RenderStorage->__QuadVTDynamic);
     r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 
@@ -112,17 +112,12 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 
 //
 
-void RenderGL::RenderTexture(vec2 _pos, Texture* _texture)
+void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture)
 {
-    RenderTexture(_pos, _texture->GetObj(), _texture->GetSize());
+    RenderTexture(_pos, _texture, _texture->GetSize());
 }
 
-void RenderGL::RenderTexture(vec2 _pos, Texture* _texture, vec2 _size)
-{
-	RenderTexture(_pos, _texture->GetObj(), _size);
-}
-
-void RenderGL::RenderTexture(vec2 _pos, uint32 _texture, vec2 _size)
+void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size)
 {
 	// Transform
 	_Pipeline->Clear();

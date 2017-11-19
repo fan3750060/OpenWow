@@ -61,7 +61,7 @@ void UIElement::Init(cvec2 _position, cvec2 _size, Image* _image, Color _color)
     m_Color = _color;
 }
 
-void UIElement::Init(cvec2 _position, cvec2 _size, Texture* _texture, Color _color)
+void UIElement::Init(cvec2 _position, cvec2 _size, R_Texture* _texture, Color _color)
 {
     m_Position = _position;
     m_Size = _size;

@@ -218,7 +218,7 @@ void MapChunk::Load(File& f, load_phases phase)
         uint32 t = C_MapBufferSize * sizeof(float);
 
         // Vertex buffer
-        uint32 __vb = _Render->r->createVertexBuffer(12 * t, nullptr);
+        R_Buffer* __vb = _Render->r->createVertexBuffer(12 * t, nullptr);
 
         _Render->r->updateBufferData(__vb, 0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
         _Render->r->updateBufferData(__vb, 3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
@@ -243,7 +243,7 @@ void MapChunk::Load(File& f, load_phases phase)
         m_Indexes = mapArray.data();
         m_IndexesCount = mapArray.size();
 
-        uint32 __ib = _Render->r->createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
+        R_Buffer* __ib = _Render->r->createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
         _Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
 
         _Render->r->finishCreatingGeometry(__geom);
@@ -252,13 +252,9 @@ void MapChunk::Load(File& f, load_phases phase)
         //***************** DEBUG NORMALS
 
         // Vertex buffer
-        uint32 __vb2 = _Render->r->createVertexBuffer(6 * t, nullptr);
-
+        R_Buffer* __vb2 = _Render->r->createVertexBuffer(6 * t, nullptr);
         _Render->r->updateBufferData(__vb2, 0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
         _Render->r->updateBufferData(__vb2, 3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
-
-
-        //
 
         __geomDebugNormals = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PN);
         _Render->r->setGeomVertexParams(__geomDebugNormals, __vb, R_DataType::T_FLOAT, 0 * t, 0);
@@ -325,7 +321,7 @@ void MapChunk::Load(File& f, load_phases phase)
         // MCLY sub-chunk (m_DiffuseTextures)
         f.Seek(header.ofsLayer);
         {
-            // Texture layer definitions for this map chunk. 16 bytes per layer, up to 4 layers (thus, layer count = size / 16).
+            // R_Texture layer definitions for this map chunk. 16 bytes per layer, up to 4 layers (thus, layer count = size / 16).
             for (uint32 i = 0; i < header.nLayers; i++)
             {
                 f.ReadBytes(&mcly[i], 16);
@@ -459,7 +455,7 @@ void MapChunk::Load(File& f, load_phases phase)
 
 void MapChunk::Post_Load()
 {
-    // Texture layer definitions for this map chunk. 16 bytes per layer, up to 4 layers (thus, layer count = size / 16).
+    // R_Texture layer definitions for this map chunk. 16 bytes per layer, up to 4 layers (thus, layer count = size / 16).
     for (uint32 i = 0; i < header.nLayers; i++)
     {
         m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].diffuseTexture;
@@ -534,8 +530,8 @@ void MapChunk::Render()
     // Bind m_DiffuseTextures
     for (uint32 i = 0; i < header.nLayers; i++)
     {
-        _Render->r->setTexture(i, m_DiffuseTextures[i]->GetObj(), _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
-        _Render->r->setTexture(5 + i, m_SpecularTextures[i]->GetObj(), _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+        _Render->r->setTexture(i, m_DiffuseTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+        _Render->r->setTexture(5 + i, m_SpecularTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
     }
 
     // Bind blend

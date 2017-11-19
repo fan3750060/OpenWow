@@ -19,7 +19,12 @@ public:
 	//
 
 	void Init(cvec2 _position, cvec2 _size, Image* _image, Color _color = COLOR_EMPTY);
-    void Init(cvec2 _position, cvec2 _size, Texture* _texture, Color _color = COLOR_EMPTY);
+    void Init(cvec2 _position, cvec2 _size, R_Texture* _texture, Color _color = COLOR_EMPTY);
+
+    void SetTexture(R_Texture* _texture)
+    {
+        m_Texture = _texture;
+    }
 
 	// Name functional
 
@@ -99,7 +104,7 @@ protected:
 	vec2        m_Position;
 	vec2        m_Size;
 	Image*      m_Image;
-    Texture*    m_Texture;
+    R_Texture*    m_Texture;
 	Color       m_Color;
 
 private:

@@ -68,7 +68,7 @@ public:
 		setInt("gBlendMode", _blendMode);
 	}
 
-	// Texture Weight
+	// R_Texture Weight
 	inline void SetTextureWeight(float _weight)
 	{
 		setFloat("gTextureWeight", _weight);

@@ -152,11 +152,11 @@ private:
 	vec3 m_WaterColorLight;
 	vec3 m_WaterColorDark;
 
-	uint32 __geom;
+    R_GeometryInfo* __geom;
 	uint32 globalBufferSize;
 
 
-	vector<Texture*> textures;
+	vector<R_Texture*> textures;
 
 
 	vector<MH2O_WaterLayer> m_WaterLayers;

@@ -24,8 +24,8 @@ struct Map_Tile_TextureInfo
         uint32_t do_not_load_specular_or_height_texture_but_use_cubemap : 1;
         uint32_t : 31;
     } mtxf;
-    Texture* diffuseTexture;
-    Texture* specularTexture;
+    R_Texture* diffuseTexture;
+    R_Texture* specularTexture;
 };
 
 class MapTile

@@ -52,19 +52,19 @@ public:
 	MCLY mcly[4];
 	int animated[4];
 
-	Texture* m_DiffuseTextures[4];
-	Texture* m_SpecularTextures[4];
+	R_Texture* m_DiffuseTextures[4];
+	R_Texture* m_SpecularTextures[4];
 
-	uint32 m_BlendRBGShadowATexture;
+    R_Texture* m_BlendRBGShadowATexture;
 
-	uint32 __geom;
+    R_GeometryInfo* __geom;
 
 	uint16* m_Indexes;
 	uint16  m_IndexesCount;
 
 	BoundingBox m_Bounds;
 
-    uint32 __geomDebugNormals;
+    R_GeometryInfo* __geomDebugNormals;
 
 private:
 	MCNK_Header header;

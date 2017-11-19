@@ -49,14 +49,14 @@ void World::Render()
 	_Render->r->setRenderBuffer(0);
 	for (uint32 i = 0; i < 4; i++)
 	{
-		_Render->r->setTexture(i, _Render->r->getRenderBufferTex(_Render->rb, i), 0, R_TextureUsage::Texture);
+		_Render->r->setTexture(i, _Render->r->getRenderBufferTex(_Render->rb, i), 0, 0);
 	}
 	_Render->r->clear(CLR_COLOR_RT0 | CLR_DEPTH);
 	RenderPostprocess();
 
     // Result pass
     /*_Render->r->setRenderBuffer(0);
-    _Render->r->setTexture(0, _Render->r->getRenderBufferTex(_Render->rbFinal, 0), 0, R_TextureUsage::Texture);
+    _Render->r->setTexture(0, _Render->r->getRenderBufferTex(_Render->rbFinal, 0), 0, R_TextureUsage::R_Texture);
     _Render->r->clear(CLR_COLOR_RT0 | CLR_DEPTH);
     DSResultQuad();*/
 
@@ -254,7 +254,7 @@ void World::RenderPostprocess()
     DSDirectionalLightPass(_EnvironmentManager->dayNightPhase.m_dirLightDay);
     DSDirectionalLightPass(_EnvironmentManager->dayNightPhase.m_dirLightNight);*/
 
-    DSFogRenderPass();
+    //DSFogRenderPass();
 }
 
 void World::tick(float dt)

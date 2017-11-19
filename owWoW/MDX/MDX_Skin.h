@@ -47,7 +47,7 @@ struct M2SkinBatch
 	uint16 materialLayer;              // Capped at 7 (see CM2Scene::BeginDraw)
 	uint16 textureCount;               // 1 to 4. Also seems to be the number of m_DiffuseTextures to load, starting at the texture lookup in the next field (0x10).
 	
-	uint16 texture_Index;          // Index into Texture lookup table
+	uint16 texture_Index;          // Index into R_Texture lookup table
 	uint16 UNUSED0;
 	uint16 texture_WeightIndex;    // Index into transparency lookup table.
 	uint16 texture_TransformIndex; // Index into uvanimation lookup table. 
@@ -98,7 +98,7 @@ private:
 	MDX* m_ModelObject;
 	vector<MDX_Skin_Batch*> m_Batches;
 
-	uint32 __geom;
+    R_GeometryInfo* __geom;
 
 	uint16* indices;
 	bool* showGeosets;

@@ -153,7 +153,7 @@ public:
 	bool m_EnableOutdoorLights;
 	BoundingBox m_Bounds;
 
-	uint32 __geom;
+    R_GeometryInfo* __geom;
 
 public:
 	//-- Triangles --//

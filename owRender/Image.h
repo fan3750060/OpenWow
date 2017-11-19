@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Texture.h"
-
 class Image
 {
 public:
@@ -19,19 +17,19 @@ public:
     Image() : m_Texture(nullptr), m_Start(VECTOR_ZERO), m_Size(VECTOR_ZERO), m_CoordsCalculated(false)
     {}
 
-    Image(Texture* _texture) : m_Texture(_texture), m_Start(VECTOR_ZERO), m_Size(_texture->GetSize())
+    Image(R_Texture* _texture) : m_Texture(_texture), m_Start(VECTOR_ZERO), m_Size(vec2(_texture->width, _texture->height))
     {
         assert1((m_Texture != nullptr) && (m_Size != VECTOR_ZERO));
         CalculateCoords();
     }
 
-    Image(Texture* _texture, cvec2 _size) : m_Texture(_texture), m_Start(VECTOR_ZERO), m_Size(_size)
+    Image(R_Texture* _texture, cvec2 _size) : m_Texture(_texture), m_Start(VECTOR_ZERO), m_Size(_size)
     {
         assert1((m_Texture != nullptr) && (m_Size != VECTOR_ZERO));
         CalculateCoords();
     }
 
-    Image(Texture* _texture, cvec2 _start, cvec2 _size) : m_Texture(_texture), m_Start(_start), m_Size(_size)
+    Image(R_Texture* _texture, cvec2 _start, cvec2 _size) : m_Texture(_texture), m_Start(_start), m_Size(_size)
     {
         assert1((m_Texture != nullptr) && (m_Size != VECTOR_ZERO));
         CalculateCoords();
@@ -39,7 +37,7 @@ public:
 
     //
 
-    Texture* GetTexture()
+    R_Texture* GetTexture()
     {
         return m_Texture;
     }
@@ -107,7 +105,7 @@ private:
     }
 
 private:
-    Texture*  m_Texture;
+    R_Texture*  m_Texture;
     vec2      m_Start;
     vec2      m_Size;
 

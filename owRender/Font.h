@@ -1,9 +1,11 @@
 #pragma once
 
+struct R_GeometryInfo;
+
 class Font : public RefItem
 {
 public:
-	Font(uint32 _Texture, uint32 _fontGeom, uint32* charWidthArray, uint32 charHeight);
+	Font(R_Texture* _Texture, R_GeometryInfo* _fontGeom, uint32* charWidthArray, uint32 charHeight);
 
 	 ~Font();
 
@@ -17,8 +19,8 @@ public:
 	static const uint32 NUM_CHARS = 192;
 
 private:
-	uint32 m_Texture;
-	uint32 m_FontBuffer;
+	R_Texture* m_Texture;
+    R_GeometryInfo* m_FontBuffer;
 	uint32* m_CharWidthArray;
 	uint32 m_CharHeight;
 };

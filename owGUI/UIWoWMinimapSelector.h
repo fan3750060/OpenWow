@@ -11,7 +11,7 @@ public:
     UIWoWMinimapSelector();
     virtual ~UIWoWMinimapSelector();
 
-    void Init(cvec2 _position, cvec2 _size, Texture* _texture);
+    void Init(cvec2 _position, cvec2 _size, R_Texture* _texture);
 
     virtual void OnRenderUI() override;
 

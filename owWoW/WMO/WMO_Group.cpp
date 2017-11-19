@@ -187,7 +187,7 @@ void WMOGroup::Load()
 		{
 			m_Normals = (vec3*)f.GetDataFromCurrent();
 		}
-		else if (strcmp(fourcc, "MOTV") == 0) // Texture coordinates
+		else if (strcmp(fourcc, "MOTV") == 0) // R_Texture coordinates
 		{
 			m_TextureCoords[MOTVCount] = (vec2*)f.GetDataFromCurrent();
 			MOTVCount++;
@@ -205,7 +205,7 @@ void WMOGroup::Load()
 				WMOBatch* _batch = &m_WMOBatchIndexes[i];
 				WMOMaterial* _wmoMat = m_ParentWMO->m_Materials[_batch->material_id];
 
-				_batch->__material.SetDiffuseTexture(_wmoMat->texture->GetObj());
+				_batch->__material.SetDiffuseTexture(_wmoMat->texture);
 
 				_batch->__material.SetBlendState(_wmoMat->GetBlendMode());
 				_batch->__material.SetRenderState(_wmoMat->IsTwoSided());
@@ -307,7 +307,7 @@ void WMOGroup::Load()
 	}
 
 	// Vertex buffer
-	uint32 __vb = _Render->r->createVertexBuffer(m_VertexesCount * bufferSize, nullptr);
+    R_Buffer* __vb = _Render->r->createVertexBuffer(m_VertexesCount * bufferSize, nullptr);
 
 	_Render->r->updateBufferData(__vb, m_VertexesCount * 0 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Vertexes);
 	_Render->r->updateBufferData(__vb, m_VertexesCount * 3 * sizeof(float), m_VertexesCount * sizeof(vec2), m_TextureCoords[0]); // FIXME
@@ -331,7 +331,7 @@ void WMOGroup::Load()
 	}
 
 	// Index bufer
-	uint32 __ib = _Render->r->createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices);
+    R_Buffer* __ib = _Render->r->createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices);
 	_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish

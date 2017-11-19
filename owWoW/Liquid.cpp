@@ -218,7 +218,7 @@ void Liquid::initFromTerrainMH2O(File& f, MH2O_Header * _header)
 				waterLayer.depths.push_back(pDepths[g]);
 			}
 		}
-		else if (vertexFormat == 1)         // Case 1, Height and Texture Coordinate data
+		else if (vertexFormat == 1)         // Case 1, Height and R_Texture Coordinate data
 		{
 			float* pHeights = (float*)(f.GetDataFromCurrent() + mh2o_instance->offsetVertexData);
 			uv_map_entry* pUVMap = (uv_map_entry*)(f.GetDataFromCurrent() + mh2o_instance->offsetVertexData + (sizeof(float) * vertexDataSize));
@@ -238,7 +238,7 @@ void Liquid::initFromTerrainMH2O(File& f, MH2O_Header * _header)
 				waterLayer.depths.push_back(pDepths[g]);
 			}
 		}
-		else if (vertexFormat == 3)         //Case 3, Height, Depth and Texture Coordinates
+		else if (vertexFormat == 3)         //Case 3, Height, Depth and R_Texture Coordinates
 		{
 			fail1();
 
@@ -318,7 +318,7 @@ void Liquid::createBuffer(cvec3 _position)
 					h4 = layer.heights[p4];
 				}
 
-				// Texture coords
+				// R_Texture coords
 				std::pair<float, float> t1, t2, t3, t4;
 				t1 = make_pair(0.0f, 0.0f);
 				t2 = make_pair(0.0f, 1.0f);
@@ -412,7 +412,7 @@ void Liquid::createBuffer(cvec3 _position)
 
 
 	// Vertex buffer
-	uint32 __vb = _Render->r->createVertexBuffer(mh2oVertices.size() * sizeof(MH2O_Vertex), mh2oVertices.data());
+    R_Buffer* __vb = _Render->r->createVertexBuffer(mh2oVertices.size() * sizeof(MH2O_Vertex), mh2oVertices.data());
 
 	//
 
@@ -442,7 +442,7 @@ void Liquid::draw()
 	_TechniquesMgr->m_Water->SetPVW();
 
 	size_t texidx = (size_t)(_EnvironmentManager->animtime / 60.0f) % textures.size();
-	_Render->r->setTexture(10, textures[texidx]->GetObj(), 0, 0);
+	_Render->r->setTexture(10, textures[texidx], 0, 0);
 
 	/*_TechniquesMgr->m_Water->SetWaterColorLight(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_LIGHT));
 	_TechniquesMgr->m_Water->SetWaterColorDark(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_DARK));

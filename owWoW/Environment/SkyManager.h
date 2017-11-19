@@ -53,8 +53,8 @@ private:
 
 private:
     SkyParams m_Interpolated;
-	uint32 __vb;
-	uint32 __geom;
+    R_Buffer* __vb;
+    R_GeometryInfo* __geom;
 	uint32 __vertsSize;
 
 	vector<Sky*> skies;

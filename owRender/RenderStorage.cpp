@@ -78,7 +78,7 @@ void RenderStorage::CreateGeometry()
     // Unit quad
     //-----------------------------------------
 
-    uint32 __vbQuad = _Render->r->createVertexBuffer(4 * sizeof(vec3), verticesQuad.data());
+    R_Buffer* __vbQuad = _Render->r->createVertexBuffer(4 * sizeof(vec3), verticesQuad.data());
 
     __Quad = _Render->r->beginCreatingGeometry(__layout_GxVBF_P);
     _Render->r->setGeomVertexParams(__Quad, __vbQuad, R_DataType::T_FLOAT, 0, sizeof(vec3));
@@ -89,7 +89,7 @@ void RenderStorage::CreateGeometry()
     // Unit quad with texture coords
     //-----------------------------------------
 
-    uint32 __vbQuadVT = _Render->r->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
+    R_Buffer* __vbQuadVT = _Render->r->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
     _Render->r->updateBufferData(__vbQuadVT, 0,                4 * sizeof(vec3), verticesQuad.data());
     _Render->r->updateBufferData(__vbQuadVT, 4 * sizeof(vec3), 4 * sizeof(vec2), texCoordsQuad.data());
 
@@ -126,8 +126,8 @@ void RenderStorage::CreateGeometry()
         4, 0, 3, 3, 7, 4,   3, 2, 6, 6, 7, 3,   4, 5, 1, 1, 0, 4
     };
 
-    uint32 _vbCube = _Render->r->createVertexBuffer(8 * sizeof(vec3), cubeVerts);
-    uint32 _ibCube = _Render->r->createIndexBuffer(36 * sizeof(uint16), cubeInds);
+    R_Buffer* _vbCube = _Render->r->createVertexBuffer(8 * sizeof(vec3), cubeVerts);
+    R_Buffer* _ibCube = _Render->r->createIndexBuffer(36 * sizeof(uint16), cubeInds);
 
     _cubeGeo = _Render->r->beginCreatingGeometry(__layout_GxVBF_P);
     _Render->r->setGeomVertexParams(_cubeGeo, _vbCube, R_DataType::T_FLOAT, 0, sizeof(vec3));
@@ -174,8 +174,8 @@ void RenderStorage::CreateGeometry()
         }
     }
 
-    uint32 _vbSphere = _Render->r->createVertexBuffer(126 * sizeof(vec3), spVerts);
-    uint32 _ibSphere = _Render->r->createIndexBuffer(128 * 3 * sizeof(uint16), spInds);
+    R_Buffer* _vbSphere = _Render->r->createVertexBuffer(126 * sizeof(vec3), spVerts);
+    R_Buffer* _ibSphere = _Render->r->createIndexBuffer(128 * 3 * sizeof(uint16), spInds);
 
     _sphereGeo = _Render->r->beginCreatingGeometry(__layout_GxVBF_P);
     _Render->r->setGeomVertexParams(_sphereGeo, _vbSphere, R_DataType::T_FLOAT, 0, sizeof(vec3));
@@ -200,8 +200,8 @@ void RenderStorage::CreateGeometry()
         2, 12, 10,   2, 1, 12,   12, 11, 10
     };
 
-    uint32 _vbCone = _Render->r->createVertexBuffer(13 * sizeof(vec3), coneVerts);
-    uint32 _ibCone = _Render->r->createIndexBuffer(22 * 3 * sizeof(uint16), coneInds);
+    R_Buffer* _vbCone = _Render->r->createVertexBuffer(13 * sizeof(vec3), coneVerts);
+    R_Buffer* _ibCone = _Render->r->createIndexBuffer(22 * 3 * sizeof(uint16), coneInds);
 
     _coneGeo = _Render->r->beginCreatingGeometry(__layout_GxVBF_P);
     _Render->r->setGeomVertexParams(_coneGeo, _vbCone, R_DataType::T_FLOAT, 0, sizeof(vec3));
@@ -323,25 +323,6 @@ void RenderStorage::CreateWoWLayouts()
 
 //
 
-uint32 RenderStorage::CreateQuadIndicesBuffer(uint32 _quadCount)
-{
-    // {0, 1, 2, 2, 1, 3}
-
-    uint16* indexes = new uint16[6 * _quadCount];
-    uint16 j = 0;
-    for (uint32 i = 0; i < _quadCount * 6; i += 6)
-    {
-        indexes[i + 0] = 0 + j;
-        indexes[i + 1] = 1 + j;
-        indexes[i + 2] = 2 + j;
-        indexes[i + 3] = 2 + j;
-        indexes[i + 4] = 1 + j;
-        indexes[i + 5] = 3 + j;
-
-        j += 4;
-    }
-    return _Render->r->createIndexBuffer(6 * _quadCount * sizeof(uint16), indexes);
-}
 
 void RenderStorage::SetEGxBlend(uint8 _index)
 {

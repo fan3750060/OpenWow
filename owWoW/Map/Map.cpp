@@ -371,7 +371,7 @@ void Map::Load_WDL()
                 }
 
                 // Vertex buffer
-                uint32 __vb = _Render->r->createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
+                R_Buffer* __vb = _Render->r->createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
 
                 //
 

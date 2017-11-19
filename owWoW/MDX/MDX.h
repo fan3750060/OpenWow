@@ -41,7 +41,7 @@ public:
 
 	ModelHeader header;
 
-	uint32 __vb;
+    R_Buffer* __vb;
 
 private:
 	bool m_Loaded;
@@ -92,9 +92,9 @@ public:
 	void lightsOff(uint32 lbase);
 
 public:
-	Texture** m_Textures;
+	R_Texture** m_Textures;
 	int m_SpecialTextures[TEXTURE_MAX];
-	Texture* m_TextureReplaced[TEXTURE_MAX];
+	R_Texture* m_TextureReplaced[TEXTURE_MAX];
 	bool m_TexturesUseSpecialTexture[TEXTURE_MAX];
 
 	bool m_IsBillboard;

@@ -10,12 +10,12 @@ public:
 
 public:
 	
-	void SetDiffuseTexture(uint32 _DiffuseTexture)
+	void SetDiffuseTexture(R_Texture* _DiffuseTexture)
 	{
 		m_DiffuseTexture = _DiffuseTexture;
 	}
 
-	void SetSpecularTexture(uint32 _SpecularTexture)
+	void SetSpecularTexture(R_Texture* _SpecularTexture)
 	{
 		m_SpecularTexture = _SpecularTexture;
 	}
@@ -46,8 +46,8 @@ private:
 	vec4 m_SpecularColor;
 
 	// Textures
-	uint32 m_DiffuseTexture;  
-	uint32 m_SpecularTexture;
+	R_Texture* m_DiffuseTexture;  
+    R_Texture* m_SpecularTexture;
 
 	// Render Modes
 	bool m_IsTwoSided;

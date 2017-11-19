@@ -23,7 +23,7 @@ public:
 public:
 	Camera* testCamera;
 
-	uint32 rb2;
+    R_RenderBuffer* rb2;
 };
 
 #define _World World::instance()

@@ -45,14 +45,14 @@ struct R_Buffer
 struct R_VertexBufferSlot
 {
 	R_VertexBufferSlot() :
-		vbObj(0),
+		vbObj(nullptr),
         type(R_DataType::T_FLOAT),
 		offset(0),
 		stride(0),
         needNorm(false)
 	{}
 
-	R_VertexBufferSlot(uint32 vbObj, R_DataType type, uint32 offset, uint32 stride, bool needNorm) :
+	R_VertexBufferSlot(R_Buffer* vbObj, R_DataType type, uint32 offset, uint32 stride, bool needNorm) :
 		vbObj(vbObj),
         type(type),
 		offset(offset),
@@ -62,7 +62,7 @@ struct R_VertexBufferSlot
 
 	//
 
-	uint32      vbObj;
+	R_Buffer*   vbObj;
     R_DataType  type;
 	uint32      offset;
 	uint32      stride;
@@ -73,7 +73,7 @@ struct R_GeometryInfo
 {
 	R_GeometryInfo() :
 		vao(0),
-		indexBuf(0),
+		indexBuf(nullptr),
 		layout(0),
 		indexBuf32Bit(false),
 		atrribsBinded(false)
@@ -83,7 +83,7 @@ struct R_GeometryInfo
 
 	vector< R_VertexBufferSlot > vertexBufInfo;
 	uint32 vao;
-	uint32 indexBuf;
+	R_Buffer* indexBuf;
 	uint32 layout;
 	bool indexBuf32Bit;
 	bool atrribsBinded;
@@ -108,8 +108,9 @@ struct R_ShaderStorage
 // Textures
 // ---------------------------------------------------------
 
-struct R_Texture
+class R_Texture : public RefItem
 {
+public:
 	R_Texture() :
 		glObj(0),
 		glFmt(0),
@@ -136,17 +137,22 @@ struct R_Texture
 	uint32                  samplerState;
 	bool                    sRGB;
 	bool                    hasMips, genMips;
+
+    vec2 GetSize()
+    {
+        return vec2(static_cast<float>(width), static_cast<float>(height));
+    }
 };
 
 struct R_TexSlot
 {
 	R_TexSlot() :
-		texObj(0),
+		texObj(nullptr),
 		samplerState(0),
 		usage(0)
 	{}
 
-	R_TexSlot(uint32 texObj, uint32 samplerState, uint32 usage) :
+	R_TexSlot(R_Texture* texObj, uint32 samplerState, uint32 usage) :
 		texObj(texObj),
 		samplerState(samplerState),
 		usage(usage)
@@ -154,7 +160,7 @@ struct R_TexSlot
 
 	//
 
-	uint32  texObj;
+    R_Texture*  texObj;
 	uint32  samplerState;
 	uint32  usage;
 };
@@ -162,16 +168,16 @@ struct R_TexSlot
 struct R_TextureBuffer
 {
 	R_TextureBuffer() :
-		bufObj(0),
+		bufObj(nullptr),
 		glFmt(0),
 		glTexID(0)
 	{}
 
 	//
 
-	uint32  bufObj;
-	uint32  glFmt;
-	uint32	glTexID;
+	R_Buffer* bufObj;
+	uint32    glFmt;
+	uint32	  glTexID;
 };
 
 
@@ -228,7 +234,8 @@ struct R_RenderBuffer
 	{
 		for (uint32 i = 0; i < MaxColorAttachmentCount; ++i)
 		{
-			colTexs[i] = colBufs[i] = 0;
+            colTexs[i] = nullptr;
+            colBufs[i] = 0;
 		}
 	}
 
@@ -238,6 +245,8 @@ struct R_RenderBuffer
 	uint32  width, height;
 	uint32  samples;
 
-	uint32  depthTex, colTexs[MaxColorAttachmentCount];
-	uint32  depthBuf, colBufs[MaxColorAttachmentCount];  // Used for multisampling
+    R_Texture*  depthTex;
+    R_Texture*  colTexs[MaxColorAttachmentCount];
+    uint32      depthBuf;
+    uint32      colBufs[MaxColorAttachmentCount];  // Used for multisampling
 };

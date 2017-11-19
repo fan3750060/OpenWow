@@ -190,7 +190,6 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Techniques\Technique.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturesMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -237,7 +236,6 @@
     <ClInclude Include="Techniques\UI_Texture.h" />
     <ClInclude Include="Techniques\WMO_GeomertyPass.h" />
     <ClInclude Include="Techniques\Water_Pass.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturesMgr.h" />
   </ItemGroup>
   <ItemGroup>

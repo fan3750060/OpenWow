@@ -1,5 +1,7 @@
 #pragma once
 
+struct R_Shader;
+
 class Technique
 {
 protected:
@@ -58,7 +60,7 @@ protected: // Base uniforms
     int32 gWorld;
 
 private:
-	uint32 shaderId;
+	R_Shader* shader;
 };
 
 #include "Technique.inl"

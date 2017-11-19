@@ -62,11 +62,11 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 		// Diffuse texture
 		if (_model->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]] == -1)
 		{
-			pass->__material.SetDiffuseTexture(_model->m_Textures[texlookup[skinBatch[j].texture_Index]]->GetObj());
+			pass->__material.SetDiffuseTexture(_model->m_Textures[texlookup[skinBatch[j].texture_Index]]);
 		}
 		else
 		{
-			/*Texture* diffuseSpecialTexture = _model->m_TextureReplaced[_model->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]]];
+			/*R_Texture* diffuseSpecialTexture = _model->m_TextureReplaced[_model->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]]];
 
 			if (diffuseSpecialTexture != nullptr)
 			{
@@ -116,7 +116,7 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 		
 		pass->__colorIndex = skinBatch[j].colorIndex;
 
-		// Texture weight
+		// R_Texture weight
 		assert1(skinBatch[j].texture_WeightIndex != -1);
 		assert1(m_ModelObject->header.texture_weights.size > 0);
 		pass->__textureWeight = texweightlookup[skinBatch[j].texture_WeightIndex];
@@ -133,7 +133,7 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 
 		/*pass->order = skinBatch[j].shader_id;
 
-		//Texture* texid = m_DiffuseTextures[texlookup[tex[j].textureid]];
+		//R_Texture* texid = m_DiffuseTextures[texlookup[tex[j].textureid]];
 		//pass->texture = texid;
 		pass->tex = texlookup[skinBatch[j].texture_Index];
 
@@ -158,9 +158,9 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 
 		pass->p = skins[m2SkinIndex].centerPosition.x;
 
-		// Texture flags
-		pass->swrap = (_model->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPX) != 0; // Texture wrap X
-		pass->twrap = (_model->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPY) != 0; // Texture wrap Y
+		// R_Texture flags
+		pass->swrap = (_model->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPX) != 0; // R_Texture wrap X
+		pass->twrap = (_model->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPY) != 0; // R_Texture wrap Y
 
 		if (_model->m_TexturesAnims)
 		{
@@ -213,7 +213,7 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
     _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(M2Vertex)); // tc1 10-11
 
 	// Index bufer
-	uint32 __ib = _Render->r->createIndexBuffer(view->indices.size * sizeof(uint16), indices);
+    R_Buffer* __ib = _Render->r->createIndexBuffer(view->indices.size * sizeof(uint16), indices);
 	_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
@@ -273,13 +273,13 @@ void Model_Skin::Draw()
 			_TechniquesMgr->m_Model->SetAlpha(1.0f);
 			_TechniquesMgr->m_Model->SetBlendMode(p->__blendMode);
 
-			// Texture weight
+			// R_Texture weight
 			_TechniquesMgr->m_Model->SetTextureWeight(m_ModelObject->m_TextureWeights[p->__textureWeight].getValue());
 
 			// Billboard
 			_TechniquesMgr->m_Model->SetBillboard(m_ModelObject->m_IsBillboard);
 
-			// Texture anim
+			// R_Texture anim
 			_TechniquesMgr->m_Model->SetTextureAnimEnable(p->__textureAnims != -1);
 			if (p->__textureAnims != -1)
 			{

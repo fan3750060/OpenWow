@@ -60,7 +60,7 @@ public:
 	//--------------------------------------------------------------
 
 public:
-	virtual void LoadAction(string name, OBJECT_TYPE* item) {};
+	virtual void LoadAction(string name, OBJECT_TYPE*& item) {};
 
 protected:
 	virtual OBJECT_TYPE* CreateAction(cstring name) { return nullptr; };

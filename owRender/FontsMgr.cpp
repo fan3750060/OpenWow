@@ -56,7 +56,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 		return nullptr;
 	}
 
-	uint32 texture = 0;
+    R_Texture* texture = 0;
 	uint32* charWidth = new uint32[Font::NUM_CHARS];
 	uint32 charHeight = 0;
 
@@ -182,11 +182,11 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	}
 
 
-	uint32 __vb = _Render->r->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
+    R_Buffer* __vb = _Render->r->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
 
 	//
 
-	uint32 __geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PT);
+    R_GeometryInfo* __geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PT);
 
 	// Vertex params
 	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 0,            sizeof(Texture_Vertex));

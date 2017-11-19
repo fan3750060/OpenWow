@@ -32,7 +32,7 @@ MDX* ModelsManager::CreateAction(cstring name)
 	return model;
 }
 
-void ModelsManager::LoadAction(string name, MDX* _model)
+void ModelsManager::LoadAction(string name, MDX*& _model)
 {
 	//wglMakeCurrent(_Render->dc, _Render->glrc3);
 

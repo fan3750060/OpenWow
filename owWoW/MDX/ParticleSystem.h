@@ -72,7 +72,7 @@ private:
 	float sizes[3];
 	float mid, slowdown, rotation;
 	vec3 pos;
-	Texture* texture;
+	R_Texture* texture;
 	ParticleEmitter* emitter;
 	ParticleList particles;
 	int blend, order, type;

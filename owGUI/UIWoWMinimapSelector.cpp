@@ -10,7 +10,7 @@ UIWoWMinimapSelector::~UIWoWMinimapSelector()
 
 }
 
-void UIWoWMinimapSelector::Init(cvec2 _position, cvec2 _size, Texture* _texture)
+void UIWoWMinimapSelector::Init(cvec2 _position, cvec2 _size, R_Texture* _texture)
 {
     m_MinimapImage = new Image(_texture);
 

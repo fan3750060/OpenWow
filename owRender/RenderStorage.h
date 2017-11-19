@@ -1,5 +1,7 @@
 #pragma once
 
+struct R_Buffer;
+
 struct Texture_Vertex
 {
 	vec3 vertex;
@@ -13,10 +15,8 @@ public:
 
 	void CreateLayouts();
 	void CreateGeometry();
-
 	void CreateWoWLayouts();
 
-    uint32 CreateQuadIndicesBuffer(uint32 _quadCount);
 	void SetEGxBlend(uint8 _index);
 	
     //----------------------------------------------
@@ -40,25 +40,25 @@ public:
 	// Geometry & VertexBuffers
     //----------------------------------------------
 
-    uint32 __QuadVTDynamic;
+    R_GeometryInfo* __QuadVTDynamic;
 
     // 2D
 
-    uint32 __Quad;
-    uint32 __QuadVT;
-    uint32 __vbQuadVTDynamic;
+    R_GeometryInfo* __Quad;
+    R_GeometryInfo* __QuadVT;
+    R_Buffer* __vbQuadVTDynamic;
 
     // 3D
 
-    uint32 _cubeGeo;
-    uint32 _sphereGeo;
-    uint32 _coneGeo;
+    R_GeometryInfo* _cubeGeo;
+    R_GeometryInfo* _sphereGeo;
+    R_GeometryInfo* _coneGeo;
 
     //----------------------------------------------
     // Index buffers
     //----------------------------------------------
 
-    uint32 __ibQuadDefault;
+    R_Buffer* __ibQuadDefault;
 };
 
 

@@ -41,7 +41,7 @@ public:
     V_KEYBD_PRESSED;
 
 private:
-    Texture* m_MinimapTexture;
+    R_Texture* m_MinimapTexture;
     UIElement* m_MinimapUI;
 
 	Commands2 cmd;

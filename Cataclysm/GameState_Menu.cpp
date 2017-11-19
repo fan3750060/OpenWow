@@ -17,7 +17,7 @@ bool GameState_Menu::Init()
 
 	OpenDBs();
 
-    m_MinimapTexture = new Texture();
+    m_MinimapTexture = new R_Texture();
 
     m_MinimapUI = new UIElement(100);
     m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), m_MinimapTexture, COLOR_WHITE);
@@ -169,7 +169,7 @@ void GameState_Menu::Render(double t, double dt)
 
         // Postprocess pass
         _Render->r->setRenderBuffer(0);
-        for (uint32 i = 0; i < 4; i++) _Render->r->setTexture(i, _Render->r->getRenderBufferTex(_Render->rb, i), 0, R_TextureUsage::Texture);
+        for (uint32 i = 0; i < 4; i++) _Render->r->setTexture(i, _Render->r->getRenderBufferTex(_Render->rb, i), 0, 0);
         _Render->r->clear(CLR_COLOR_RT0 | CLR_DEPTH);
 
         // Simple pass
@@ -195,7 +195,7 @@ void GameState_Menu::RenderUI()
 
 		if (_Map.GetMinimap() != 0)
 		{
-            m_MinimapTexture->SetObj(_Map.GetMinimap());
+            m_MinimapUI->SetTexture(_Map.GetMinimap());
 
             m_MinimapUI->Show();
 		}

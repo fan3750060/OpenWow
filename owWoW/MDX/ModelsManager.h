@@ -9,7 +9,7 @@ public:
 
 	// RefManager override
 	MDX* CreateAction(cstring name) override;
-	void LoadAction(string name, MDX* _model) override;
+	void LoadAction(string name, MDX*& _model) override;
 	bool DeleteAction(cstring name) override;
 
 	void resetAnim();

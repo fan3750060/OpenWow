@@ -38,7 +38,7 @@ private:
 	vec4 tcolor;
 	float tabove, tbelow;
 
-	Texture* texture;
+	R_Texture* texture;
 
 	list<RibbonSegment> segs;
 };

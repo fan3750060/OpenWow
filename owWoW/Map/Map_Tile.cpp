@@ -320,7 +320,7 @@ bool MapTile::Load_SplitFile(cstring _filename, load_phases _phase)
             if (mamp_value != 0)
             {
                 Log::Print("Mamp value is [%d]", mamp_value);
-                Log::Print("Texture size is [%d]", 64 / (pow(2, mamp_value)));
+                Log::Print("R_Texture size is [%d]", 64 / (pow(2, mamp_value)));
                 fail1();
             }
         }

@@ -66,7 +66,7 @@ public: // Getters
 
 	const WDT_MPHD_Flags& GetMapFlag() { return m_Flag; }
 
-	uint32 GetMinimap() { return minimap; }
+    R_Texture* GetMinimap() { return minimap; }
 
 	int GetCurrentX() { return currentTileX; }
 	int GetCurrentZ() { return currentTileZ; }
@@ -85,8 +85,8 @@ private:
 private:
 	bool m_IsTileBased;
 	WDT_MAIN_Flags m_TileFlag[C_TilesInMap][C_TilesInMap];
-	uint32 lowrestiles[C_TilesInMap][C_TilesInMap];
-	uint32 minimap;
+    R_GeometryInfo* lowrestiles[C_TilesInMap][C_TilesInMap];
+    R_Texture* minimap;
 	MapTile* maptilecache[C_TilesCacheSize];
 	MapTile* current[C_RenderedTiles][C_RenderedTiles];
 

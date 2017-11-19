@@ -12,7 +12,7 @@ inline void Technique::InitBaseUniforms()
 
 inline void Technique::BindS()
 {
-	_Render->r->bindShader(shaderId);
+	_Render->r->bindShader(shader);
 }
 
 inline void Technique::Unbind()
@@ -23,7 +23,7 @@ inline void Technique::Unbind()
 
 inline int32 Technique::getLocation(const char* name) const
 {
-	return _Render->r->getShaderConstLoc(shaderId, name);
+	return _Render->r->getShaderConstLoc(shader, name);
 }
 
 

@@ -1,5 +1,9 @@
 #include "../stdafx.h"
 
+// Include
+#include "../RenderDevice.h"
+
+
 // General
 #include "Technique.h"
 
@@ -86,10 +90,10 @@ Technique::~Technique()
 
 void Technique::Process(const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
 {
-    shaderId = _Render->r->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
+    shader = _Render->r->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
     if (_Render->r->getShaderLog().empty())
     {
-        Log::Green("Shader: Successfull. Id [%d].", shaderId);
+        Log::Green("Shader: Successfull. Id [%d].", shader);
     }
     else
     {

@@ -6,7 +6,7 @@
 // Additional
 #include "TechniquesManager.h"
 
-Font::Font(uint32 _Texture, uint32 _fontGeom, uint32* charWidthArray, uint32 charHeight) :
+Font::Font(R_Texture* _Texture, R_GeometryInfo* _fontGeom, uint32* charWidthArray, uint32 charHeight) :
 	RefItem(),
 	m_Texture(_Texture),
 	m_FontBuffer(_fontGeom),

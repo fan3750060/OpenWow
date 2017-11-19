@@ -32,7 +32,7 @@ WMO* WMOsManager::CreateAction(cstring name)
 	return _wmo;
 }
 
-void WMOsManager::LoadAction(string name, WMO* _wmo)
+void WMOsManager::LoadAction(string name, WMO*& _wmo)
 {
 	//wglMakeCurrent(_Render->dc, _Render->glrc4);
 

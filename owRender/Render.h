@@ -40,9 +40,8 @@ public:
 	void RenderImage(vec2 _pos, Image* _image);
 	void RenderImage(vec2 _pos, Image* _image, vec2 _size);
 
-    void RenderTexture(vec2 _pos, Texture* _texture);
-    void RenderTexture(vec2 _pos, Texture* _texture, vec2 _size);
-	void RenderTexture(vec2 _pos, uint32 _texture, vec2 _size);
+    void RenderTexture(vec2 _pos, R_Texture* _texture);
+    void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size);
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN);
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN);
@@ -63,8 +62,8 @@ private:
 
 public:
 	RenderDevice* r;
-    uint32 rb;
-    uint32 rbFinal;
+    R_RenderBuffer* rb;
+    R_RenderBuffer* rbFinal;
     Camera* mainCamera;
 };
 

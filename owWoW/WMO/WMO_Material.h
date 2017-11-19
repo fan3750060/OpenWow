@@ -59,5 +59,5 @@ private:
 
 public:
 	WMOMaterialDef matDef;
-	Texture* texture;
+	R_Texture* texture;
 };

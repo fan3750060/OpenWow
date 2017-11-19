@@ -252,7 +252,7 @@ void GameState_InWorld::RenderUIDebug()
     sprintf(buff, "Buffer memory [%d] bytes", _Render->r->getBufferMem());
     _Render->RenderText(vec2(_Config.windowSizeX - 400, _Config.windowSizeY - 40), buff);
 
-    sprintf(buff, "Texture memory [%d] bytes", _Render->r->getTextureMem());
+    sprintf(buff, "R_Texture memory [%d] bytes", _Render->r->getTextureMem());
     _Render->RenderText(vec2(_Config.windowSizeX - 400, _Config.windowSizeY - 20), buff);
 }
 
