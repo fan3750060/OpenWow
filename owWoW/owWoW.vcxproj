@@ -52,7 +52,6 @@
     <ClCompile Include="MDX\ParticleEmitters.cpp" />
     <ClCompile Include="MDX\ParticleSystem.cpp" />
     <ClCompile Include="MDX\RibbonEmitter.cpp" />
-    <ClCompile Include="MDX\Sky_Model.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="WMO\DoodadInstance.cpp" />
     <ClCompile Include="WMO\WMO.cpp" />
@@ -118,7 +117,6 @@
     <ClInclude Include="MDX\Particle.h" />
     <ClInclude Include="MDX\ParticleSystem.h" />
     <ClInclude Include="MDX\RibbonEmitter.h" />
-    <ClInclude Include="MDX\Sky_Model.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WMO\DoodadInstance.h" />
     <ClInclude Include="WMO\WMO.h" />

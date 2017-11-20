@@ -81,7 +81,7 @@ struct R_GeometryInfo
 
 	//
 
-	vector< R_VertexBufferSlot > vertexBufInfo;
+	vector<R_VertexBufferSlot> vertexBufInfo;
 	uint32 vao;
 	R_Buffer* indexBuf;
 	uint32 layout;
@@ -161,8 +161,8 @@ struct R_TexSlot
 	//
 
     R_Texture*  texObj;
-	uint32  samplerState;
-	uint32  usage;
+	uint32      samplerState;
+	uint32      usage;
 };
 
 struct R_TextureBuffer

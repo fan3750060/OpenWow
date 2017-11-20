@@ -40,7 +40,7 @@ void Map::InitGlobalsWMOs()
     if (m_GlobalWMOPlacementInfo != nullptr)
     {
         WMO* wmo = _WMOsMgr->Add(m_GlobalWMOName);
-        m_GlobalWMO = new WMOInstance(wmo, m_GlobalWMOPlacementInfo);
+        m_GlobalWMO = new WMOInstance(wmo, *m_GlobalWMOPlacementInfo);
     }
 
     // Load low-resolution WMOs
@@ -51,7 +51,7 @@ void Map::InitGlobalsWMOs()
         const string name = m_LowResolutionWMOsNames[it->nameIndex];
 
         WMO* wmo = _WMOsMgr->Add(name);
-        WMOInstance* inst = new WMOInstance(wmo, it);
+        WMOInstance* inst = new WMOInstance(wmo, *it);
         m_LowResolutionWMOs.push_back(inst);
     }
 }
@@ -139,13 +139,9 @@ void Map::Load_WDT(DBC_MapRecord* _map)
         }
         else if (strcmp(fourcc, "MODF") == 0)
         {
-            assert1((size / WMOPlacementInfo::__size) > 1);
-
-            if ((size / WMOPlacementInfo::__size) == 1)
-            {
-                m_GlobalWMOPlacementInfo = new WMOPlacementInfo;
-                f.ReadBytes(m_GlobalWMOPlacementInfo, WMOPlacementInfo::__size);
-            }
+            assert1((size / WMOPlacementInfo::__size) == 1);
+            m_GlobalWMOPlacementInfo = new WMOPlacementInfo;
+            f.ReadBytes(m_GlobalWMOPlacementInfo, WMOPlacementInfo::__size);
         }
         else
         {

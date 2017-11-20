@@ -19,7 +19,12 @@ struct ModelPlacementInfo
 	vec3 position;
 	vec3 rotation;
 	uint16 scale;
-	uint16 flags;
+    struct
+    {
+        uint16 Flag_Biodome : 1;
+        uint16 Flag_Shrubbery : 1;
+        uint16 : 14;
+    } flags;
 
 	//
 	static const uint32 __size = 36;
@@ -30,17 +35,16 @@ struct ModelPlacementInfo
 class ModelInstance : protected SceneNode, protected RenderableItem
 {
 public:
-	ModelInstance(MDX* _mdxObject, ModelPlacementInfo* _placementInfo);
+	ModelInstance(MDX* _mdxObject, ModelPlacementInfo _placementInfo);
 	~ModelInstance();
 
-    void SetMDX(MDX* _mdx) { modelObject = _mdx; }
-    MDX* GetMDX() { return modelObject; }
+    const MDX* GetMDX() { return modelObject; }
 
 	void Render();
 
 public: 
 	MDX* modelObject;
-	ModelPlacementInfo* placementInfo;
+	ModelPlacementInfo placementInfo;
 
 	float sc;
 };

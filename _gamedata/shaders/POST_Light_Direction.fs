@@ -98,7 +98,7 @@ void main(void)
 	Color = getAlbedo4(pixelXY);
 	Color.a = 1.0;
 	
-	if(getMatID(pixelXY) >= 0.0)
+	if(getMatID(pixelXY) == 0.0)
 	{
 		FragColor = Color * vec4(CalcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction), 1.0);
 	}

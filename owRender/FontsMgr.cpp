@@ -57,7 +57,8 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	}
 
     R_Texture* texture = 0;
-	uint32* charWidth = new uint32[Font::NUM_CHARS];
+    vector<uint32> charWidth;
+    charWidth.reserve(Font::NUM_CHARS);
 	uint32 charHeight = 0;
 
 	FT_Library ftLibrary;
@@ -103,7 +104,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 		// RenderPhase the current glyph.
 		FT_Load_Glyph(face, charIndex, FT_LOAD_RENDER);
 
-		charWidth[ch] = (face->glyph->metrics.horiAdvance >> 6);
+		charWidth.push_back(face->glyph->metrics.horiAdvance >> 6);
 		// If the line is full go to the next line
 		if (charWidth[ch] > lineSpace)
 		{

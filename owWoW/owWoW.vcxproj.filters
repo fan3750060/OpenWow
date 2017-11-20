@@ -67,9 +67,6 @@
     <ClCompile Include="MDX\ModelsManager.cpp">
       <Filter>MDX</Filter>
     </ClCompile>
-    <ClCompile Include="MDX\Sky_Model.cpp">
-      <Filter>MDX</Filter>
-    </ClCompile>
     <ClCompile Include="MDX\MDX_Part_Bone.cpp">
       <Filter>MDX\Parts</Filter>
     </ClCompile>
@@ -191,9 +188,6 @@
       <Filter>MDX</Filter>
     </ClInclude>
     <ClInclude Include="MDX\ModelsManager.h">
-      <Filter>MDX</Filter>
-    </ClInclude>
-    <ClInclude Include="MDX\Sky_Model.h">
       <Filter>MDX</Filter>
     </ClInclude>
     <ClInclude Include="MDX\MDX_Part_Bone.h">

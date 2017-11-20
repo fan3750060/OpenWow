@@ -129,9 +129,6 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
         _texture = _Render->r->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
 
         uint8* buf = new uint8[header.mipSizes[0]];
-        //uint8* ucbuf = new uint8[header.height * header.width * 4];
-
-        // do every mipmap level
         for (uint8 i = 0; i < mipmax; i++)
         {
             if (header.mipOffsets[i])
@@ -209,7 +206,6 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
                     }
                 }
 
-                //glTexImage2D(GL_TEXTURE_2D, i, GL_RGBA8, header.width, header.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buf2);
                 _Render->r->uploadTextureData(_texture, 0, i, buf2);
             }
             else
@@ -272,13 +268,12 @@ void TexturesMgr::LoadAction(string _name, R_Texture*& _texture)
     // Check result
     if (!result)
     {
-        //Log::Error("TexturesMgr[%s]: Error while loading texture data.", f.Path_Name().c_str());
-        //delete _texture;
+        Log::Error("TexturesMgr[%s]: Error while loading texture data.", f.Path_Name().c_str());
         _texture = DefaultTexture();
         return;
     }
 
-    //Log::Info("TexturesMgr[%s]: R_Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
+    //Log::Info("TexturesMgr[%s]: Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
 }
 
 bool TexturesMgr::DeleteAction(cstring name)

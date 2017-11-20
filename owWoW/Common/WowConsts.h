@@ -17,3 +17,11 @@ const uint32 C_MapBufferSize = 9 * 9 + 8 * 8;
 
 // World
 const float C_DetailSize = 8.0f;
+
+// Time
+const uint32 C_Game_SecondsInMinute = 2;
+const uint32 C_Game_MinutesInHour = 60;
+const uint32 C_Game_HoursInDay = 24;
+
+const uint32 C_Game_SecondsInHour = (C_Game_SecondsInMinute * C_Game_MinutesInHour);                    // 120
+const uint32 C_Game_SecondsInDay = (C_Game_SecondsInMinute * C_Game_MinutesInHour * C_Game_HoursInDay); // 2880

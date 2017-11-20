@@ -18,8 +18,8 @@ inline T Sky::GetByTimeTemplate(vector<SkyParam<T>>* _array, uint32 _paramNum, u
         parBegin = _array[_paramNum][last].param;
         timeBegin = _array[_paramNum][last].time;
         parEnd = _array[_paramNum][0].param;
-        timeEnd = _array[_paramNum][0].time + (2 * 60 * 24); // next day
-        _time += (2 * 60 * 24);
+        timeEnd = _array[_paramNum][0].time + C_Game_SecondsInDay; // next day
+        _time += C_Game_SecondsInDay;
     }
     else
     {
@@ -33,7 +33,7 @@ inline T Sky::GetByTimeTemplate(vector<SkyParam<T>>* _array, uint32 _paramNum, u
                 if (i == last) // if current is last, then interpolate with first
                 {
                     parEnd = _array[_paramNum][0].param;
-                    timeEnd = _array[_paramNum][0].time + (2 * 60 * 24);
+                    timeEnd = _array[_paramNum][0].time + C_Game_SecondsInDay;
                 }
                 else
                 {

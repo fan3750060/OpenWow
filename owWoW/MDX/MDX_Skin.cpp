@@ -206,8 +206,8 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
     
 	// Vertex params
 	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(M2Vertex)); // pos 0-2
-	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_INT32, 3 * sizeof(float), sizeof(M2Vertex)); // blend 3
-	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_INT32, 4 * sizeof(float), sizeof(M2Vertex)); // index 4
+	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(M2Vertex)); // blend 3
+	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(M2Vertex)); // index 4
     _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(M2Vertex)); // normal 5-7
     _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(M2Vertex)); // tc0 8-9
     _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(M2Vertex)); // tc1 10-11
@@ -233,9 +233,8 @@ void Model_Skin::Draw()
 {
 	_TechniquesMgr->m_Model->BindS();
 	_TechniquesMgr->m_Model->SetPVW();
-    _TechniquesMgr->m_Model->SetAnimated(false);
 
-    /*_TechniquesMgr->m_Model->SetAnimated(m_ModelObject->animBones && m_ModelObject->animated);
+    _TechniquesMgr->m_Model->SetAnimated(m_ModelObject->animBones && m_ModelObject->animated);
     if (m_ModelObject->animBones && m_ModelObject->animated)
     {
         //_TechniquesMgr->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
@@ -247,7 +246,7 @@ void Model_Skin::Draw()
             bones.push_back(m_ModelObject->m_Part_Bones[i].m_TransformMatrix);
         }
         _TechniquesMgr->m_Model->SetBones(bones);
-    }*/
+    }
 
 	_Render->r->setGeometry(__geom);
 

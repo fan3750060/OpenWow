@@ -36,11 +36,6 @@ MapTile::MapTile(uint32 _intexX, uint32 _intexZ) : m_IndexX(_intexX), m_IndexZ(_
 {
     m_GamePositionX = _intexX * C_TileSize;
     m_GamePositionZ = _intexZ * C_TileSize;
-
-    /*for (uint32 i = 0; i < C_ChunksInTileGlobal; i++)
-    {
-        m_Chunks.push_back(new MapChunk(this));
-    }*/
 }
 
 MapTile::~MapTile()
@@ -128,9 +123,9 @@ bool MapTile::Load(cstring _filename)
     // WMOs
     for (auto it : m_WMOsPlacementInfo)
     {
-        _WMOsMgr->Add(m_WMOsNames[it->nameIndex]);
+        _WMOsMgr->Add(m_WMOsNames[it.nameIndex]);
 
-        WMO* wmo = (WMO*)_WMOsMgr->objects[m_WMOsNames[it->nameIndex]];
+        WMO* wmo = (WMO*)_WMOsMgr->objects[m_WMOsNames[it.nameIndex]];
         WMOInstance* inst = new WMOInstance(wmo, it);
         m_WMOsInstances.push_back(inst);
     }
@@ -138,9 +133,9 @@ bool MapTile::Load(cstring _filename)
     // MDXs
     for (auto it : m_MDXsPlacementInfo)
     {
-        _ModelsMgr->Add(m_MDXsNames[it->nameId]);
+        _ModelsMgr->Add(m_MDXsNames[it.nameId]);
 
-        MDX* mdx = (MDX*)_ModelsMgr->GetItemByName(m_MDXsNames[it->nameId]);
+        MDX* mdx = (MDX*)_ModelsMgr->GetItemByName(m_MDXsNames[it.nameId]);
         ModelInstance* inst = new ModelInstance(mdx, it);
         m_MDXsInstances.push_back(inst);
     }
@@ -248,8 +243,8 @@ bool MapTile::Load_SplitFile(cstring _filename, load_phases _phase)
         {
             for (uint32 i = 0; i < size / ModelPlacementInfo::__size; i++)
             {
-                ModelPlacementInfo* placementInfo = new ModelPlacementInfo();
-                f.ReadBytes(placementInfo, ModelPlacementInfo::__size);
+                ModelPlacementInfo placementInfo;
+                f.ReadBytes(&placementInfo, ModelPlacementInfo::__size);
                 m_MDXsPlacementInfo.push_back(placementInfo);
             }
         }
@@ -257,8 +252,8 @@ bool MapTile::Load_SplitFile(cstring _filename, load_phases _phase)
         {
             for (uint32 i = 0; i < size / WMOPlacementInfo::__size; i++)
             {
-                WMOPlacementInfo* placementInfo = new WMOPlacementInfo();
-                f.ReadBytes(placementInfo, WMOPlacementInfo::__size);
+                WMOPlacementInfo placementInfo;
+                f.ReadBytes(&placementInfo, WMOPlacementInfo::__size);
                 m_WMOsPlacementInfo.push_back(placementInfo);
             }
         }

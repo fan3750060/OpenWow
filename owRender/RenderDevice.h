@@ -254,11 +254,10 @@ public:
 	{
 		_newBlendState.blendEnable = enabled;
 
-		_newBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
+		_newBlendState.srcRGBBlendFunc  = srcRGBBlendFunc;
 		_newBlendState.destRGBBlendFunc = destRGBBlendFunc;
-
-		_newBlendState.srcABlendFunc = srcRGBBlendFunc;
-		_newBlendState.destABlendFunc = destRGBBlendFunc;
+		_newBlendState.srcABlendFunc    = srcRGBBlendFunc;
+		_newBlendState.destABlendFunc   = destRGBBlendFunc;
 
 		_pendingMask |= PM_RENDERSTATES;
 	}
@@ -266,11 +265,10 @@ public:
 	{
 		_newBlendState.blendEnable = enabled;
 
-		_newBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
+		_newBlendState.srcRGBBlendFunc  = srcRGBBlendFunc;
 		_newBlendState.destRGBBlendFunc = destRGBBlendFunc;
-
-		_newBlendState.srcABlendFunc = srcABlendFunc;
-		_newBlendState.destABlendFunc = destABlendFunc;
+		_newBlendState.srcABlendFunc    = srcABlendFunc;
+		_newBlendState.destABlendFunc   = destABlendFunc;
 
 		_pendingMask |= PM_RENDERSTATES;
 	}
@@ -395,8 +393,8 @@ protected:
 
 	R_Shader*					_curShaderId;
 	uint32						_pendingMask;
-    R_GeometryInfo*						_defGeometry;
-    R_GeometryInfo*						_curGeometryIndex;
+    R_GeometryInfo*				_defGeometry;
+    R_GeometryInfo*				_curGeometryIndex;
 	uint32						_maxTexSlots; // specified in inherited render devices
 
 	uint32						_tessPatchVerts; // number of vertices in patch. Used for tesselation.

@@ -30,17 +30,18 @@ vec4 applyFog()
 	}
 
 	// After camera end
-	if (cameraDistance > gFogDistance) 
+	if (cameraDistance2D > gFogDistance) 
 	{
 		color.rgb = gFogColor.rgb;
 		color.a = 1.0;
 	}
 
 	// Ensure certain blending mode pixels fade out as fog increases.
-	if (materialID >= 2 && materialID < 6) 
+	/*if (materialID >= 2 && materialID < 6) 
 	{
 		color.a *= 1.0 - fogFactor;
-	}
+	}*/
+	
 
 	return color;
 }

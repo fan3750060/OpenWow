@@ -250,11 +250,10 @@ void World::RenderPostprocess()
     light.specular = vec3(1.0f, 1.0f, 1.0f);
     DSDirectionalLightPass(light);
 
-    /*_EnvironmentManager->dayNightPhase.setupLighting();
-    DSDirectionalLightPass(_EnvironmentManager->dayNightPhase.m_dirLightDay);
-    DSDirectionalLightPass(_EnvironmentManager->dayNightPhase.m_dirLightNight);*/
-
-    //DSFogRenderPass();
+    if (_Config.drawfog)
+    {
+        DSFogRenderPass();
+    }
 }
 
 void World::tick(float dt)

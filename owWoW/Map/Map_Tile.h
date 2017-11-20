@@ -63,11 +63,11 @@ public:
 	vector<Map_Tile_TextureInfo> m_Textures;
 
 	vector<string>               m_WMOsNames;
-    vector<WMOPlacementInfo*>    m_WMOsPlacementInfo;
+    vector<WMOPlacementInfo>    m_WMOsPlacementInfo;
 	vector<WMOInstance*>         m_WMOsInstances;
 
 	vector<string>               m_MDXsNames;
-    vector<ModelPlacementInfo*>  m_MDXsPlacementInfo;
+    vector<ModelPlacementInfo>  m_MDXsPlacementInfo;
 	vector<ModelInstance*>       m_MDXsInstances;
 
     vector<MapChunk*>            m_Chunks;

@@ -21,10 +21,9 @@ struct WMOPlacementInfo
 class WMOInstance : protected SceneNode, protected RenderableItem
 {
 public:
-	WMOInstance(WMO* _wmoObject, WMOPlacementInfo* _placementInfo);
+	WMOInstance(WMO* _wmoObject, WMOPlacementInfo _placementInfo);
 	~WMOInstance();
 
-	void SetWMO(WMO* _wmo) { wmoObject = _wmo; }
 	WMO* GetWMO() { return wmoObject; }
 
 	void Render();
@@ -34,7 +33,7 @@ private:
 
 private:
 	WMO* wmoObject;
-	WMOPlacementInfo* placementInfo;
+	WMOPlacementInfo placementInfo;
 
 	static std::set<uint32> alreadyDraw;
 

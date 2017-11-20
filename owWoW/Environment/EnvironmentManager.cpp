@@ -16,6 +16,7 @@ bool EnvironmentManager::Init()
         << endl;
 
 	m_GameTime.Set(now->tm_hour, now->tm_min);
+    m_GameTime.Set(9, 0);
 
 	skies = 0;
 	dayNightCycle = new DayNightCycle();
