@@ -63,7 +63,7 @@ bool GameState_Menu::Init()
 			continue;
 		}
 
-		auto image = new Image(_TexturesMgr->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), VECTOR_ZERO, vec2(128, 22));
+		auto image = new Image(_TexturesMgr->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));
 
 		// Add btn
 		auto btn = new UIButton();
@@ -306,7 +306,7 @@ On_Mouse_Released(GameState_Menu)
 {
 
         enableFreeCamera = false;
-        lastMousePos = VECTOR_ZERO;
+        lastMousePos = vec2();
         _Engine->GetAdapter()->ShowCursor();
         return true;
 

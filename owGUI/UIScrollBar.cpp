@@ -6,14 +6,14 @@
 UIScrollBar::UIScrollBar() : base() {
 	value = 0.5;
 
-	begunokPoint = VECTOR_ZERO;
+	begunokPoint = vec2();
 	begunokYOffset = 0;
-	begunokSize = VECTOR_ZERO;
+	begunokSize = vec2();
 
 	begunokSelected = false;
 	begunokPressed = false;
 
-	begunokBounds = VECTOR_ZERO;
+	begunokBounds = vec2();
 	begunokBoundsSize = 0;
 }
 
@@ -36,7 +36,7 @@ void UIScrollBar::Init(cvec2 _position, cvec2 _size) {
 
 	begunokImage = new Image(buttonTexture, vec2(4, 40), vec2(15, 27));
 
-	base::Init(_position, _size, new Image(buttonTexture, VECTOR_ZERO, imageSize));
+	base::Init(_position, _size, new Image(buttonTexture, vec2(), imageSize));
 }
 
 void UIScrollBar::OnRenderUI() {

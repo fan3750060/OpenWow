@@ -221,9 +221,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Techniques\Debug_GeometryPass.h" />
     <ClInclude Include="Techniques\Debug_Normals.h" />
+    <ClInclude Include="Techniques\PostProcess_Common.h" />
     <ClInclude Include="Techniques\POST_DirectionalLight.h" />
-    <ClInclude Include="Techniques\ds_light_pass_tech.h" />
-    <ClInclude Include="Techniques\ds_point_light_pass_tech.h" />
     <ClInclude Include="Techniques\MapChunk_GeometryPass.h" />
     <ClInclude Include="Techniques\MapTileLowRes_GeometryPass.h" />
     <ClInclude Include="Techniques\Model_Shader.h" />

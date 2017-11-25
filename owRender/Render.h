@@ -54,6 +54,8 @@ public:
 	void RenderQuad();
     void RenderQuadVT();
 
+    void DrawBoundingBox(BoundingBox& _box, cmat4 _mat);
+
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);
 

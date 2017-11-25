@@ -2,35 +2,23 @@
 
 #include "technique.h"
 
-class POST_Fog : public Technique
+class POST_Fog : public PostProcess_Common
 {
 public:
-    POST_Fog() : Technique("shaders/Common_SimpleVertex.vs", "shaders/POST_Fog.fs") {}
+    POST_Fog() : PostProcess_Common("shaders/POST_Fog.fs") {}
 
-    void SetCameraPos(cvec3 _cameraPos)
+    void SetFogDistance(float _distance)
     {
-        setVec3("gCameraPosition", _cameraPos);
+        setFloat("gFogDistance", _distance);
     }
 
-	 void SetScreenSize(unsigned int Width, unsigned int Height)
-	 {
-		 setVec2("gScreenSize", (float)Width, (float)Height);
-	 }
+    void SetFogModifier(float _modifier)
+    {
+        setFloat("gFogModifier", _modifier);
+    }
 
-
-
-     void SetFogDistance(float _distance)
-     {
-         setFloat("gFogDistance", _distance);
-     }
-
-     void SetFogModifier(float _modifier)
-     {
-         setFloat("gFogModifier", _modifier);
-     }
-
-     void SetFogColor(cvec3 _color)
-     {
-         setVec3("gFogColor", _color);
-     }
+    void SetFogColor(cvec3 _color)
+    {
+        setVec3("gFogColor", _color);
+    }
 };

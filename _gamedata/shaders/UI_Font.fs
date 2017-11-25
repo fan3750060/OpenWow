@@ -1,11 +1,10 @@
 #version 330
 
-// Input
 in vec2 OutTextCoord;
 
-// Uniforms
 uniform sampler2D gFontTexture;
 uniform vec3 gFontColor;
+uniform vec2 gOffset;
 
 // Out
 out vec4 FragColor;

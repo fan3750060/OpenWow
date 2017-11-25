@@ -3,18 +3,31 @@
 #include "technique.h"
 
 class MapChunk_GeometryPass : public Technique {
+    int32 gColorMap[4];
+    int32 gSpecularMap[4];
+
+    int32 gShadowMapExists;
+    int32 gShadowColor;
+
+    int32 gLayersCount;
+    int32 gBlend;
+    int32 gMCCVExists;
+    int32 gMCLVExists;
+
 public:
 	MapChunk_GeometryPass() : Technique("shaders/MapChunk.vs", "shaders/MapChunk.fs")
     {
-        gLayersCount = getLocation("gLayersCount");
-
         for (uint8 i = 0; i < 4; i++)
         {
             gColorMap[i] = getLocation((string("gColorMap[") + std::to_string(i) + "]").c_str());
             gSpecularMap[i] = getLocation((string("gSpecularMap[") + std::to_string(i) + "]").c_str());
         }
 
+        gLayersCount = getLocation("gLayersCount");
         gBlend = getLocation("gBlend");
+
+        gShadowMapExists = getLocation("gShadowMapExists");
+        gShadowColor = getLocation("gShadowColor");
 
         gMCCVExists = getLocation("gMCCVExists");
         gMCLVExists = getLocation("gMCLVExists");
@@ -22,14 +35,9 @@ public:
 
 	// ---------------------------------------------------
 
-    void SetFirstPasst(int _firstPass)
-    {
-        setInt("gIsFirstPass", _firstPass);
-    }
-
 	void SetLayersCount(int _layersCount)
 	{
-		setInt("gLayersCount", _layersCount);
+		setInt(gLayersCount, _layersCount);
 	}
 
 	void SetColorTextureUnit(int _number, int TextureUnit)
@@ -54,35 +62,23 @@ public:
 
 	void SetShadowMapExists(bool _exists)
 	{
-		setInt("gShadowMapExists", _exists);
+		setInt(gShadowMapExists, _exists);
 	}
 
 	void SetShadowColor(vec3 _shadowColor)
 	{
-		setVec3("gShadowColor", _shadowColor);
+		setVec3(gShadowColor, _shadowColor);
 	}
 
 	// ----------------------------------------------------
 
-	
-
 	void SetMCCVExists(bool _exists)
 	{
-		setInt("gMCCVExists", _exists);
+		setInt(gMCCVExists, _exists);
 	}
 
 	void SetMCLVExists(bool _exists)
 	{
-		setInt("gMCLVExists", _exists);
+		setInt(gMCLVExists, _exists);
 	}
-
-protected: // Base uniforms
-    int32 gLayersCount;
-
-    int32 gColorMap[4];
-    int32 gSpecularMap[4];
-
-    int32 gBlend;
-    int32 gMCCVExists;
-    int32 gMCLVExists;
 };

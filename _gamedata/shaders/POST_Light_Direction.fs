@@ -14,39 +14,14 @@ struct DirectionalLight
 	vec3 Direction;
 };
 
-struct Attenuation
-{
-	float Constant;
-	float Linear;
-	float Quadratic;
-};
-
-struct PointLight
-{
-	BaseLight Base;
-	vec3 Position;
-	Attenuation Atten;
-	float Radius;
-};
-
-struct SpotLight
-{
-	PointLight Base;
-	vec3 Direction;
-	float Cutoff;
-};
-
 // Light type
-uniform int gLightType;
 uniform DirectionalLight gDirectionalLight;
-uniform PointLight gPointLight;
-uniform SpotLight gSpotLight;
 
 // Specular
 uniform float gSpecularPower; // Shrinesses
 
 // Screen
-uniform vec3 gEyeWorldPos;
+uniform vec3 gCameraPosition;
 uniform vec2 gScreenSize;
 
 // OUT
@@ -67,7 +42,7 @@ vec3 CalcLightInternal(BaseLight Light, vec3 LightDirection)
 
 	if (DiffuseFactor > 0)
 	{
-		vec3 VertexToEye = normalize(gEyeWorldPos - WorldPos);
+		vec3 VertexToEye = normalize(gCameraPosition - WorldPos);
 		vec3 LightReflect = normalize(reflect(LightDirection, Normal));
 
 		float SpecularFactor = dot(VertexToEye, LightReflect);
@@ -75,7 +50,7 @@ vec3 CalcLightInternal(BaseLight Light, vec3 LightDirection)
 
 		if (SpecularFactor > 0)
 		{
-			SpecularColor = vec3(Light.specular * getSpecParams(pixelXY).rgb) * SpecularFactor;
+			SpecularColor = vec3(getSpecParams(pixelXY).rgb) * SpecularFactor;
 		}
 	}
 
@@ -98,7 +73,7 @@ void main(void)
 	Color = getAlbedo4(pixelXY);
 	Color.a = 1.0;
 	
-	if(getMatID(pixelXY) == 0.0)
+	if(getMatID(pixelXY) >= 0)
 	{
 		FragColor = Color * vec4(CalcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction), 1.0);
 	}

@@ -26,7 +26,7 @@ uniform mat4 gWorld;
 
 void main(void)
 {
-	mat4 PVW = gProjection * gView;
+	mat4 PVW = gProjection * gView * gWorld;
 	gl_Position = PVW * vec4(VertexPosition, 1.0);
 
 	VSInput.WorldSpacePos   = VertexPosition;

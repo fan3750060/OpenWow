@@ -19,12 +19,8 @@ uniform sampler2D gDiffuseTexture;
 uniform sampler2D gSpecularTexture;
 
 // Alpha & Blend
-uniform float gAlpha;
 uniform int gBlendMode;
-
 uniform float gTextureWeight;
-
-
 
 void main(void)
 {

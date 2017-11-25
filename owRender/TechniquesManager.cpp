@@ -79,45 +79,24 @@ void TechniquesMgr::Init()
 
 	m_POST_DirectionalLight = new POST_DirectionalLight();
 	m_POST_DirectionalLight->BindS();
-
-	m_POST_DirectionalLight->SetProjectionMatrix(mat4());
-	m_POST_DirectionalLight->SetViewMatrix(mat4());
-	m_POST_DirectionalLight->SetWorldMatrix(mat4());
-
 	m_POST_DirectionalLight->BindToPostprocess();
-
 	m_POST_DirectionalLight->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
-	m_POST_DirectionalLight->SetMatSpecularPower(64);
-
+	m_POST_DirectionalLight->SetMatSpecularPower(32);
 	m_POST_DirectionalLight->Unbind();
 
     //----------------------------------------------------------------//
 
     m_POST_Fog = new POST_Fog();
     m_POST_Fog->BindS();
-
-    m_POST_Fog->SetProjectionMatrix(mat4());
-    m_POST_Fog->SetViewMatrix(mat4());
-    m_POST_Fog->SetWorldMatrix(mat4());
-
     m_POST_Fog->BindToPostprocess();
-
     m_POST_Fog->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
-
     m_POST_Fog->Unbind();
 	//----------------------------------------------------------------//
 
 	m_POST_Simple = new POST_Simple();
 	m_POST_Simple->BindS();
-
-	m_POST_Simple->SetProjectionMatrix(mat4());
-	m_POST_Simple->SetViewMatrix(mat4());
-	m_POST_Simple->SetWorldMatrix(mat4());
-
 	m_POST_Simple->BindToPostprocess();
-
 	m_POST_Simple->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
-	
 	m_POST_Simple->Unbind();
 
 	//

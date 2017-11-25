@@ -54,6 +54,7 @@ string ProcessShader(File& f)
 
 Technique::Technique(cstring _fileName)
 {
+    fsName = _fileName + ".fs";
 	string shVS = ProcessShader(File(_fileName + ".vs"));
 	string shFS = ProcessShader(File(_fileName + ".fs"));
 
@@ -64,6 +65,7 @@ Technique::Technique(cstring _fileName)
 
 Technique::Technique(cstring _fileNameVS, cstring _fileNameFS)
 {
+    fsName = _fileNameFS;
 	string shVS = ProcessShader(File(_fileNameVS));
 	string shFS = ProcessShader(File(_fileNameFS));
 
@@ -74,6 +76,7 @@ Technique::Technique(cstring _fileNameVS, cstring _fileNameFS)
 
 Technique::Technique(cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
 {
+    fsName = _fileNameFS;
     string shVS = ProcessShader(File(_fileNameVS));
     string shFS = ProcessShader(File(_fileNameFS));
     string shGS = ProcessShader(File(_fileNameGS));
@@ -93,7 +96,7 @@ void Technique::Process(const char* vertexShaderSrc, const char* fragmentShaderS
     shader = _Render->r->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
     if (_Render->r->getShaderLog().empty())
     {
-        Log::Green("Shader: Successfull. Id [%d].", shader);
+        Log::Green("Shader: Successfull. Id [%d].", shader->oglProgramObj);
     }
     else
     {

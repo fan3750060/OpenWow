@@ -12,6 +12,7 @@
 #include "Techniques/Model_Shader.h"
 
 // After
+#include "Techniques/PostProcess_Common.h"
 #include "Techniques/POST_DirectionalLight.h"
 #include "Techniques/POST_Fog.h"
 #include "Techniques/POST_Simple.h"

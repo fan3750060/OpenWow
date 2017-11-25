@@ -313,7 +313,7 @@ Image* UIFile::GetImage(XMLNode* _node)
 
 	buff = imageNode->GetKeyValue("size");
 	vec2 imageSize = Utils::ToPoint(buff);
-	if (imageSize == VECTOR_ZERO)
+	if (imageSize == vec2())
 	{
 		Log::Warn("UIFile[%s]: Node[%s]: Image: Size is zero. Set as texture size.", filename.c_str(), _node->GetName().c_str());
 		imageSize = texture->GetSize();

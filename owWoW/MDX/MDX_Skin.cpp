@@ -269,7 +269,6 @@ void Model_Skin::Draw()
 			}
 
 			// Blend & Alpha
-			_TechniquesMgr->m_Model->SetAlpha(1.0f);
 			_TechniquesMgr->m_Model->SetBlendMode(p->__blendMode);
 
 			// R_Texture weight

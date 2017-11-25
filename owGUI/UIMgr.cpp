@@ -194,7 +194,7 @@ void UIMgr::DeleteUIElement(UIElement* _element)
 
 On_Mouse_Moved(UIMgr)
 {
-    assert1(m_RootElement != nullptr);
+    //assert1(m_RootElement != nullptr);
     m_RootElement->OnMouseMoved(_mousePos);
 }
 

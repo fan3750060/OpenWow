@@ -49,7 +49,7 @@ void ConsoleOpenGL::RenderUI()
 	}
 
 	// Console rectangle
-	_Render->RenderRectangle(VECTOR_ZERO, vec2(windowSize.x, consoleHeight), COLOR_BLACK);
+	_Render->RenderRectangle(vec2(), vec2(windowSize.x, consoleHeight), COLOR_BLACK);
 
 	// Messages
 	int curLine = 0;

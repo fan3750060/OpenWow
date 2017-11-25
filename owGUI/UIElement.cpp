@@ -19,8 +19,8 @@ UIElement::UIElement(uint32 _DeepAdding)
     m_IsSelected = false;
 
     // General
-    m_Position = VECTOR_ZERO;
-    m_Size = VECTOR_ZERO;
+    m_Position = vec2();
+    m_Size = vec2();
     m_Image = nullptr;
     m_Texture = nullptr;
     m_Color = COLOR_EMPTY;
@@ -114,7 +114,7 @@ void UIElement::Hide()
 
 bool UIElement::CheckSelection(cvec2 _mousePos)
 {
-    if (m_Size == VECTOR_ZERO)
+    if (m_Size == vec2())
     {
         m_IsSelected = false;
         return false;
@@ -166,7 +166,7 @@ void UIElement::OnUpdate()
 void UIElement::OnRenderUI()
 {
     // Render me
-    if (m_Size != VECTOR_ZERO)
+    if (m_Size != vec2())
     {
         if (m_Image)
         {

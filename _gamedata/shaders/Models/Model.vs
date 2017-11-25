@@ -22,8 +22,6 @@ uniform mat4 gWorld;
 
 // Bones
 uniform bool gIsAnimated;
-uniform int gBoneStartIndex;
-uniform int gBoneMaxCount;
 uniform mat4 gBones[251];
 
 // Billboard

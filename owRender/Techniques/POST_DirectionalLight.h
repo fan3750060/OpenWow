@@ -1,42 +1,38 @@
 #pragma once
 
-#include "ds_light_pass_tech.h"
 #include "../lights_common.h"
 
-class POST_DirectionalLight : public Technique
+class POST_DirectionalLight : public PostProcess_Common
 {
 public:
-	POST_DirectionalLight() : Technique("shaders/Common_SimpleVertex.vs", "shaders/POST_Light_Direction.fs") {}
+    POST_DirectionalLight() : PostProcess_Common("shaders/POST_Light_Direction.fs")
+    {
+        gDirectionalLight_Base_ambient = getLocation("gDirectionalLight.Base.ambient");
+        gDirectionalLight_Base_diffuse = getLocation("gDirectionalLight.Base.diffuse");
+        gDirectionalLight_Base_specular = getLocation("gDirectionalLight.Base.specular");
+        gDirectionalLight_Direction = getLocation("gDirectionalLight.Direction");
 
-	void SetDirectionalLight(const DirectionalLight& Light)
-	{
-		setVec3("gDirectionalLight.Base.ambient", Light.ambient);
-		setVec3("gDirectionalLight.Base.diffuse", Light.diffuse);
-		setVec3("gDirectionalLight.Base.specular", Light.specular);
+        gSpecularPower = getLocation("gSpecularPower");
+    }
 
-		vec3 Direction = Light.Direction;
-		Direction = Direction.normalized();
-		setVec3("gDirectionalLight.Direction", Direction);
-	}
+    void SetDirectionalLight(const DirectionalLight& Light)
+    {
+        setVec3(gDirectionalLight_Base_ambient, Light.ambient);
+        setVec3(gDirectionalLight_Base_diffuse, Light.diffuse);
+        setVec3(gDirectionalLight_Base_specular, Light.specular);
+        setVec3(gDirectionalLight_Direction, Light.Direction);
+    }
 
+    void SetMatSpecularPower(float Power)
+    {
+        setFloat("gSpecularPower", Power);
+    }
 
-	void SetEyeWorldPos(const vec3& EyePos)
-	{
-		setVec3("gEyeWorldPos", EyePos);
-	}
+private:
+    int32 gDirectionalLight_Base_ambient;
+    int32 gDirectionalLight_Base_diffuse;
+    int32 gDirectionalLight_Base_specular;
+    int32 gDirectionalLight_Direction;
 
-	void SetMatSpecularIntensity(float Intensity)
-	{
-		setFloat("gMatSpecularIntensity", Intensity);
-	}
-
-	void SetMatSpecularPower(float Power)
-	{
-		setFloat("gSpecularPower", Power);
-	}
-
-	void SetScreenSize(unsigned int Width, unsigned int Height)
-	{
-		setVec2("gScreenSize", (float)Width, (float)Height);
-	}
+    int32 gSpecularPower;
 };

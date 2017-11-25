@@ -148,12 +148,6 @@
     <ClInclude Include="Techniques\Technique.h">
       <Filter>Techniques</Filter>
     </ClInclude>
-    <ClInclude Include="Techniques\ds_light_pass_tech.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\ds_point_light_pass_tech.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
     <ClInclude Include="lights_common.h">
       <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
@@ -171,6 +165,9 @@
     </ClInclude>
     <ClInclude Include="GPUTimer.h">
       <Filter>RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Techniques\PostProcess_Common.h">
+      <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -79,6 +79,8 @@ void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 	//Log::Exit(-1);
 }
 
+
+
 // =================================================================================================
 // Common
 // =================================================================================================
@@ -255,8 +257,6 @@ uint32 RenderDevice::registerVertexLayout(uint32 numAttribs, R_VertexLayoutAttri
 
 
 
-
-
 void RenderDevice::beginRendering()
 {
 	CHECK_GL_ERROR
@@ -284,21 +284,18 @@ R_GeometryInfo* RenderDevice::beginCreatingGeometry(uint32 vlObj)
 
 void RenderDevice::finishCreatingGeometry(R_GeometryInfo* geoObj)
 {
-	assert1(geoObj > 0);
+	assert1(geoObj);
 
 	glBindVertexArray(geoObj->vao);
 
 	// bind index buffer, if present
 	if (geoObj->indexBuf)
 	{
-		R_Buffer* buf = geoObj->indexBuf;
-		assert1(buf->glObj > 0);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf->glObj);
+		assert1(geoObj->indexBuf->glObj > 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, geoObj->indexBuf->glObj);
 	}
 
 	uint32 newVertexAttribMask = 0;
-
 	R_VertexLayout vl = _vertexLayouts[geoObj->layout - 1];
 
 	// Set vertex attrib pointers
@@ -308,10 +305,10 @@ void RenderDevice::finishCreatingGeometry(R_GeometryInfo* geoObj)
 		const R_VertexBufferSlot& vbSlot = geoObj->vertexBufInfo[attrib.vbSlot];
 
 		R_Buffer* buf = geoObj->vertexBufInfo[attrib.vbSlot].vbObj;
-		assert1(buf->glObj != 0 && buf->type == GL_ARRAY_BUFFER || buf->type == GL_SHADER_STORAGE_BUFFER); // special case for compute buffer
+		assert1(buf->glObj && buf->type == GL_ARRAY_BUFFER || buf->type == GL_SHADER_STORAGE_BUFFER); // special case for compute buffer
 
 		glBindBuffer(GL_ARRAY_BUFFER, buf->glObj);
-		glVertexAttribPointer(i, attrib.size, dataTypes[vbSlot.type], vbSlot.needNorm, vbSlot.stride, (char *)0 + vbSlot.offset + attrib.offset);
+		glVertexAttribPointer(i, attrib.size, dataTypes[vbSlot.type], vbSlot.needNorm, vbSlot.stride, (char*)0 + vbSlot.offset + attrib.offset);
 
 		newVertexAttribMask |= 1 << i;
 	}
@@ -361,10 +358,7 @@ void RenderDevice::setGeomIndexParams(R_GeometryInfo* geoObj, R_Buffer* indBuf, 
 
 void RenderDevice::destroyGeometry(R_GeometryInfo*& geoObj, bool destroyBindedBuffers)
 {
-	if (geoObj == 0)
-	{
-		return;
-	}
+    assert1(geoObj);
 
 	glDeleteVertexArrays(1, &geoObj->vao);
 	glBindVertexArray(0);
@@ -392,6 +386,8 @@ void RenderDevice::destroyGeometry(R_GeometryInfo*& geoObj, bool destroyBindedBu
     delete geoObj;
 	geoObj = nullptr;
 }
+
+
 
 // =================================================================================================
 // Buffers
@@ -934,6 +930,11 @@ int RenderDevice::getShaderBufferLoc(R_Shader* _shader, const char *name)
 
 void RenderDevice::setShaderConst(int loc, R_ShaderConstType type, const void *values, uint32 count)
 {
+    if (loc == -1)
+    {
+        return;
+    }
+
 	switch (type)
 	{
 		case CONST_INT:
@@ -962,6 +963,11 @@ void RenderDevice::setShaderConst(int loc, R_ShaderConstType type, const void *v
 
 void RenderDevice::setShaderSampler(int loc, uint32 texUnit)
 {
+    if (loc == -1)
+    {
+        return;
+    }
+
 	glUniform1i(loc, (int)texUnit);
 }
 
@@ -1897,7 +1903,7 @@ bool RenderDevice::commitStates(uint32 filter)
 		// Bind m_DiffuseTextures and set sampler state
 		if (mask & PM_TEXTURES)
 		{
-			for (uint32 i = 0; i < 16; ++i)
+			for (uint32 i = 0; i < 16; i++)
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
 
@@ -1935,7 +1941,6 @@ bool RenderDevice::commitStates(uint32 filter)
 					glBindTexture(GL_TEXTURE_2D, 0);
 				}
 			}
-
 			_pendingMask &= ~PM_TEXTURES;
 		}
 

@@ -274,10 +274,10 @@ void World::tick(float dt)
 void World::DSDirectionalLightPass(DirectionalLight& _light)
 {
 	_TechniquesMgr->m_POST_DirectionalLight->BindS();
-	_TechniquesMgr->m_POST_DirectionalLight->SetEyeWorldPos(_Camera->Position);
-	_TechniquesMgr->m_POST_DirectionalLight->SetDirectionalLight(_light);
-	_TechniquesMgr->m_POST_DirectionalLight->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
+	_TechniquesMgr->m_POST_DirectionalLight->SetCameraPos(_Camera->Position);
 
+	_TechniquesMgr->m_POST_DirectionalLight->SetDirectionalLight(_light);
+	
 	_Render->r->setDepthTest(false);
 	_Render->r->setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
@@ -292,10 +292,7 @@ void World::DSDirectionalLightPass(DirectionalLight& _light)
 void World::DSSimpleRenderPass()
 {
 	_TechniquesMgr->m_POST_Simple->BindS();
-	_TechniquesMgr->m_POST_Simple->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
-    _TechniquesMgr->m_POST_Simple->SetAmbientColor(_EnvironmentManager->skies->GetColor(LIGHT_COLOR_GLOBAL_AMBIENT));
-    //_TechniquesMgr->m_POST_Simple->SetAmbientColor(_EnvironmentManager->dayNightPhase.ambientColor);
-    _TechniquesMgr->m_POST_Simple->SetAmbientIntensitive(_EnvironmentManager->dayNightPhase.ambientIntensity);
+    _TechniquesMgr->m_POST_Simple->SetCameraPos(_Camera->Position);
 
 	_Render->r->setDepthTest(false);
 	_Render->r->setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -311,9 +308,8 @@ void World::DSSimpleRenderPass()
 void World::DSFogRenderPass()
 {
     _TechniquesMgr->m_POST_Fog->BindS();
-    _TechniquesMgr->m_POST_Fog->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
-
     _TechniquesMgr->m_POST_Fog->SetCameraPos(_Camera->Position);
+
     _TechniquesMgr->m_POST_Fog->SetFogDistance(_EnvironmentManager->skies->GetFog(LIGHT_FOG_DISTANCE));
     _TechniquesMgr->m_POST_Fog->SetFogModifier(_EnvironmentManager->skies->GetFog(LIGHT_FOG_MULTIPLIER));
     _TechniquesMgr->m_POST_Fog->SetFogColor(_EnvironmentManager->skies->GetColor(LIGHT_COLOR_FOG));

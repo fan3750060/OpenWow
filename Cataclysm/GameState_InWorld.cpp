@@ -290,7 +290,7 @@ On_Mouse_Released(GameState_InWorld)
     if (_button == OW_MOUSE_BUTTON_LEFT)
     {
         enableFreeCamera = false;
-        lastMousePos = VECTOR_ZERO;
+        lastMousePos = vec2();
         _Engine->GetAdapter()->ShowCursor();
         return true;
     }

@@ -1,27 +1,3 @@
-// *************************************************************************************************
-//
-// Horde3D
-//   Next-Generation Graphics Engine
-// --------------------------------------
-// Copyright (C) 2006-2016 Nicolas Schulz and Horde3D team
-//
-// This software is distributed under the terms of the Eclipse Public License v1.0.
-// A copy of the license may be obtained at: http://www.eclipse.org/legal/epl-v10.html
-//
-// *************************************************************************************************
-
-// -------------------------------------------------------------------------------------------------
-//
-// Math library
-//
-// Conventions:
-//
-// - Coordinate system is right-handed with positive y as up axis
-// - All rotation angles are counter-clockwise when looking from the positive end of the rotation axis towards the origin
-// - An unrotated view vector points along the negative z-axis
-//
-// -------------------------------------------------------------------------------------------------
-
 #pragma once
 
 #include <cmath>

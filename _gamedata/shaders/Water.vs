@@ -18,17 +18,16 @@ layout(location = 2) in vec3 Normal;
 uniform mat4 gProjection;
 uniform mat4 gView;
 uniform mat4 gWorld;
-
 // Out
 out VSOutput VSout;
 
 void main(void)
 {
-	mat4 PVW = gProjection * gView * gWorld;
+	mat4 PVW = gProjection * gView;
 	gl_Position = PVW * vec4(VertexPosition, 1.0);
 
-	VSout.WorldSpacePos = (gWorld * vec4(VertexPosition, 1.0)).xyz;
+	VSout.WorldSpacePos = VertexPosition;
 	VSout.TexCoord = TexCoord;
-	VSout.Normal = (gWorld * vec4(Normal, 0.0)).xyz;
+	VSout.Normal = Normal;
 };
 

@@ -22,13 +22,6 @@ void main(void)
 	vec3 WorldPos = getPos(pixelXY);
 	vec3 Normal = getNormal(pixelXY);
 	vec4 Color = getAlbedo4(pixelXY);
-	
-	if(materialID >= 0)
-	{
-		FragColor = vec4(Color.rgb * gAmbientColor, 1.0);
-	}
-	else
-	{
-		FragColor = vec4(Color.rgb, 1.0);
-	}
+
+	FragColor = vec4(Color.rgb, 1.0);
 }

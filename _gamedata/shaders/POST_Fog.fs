@@ -1,6 +1,10 @@
 #version 330
 #include "lib/fragDeferredRead.glsl"
 
+uniform mat4 gProjection;
+uniform mat4 gView;
+uniform mat4 gWorld;
+
 // Uniform
 uniform vec2 gScreenSize;
 uniform vec3 gCameraPosition;
