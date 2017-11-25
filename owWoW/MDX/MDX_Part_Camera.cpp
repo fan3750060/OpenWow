@@ -29,7 +29,7 @@ void MDX_Part_Camera::setup(int time)
 	vec3 t = target + tTarget.getValue(0, time);
 	vec3 u(0, 1, 0);
 
-	roll = tRoll.getValue(0, time) / Math::Pi * 180.0f;
+	roll = tRoll.getValue(0, time) / PI * 180.0f;
 
 	camera.setupViewParams(fov, _Config.aspectRatio, nearclip, farclip);
 
