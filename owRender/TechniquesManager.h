@@ -1,26 +1,26 @@
 #pragma once
 
 // Log
-#include "Techniques/Debug_GeometryPass.h"
-#include "Techniques/Debug_Normals.h"
+#include "Debug_GeometryPass.h"
+#include "Debug_Normals.h"
 
-#include "Techniques/Sky_GeometryPass.h"
-#include "Techniques/MapTileLowRes_GeometryPass.h"
-#include "Techniques/MapChunk_GeometryPass.h"
-#include "Techniques/WMO_GeomertyPass.h"
-#include "Techniques/Water_Pass.h"
-#include "Techniques/Model_Shader.h"
+#include "Sky_GeometryPass.h"
+#include "MapTileLowRes_GeometryPass.h"
+#include "MapChunk_GeometryPass.h"
+#include "WMO_GeomertyPass.h"
+#include "Water_Pass.h"
+#include "Model_Shader.h"
 
 // After
-#include "Techniques/PostProcess_Common.h"
-#include "Techniques/POST_DirectionalLight.h"
-#include "Techniques/POST_Fog.h"
-#include "Techniques/POST_Simple.h"
+#include "PostProcess_Common.h"
+#include "POST_DirectionalLight.h"
+#include "POST_Fog.h"
+#include "POST_Simple.h"
 
 // UI
-#include "Techniques/UI_Color.h"
-#include "Techniques/UI_Font.h"
-#include "Techniques/UI_Texture.h"
+#include "UI_Color.h"
+#include "UI_Font.h"
+#include "UI_Texture.h"
 
 class TechniquesMgr
 {

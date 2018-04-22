@@ -19,56 +19,59 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common\WowChunkUtils.cpp" />
+    <ClCompile Include="Animated.cpp" />
+    <ClCompile Include="DayNightCycle.cpp" />
+    <ClCompile Include="DayNightPhase.cpp" />
     <ClCompile Include="DBC__Storage.cpp" />
-    <ClCompile Include="Environment\DayNightCycle.cpp" />
-    <ClCompile Include="Environment\DayNightPhase.cpp" />
-    <ClCompile Include="Environment\EnvironmentManager.cpp" />
-    <ClCompile Include="Environment\SkyManager.cpp" />
-    <ClCompile Include="Environment\Sky.cpp" />
-    <ClCompile Include="IWoWPrototype.cpp" />
-    <ClCompile Include="IWoWTemplate.cpp" />
+    <ClCompile Include="DoodadInstance.cpp" />
+    <ClCompile Include="EnvironmentManager.cpp" />
     <ClCompile Include="Liquid.cpp" />
-    <ClCompile Include="Map\Map.cpp" />
-    <ClCompile Include="Map\Map_Chunk.cpp" />
-    <ClCompile Include="Map\Map_Shared.cpp" />
-    <ClCompile Include="Map\Map_Tile.cpp" />
-    <ClCompile Include="Map\Model_Instance.cpp" />
-    <ClCompile Include="Map\WMO_Instance.cpp" />
-    <ClCompile Include="MDX\Animated.cpp" />
-    <ClCompile Include="MDX\MDX.cpp" />
-    <ClCompile Include="MDX\MDX_Animated.cpp" />
-    <ClCompile Include="MDX\MDX_Part_Bone.cpp" />
-    <ClCompile Include="MDX\MDX_Part_Camera.cpp" />
-    <ClCompile Include="MDX\MDX_Part_Color.cpp" />
-    <ClCompile Include="MDX\MDX_Part_Light.cpp" />
-    <ClCompile Include="MDX\MDX_Part_TextureAnim.cpp" />
-    <ClCompile Include="MDX\MDX_Part_TextureWeight.cpp" />
-    <ClCompile Include="MDX\ModelsManager.cpp" />
-    <ClCompile Include="MDX\MDX_Skin_Batch.cpp" />
-    <ClCompile Include="MDX\MDX_Skin.cpp" />
-    <ClCompile Include="MDX\Model_Static.cpp" />
-    <ClCompile Include="MDX\Particle.cpp" />
-    <ClCompile Include="MDX\ParticleEmitters.cpp" />
-    <ClCompile Include="MDX\ParticleSystem.cpp" />
-    <ClCompile Include="MDX\RibbonEmitter.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="WMO\DoodadInstance.cpp" />
-    <ClCompile Include="WMO\WMO.cpp" />
-    <ClCompile Include="WMO\WMO_Fog.cpp" />
-    <ClCompile Include="WMO\WMO_Group.cpp" />
-    <ClCompile Include="WMO\WMO_Light.cpp" />
-    <ClCompile Include="WMO\WMO_Manager.cpp" />
-    <ClCompile Include="WMO\WMO_Material.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Map_Chunk.cpp" />
+    <ClCompile Include="Map_Shared.cpp" />
+    <ClCompile Include="Map_Tile.cpp" />
+    <ClCompile Include="MDX.cpp" />
+    <ClCompile Include="MDX_Animated.cpp" />
+    <ClCompile Include="MDX_Part_Bone.cpp" />
+    <ClCompile Include="MDX_Part_Camera.cpp" />
+    <ClCompile Include="MDX_Part_Color.cpp" />
+    <ClCompile Include="MDX_Part_Light.cpp" />
+    <ClCompile Include="MDX_Part_TextureAnim.cpp" />
+    <ClCompile Include="MDX_Part_TextureWeight.cpp" />
+    <ClCompile Include="MDX_Skin.cpp" />
+    <ClCompile Include="MDX_Skin_Batch.cpp" />
+    <ClCompile Include="ModelsManager.cpp" />
+    <ClCompile Include="Model_Instance.cpp" />
+    <ClCompile Include="Model_Static.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleEmitters.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="RibbonEmitter.cpp" />
+    <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="SkyManager.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="WMO.cpp" />
+    <ClCompile Include="WMO_Fog.cpp" />
+    <ClCompile Include="WMO_Group.cpp" />
     <ClCompile Include="WMO_Group_Batch.cpp" />
+    <ClCompile Include="WMO_Instance.cpp" />
+    <ClCompile Include="WMO_Light.cpp" />
+    <ClCompile Include="WMO_Manager.cpp" />
+    <ClCompile Include="WMO_Material.cpp" />
+    <ClCompile Include="WowChunkUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owWoW.h" />
+    <ClInclude Include="Animated.h" />
+    <ClInclude Include="Animated_Types.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="Common\WowChunkUtils.h" />
-    <ClInclude Include="Common\WowConsts.h" />
-    <ClInclude Include="Common\WowTime.h" />
-    <ClInclude Include="Common\WowTypes.h" />
+    <ClInclude Include="DayNightCycle.h" />
+    <ClInclude Include="DayNightPhase.h" />
     <ClInclude Include="DBC_AreaTable.h" />
     <ClInclude Include="DBC_GroundEffectDoodad.h" />
     <ClInclude Include="DBC_GroundEffectTexture.h" />
@@ -85,58 +88,55 @@
     <ClInclude Include="DBC_WMOAreaTable.h" />
     <ClInclude Include="DBC__File.h" />
     <ClInclude Include="DBC__Storage.h" />
-    <ClInclude Include="Environment\DayNightCycle.h" />
-    <ClInclude Include="Environment\DayNightPhase.h" />
-    <ClInclude Include="Environment\EnvironmentManager.h" />
-    <ClInclude Include="Environment\SkyManager.h" />
-    <ClInclude Include="Environment\Sky.h" />
-    <ClInclude Include="IWoWObject.h" />
-    <ClInclude Include="IWoWPrototype.h" />
-    <ClInclude Include="IWoWTemplate.h" />
+    <ClInclude Include="DoodadInstance.h" />
+    <ClInclude Include="EnvironmentManager.h" />
     <ClInclude Include="Liquid.h" />
-    <ClInclude Include="Map\Map.h" />
-    <ClInclude Include="Map\Map_Chunk.h" />
-    <ClInclude Include="Map\Map_Chunk_Types.h" />
-    <ClInclude Include="Map\Map_Shared.h" />
-    <ClInclude Include="Map\Map_Tile.h" />
-    <ClInclude Include="Map\Model_Instance.h" />
-    <ClInclude Include="Map\WMO_Instance.h" />
-    <ClInclude Include="MDX\Animated.h" />
-    <ClInclude Include="MDX\Animated_Types.h" />
-    <ClInclude Include="MDX\MDX.h" />
-    <ClInclude Include="MDX\MDX_Headers.h" />
-    <ClInclude Include="MDX\MDX_Part_Bone.h" />
-    <ClInclude Include="MDX\MDX_Part_Camera.h" />
-    <ClInclude Include="MDX\MDX_Part_Color.h" />
-    <ClInclude Include="MDX\MDX_Part_Light.h" />
-    <ClInclude Include="MDX\MDX_Part_TextureAnim.h" />
-    <ClInclude Include="MDX\MDX_Part_TextureWeight.h" />
-    <ClInclude Include="MDX\ModelsManager.h" />
-    <ClInclude Include="MDX\MDX_Skin_Batch.h" />
-    <ClInclude Include="MDX\MDX_Skin.h" />
-    <ClInclude Include="MDX\Particle.h" />
-    <ClInclude Include="MDX\ParticleSystem.h" />
-    <ClInclude Include="MDX\RibbonEmitter.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Map_Chunk.h" />
+    <ClInclude Include="Map_Chunk_Types.h" />
+    <ClInclude Include="Map_Shared.h" />
+    <ClInclude Include="Map_Tile.h" />
+    <ClInclude Include="MDX.h" />
+    <ClInclude Include="MDX_Headers.h" />
+    <ClInclude Include="MDX_Part_Bone.h" />
+    <ClInclude Include="MDX_Part_Camera.h" />
+    <ClInclude Include="MDX_Part_Color.h" />
+    <ClInclude Include="MDX_Part_Light.h" />
+    <ClInclude Include="MDX_Part_TextureAnim.h" />
+    <ClInclude Include="MDX_Part_TextureWeight.h" />
+    <ClInclude Include="MDX_Skin.h" />
+    <ClInclude Include="MDX_Skin_Batch.h" />
+    <ClInclude Include="ModelsManager.h" />
+    <ClInclude Include="Model_Instance.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="RibbonEmitter.h" />
+    <ClInclude Include="Sky.h" />
+    <ClInclude Include="SkyManager.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="WMO\DoodadInstance.h" />
-    <ClInclude Include="WMO\WMO.h" />
-    <ClInclude Include="WMO\WMO_Fog.h" />
-    <ClInclude Include="WMO\WMO_Group.h" />
-    <ClInclude Include="WMO\WMO_Light.h" />
-    <ClInclude Include="WMO\WMO_Manager.h" />
-    <ClInclude Include="WMO\WMO_Material.h" />
+    <ClInclude Include="WMO.h" />
+    <ClInclude Include="WMO_Fog.h" />
+    <ClInclude Include="WMO_Group.h" />
     <ClInclude Include="WMO_Group_Batch.h" />
+    <ClInclude Include="WMO_Instance.h" />
+    <ClInclude Include="WMO_Light.h" />
+    <ClInclude Include="WMO_Manager.h" />
+    <ClInclude Include="WMO_Material.h" />
+    <ClInclude Include="WowChunkUtils.h" />
+    <ClInclude Include="WowConsts.h" />
+    <ClInclude Include="WowTime.h" />
+    <ClInclude Include="WowTypes.h" />
     <ClInclude Include="_unused.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DBC__File.inl" />
-    <None Include="Environment\Sky.inl" />
+    <None Include="Sky.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C29C7FEE-86D9-4EEF-965F-68B89C516FAE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>owWoW</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -203,8 +203,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -219,8 +218,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -236,8 +234,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -258,8 +255,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

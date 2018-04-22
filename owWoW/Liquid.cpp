@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
 // Includes
-#include "WMO/Wmo_Material.h"
+#include "Wmo_Material.h"
 
 // General
 #include "liquid.h"
 
 // Additional
 #include "DBC__Storage.h"
-#include "Environment/EnvironmentManager.h"
+#include "EnvironmentManager.h"
 
 // Internal
 #include "../shared/pack_begin.h"

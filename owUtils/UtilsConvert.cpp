@@ -80,15 +80,6 @@ vec3 Utils::ToVector3(string& _string)
 	return vec3(_x, _y, _z);
 }
 
-Rect Utils::ToRect(string& _string)
-{
-	float _x = popFirstFloat(_string);
-	float _y = popFirstFloat(_string);
-	float _w = popFirstFloat(_string);
-	float _h = popFirstFloat(_string);
-	return Rect(_x, _y, _w, _h);
-}
-
 Color Utils::ToColorFromName(string& _string)
 {
 	ToLower(_string);

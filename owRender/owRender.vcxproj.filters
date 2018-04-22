@@ -20,9 +20,6 @@
     <ClCompile Include="Perfomance.cpp">
       <Filter>Perfomance</Filter>
     </ClCompile>
-    <ClCompile Include="TechniquesManager.cpp">
-      <Filter>Techniques</Filter>
-    </ClCompile>
     <ClCompile Include="PipelineWorldTransformation.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
@@ -47,14 +44,17 @@
     <ClCompile Include="RenderConfig.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Techniques\Technique.cpp">
-      <Filter>Techniques</Filter>
-    </ClCompile>
     <ClCompile Include="RenderDevice.cpp">
       <Filter>RenderCore</Filter>
     </ClCompile>
     <ClCompile Include="GPUTimer.cpp">
       <Filter>RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Technique.cpp">
+      <Filter>Techniques</Filter>
+    </ClCompile>
+    <ClCompile Include="TechniquesManager.cpp">
+      <Filter>Techniques</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,41 +79,11 @@
     <ClInclude Include="Perfomance.h">
       <Filter>Perfomance</Filter>
     </ClInclude>
-    <ClInclude Include="TechniquesManager.h">
-      <Filter>Techniques</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\MapChunk_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\MapTileLowRes_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\WMO_GeomertyPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\Sky_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\UI_Font.h">
-      <Filter>Techniques\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\Debug_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="PipelineWorldTransformation.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Techniques\Water_Pass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\UI_Texture.h">
-      <Filter>Techniques\UI</Filter>
-    </ClInclude>
     <ClInclude Include="OpenGL.h">
       <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\UI_Color.h">
-      <Filter>Techniques\UI</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Render</Filter>
@@ -124,9 +94,6 @@
     <ClInclude Include="Material.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Techniques\Model_Shader.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="ConsoleOpenGL.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -135,24 +102,6 @@
     </ClInclude>
     <ClInclude Include="RenderConfig.h">
       <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\POST_Fog.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\POST_Simple.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\POST_DirectionalLight.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\Technique.h">
-      <Filter>Techniques</Filter>
-    </ClInclude>
-    <ClInclude Include="lights_common.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="Techniques\Debug_Normals.h">
-      <Filter>Techniques\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="RenderDevice.h">
       <Filter>RenderCore</Filter>
@@ -166,7 +115,55 @@
     <ClInclude Include="GPUTimer.h">
       <Filter>RenderCore</Filter>
     </ClInclude>
-    <ClInclude Include="Techniques\PostProcess_Common.h">
+    <ClInclude Include="Technique.h">
+      <Filter>Techniques</Filter>
+    </ClInclude>
+    <ClInclude Include="TechniquesManager.h">
+      <Filter>Techniques</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Color.h">
+      <Filter>Techniques\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Font.h">
+      <Filter>Techniques\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Texture.h">
+      <Filter>Techniques\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug_GeometryPass.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug_Normals.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MapChunk_GeometryPass.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTileLowRes_GeometryPass.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky_GeometryPass.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Water_Pass.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_GeomertyPass.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="lights_common.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="POST_DirectionalLight.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="POST_Fog.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="POST_Simple.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcess_Common.h">
       <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
   </ItemGroup>
@@ -206,7 +203,7 @@
     <None Include="PipelineWorldTransformation.inl">
       <Filter>Pipeline</Filter>
     </None>
-    <None Include="Techniques\Technique.inl">
+    <None Include="Technique.inl">
       <Filter>Techniques</Filter>
     </None>
   </ItemGroup>

@@ -21,9 +21,7 @@ typedef const Quaternion& cquat;
 // Own types
 #include "Color.h"
 #include "Primitives.h"
-#include "Rect.h"
 #include "Timer.h"
-#include "Variant.h"
 
 // STL Types
 #include <map>

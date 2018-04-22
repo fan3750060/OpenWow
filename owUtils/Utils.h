@@ -15,7 +15,6 @@ public:
     // My types
     static  vec2 ToPoint(string& _string);
     static  vec3 ToVector3(string& _string);
-    static  Rect ToRect(string& _string);
     static  Color ToColorFromName(string& _string);
     static  Color ToColorFromRGB(string& _string);
     static  Color ToColorFromRGBA(string& _string);

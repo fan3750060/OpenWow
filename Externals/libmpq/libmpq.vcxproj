@@ -48,7 +48,7 @@
     <ProjectGuid>{0CC7FA61-23DE-4D9F-A6F4-FDA327AB5984}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>libmpq</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>libmpq</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
