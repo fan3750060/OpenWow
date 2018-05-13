@@ -3,7 +3,7 @@
 // General
 #include "MDX_Part_Bone.h"
 
-void MDX_Part_Bone::init(File& f, M2CompBone& b, uint32* global, File* animfiles)
+void MDX_Part_Bone::init(File& f, M2CompBone& b, uint32* global)
 {
 	parent = b.parent_bone;
 	pivot = From_XYZ_To_XZminusY_RET(b.pivot);
@@ -30,9 +30,9 @@ void MDX_Part_Bone::init(File& f, M2CompBone& b, uint32* global, File* animfiles
 		}
 	}
 
-	trans.init(b.translation, f, global, animfiles);
-	roll.init(b.rotation, f, global, animfiles);
-	scale.init(b.scale, f, global, animfiles);
+	trans.init(b.translation, f, global);
+	roll.init(b.rotation, f, global);
+	scale.init(b.scale, f, global);
 
 	trans.fix(From_XYZ_To_XZminusY_RET);
 	roll.fix(From_XYZW_To_XZminusYW_RET);
@@ -77,7 +77,7 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, int anim, int time)
 			m.scale(scale.getValue(anim, time));
 		}
 
-		if (m_BillboardType)
+		/*if (m_BillboardType)
 		{
 			if (parent != -1)
 			{
@@ -139,7 +139,7 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, int anim, int time)
 			m.c[2][0] = vRight.x;
 			m.c[2][1] = vRight.y;
 			m.c[2][2] = vRight.z;
-		}
+		}*/
 xxx:
 
 		m.translate(pivot * -1.0f);

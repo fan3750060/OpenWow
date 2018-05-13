@@ -20,7 +20,7 @@ struct WMOHeaderDef
 	uint32 nDoodadNames;
 	uint32 nDoodadDefs;
 	uint32 nDoodadSets;
-	CArgb ambColor;				// Color settings for base (ambient) color. See the flag at   
+	CArgb ambColor; 
 	__DBC_FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOID, wmoID);
 	CAaBox bounding_box;
 

@@ -39,7 +39,7 @@ bool TexturesMgr::Init()
 
     RefManager1DimAssync::Init();
 
-    m_DefaultTextureSize = vec2(64, 64);
+	vec2 m_DefaultTextureSize = vec2(64, 64);
 
     struct
     {

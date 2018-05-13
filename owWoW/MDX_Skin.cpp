@@ -6,38 +6,25 @@
 // General
 #include "MDX_Skin.h"
 
-Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model)
+Model_Skin::Model_Skin(MDX* _parent, File& f, M2SkinProfile& view) 
+	: m_Parent(_parent)
 {
-	if (!_aF.Open())
-	{
-		Log::Info("Error: loading lod [%s]", _aF.Path_Name().c_str());
-		return;
-	}
-
-	M2SkinProfile* view = (M2SkinProfile*)(_aF.GetData());
-
 	// Skin data
-	uint16*        vertexesIndex = (uint16*)        (_aF.GetData() + view->vertices.offset);
-	uint16*        indexesIndex  = (uint16*)        (_aF.GetData() + view->indices.offset);
-    uint32*        bonesIndex    = (uint32*)        (_aF.GetData() + view->bones.offset);
-	M2SkinSection* skins         = (M2SkinSection*) (_aF.GetData() + view->submeshes.offset);
-	M2SkinBatch*   skinBatch     = (M2SkinBatch*)   (_aF.GetData() + view->batches.offset);
-    uint32         bonesMax      = view->boneCountMax;
-
-    if (bonesMax > 0)
-    {
-        Log::Error("Max bones = %d", bonesMax);
-    }
+	uint16*        vertexesIndex = (uint16*)        (f.GetData() + view.vertices.offset);
+	uint16*        indexesIndex  = (uint16*)        (f.GetData() + view.indices.offset);
+	M2SkinBones*   bonesIndex    = (M2SkinBones*)        (f.GetData() + view.bones.offset);
+	M2SkinSection* skins         = (M2SkinSection*) (f.GetData() + view.submeshes.offset);
+	M2SkinBatch*   skinBatch     = (M2SkinBatch*)   (f.GetData() + view.batches.offset);
+    uint32         bonesMax      = view.boneCountMax;
 
 	//------------
 
-	M2Material*    m2Materials =   (M2Material*)    (_mF.GetData() + _model->header.materials.offset);
+	M2Material*    m2Materials =   (M2Material*)    (f.GetData() + _parent->header.materials.offset);
+	uint16*        texlookup =     (uint16*)        (f.GetData() + _parent->header.texture_lookup_table.offset);
+	uint16*        texanimlookup = (uint16*)        (f.GetData() + _parent->header.texture_transforms_lookup_table.offset);
+	uint16*        texweightlookup=(uint16*)        (f.GetData() + _parent->header.transparency_lookup_table.offset);
 
-	uint16*        texlookup =     (uint16*)        (_mF.GetData() + _model->header.texture_lookup_table.offset);
-	uint16*        texanimlookup = (uint16*)        (_mF.GetData() + _model->header.texture_transforms_lookup_table.offset);
-	uint16*        texweightlookup=(uint16*)        (_mF.GetData() + _model->header.transparency_lookup_table.offset);
-
-	for (uint32 j = 0; j < view->batches.size; j++)
+	for (uint32 j = 0; j < view.batches.size; j++)
 	{
 		MDX_Skin_Batch* pass = new MDX_Skin_Batch();
 
@@ -60,17 +47,22 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 		M2Material& rf = m2Materials[skinBatch[j].materialIndex];
 
 		// Diffuse texture
-		if (_model->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]] == -1)
+		if (_parent->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]] == -1)
 		{
-			pass->__material.SetDiffuseTexture(_model->m_Textures[texlookup[skinBatch[j].texture_Index]]);
+			uint32 index = texlookup[skinBatch[j].texture_Index];
+			if (index < _parent->m_Textures.size())
+			{
+				pass->__material.SetDiffuseTexture(_parent->m_Textures[index]);
+			}
 		}
 		else
 		{
-			/*R_Texture* diffuseSpecialTexture = _model->m_TextureReplaced[_model->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]]];
+			pass->__material.SetDiffuseTexture(_TexturesMgr->DefaultTexture());
+			/*R_Texture* diffuseSpecialTexture = _parent->m_TextureReplaced[_parent->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]]];
 
 			if (diffuseSpecialTexture != nullptr)
 			{
-				pass->__material.SetDiffuseTexture(diffuseSpecialTexture->GetObj());
+				pass->__material.SetDiffuseTexture(diffuseSpecialTexture);
 			}*/
 		}
 		
@@ -118,7 +110,7 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 
 		// R_Texture weight
 		assert1(skinBatch[j].texture_WeightIndex != -1);
-		assert1(m_ModelObject->header.texture_weights.size > 0);
+		assert1(m_Parent->header.texture_weights.size > 0);
 		pass->__textureWeight = texweightlookup[skinBatch[j].texture_WeightIndex];
 
 		// Anim texture
@@ -143,7 +135,7 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 
 		pass->blendmode = rf.blending_mode;
 		pass->color = skinBatch[j].colorIndex;
-		pass->opacity = _model->transLookup[skinBatch[j].texture_WeightIndex];
+		pass->opacity = _parent->transLookup[skinBatch[j].texture_WeightIndex];
 
 		pass->unlit = (rf.flags.M2MATERIAL_FLAGS_UNLIT) != 0;
 		pass->cull = (rf.flags.M2MATERIAL_FLAGS_TWOSIDED) == 0 && rf.blending_mode == 0;
@@ -159,10 +151,10 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 		pass->p = skins[m2SkinIndex].centerPosition.x;
 
 		// R_Texture flags
-		pass->swrap = (_model->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPX) != 0; // R_Texture wrap X
-		pass->twrap = (_model->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPY) != 0; // R_Texture wrap Y
+		pass->swrap = (_parent->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPX) != 0; // R_Texture wrap X
+		pass->twrap = (_parent->texdef[pass->tex].flags.M2TEXTURE_FLAGS_WRAPY) != 0; // R_Texture wrap Y
 
-		if (_model->m_TexturesAnims)
+		if (_parent->m_TexturesAnims)
 		{
 			if (skinBatch[j].flags & TEXTUREUNIT_STATIC)
 			{
@@ -187,33 +179,33 @@ Model_Skin::Model_Skin(MDX* _model, File& _mF, File& _aF) : m_ModelObject(_model
 	//std::sort(m_Batches.begin(), m_Batches.end());
 
 
-	showGeosets = new bool[view->submeshes.size];
-	for (uint32 i = 0; i < view->submeshes.size; i++)
+	showGeosets = new bool[view.submeshes.size];
+	for (uint32 i = 0; i < view.submeshes.size; i++)
 	{
 		showGeosets[i] = true;
 	}
 
-	indices = new uint16[view->indices.size];
-	for (uint32 i = 0; i < view->indices.size; i++)
+	uint16* indices = new uint16[view.indices.size];
+	for (uint32 i = 0; i < view.indices.size; i++)
 	{
 		indices[i] = vertexesIndex[indexesIndex[i]];
 	}
 
 
-	//
+	// Begin geometry
 
 	__geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PBNT2);
     
 	// Vertex params
-	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(M2Vertex)); // pos 0-2
-	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(M2Vertex)); // blend 3
-	_Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(M2Vertex)); // index 4
-    _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(M2Vertex)); // normal 5-7
-    _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(M2Vertex)); // tc0 8-9
-    _Render->r->setGeomVertexParams(__geom, m_ModelObject->__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(M2Vertex)); // tc1 10-11
+	_Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(M2Vertex)); // pos 0-2
+	_Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(M2Vertex)); // blend 3
+	_Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(M2Vertex)); // index 4
+    _Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(M2Vertex)); // normal 5-7
+    _Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(M2Vertex)); // tc0 8-9
+    _Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(M2Vertex)); // tc1 10-11
 
 	// Index bufer
-    R_Buffer* __ib = _Render->r->createIndexBuffer(view->indices.size * sizeof(uint16), indices);
+    R_Buffer* __ib = _Render->r->createIndexBuffer(view.indices.size * sizeof(uint16), indices);
 	_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
@@ -231,26 +223,43 @@ Model_Skin::~Model_Skin()
 
 void Model_Skin::Draw()
 {
+	if (m_Batches.size() <= 0)
+	{
+		return;
+	}
+
+	bool one = false;
+	for (uint32_t i = 0; i < m_Batches.size(); i++)
+	{
+		if (showGeosets[m_Batches[i]->m2SkinIndex])
+		{
+			one = true;
+			break;
+		}
+	}
+
+	assert1(one);
+
 	_TechniquesMgr->m_Model->BindS();
 	_TechniquesMgr->m_Model->SetPVW();
 
-    _TechniquesMgr->m_Model->SetAnimated(m_ModelObject->animBones && m_ModelObject->animated);
-    if (m_ModelObject->animBones && m_ModelObject->animated)
+    _TechniquesMgr->m_Model->SetAnimated(m_Parent->animBones && m_Parent->animated);
+    if (m_Parent->animBones && m_Parent->animated)
     {
         //_TechniquesMgr->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
         //_TechniquesMgr->m_Model->SetBoneMaxCount(p->boneInfluences);
 
         vector<mat4> bones;
-        for (uint32 i = 0; i < m_ModelObject->header.bones.size; i++)
+        for (uint32 i = 0; i < m_Parent->header.bones.size; i++)
         {
-            bones.push_back(m_ModelObject->m_Part_Bones[i].m_TransformMatrix);
+            bones.push_back(m_Parent->m_Part_Bones[i].m_TransformMatrix);
         }
         _TechniquesMgr->m_Model->SetBones(bones);
     }
 
 	_Render->r->setGeometry(__geom);
 
-	for (size_t i = 0; i < m_Batches.size(); i++)
+	for (uint32_t i = 0; i < m_Batches.size(); i++)
 	{
 		MDX_Skin_Batch* p = m_Batches[i];
 
@@ -261,7 +270,7 @@ void Model_Skin::Draw()
 			// Color
 			if (p->__colorIndex != 65535)
 			{
-				_TechniquesMgr->m_Model->SetColor(m_ModelObject->m_Colors[p->__colorIndex].getValue());
+				_TechniquesMgr->m_Model->SetColor(m_Parent->m_Colors[p->__colorIndex].getValue());
 			}
 		    else
 			{
@@ -272,16 +281,16 @@ void Model_Skin::Draw()
 			_TechniquesMgr->m_Model->SetBlendMode(p->__blendMode);
 
 			// R_Texture weight
-			_TechniquesMgr->m_Model->SetTextureWeight(m_ModelObject->m_TextureWeights[p->__textureWeight].getValue());
+			_TechniquesMgr->m_Model->SetTextureWeight(m_Parent->m_TextureWeights[p->__textureWeight].getValue());
 
 			// Billboard
-			_TechniquesMgr->m_Model->SetBillboard(m_ModelObject->m_IsBillboard);
+			_TechniquesMgr->m_Model->SetBillboard(m_Parent->m_IsBillboard);
 
 			// R_Texture anim
 			_TechniquesMgr->m_Model->SetTextureAnimEnable(p->__textureAnims != -1);
 			if (p->__textureAnims != -1)
 			{
-				_TechniquesMgr->m_Model->SetTextureAnimMatrix(m_ModelObject->m_TexturesAnims[p->__textureAnims].getValue());
+				_TechniquesMgr->m_Model->SetTextureAnimMatrix(m_Parent->m_TexturesAnims[p->__textureAnims].getValue());
 			}
 			else
 			{

@@ -5,7 +5,33 @@
 #include "Model_Instance.h"
 #include "WMO_Instance.h"
 
-enum load_phases;
+struct ADT_MHDR
+{
+	uint32 unk0;
+
+	uint32 MCIN;
+	uint32 MTEX;
+	uint32 MMDX;
+	uint32 MMID;
+	uint32 MWMO;
+	uint32 MWID;
+	uint32 MDDF;
+	uint32 MODF;
+
+	uint8 unk1[28];
+};
+
+struct SMChunkInfo
+{
+	uint32_t offset;               // absolute offset.
+	uint32_t size;                 // the size of the MCNK chunk, this is refering to.
+	uint32_t flags;                // always 0. only set in the client., FLAG_LOADED = 1
+	union
+	{
+		uint8_t  unk0[4];
+		uint32_t asyncId;
+	};
+};
 
 struct Map_Tile_TextureInfo
 {
@@ -37,7 +63,6 @@ public:
 	//
 
 	bool Load(cstring _filename);
-	bool Load_SplitFile(cstring _filename, load_phases _phase);
 
 	//
 
@@ -57,17 +82,18 @@ public:
     }
 
 public:
+	ADT_MHDR					 m_Header;
     int                          m_IndexX, m_IndexZ;
     float                        m_GamePositionX, m_GamePositionZ;
 
 	vector<Map_Tile_TextureInfo> m_Textures;
 
 	vector<string>               m_WMOsNames;
-    vector<WMOPlacementInfo>    m_WMOsPlacementInfo;
+    vector<WMOPlacementInfo>     m_WMOsPlacementInfo;
 	vector<WMOInstance*>         m_WMOsInstances;
 
 	vector<string>               m_MDXsNames;
-    vector<ModelPlacementInfo>  m_MDXsPlacementInfo;
+    vector<ModelPlacementInfo>   m_MDXsPlacementInfo;
 	vector<ModelInstance*>       m_MDXsInstances;
 
     vector<MapChunk*>            m_Chunks;

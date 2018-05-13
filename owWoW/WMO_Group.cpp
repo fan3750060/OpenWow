@@ -122,7 +122,7 @@ void WMOGroup::Load()
 		flipcc(fourcc);
 		fourcc[4] = 0;
 		if (size == 0)	continue;
-		size_t nextpos = f.GetPos() + size;
+		uint32_t nextpos = f.GetPos() + size;
 
 		if (strcmp(fourcc, "MVER") == 0)
 		{
@@ -244,12 +244,23 @@ void WMOGroup::Load()
 			WMO_Group_MLIQ liquidHeader;
 			f.ReadBytes(&liquidHeader, WMO_Group_MLIQ::__size);
 
+			enum liquid_basic_types
+			{
+				liquid_basic_types_water = 0,
+				liquid_basic_types_ocean = 1,
+				liquid_basic_types_magma = 2,
+				liquid_basic_types_slime = 3,
+
+				liquid_basic_types_MASK = 3,
+			};
+
 			if (m_Header.liquidType > 0)
 			{
-				Log::Green("WMO[%s]: Contain liquid! [%s]", m_ParentWMO->GetName().c_str(), DBC_LiquidType[m_Header.liquidType]->Get_Name());
+				Log::Green("WMO[%s]: Contain liquid! [%s]", m_ParentWMO->GetName().c_str(), DBC_LiquidType[m_Header.liquidType & 3]->Get_Name());
+				Log::Green("WMO[%s]: LiquidType CHUNK = [%d], WMO = [%d]", m_ParentWMO->GetName().c_str(), liquidHeader.type, m_Header.liquidType);
 
 				m_Liquid = new Liquid(liquidHeader.A, liquidHeader.B, From_XYZ_To_XZminusY_RET(liquidHeader.pos));
-				m_Liquid->initFromWMO2(f, m_ParentWMO->m_Materials[liquidHeader.type], DBC_LiquidType[m_Header.liquidType], m_Header.flags.FLAG_IS_INDOOR);
+				m_Liquid->CreateFromWMO(f, m_ParentWMO->m_Materials[liquidHeader.type], DBC_LiquidType[m_Header.liquidType & 3], m_Header.flags.FLAG_IS_INDOOR);
 			}
 		}
 		else if (strcmp(fourcc, "MORI") == 0)
@@ -356,7 +367,7 @@ void WMOGroup::initLighting()
 		vec3 dirmin(1, 1, 1);
 		float lenmin;
 		int lmin;
-
+#if CURRENT > CLASSIC
 		for (uint32 i = 0; i < m_DoodadsIndexesCount; i++)
 		{
 			lenmin = 999999.0f * 999999.0f;
@@ -377,6 +388,7 @@ void WMOGroup::initLighting()
 			mi->light = lmin;
 			mi->ldir = dirmin;
 		}
+#endif
 
 		m_EnableOutdoorLights = false;
 	}
@@ -483,7 +495,7 @@ bool WMOGroup::drawLiquid()
 		glLightfv(GL_LIGHT2, GL_POSITION, vec4(0, 1, 0, 0));*/
 	}
 
-	m_Liquid->draw();
+	m_Liquid->Render();
 
 	PERF_INC(PERF_MAP_MODELS_WMOs_LIQUIDS);
 

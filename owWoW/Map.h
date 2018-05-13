@@ -1,7 +1,6 @@
 #pragma once
 
 // Includes
-#include "DBC__Storage.h"
 #include "Map_Tile.h"
 
 struct WDT_MPHD_Flags

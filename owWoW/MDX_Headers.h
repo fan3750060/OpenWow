@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Animated.h"
+#include "MDX_Skin.h"
 
 #include "../shared/pack_begin.h"
 
@@ -46,9 +47,11 @@ struct M2Sequence
 {
     uint16 id;                   // Animation id in AnimationData.dbc
     uint16 variationIndex;       // Sub-animation id: Which number in a row of animations this one is.
-    uint32 duration;             // The length of this animation sequence in milliseconds.
+	uint32_t start_timestamp;
+	uint32_t end_timestamp;
 
     float movespeed;               // This is the speed the character moves with in this animation.
+
     uint32 flags;                // See below.
     int16 frequency;             // This is used to determine how often the animation is played. For all animations of the same type, this adds up to 0x7FFF (32767).
     uint16 unk0;                  // Padding
@@ -87,18 +90,8 @@ struct M2CompBone
     int16 parent_bone;            // Parent bone ID or -1 if there is none.
     uint16 submesh_id;            // Mesh part ID OR uDistToParent?
 
-    union
-    {
-        struct
-        {
-            uint16 uDistToFurthDesc;
-            uint16 uZRatioOfChain;
-        } CompressData;
-        uint32 boneNameCRC;         // these are for debugging only. their bone names match those in key bone lookup.
-    };
-
     M2Track<vec3> translation;
-    M2Track<M2CompQuat> rotation;   // compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
+    M2Track<quat> rotation;   // compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
     M2Track<vec3> scale;
 
     vec3 pivot;                 // The pivot point of that bone.
@@ -112,7 +105,7 @@ struct M2Vertex
     uint8 bone_weights[4];
     uint8 bone_indices[4];
     vec3 normal;
-    vec2 tex_coords[2];  // two m_DiffuseTextures, depending on shader used
+    vec2 tex_coords[2];  // two DiffuseTextures, depending on shader used
 };
 
 //
@@ -254,9 +247,6 @@ struct M2Ribbon
 
     M2Track<uint16> texSlotTrack;
     M2Track<uint8> visibilityTrack;
-
-    int16 priorityPlane;
-    uint16 padding;
 };
 
 //
@@ -396,10 +386,7 @@ struct ModelHeader
     {
         uint32 flag_tilt_x : 1;
         uint32 flag_tilt_y : 1;
-        uint32 unk0 : 1;
-        uint32 flag_has_blend_maps : 1;                  // add BlendMaps fields in header
-        uint32 unk1 : 1;
-        uint32 : 27;
+        uint32 : 30;
     } global_flags;
     M2Array<M2Loop> global_loops;                        // Timestamps used in global looping animations.
 
@@ -407,6 +394,7 @@ struct ModelHeader
     // Sequences
     M2Array<M2Sequence> sequences;                       // Information about the animations in the model.
     M2Array<uint16> sequence_lookups;                    // Mapping of sequence IDs to the entries in the Animation sequences block.
+	M2Array<uint32> playable_animation_lookup;
 
     // Bones
     M2Array<M2CompBone> bones;                           // MAX_BONES = 0x100
@@ -416,20 +404,19 @@ struct ModelHeader
     M2Array<M2Vertex> vertices;
 
     // Skin
-    uint32 num_skin_profiles;                            // Views (LOD) are now in .skins.
+	M2Array<M2SkinProfile> skin_profiles;                           // Views (LOD) are now in .skins.
 
     // Materials
     M2Array<M2Color> colors;                             // Color and alpha animations definitions.
-
     M2Array<M2Texture> textures;
-    M2Array<M2TextureWeight> texture_weights;            // Transparency of m_DiffuseTextures.
-    M2Array<M2TextureTransform> texture_transforms;
-
+    M2Array<M2TextureWeight> texture_weights;  
+	M2Array<void> unk0;
+	M2Array<M2TextureTransform> texture_transforms;
     M2Array<uint16> replacable_texture_lookup;
     M2Array<M2Material> materials;                       // Blending modes / render flags.
     M2Array<uint16> bone_lookup_table;
     M2Array<uint16> texture_lookup_table;
-    M2Array<uint16> __unused1;
+    M2Array<uint16> tex_unit_lookup_table;
     M2Array<uint16> transparency_lookup_table;
     M2Array<uint16> texture_transforms_lookup_table;
 

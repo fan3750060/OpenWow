@@ -31,12 +31,11 @@ public:
 	MapChunk(MapTile* _parentTile);
 	~MapChunk();
 
-	void Load(File& f, load_phases _phase);
+	void Load(File& f);
 	void Post_Load();
 
 	void Render();
     void Render_DEBUG();
-	void drawPass(int anim);
 
 public:
 	MapTile* m_ParentTile;

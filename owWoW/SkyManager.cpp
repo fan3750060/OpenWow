@@ -215,7 +215,7 @@ void SkyManager::CalculateSkiesWeights(cvec3 pos)
 		{
 			// we're in a sky, zero out the rest
 			s->m_Wight = 1.0f;
-			for (size_t j = i + 1; j < skies.size(); j++)
+			for (uint32_t j = i + 1; j < skies.size(); j++)
 			{
 				skies[j]->m_Wight = 0.0f;
 			}
@@ -225,7 +225,7 @@ void SkyManager::CalculateSkiesWeights(cvec3 pos)
 			// we're in an outer area, scale down the other weights
 			float r = (dist - s->m_Range.min) / (s->m_Range.max - s->m_Range.min);
 			s->m_Wight = 1.0f - r;
-			for (size_t j = i + 1; j < skies.size(); j++)
+			for (uint32_t j = i + 1; j < skies.size(); j++)
 			{
 				skies[j]->m_Wight *= r;
 			}

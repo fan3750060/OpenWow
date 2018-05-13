@@ -27,7 +27,6 @@ private:
     R_Texture*   m_DefaultTexture2DObj;
     R_Texture*   m_DefaultTexture3DObj;
     R_Texture*   m_DefaultTextureCubeObj;
-    vec2         m_DefaultTextureSize;
 
 	ContainerAssync<string, R_Texture*> textures;
 };

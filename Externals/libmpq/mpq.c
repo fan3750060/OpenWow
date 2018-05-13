@@ -56,7 +56,7 @@ const char *libmpq__strerror(int32_t return_code)
 {
 
 	/* check for array bounds */
-	if (-return_code < 0 || (size_t)-return_code > sizeof(__libmpq_error_strings) / sizeof(char*))
+	if (-return_code < 0 || (uint32_t)-return_code > sizeof(__libmpq_error_strings) / sizeof(char*))
 		return NULL;
 
 	/* return appropriate string */

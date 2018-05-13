@@ -98,33 +98,12 @@ bool MDX::isAnimated(File& f)
 
 void MDX::initAnimated(File& f)
 {
-	m_OriginalVertexes = new M2Vertex[header.vertices.size];
-	memcpy(m_OriginalVertexes, f.GetData() + header.vertices.offset, header.vertices.size * sizeof(M2Vertex));
-
 	initCommon(f);
 
-	if (header.sequences.size > 0)
+	if (header.sequences.size)
 	{
 		m_Sequences = new M2Sequence[header.sequences.size];
 		memcpy(m_Sequences, f.GetData() + header.sequences.offset, header.sequences.size * sizeof(M2Sequence));
-
-		animfiles = new File[header.sequences.size];
-		for (uint32 i = 0; i < header.sequences.size; i++)
-		{
-			char buf[256];
-			sprintf_s(buf, "%s%04d-%02d.anim", m_ModelName.c_str(), m_Sequences[i].id, m_Sequences[i].variationIndex);
-			if (MPQFile::GetFileSize(buf) > 0)
-			{
-				animfiles[i].SetName(buf);
-				animfiles[i].Open();
-			}
-			else
-			{
-				//Log::Warn("MDX[%s]: Animation doesn't exists.", buf);
-				//Log::Warn("header.bones.size = [%d]", header.bones.size);
-				//assert1(animBones == false);
-			}
-		}
 	}
 
 	if (animBones)
@@ -133,7 +112,7 @@ void MDX::initAnimated(File& f)
 		M2CompBone* bonesDefs = (M2CompBone*)(f.GetData() + header.bones.offset);
 		for (uint32 i = 0; i < header.bones.size; i++)
 		{
-			m_Part_Bones[i].init(f, bonesDefs[i], m_GlobalLoops, animfiles);
+			m_Part_Bones[i].init(f, bonesDefs[i], m_GlobalLoops);
 		}
 	}
 
@@ -221,7 +200,8 @@ void MDX::animate(uint32 _animationIndex)
 		calcBones(_animationIndex, m_AnimationTime);
 	}
 
-	/*if (animGeometry)
+	/* Old animation without shader
+	if (animGeometry)
 	{
 		M2Vertex* ov = m_OriginalVertexes;
 		for (uint32 i = 0, k = 0; i < header.vertices.size; ++i, ++ov)

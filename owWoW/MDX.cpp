@@ -37,8 +37,6 @@ MDX::MDX(cstring name) : RefItemNamed(name), m_Loaded(false)
 	m_Lights = nullptr;
 	m_TextureWeights = nullptr;
 
-    m_Skin = nullptr;
-
 #ifdef MDX_PARTICLES_ENABLE
 	particleSystems = nullptr;
 	ribbons = nullptr;
@@ -63,48 +61,6 @@ MDX::~MDX()
 				_TexturesMgr->Delete(m_Textures[i]);
 			}
 		}
-		delete[] m_Textures;
-	}
-
-	delete[] m_GlobalLoops;
-
-	if (m_Colors) delete[] m_Colors;
-	if (m_TextureWeights) delete[] m_TextureWeights;
-
-	//delete[] m_Vertices;
-	//delete[] m_Texcoords;
-	//delete[] m_Normals;
-
-	if (animated)
-	{
-		// unload all sorts of crap
-		delete[] m_Sequences;
-		delete[] m_OriginalVertexes;
-		if (animBones)
-		{
-			delete[] m_Part_Bones;
-		}
-
-		//if (!animGeometry)
-		//{
-		//	glDeleteBuffersARB(1, &nbuf);
-		//}
-		//glDeleteBuffersARB(1, &vbuf);
-		//glDeleteBuffersARB(1, &tbuf);
-
-		if (animTextures) delete[] m_TexturesAnims;
-		
-		
-		if (m_Lights) delete[] m_Lights;
-
-#ifdef MDX_PARTICLES_ENABLE
-		if (particleSystems) delete[] particleSystems;
-		if (ribbons) delete[] ribbons;
-#endif
-	}
-	else
-	{
-		//glDeleteLists(dlist, 1);
 	}
 }
 
@@ -139,7 +95,7 @@ void MDX::Init(bool forceAnim)
 	}
 	else
 	{
-		initStatic(f);
+		initCommon(f);
 	}
 
 	m_Loaded = true;
@@ -149,6 +105,8 @@ void MDX::Init(bool forceAnim)
 
 void MDX::initCommon(File& f)
 {
+	M2Vertex* m_OriginalVertexes = (M2Vertex*)(f.GetData() + header.vertices.offset);
+
 	// Convert vertices
 	for (uint32 i = 0; i < header.vertices.size; i++)
 	{
@@ -159,7 +117,7 @@ void MDX::initCommon(File& f)
 	// m_DiffuseTextures
 	if (header.textures.size)
 	{
-		m_Textures = new R_Texture*[header.textures.size];
+		//m_Textures = new R_Texture*[header.textures.size];
 		m_M2Textures = (M2Texture*)(f.GetData() + header.textures.offset);
 
 		
@@ -172,7 +130,7 @@ void MDX::initCommon(File& f)
 				char buff[256];
 				strncpy_s(buff, (const char*)(f.GetData() + m_M2Textures[i].filename.offset), m_M2Textures[i].filename.size);
 				buff[m_M2Textures[i].filename.size] = '\0';
-				m_Textures[i] = _TexturesMgr->Add(buff);
+				m_Textures.push_back(_TexturesMgr->Add(buff));
 			}
 			else // special texture - only on characters and such...
 			{
@@ -216,17 +174,12 @@ void MDX::initCommon(File& f)
 	// Vertex buffer
 	__vb = _Render->r->createVertexBuffer(header.vertices.size * 12 * sizeof(float), m_OriginalVertexes);
 
-	// just use the first LOD/view
-	if (header.num_skin_profiles > 0)
+	// Load LODs
+	assert1(header.skin_profiles.size);
+	for (uint32 i = 0; i < header.skin_profiles.size; i++)
 	{
-		File skinFile = m_ModelName + "00.skin";
-
-        m_Skin = new Model_Skin(this, f, skinFile);
+		m_Skins.push_back(new Model_Skin(this, f, ((M2SkinProfile*)(f.GetData() + header.skin_profiles.offset))[i]));
 	}
-    else
-    {
-        fail1();
-    }
 }
 
 //
@@ -238,8 +191,12 @@ void MDX::drawModel()
 		m_Colors[i].calc(m_AnimationIndex, m_AnimationTime);
 	}
 
+	/*for (auto it = m_Skins.begin(); it != m_Skins.end(); ++it)
+	{
+		(*it)->Draw();
+	}*/
 
-    m_Skin->Draw();
+	m_Skins.back()->Draw();
 }
 
 void MDX::Render()
@@ -248,39 +205,47 @@ void MDX::Render()
 	{
 		return;
 	}
-
-	if (animated)
+	
+	if (animated && false)
 	{
-		if (m_Sequences[m_AnimationIndex].duration == 0) return; // FIXME Outland 
-		m_AnimationTime = _EnvironmentManager->globalTime % m_Sequences[m_AnimationIndex].duration;
+		uint32 duration = m_Sequences[m_AnimationIndex].end_timestamp - m_Sequences[m_AnimationIndex].start_timestamp;
+
+		if (duration > 0 )
+		{
+			/*if (duration == 0)
+			{
+				duration = 50;
+			}*/
+			m_AnimationTime = _EnvironmentManager->globalTime % duration;
 
 
-		if (m_IsBillboard)
-		{
-			animate(0);
-		}
-		else
-		{
-			if (!animcalc)
+			if (m_IsBillboard)
 			{
 				animate(0);
-				animcalc = true;
 			}
-		}
+			else
+			{
+				if (!animcalc)
+				{
+					animate(0);
+					animcalc = true;
+				}
+			}
 
-		// draw particle systems
+			// draw particle systems
 #ifdef MDX_PARTICLES_ENABLE
-		for (uint32 i = 0; i < header.particle_emitters.size; i++)
-		{
-			particleSystems[i].draw();
-		}
+			for (uint32 i = 0; i < header.particle_emitters.size; i++)
+			{
+				particleSystems[i].draw();
+			}
 
-		// draw ribbons
-		for (uint32 i = 0; i < header.ribbon_emitters.size; i++)
-		{
-			ribbons[i].draw();
-		}
+			// draw ribbons
+			for (uint32 i = 0; i < header.ribbon_emitters.size; i++)
+			{
+				ribbons[i].draw();
+			}
 #endif
+		}
 	}
 
 	drawModel();

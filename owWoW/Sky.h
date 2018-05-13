@@ -36,6 +36,7 @@ enum LightColors
 
     LIGHT_COLOR_RIVER_LIGHT,
     LIGHT_COLOR_RIVER_DARK,
+
     //--------------------
     LIGHT_COLORS_COUNT
 };
@@ -48,6 +49,7 @@ enum LightFogs
     LIGHT_FOG_CLOUD_DESINTY,   // Cloud Density - Controls the density of cloud cover in the area.Value range is 0.0 to 1.0.
     LIGHT_FOG_UNK0,
     LIGHT_FOG_UNK1,
+
     //--------------------
     LIGHT_FOGS_COUNT
 };
@@ -147,8 +149,6 @@ public: // Params
     float                     m_oceanDeepAlpha;
 };
 
-
-#include "DBC__Storage.h"
 
 class Sky : public SkyParams
 {

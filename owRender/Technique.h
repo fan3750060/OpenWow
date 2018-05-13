@@ -10,7 +10,7 @@ protected:
     Technique(cstring _fileNameVS, cstring _fileNameFS, cstring _filenameGS);
 	~Technique();
 
-    void Process(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc);
+    void Process(cstring fileName, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc);
 
     void InitBaseUniforms();
 
@@ -56,7 +56,6 @@ protected: // Base uniforms
 
 private:
 	R_Shader* shader;
-    string fsName;
 };
 
 #include "Technique.inl"

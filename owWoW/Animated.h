@@ -1,55 +1,39 @@
 #pragma once
 
-// Includes
 #include "Animated_Types.h"
 
 #include "EnvironmentManager.h"
 
+// interpolation functions
 template<class T>
-inline T interpolate(const float r, const T& v1, const T& v2)
+inline T interpolate(const float r, const T &v1, const T &v2)
 {
 	return v1 * (1.0f - r) + v2 * r;
 }
 
-template<>
-inline Quaternion interpolate<Quaternion>(const float r, const Quaternion& v1, const Quaternion& v2)
-{
-	return  v1.slerp(v2, r);
-}
-
 template<class T>
-inline T interpolateHermite(const float r, const T& v1, const T& v2, const T& in, const T &out)
+inline T interpolateHermite(const float r, const T &v1, const T &v2, const T &in, const T &out)
 {
+	// dummy
+	//return interpolate<T>(r,v1,v2);
+
 	// basis functions
 	float h1 = 2.0f*r*r*r - 3.0f*r*r + 1.0f;
 	float h2 = -2.0f*r*r*r + 3.0f*r*r;
-	float h3 = r*r*r - 2.0f*r*r + r;
-	float h4 = r*r*r - r*r;
+	float h3 = r * r*r - 2.0f*r*r + r;
+	float h4 = r * r*r - r * r;
 
 	// interpolation
-	return static_cast<T>(v1 * h1 + v2 * h2 + in * h3 + out * h4);
+	return v1 * h1 + v2 * h2 + in * h3 + out * h4;
 }
 
-template<class T>
-inline T interpolateBezier(const float r, const T &v1, const T &v2, const T &in, const T &out)
+// "linear" interpolation for quaternions should be slerp by default
+template<>
+inline Quaternion interpolate<Quaternion>(const float r, const Quaternion &v1, const Quaternion &v2)
 {
-	float InverseFactor = (1.0f - r);
-	float FactorTimesTwo = r*r;
-	float InverseFactorTimesTwo = InverseFactor*InverseFactor;
-
-	// basis functions
-	float h1 = InverseFactorTimesTwo * InverseFactor;
-	float h2 = 3.0f * r * InverseFactorTimesTwo;
-	float h3 = 3.0f * FactorTimesTwo * InverseFactor;
-	float h4 = FactorTimesTwo * r;
-
-	// interpolation
-	return static_cast<T>(v1*h1 + v2*h2 + in*h3 + out*h4);
+	return v1.slerp(v2, r);
 }
 
-//
-
-#define	MAX_ANIMATED (500u)
 
 /*
 	Generic animated value class:
@@ -64,17 +48,20 @@ class Animated
 public:
 	bool uses(uint32 anim)
 	{
-		if (global_sequence > -1)
-		{
-			anim = 0;
-		}
-
-		return (data[anim].size() > 0);
+		return interpolation_type != INTERPOLATION_NONE;
 	}
 
 	T getValue(uint32 anim, uint32 time)
 	{
-		if (global_sequence > -1)
+		if (interpolation_type == INTERPOLATION_NONE)
+		{
+			return data[0];
+		}
+
+		AnimRange range(0, data.size() - 1);
+
+		// obtain a time value and a data range
+		if (global_sequence != -1)
 		{
 			if (globals[global_sequence] == 0)
 			{
@@ -84,55 +71,42 @@ public:
 			{
 				time = _EnvironmentManager->globalTime % globals[global_sequence];
 			}
-			anim = 0;
+		}
+		else
+		{
+			range = ranges[anim];
+			time %= times[times.size() - 1];
 		}
 
-		if (data[anim].size() > 1 && times[anim].size() > 1)
+		if (range.begin != range.end)
 		{
-			size_t t1, t2;
-			size_t pos = 0;
-			int max_time = times[anim][times[anim].size() - 1];
-			if (max_time > 0)
+			// Get pos by time
+			uint32 pos = 0;
+			for (uint32 i = range.begin; i < range.end; i++)
 			{
-				time %= max_time; // I think this might not be necessary?
-			}
-			for (size_t i = 0; i < times[anim].size() - 1; i++)
-			{
-				if (time >= times[anim][i] && time < times[anim][i + 1])
+				if (time >= times[i] && time < times[i + 1])
 				{
 					pos = i;
 					break;
 				}
 			}
-			t1 = times[anim][pos];
-			t2 = times[anim][pos + 1];
+
+			uint32 t1 = times[pos];
+			uint32 t2 = times[pos + 1];
 			float r = (time - t1) / (float)(t2 - t1);
 
 			if (interpolation_type == INTERPOLATION_LINEAR)
 			{
-				return interpolate<T>(r, data[anim][pos], data[anim][pos + 1]);
-			}
-			else if (interpolation_type == INTERPOLATION_NONE)
-			{
-				return data[anim][pos];
+				return interpolate<T>(r, data[pos], data[pos + 1]);
 			}
 			else
 			{
-				// INTERPOLATION_HERMITE is only used in cameras afaik?
-				return interpolateHermite<T>(r, data[anim][pos], data[anim][pos + 1], in[anim][pos], out[anim][pos]);
+				return interpolateHermite<T>(r, data[pos], data[pos + 1], in[pos], out[pos]);
 			}
 		}
 		else
 		{
-			// default value
-			if (data[anim].size() == 0)
-			{
-				return T();
-			}
-			else
-			{
-				return data[anim][0];
-			}
+			return data[range.begin];
 		}
 	}
 
@@ -146,152 +120,76 @@ public:
 			assert1(gs);
 		}
 
-		assert1(b.timestamps.size == b.values.size);
-		sizes = b.timestamps.size;
-		if (b.timestamps.size == 0)	return;
+		// Fix ranges
+		if (b.nRanges <= 0 && interpolation_type != 0 && global_sequence == -1)
+		{
+			ranges.push_back(AnimRange(0, b.nKeys - 1));
+		}
+
+		// ranges
+		uint32* pranges = (uint32*)(f.GetData() + b.ofsRanges);
+		for (uint32 i = 0; i < b.nRanges; i++) ranges.push_back(AnimRange(pranges[i], pranges[i + 1]));
 
 		// times
-		for (size_t j = 0; j < b.timestamps.size; j++)
-		{
-			M2Array<uint32>* pHeadTimes = (M2Array<uint32>*)(f.GetData() + b.timestamps.offset + j * sizeof(M2Array<uint32>));
-
-			uint32* ptimes = (uint32*)(f.GetData() + pHeadTimes->offset);
-			for (size_t i = 0; i < pHeadTimes->size; i++)
-			{
-				times[j].push_back(ptimes[i]);
-			}
-		}
+		assert1(b.nTimes == b.nKeys);
+		uint32 *ptimes = (uint32*)(f.GetData() + b.ofsTimes);
+		for (uint32 i = 0; i < b.nTimes; i++) times.push_back(ptimes[i]);
 
 		// keyframes
-		for (size_t j = 0; j < b.values.size; j++)
+		D *keys = (D*)(f.GetData() + b.ofsKeys);
+		switch (interpolation_type)
 		{
-			M2Array<D>* pHeadKeys = (M2Array<D>*)(f.GetData() + b.values.offset + j * sizeof(M2Array<D>));
-
-			D* keys = (D*)(f.GetData() + pHeadKeys->offset);
-			switch (interpolation_type)
+		case INTERPOLATION_NONE:
+		case INTERPOLATION_LINEAR:
+			for (uint32 i = 0; i < b.nKeys; i++)
 			{
-				case INTERPOLATION_NONE:
-				case INTERPOLATION_LINEAR:
-				for (size_t i = 0; i < pHeadKeys->size; i++)
-				{
-					data[j].push_back(Conv::conv(keys[i]));
-				}
-				break;
-
-				case INTERPOLATION_HERMITE:
-				for (size_t i = 0; i < pHeadKeys->size; i++)
-				{
-					data[j].push_back(Conv::conv(keys[i * 3 + 0]));
-					in[j].push_back(  Conv::conv(keys[i * 3 + 1]));
-					out[j].push_back( Conv::conv(keys[i * 3 + 2]));
-				}
-				break;
+				data.push_back(Conv::conv(keys[i]));
 			}
-		}
-	}
+			break;
 
-	void init(M2Track<D>& b, File& f, uint32* gs, File* animfiles)
-	{
-		globals = gs;
-		interpolation_type = b.interpolation_type;
-		global_sequence = b.global_sequence;
-		if (global_sequence != -1)
-		{
-			assert1(gs);
-		}
-
-		assert1(b.timestamps.size == b.values.size);
-		sizes = b.timestamps.size;
-		if (b.timestamps.size == 0)	return;
-
-		// times
-		for (size_t j = 0; j < b.timestamps.size; j++)
-		{
-			M2Array<uint32>* pHeadTimes = (M2Array<uint32>*)(f.GetData() + b.timestamps.offset + j * sizeof(M2Array<uint32>));
-			
-			uint32* ptimes;
-			if (animfiles[j].GetSize() > 0)
-				ptimes = (uint32*)(animfiles[j].GetData() + pHeadTimes->offset);
-			else
-				ptimes = (uint32*)(f.GetData() + pHeadTimes->offset);
-
-			for (size_t i = 0; i < pHeadTimes->size; i++)
+		case INTERPOLATION_HERMITE:
+			for (uint32 i = 0; i < b.nKeys; i++)
 			{
-				times[j].push_back(ptimes[i]);
+				data.push_back(Conv::conv(keys[i * 3]));
+				in.push_back(Conv::conv(keys[i * 3 + 1]));
+				out.push_back(Conv::conv(keys[i * 3 + 2]));
 			}
-		}
-
-		// keyframes
-		for (size_t j = 0; j < b.values.size; j++)
-		{
-			M2Array<D>* pHeadKeys = (M2Array<D>*)(f.GetData() + b.values.offset + j * sizeof(M2Array<D>));
-			assert1((D*)(f.GetData() + pHeadKeys->offset));
-
-			D *keys;
-			if (animfiles[j].GetSize() > 0)
-				keys = (D*)(animfiles[j].GetData() + pHeadKeys->offset);
-			else
-				keys = (D*)(f.GetData() + pHeadKeys->offset);
-
-			switch (interpolation_type)
-			{
-				case INTERPOLATION_NONE:
-				case INTERPOLATION_LINEAR:
-				for (size_t i = 0; i < pHeadKeys->size; i++)
-					data[j].push_back(Conv::conv(keys[i]));
-				break;
-
-				case INTERPOLATION_HERMITE:
-				for (size_t i = 0; i < pHeadKeys->size; i++)
-				{
-					data[j].push_back(Conv::conv(keys[i * 3 + 0]));
-					in[j].push_back(  Conv::conv(keys[i * 3 + 1]));
-					out[j].push_back( Conv::conv(keys[i * 3 + 2]));
-				}
-				break;
-			}
+			break;
 		}
 	}
 
 	void fix(T fixfunc(const T&))
 	{
-		switch (interpolation_type)
-		{
-			case INTERPOLATION_NONE:
-			case INTERPOLATION_LINEAR:
-			for (size_t i = 0; i < sizes; i++)
+		switch (interpolation_type) {
+		case INTERPOLATION_NONE:
+		case INTERPOLATION_LINEAR:
+			for (uint32 i = 0; i < data.size(); i++)
 			{
-				for (size_t j = 0; j < data[i].size(); j++)
-				{
-					data[i][j] = fixfunc(data[i][j]);
-				}
+				data[i] = fixfunc(data[i]);
 			}
 			break;
 
-			case INTERPOLATION_HERMITE:
-			for (size_t i = 0; i < sizes; i++)
+		case INTERPOLATION_HERMITE:
+			for (uint32 i = 0; i < data.size(); i++)
 			{
-				for (size_t j = 0; j < data[i].size(); j++)
-				{
-					data[i][j] = fixfunc(data[i][j]);
-					in[i][j] = fixfunc(in[i][j]);
-					out[i][j] = fixfunc(out[i][j]);
-				}
+				data[i] = fixfunc(data[i]);
+				in[i] = fixfunc(in[i]);
+				out[i] = fixfunc(out[i]);
 			}
 			break;
 		}
 	}
 
 private:
-	int32 interpolation_type;
-	int32 global_sequence;
+	uint32 interpolation_type;
+	uint32 global_sequence;
 	uint32* globals;
 
-	size_t sizes;
-	vector<int32> times[MAX_ANIMATED];
-	vector<T> data[MAX_ANIMATED];
+	std::vector<AnimRange> ranges;
+	std::vector<int32> times;
+	std::vector<T> data;
 
 	// Hermite interpolation
-	vector<T> in[MAX_ANIMATED];
-	vector<T> out[MAX_ANIMATED];
+	std::vector<T> in;
+	std::vector<T> out;
 };

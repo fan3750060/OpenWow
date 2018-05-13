@@ -22,7 +22,6 @@
     <ClCompile Include="Animated.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="DayNightPhase.cpp" />
-    <ClCompile Include="DBC__Storage.cpp" />
     <ClCompile Include="DoodadInstance.cpp" />
     <ClCompile Include="EnvironmentManager.cpp" />
     <ClCompile Include="Liquid.cpp" />
@@ -42,7 +41,6 @@
     <ClCompile Include="MDX_Skin_Batch.cpp" />
     <ClCompile Include="ModelsManager.cpp" />
     <ClCompile Include="Model_Instance.cpp" />
-    <ClCompile Include="Model_Static.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
@@ -67,27 +65,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owWoW.h" />
+    <ClInclude Include="AnimatedOld.h" />
     <ClInclude Include="Animated.h" />
     <ClInclude Include="Animated_Types.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="DayNightPhase.h" />
-    <ClInclude Include="DBC_AreaTable.h" />
-    <ClInclude Include="DBC_GroundEffectDoodad.h" />
-    <ClInclude Include="DBC_GroundEffectTexture.h" />
-    <ClInclude Include="DBC_Light.h" />
-    <ClInclude Include="DBC_LightFloatBand.h" />
-    <ClInclude Include="DBC_LightIntBand.h" />
-    <ClInclude Include="DBC_LightParams.h" />
-    <ClInclude Include="DBC_LightSkyBox.h" />
-    <ClInclude Include="DBC_LiquidMaterial.h" />
-    <ClInclude Include="DBC_LiquidObject.h" />
-    <ClInclude Include="DBC_LiquidType.h" />
-    <ClInclude Include="DBC_LoadingScreen.h" />
-    <ClInclude Include="DBC_Map.h" />
-    <ClInclude Include="DBC_WMOAreaTable.h" />
-    <ClInclude Include="DBC__File.h" />
-    <ClInclude Include="DBC__Storage.h" />
     <ClInclude Include="DoodadInstance.h" />
     <ClInclude Include="EnvironmentManager.h" />
     <ClInclude Include="Liquid.h" />
@@ -129,7 +112,6 @@
     <ClInclude Include="_unused.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DBC__File.inl" />
     <None Include="Sky.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

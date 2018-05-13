@@ -87,7 +87,7 @@ bool WMO::Load()
         size = 0;
         f.ReadBytes(&size, 4);
         if (size == 0) continue;
-        size_t nextpos = f.GetPos() + size;
+        uint32_t nextpos = f.GetPos() + size;
 
         if (strcmp(fourcc, "MVER") == 0)                    // Version
         {
@@ -98,7 +98,6 @@ bool WMO::Load()
         else if (strcmp(fourcc, "MOHD") == 0)               // Header
         {
             f.ReadBytes(&m_Header, WMOHeaderDef::__size);
-            //Log::Error("ID = [%d]", m_Header.wmoID()->Get_ID());
 
             m_Bounds.Min = From_XYZ_To_XZY_RET(m_Header.bounding_box.min);
             m_Bounds.Max = From_XYZ_To_XZY_RET(m_Header.bounding_box.max);
@@ -405,7 +404,7 @@ void WMO::DEBUG_DrawFogPositions()
 
     /*glColor4f(1, 1, 1, 1);
 
-    for (size_t i = 0; i < m_Fogs.size(); i++)
+    for (uint32_t i = 0; i < m_Fogs.size(); i++)
     {
         WMOFog* fog = m_Fogs[i];
 
@@ -487,7 +486,7 @@ void WMO::DEBUG_DrawBoundingBoxes()
 
 void WMO::DEBUG_DrawPortalsRelations()
 {
-    for (size_t i = 0; i < m_Header.nPortals; i++)
+    for (uint32_t i = 0; i < m_Header.nPortals; i++)
     {
         /*WMO_PortalInformation* portalInformation = m_PortalInformation[i];
         WMO_PortalReferences* portalReference = m_PortalReferences[i];

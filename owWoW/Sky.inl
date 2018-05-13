@@ -10,7 +10,7 @@ inline T Sky::GetByTimeTemplate(vector<SkyParam<T>>* _array, uint32 _paramNum, u
 
     T parBegin, parEnd;
     uint32 timeBegin, timeEnd;
-    size_t last = _array[_paramNum].size() - 1;
+    uint32_t last = _array[_paramNum].size() - 1;
 
     if (_time < _array[_paramNum][0].time)
     {

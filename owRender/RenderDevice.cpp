@@ -376,7 +376,7 @@ void RenderDevice::destroyGeometry(R_GeometryInfo*& geoObj, bool destroyBindedBu
 	}
 	else
 	{
-		for (size_t i = 0; i < geoObj->vertexBufInfo.size(); ++i)
+		for (uint32_t i = 0; i < geoObj->vertexBufInfo.size(); ++i)
 		{
 			decreaseBufferRefCount(geoObj->vertexBufInfo[i].vbObj);
 		}
@@ -1972,7 +1972,7 @@ bool RenderDevice::commitStates(uint32 filter)
 		// Bind storage buffers
 		if (mask & PM_COMPUTE)
 		{
-			for (size_t i = 0; i < _storageBufs.size(); ++i)
+			for (uint32_t i = 0; i < _storageBufs.size(); ++i)
 			{
 				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, _storageBufs[i].slot, _storageBufs[i].oglObject);
 			}

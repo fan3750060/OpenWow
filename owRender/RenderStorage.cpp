@@ -253,6 +253,7 @@ void RenderStorage::CreateWoWLayouts()
         {"tc0",         2, 2, 0},
         {"tc1",         3, 2, 0}
     };
+	__layout_GxVBF_PNT2 = _Render->r->registerVertexLayout(4, attribs_GxVBF_PNT2);
 
     R_VertexLayoutAttrib attribs_GxVBF_PNCT2[5] = { // 44
         {"position",    0, 3, 0},

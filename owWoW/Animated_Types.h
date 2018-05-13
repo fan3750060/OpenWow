@@ -9,6 +9,17 @@ enum Interpolations
 
 #include "../shared/pack_begin.h"
 
+struct AnimRange
+{
+	AnimRange(uint32 begin, uint32 end) :
+		begin(begin),
+		end(end)
+	{}
+
+	uint32 begin;
+	uint32 end;
+};
+
 template<typename T>
 struct M2Array
 {
@@ -21,6 +32,10 @@ struct M2TrackBase
 	int16 interpolation_type;
 	int16 global_sequence;
 	M2Array<M2Array<uint32>> timestamps;
+	uint32 nRanges;
+	uint32 ofsRanges;
+	uint32 nTimes;
+	uint32 ofsTimes;
 };
 
 template<typename T>
@@ -28,8 +43,12 @@ struct M2Track
 {
 	int16 interpolation_type;
 	int16 global_sequence;
-	M2Array<M2Array<uint32>> timestamps;
-	M2Array<M2Array<T>> values;
+	uint32 nRanges;
+	uint32 ofsRanges;
+	uint32 nTimes;
+	uint32 ofsTimes;
+	uint32 nKeys;
+	uint32 ofsKeys;
 };
 
 template<typename T>
@@ -37,11 +56,17 @@ struct M2TrackFake
 {
 	M2Array<M2Array<uint32>> timestamps;
 	M2Array<M2Array<T>> values;
+	uint32 nRanges;
+	uint32 ofsRanges;
+	uint32 nTimes;
+	uint32 ofsTimes;
+	uint32 nKeys;
+	uint32 ofsKeys;
 };
 
 struct M2CompQuat
 {
-	__int16 x, y, z, w;
+	int16 x, y, z, w;
 };
 
 #include "../shared/pack_end.h"

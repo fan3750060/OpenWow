@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="DBC__Storage.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="..\shared\owDBC.h" />
+    <ClInclude Include="DBC__Storage.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC__File.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_AreaTable.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_GroundEffectDoodad.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_GroundEffectTexture.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_Light.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightFloatBand.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightIntBand.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightParams.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightSkyBox.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LiquidType.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LoadingScreen.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_Map.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_WMOAreaTable.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6f348bad-d28e-4304-bfbd-ab646e82a894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs">
+      <UniqueIdentifier>{7fb4b204-ed98-428e-86a3-13ca2ef284e0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DBC__File.inl">
+      <Filter>Common</Filter>
+    </None>
+  </ItemGroup>
+</Project>

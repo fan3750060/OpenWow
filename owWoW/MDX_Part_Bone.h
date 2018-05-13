@@ -5,7 +5,7 @@
 class MDX_Part_Bone
 {
 public:
-	void init(File& f, M2CompBone& b, uint32* global, File* animfiles);
+	void init(File& f, M2CompBone& b, uint32* global);
 	void calcMatrix(MDX_Part_Bone* allbones, int anim, int time);
 
 private:
@@ -35,7 +35,7 @@ private:
 	bool m_IsCalculated;
 
 	Animated<vec3> trans;
-	Animated<quat, M2CompQuat, Quat16ToQuat32> roll;
+	Animated<quat> roll;
 	Animated<vec3> scale;
 
 	//

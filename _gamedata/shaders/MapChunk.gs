@@ -4,8 +4,6 @@
 	vec2 TexCoordDetail;
 	vec2 TexCoordAlpha;
 	vec3 Normal;
-	vec3 VertexColorMCCV;
-	vec4 VertexColorMCLV;
 };
 
 // Vertex attrib

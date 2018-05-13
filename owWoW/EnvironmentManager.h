@@ -1,10 +1,7 @@
 #pragma once
 
 #include "DayNightCycle.h"
-
 #include "SkyManager.h"
-
-
 
 //
 

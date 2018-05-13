@@ -89,7 +89,7 @@ void Map::Load_WDT(DBC_MapRecord* _map)
         flipcc(fourcc);
         fourcc[4] = 0;
         if (size == 0) continue;
-        size_t nextpos = f.GetPos() + size;
+        uint32_t nextpos = f.GetPos() + size;
 
         if (strcmp(fourcc, "MVER") == 0)
         {
@@ -179,7 +179,7 @@ void Map::Load_WDL()
         flipcc(fourcc);
         fourcc[4] = 0;
         if (size == 0) continue;
-        size_t nextpos = f.GetPos() + size;
+        uint32_t nextpos = f.GetPos() + size;
 
         if (strcmp(fourcc, "MVER") == 0)
         {
@@ -212,7 +212,7 @@ void Map::Load_WDL()
         }
         else if (strncmp(fourcc, "MARE", 4) == 0) // Heightmap for one map tile.
         {
-            // Contains 17*17 + 16*16 = 545 signed 16-bit integers. So a 17 by 17 grid of height values is given, with additional height values in between grid points. Here, the "outer" 17x17 points are listed (in the usual row major order), followed by 16x16 "inner" points. The height values are on the same scale as those used in the regular height maps.
+            // Contains 17 * 17 + 16 * 16 = 545 signed 16-bit integers. So a 17 by 17 grid of height values is given, with additional height values in between grid points. Here, the "outer" 17x17 points are listed (in the usual row major order), followed by 16x16 "inner" points. The height values are on the same scale as those used in the regular height maps.
         }
         else if (strncmp(fourcc, "MAHO", 4) == 0)
         {

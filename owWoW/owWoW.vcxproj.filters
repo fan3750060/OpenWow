@@ -25,9 +25,6 @@
     <Filter Include="WMO\Instances">
       <UniqueIdentifier>{4cacdc22-0be2-480f-91e2-b7ef974ad3e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DBC">
-      <UniqueIdentifier>{cf549537-a757-477f-ac0c-e984aef2e058}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MDX\Animated">
       <UniqueIdentifier>{eec8ec3d-42e8-40b1-ab10-8f0117192ba7}</UniqueIdentifier>
     </Filter>
@@ -40,21 +37,12 @@
     <Filter Include="Environment\DayNight">
       <UniqueIdentifier>{28b97f23-4ed2-4ece-b969-7b97bd834fdc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DBC\Light">
-      <UniqueIdentifier>{5d127be8-c522-4fd9-8653-859692201da5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Environment\Skies">
       <UniqueIdentifier>{179d7822-1b17-4d5c-9dcf-34999c82a998}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DBC\Liquid">
-      <UniqueIdentifier>{4fea2d40-9d28-41d5-9f2d-510a470ab6c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="DBC__Storage.cpp">
-      <Filter>DBC</Filter>
-    </ClCompile>
     <ClCompile Include="Liquid.cpp">
       <Filter>Liquid</Filter>
     </ClCompile>
@@ -118,9 +106,6 @@
     <ClCompile Include="Map_Tile.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Animated.cpp">
-      <Filter>MDX\Animated</Filter>
-    </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>MDX\Particles</Filter>
     </ClCompile>
@@ -163,69 +148,21 @@
     <ClCompile Include="MDX_Skin_Batch.cpp">
       <Filter>MDX</Filter>
     </ClCompile>
-    <ClCompile Include="Model_Static.cpp">
-      <Filter>MDX</Filter>
-    </ClCompile>
     <ClCompile Include="ModelsManager.cpp">
       <Filter>MDX</Filter>
+    </ClCompile>
+    <ClCompile Include="Animated.cpp">
+      <Filter>MDX\Animated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="DBC__File.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC__Storage.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_AreaTable.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LoadingScreen.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_Map.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
     <ClInclude Include="Liquid.h">
       <Filter>Liquid</Filter>
     </ClInclude>
-    <ClInclude Include="DBC_WMOAreaTable.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_GroundEffectTexture.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_GroundEffectDoodad.h">
-      <Filter>DBC</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared\owWoW.h" />
     <ClInclude Include="_unused.h" />
-    <ClInclude Include="DBC_Light.h">
-      <Filter>DBC\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightFloatBand.h">
-      <Filter>DBC\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightIntBand.h">
-      <Filter>DBC\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightParams.h">
-      <Filter>DBC\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightSkyBox.h">
-      <Filter>DBC\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LiquidMaterial.h">
-      <Filter>DBC\Liquid</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LiquidObject.h">
-      <Filter>DBC\Liquid</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LiquidType.h">
-      <Filter>DBC\Liquid</Filter>
-    </ClInclude>
     <ClInclude Include="DoodadInstance.h">
       <Filter>WMO\Instances</Filter>
     </ClInclude>
@@ -298,9 +235,6 @@
     <ClInclude Include="Map_Tile.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="Animated.h">
-      <Filter>MDX\Animated</Filter>
-    </ClInclude>
     <ClInclude Include="Animated_Types.h">
       <Filter>MDX\Animated</Filter>
     </ClInclude>
@@ -346,11 +280,14 @@
     <ClInclude Include="ModelsManager.h">
       <Filter>MDX</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatedOld.h">
+      <Filter>MDX\Animated</Filter>
+    </ClInclude>
+    <ClInclude Include="Animated.h">
+      <Filter>MDX\Animated</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DBC__File.inl">
-      <Filter>DBC</Filter>
-    </None>
     <None Include="Sky.inl">
       <Filter>Environment\Skies</Filter>
     </None>

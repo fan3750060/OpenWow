@@ -551,7 +551,7 @@ bool isExtensionSupported(const char *extName)
 void getOpenGLVersion()
 {
     char version[8];
-    size_t len = strlen((char*)glGetString(GL_VERSION));
+    uint32_t len = strlen((char*)glGetString(GL_VERSION));
     if (len >= 8)
     {
         len = 7;

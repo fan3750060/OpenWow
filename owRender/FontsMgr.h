@@ -13,7 +13,7 @@ public:
 	//
 	
 	Font* GetMainFont() const { return mainFont; }
-	size_t GetFontsCount() const { return Fonts.size(); }
+	uint32_t GetFontsCount() const { return Fonts.size(); }
 
 protected:
 	Font* CreateAction(cstring name) override;

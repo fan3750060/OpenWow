@@ -39,7 +39,7 @@ Font* FontsMgr::Add(File& _fontFileName, uint32 _fontSize)
 
 Font* FontsMgr::CreateAction(cstring _nameAndSize)
 {
-	size_t _delimIndex = _nameAndSize.find_last_of("__");
+	uint32_t _delimIndex = _nameAndSize.find_last_of("__");
 	if (_delimIndex == -1)
 	{
 		Log::Error("FontsMgr[%s]: Incorrect font nameAndSize.", _nameAndSize.c_str());
@@ -88,13 +88,13 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	FT_Set_Pixel_Sizes(face, fontSize, 0);
 
 	// Step 2: Find maxAscent/Descent to calculate imageHeight //
-	size_t imageHeight = 0;
-	size_t imageWidth = 512;
+	uint32_t imageHeight = 0;
+	uint32_t imageWidth = 512;
 	int maxDescent = 0;
 	int maxAscent = 0;
-	size_t lineSpace = imageWidth;
-	size_t lines = 1;
-	size_t charIndex;
+	uint32_t lineSpace = imageWidth;
+	uint32_t lines = 1;
+	uint32_t charIndex;
 
 	for (uint32 ch = 0; ch < Font::NUM_CHARS; ++ch)
 	{
@@ -119,7 +119,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 
 	charHeight = maxAscent + maxDescent;
 
-	size_t neededHeight = (maxAscent + maxDescent) * lines;
+	uint32_t neededHeight = (maxAscent + maxDescent) * lines;
 
 	// Get the first power of two in which it will fit
 	imageHeight = 16;
@@ -134,8 +134,8 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	memset(image, 0x00, imageHeight * imageWidth * sizeof(uint32));
 
 	// These are the cameraPosition at which to draw the next glyph
-	size_t x = 0;
-	size_t y = maxAscent;
+	uint32_t x = 0;
+	uint32_t y = maxAscent;
 
 	vector<Texture_Vertex> fontVertices;
 	float xOffset = 0.0f;
@@ -143,7 +143,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	for (uint32 ch = 0; ch < Font::NUM_CHARS; ++ch)
 	{
 		//Log::Warn("Char [%c] %d", char(ch), ch);
-		size_t charIndex = FT_Get_Char_Index(face, ch + Font::SPACE);
+		uint32_t charIndex = FT_Get_Char_Index(face, ch + Font::SPACE);
 
 		FT_Load_Glyph(face, charIndex, FT_LOAD_DEFAULT);
 		FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);

@@ -39,12 +39,12 @@ void Material::Set()
 	_Render->r->setDepthTest(m_DepthTest);
 	_Render->r->setDepthMask(m_DepthWrite);
 
-	if (m_DiffuseTexture != 0)
+	if (m_DiffuseTexture != nullptr)
 	{
 		_Render->r->setTexture(C_DiffuseTextureIndex, m_DiffuseTexture, _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
 	
-	if (m_SpecularTexture != 0)
+	if (m_SpecularTexture != nullptr)
 	{
 		_Render->r->setTexture(C_SpecularTextureIndex, m_SpecularTexture, _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}

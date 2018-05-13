@@ -50,16 +50,13 @@ private:
 	string m_ModelInternalName;
 
 private:
-	M2Vertex* m_OriginalVertexes;
-
-	Model_Skin* m_Skin;
+	std::vector<Model_Skin*> m_Skins;
 
 public:
 	bool animated;
 	bool animGeometry, animTextures, animBones;
 
 	bool forceAnim;
-	File* animfiles;
 
 	M2Sequence* m_Sequences;
 	uint32* m_GlobalLoops;
@@ -83,7 +80,6 @@ public:
 	void initCommon(File& f);
 	bool isAnimated(File& f);
 	void initAnimated(File& f);
-	void initStatic(File& f);
 
 	void animate(uint32 _animationIndex);
 	void calcBones(uint32 _animationIndex, int time);
@@ -92,7 +88,7 @@ public:
 	void lightsOff(uint32 lbase);
 
 public:
-	R_Texture** m_Textures;
+	std::vector<R_Texture*> m_Textures;
 	int m_SpecialTextures[TEXTURE_MAX];
 	R_Texture* m_TextureReplaced[TEXTURE_MAX];
 	bool m_TexturesUseSpecialTexture[TEXTURE_MAX];

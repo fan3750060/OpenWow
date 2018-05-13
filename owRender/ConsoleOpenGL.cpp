@@ -53,7 +53,7 @@ void ConsoleOpenGL::RenderUI()
 
 	// Messages
 	int curLine = 0;
-	for (size_t i = messages.size() - 1 - lineOffset; i > 0; i--)
+	for (uint32_t i = messages.size() - 1 - lineOffset; i > 0; i--)
 	{
 		auto _message = messages[i];
 		if (curLine == linesInConsole)

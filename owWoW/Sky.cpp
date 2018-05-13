@@ -3,9 +3,6 @@
 // General
 #include "Sky.h"
 
-// Additional
-#include "DBC__Storage.h"
-
 Sky::Sky() : m_LightRecord(nullptr)
 {}
 

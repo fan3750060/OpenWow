@@ -25,7 +25,10 @@ inline void Technique::Unbind()
 inline int32 Technique::getLocation(const char* name) const
 {
     int32 location = _Render->r->getShaderConstLoc(shader, name);
-    Log::Error("Attrib [%s] not found in shader [%d]", name, shader->oglProgramObj);
+	if (location < 0)
+	{
+		Log::Error("Attrib [%s] not found in shader [%d]", name, shader->oglProgramObj);
+	}
 	return location;
 }
 //

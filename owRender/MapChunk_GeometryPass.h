@@ -11,8 +11,6 @@ class MapChunk_GeometryPass : public Technique {
 
     int32 gLayersCount;
     int32 gBlend;
-    int32 gMCCVExists;
-    int32 gMCLVExists;
 
 public:
 	MapChunk_GeometryPass() : Technique("shaders/MapChunk.vs", "shaders/MapChunk.fs")
@@ -28,9 +26,6 @@ public:
 
         gShadowMapExists = getLocation("gShadowMapExists");
         gShadowColor = getLocation("gShadowColor");
-
-        gMCCVExists = getLocation("gMCCVExists");
-        gMCLVExists = getLocation("gMCLVExists");
     }
 
 	// ---------------------------------------------------
@@ -68,17 +63,5 @@ public:
 	void SetShadowColor(vec3 _shadowColor)
 	{
 		setVec3(gShadowColor, _shadowColor);
-	}
-
-	// ----------------------------------------------------
-
-	void SetMCCVExists(bool _exists)
-	{
-		setInt(gMCCVExists, _exists);
-	}
-
-	void SetMCLVExists(bool _exists)
-	{
-		setInt(gMCLVExists, _exists);
 	}
 };
