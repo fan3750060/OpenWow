@@ -1,11 +1,11 @@
 #pragma once
 
-#include "technique.h"
+#include "PostProcess_Common.h"
 
 class POST_Fog : public PostProcess_Common
 {
 public:
-    POST_Fog() : PostProcess_Common("shaders/POST_Fog.fs") {}
+    POST_Fog(RenderDevice* _RenderDevice) : PostProcess_Common(_RenderDevice, "shaders/POST_Fog.fs") {}
 
     void SetFogDistance(float _distance)
     {

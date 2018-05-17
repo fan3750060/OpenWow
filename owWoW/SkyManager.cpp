@@ -92,7 +92,7 @@ void SkyManager::Calculate(cvec3 _cameraPosition, uint32 _time)
 
     // Fill buffer with color
 
-    _Render->r->updateBufferData(__vb, __vertsSize * sizeof(vec3), __vertsSize * sizeof(vec3), colors.data());
+	__vb->updateBufferData(__vertsSize * sizeof(vec3), __vertsSize * sizeof(vec3), colors.data());
 }
 
 bool SkyManager::drawSky(cvec3 pos)
@@ -105,21 +105,21 @@ bool SkyManager::drawSky(cvec3 pos)
     _Pipeline->Clear();
     _Pipeline->Translate(pos);
 
-    _TechniquesMgr->m_Sky_GeometryPass->BindS();
-    _TechniquesMgr->m_Sky_GeometryPass->SetPVW();
+    _Render->TechniquesMgr()->m_Sky_GeometryPass->Bind();
+    _Render->TechniquesMgr()->m_Sky_GeometryPass->SetPVW();
 
-    _Render->r->setGeometry(__geom);
-    _Render->r->draw(PRIM_TRILIST, 0, __vertsSize);
+    _Render->r.setGeometry(__geom);
+    _Render->r.draw(PRIM_TRILIST, 0, __vertsSize);
 
     return true;
 }
 
 bool SkyManager::DEBUG_Render()
 {
-    _Render->r->setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-    _TechniquesMgr->m_Debug_GeometryPass->BindS();
+    _Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+    _Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
 
-    _Render->r->setGeometry(_RenderStorage->_sphereGeo);
+    _Render->r.setGeometry(_Render->Storage()->_sphereGeo);
 
     for (auto it : skies)
     {
@@ -127,10 +127,10 @@ bool SkyManager::DEBUG_Render()
         _Pipeline->Translate(it->position);
         _Pipeline->Scale(it->radiusInner);
 
-        _TechniquesMgr->m_Debug_GeometryPass->SetPVW();
-        _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
 
-        _Render->r->drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);*/
+        _Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);*/
 
         //---------------------------------------------------------------------------------
 
@@ -138,14 +138,14 @@ bool SkyManager::DEBUG_Render()
         _Pipeline->Translate(it->m_Position);
         _Pipeline->Scale(it->m_Range.max);
 
-        _TechniquesMgr->m_Debug_GeometryPass->SetPVW();
-        _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
 
-        _Render->r->drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
+        _Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
     }
 
-    _TechniquesMgr->m_Debug_GeometryPass->Unbind();
-    _Render->r->setFillMode(R_FillMode::RS_FILL_SOLID);
+    _Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+    _Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 
     return false;
 }
@@ -182,23 +182,23 @@ void SkyManager::InitBuffer()
 
 
 	// Vertex buffer
-	__vb = _Render->r->createVertexBuffer(2 * __vertsSize * sizeof(vec3), nullptr);
-	_Render->r->updateBufferData(__vb, 0, __vertsSize * sizeof(vec3), vertices.data());
+	__vb = _Render->r.createVertexBuffer(2 * __vertsSize * sizeof(vec3), nullptr);
+	__vb->updateBufferData(0, __vertsSize * sizeof(vec3), vertices.data());
 
 	//
 
-	__geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layoutSky);
+	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutSky);
 
 	// Vertex params
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 0,                              0);
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3),     0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0,                              0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3),     0);
 
 	// Index bufer
-	//uint32 __ib = _Render->r->createIndexBuffer(striplen, strip);
-	//_Render->r->setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
+	//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
+	//_Render->r.setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
-	_Render->r->finishCreatingGeometry(__geom);
+	__geom->finishCreatingGeometry();
 }
 
 void SkyManager::CalculateSkiesWeights(cvec3 pos)

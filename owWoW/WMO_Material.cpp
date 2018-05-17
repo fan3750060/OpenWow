@@ -10,12 +10,12 @@ WMOMaterial::WMOMaterial(const WMO* _parentWMO, File& _file) : m_ParentWMO(_pare
 {
 	_file.ReadBytes(&matDef, WMOMaterialDef::__size);
 
-	texture = _TexturesMgr->Add(_parentWMO->m_TexturesNames + matDef.diffuseNameIndex);
+	texture = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + matDef.diffuseNameIndex);
 }
 
 WMOMaterial::~WMOMaterial()
 {
-	_TexturesMgr->Delete(texture);
+	_Render->TexturesMgr()->Delete(texture);
 }
 
 /*switch (matDef.blendMode)

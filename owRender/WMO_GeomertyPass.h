@@ -5,7 +5,7 @@
 class WMO_GeomertyPass : public Technique
 {
 public:
-    WMO_GeomertyPass() : Technique("shaders/WMO")
+    WMO_GeomertyPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/WMO")
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");

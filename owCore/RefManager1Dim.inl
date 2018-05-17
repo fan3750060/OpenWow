@@ -61,7 +61,10 @@ inline void RefManager1Dim<OBJECT_TYPE>::DeleteAll()
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
+		auto obj = *it;
 		pre_delete(it->second);
+		it = objects.erase(it);
+		delete obj.second;
 	}
 }
 

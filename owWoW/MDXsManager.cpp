@@ -1,21 +1,19 @@
 #include "stdafx.h"
 
 // General
-#include "ModelsManager.h"
+#include "MDXsManager.h"
 
 // Additional
 #include "MDX.h"
 
-bool ModelsManager::Init()
+MDXsManager::MDXsManager()
 {
-	ADDCONSOLECOMMAND_CLASS("models_info", ModelsManager, PrintAllInfo);
+	ADDCONSOLECOMMAND_CLASS("models_info", MDXsManager, PrintAllInfo);
 
 	RefManager1DimAssync::Init();
-
-	return true;
 }
 
-void ModelsManager::Destroy()
+MDXsManager::~MDXsManager()
 {
 	RefManager1DimAssync::Destroy();
 
@@ -26,25 +24,25 @@ void ModelsManager::Destroy()
 
 //
 
-MDX* ModelsManager::CreateAction(cstring name)
+MDX* MDXsManager::CreateAction(cstring name)
 {
 	MDX* model = new MDX(name);
 	return model;
 }
 
-void ModelsManager::LoadAction(string name, MDX*& _model)
+void MDXsManager::LoadAction(string name, MDX*& _model)
 {
 	//wglMakeCurrent(_Render->dc, _Render->glrc3);
 
 	_model->Init();
 }
 
-bool ModelsManager::DeleteAction(cstring name)
+bool MDXsManager::DeleteAction(cstring name)
 {
 	return true;
 }
 
-void ModelsManager::resetAnim()
+void MDXsManager::resetAnim()
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -55,7 +53,7 @@ void ModelsManager::resetAnim()
 	}
 }
 
-void ModelsManager::updateEmitters(float dt)
+void MDXsManager::updateEmitters(float dt)
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{

@@ -9,7 +9,7 @@ enum Commands2
 class GameState_Menu : public GameState
 {
 public:
-	GameState_Menu() : GameState() {}
+	GameState_Menu(Engine* _Engine) : GameState(_Engine) {}
 
 	bool Init() override;
 	void Destroy() override;

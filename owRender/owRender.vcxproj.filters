@@ -2,12 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="TexturesMgr.cpp">
-      <Filter>Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="FontsMgr.cpp">
-      <Filter>Fonts</Filter>
-    </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
@@ -56,17 +50,38 @@
     <ClCompile Include="TechniquesManager.cpp">
       <Filter>Techniques</Filter>
     </ClCompile>
+    <ClCompile Include="FontsManager.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturesManager.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Texture.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Shader.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="R_RenderBuffer.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="R_GeometryInfo.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="R_Buffer.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="R_BufferBase.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="R_TextureBuffer.cpp">
+      <Filter>RenderCore\Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="..\shared\owRender.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TexturesMgr.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="FontsMgr.h">
-      <Filter>Fonts</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Fonts</Filter>
     </ClInclude>
@@ -166,6 +181,36 @@
     <ClInclude Include="PostProcess_Common.h">
       <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
+    <ClInclude Include="FontsManager.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturesManager.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Model_Shader.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Texture.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Shader.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="R_RenderBuffer.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="R_GeometryInfo.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="R_Buffer.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="R_BufferBase.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="R_TextureBuffer.h">
+      <Filter>RenderCore\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">
@@ -197,6 +242,9 @@
     </Filter>
     <Filter Include="RenderCore">
       <UniqueIdentifier>{86c8b07c-1ebc-4ea6-a076-c4c41bc71d04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderCore\Types">
+      <UniqueIdentifier>{6589b742-140d-40d1-bc7d-eaafa3fcfe2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

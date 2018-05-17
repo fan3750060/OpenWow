@@ -34,12 +34,6 @@ bool Log::AddDebugOutput(DebugOutput* _debugOutput)
 		return false;
 	}
 
-	if (!_debugOutput->Init())
-	{
-		Log::Error("Debug[]: Can't init debug output.");
-		return false;
-	}
-
 	debugOutputs.push_back(_debugOutput);
 
 	return true;

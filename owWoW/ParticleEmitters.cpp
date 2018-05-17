@@ -6,6 +6,9 @@
 // General
 #include "ParticleSystem.h"
 
+// Additional
+#include "WorldController.h"
+
 //Generates the rotation matrix based on spread
 mat4 SpreadMat;
 void CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
@@ -159,7 +162,7 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 	}
 
 	p.life = 0;
-	p.maxlife = sys->lifespan.getValue(anim, time);
+	p.maxlife = sys->lifespan.getValue(anim, time, _World->EnvM()->globalTime);
 
 	p.origin = p.pos;
 
@@ -269,7 +272,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	p.down = vec3(0, -1.0f, 0);
 
 	p.life = 0;
-	p.maxlife = sys->lifespan.getValue(anim, time);
+	p.maxlife = sys->lifespan.getValue(anim, time, _World->EnvM()->globalTime);
 
 	p.origin = p.pos;
 

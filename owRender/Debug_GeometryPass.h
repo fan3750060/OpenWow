@@ -5,7 +5,7 @@
 class Debug_GeometryPass : public Technique
 {
 public:
-	Debug_GeometryPass() : Technique("shaders/Debug/Debug") 
+	Debug_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Debug/Debug")
     {
         gColor = getLocation("gColor");
     }

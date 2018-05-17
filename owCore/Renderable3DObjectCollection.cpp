@@ -37,6 +37,16 @@ void Renderable3DObjectCollection::RenderUI()
 
 	for (auto it : m_Objects)
 	{
+		it->PreRender3D();
+	}
+
+	for (auto it : m_Objects)
+	{
 		it->Render3D();
+	}
+
+	for (auto it : m_Objects)
+	{
+		it->PostRender3D();
 	}
 }

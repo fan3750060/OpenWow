@@ -23,7 +23,7 @@ UIScrollBar::~UIScrollBar() {
 }
 
 void UIScrollBar::Init(cvec2 _position, cvec2 _size) {
-	auto buttonTexture = _TexturesMgr->Add("images/ui/buttons/slider_default.png");
+	auto buttonTexture = _Render->TexturesMgr()->Add("images/ui/buttons/slider_default.png");
 
 	auto imageSize = vec2(buttonTexture->GetSize().x, buttonTexture->GetSize().y / 2);
 	auto coeff = _size / imageSize;

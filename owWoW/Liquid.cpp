@@ -8,7 +8,7 @@
 #include "liquid.h"
 
 // Additional
-#include "EnvironmentManager.h"
+#include "WorldController.h"
 
 struct Liquid_VertexData
 {
@@ -32,7 +32,7 @@ Liquid::~Liquid()
 {
 	for (uint32_t i = 0; i < textures.size(); i++)
 	{
-		_TexturesMgr->Delete(textures[i]);
+		_Render->TexturesMgr()->Delete(textures[i]);
 	}
 }
 
@@ -65,7 +65,7 @@ void Liquid::CreateFromMCLQ(File & f, MCNK_Header header)
 
 void Liquid::CreateFromWMO(File& f, WMOMaterial* _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor)
 {
-	ydir = 1.0f; // Magic for WMO
+	ydir = -1.0f; // Magic for WMO
 
 	initGeometry(f);
 	InitTextures((DBC_LIQUIDTYPE_Type)_liquidType->Get_Type());
@@ -77,8 +77,8 @@ void Liquid::CreateFromWMO(File& f, WMOMaterial* _material, const DBC_LiquidType
 	}
 	else
 	{
-		m_WaterColorLight = _EnvironmentManager->skies->GetColor(LIGHT_COLOR_RIVER_LIGHT);
-		m_WaterColorDark = _EnvironmentManager->skies->GetColor(LIGHT_COLOR_RIVER_DARK);
+		m_WaterColorLight = _World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_LIGHT);
+		m_WaterColorDark = _World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_DARK);
 	}
 }
 
@@ -91,29 +91,118 @@ void Liquid::Render()
 		return;
 	}
 
-	_TechniquesMgr->m_Water->BindS();
-	_TechniquesMgr->m_Water->SetPVW();
+	_Render->TechniquesMgr()->m_Water->Bind();
+	_Render->TechniquesMgr()->m_Water->SetPVW();
 
-	uint32_t texidx = (uint32_t)(_EnvironmentManager->animtime / 60.0f) % textures.size();
-	_Render->r->setTexture(10, textures[texidx], 0, 0);
+	uint32_t texidx = (uint32_t)(_World->EnvM()->animtime / 60.0f) % textures.size();
+	_Render->r.setTexture(10, textures[texidx], 0, 0);
 
-	/*_TechniquesMgr->m_Water->SetWaterColorLight(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_LIGHT));
-	_TechniquesMgr->m_Water->SetWaterColorDark(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_DARK));
-    _TechniquesMgr->m_Water->SetShallowAlpha(_EnvironmentManager->skies->oceanShallowAlpha);
-    _TechniquesMgr->m_Water->SetDeepAlpha(_EnvironmentManager->skies->oceanDeepAlpha);*/
+	/*_Render->TechniquesMgr()->m_Water->SetWaterColorLight(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_LIGHT));
+	_Render->TechniquesMgr()->m_Water->SetWaterColorDark(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_DARK));
+    _Render->TechniquesMgr()->m_Water->SetShallowAlpha(_EnvironmentManager->skies->oceanShallowAlpha);
+    _Render->TechniquesMgr()->m_Water->SetDeepAlpha(_EnvironmentManager->skies->oceanDeepAlpha);*/
 
-    _TechniquesMgr->m_Water->SetWaterColorLight(_EnvironmentManager->skies->GetColor(LIGHT_COLOR_RIVER_LIGHT));
-    _TechniquesMgr->m_Water->SetWaterColorDark(_EnvironmentManager->skies->GetColor(LIGHT_COLOR_RIVER_DARK));
-    _TechniquesMgr->m_Water->SetShallowAlpha(_EnvironmentManager->skies->GetWaterShallowAlpha());
-    _TechniquesMgr->m_Water->SetDeepAlpha(_EnvironmentManager->skies->GetWaterDarkAlpha());
+    _Render->TechniquesMgr()->m_Water->SetWaterColorLight(_World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_LIGHT));
+    _Render->TechniquesMgr()->m_Water->SetWaterColorDark(_World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_DARK));
+    _Render->TechniquesMgr()->m_Water->SetShallowAlpha(_World->EnvM()->skies->GetWaterShallowAlpha());
+    _Render->TechniquesMgr()->m_Water->SetDeepAlpha(_World->EnvM()->skies->GetWaterDarkAlpha());
 
-	_Render->r->setGeometry(__geom);
+	_Render->r.setGeometry(__geom);
 
-	_Render->r->draw(PRIM_TRILIST, 0, globalBufferSize);
+	_Render->r.draw(PRIM_TRILIST, 0, globalBufferSize);
 	PERF_INC(PERF_MAP_CHUNK_MH20);
 }
 
 //
+
+
+
+#pragma region Types
+
+#include "../shared/pack_begin.h"
+
+struct Liquid_Vertex
+{
+	union
+	{
+		struct SWVert
+		{
+			char depth;
+			char flow0Pct;
+			char flow1Pct;
+			char filler;
+			float height;
+		} waterVert;
+
+		struct SOVert
+		{
+			char depth;
+			char foam;
+			char wet;
+			char filler;
+		} oceanVert;
+
+		struct SMOMagmaVert
+		{
+			uint16 s;
+			uint16 t;
+			float height;
+		} magmaVert;
+	};
+};
+
+struct Liquid_Flag
+{
+	uint8 liquid : 6;    // 0x01 - 0x20
+	uint8 fishable : 1;  // 0x40
+	uint8 shared : 1;    // 0x80
+};
+
+#include "../shared/pack_end.h"
+
+#pragma endregion
+
+void Liquid::initGeometry(File& f)
+{
+	Liquid_Vertex* map = (Liquid_Vertex*)f.GetDataFromCurrent();
+	Liquid_Flag* flags = (Liquid_Flag*)(f.GetDataFromCurrent() + m_TilesCount * sizeof(Liquid_Vertex));
+
+	Liquid_Layer waterLayer;
+
+	waterLayer.x = 0;
+	waterLayer.y = 0;
+	waterLayer.Width = m_TilesX;
+	waterLayer.Height = m_TilesY;
+
+	waterLayer.LiquidType = 0;
+	waterLayer.MinHeightLevel = 0;
+	waterLayer.MaxHeightLevel = 0;
+	waterLayer.LiquidObjectOrLVF = 0; // FIXME Send format to create buffer
+
+	for (uint32 j = 0; j < m_TilesY + 1; j++)
+	{
+		for (uint32 i = 0; i < m_TilesX + 1; i++)
+		{
+			uint32 p = j * (m_TilesX + 1) + i;
+
+			if (flags[p].liquid & 0x08)
+			{
+				waterLayer.renderTiles.push_back(false);
+			}
+			else
+			{
+				waterLayer.renderTiles.push_back(true);
+			}
+
+			waterLayer.heights.push_back(map[p].magmaVert.height);
+			//waterLayer.depths.push_back((map[p].magmaVert.s / 255.0f) * 0.5f + 0.5f);
+		}
+	}
+
+	m_WaterLayers.push_back(waterLayer);
+
+	createBuffer(m_Position);
+}
 
 void Liquid::createBuffer(cvec3 _position)
 {
@@ -244,110 +333,23 @@ void Liquid::createBuffer(cvec3 _position)
 
 
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r->createVertexBuffer(mh2oVertices.size() * sizeof(Liquid_VertexData), mh2oVertices.data());
+	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(Liquid_VertexData), mh2oVertices.data());
 
 	//
 
-	__geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layoutWater);
+	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWater);
 
 	// Vertex params
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 0, sizeof(Liquid_VertexData));
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 12, sizeof(Liquid_VertexData));
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 24, sizeof(Liquid_VertexData));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(Liquid_VertexData));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(Liquid_VertexData));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(Liquid_VertexData));
 
 	// Index bufer
-	//uint32 __ib = _Render->r->createIndexBuffer(m_IndicesCount, m_Indices);
-	//_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
+	//uint32 __ib = _Render->r.createIndexBuffer(m_IndicesCount, m_Indices);
+	//_Render->r.setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
-	_Render->r->finishCreatingGeometry(__geom);
-}
-
-#pragma region Types
-
-#include "../shared/pack_begin.h"
-
-struct Liquid_Vertex
-{
-	union
-	{
-		struct SWVert
-		{
-			char depth;
-			char flow0Pct;
-			char flow1Pct;
-			char filler;
-			float height;
-		} waterVert;
-
-		struct SOVert
-		{
-			char depth;
-			char foam;
-			char wet;
-			char filler;
-		} oceanVert;
-
-		struct SMOMagmaVert
-		{
-			uint16 s;
-			uint16 t;
-			float height;
-		} magmaVert;
-	};
-};
-
-struct Liquid_Flag
-{
-	uint8 liquid : 6;    // 0x01 - 0x20
-	uint8 fishable : 1;  // 0x40
-	uint8 shared : 1;    // 0x80
-};
-
-#include "../shared/pack_end.h"
-
-#pragma endregion
-
-void Liquid::initGeometry(File& f)
-{
-	Liquid_Vertex* map = (Liquid_Vertex*)f.GetDataFromCurrent();
-	Liquid_Flag* flags = (Liquid_Flag*)(f.GetDataFromCurrent() + m_TilesCount * sizeof(Liquid_Vertex));
-
-	Liquid_Layer waterLayer;
-
-	waterLayer.x = 0;
-	waterLayer.y = 0;
-	waterLayer.Width = m_TilesX;
-	waterLayer.Height = m_TilesY;
-
-	waterLayer.LiquidType = 0;
-	waterLayer.MinHeightLevel = 0;
-	waterLayer.MaxHeightLevel = 0;
-	waterLayer.LiquidObjectOrLVF = 0; // FIXME Send format to create buffer
-
-	for (uint32 j = 0; j < m_TilesY + 1; j++)
-	{
-		for (uint32 i = 0; i < m_TilesX + 1; i++)
-		{
-			uint32 p = j * (m_TilesX + 1) + i;
-
-			if (flags[p].liquid & 0x08)
-			{
-				waterLayer.renderTiles.push_back(false);
-			}
-			else
-			{
-				waterLayer.renderTiles.push_back(true);
-			}
-
-			waterLayer.heights.push_back(map[p].magmaVert.height);
-			//waterLayer.depths.push_back((map[p].magmaVert.s / 255.0f) * 0.5f + 0.5f);
-		}
-	}
-
-	m_WaterLayers.push_back(waterLayer);
-
-	createBuffer(m_Position);
+	__geom->finishCreatingGeometry();
 }
 
 void Liquid::InitTextures(DBC_LIQUIDTYPE_Type _liquidType)
@@ -378,6 +380,6 @@ void Liquid::InitTextures(DBC_LIQUIDTYPE_Type _liquidType)
 	char buf[256];
 	for (int i = 1; i <= 30; i++) {
 		sprintf(buf, "%s.%d.blp", baseName.c_str(), i);
-		textures.push_back(_TexturesMgr->Add(buf));
+		textures.push_back(_Render->TexturesMgr()->Add(buf));
 	}
 }

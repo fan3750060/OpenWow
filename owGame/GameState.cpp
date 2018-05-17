@@ -3,7 +3,10 @@
 // General
 #include "GameState.h"
 
-GameState::GameState() : m_IsInited(false), m_IsCurrent(false)
+GameState::GameState(Engine* _Engine) 
+	: m_IsInited(false), 
+	m_IsCurrent(false),
+	m_Engine(_Engine)
 {}
 
 bool GameState::Init()

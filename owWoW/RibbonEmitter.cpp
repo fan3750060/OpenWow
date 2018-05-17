@@ -7,6 +7,9 @@
 // General
 #include "RibbonEmitter.h"
 
+// Additional
+#include "WorldController.h"
+
 void RibbonEmitter::init(File& f, M2Ribbon& mta, uint32 * globals)
 {
 	color.init(mta.colorTrack, f, globals);
@@ -88,10 +91,10 @@ void RibbonEmitter::setup(int anim, int time)
 	}
 
 	tpos = ntpos;
-	tcolor = vec4(color.getValue(anim, time), opacity.getValue(anim, time));
+	tcolor = vec4(color.getValue(anim, time, _World->EnvM()->globalTime), opacity.getValue(anim, time, _World->EnvM()->globalTime));
 
-	tabove = above.getValue(anim, time);
-	tbelow = below.getValue(anim, time);
+	tabove = above.getValue(anim, time, _World->EnvM()->globalTime);
+	tbelow = below.getValue(anim, time, _World->EnvM()->globalTime);
 }
 
 void RibbonEmitter::draw()

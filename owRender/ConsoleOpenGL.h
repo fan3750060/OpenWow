@@ -25,8 +25,8 @@ class ConsoleOpenGL : public Console, public RenderableUIObject, public InputLis
 	typedef vector<ConsoleMessage*> ConsoleMessages;
 public:
 
-	bool Init();
-	void Destroy();
+	ConsoleOpenGL();
+	~ConsoleOpenGL();
 
 	void RenderUI() override;
 

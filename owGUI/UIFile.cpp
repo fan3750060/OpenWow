@@ -301,7 +301,7 @@ Image* UIFile::GetImage(XMLNode* _node)
 		return nullptr;
 	}
 
-	auto texture = _TexturesMgr->Add(textureName);
+	auto texture = _Render->TexturesMgr()->Add(textureName);
 	if (texture == nullptr)
 	{
 		Log::Error("UIFile[%s]: Node[%s]: Image: Can't find texture [%s].", filename.c_str(), _node->GetName().c_str(), textureName.c_str());

@@ -5,7 +5,7 @@
 class MapTileLowRes_GeometryPass : public Technique
 {
 public:
-	MapTileLowRes_GeometryPass() : Technique("shaders/MapTileLowRes") 
+	MapTileLowRes_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/MapTileLowRes")
     {
         gColor = getLocation("gColor");
     }

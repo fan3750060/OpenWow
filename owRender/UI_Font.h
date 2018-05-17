@@ -5,7 +5,7 @@
 class UI_Font : public Technique
 {
 public:
-	UI_Font() : Technique("shaders/UI_Font") 
+	UI_Font(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/UI_Font")
     {
         gFontTexture = getLocation("gFontTexture");
         gFontColor = getLocation("gFontColor");

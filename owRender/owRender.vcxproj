@@ -179,10 +179,17 @@
     <ClCompile Include="GPUTimer.cpp" />
     <ClCompile Include="RenderStorage.cpp" />
     <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FontsMgr.cpp" />
+    <ClCompile Include="FontsManager.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Render.cpp" />
+    <ClCompile Include="R_Buffer.cpp" />
+    <ClCompile Include="R_BufferBase.cpp" />
+    <ClCompile Include="R_GeometryInfo.cpp" />
+    <ClCompile Include="R_RenderBuffer.cpp" />
+    <ClCompile Include="R_Shader.cpp" />
+    <ClCompile Include="R_Texture.cpp" />
+    <ClCompile Include="R_TextureBuffer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -191,7 +198,7 @@
     </ClCompile>
     <ClCompile Include="Technique.cpp" />
     <ClCompile Include="TechniquesManager.cpp" />
-    <ClCompile Include="TexturesMgr.cpp" />
+    <ClCompile Include="TexturesManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owRender.h" />
@@ -205,6 +212,7 @@
     <ClInclude Include="MapChunk_GeometryPass.h" />
     <ClInclude Include="MapTileLowRes_GeometryPass.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Model_Shader.h" />
     <ClInclude Include="OpenGL.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
@@ -222,15 +230,22 @@
     <ClInclude Include="RenderStorage.h" />
     <ClInclude Include="RenderTypes.h" />
     <ClInclude Include="Font.h" />
-    <ClInclude Include="FontsMgr.h" />
+    <ClInclude Include="FontsManager.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="R_Buffer.h" />
+    <ClInclude Include="R_BufferBase.h" />
+    <ClInclude Include="R_GeometryInfo.h" />
+    <ClInclude Include="R_RenderBuffer.h" />
+    <ClInclude Include="R_Shader.h" />
+    <ClInclude Include="R_Texture.h" />
+    <ClInclude Include="R_TextureBuffer.h" />
     <ClInclude Include="Sky_GeometryPass.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Technique.h" />
     <ClInclude Include="TechniquesManager.h" />
-    <ClInclude Include="TexturesMgr.h" />
+    <ClInclude Include="TexturesManager.h" />
     <ClInclude Include="UI_Color.h" />
     <ClInclude Include="UI_Font.h" />
     <ClInclude Include="UI_Texture.h" />

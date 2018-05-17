@@ -16,7 +16,7 @@ class Model_Shader : public Technique
     int32  gTextureAnimMatrix;
 
 public:
-	Model_Shader() : Technique("shaders/Models/Model") 
+	Model_Shader(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Models/Model")
     {
         gBones = getLocation("gBones");
         gColor = getLocation("gColor");
@@ -49,7 +49,7 @@ public:
             fail1();
         }
 
-        _Render->r->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), _bones.size());
+        m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), _bones.size());
     }
 
 	// Textures

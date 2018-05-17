@@ -7,7 +7,7 @@
 #include "Map_Chunk.h"
 
 // Additional
-#include "Map.h"
+#include "MapController.h"
 #include "Map_Shared.h"
 
 //
@@ -25,6 +25,7 @@ MapChunk::MapChunk(MapTile* _parentTile) :
 	m_IndexesCount(0)
 {
 	memset(mcly, 0x00, 16 * 4);
+
 	waterlevel[0] = 0;
 	waterlevel[1] = 0;
 
@@ -166,39 +167,36 @@ void MapChunk::Load(File& f)
 	// Alpha
 	f.Seek(startPos + header.ofsAlpha);
 	{
-		if (header.nLayers > 0)
+		for (uint32 i = 1; i < header.nLayers; i++)
 		{
-			for (uint32 i = 1; i < header.nLayers; i++)
-			{
-				uint8 amap[64 * 64];
-				memset(amap, 0x00, 64 * 64);
-				uint8* abuf = f.GetDataFromCurrent() + mcly[i].offsetInMCAL, *p;
-				p = amap;
-				for (int j = 0; j < 64; j++) {
-					for (int i = 0; i < 32; i++) {
-						unsigned char c = *abuf++;
-						*p++ = (c & 0x0f) << 4;
-						*p++ = (c & 0xf0);
-					}
-
-				}
-
-				if (!header.flags.do_not_fix_alpha_map)
-				{
-					for (uint8 i = 0; i < 64; ++i)
-					{
-						amap[i * 64 + 63] = amap[i * 64 + 62];
-						amap[63 * 64 + i] = amap[62 * 64 + i];
-					}
-					amap[63 * 64 + 63] = amap[62 * 64 + 62];
-				}
-
-				for (int p = 0; p < 64 * 64; p++)
-				{
-					blendbuf[p * 4 + (i - 1)] = amap[p];
+			uint8 amap[64 * 64];
+			memset(amap, 0x00, 64 * 64);
+			uint8* abuf = f.GetDataFromCurrent() + mcly[i].offsetInMCAL, *p;
+			p = amap;
+			for (int j = 0; j < 64; j++) {
+				for (int i = 0; i < 32; i++) {
+					unsigned char c = *abuf++;
+					*p++ = (c & 0x0f) << 4;
+					*p++ = (c & 0xf0);
 				}
 
 			}
+
+			if (!header.flags.do_not_fix_alpha_map)
+			{
+				for (uint8 i = 0; i < 64; ++i)
+				{
+					amap[i * 64 + 63] = amap[i * 64 + 62];
+					amap[63 * 64 + i] = amap[62 * 64 + i];
+				}
+				amap[63 * 64 + 63] = amap[62 * 64 + 62];
+			}
+
+			for (int p = 0; p < 64 * 64; p++)
+			{
+				blendbuf[p * 4 + (i - 1)] = amap[p];
+			}
+
 		}
 	}
 
@@ -221,50 +219,50 @@ void MapChunk::Load(File& f)
 	uint32 t = C_MapBufferSize * sizeof(float);
 
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r->createVertexBuffer(10 * t, nullptr);
+	R_Buffer* __vb = _Render->r.createVertexBuffer(10 * t, nullptr);
 
-	_Render->r->updateBufferData(__vb, 0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
-	_Render->r->updateBufferData(__vb, 3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
-	_Render->r->updateBufferData(__vb, 6 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordDetail());
-	_Render->r->updateBufferData(__vb, 8 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordAlpha());
+	__vb->updateBufferData(0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
+	__vb->updateBufferData(3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
+	__vb->updateBufferData(6 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordDetail());
+	__vb->updateBufferData(8 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordAlpha());
 
 
 	//
 
-	__geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PNT2);
+	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
 
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 0 * t, 0);
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 3 * t, 0);
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 6 * t, 0);
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 8 * t, 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * t, 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 6 * t, 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 8 * t, 0);
 
 	vector<uint16>& mapArray = Map_Shared::GenarateDefaultMapArray(header.holes);
 	m_Indexes = mapArray.data();
 	m_IndexesCount = mapArray.size();
 
-	R_Buffer* __ib = _Render->r->createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
-	_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
+	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 
-	_Render->r->finishCreatingGeometry(__geom);
+	__geom->finishCreatingGeometry();
 
 
 	//***************** DEBUG NORMALS
 
 	// Vertex buffer
-	R_Buffer* __vb2 = _Render->r->createVertexBuffer(6 * t, nullptr);
-	_Render->r->updateBufferData(__vb2, 0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
-	_Render->r->updateBufferData(__vb2, 3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
+	R_Buffer* __vb2 = _Render->r.createVertexBuffer(6 * t, nullptr);
+	__vb2->updateBufferData(0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
+	__vb2->updateBufferData(3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
 
-	__geomDebugNormals = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PN);
-	_Render->r->setGeomVertexParams(__geomDebugNormals, __vb, R_DataType::T_FLOAT, 0 * t, 0);
-	_Render->r->setGeomVertexParams(__geomDebugNormals, __vb, R_DataType::T_FLOAT, 3 * t, 0);
-	_Render->r->setGeomIndexParams(__geomDebugNormals, __ib, R_IndexFormat::IDXFMT_16);
-	_Render->r->finishCreatingGeometry(__geomDebugNormals);
+	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PN);
+	__geomDebugNormals->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * t, 0);
+	__geomDebugNormals->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
+	__geomDebugNormals->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
+	__geomDebugNormals->finishCreatingGeometry();
 
 	//--
 
-	m_BlendRBGShadowATexture = _Render->r->createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
-	_Render->r->uploadTextureData(m_BlendRBGShadowATexture, 0, 0, blendbuf);
+	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
 }
 
 void MapChunk::Post_Load()
@@ -332,36 +330,36 @@ void MapChunk::Render()
 
 	visible = true;
 
-	_TechniquesMgr->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
 
 
-	_Render->r->setGeometry(__geom);
+	_Render->r.setGeometry(__geom);
 
-	//_Render->r->setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	// Bind m_DiffuseTextures
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
-		_Render->r->setTexture(i, m_DiffuseTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
-		_Render->r->setTexture(5 + i, m_SpecularTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(i, m_DiffuseTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(5 + i, m_SpecularTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
 
 	// Bind blend
 	if (header.nLayers > 0)
 	{
-		_Render->r->setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+		_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
 	}
 
 	// Bind shadow
-	_TechniquesMgr->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
 	if (header.flags.has_mcsh)
 	{
-		_TechniquesMgr->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
 	}
 
-	_Render->r->drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
 
-	//_Render->r->setFillMode(R_FillMode::RS_FILL_SOLID);
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 }
 
 void MapChunk::Render_DEBUG()
@@ -371,7 +369,7 @@ void MapChunk::Render_DEBUG()
 		return;
 	}
 
-	_Render->r->setGeometry(__geomDebugNormals);
-	_Render->r->drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
+	_Render->r.setGeometry(__geomDebugNormals);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
 }
 

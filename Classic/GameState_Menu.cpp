@@ -8,25 +8,23 @@
 
 bool GameState_Menu::Init()
 {
-    GameState::Init();
+	GameState::Init();
 
-    //
+	//
 
-	_ModelsMgr->Init();
-	_WMOsMgr->Init();
+	_World->MDXM()->Init();
+	_World->WMOM()->Init();
 
 	OpenDBs();
 
-    m_MinimapTexture = new R_Texture();
+	m_MinimapTexture = new R_Texture(&_Render->r);
 
-    m_MinimapUI = new UIElement(100);
-    m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), m_MinimapTexture, COLOR_WHITE);
-    m_MinimapUI->Hide();
+	m_MinimapUI = new UIElement(100);
+	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), m_MinimapTexture, COLOR_WHITE);
+	m_MinimapUI->Hide();
 
-    _EnvironmentManager->Init();
-    _TechniquesMgr->Init();
-	_EnvironmentManager->globalTime = 0;
-	_EnvironmentManager->animtime = 0;
+	_World->EnvM()->globalTime = 0;
+	_World->EnvM()->animtime = 0;
 
 	cmd = CMD_NONE2;
 	backgroundModel = 0;
@@ -63,7 +61,7 @@ bool GameState_Menu::Init()
 			continue;
 		}
 
-		auto image = new Image(_TexturesMgr->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));
+		auto image = new Image(_Render->TexturesMgr()->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));
 
 		// Add btn
 		auto btn = new UIButton();
@@ -80,64 +78,64 @@ bool GameState_Menu::Init()
 		mapsY[0] += mapsYdelta;
 	}
 
-    //
-    enableFreeCamera = false;
-    cameraSprint = false;
-    //
+	//
+	enableFreeCamera = false;
+	cameraSprint = false;
+	//
 
-    return true;
+	return true;
 }
 
 void GameState_Menu::Destroy()
 {
-    GameState::Destroy();
+	GameState::Destroy();
 }
 
 //
 
 bool GameState_Menu::Set()
 {
-    GameState::Set();
+	GameState::Set();
 
-    cmd = CMD_NONE2;
+	cmd = CMD_NONE2;
 
-    return true;
+	return true;
 }
 
 void GameState_Menu::Unset()
 {
-    GameState::Unset();
+	GameState::Unset();
 }
 
 //
 
 void GameState_Menu::Input(double t, double dt)
 {
-    float speed = 4.5f;
+	float speed = 4.5f;
 
-    if (cameraSlow)
-        speed *= 0.2f;
+	if (cameraSlow)
+		speed *= 0.2f;
 
-    if (cameraSprint)
-        speed *= 3.0f;
+	if (cameraSprint)
+		speed *= 3.0f;
 
-    if (Input::IsKeyPressed(OW_KEY_W))
-        _Render->mainCamera->ProcessKeyboard(FORWARD, speed);
+	if (Input::IsKeyPressed(OW_KEY_W))
+		_Render->mainCamera->ProcessKeyboard(FORWARD, speed);
 
-    if (Input::IsKeyPressed(OW_KEY_S))
-        _Render->mainCamera->ProcessKeyboard(BACKWARD, speed);
+	if (Input::IsKeyPressed(OW_KEY_S))
+		_Render->mainCamera->ProcessKeyboard(BACKWARD, speed);
 
-    if (Input::IsKeyPressed(OW_KEY_A))
-        _Render->mainCamera->ProcessKeyboard(LEFT, speed);
+	if (Input::IsKeyPressed(OW_KEY_A))
+		_Render->mainCamera->ProcessKeyboard(LEFT, speed);
 
-    if (Input::IsKeyPressed(OW_KEY_D))
-        _Render->mainCamera->ProcessKeyboard(RIGHT, speed);
+	if (Input::IsKeyPressed(OW_KEY_D))
+		_Render->mainCamera->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_Menu::Update(double t, double dt)
 {
-	_EnvironmentManager->animtime += (dt * 1000.0f);
-	_EnvironmentManager->globalTime = (int)_EnvironmentManager->animtime;
+	_World->EnvM()->animtime += (dt * 1000.0f);
+	_World->EnvM()->globalTime = (int)_World->EnvM()->animtime;
 
 	if (backgroundModel)
 	{
@@ -149,42 +147,42 @@ void GameState_Menu::Render(double t, double dt)
 {
 	if (backgroundModel != nullptr)
 	{
-        //_ModelsMgr->resetAnim();
+		//_ModelsMgr->resetAnim();
 
-        _Render->r->setRenderBuffer(_Render->rb);
-        _Render->r->clear();
+		_Render->rb->setRenderBuffer();
+		_Render->r.clear();
 
-        // Camera
-        _Pipeline->Clear();
+		// Camera
+		_Pipeline->Clear();
 		/*backgroundModel->m_Cameras[0].setup(_EnvironmentManager->globalTime);
 		_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
-        _PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());*/
+		_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());*/
 
-        _PipelineGlobal->SetCamera(_Render->mainCamera);
-        _PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
-        
-        
-        // Geom
+		_PipelineGlobal->SetCamera(_Render->mainCamera);
+		_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
+
+
+		// Geom
 		backgroundModel->Render();
 
-        // Postprocess pass
-        _Render->r->setRenderBuffer(0);
-        for (uint32 i = 0; i < 4; i++) _Render->r->setTexture(i, _Render->r->getRenderBufferTex(_Render->rb, i), 0, 0);
-        _Render->r->clear(CLR_COLOR_RT0 | CLR_DEPTH);
+		// Postprocess pass
+		_Render->rb->resetRenderBuffer();
+		for (uint32 i = 0; i < 4; i++) _Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
+		_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
 
-        // Simple pass
-        _TechniquesMgr->m_POST_Simple->BindS();
-        _TechniquesMgr->m_POST_Simple->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
+		// Simple pass
+		_Render->TechniquesMgr()->m_POST_Simple->Bind();
+		_Render->TechniquesMgr()->m_POST_Simple->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
 
-        _Render->r->setDepthTest(false);
-        _Render->r->setBlendMode(true, R_BlendFunc::BS_BLEND_ONE, R_BlendFunc::BS_BLEND_ONE);
+		_Render->r.setDepthTest(false);
+		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_ONE, R_BlendFunc::BS_BLEND_ONE);
 
-        _Render->RenderQuad();
+		_Render->RenderQuad();
 
-        _Render->r->setBlendMode(false);
-        _Render->r->setDepthTest(true);
+		_Render->r.setBlendMode(false);
+		_Render->r.setDepthTest(true);
 
-        _TechniquesMgr->m_POST_Simple->Unbind();
+		_Render->TechniquesMgr()->m_POST_Simple->Unbind();
 	}
 }
 
@@ -193,21 +191,17 @@ void GameState_Menu::RenderUI()
 	if (cmd == CMD_SELECT2)
 	{
 
-		if (_Map.GetMinimap() != 0)
+		if (_World->Map()->GetMinimap() != 0)
 		{
-            m_MinimapUI->SetTexture(_Map.GetMinimap());
-
-            m_MinimapUI->Show();
+			m_MinimapUI->SetTexture(_World->Map()->GetMinimap());
+			m_MinimapUI->Show();
 		}
-        else
-        {
-            m_MinimapUI->Hide();
-        }
-	}   
+		else
+		{
+			m_MinimapUI->Hide();
+		}
 
-	if (cmd == CMD_SELECT2)
-	{
-		if (_Map.MapHasTiles())
+		if (_World->Map()->MapHasTiles())
 		{
 			_Render->RenderText(vec2(400, 0), "Select your starting point");
 		}
@@ -222,28 +216,28 @@ void GameState_Menu::RenderUI()
 
 void GameState_Menu::OnBtn(DBC_MapRecord* _e)
 {
-    Log::Green("Load level %s [%d]", _e->Get_Directory(), _e->Get_ID());
+	Log::Green("Load level %s [%d]", _e->Get_Directory(), _e->Get_ID());
 
-    _Map.Load_WDT(_e);
-    cmd = CMD_SELECT2;
+	_World->Map()->Load_WDT(_e);
+	cmd = CMD_SELECT2;
 
-    m_MinimapUI->AttachTo(m_Window);
+	m_MinimapUI->AttachTo(m_Window);
 }
 
 bool GameState_Menu::LoadWorld(cvec3 _pos)
 {
-	_Map.enterTile(_pos.x / C_TileSize, _pos.z / C_TileSize);
+	_World->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
 
-    _Render->mainCamera->Position = _pos;
-    _Render->mainCamera->Update();
+	_Render->mainCamera->Position = _pos;
+	_Render->mainCamera->Update();
 
 	if (backgroundModel != nullptr)
 	{
 		delete backgroundModel;
 	}
 
-    // Change GameState
-    GameStateManager::SetGameState(GameStatesNames::GAME_STATE_WORLD);
+	// Change GameState
+	GameStateManager::SetGameState(GameStatesNames::GAME_STATE_WORLD);
 
 	return true;
 }
@@ -254,25 +248,25 @@ bool GameState_Menu::LoadWorld(cvec3 _pos)
 
 On_Mouse_Moved(GameState_Menu)
 {
-    if (enableFreeCamera)
-    {
-        vec2 mouseDelta = (_mousePos - lastMousePos) / _Config.GetWindowSize();
+	if (enableFreeCamera)
+	{
+		vec2 mouseDelta = (_mousePos - lastMousePos) / _Config.GetWindowSize();
 
-        _Render->mainCamera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Render->mainCamera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
-        _Engine->GetAdapter()->SetMousePosition(lastMousePos);
-    }
+		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
+	}
 }
 
 On_Mouse_Pressed(GameState_Menu)
 {
-    /*if (_button == OW_MOUSE_BUTTON_LEFT)
-    {
-        enableFreeCamera = true;
-        lastMousePos = _mousePos;
-        _Engine->GetAdapter()->HideCursor();
-        return true;
-    }*/
+	/*if (_button == OW_MOUSE_BUTTON_LEFT)
+	{
+		enableFreeCamera = true;
+		lastMousePos = _mousePos;
+		_Engine->GetAdapter()->HideCursor();
+		return true;
+	}*/
 
 	// Select point
 	if (cmd == CMD_SELECT2 && _mousePos.x >= 200 && _mousePos.x < 200 + 12 * 64 && _mousePos.y < 12 * 64)
@@ -282,17 +276,20 @@ On_Mouse_Pressed(GameState_Menu)
 
 		vec3 pointInWorld;
 
-		if (_Map.MapHasTiles())
+		if (_World->Map()->MapHasTiles())
 		{
 			pointInWorld = vec3(selectedPointX / 12.0f, 0.1f, selectedPointZ / 12.0f) * C_TileSize;
 		}
-		else if (_Map.MapHasGlobalWMO())
+		else if (_World->Map()->MapHasGlobalWMO())
 		{
-			pointInWorld = _Map.GetGlobalWMOPlacementInfo()->position;
+			pointInWorld = _World->Map()->GetGlobalWMOPlacementInfo()->position;
 		}
 
-		delete backgroundModel;
-		backgroundModel = nullptr;
+		if (backgroundModel != nullptr)
+		{
+			delete backgroundModel;
+			backgroundModel = nullptr;
+		}
 
 		LoadWorld(pointInWorld);
 
@@ -304,14 +301,10 @@ On_Mouse_Pressed(GameState_Menu)
 
 On_Mouse_Released(GameState_Menu)
 {
-
-        enableFreeCamera = false;
-        lastMousePos = vec2();
-        _Engine->GetAdapter()->ShowCursor();
-        return true;
-
-
-    return false;
+	enableFreeCamera = false;
+	lastMousePos = vec2();
+	m_Engine->GetAdapter()->ShowCursor();
+	return true;
 }
 
 On_Keyboard_Pressed(GameState_Menu)
@@ -322,12 +315,12 @@ On_Keyboard_Pressed(GameState_Menu)
 		{
 			cmd = CMD_NONE2;
 
-            m_MinimapUI->Detach();
+			m_MinimapUI->Detach();
 			//_UIMgr->Attach(window);
 		}
 		else
 		{
-			_Engine->Destroy();
+			delete m_Engine;
 		}
 	}
 
@@ -360,7 +353,7 @@ On_Keyboard_Pressed(GameState_Menu)
 
 	if (_key == OW_KEY_V)
 	{
-        _Config.Switch(_Config.Quality.Terrain_MCLV);
+		_Config.Switch(_Config.Quality.Terrain_MCLV);
 		return true;
 	}
 
@@ -380,7 +373,7 @@ void GameState_Menu::randBackground()
 	if (backgroundModel != nullptr)
 		delete backgroundModel;
 
-	char* ui[] = {"MainMenu", "NightElf", "Human", "Dwarf", "Orc", "Tauren", "Scourge"};
+	char* ui[] = { "MainMenu", "NightElf", "Human", "Dwarf", "Orc", "Tauren", "Scourge" };
 
 	char* randui = ui[Random::GenerateMax(7)];
 	char path[256];

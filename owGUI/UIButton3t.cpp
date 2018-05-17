@@ -14,7 +14,7 @@ UIButton3t::~UIButton3t()
 
 void UIButton3t::Init(cvec2 _position, cstring _textureName)
 {
-	auto buttonTexture = _TexturesMgr->Add(_textureName);
+	auto buttonTexture = _Render->TexturesMgr()->Add(_textureName);
 	auto buttonSize = vec2(buttonTexture->GetSize().x, buttonTexture->GetSize().y / 4);
 
     for (int i = 0; i < 4; i++)

@@ -1,24 +1,26 @@
 #pragma once
 
-struct R_Shader;
+#include "RenderDevice.h"
+
+class TechniquesManager;
 
 class Technique
 {
+	friend TechniquesManager;
 protected:
-	Technique(cstring _fileName);
-	Technique(cstring _fileNameVS, cstring _fileNameFS);
-    Technique(cstring _fileNameVS, cstring _fileNameFS, cstring _filenameGS);
+	Technique(RenderDevice* _RenderDevice, cstring _fileName);
+	Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS);
+    Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _filenameGS);
 	~Technique();
 
     void Process(cstring fileName, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc);
 
-    void InitBaseUniforms();
-
 public:
-	inline void BindS();
+	inline void Bind();
 	inline void Unbind();
 
 protected:
+	void InitBaseUniforms();
 	inline int32 getLocation(const char* name) const;
 
 	inline void setTexture(const char* name, uint32 value) const;
@@ -54,8 +56,9 @@ protected: // Base uniforms
     int32 gView;
     int32 gWorld;
 
-private:
-	R_Shader* shader;
+protected:
+	R_Shader*      m_Shader;
+	RenderDevice*  m_RenderDevice;
 };
 
 #include "Technique.inl"

@@ -22,14 +22,11 @@ struct WDT_MAIN_Flags
 	uint32 : 29;
 };
 
-class DBC_MapRecord;
-
-class Map
+class MapController
 {
-	CLASS_INSTANCE2(Map);
-
-	Map();
-	~Map();
+public:
+	MapController();
+	~MapController();
 
     void InitGlobalsWMOs();
 
@@ -48,8 +45,8 @@ class Map
     void Render_DEBUG();
 	//
 
-	void enterTile(int x, int z);
-	MapTile* LoadTile(int x, int z);
+	void EnterMap(int32 x, int32 z);
+	MapTile* LoadTile(int32 x, int32 z);
 	void ClearCache();
 	uint32 getAreaID();
 
@@ -67,8 +64,8 @@ public: // Getters
 
     R_Texture* GetMinimap() { return minimap; }
 
-	int GetCurrentX() { return currentTileX; }
-	int GetCurrentZ() { return currentTileZ; }
+	int GetCurrentX() { return m_CurrentTileX; }
+	int GetCurrentZ() { return m_CurrentTileZ; }
 
 	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
 	void SetOutOfBounds(bool _value) { m_IsOnInvalidTile = _value; }
@@ -77,19 +74,19 @@ private:
 	bool IsTileInCurrent(MapTile* _mapTile);
 
 private:
-	string m_MapFolder;
-	DBC_MapRecord* m_DBC_Map;
-	WDT_MPHD_Flags m_Flag;
+	string                     m_MapFolder;
+	DBC_MapRecord*             m_DBC_Map;
+	WDT_MPHD_Flags             m_Flag;
 
 private:
-	bool m_IsTileBased;
-	WDT_MAIN_Flags m_TileFlag[C_TilesInMap][C_TilesInMap];
-    R_GeometryInfo* lowrestiles[C_TilesInMap][C_TilesInMap];
-    R_Texture* minimap;
-	MapTile* maptilecache[C_TilesCacheSize];
-	MapTile* current[C_RenderedTiles][C_RenderedTiles];
+	bool                       m_IsTileBased;
+	WDT_MAIN_Flags             m_TileFlag[C_TilesInMap][C_TilesInMap];
+    R_GeometryInfo*            m_LowResilutionTiles[C_TilesInMap][C_TilesInMap];
+    R_Texture*                 minimap;
+	MapTile*                   m_MapTilesCache[C_TilesCacheSize];
+	MapTile*                   m_Current[C_RenderedTiles][C_RenderedTiles];
 
-    int currentTileX, currentTileZ;
+    int						   m_CurrentTileX, m_CurrentTileZ;
 	bool                       m_IsOnInvalidTile;
 
 private: // WMOs
@@ -101,8 +98,6 @@ private: // WMOs
 	vector<WMOPlacementInfo*>  m_LowResolutionWMOsPlacementInfo;
 	vector<WMOInstance*>       m_LowResolutionWMOs;
 };
-
-#define _Map Map::instance()
 
 inline bool IsBadTileIndex(int i, int j)
 {

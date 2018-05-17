@@ -12,16 +12,19 @@
 
 // MDX
 #include "../owWoW/MDX.h"
-#include "../owWoW/ModelsManager.h"
+#include "../owWoW/MDXsManager.h"
 
 // WMO
 #include "../owWoW/WMO.h"
-#include "../owWoW/WMO_Manager.h"
+#include "../owWoW/WMOsManager.h"
 
 // Map
-#include "../owWoW/Map.h"
+#include "../owWoW/MapController.h"
 
 // Environment
 #include "../owWoW/DayNightCycle.h"
 #include "../owWoW/SkyManager.h"
 #include "../owWoW/EnvironmentManager.h"
+
+#include "../owWoW/WorldController.h"
+#include "../owWoW/WorldRender.h"

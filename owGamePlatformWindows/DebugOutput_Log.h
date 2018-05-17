@@ -3,8 +3,8 @@
 class DebugOutput_Log : public DebugOutput
 {
 public:
-	bool Init();
-	void Destroy();
+	DebugOutput_Log();
+	~DebugOutput_Log();
 
 protected:
 	void Print(string _messageFmt, DebugOutput::DebugMessageType _type);

@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Engine.h"
 class GameStateManager;
 class UIWindow;
 
 class GameState : public UpdatableObject, public RenderableUIObject, public InputListenerObject
 {
+	friend GameStateManager;
 public:
-    GameState();
+    GameState(Engine* _Engine);
 
 	virtual bool Init();
 	virtual void Destroy();
@@ -23,8 +25,5 @@ protected:
 	bool      m_IsInited;
     bool      m_IsCurrent;
     UIWindow* m_Window;
-
-    //
-
-    friend GameStateManager;
+	Engine*   m_Engine;
 };

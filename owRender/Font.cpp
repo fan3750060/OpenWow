@@ -16,13 +16,13 @@ Font::Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _w
 
 Font::~Font()
 {
-    _Render->r->destroyGeometry(m_Geometry, true);
+	m_Geometry->destroyGeometry(true);
 }
 
 void Font::Render(cstring _string, vec2 _offset) const
 {
-	_Render->r->setTexture(10, m_Texture, SS_FILTER_BILINEAR | SS_ADDR_CLAMP, 0);
-	_Render->r->setGeometry(m_Geometry);
+	_Render->r.setTexture(10, m_Texture, SS_FILTER_BILINEAR | SS_ADDR_CLAMP, 0);
+	_Render->r.setGeometry(m_Geometry);
 	
 	for (uint32 i = 0; i < _string.length(); i++)
 	{
@@ -32,10 +32,10 @@ void Font::Render(cstring _string, vec2 _offset) const
 			continue;
 		}
 
-		_TechniquesMgr->m_UI_Font->SetCharOffset(_offset);
+		_Render->TechniquesMgr()->m_UI_Font->SetCharOffset(_offset);
 		_offset.x += static_cast<float>(m_WidthArray[ch - SPACE]);
 
-		_Render->r->draw(PRIM_TRILIST, (ch - SPACE) * 6, 6);
+		_Render->r.draw(PRIM_TRILIST, (ch - SPACE) * 6, 6);
 	}
 }
 

@@ -6,15 +6,14 @@
 // Additional
 #include <iostream>
 
-bool DebugOutput_ConsoleWindows::Init()
+DebugOutput_ConsoleWindows::DebugOutput_ConsoleWindows()
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	defaultConsoleColor = ConsoleWindowsColor::GRAY;
 
-	return true;
 }
 
-void DebugOutput_ConsoleWindows::Destroy()
+DebugOutput_ConsoleWindows::~DebugOutput_ConsoleWindows()
 {
 }
 

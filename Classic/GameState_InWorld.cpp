@@ -3,8 +3,6 @@
 // General
 #include "GameState_InWorld.h"
 
-// Additional
-#include "World.h"
 
 bool GameState_InWorld::Init()
 {
@@ -15,24 +13,14 @@ bool GameState_InWorld::Init()
 
     minimapActive = false;
 
+	m_WorldRender = new WorldRender(_World);
+
     return true;
 }
 
 void GameState_InWorld::Destroy()
 {
     GameState::Destroy();
-}
-
-bool GameState_InWorld::Set()
-{
-    GameState::Set();
-
-    return true;
-}
-
-void GameState_InWorld::Unset()
-{
-    GameState::Unset();
 }
 
 void GameState_InWorld::Input(double t, double dt)
@@ -60,17 +48,16 @@ void GameState_InWorld::Input(double t, double dt)
 
 void GameState_InWorld::Update(double t, double dt)
 {
-    _EnvironmentManager->animtime += (dt * 1000.0f);
-    _EnvironmentManager->globalTime = (int)_EnvironmentManager->animtime;
 
-    _World->tick(dt);
 }
 
 void GameState_InWorld::Render(double t, double dt)
 {
     if (!minimapActive)
     {
-        _World->Render();
+		m_WorldRender->PreRender3D();
+		m_WorldRender->Render3D();
+		m_WorldRender->PostRender3D();
     }
 }
 
@@ -86,11 +73,11 @@ void GameState_InWorld::RenderUI()
         int basex = 200;
         int basey = 0;
 
-        if (_Map.GetMinimap() != 0)
+        if (_World->Map()->GetMinimap() != 0)
         {
             const int len = 768;
 
-            _Render->RenderTexture(vec2(basex, basey), _Map.GetMinimap(), vec2(len, len));
+            _Render->RenderTexture(vec2(basex, basey), _World->Map()->GetMinimap(), vec2(len, len));
 
             // Player position
             /*glBegin(GL_LINES);
@@ -121,7 +108,7 @@ void GameState_InWorld::RenderUI()
     DBÑ_AreaTableRecord* areaRecord = nullptr;
     string areaName = "<unknown>";
 
-    areaRecord = DBÑ_AreaTable[_Map.getAreaID()];
+    areaRecord = DBÑ_AreaTable[_World->Map()->getAreaID()];
     if (areaRecord != nullptr)
     {
         areaName = areaRecord->Get_Name();
@@ -144,15 +131,15 @@ void GameState_InWorld::RenderUI()
     //
     // DEBUG
     //
-    _Render->RenderTexture(vec2(_Config.windowSizeX * 2.0 / 3.0, _Config.windowSizeY * 2.0 / 3.0), _Render->r->getRenderBufferTex(_World->rb2, 2), vec2(_Config.windowSizeX / 3, _Config.windowSizeY / 3));
+    _Render->RenderTexture(vec2(_Config.windowSizeX * 2.0 / 3.0, _Config.windowSizeY * 2.0 / 3.0), m_WorldRender->GetTestRB()->getRenderBufferTex(2), vec2(_Config.windowSizeX / 3, _Config.windowSizeY / 3));
 
 
     //
 
 
-    _Render->RenderText(vec2(5, 20), "Area: [" + areaName + "] [Area id = " + std::to_string(_Map.getAreaID()) + "]");
+    _Render->RenderText(vec2(5, 20), "Area: [" + areaName + "] [Area id = " + std::to_string(_World->Map()->getAreaID()) + "]");
     _Render->RenderText(vec2(5, 40), "Region: [" + regionName + "]");
-    _Render->RenderText(vec2(5, 60), "CURRX: " + to_string(_Map.GetCurrentX()) + ", CURRZ " + to_string(_Map.GetCurrentZ()));
+    _Render->RenderText(vec2(5, 60), "CURRX: " + to_string(_World->Map()->GetCurrentX()) + ", CURRZ " + to_string(_World->Map()->GetCurrentZ()));
 
 
     ///
@@ -164,47 +151,43 @@ void GameState_InWorld::RenderUI()
     _Render->RenderText(vec2(5, _Config.windowSizeY - 22), "CamRot: [" + to_string(_Render->mainCamera->Direction.x) + "], [" + to_string(_Render->mainCamera->Direction.y) + "], [" + to_string(_Render->mainCamera->Direction.z) + "]");
 
     // Time
-    _Render->RenderText(vec2(_Config.windowSizeX - 150, 0), "TIME [" + to_string(_EnvironmentManager->m_GameTime.GetHour()) + "." + to_string(_EnvironmentManager->m_GameTime.GetMinute()) + "]");
+    _Render->RenderText(vec2(_Config.windowSizeX - 150, 0), "TIME [" + to_string(_World->EnvM()->m_GameTime.GetHour()) + "." + to_string(_World->EnvM()->m_GameTime.GetMinute()) + "]");
     char buff[256];
 
     // Ambient
 
     sprintf(buff, "Amb[c=[%0.2f %0.2f %0.2f] i=[%f]]",
-    _EnvironmentManager->dayNightPhase.ambientColor.x, _EnvironmentManager->dayNightPhase.ambientColor.y, _EnvironmentManager->dayNightPhase.ambientColor.z,
-    _EnvironmentManager->dayNightPhase.ambientIntensity
+    _World->EnvM()->dayNightPhase.ambientColor.x, _World->EnvM()->dayNightPhase.ambientColor.y, _World->EnvM()->dayNightPhase.ambientColor.z,
+    _World->EnvM()->dayNightPhase.ambientIntensity
     );
     _Render->RenderText(vec2(_Config.windowSizeX - 400, 20), buff);
 
     // Day
-
     sprintf(buff, "Day[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]",
-    _EnvironmentManager->dayNightPhase.dayColor.x, _EnvironmentManager->dayNightPhase.dayColor.y, _EnvironmentManager->dayNightPhase.dayColor.z,
-    _EnvironmentManager->dayNightPhase.dayIntensity,
-    _EnvironmentManager->dayNightPhase.dayDir.x, _EnvironmentManager->dayNightPhase.dayDir.y, _EnvironmentManager->dayNightPhase.dayDir.z
+    _World->EnvM()->dayNightPhase.dayColor.x, _World->EnvM()->dayNightPhase.dayColor.y, _World->EnvM()->dayNightPhase.dayColor.z,
+    _World->EnvM()->dayNightPhase.dayIntensity,
+    _World->EnvM()->dayNightPhase.dayDir.x, _World->EnvM()->dayNightPhase.dayDir.y, _World->EnvM()->dayNightPhase.dayDir.z
     );
     _Render->RenderText(vec2(_Config.windowSizeX - 400, 40), buff);
 
     // Night
-
     sprintf(buff, "Nig[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]\0",
-    _EnvironmentManager->dayNightPhase.nightColor.x, _EnvironmentManager->dayNightPhase.nightColor.y, _EnvironmentManager->dayNightPhase.nightColor.z,
-    _EnvironmentManager->dayNightPhase.nightIntensity,
-    _EnvironmentManager->dayNightPhase.nightDir.x, _EnvironmentManager->dayNightPhase.nightDir.y, _EnvironmentManager->dayNightPhase.nightDir.z
+    _World->EnvM()->dayNightPhase.nightColor.x, _World->EnvM()->dayNightPhase.nightColor.y, _World->EnvM()->dayNightPhase.nightColor.z,
+    _World->EnvM()->dayNightPhase.nightIntensity,
+    _World->EnvM()->dayNightPhase.nightDir.x, _World->EnvM()->dayNightPhase.nightDir.y, _World->EnvM()->dayNightPhase.nightDir.z
     );
     _Render->RenderText(vec2(_Config.windowSizeX - 400, 60), buff);
 
     // Fog
-
     sprintf(buff, "Fog[end=[%f] koeff=[%f]]\0",
-            _EnvironmentManager->skies->GetFog(LIGHT_FOG_DISTANCE),
-            _EnvironmentManager->skies->GetFog(LIGHT_FOG_MULTIPLIER)
+            _World->EnvM()->skies->GetFog(LIGHT_FOG_DISTANCE),
+            _World->EnvM()->skies->GetFog(LIGHT_FOG_MULTIPLIER)
     );
     _Render->RenderText(vec2(_Config.windowSizeX - 400, 80), buff);
 
     // Colors
     float xPos = _Config.windowSizeX - 400;
     float yPos = 100;
-
     const char* names[18] =
     {
         "LIGHT_COLOR_GLOBAL_DIFFUSE" ,
@@ -235,13 +218,11 @@ void GameState_InWorld::RenderUI()
         "LIGHT_COLOR_RIVER_LIGHT",
         "LIGHT_COLOR_RIVER_DARK"
     };
-
     for (uint8 i = 0; i < 18; i++)
     {
-        _Render->RenderRectangle(vec2(xPos,      yPos + i * 16), vec2(16.0f, 16.0f), Color(_EnvironmentManager->skies->GetColor((LightColors)i)));
+        _Render->RenderRectangle(vec2(xPos,      yPos + i * 16), vec2(16.0f, 16.0f), Color(_World->EnvM()->skies->GetColor((LightColors)i)));
         _Render->RenderText(     vec2(xPos + 20, yPos + i * 16), names[i]);
     }
-
 
     RenderUIDebug();
 }
@@ -249,10 +230,10 @@ void GameState_InWorld::RenderUI()
 void GameState_InWorld::RenderUIDebug()
 {
     char buff[256];
-    sprintf(buff, "Buffer memory [%d] bytes", _Render->r->getBufferMem());
+    sprintf(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
     _Render->RenderText(vec2(_Config.windowSizeX - 400, _Config.windowSizeY - 40), buff);
 
-    sprintf(buff, "R_Texture memory [%d] bytes", _Render->r->getTextureMem());
+    sprintf(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
     _Render->RenderText(vec2(_Config.windowSizeX - 400, _Config.windowSizeY - 20), buff);
 }
 
@@ -268,7 +249,7 @@ On_Mouse_Moved(GameState_InWorld)
 
         _Render->mainCamera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
-        _Engine->GetAdapter()->SetMousePosition(lastMousePos);
+        m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
     }
 }
 
@@ -278,7 +259,7 @@ On_Mouse_Pressed(GameState_InWorld)
     {
         enableFreeCamera = true;
         lastMousePos = _mousePos;
-        _Engine->GetAdapter()->HideCursor();
+		m_Engine->GetAdapter()->HideCursor();
         return true;
     }
 
@@ -291,7 +272,7 @@ On_Mouse_Released(GameState_InWorld)
     {
         enableFreeCamera = false;
         lastMousePos = vec2();
-        _Engine->GetAdapter()->ShowCursor();
+		m_Engine->GetAdapter()->ShowCursor();
         return true;
     }
 

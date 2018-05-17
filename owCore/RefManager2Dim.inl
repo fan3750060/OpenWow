@@ -78,6 +78,7 @@ inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::DeleteAll()
 	for (auto it = items.begin(); it != items.end(); ++it)
 	{
 		pre_delete(it->first, it->second);
+
 	}
 }
 

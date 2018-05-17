@@ -1,11 +1,12 @@
 #pragma once
 
+#include "PostProcess_Common.h"
 #include "lights_common.h"
 
 class POST_DirectionalLight : public PostProcess_Common
 {
 public:
-    POST_DirectionalLight() : PostProcess_Common("shaders/POST_Light_Direction.fs")
+    POST_DirectionalLight(RenderDevice* _RenderDevice) : PostProcess_Common(_RenderDevice, "shaders/POST_Light_Direction.fs")
     {
         gDirectionalLight_Base_ambient = getLocation("gDirectionalLight.Base.ambient");
         gDirectionalLight_Base_diffuse = getLocation("gDirectionalLight.Base.diffuse");

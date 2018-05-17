@@ -38,5 +38,7 @@
 #include "../owCore/InputListenerCollection.h"
 #include "../owCore/UpdatableObject.h"
 #include "../owCore/UpdatableObjectCollection.h"
+#include "../owCore/Renderable3DObject.h"
+#include "../owCore/Renderable3DObjectCollection.h"
 #include "../owCore/RenderableUIObject.h"
 #include "../owCore/RenderableUIObjectCollection.h"

@@ -51,10 +51,10 @@ void Pipeline::RenderCamera(Camera* _camera)
 	vec3 fbl = fc - activeCamera->CameraUp * fh - activeCamera->CameraRight * fw;
 	vec3 fbr = fc - activeCamera->CameraUp * fh + activeCamera->CameraRight * fw;
 
-	_TechniquesMgr->m_Debug_GeometryPass->BindS();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
 	_Pipeline->Clear();
-	_TechniquesMgr->m_Debug_GeometryPass->SetPVW();
-	_TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
 
 	vector<vec3> verts;
 
@@ -104,5 +104,5 @@ void Pipeline::RenderCamera(Camera* _camera)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDeleteBuffers(1, &buffer);*/
 
-	_TechniquesMgr->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
 }

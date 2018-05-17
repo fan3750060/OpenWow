@@ -3,6 +3,9 @@
 // General
 #include "MDX_Part_TextureAnim.h"
 
+// Additional
+#include "WorldController.h"
+
 void MDX_Part_TextureAnim::init(File& f, M2TextureTransform& mta, uint32 * global)
 {
 	trans.init(mta.translation, f, global);
@@ -16,7 +19,7 @@ void MDX_Part_TextureAnim::calc(int anim, int time)
 	
 	if (trans.uses(anim))
 	{
-		tval = trans.getValue(anim, time);
+		tval = trans.getValue(anim, time, _World->EnvM()->globalTime);
 		matrix.translate(tval);
 	}
 
@@ -24,7 +27,7 @@ void MDX_Part_TextureAnim::calc(int anim, int time)
 	{
 		matrix.translate(vec3(0.5f, 0.5f, 0.5f));
 
-		rval = roll.getValue(anim, time);
+		rval = roll.getValue(anim, time, _World->EnvM()->globalTime);
 		matrix.rotate(rval);
 
 		matrix.translate(vec3(-0.5f, -0.5f, -0.5f));
@@ -32,7 +35,7 @@ void MDX_Part_TextureAnim::calc(int anim, int time)
 
 	if (scale.uses(anim))
 	{
-		sval = scale.getValue(anim, time);
+		sval = scale.getValue(anim, time, _World->EnvM()->globalTime);
 		matrix.scale(sval);
 	}
 }

@@ -1,79 +1,70 @@
 #include "stdafx.h"
 
-// Include
-#include "FontsMgr.h"
-#include "TexturesMgr.h"
-
 // General
 #include "Render.h"
 
 // Additional
 #include "RenderStorage.h"
+
+#include "FontsManager.h"
+#include "TexturesManager.h"
 #include "TechniquesManager.h"
+#include "RenderStorage.h"
 
-bool RenderGL::Init()
+RenderGL::RenderGL()
 {
-    if (r == 0)
-    {
-        r = new RenderDevice();
-    }
-
-    if (!r)
-    {
-        Log::Fatal("CAN'T CREATE RENDER DEVICE!!!.");
-        return false;
-    }
-
-    if (!r->init())
-    {
-        Log::Fatal("CAN'T INIT RENDER DEVICE!!!.");
-        return false;
-    }
-
-    r->setViewport(0, 0, _Config.windowSizeX, _Config.windowSizeY);
+	r.init();
+    r.setViewport(0, 0, _Config.windowSizeX, _Config.windowSizeY);
 
     m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, _Config.windowSizeX, _Config.windowSizeY, 0.0f, -1.0f, 1.0f);
 
-    _RenderStorage->Init();
-
-    rb = r->createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
-    rbFinal = r->createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA32F, false, 1, 0);
+    rb = r.createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
+    rbFinal = r.createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA32F, false, 1, 0);
 
     // Main game camera
     mainCamera = new Camera;
     mainCamera->setupViewParams(45.0f, _Config.aspectRatio, 2.0f, 10000.0f);
     _PipelineGlobal->SetCamera(mainCamera);
-
-    return true;
 }
 
-void RenderGL::Destroy()
-{}
+RenderGL::~RenderGL()
+{
+}
+
+void RenderGL::Init()
+{
+	// Managers
+	m_RenderStorage = new RenderStorage(&r);
+	m_TexturesManager = new TexturesManager(&r);
+	m_FontsManager = new FontsManager(&r);
+	m_TechniquesManager = new TechniquesManager(&r);
+	
+}
 
 void RenderGL::Set3D()
 {
     // Cull face
-    r->setCullMode(R_CullMode::RS_CULL_BACK);
+    r.setCullMode(R_CullMode::RS_CULL_BACK);
 
     // Depth settings
-    r->setDepthMask(true);
-    r->setDepthTest(true);
+    r.setDepthMask(true);
+    r.setDepthTest(true);
 
     // Blending settings
-    r->setBlendMode(false);
+    r.setBlendMode(false);
 }
 
 void RenderGL::Set2D()
 {
     // Cull face
-    r->setCullMode(R_CullMode::RS_CULL_NONE);
+    r.setCullMode(R_CullMode::RS_CULL_NONE);
 
     // Depth settings
-    r->setDepthMask(false);
-    r->setDepthTest(false);
+    r.setDepthMask(false);
+    r.setDepthTest(false);
 
     // Blending settings
-    r->setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+    r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 }
 
 // UI
@@ -96,18 +87,18 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
     texCoordsQuad.push_back(_image->GetP1());
     texCoordsQuad.push_back(_image->GetP3());
     texCoordsQuad.push_back(_image->GetP2());
-    _Render->r->updateBufferData(_RenderStorage->__vbQuadVTDynamic, 4 * sizeof(vec3), 4 * sizeof(vec2), texCoordsQuad.data());
+	m_RenderStorage->__vbQuadVTDynamic->updateBufferData(4 * sizeof(vec3), 4 * sizeof(vec2), texCoordsQuad.data());
 
     // Shader
-    _TechniquesMgr->m_UI_Texture->BindS();
-    _TechniquesMgr->m_UI_Texture->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
+	m_TechniquesManager->m_UI_Texture->Bind();
+	m_TechniquesManager->m_UI_Texture->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
 
     // State
-    r->setTexture(10, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
-    r->setGeometry(_RenderStorage->__QuadVTDynamic);
-    r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+    r.setTexture(10, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+    r.setGeometry(m_RenderStorage->__QuadVTDynamic);
+    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 
-    _TechniquesMgr->m_UI_Texture->Unbind();
+	m_TechniquesManager->m_UI_Texture->Unbind();
 }
 
 //
@@ -125,15 +116,15 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size)
     _Pipeline->Scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
 
     // Shader
-    _TechniquesMgr->m_UI_Texture->BindS();
-    _TechniquesMgr->m_UI_Texture->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
+    m_TechniquesManager->m_UI_Texture->Bind();
+    m_TechniquesManager->m_UI_Texture->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
 
     // State
-    r->setTexture(10, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
-    r->setGeometry(_RenderStorage->__QuadVT);
-    r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+    r.setTexture(10, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+    r.setGeometry(m_RenderStorage->__QuadVT);
+    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 
-    _TechniquesMgr->m_UI_Texture->Unbind();
+    m_TechniquesManager->m_UI_Texture->Unbind();
 }
 
 //
@@ -146,14 +137,14 @@ void RenderGL::RenderRectangle(vec2 _pos, vec2 _size, const Color& _color)
     _Pipeline->Scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
 
     // Shader
-    _TechniquesMgr->m_UI_Color->BindS();
-    _TechniquesMgr->m_UI_Color->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
-    _TechniquesMgr->m_UI_Color->SetColor(_color);
+    m_TechniquesManager->m_UI_Color->Bind();
+    m_TechniquesManager->m_UI_Color->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
+    m_TechniquesManager->m_UI_Color->SetColor(_color);
 
-    r->setGeometry(_RenderStorage->__Quad);
-    r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+    r.setGeometry(m_RenderStorage->__Quad);
+    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 
-    _TechniquesMgr->m_UI_Color->Unbind();
+    m_TechniquesManager->m_UI_Color->Unbind();
 }
 
 void RenderGL::RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color)
@@ -164,31 +155,31 @@ void RenderGL::RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color
     _Pipeline->Scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
 
     // Shader
-    _TechniquesMgr->m_UI_Color->BindS();
-    _TechniquesMgr->m_UI_Color->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
-    _TechniquesMgr->m_UI_Color->SetColor(_color);
+    m_TechniquesManager->m_UI_Color->Bind();
+    m_TechniquesManager->m_UI_Color->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
+    m_TechniquesManager->m_UI_Color->SetColor(_color);
 
-    r->setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+    r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-    r->setGeometry(_RenderStorage->__Quad);
-    r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+    r.setGeometry(_RenderStorage->__Quad);
+    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 
-    r->setFillMode(R_FillMode::RS_FILL_SOLID);
+    r.setFillMode(R_FillMode::RS_FILL_SOLID);
 
-    _TechniquesMgr->m_UI_Color->Unbind();*/
+    m_TechniquesManager->m_UI_Color->Unbind();*/
 
 
 
-    r->setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+    r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
     RenderRectangle(_pos, _size, _color);
-    r->setFillMode(R_FillMode::RS_FILL_SOLID);
+    r.setFillMode(R_FillMode::RS_FILL_SOLID);
 }
 
 //
 
 void RenderGL::RenderText(vec2 _pos, cstring _string, const Color& _color) const
 {
-    RenderText(_pos, _string, TextAlignW::TEXT_ALIGNW_LEFT, TextAlignH::TEXT_ALIGNH_BOTTOM, _FontsMgr->GetMainFont(), _color);
+    RenderText(_pos, _string, TextAlignW::TEXT_ALIGNW_LEFT, TextAlignH::TEXT_ALIGNH_BOTTOM, m_FontsManager->GetMainFont(), _color);
 }
 
 void RenderGL::RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color) const
@@ -198,7 +189,7 @@ void RenderGL::RenderText(vec2 _pos, cstring _string, Font* _font, const Color& 
 
 void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color) const
 {
-    RenderText(_pos, _string, _alignW, _alignH, _FontsMgr->GetMainFont(), _color);
+    RenderText(_pos, _string, _alignW, _alignH, m_FontsManager->GetMainFont(), _color);
 }
 
 void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color) const
@@ -238,34 +229,34 @@ void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAl
         break;
     }
 
-    _TechniquesMgr->m_UI_Font->BindS();
-    _TechniquesMgr->m_UI_Font->SetProjectionMatrix(m_OrhoMatrix);
-    _TechniquesMgr->m_UI_Font->SetFontColor(vec3(_color.red, _color.green, _color.blue));
+    m_TechniquesManager->m_UI_Font->Bind();
+    m_TechniquesManager->m_UI_Font->SetProjectionMatrix(m_OrhoMatrix);
+    m_TechniquesManager->m_UI_Font->SetFontColor(vec3(_color.red, _color.green, _color.blue));
 
     _font->Render(_string, _pos + offset);
 
-    _TechniquesMgr->m_UI_Font->Unbind();
+    m_TechniquesManager->m_UI_Font->Unbind();
 }
 
 //
 
 void RenderGL::RenderQuad()
 {
-    r->setGeometry(_RenderStorage->__Quad);
-    r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+    r.setGeometry(m_RenderStorage->__Quad);
+    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 }
 
 void RenderGL::RenderQuadVT()
 {
-    r->setGeometry(_RenderStorage->__QuadVT);
-    r->drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+    r.setGeometry(m_RenderStorage->__QuadVT);
+    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 }
 
 //
 
 void RenderGL::DrawBoundingBox(BoundingBox& _box, cmat4 _mat)
 {
-    _Render->r->setGeometry(_RenderStorage->_cubeGeo);
+    _Render->r.setGeometry(m_RenderStorage->_cubeGeo);
 
     BoundingBox newBox = _box;
     _box.transform(_mat);
@@ -276,18 +267,18 @@ void RenderGL::DrawBoundingBox(BoundingBox& _box, cmat4 _mat)
         _Pipeline->Translate(newBox.Min);
         _Pipeline->Scale(newBox.Max - newBox.Min);
 
-        _Render->r->setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-        _TechniquesMgr->m_Debug_GeometryPass->BindS();
-        _TechniquesMgr->m_Debug_GeometryPass->SetPVW();
+        _Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+        m_TechniquesManager->m_Debug_GeometryPass->Bind();
+        m_TechniquesManager->m_Debug_GeometryPass->SetPVW();
     }
     _Pipeline->Pop();
 
-    _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1, 1, 1, 1));
+    m_TechniquesManager->m_Debug_GeometryPass->SetColor4(vec4(1, 1, 1, 1));
 
-    _Render->r->drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+    _Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
 
-    _TechniquesMgr->m_Debug_GeometryPass->Unbind();
-    _Render->r->setFillMode(R_FillMode::RS_FILL_SOLID);
+    m_TechniquesManager->m_Debug_GeometryPass->Unbind();
+    _Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 }
 
 //
@@ -302,7 +293,7 @@ void RenderGL::OnWindowResized(uint32 _width, uint32 _height)
     _Config.CalculateAspectFactor();
 
     // Set viewport
-    r->setViewport(0, 0, _Config.windowSizeX, _Config.windowSizeY);
+    r.setViewport(0, 0, _Config.windowSizeX, _Config.windowSizeY);
 
     // Projection matix
     m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, _Config.windowSizeX, _Config.windowSizeY, 0.0f, -1.0f, 1.0f);

@@ -3,15 +3,10 @@
 class GameState_InWorld : public GameState
 {
 public:
-    GameState_InWorld() : GameState() {}
+    GameState_InWorld(Engine* _Engine) : GameState(_Engine) {}
 
     bool Init() override;
     void Destroy() override;
-
-    //
-
-    bool Set() override;
-    void Unset() override;
 
     //
 
@@ -39,4 +34,7 @@ private:
     vec2 lastMousePos;
 
     bool minimapActive;
+
+private:
+	WorldRender* m_WorldRender;
 };

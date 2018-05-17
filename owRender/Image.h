@@ -106,12 +106,12 @@ private:
 
 private:
     R_Texture*  m_Texture;
-    vec2      m_Start;
-    vec2      m_Size;
+    vec2        m_Start;
+    vec2        m_Size;
 
-    bool      m_CoordsCalculated;
-    vec2      m_P0;
-    vec2      m_P1;
-    vec2      m_P2;
-    vec2      m_P3;
+    bool        m_CoordsCalculated;
+    vec2        m_P0;
+    vec2        m_P1;
+    vec2        m_P2;
+    vec2        m_P3;
 };

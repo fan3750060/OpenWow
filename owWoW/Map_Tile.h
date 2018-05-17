@@ -75,6 +75,15 @@ public:
 
 	//
 
+	bool operator==(const MapTile& t) const
+	{
+		return (t.m_IndexX == m_IndexX) && (t.m_IndexZ == m_IndexZ);
+	}
+	bool operator!=(const MapTile& t) const
+	{
+		return (t.m_IndexX != m_IndexX) || (t.m_IndexZ != m_IndexZ);
+	}
+
 	MapChunk* getChunk(uint32 x, uint32 z)
     {
         assert1(x < C_ChunksInTile && z < C_ChunksInTile);

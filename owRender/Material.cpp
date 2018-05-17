@@ -26,27 +26,27 @@ Material::Material()
 
 void Material::Set()
 {
-	//_Render->r->setAlphaToCoverage(true);
+	//_Render->r.setAlphaToCoverage(true);
 	if (m_BlendEGxBlendIndex != -1)
 	{
-		_RenderStorage->SetEGxBlend(m_BlendEGxBlendIndex);
+		_Render->Storage()->SetEGxBlend(m_BlendEGxBlendIndex);
 	}
 	else
 	{
-		_Render->r->setBlendMode(m_BlendEnabled, m_Blend_SrcFunc, m_Blend_DstFunc);
+		_Render->r.setBlendMode(m_BlendEnabled, m_Blend_SrcFunc, m_Blend_DstFunc);
 	}
-	_Render->r->setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
-	_Render->r->setDepthTest(m_DepthTest);
-	_Render->r->setDepthMask(m_DepthWrite);
+	_Render->r.setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
+	_Render->r.setDepthTest(m_DepthTest);
+	_Render->r.setDepthMask(m_DepthWrite);
 
 	if (m_DiffuseTexture != nullptr)
 	{
-		_Render->r->setTexture(C_DiffuseTextureIndex, m_DiffuseTexture, _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(C_DiffuseTextureIndex, m_DiffuseTexture, _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
 	
 	if (m_SpecularTexture != nullptr)
 	{
-		_Render->r->setTexture(C_SpecularTextureIndex, m_SpecularTexture, _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(C_SpecularTextureIndex, m_SpecularTexture, _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
 
 }

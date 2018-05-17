@@ -5,9 +5,11 @@
 
 //
 
-class EnvironmentManager : public Module
+class EnvironmentManager
 {
-	DEF_MODULE(EnvironmentManager);
+public:
+	EnvironmentManager();
+	~EnvironmentManager();
 
 	void InitSkies(DBC_MapRecord* _mapRecord);
 

@@ -46,8 +46,8 @@ public:
 	void Render();
 
 private:
-	void createBuffer(cvec3 _position);
 	void initGeometry(File& f);
+	void createBuffer(cvec3 _position);
 	void InitTextures(DBC_LIQUIDTYPE_Type _liquidType);
 
 private:

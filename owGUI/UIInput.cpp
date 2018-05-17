@@ -23,7 +23,7 @@ void UIInput::Init(cvec2 _position, cvec2 _size, InputMode _inputMode)
 
 	inputMode = _inputMode;
 
-	auto inputTexture = _TexturesMgr->Add("images/ui/buttons/listbox_char.png");
+	auto inputTexture = _Render->TexturesMgr()->Add("images/ui/buttons/listbox_char.png");
 
 	base::Init(_position, _size, new Image(inputTexture));
 }

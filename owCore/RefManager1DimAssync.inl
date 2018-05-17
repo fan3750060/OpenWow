@@ -44,7 +44,6 @@ inline void RefManager1DimAssync<OBJECT_TYPE>::Delete(cstring name)
 	OBJECT_TYPE* item = GetItemByName(name);
 	if (item != nullptr)
 	{
-
 		item->DelRef();
 
 		if (item->NeedDelete())
@@ -71,9 +70,12 @@ inline void RefManager1DimAssync<OBJECT_TYPE>::Delete(OBJECT_TYPE* item)
 template <class OBJECT_TYPE>
 inline void RefManager1DimAssync<OBJECT_TYPE>::DeleteAll()
 {
-	for (auto it = objects.begin(); it != objects.end(); ++it)
+	for (auto it = objects.begin(); it != objects.end();)
 	{
+		auto obj = *it;
 		pre_delete(it->second);
+		it = objects.erase(it);
+		delete obj.second; 
 	}
 }
 

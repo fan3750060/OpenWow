@@ -5,10 +5,11 @@
 class Module;
 class File;
 
-class TexturesMgr : public Module, public RefManager1DimAssync<R_Texture>
+class TexturesManager : public RefManager1DimAssync<R_Texture>
 {
 public:
-	DEF_MODULE(TexturesMgr);
+	TexturesManager(RenderDevice* _RenderDevice);
+	~TexturesManager();
 
     R_Texture* Add(cstring _textureFileName);
     R_Texture* Add(File& _textureFile);
@@ -29,6 +30,7 @@ private:
     R_Texture*   m_DefaultTextureCubeObj;
 
 	ContainerAssync<string, R_Texture*> textures;
-};
 
-#define _TexturesMgr TexturesMgr::instance()
+private:
+	RenderDevice* m_RenderDevice;
+};

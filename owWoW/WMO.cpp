@@ -10,7 +10,7 @@
 
 // Additional
 #include "EnvironmentManager.h"
-#include "ModelsManager.h"
+#include "WorldController.h"
 #include "Wmo_Group.h"
 
 WMO::WMO(cstring name) : RefItemNamed(name), m_Loaded(false)
@@ -37,7 +37,7 @@ WMO::~WMO()
     ERASE_VECTOR(m_Groups);
 
     delete[] m_Skybox_Filename;
-    _ModelsMgr->Delete(m_Skybox);
+	_World->MDXM()->Delete(m_Skybox);
 
     // Clear portals
     if (m_Header.nPortals)
@@ -59,7 +59,7 @@ WMO::~WMO()
     ERASE_VECTOR(doodadsets);
     for (auto it = m_MDXNames.begin(); it != m_MDXNames.end(); ++it)
     {
-        _ModelsMgr->Delete(*it);
+		_World->MDXM()->Delete(*it);
     }
     ERASE_VECTOR(m_MDXInstances);
 
@@ -225,7 +225,7 @@ bool WMO::Load()
 
                 WOWCHUNK_READ_STRINGS2_BEGIN;
 
-                _ModelsMgr->Add(_string);
+				_World->MDXM()->Add(_string);
                 m_MDXNames.push_back(_string);
 
                 WOWCHUNK_READ_STRINGS2_END;
@@ -238,7 +238,7 @@ bool WMO::Load()
             {
                 DoodadInstance* _doodadInstance = new DoodadInstance(f);
 
-                MDX* m = (MDX*)_ModelsMgr->objects[m_MDXFilenames + _doodadInstance->placementInfo->flags.nameIndex];
+                MDX* m = (MDX*)_World->MDXM()->objects[m_MDXFilenames + _doodadInstance->placementInfo->flags.nameIndex];
                 assert1(m != nullptr);
                 _doodadInstance->SetModel(m);
 
@@ -296,7 +296,7 @@ bool WMO::Render(uint32 _doodadSet)
 
     if (_CameraFrustum->_frustum.cullBox(aabb))
     {
-        return false;
+       // return false;
     }
 
     // WMO groups
@@ -334,8 +334,8 @@ bool WMO::Render(uint32 _doodadSet)
 
     // Debug geometry
     {
-        _Render->r->setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-        _TechniquesMgr->m_Debug_GeometryPass->BindS();
+        _Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
 
         //#ifdef _DEBUG
         //DEBUG_DrawLightPlaceHolders();
@@ -347,8 +347,8 @@ bool WMO::Render(uint32 _doodadSet)
         //DEBUG_DrawPortals();
         //#endif
 
-        _TechniquesMgr->m_Debug_GeometryPass->Unbind();
-        _Render->r->setFillMode(R_FillMode::RS_FILL_SOLID);
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+        _Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
     }
 
     return true;
@@ -372,7 +372,7 @@ bool WMO::drawSkybox()
 
     m_Skybox->Render();
 
-    _EnvironmentManager->m_HasSky = true;
+	_World->EnvM()->m_HasSky = true;
 
     return true;
 }
@@ -424,43 +424,43 @@ void WMO::DEBUG_DrawFogPositions()
 
 void WMO::DEBUG_DrawMainBoundingBox()
 {
-    _Render->r->setGeometry(_RenderStorage->_cubeGeo);
+    _Render->r.setGeometry(_Render->Storage()->_cubeGeo);
 
     _Pipeline->Push(); // Save world matrix
     {
         _Pipeline->Translate(m_Bounds.Min);
         _Pipeline->Scale(m_Bounds.Max - m_Bounds.Min);
 
-        _TechniquesMgr->m_Debug_GeometryPass->SetPVW();
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
     }
     _Pipeline->Pop();
 
-    _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
+    _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
 
-    _Render->r->drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+    _Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
 }
 
 void WMO::DEBUG_DrawMainBoundingSphere()
 {
-    _Render->r->setGeometry(_RenderStorage->_sphereGeo);
+    _Render->r.setGeometry(_Render->Storage()->_sphereGeo);
 
     _Pipeline->Push(); // Save world matrix
     {
         //_Pipeline->Translate(m_Bounds.Center);
         _Pipeline->Scale(m_Bounds.Radius);
 
-        _TechniquesMgr->m_Debug_GeometryPass->SetPVW();
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
     }
     _Pipeline->Pop();
 
-    _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
+    _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
 
-    _Render->r->drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);
+    _Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);
 }
 
 void WMO::DEBUG_DrawBoundingBoxes()
 {
-    _Render->r->setGeometry(_RenderStorage->_cubeGeo);
+    _Render->r.setGeometry(_Render->Storage()->_cubeGeo);
 
     for (int i = 0; i < m_Header.nGroups; i++)
     {
@@ -472,15 +472,15 @@ void WMO::DEBUG_DrawBoundingBoxes()
             _Pipeline->Translate(g->m_Bounds.Min);
             _Pipeline->Scale(g->m_Bounds.Max - g->m_Bounds.Min);
 
-            _TechniquesMgr->m_Debug_GeometryPass->SetPVW();
+            _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
         }
         _Pipeline->Pop();
 
-        _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(fc[i % 2], fc[(i / 2) % 2], fc[(i / 3) % 2], 0.7f));
+        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(fc[i % 2], fc[(i / 2) % 2], fc[(i / 3) % 2], 0.7f));
 
 
 
-        _Render->r->drawIndexed(PRIM_TRILIST, 0, 36, 0, 8, false);
+        _Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8, false);
     }
 }
 
@@ -494,11 +494,11 @@ void WMO::DEBUG_DrawPortalsRelations()
 
         if (portalReference->side > 0)
         {
-            _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 0.0f, 0.8f));
+            _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 0.0f, 0.8f));
         }
         else
         {
-            _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 0.0f, 1.0f, 0.8f));
+            _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 0.0f, 1.0f, 0.8f));
         }
 
         vec3 pc;
@@ -536,7 +536,7 @@ void WMO::DEBUG_DrawPortalsRelations()
 
 void WMO::DEBUG_DrawPortals()
 {
-    _TechniquesMgr->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.5f));
+    _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.5f));
 
     for (uint32 i = 0; i < m_Header.nPortals; i++)
     {

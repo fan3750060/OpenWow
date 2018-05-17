@@ -3,8 +3,10 @@
 class Renderable3DObject
 {
 public:
+	virtual void PreRender3D() = 0;
 	virtual void Render3D() = 0;
-    
+	virtual void PostRender3D() = 0;
+
     //
 
 	void SetDrawOrder(uint32 _order)

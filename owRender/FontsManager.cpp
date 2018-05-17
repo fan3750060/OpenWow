@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // General
-#include "FontsMgr.h"
+#include "FontsManager.h"
 
 // Additional
 #include <freetype/config/ftheader.h>
@@ -10,39 +10,37 @@
 #include "Render.h"
 #include "RenderStorage.h"
 
-
-bool FontsMgr::Init()
+FontsManager::FontsManager(RenderDevice* _RenderDevice)
+	: m_RenderDevice(_RenderDevice)
 {
 	mainFont = Add("Fonts\\Consolas.TTF", 12);
-
-	return true;
 }
 
-void FontsMgr::Destroy()
+FontsManager::~FontsManager()
 {
 	DeleteAll();
 
-	Log::Info("FontsMgr[]: All fonts destroyed.");
+	Log::Info("FontsManager[]: All fonts destroyed.");
 }
 
-Font* FontsMgr::Add(cstring _fontFileName, uint32 _fontSize)
+Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 {
 	return RefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
 }
 
-Font* FontsMgr::Add(File& _fontFileName, uint32 _fontSize)
+Font* FontsManager::Add(File& _fontFileName, uint32 _fontSize)
 {
 	return RefManager1Dim::Add(_fontFileName.Path_Name() + "__" + std::to_string(_fontSize));
 }
 
 //
 
-Font* FontsMgr::CreateAction(cstring _nameAndSize)
+Font* FontsManager::CreateAction(cstring _nameAndSize)
 {
 	uint32_t _delimIndex = _nameAndSize.find_last_of("__");
 	if (_delimIndex == -1)
 	{
-		Log::Error("FontsMgr[%s]: Incorrect font nameAndSize.", _nameAndSize.c_str());
+		Log::Error("FontsManager[%s]: Incorrect font nameAndSize.", _nameAndSize.c_str());
 		return nullptr;
 	}
 
@@ -52,7 +50,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	File f = fontFileName;
 	if (!f.Open())
 	{
-		Log::Fatal("FontsMgr[%s]: Error while loading font.", f.Path_Name().c_str());
+		Log::Fatal("FontsManager[%s]: Error while loading font.", f.Path_Name().c_str());
 		return nullptr;
 	}
 
@@ -67,7 +65,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	FT_Face face;
 	if (FT_New_Memory_Face(ftLibrary, f.GetData(), f.GetSize(), 0, &face) != 0)
 	{
-		Log::Error("FontsMgr[%s]: Error while loading font. Could not load font file.", f.Path_Name().c_str());
+		Log::Error("FontsManager[%s]: Error while loading font. Could not load font file.", f.Path_Name().c_str());
 
 		// Unload
 		FT_Done_Face(face);
@@ -77,7 +75,7 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 
 	if (!(face->face_flags & FT_FACE_FLAG_SCALABLE) || !(face->face_flags & FT_FACE_FLAG_HORIZONTAL))
 	{
-		Log::Error("FontsMgr[%s]: Error while loading font. Error setting font size.", f.Path_Name().c_str());
+		Log::Error("FontsManager[%s]: Error while loading font. Error setting font size.", f.Path_Name().c_str());
 
 		// Unload
 		FT_Done_Face(face);
@@ -183,22 +181,22 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	}
 
 
-    R_Buffer* __vb = _Render->r->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
+    R_Buffer* __vb = m_RenderDevice->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
 
 	//
 
-    R_GeometryInfo* __geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PT);
+    R_GeometryInfo* __geom = m_RenderDevice->beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PT);
 
 	// Vertex params
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, 0,            sizeof(Texture_Vertex));
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, sizeof(vec3), sizeof(Texture_Vertex));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0,            sizeof(Texture_Vertex));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, sizeof(vec3), sizeof(Texture_Vertex));
 
 	// Finish
-	_Render->r->finishCreatingGeometry(__geom);
+	__geom->finishCreatingGeometry();
 
 	// Font texture
-	texture = _Render->r->createTexture(R_TextureTypes::Tex2D, imageWidth, imageHeight, 1, R_TextureFormats::RGBA8, false, false, false, false);
-	_Render->r->uploadTextureData(texture, 0, 0, image);
+	texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, imageWidth, imageHeight, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	texture->uploadTextureData(0, 0, image);
 
 	delete[] image;
 
@@ -210,12 +208,12 @@ Font* FontsMgr::CreateAction(cstring _nameAndSize)
 	Font* font = new Font(texture, __geom, charWidth, charHeight);
 	Fonts.insert(make_pair(_nameAndSize, font));
 
-	Log::Info("FontsMgr[%s]: Font loaded. Size [%d].", f.Path_Name().c_str(), fontSize);
+	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f.Path_Name().c_str(), fontSize);
 
 	return font;
 }
 
-bool FontsMgr::DeleteAction(cstring name)
+bool FontsManager::DeleteAction(cstring name)
 {
 	return true;
 }

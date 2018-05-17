@@ -5,7 +5,7 @@
 
 void UIWoWWindow::Init(cvec2 _position, cvec2 _size)
 {
-    R_Texture* texture = _TexturesMgr->Add("Interface/DialogFrame/UI-DialogBox-Border.blp");
+    R_Texture* texture = _Render->TexturesMgr()->Add("Interface/DialogFrame/UI-DialogBox-Border.blp");
     for (uint8 i = 0; i < 8; i++)
     {
         m_Images[i] = new Image(texture, vec2(i * 32.0f, 0.0f), vec2(C_ImgSize, C_ImgSize));
@@ -14,7 +14,7 @@ void UIWoWWindow::Init(cvec2 _position, cvec2 _size)
     m_Images[IMG_TOP]->RotateCoords(Image::CoordsRotation::Coords_ROT_90);
     m_Images[IMG_BOT]->RotateCoords(Image::CoordsRotation::Coords_ROT_90);
 
-    m_Background = _TexturesMgr->Add("Interface/DialogFrame/UI-DialogBox-Background-Dark.blp");
+    m_Background = _Render->TexturesMgr()->Add("Interface/DialogFrame/UI-DialogBox-Background-Dark.blp");
 
     base::Init(_position, _size, nullptr);
 }

@@ -14,7 +14,7 @@ UICheckBox::~UICheckBox() {
 }
 
 void UICheckBox::Init(cvec2 _position) {
-	auto checkBoxTexture = _TexturesMgr->Add("images/ui/buttons/checkbox_default.png");
+	auto checkBoxTexture = _Render->TexturesMgr()->Add("images/ui/buttons/checkbox_default.png");
 	auto checkBoxSize = vec2(checkBoxTexture->GetSize().x, checkBoxTexture->GetSize().y / 2);
 
 	for (int i = 0; i < 2; i++)

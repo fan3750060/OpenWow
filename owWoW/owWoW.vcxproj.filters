@@ -40,6 +40,12 @@
     <Filter Include="Environment\Skies">
       <UniqueIdentifier>{179d7822-1b17-4d5c-9dcf-34999c82a998}</UniqueIdentifier>
     </Filter>
+    <Filter Include="WMO\Parts">
+      <UniqueIdentifier>{b0f56994-9fa8-494f-a732-b6f401df22f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorldController">
+      <UniqueIdentifier>{86cc816c-079e-4fc1-8454-67b7ce64a75c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -52,22 +58,7 @@
     <ClCompile Include="WMO.cpp">
       <Filter>WMO</Filter>
     </ClCompile>
-    <ClCompile Include="WMO_Fog.cpp">
-      <Filter>WMO</Filter>
-    </ClCompile>
     <ClCompile Include="WMO_Group.cpp">
-      <Filter>WMO</Filter>
-    </ClCompile>
-    <ClCompile Include="WMO_Group_Batch.cpp">
-      <Filter>WMO</Filter>
-    </ClCompile>
-    <ClCompile Include="WMO_Light.cpp">
-      <Filter>WMO</Filter>
-    </ClCompile>
-    <ClCompile Include="WMO_Manager.cpp">
-      <Filter>WMO</Filter>
-    </ClCompile>
-    <ClCompile Include="WMO_Material.cpp">
       <Filter>WMO</Filter>
     </ClCompile>
     <ClCompile Include="WowChunkUtils.cpp">
@@ -93,9 +84,6 @@
     </ClCompile>
     <ClCompile Include="WMO_Instance.cpp">
       <Filter>Map\Instances</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="Map_Chunk.cpp">
       <Filter>Map</Filter>
@@ -148,11 +136,32 @@
     <ClCompile Include="MDX_Skin_Batch.cpp">
       <Filter>MDX</Filter>
     </ClCompile>
-    <ClCompile Include="ModelsManager.cpp">
-      <Filter>MDX</Filter>
-    </ClCompile>
     <ClCompile Include="Animated.cpp">
       <Filter>MDX\Animated</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Light.cpp">
+      <Filter>WMO\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Fog.cpp">
+      <Filter>WMO\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Material.cpp">
+      <Filter>WMO\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldController.cpp">
+      <Filter>WorldController</Filter>
+    </ClCompile>
+    <ClCompile Include="MDXsManager.cpp">
+      <Filter>MDX</Filter>
+    </ClCompile>
+    <ClCompile Include="WMOsManager.cpp">
+      <Filter>WMO</Filter>
+    </ClCompile>
+    <ClCompile Include="MapController.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldRender.cpp">
+      <Filter>WorldController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,22 +178,7 @@
     <ClInclude Include="WMO.h">
       <Filter>WMO</Filter>
     </ClInclude>
-    <ClInclude Include="WMO_Fog.h">
-      <Filter>WMO</Filter>
-    </ClInclude>
     <ClInclude Include="WMO_Group.h">
-      <Filter>WMO</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_Group_Batch.h">
-      <Filter>WMO</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_Light.h">
-      <Filter>WMO</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_Manager.h">
-      <Filter>WMO</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_Material.h">
       <Filter>WMO</Filter>
     </ClInclude>
     <ClInclude Include="WowChunkUtils.h">
@@ -219,9 +213,6 @@
     </ClInclude>
     <ClInclude Include="WMO_Instance.h">
       <Filter>Map\Instances</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="Map_Chunk.h">
       <Filter>Map</Filter>
@@ -277,14 +268,35 @@
     <ClInclude Include="MDX_Skin_Batch.h">
       <Filter>MDX</Filter>
     </ClInclude>
-    <ClInclude Include="ModelsManager.h">
-      <Filter>MDX</Filter>
-    </ClInclude>
     <ClInclude Include="AnimatedOld.h">
       <Filter>MDX\Animated</Filter>
     </ClInclude>
     <ClInclude Include="Animated.h">
       <Filter>MDX\Animated</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Light.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Fog.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Material.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldController.h">
+      <Filter>WorldController</Filter>
+    </ClInclude>
+    <ClInclude Include="MDXsManager.h">
+      <Filter>MDX</Filter>
+    </ClInclude>
+    <ClInclude Include="WMOsManager.h">
+      <Filter>WMO</Filter>
+    </ClInclude>
+    <ClInclude Include="MapController.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldRender.h">
+      <Filter>WorldController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

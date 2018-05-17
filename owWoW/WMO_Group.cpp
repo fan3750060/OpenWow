@@ -7,10 +7,10 @@
 #include "Wmo_Group.h"
 
 // Additional
-#include "EnvironmentManager.h"
 #include "Wmo_Fog.h"
 #include "Wmo_Light.h"
 #include "Wmo_Material.h"
+#include "WorldController.h"
 
 struct WMOGroupInfoDef
 {
@@ -318,35 +318,35 @@ void WMOGroup::Load()
 	}
 
 	// Vertex buffer
-    R_Buffer* __vb = _Render->r->createVertexBuffer(m_VertexesCount * bufferSize, nullptr);
+    R_Buffer* __vb = _Render->r.createVertexBuffer(m_VertexesCount * bufferSize, nullptr);
 
-	_Render->r->updateBufferData(__vb, m_VertexesCount * 0 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Vertexes);
-	_Render->r->updateBufferData(__vb, m_VertexesCount * 3 * sizeof(float), m_VertexesCount * sizeof(vec2), m_TextureCoords[0]); // FIXME
-	_Render->r->updateBufferData(__vb, m_VertexesCount * 5 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Normals);
+	__vb->updateBufferData(m_VertexesCount * 0 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Vertexes);
+	__vb->updateBufferData(m_VertexesCount * 3 * sizeof(float), m_VertexesCount * sizeof(vec2), m_TextureCoords[0]); // FIXME
+	__vb->updateBufferData(m_VertexesCount * 5 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Normals);
 	if (m_Header.flags.FLAG_HAS_VERTEX_COLORS)
 	{
-		_Render->r->updateBufferData(__vb, m_VertexesCount * 8 * sizeof(float), m_VertexesCount * sizeof(vec4), vertexColors);
+		__vb->updateBufferData(m_VertexesCount * 8 * sizeof(float), m_VertexesCount * sizeof(vec4), vertexColors);
 	}
 
 	//
 
-	__geom = _Render->r->beginCreatingGeometry(m_Header.flags.FLAG_HAS_VERTEX_COLORS ? _RenderStorage->__layoutWMO_VC : _RenderStorage->__layoutWMO);
+	__geom = _Render->r.beginCreatingGeometry(m_Header.flags.FLAG_HAS_VERTEX_COLORS ? _Render->Storage()->__layoutWMO_VC : _Render->Storage()->__layoutWMO);
 
 	// Vertex params
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, m_VertexesCount * 0 * sizeof(float), 0);
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, m_VertexesCount * 3 * sizeof(float), 0);
-	_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, m_VertexesCount * 5 * sizeof(float), 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 0 * sizeof(float), 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 3 * sizeof(float), 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 5 * sizeof(float), 0);
 	if (m_Header.flags.FLAG_HAS_VERTEX_COLORS)
 	{
-		_Render->r->setGeomVertexParams(__geom, __vb, R_DataType::T_FLOAT, m_VertexesCount * 8 * sizeof(float), 0);
+		__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 8 * sizeof(float), 0);
 	}
 
 	// Index bufer
-    R_Buffer* __ib = _Render->r->createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices);
-	_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
+    R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices);
+	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
-	_Render->r->finishCreatingGeometry(__geom);
+	__geom->finishCreatingGeometry();
 
 	//
 
@@ -420,10 +420,10 @@ bool WMOGroup::Render()
 
 	visible = true;
 
-	_TechniquesMgr->m_WMO_GeometryPass->BindS();
-	_TechniquesMgr->m_WMO_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->m_WMO_GeometryPass->Bind();
+	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetPVW();
 
-	_Render->r->setGeometry(__geom);
+	_Render->r.setGeometry(__geom);
 
 	for (uint32 i = 0; i < m_WMOBatchIndexesCount; i++)
 	{
@@ -432,10 +432,10 @@ bool WMOGroup::Render()
 
 		batch->__material.Set();
 
-		//_TechniquesMgr->m_WMO_GeometryPass->SetDiffuseColor(fromARGB(material->GetDiffuseColor()));
-		_TechniquesMgr->m_WMO_GeometryPass->SetHasMOCV(false);
+		//_Render->TechniquesMgr()->m_WMO_GeometryPass->SetDiffuseColor(fromARGB(material->GetDiffuseColor()));
+		_Render->TechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(false);
 
-		_Render->r->drawIndexed(PRIM_TRILIST, batch->indexStart, batch->indexCount, batch->vertexStart, (batch->vertexEnd - batch->vertexStart), false);
+		_Render->r.drawIndexed(PRIM_TRILIST, batch->indexStart, batch->indexCount, batch->vertexStart, (batch->vertexEnd - batch->vertexStart), false);
 	}
 
 	return true;
@@ -506,7 +506,7 @@ void WMOGroup::setupFog()
 {
 	if (m_EnableOutdoorLights || fog == -1)
 	{
-		_EnvironmentManager->SetFog();
+		_World->EnvM()->SetFog();
 	}
 	else
 	{

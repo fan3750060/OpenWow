@@ -3,6 +3,9 @@
 // General
 #include "MDX_Part_Light.h"
 
+// Additional
+#include "WorldController.h"
+
 void MDX_Part_Light::init(File& f, M2Light& mld, uint32* global)
 {
 	tpos = pos = From_XYZ_To_XZminusY_RET(mld.position);
@@ -18,8 +21,8 @@ void MDX_Part_Light::init(File& f, M2Light& mld, uint32* global)
 
 void MDX_Part_Light::setup(int time, uint32 l)
 {
-	vec4 ambcol(ambColor.getValue(0, time) * ambIntensity.getValue(0, time), 1.0f);
-	vec4 diffcol(diffColor.getValue(0, time) * diffIntensity.getValue(0, time), 1.0f);
+	vec4 ambcol(ambColor.getValue(0, time, _World->EnvM()->globalTime) * ambIntensity.getValue(0, time, _World->EnvM()->globalTime), 1.0f);
+	vec4 diffcol(diffColor.getValue(0, time, _World->EnvM()->globalTime) * diffIntensity.getValue(0, time, _World->EnvM()->globalTime), 1.0f);
 	vec4 p;
 
 	if (type == MODELLIGHT_DIRECTIONAL)

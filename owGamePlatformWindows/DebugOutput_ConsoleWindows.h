@@ -3,8 +3,8 @@
 class DebugOutput_ConsoleWindows : public DebugOutput
 {
 public:
-	 bool Init();
-	 void Destroy();
+	DebugOutput_ConsoleWindows();
+	~DebugOutput_ConsoleWindows();
 
 protected:
 	 void Print(string _messageFmt, DebugOutput::DebugMessageType _type);

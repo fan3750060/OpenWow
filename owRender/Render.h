@@ -5,6 +5,11 @@
 
 class GLFWBackend;
 
+class TexturesManager;
+class FontsManager;
+class TechniquesManager;
+class RenderStorage;
+
 struct RenderTarget
 {
 	std::string           id;
@@ -28,11 +33,21 @@ struct RenderTarget
 	}
 };
 
-class RenderGL : public Module
+class RenderGL
 {
 	friend GLFWBackend;
+	CLASS_INSTANCE(RenderGL);
 public:
-	DEF_MODULE(RenderGL);
+	RenderGL();
+	~RenderGL();
+
+	void Init();
+
+	inline RenderStorage* Storage() { return m_RenderStorage; }
+	inline TexturesManager* TexturesMgr() { return m_TexturesManager; }
+	inline FontsManager* FontsMgr() { return m_FontsManager; }
+	inline TechniquesManager* TechniquesMgr() { return m_TechniquesManager; }
+	
 
 	void Set3D();
 	void Set2D();
@@ -63,10 +78,19 @@ private:
 	mat4 m_OrhoMatrix;
 
 public:
-	RenderDevice* r;
+	RenderDevice r;
     R_RenderBuffer* rb;
     R_RenderBuffer* rbFinal;
     Camera* mainCamera;
+
+private:
+	RenderStorage * m_RenderStorage;
+	TexturesManager*        m_TexturesManager;
+	FontsManager*           m_FontsManager;
+	TechniquesManager*      m_TechniquesManager;
+	
 };
 
 #define _Render RenderGL::instance()
+
+#include "TechniquesManager.h"

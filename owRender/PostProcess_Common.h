@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Technique.h"
+
 class PostProcess_Common : public Technique
 {
 public:
-    PostProcess_Common(cstring _fsName) : Technique("shaders/Common_SimpleVertex.vs", _fsName) 
+    PostProcess_Common(RenderDevice* _RenderDevice, cstring _fsName) : Technique(_RenderDevice, "shaders/Common_SimpleVertex.vs", _fsName)
     { 
         gScreenSize     = getLocation("gScreenSize");
         gCameraPosition = getLocation("gCameraPosition");

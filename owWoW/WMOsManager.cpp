@@ -3,21 +3,19 @@
 // Includes
 
 // General
-#include "WMO_Manager.h"
+#include "WMOsManager.h"
 
 // Additional
 #include "Wmo.h"
 
-bool WMOsManager::Init()
+WMOsManager::WMOsManager()
 {
 	ADDCONSOLECOMMAND_CLASS("wmo_info", WMOsManager, PrintAllInfo);
 
 	RefManager1DimAssync::Init();
-
-	return true;
 }
 
-void WMOsManager::Destroy()
+WMOsManager::~WMOsManager()
 {
 	RefManager1DimAssync::Destroy();
 

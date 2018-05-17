@@ -1,12 +1,7 @@
 #include "stdafx.h"
 
 // General
-#include "TexturesMgr.h"
-
-// Additional
-#include "Render.h"
-
-// Header
+#include "TexturesManager.h"
 
 #include "../shared/pack_begin.h"
 struct BLPHeader
@@ -33,9 +28,10 @@ struct __RGBA
     uint8 r, g, b, a;
 };
 
-bool TexturesMgr::Init()
+TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
+	: m_RenderDevice(_RenderDevice)
 {
-    ADDCONSOLECOMMAND_CLASS("tm_info", TexturesMgr, PrintAllInfo);
+    ADDCONSOLECOMMAND_CLASS("tm_info", TexturesManager, PrintAllInfo);
 
     RefManager1DimAssync::Init();
 
@@ -57,15 +53,15 @@ bool TexturesMgr::Init()
         }
     }
 
-    m_DefaultTexture2DObj = _Render->r->createTexture(R_TextureTypes::Tex2D, m_DefaultTextureSize.x, m_DefaultTextureSize.y, 1, R_TextureFormats::RGBA8, true, true, false, false);
-    _Render->r->uploadTextureData(m_DefaultTexture2DObj, 0, 0, defaultColors);
+    m_DefaultTexture2DObj = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, m_DefaultTextureSize.x, m_DefaultTextureSize.y, 1, R_TextureFormats::RGBA8, true, true, false, false);
+	m_DefaultTexture2DObj->uploadTextureData(0, 0, defaultColors);
 
     //--------------
 
-    /*m_DefaultTextureCubeObj = _Render->r->createTexture(R_TextureTypes::TexCube, 4, 4, 1, R_TextureFormats::RGBA8, true, true, false, false);
+    /*m_DefaultTextureCubeObj = m_RenderDevice->createTexture(R_TextureTypes::TexCube, 4, 4, 1, R_TextureFormats::RGBA8, true, true, false, false);
     for (uint32 i = 0; i < 6; ++i)
     {
-        _Render->r->uploadTextureData(m_DefaultTextureCubeObj, i, 0, texData);
+        m_RenderDevice->uploadTextureData(m_DefaultTextureCubeObj, i, 0, texData);
     }*/
 
     //-------------
@@ -76,25 +72,23 @@ bool TexturesMgr::Init()
     memcpy(texData2 + 128, texData, 64);
     memcpy(texData2 + 192, texData, 64);
 
-    m_DefaultTexture3DObj = _Render->r->createTexture(R_TextureTypes::Tex3D, 4, 4, 4, R_TextureFormats::RGBA8, true, true, false, false);
-    _Render->r->uploadTextureData(m_DefaultTexture3DObj, 0, 0, texData2);
+    m_DefaultTexture3DObj = m_RenderDevice->createTexture(R_TextureTypes::Tex3D, 4, 4, 4, R_TextureFormats::RGBA8, true, true, false, false);
+    m_RenderDevice->uploadTextureData(m_DefaultTexture3DObj, 0, 0, texData2);
     delete[] texData2;*/
-
-    return true;
 }
 
-void TexturesMgr::Destroy()
+TexturesManager::~TexturesManager()
 {
     RefManager1DimAssync::Destroy();
 
     DeleteAll();
 
-    Log::Info("TexturesMgr[]: All textures destroyed.");
+    Log::Info("TexturesManager[]: All textures destroyed.");
 }
 
 //
 
-bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
+bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
 {
     // Read data
     BLPHeader header;
@@ -126,7 +120,7 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
             fail1();
         }
 
-        _texture = _Render->r->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
+        _texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
 
         uint8* buf = new uint8[header.mipSizes[0]];
         for (uint8 i = 0; i < mipmax; i++)
@@ -138,7 +132,7 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
                 _file.Seek(header.mipOffsets[i]);
                 _file.ReadBytes(buf, header.mipSizes[i]);
 
-                _Render->r->uploadTextureData(_texture, 0, i, buf);
+				_texture->uploadTextureData(0, i, buf);
             }
             else
             {
@@ -161,7 +155,7 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
 
         bool hasalpha = (header.alpha_depth != 0);
 
-        _texture = _Render->r->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
+        _texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
 
         for (int i = 0; i < mipmax; i++)
         {
@@ -206,7 +200,7 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
                     }
                 }
 
-                _Render->r->uploadTextureData(_texture, 0, i, buf2);
+				_texture->uploadTextureData(0, i, buf2);
             }
             else
             {
@@ -226,12 +220,12 @@ bool TexturesMgr::LoadBLPTexture(File& _file, R_Texture*& _texture)
     return true;
 }
 
-R_Texture* TexturesMgr::Add(cstring _textureFileName)
+R_Texture* TexturesManager::Add(cstring _textureFileName)
 {
     return RefManager1DimAssync::Add(_textureFileName);
 }
 
-R_Texture* TexturesMgr::Add(File& _textureFile)
+R_Texture* TexturesManager::Add(File& _textureFile)
 {
     return RefManager1DimAssync::Add(_textureFile.Path_Name());
 }
@@ -239,7 +233,7 @@ R_Texture* TexturesMgr::Add(File& _textureFile)
 // Protected
 
 
-R_Texture* TexturesMgr::CreateAction(cstring name)
+R_Texture* TexturesManager::CreateAction(cstring name)
 {
    // R_Texture* texture = new R_Texture();
     //    m_DefaultTexture2DObj;
@@ -247,7 +241,7 @@ R_Texture* TexturesMgr::CreateAction(cstring name)
     return nullptr;
 }
 
-void TexturesMgr::LoadAction(string _name, R_Texture*& _texture)
+void TexturesManager::LoadAction(string _name, R_Texture*& _texture)
 {
     //wglMakeCurrent(_Render->dc, _Render->glrc2);
 
@@ -255,12 +249,12 @@ void TexturesMgr::LoadAction(string _name, R_Texture*& _texture)
 
     if (!f.Open())
     {
-        Log::Error("TexturesMgr[%s]: Error while open texture.", f.Path_Name().c_str());
-        _texture = _TexturesMgr->DefaultTexture();
+        Log::Error("TexturesManager[%s]: Error while open texture.", f.Path_Name().c_str());
+        _texture = DefaultTexture();
         return;
     }
 
-    //Log::Info("TexturesMgr[%s]: R_Texture loading.", f.Path_Name().c_str());
+    //Log::Info("TexturesManager[%s]: R_Texture loading.", f.Path_Name().c_str());
 
     // Load texture
     bool result = LoadBLPTexture(f, _texture);
@@ -268,15 +262,15 @@ void TexturesMgr::LoadAction(string _name, R_Texture*& _texture)
     // Check result
     if (!result)
     {
-        Log::Error("TexturesMgr[%s]: Error while loading texture data.", f.Path_Name().c_str());
+        Log::Error("TexturesManager[%s]: Error while loading texture data.", f.Path_Name().c_str());
         _texture = DefaultTexture();
         return;
     }
 
-    //Log::Info("TexturesMgr[%s]: Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
+    //Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
 }
 
-bool TexturesMgr::DeleteAction(cstring name)
+bool TexturesManager::DeleteAction(cstring name)
 {
     return true;
 }

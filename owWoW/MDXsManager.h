@@ -2,10 +2,11 @@
 
 #include "MDX.h"
 
-class ModelsManager : public Module, public RefManager1DimAssync<MDX>
+class MDXsManager : public RefManager1DimAssync<MDX>
 {
 public:
-	DEF_MODULE(ModelsManager);
+	MDXsManager();
+	~MDXsManager();
 
 	// RefManager override
 	MDX* CreateAction(cstring name) override;
@@ -14,8 +15,4 @@ public:
 
 	void resetAnim();
 	void updateEmitters(float dt);
-
-	
 };
-
-#define _ModelsMgr ModelsManager::instance()

@@ -4,15 +4,15 @@
 #include "ConsoleOpenGL.h"
 
 // Additional
-#include "FontsMgr.h"
-#include "TexturesMgr.h"
+#include "FontsManager.h"
+#include "TexturesManager.h"
 #include "Render.h"
 
-bool ConsoleOpenGL::Init()
+ConsoleOpenGL::ConsoleOpenGL()
 {
 	windowSize = _Config.GetWindowSize();
 	opened = false;
-	consoleFont = _FontsMgr->GetMainFont();
+	consoleFont = _Render->FontsMgr()->GetMainFont();
 	assert1(consoleFont != nullptr);
 	fontHeight = consoleFont->GetHeight();
 	consoleHeight = windowSize.y / 2.0f;
@@ -30,15 +30,14 @@ bool ConsoleOpenGL::Init()
 
     RenderableUIObject::Register(1000);
     InputListenerObject::Register();
-    return true;
 }
 
-void ConsoleOpenGL::Destroy()
+ConsoleOpenGL::~ConsoleOpenGL()
 {
-	_FontsMgr->Delete(consoleFont);
-
 	RenderableUIObject::Unregister();
-    InputListenerObject::Unregister();
+	InputListenerObject::Unregister();
+
+	_Render->FontsMgr()->Delete(consoleFont);
 }
 
 void ConsoleOpenGL::RenderUI()

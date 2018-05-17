@@ -24,8 +24,8 @@ public:
 		}
 		else
 		{*/
-			_objects.push_back(obj);
-			return (uint32)_objects.size();
+		_objects.push_back(obj);
+		return (uint32)_objects.size();
 		/*}*/
 	}
 
@@ -61,6 +61,13 @@ private:
 
 class RenderDevice
 {
+	friend R_BufferBase;
+	friend R_Buffer;
+	friend R_TextureBuffer;
+	friend R_GeometryInfo;
+	friend R_RenderBuffer;
+	friend R_Shader;
+	friend R_Texture;
 public:
 	RenderDevice();
 	~RenderDevice();
@@ -74,50 +81,28 @@ public:
 	// Rendering
 	void beginRendering();
 
-    // Geometry
-    R_GeometryInfo* beginCreatingGeometry(uint32 vlObj);
-	void finishCreatingGeometry(R_GeometryInfo* geoObj);
-	void setGeomVertexParams(R_GeometryInfo* geoObj, R_Buffer* vbo, R_DataType type, uint32 offset, uint32 stride, bool needNorm = false);
-	void setGeomIndexParams(R_GeometryInfo* geoObj, R_Buffer* indBuf, R_IndexFormat format);
-	void destroyGeometry(R_GeometryInfo*& geoObj, bool destroyBindedBuffers);
+	// Geometry
+	R_GeometryInfo* beginCreatingGeometry(uint32 vlObj);
 
 	// Buffers
-    R_Buffer* createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
-    R_Buffer* createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
-    R_TextureBuffer* createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
-    R_Buffer* createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
-	void destroyBuffer(R_Buffer*& bufObj);
-	void destroyTextureBuffer(R_TextureBuffer*& bufObj);
-	void updateBufferData(R_Buffer* bufObj, uint32 offset, uint32 size, const void *data);
-	void* mapBuffer(R_Buffer* bufObj, uint32 offset, uint32 size, R_BufferMappingTypes mapType);
-	void unmapBuffer(R_Buffer* bufObj);
+	R_Buffer* createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	R_Buffer* createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	R_Buffer* createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	R_TextureBuffer* createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
 	uint32 getBufferMem() const
 	{
 		return _bufferMem;
 	}
 
 	// Textures
-	uint32 calcTextureSize(R_TextureFormats::List format, int width, int height, int depth);
-    R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
-	void uploadTextureData(R_Texture* texObj, int slice, int mipLevel, const void *pixels);
-	void destroyTexture(R_Texture*& texObj);
-	bool getTextureData(R_Texture* texObj, int slice, int mipLevel, void *buffer);
-	void bindImageToTexture(R_Texture* texObj, void* eglImage);
+	R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
 	uint32 getTextureMem() const
 	{
 		return _textureMem;
 	}
 
 	// Shaders
-    R_Shader* createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
-	void destroyShader(R_Shader*& shaderId);
-	void bindShader(R_Shader* shaderId);
-	int getShaderConstLoc(R_Shader* shaderId, const char *name);
-	int getShaderSamplerLoc(R_Shader* shaderId, const char *name);
-	int getShaderBufferLoc(R_Shader* shaderId, const char *name);
-	void setShaderConst(int loc, R_ShaderConstType type, const void *values, uint32 count = 1);
-	void setShaderSampler(int loc, uint32 texUnit);
-	void runComputeShader(R_Shader* shaderId, uint32 xDim, uint32 yDim, uint32 zDim);
+	R_Shader* createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
 	string getShaderLog() const
 	{
 		return _shaderLog;
@@ -125,11 +110,6 @@ public:
 
 	// Renderbuffers
 	R_RenderBuffer* createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
-	void destroyRenderBuffer(R_RenderBuffer*& rbObj);
-    R_Texture* getRenderBufferTex(R_RenderBuffer* rbObj, uint32 bufIndex);
-	void setRenderBuffer(R_RenderBuffer* rbObj);
-	bool getRenderBufferData(R_RenderBuffer* rbObj, int bufIndex, int *width, int *height, int *compCount, void *dataBuffer, int bufferSize);
-	void getRenderBufferDimensions(R_RenderBuffer* rbObj, int *width, int *height);
 
 	// Queries
 	uint32 createOcclusionQuery();
@@ -254,10 +234,10 @@ public:
 	{
 		_newBlendState.blendEnable = enabled;
 
-		_newBlendState.srcRGBBlendFunc  = srcRGBBlendFunc;
+		_newBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
 		_newBlendState.destRGBBlendFunc = destRGBBlendFunc;
-		_newBlendState.srcABlendFunc    = srcRGBBlendFunc;
-		_newBlendState.destABlendFunc   = destRGBBlendFunc;
+		_newBlendState.srcABlendFunc = srcRGBBlendFunc;
+		_newBlendState.destABlendFunc = destRGBBlendFunc;
 
 		_pendingMask |= PM_RENDERSTATES;
 	}
@@ -265,10 +245,10 @@ public:
 	{
 		_newBlendState.blendEnable = enabled;
 
-		_newBlendState.srcRGBBlendFunc  = srcRGBBlendFunc;
+		_newBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
 		_newBlendState.destRGBBlendFunc = destRGBBlendFunc;
-		_newBlendState.srcABlendFunc    = srcABlendFunc;
-		_newBlendState.destABlendFunc   = destABlendFunc;
+		_newBlendState.srcABlendFunc = srcABlendFunc;
+		_newBlendState.destABlendFunc = destABlendFunc;
 
 		_pendingMask |= PM_RENDERSTATES;
 	}
@@ -318,7 +298,7 @@ public:
 protected:
 	bool commitStates(uint32 filter = 0xFFFFFFFF);
 	void resetStates();
-	
+
 public:
 	// Draw calls and clears
 	void clear(uint32 flags = CLR_COLOR_RT0 | CLR_COLOR_RT1 | CLR_COLOR_RT2 | CLR_COLOR_RT3 | CLR_DEPTH, float* colorRGBA = 0x0, float depth = 1.0f);
@@ -326,36 +306,10 @@ public:
 	void drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, bool _softReset = true);
 
 protected:
-	// Buffer helper
-	inline R_Buffer* createBuffer(uint32 type, uint32 size, const void *data, bool _isDynamic = true);
-	inline void	decreaseBufferRefCount(R_Buffer* bufObj);
-
-	// Shader helper
-	uint32 createShaderProgram(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvalShaderSrc, const char *computeShaderSrc);
-	bool linkShaderProgram(uint32 programObj);
-
-	// RenderBuffer helper
-	void resolveRenderBuffer(R_RenderBuffer* rbObj);
-
 	void checkError();
 	bool applyVertexLayout(R_GeometryInfo &geo);
 	void applySamplerState(R_Texture* tex);
 	void applyRenderStates();
-
-protected:
-	enum RDIPendingMask
-	{
-		PM_VIEWPORT = 0x00000001,
-		//PM_INDEXBUF      = 0x00000002,
-		//PM_VERTLAYOUT    = 0x00000004,
-		PM_TEXTUREBUFFER = 0x00000004,
-		PM_TEXTURES = 0x00000008,
-		PM_SCISSOR = 0x00000010,
-		PM_RENDERSTATES = 0x00000020,
-		PM_GEOMETRY = 0x00000040,
-		PM_BARRIER = 0x00000080,
-		PM_COMPUTE = 0x00000100
-	};
 
 protected:
 	R_VertexLayout                _vertexLayouts[MaxNumVertexLayouts];
@@ -393,8 +347,8 @@ protected:
 
 	R_Shader*					_curShaderId;
 	uint32						_pendingMask;
-    R_GeometryInfo*				_defGeometry;
-    R_GeometryInfo*				_curGeometryIndex;
+	R_GeometryInfo*				_defGeometry;
+	R_GeometryInfo*				_curGeometryIndex;
 	uint32						_maxTexSlots; // specified in inherited render devices
 
 	uint32						_tessPatchVerts; // number of vertices in patch. Used for tesselation.

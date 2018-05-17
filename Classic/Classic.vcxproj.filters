@@ -2,13 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="World.h" />
     <ClInclude Include="GameState_Menu.h" />
     <ClInclude Include="GameState_InWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="World.cpp" />
     <ClCompile Include="GameState_Menu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameState_InWorld.cpp" />

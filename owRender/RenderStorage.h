@@ -1,6 +1,6 @@
 #pragma once
 
-struct R_Buffer;
+#include "RenderDevice.h"
 
 struct Texture_Vertex
 {
@@ -8,10 +8,11 @@ struct Texture_Vertex
 	vec2 textureCoord;
 };
 
-class RenderStorage : public Module
+class RenderStorage
 {
 public:
-	DEF_MODULE(RenderStorage);
+	RenderStorage(RenderDevice* _RenderDevice);
+	~RenderStorage();
 
 	void CreateLayouts();
 	void CreateGeometry();
@@ -60,7 +61,7 @@ public:
     //----------------------------------------------
 
     R_Buffer* __ibQuadDefault;
+
+private:
+	RenderDevice* m_RenderDevice;
 };
-
-
-#define _RenderStorage RenderStorage::instance()

@@ -3,6 +3,9 @@
 // General
 #include "MDX_Part_Bone.h"
 
+// Additional
+#include "WorldController.h"
+
 void MDX_Part_Bone::init(File& f, M2CompBone& b, uint32* global)
 {
 	parent = b.parent_bone;
@@ -54,12 +57,12 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, int anim, int time)
 
 		if (trans.uses(anim))
 		{
-			m.translate(trans.getValue(anim, time));
+			m.translate(trans.getValue(anim, time, _World->EnvM()->globalTime));
 		}
 
 		if (roll.uses(anim))
 		{
-			quat q = roll.getValue(anim, time);
+			quat q = roll.getValue(anim, time, _World->EnvM()->globalTime);
 			m.rotate(q);
 
 			if (parent >= 0)
@@ -74,7 +77,7 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, int anim, int time)
 
 		if (scale.uses(anim))
 		{
-			m.scale(scale.getValue(anim, time));
+			m.scale(scale.getValue(anim, time, _World->EnvM()->globalTime));
 		}
 
 		/*if (m_BillboardType)

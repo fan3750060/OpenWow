@@ -31,7 +31,7 @@ UIElement::UIElement(uint32 _DeepAdding)
     m_TextAlignW = TextAlignW::TEXT_ALIGNW_LEFT;
     m_TextAlignH = TextAlignH::TEXT_ALIGNH_CENTER;
 
-    m_Font = _FontsMgr->GetMainFont();
+    m_Font = _Render->FontsMgr()->GetMainFont();
     if (m_Font == nullptr)
     {
         m_TextOffset = vec2(0.0f, 0.0f);

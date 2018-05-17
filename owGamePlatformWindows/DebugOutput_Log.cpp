@@ -5,14 +5,14 @@
 
 #define LOGFILENAME "log.txt"
 
-bool DebugOutput_Log::Init()
+DebugOutput_Log::DebugOutput_Log()
 {
 	string fileName = string(LOGFILENAME);
 
 	if (fileName.empty())
 	{
 		Log::Error("LogFile[%s]: No such file or directory!", fileName.c_str());
-		return false;
+		fail1();
 	}
 
 	logStream.open(fileName.c_str(), ios::out);
@@ -20,13 +20,11 @@ bool DebugOutput_Log::Init()
 	{
 		Log::Error("LogFile[%s]: Can not open file!", fileName.c_str());
 		logStream.clear();
-		return false;
+		fail1();
 	}
-
-	return true;
 }
 
-void DebugOutput_Log::Destroy()
+DebugOutput_Log::~DebugOutput_Log()
 {
 	logStream.flush();
 	logStream.close();

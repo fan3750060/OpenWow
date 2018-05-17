@@ -1,5 +1,19 @@
 #pragma once
 
+enum RenderDevicePendingMask
+{
+	PM_VIEWPORT = 0x00000001,
+	//PM_INDEXBUF      = 0x00000002,
+	//PM_VERTLAYOUT    = 0x00000004,
+	PM_TEXTUREBUFFER = 0x00000004,
+	PM_TEXTURES = 0x00000008,
+	PM_SCISSOR = 0x00000010,
+	PM_RENDERSTATES = 0x00000020,
+	PM_GEOMETRY = 0x00000040,
+	PM_BARRIER = 0x00000080,
+	PM_COMPUTE = 0x00000100
+};
+
 // ---------------------------------------------------------
 // Buffers
 // ---------------------------------------------------------

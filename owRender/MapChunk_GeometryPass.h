@@ -3,17 +3,8 @@
 #include "technique.h"
 
 class MapChunk_GeometryPass : public Technique {
-    int32 gColorMap[4];
-    int32 gSpecularMap[4];
-
-    int32 gShadowMapExists;
-    int32 gShadowColor;
-
-    int32 gLayersCount;
-    int32 gBlend;
-
 public:
-	MapChunk_GeometryPass() : Technique("shaders/MapChunk.vs", "shaders/MapChunk.fs")
+	MapChunk_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/MapChunk.vs", "shaders/MapChunk.fs")
     {
         for (uint8 i = 0; i < 4; i++)
         {
@@ -64,4 +55,14 @@ public:
 	{
 		setVec3(gShadowColor, _shadowColor);
 	}
+
+private:
+	int32 gColorMap[4];
+	int32 gSpecularMap[4];
+
+	int32 gShadowMapExists;
+	int32 gShadowColor;
+
+	int32 gLayersCount;
+	int32 gBlend;
 };

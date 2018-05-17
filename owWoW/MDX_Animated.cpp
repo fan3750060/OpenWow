@@ -223,8 +223,8 @@ void MDX::animate(uint32 _animationIndex)
 		}
 
 		// Add sub-data
-		_Render->r->updateBufferData(__vb, header.vertices.size * 0 * sizeof(float), header.vertices.size * sizeof(vec3), m_Vertices);
-		_Render->r->updateBufferData(__vb, header.vertices.size * 3 * sizeof(float), header.vertices.size * sizeof(vec3), m_Normals);
+		_Render->r.updateBufferData(__vb, header.vertices.size * 0 * sizeof(float), header.vertices.size * sizeof(vec3), m_Vertices);
+		_Render->r.updateBufferData(__vb, header.vertices.size * 3 * sizeof(float), header.vertices.size * sizeof(vec3), m_Normals);
 	}*/
 
 	for (uint32 i = 0; i < header.lights.size; i++)

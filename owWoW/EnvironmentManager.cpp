@@ -6,7 +6,7 @@
 // Additiobal
 #include <ctime>
 
-bool EnvironmentManager::Init()
+EnvironmentManager::EnvironmentManager()
 {
     time_t t = time(0);   // get time now
     tm* now = localtime(&t);
@@ -26,11 +26,9 @@ bool EnvironmentManager::Init()
 	m_OutdoorDayDiffuseColor = vec4();
 	m_OutdoorNightDiffuseColor = vec4();
 	m_OutdoorSpecularColor = vec4();
-	
-	return true;
 }
 
-void EnvironmentManager::Destroy()
+EnvironmentManager::~EnvironmentManager()
 {
 	if (skies)
 	{

@@ -5,8 +5,7 @@
 
 // Additional
 #include "EnvironmentManager.h"
-#include "ModelsManager.h"
-#include "WMO_Manager.h"
+#include "WorldController.h"
 
 
 
@@ -26,19 +25,19 @@ MapTile::~MapTile()
 
 	for (auto it : m_Textures)
 	{
-		_TexturesMgr->Delete(it.diffuseTexture);
-		_TexturesMgr->Delete(it.specularTexture);
+		_Render->TexturesMgr()->Delete(it.diffuseTexture);
+		_Render->TexturesMgr()->Delete(it.specularTexture);
 	}
 
 	for (auto it : m_WMOsNames)
 	{
-		_WMOsMgr->Delete(it);
+		_World->WMOM()->Delete(it);
 	}
 	ERASE_VECTOR(m_WMOsInstances);
 
 	for (auto it : m_MDXsNames)
 	{
-		_ModelsMgr->Delete(it);
+		_World->MDXM()->Delete(it);
 	}
 	ERASE_VECTOR(m_MDXsInstances);
 
@@ -204,18 +203,18 @@ bool MapTile::Load(cstring _filename)
 	{
 		if (it.mtxf.do_not_load_specular_or_height_texture_but_use_cubemap)
 		{
-			it.diffuseTexture = _TexturesMgr->DefaultTexture();
-			it.specularTexture = _TexturesMgr->DefaultTexture();
+			it.diffuseTexture = _Render->TexturesMgr()->DefaultTexture();
+			it.specularTexture = _Render->TexturesMgr()->DefaultTexture();
 			continue;
 		}
 
 		// Preload diffuse texture
-		it.diffuseTexture = _TexturesMgr->Add(it.textureName);
+		it.diffuseTexture = _Render->TexturesMgr()->Add(it.textureName);
 
 		// Preload specular texture
 		string specularTextureName = it.textureName;
 		specularTextureName = specularTextureName.insert(specularTextureName.length() - 4, "_s");
-		it.specularTexture = _TexturesMgr->Add(specularTextureName);
+		it.specularTexture = _Render->TexturesMgr()->Add(specularTextureName);
 	}
 
 	//---------------------------------------------------------------------------------
@@ -223,9 +222,9 @@ bool MapTile::Load(cstring _filename)
 	// WMOs
 	for (auto it : m_WMOsPlacementInfo)
 	{
-		_WMOsMgr->Add(m_WMOsNames[it.nameIndex]);
+		_World->WMOM()->Add(m_WMOsNames[it.nameIndex]);
 
-		WMO* wmo = (WMO*)_WMOsMgr->objects[m_WMOsNames[it.nameIndex]];
+		WMO* wmo = (WMO*)_World->WMOM()->objects[m_WMOsNames[it.nameIndex]];
 		WMOInstance* inst = new WMOInstance(wmo, it);
 		m_WMOsInstances.push_back(inst);
 	}
@@ -235,9 +234,9 @@ bool MapTile::Load(cstring _filename)
 	// MDXs
 	for (auto it : m_MDXsPlacementInfo)
 	{
-		_ModelsMgr->Add(m_MDXsNames[it.nameId]);
+		_World->MDXM()->Add(m_MDXsNames[it.nameId]);
 
-		MDX* mdx = (MDX*)_ModelsMgr->GetItemByName(m_MDXsNames[it.nameId]);
+		MDX* mdx = (MDX*)_World->MDXM()->GetItemByName(m_MDXsNames[it.nameId]);
 		ModelInstance* inst = new ModelInstance(mdx, it);
 		m_MDXsInstances.push_back(inst);
 	}
@@ -298,7 +297,7 @@ void MapTile::drawSky()
 	{
 		it->GetWMO()->drawSkybox();
 
-		if (_EnvironmentManager->m_HasSky)
+		if (_World->EnvM()->m_HasSky)
 		{
 			break;
 		}

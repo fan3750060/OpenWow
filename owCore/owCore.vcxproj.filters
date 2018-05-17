@@ -73,6 +73,9 @@
     <Filter Include="Helpers">
       <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects bindings\Renderable3D">
+      <UniqueIdentifier>{eb9a2bbf-09a5-49c2-94f7-4f3c859e58a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -156,6 +159,12 @@
     </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable3DObject.cpp">
+      <Filter>Objects bindings\Renderable3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable3DObjectCollection.cpp">
+      <Filter>Objects bindings\Renderable3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +299,12 @@
     </ClInclude>
     <ClInclude Include="File.h">
       <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable3DObject.h">
+      <Filter>Objects bindings\Renderable3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable3DObjectCollection.h">
+      <Filter>Objects bindings\Renderable3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

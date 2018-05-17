@@ -57,7 +57,7 @@ Model_Skin::Model_Skin(MDX* _parent, File& f, M2SkinProfile& view)
 		}
 		else
 		{
-			pass->__material.SetDiffuseTexture(_TexturesMgr->DefaultTexture());
+			pass->__material.SetDiffuseTexture(_Render->TexturesMgr()->DefaultTexture());
 			/*R_Texture* diffuseSpecialTexture = _parent->m_TextureReplaced[_parent->m_SpecialTextures[texlookup[skinBatch[j].texture_Index]]];
 
 			if (diffuseSpecialTexture != nullptr)
@@ -194,22 +194,22 @@ Model_Skin::Model_Skin(MDX* _parent, File& f, M2SkinProfile& view)
 
 	// Begin geometry
 
-	__geom = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_PBNT2);
+	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PBNT2);
     
 	// Vertex params
-	_Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(M2Vertex)); // pos 0-2
-	_Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(M2Vertex)); // blend 3
-	_Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(M2Vertex)); // index 4
-    _Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(M2Vertex)); // normal 5-7
-    _Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(M2Vertex)); // tc0 8-9
-    _Render->r->setGeomVertexParams(__geom, m_Parent->__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(M2Vertex)); // tc1 10-11
+	__geom->setGeomVertexParams(m_Parent->__vb, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(M2Vertex)); // pos 0-2
+	__geom->setGeomVertexParams(m_Parent->__vb, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(M2Vertex)); // blend 3
+	__geom->setGeomVertexParams(m_Parent->__vb, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(M2Vertex)); // index 4
+	__geom->setGeomVertexParams(m_Parent->__vb, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(M2Vertex)); // normal 5-7
+	__geom->setGeomVertexParams(m_Parent->__vb, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(M2Vertex)); // tc0 8-9
+	__geom->setGeomVertexParams(m_Parent->__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(M2Vertex)); // tc1 10-11
 
 	// Index bufer
-    R_Buffer* __ib = _Render->r->createIndexBuffer(view.indices.size * sizeof(uint16), indices);
-	_Render->r->setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
+    R_Buffer* __ib = _Render->r.createIndexBuffer(view.indices.size * sizeof(uint16), indices);
+	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
-	_Render->r->finishCreatingGeometry(__geom);
+	__geom->finishCreatingGeometry();
 
 	delete[] indices;
 }
@@ -240,24 +240,24 @@ void Model_Skin::Draw()
 
 	assert1(one);
 
-	_TechniquesMgr->m_Model->BindS();
-	_TechniquesMgr->m_Model->SetPVW();
+	_Render->TechniquesMgr()->m_Model->Bind();
+	_Render->TechniquesMgr()->m_Model->SetPVW();
 
-    _TechniquesMgr->m_Model->SetAnimated(m_Parent->animBones && m_Parent->animated);
+    _Render->TechniquesMgr()->m_Model->SetAnimated(m_Parent->animBones && m_Parent->animated);
     if (m_Parent->animBones && m_Parent->animated)
     {
-        //_TechniquesMgr->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
-        //_TechniquesMgr->m_Model->SetBoneMaxCount(p->boneInfluences);
+        //_Render->TechniquesMgr()->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
+        //_Render->TechniquesMgr()->m_Model->SetBoneMaxCount(p->boneInfluences);
 
         vector<mat4> bones;
         for (uint32 i = 0; i < m_Parent->header.bones.size; i++)
         {
             bones.push_back(m_Parent->m_Part_Bones[i].m_TransformMatrix);
         }
-        _TechniquesMgr->m_Model->SetBones(bones);
+        _Render->TechniquesMgr()->m_Model->SetBones(bones);
     }
 
-	_Render->r->setGeometry(__geom);
+	_Render->r.setGeometry(__geom);
 
 	for (uint32_t i = 0; i < m_Batches.size(); i++)
 	{
@@ -270,36 +270,36 @@ void Model_Skin::Draw()
 			// Color
 			if (p->__colorIndex != 65535)
 			{
-				_TechniquesMgr->m_Model->SetColor(m_Parent->m_Colors[p->__colorIndex].getValue());
+				_Render->TechniquesMgr()->m_Model->SetColor(m_Parent->m_Colors[p->__colorIndex].getValue());
 			}
 		    else
 			{
-				_TechniquesMgr->m_Model->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
+				_Render->TechniquesMgr()->m_Model->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
 			}
 
 			// Blend & Alpha
-			_TechniquesMgr->m_Model->SetBlendMode(p->__blendMode);
+			_Render->TechniquesMgr()->m_Model->SetBlendMode(p->__blendMode);
 
 			// R_Texture weight
-			_TechniquesMgr->m_Model->SetTextureWeight(m_Parent->m_TextureWeights[p->__textureWeight].getValue());
+			_Render->TechniquesMgr()->m_Model->SetTextureWeight(m_Parent->m_TextureWeights[p->__textureWeight].getValue());
 
 			// Billboard
-			_TechniquesMgr->m_Model->SetBillboard(m_Parent->m_IsBillboard);
+			_Render->TechniquesMgr()->m_Model->SetBillboard(m_Parent->m_IsBillboard);
 
 			// R_Texture anim
-			_TechniquesMgr->m_Model->SetTextureAnimEnable(p->__textureAnims != -1);
+			_Render->TechniquesMgr()->m_Model->SetTextureAnimEnable(p->__textureAnims != -1);
 			if (p->__textureAnims != -1)
 			{
-				_TechniquesMgr->m_Model->SetTextureAnimMatrix(m_Parent->m_TexturesAnims[p->__textureAnims].getValue());
+				_Render->TechniquesMgr()->m_Model->SetTextureAnimMatrix(m_Parent->m_TexturesAnims[p->__textureAnims].getValue());
 			}
 			else
 			{
 				//continue;
 			}
 
-			_Render->r->drawIndexed(PRIM_TRILIST, p->indexStart, p->indexCount, p->vertexStart, p->vertexCount, false);
+			_Render->r.drawIndexed(PRIM_TRILIST, p->indexStart, p->indexCount, p->vertexStart, p->vertexCount, false);
 		}
 	}
 
-	_TechniquesMgr->m_Model->Unbind();
+	_Render->TechniquesMgr()->m_Model->Unbind();
 }

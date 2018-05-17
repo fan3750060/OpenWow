@@ -7,12 +7,8 @@
 #include <ctime>
 #include "GameStateManager.h"
 
-void shutdown(int _errCode)
-{
-	_Engine->Destroy();
-}
-
-bool Engine::PreInit(int argumentCount, char* arguments[])
+Engine::Engine(OpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[])
+	: m_OpenGLAdapter(_OpenGLAdapter)
 {
 	// Arguments
 	for (int i = 0; i < argumentCount; i++)
@@ -30,11 +26,6 @@ bool Engine::PreInit(int argumentCount, char* arguments[])
 	// Files
 	MPQArchiveStorage::InitCommonArchives();
 
-	return true;
-}
-
-bool Engine::Init()
-{
 	Log::Green("Engine[]: Loading.");
 
 	// Init adapter
@@ -42,9 +33,7 @@ bool Engine::Init()
 	assert1(m_OpenGLAdapter->Init());
 
 	// Load modules
-	assert1(_Render->Init());
-	assert1(_TexturesMgr->Init());
-	assert1(_FontsMgr->Init());
+	_Render->Init();
 
 	needExit = false;
 
@@ -54,10 +43,9 @@ bool Engine::Init()
 
 	t = 0;
 
-	return true;
 }
 
-void Engine::Destroy(uint32 _errorCode)
+Engine::~Engine()
 {
 	Log::Green("Engine[]: Destroy engine.");
 
@@ -65,13 +53,6 @@ void Engine::Destroy(uint32 _errorCode)
 	Modules::Destroy();
 
 	exit(0);
-}
-
-bool Engine::SetAdapter(OpenGLAdapter * _openGLAdapter)
-{
-	assert1(_openGLAdapter != nullptr);
-	m_OpenGLAdapter = _openGLAdapter;
-	return true;
 }
 
 bool Engine::Tick()
@@ -91,8 +72,8 @@ bool Engine::Tick()
 
 	//
 
-	_Render->r->beginRendering();
-	_Render->r->clear();
+	_Render->r.beginRendering();
+	_Render->r.clear();
 
     //------------------------------------------------
     //-- Render3D

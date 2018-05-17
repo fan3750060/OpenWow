@@ -5,6 +5,7 @@
 
 // Additional
 #include "MDX_Skin_Batch.h"
+#include "WorldController.h"
 
 MDX::MDX(cstring name) : RefItemNamed(name), m_Loaded(false)
 {
@@ -58,7 +59,7 @@ MDX::~MDX()
 		{
 			if (m_Textures[i] != nullptr)
 			{
-				_TexturesMgr->Delete(m_Textures[i]);
+				_Render->TexturesMgr()->Delete(m_Textures[i]);
 			}
 		}
 	}
@@ -130,7 +131,7 @@ void MDX::initCommon(File& f)
 				char buff[256];
 				strncpy_s(buff, (const char*)(f.GetData() + m_M2Textures[i].filename.offset), m_M2Textures[i].filename.size);
 				buff[m_M2Textures[i].filename.size] = '\0';
-				m_Textures.push_back(_TexturesMgr->Add(buff));
+				m_Textures.push_back(_Render->TexturesMgr()->Add(buff));
 			}
 			else // special texture - only on characters and such...
 			{
@@ -145,7 +146,7 @@ void MDX::initCommon(File& f)
 				// a fix for weapons with type-3 m_DiffuseTextures.
 				if (m_M2Textures[i].type == 3)
 				{
-					m_TextureReplaced[m_M2Textures[i].type] = _TexturesMgr->Add("Item\\ObjectComponents\\Weapon\\ArmorReflect4.BLP");
+					m_TextureReplaced[m_M2Textures[i].type] = _Render->TexturesMgr()->Add("Item\\ObjectComponents\\Weapon\\ArmorReflect4.BLP");
 				}*/
 			}
 		}
@@ -172,7 +173,7 @@ void MDX::initCommon(File& f)
 	}
 	
 	// Vertex buffer
-	__vb = _Render->r->createVertexBuffer(header.vertices.size * 12 * sizeof(float), m_OriginalVertexes);
+	__vb = _Render->r.createVertexBuffer(header.vertices.size * 12 * sizeof(float), m_OriginalVertexes);
 
 	// Load LODs
 	assert1(header.skin_profiles.size);
@@ -216,7 +217,7 @@ void MDX::Render()
 			{
 				duration = 50;
 			}*/
-			m_AnimationTime = _EnvironmentManager->globalTime % duration;
+			m_AnimationTime = _World->EnvM()->globalTime % duration;
 
 
 			if (m_IsBillboard)

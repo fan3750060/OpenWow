@@ -3,6 +3,9 @@
 // General
 #include "MDX_Part_Color.h"
 
+// Additional
+#include "WorldController.h"
+
 void MDX_Part_Color::init(File& f, M2Color& mcd, uint32* global)
 {
 	color.init(mcd.color, f, global);
@@ -16,7 +19,7 @@ void MDX_Part_Color::calc(int anim, int time)
 {
 	if (color.uses(anim))
 	{
-		vColor = color.getValue(anim, time);
-		vAlpha = alpha.getValue(anim, time);
+		vColor = color.getValue(anim, time, _World->EnvM()->globalTime);
+		vAlpha = alpha.getValue(anim, time, _World->EnvM()->globalTime);
 	}
 }

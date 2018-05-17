@@ -95,18 +95,14 @@ private:
 			}
 		}
 
+		if (itemName.empty())
+		{
+			return;
+		}
+
 		// Delete action
 		DeleteAction(itemName);
 
-		// Delete from arrays
-		do_delete(itemName);
-
-		delete item;
-	}
-
-	inline void do_delete(cstring name)
-	{
-		objects.erase(objects.find(name));
 	}
 
 	//--------------------------------------------------------------

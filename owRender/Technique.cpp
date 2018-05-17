@@ -1,15 +1,11 @@
 #include "stdafx.h"
 
-// Include
-#include "RenderDevice.h"
-
-
 // General
 #include "Technique.h"
 
-// Additional
+#pragma region Language
 
-string ProcessShader(File& f)
+string ProcessInclude(File& f)
 {
 	if (!f.Open())
 	{
@@ -39,7 +35,7 @@ string ProcessShader(File& f)
 			assert1(firstBracketPosition != lastBracketPosition);
 
 			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
-			data += ProcessShader(File(f.Path() + inludeFileName)) + '\n';
+			data += ProcessInclude(File(f.Path() + inludeFileName)) + '\n';
 
 			continue;
 		}
@@ -50,33 +46,36 @@ string ProcessShader(File& f)
 	return data;
 }
 
-//
+#pragma endregion
 
-Technique::Technique(cstring _fileName)
+Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
+	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessShader(File(_fileName + ".vs"));
-	string shFS = ProcessShader(File(_fileName + ".fs"));
+	string shVS = ProcessInclude(File(_fileName + ".vs"));
+	string shFS = ProcessInclude(File(_fileName + ".fs"));
 
     Process(_fileName, shVS.c_str(), shFS.c_str(), nullptr);
 
     InitBaseUniforms();
 }
 
-Technique::Technique(cstring _fileNameVS, cstring _fileNameFS)
+Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS)
+	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessShader(File(_fileNameVS));
-	string shFS = ProcessShader(File(_fileNameFS));
+	string shVS = ProcessInclude(File(_fileNameVS));
+	string shFS = ProcessInclude(File(_fileNameFS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 
     InitBaseUniforms();
 }
 
-Technique::Technique(cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
+Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
+	: m_RenderDevice(_RenderDevice)
 {
-    string shVS = ProcessShader(File(_fileNameVS));
-    string shFS = ProcessShader(File(_fileNameFS));
-    string shGS = ProcessShader(File(_fileNameGS));
+    string shVS = ProcessInclude(File(_fileNameVS));
+    string shFS = ProcessInclude(File(_fileNameFS));
+    string shGS = ProcessInclude(File(_fileNameGS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), shGS.c_str());
 
@@ -90,14 +89,21 @@ Technique::~Technique()
 
 void Technique::Process(cstring fileName, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
 {
-    shader = _Render->r->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
-    if (_Render->r->getShaderLog().empty())
+    m_Shader = m_RenderDevice->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
+    if (m_RenderDevice->getShaderLog().empty())
     {
-        Log::Green("Shader[%s]: Successfull. Id [%d].", fileName.c_str(), shader->oglProgramObj);
+        Log::Green("Shader[%s]: Successfull. Id [%d].", fileName.c_str(), m_Shader->oglProgramObj);
     }
     else
     {
         Log::Error("Shader[%s]: Error.", fileName.c_str());
-        Log::Error(_Render->r->getShaderLog().c_str());
+        Log::Error(m_RenderDevice->getShaderLog().c_str());
     }
+}
+
+void Technique::InitBaseUniforms()
+{
+	gProjection = getLocation("gProjection");
+	gView = getLocation("gView");
+	gWorld = getLocation("gWorld");
 }

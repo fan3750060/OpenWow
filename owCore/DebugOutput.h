@@ -14,11 +14,6 @@ public:
 	};
 
 public:
-	virtual bool Init() = 0;
-	virtual void Destroy() = 0;
-
-	//
-
 	 void PushMessage(cstring _message, DebugOutput::DebugMessageType _type);
 	 void PushMessage(DebugOutput::DebugMessageType _type, const char* _message, va_list& _vaList);
 

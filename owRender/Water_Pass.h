@@ -5,7 +5,7 @@
 class Water_Pass : public Technique
 {
 public:
-    Water_Pass() : Technique("shaders/Water")
+    Water_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Water")
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");

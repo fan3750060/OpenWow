@@ -5,7 +5,7 @@
 class UI_Texture : public Technique
 {
 public:
-	UI_Texture() : Technique("shaders/UI_Texture") {}
+	UI_Texture(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/UI_Texture") {}
 
 	//
 

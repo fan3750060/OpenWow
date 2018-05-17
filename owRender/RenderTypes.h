@@ -23,24 +23,7 @@ struct R_VertexLayout
 // Buffers
 // ---------------------------------------------------------
 
-struct R_Buffer
-{
-	R_Buffer() :
-		type(0),
-		glObj(0),
-		size(0),
-        isDynamic(true),
-		geometryRefCount(0)
-	{}
-
-	//
-
-	uint32  type;
-	uint32  glObj;
-	uint32  size;
-    bool    isDynamic;
-	int		geometryRefCount;
-};
+#include "R_Buffer.h"
 
 struct R_VertexBufferSlot
 {
@@ -69,25 +52,7 @@ struct R_VertexBufferSlot
     bool        needNorm;
 };
 
-struct R_GeometryInfo
-{
-	R_GeometryInfo() :
-		vao(0),
-		indexBuf(nullptr),
-		layout(0),
-		indexBuf32Bit(false),
-		atrribsBinded(false)
-	{}
-
-	//
-
-	vector<R_VertexBufferSlot> vertexBufInfo;
-	uint32 vao;
-	R_Buffer* indexBuf;
-	uint32 layout;
-	bool indexBuf32Bit;
-	bool atrribsBinded;
-};
+#include "R_GeometryInfo.h"
 
 struct R_ShaderStorage
 {
@@ -108,41 +73,7 @@ struct R_ShaderStorage
 // Textures
 // ---------------------------------------------------------
 
-class R_Texture : public RefItem
-{
-public:
-	R_Texture() :
-		glObj(0),
-		glFmt(0),
-		type(0),
-		format(R_TextureFormats::Unknown),
-		width(0),
-		height(0),
-		depth(0),
-		memSize(0),
-		samplerState(0),
-		sRGB(false),
-		hasMips(false),
-		genMips(false)
-	{}
-
-	//
-
-	uint32                  glObj;
-	uint32                  glFmt;
-	int                     type;
-	R_TextureFormats::List  format;
-	int                     width, height, depth;
-	int                     memSize;
-	uint32                  samplerState;
-	bool                    sRGB;
-	bool                    hasMips, genMips;
-
-    vec2 GetSize()
-    {
-        return vec2(static_cast<float>(width), static_cast<float>(height));
-    }
-};
+#include "R_Texture.h"
 
 struct R_TexSlot
 {
@@ -151,7 +82,6 @@ struct R_TexSlot
 		samplerState(0),
 		usage(0)
 	{}
-
 	R_TexSlot(R_Texture* texObj, uint32 samplerState, uint32 usage) :
 		texObj(texObj),
 		samplerState(samplerState),
@@ -165,21 +95,7 @@ struct R_TexSlot
 	uint32      usage;
 };
 
-struct R_TextureBuffer
-{
-	R_TextureBuffer() :
-		bufObj(nullptr),
-		glFmt(0),
-		glTexID(0)
-	{}
-
-	//
-
-	R_Buffer* bufObj;
-	uint32    glFmt;
-	uint32	  glTexID;
-};
-
+#include "R_TextureBuffer.h"
 
 
 // ---------------------------------------------------------
@@ -199,17 +115,7 @@ struct R_InputLayout
 	int8  attribIndices[16];
 };
 
-struct R_Shader
-{
-	R_Shader() :
-		oglProgramObj(0)
-	{}
-
-	//
-
-	uint32			oglProgramObj;
-	R_InputLayout	inputLayouts[MaxNumVertexLayouts];
-};
+#include "R_Shader.h"
 
 
 
@@ -217,36 +123,4 @@ struct R_Shader
 // Render buffers
 // ---------------------------------------------------------
 
-struct R_RenderBuffer
-{
-	static const uint32 MaxColorAttachmentCount = 4;
-
-	//
-
-	R_RenderBuffer() :
-		fbo(0),
-		fboMS(0),
-		width(0),
-		height(0),
-		depthTex(0),
-		depthBuf(0),
-		samples(0)
-	{
-		for (uint32 i = 0; i < MaxColorAttachmentCount; ++i)
-		{
-            colTexs[i] = nullptr;
-            colBufs[i] = 0;
-		}
-	}
-
-	//
-
-	uint32  fbo, fboMS;
-	uint32  width, height;
-	uint32  samples;
-
-    R_Texture*  depthTex;
-    R_Texture*  colTexs[MaxColorAttachmentCount];
-    uint32      depthBuf;
-    uint32      colBufs[MaxColorAttachmentCount];  // Used for multisampling
-};
+#include "R_RenderBuffer.h"

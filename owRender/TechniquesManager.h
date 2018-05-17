@@ -1,6 +1,5 @@
 #pragma once
 
-// Log
 #include "Debug_GeometryPass.h"
 #include "Debug_Normals.h"
 
@@ -22,15 +21,13 @@
 #include "UI_Font.h"
 #include "UI_Texture.h"
 
-class TechniquesMgr
+class TechniquesManager
 {
-	CLASS_INSTANCE(TechniquesMgr);
+public:
+	TechniquesManager(RenderDevice* _RenderDevice);
+	~TechniquesManager();
 
-	TechniquesMgr();
-	~TechniquesMgr();
-
-	void Init();
-
+public:
 	Debug_GeometryPass* m_Debug_GeometryPass;
     Debug_Normals* m_Debug_Normals;
 
@@ -51,6 +48,7 @@ class TechniquesMgr
 	UI_Color* m_UI_Color;
 	UI_Font* m_UI_Font;
 	UI_Texture* m_UI_Texture;
-};
 
-#define _TechniquesMgr TechniquesMgr::instance()
+private:
+	RenderDevice* m_RenderDevice;
+};

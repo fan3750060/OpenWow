@@ -2,8 +2,6 @@
 
 #include "Animated_Types.h"
 
-#include "EnvironmentManager.h"
-
 // interpolation functions
 template<class T>
 inline T interpolate(const float r, const T &v1, const T &v2)
@@ -51,7 +49,7 @@ public:
 		return interpolation_type != INTERPOLATION_NONE;
 	}
 
-	T getValue(uint32 anim, uint32 time)
+	T getValue(uint32 anim, uint32 time, uint32 globalTime)
 	{
 		if (interpolation_type == INTERPOLATION_NONE)
 		{
@@ -69,7 +67,7 @@ public:
 			}
 			else
 			{
-				time = _EnvironmentManager->globalTime % globals[global_sequence];
+				time = globalTime % globals[global_sequence];
 			}
 		}
 		else

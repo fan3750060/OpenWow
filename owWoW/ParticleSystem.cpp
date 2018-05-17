@@ -6,6 +6,9 @@
 // General
 #include "ParticleSystem.h"
 
+// Additional
+#include "WorldController.h"
+
 ParticleSystem::ParticleSystem() : emitter(0), mid(0), rem(0)
 {
 	blend = 0;
@@ -111,15 +114,15 @@ void ParticleSystem::init(File& f, M2Particle& mta, uint32* globals)
 
 void ParticleSystem::update(float dt)
 {
-	float grav = gravity.getValue(manim, mtime);
-	float deaccel = deacceleration.getValue(manim, mtime);
+	float grav = gravity.getValue(manim, mtime, _World->EnvM()->globalTime);
+	float deaccel = deacceleration.getValue(manim, mtime, _World->EnvM()->globalTime);
 
 	// spawn new particles
 	if (emitter)
 	{
-		float frate = rate.getValue(manim, mtime);
+		float frate = rate.getValue(manim, mtime, _World->EnvM()->globalTime);
 		float flife = 1.0f;
-		flife = lifespan.getValue(manim, mtime);
+		flife = lifespan.getValue(manim, mtime, _World->EnvM()->globalTime);
 
 		float ftospawn = (dt * frate / flife) + rem;
 		if (ftospawn < 1.0f)
@@ -138,15 +141,15 @@ void ParticleSystem::update(float dt)
 			rem = ftospawn - (float)tospawn;
 
 
-			float w = areal.getValue(manim, mtime) * 0.5f;
-			float l = areaw.getValue(manim, mtime) * 0.5f;
-			float spd = speed.getValue(manim, mtime);
-			float var = variation.getValue(manim, mtime);
-			float spr = spread.getValue(manim, mtime);
-			float spr2 = lat.getValue(manim, mtime);
+			float w = areal.getValue(manim, mtime, _World->EnvM()->globalTime) * 0.5f;
+			float l = areaw.getValue(manim, mtime, _World->EnvM()->globalTime) * 0.5f;
+			float spd = speed.getValue(manim, mtime, _World->EnvM()->globalTime);
+			float var = variation.getValue(manim, mtime, _World->EnvM()->globalTime);
+			float spr = spread.getValue(manim, mtime, _World->EnvM()->globalTime);
+			float spr2 = lat.getValue(manim, mtime, _World->EnvM()->globalTime);
 			bool en = true;
 			if (enabled.uses(manim))
-				en = enabled.getValue(manim, mtime) != 0;
+				en = enabled.getValue(manim, mtime, _World->EnvM()->globalTime) != 0;
 
 			//rem = 0;
 			if (en)

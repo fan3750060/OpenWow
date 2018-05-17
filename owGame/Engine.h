@@ -4,14 +4,10 @@
 
 class Engine
 {
-	CLASS_INSTANCE(Engine);
-
 public:
-	bool PreInit(int argumentCount, char* arguments[]);
-	bool Init();
-	void Destroy(uint32 _errorCode = 0);
+	Engine(OpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[]);
+	~Engine();
 
-	bool SetAdapter(OpenGLAdapter* _openGLAdapter);
 	OpenGLAdapter* GetAdapter() { return m_OpenGLAdapter; }
 
 	bool Tick();
@@ -47,5 +43,3 @@ private:
 
 	OpenGLAdapter* m_OpenGLAdapter;
 };
-
-#define _Engine Engine::instance()

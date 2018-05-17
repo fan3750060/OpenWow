@@ -3,6 +3,9 @@
 // General
 #include "MDX_Part_Camera.h"
 
+// Additional
+#include "WorldController.h"
+
 void MDX_Part_Camera::init(File& f, M2Camera& mcd, uint32* global)
 {
 	nearclip = mcd.near_clip;
@@ -23,13 +26,13 @@ void MDX_Part_Camera::init(File& f, M2Camera& mcd, uint32* global)
 
 void MDX_Part_Camera::setup(int time)
 {
-	fov = tFov.getValue(0, time) * 34.5f;
+	fov = tFov.getValue(0, time, _World->EnvM()->globalTime) * 34.5f;
 
-	vec3 p = pos + tPos.getValue(0, time);
-	vec3 t = target + tTarget.getValue(0, time);
+	vec3 p = pos + tPos.getValue(0, time, _World->EnvM()->globalTime);
+	vec3 t = target + tTarget.getValue(0, time, _World->EnvM()->globalTime);
 	vec3 u(0, 1, 0);
 
-	roll = tRoll.getValue(0, time) / Math::Pi * 180.0f;
+	roll = tRoll.getValue(0, time, _World->EnvM()->globalTime) / Math::Pi * 180.0f;
 
 	camera.setupViewParams(fov, _Config.aspectRatio, nearclip, farclip);
 

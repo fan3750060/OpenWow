@@ -5,7 +5,7 @@
 class UI_Color : public Technique
 {
 public:
-	UI_Color() : Technique("shaders/UI_Color") 
+	UI_Color(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/UI_Color")
     {
         gColor = getLocation("gColor");
     }

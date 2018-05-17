@@ -2,10 +2,11 @@
 
 #include "Font.h"
 
-class FontsMgr : public Module, public RefManager1Dim<Font>
+class FontsManager : public RefManager1Dim<Font>
 {
 public:
-	DEF_MODULE(FontsMgr);
+	FontsManager(RenderDevice* _RenderDevice);
+	~FontsManager();
 
 	Font* Add(cstring _fontFileName, uint32 _fontSize);
 	Font* Add(File& _fontFileName, uint32 _fontSize);
@@ -23,6 +24,7 @@ private:
 	map<string, Font*> Fonts;
 
 	Font* mainFont;
-};
 
-#define _FontsMgr FontsMgr::instance()
+private:
+	RenderDevice* m_RenderDevice;
+};

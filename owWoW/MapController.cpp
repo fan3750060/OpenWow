@@ -1,45 +1,45 @@
 #include "stdafx.h"
 
 // General
-#include "Map.h"
+#include "MapController.h"
 
 // Additional
 #include "EnvironmentManager.h"
-#include "WMO_Manager.h"
+#include "WorldController.h"
 #include "Map_Shared.h"
 
-Map::Map() : 
+MapController::MapController() : 
     m_GlobalWMO(nullptr),
     m_GlobalWMOPlacementInfo(nullptr)
 {
     // Load default variables
     m_IsTileBased = false;
-    memset(lowrestiles, 0, sizeof(lowrestiles));
+    memset(m_LowResilutionTiles, 0, sizeof(m_LowResilutionTiles));
     minimap = 0;
-    memset(maptilecache, 0, sizeof(maptilecache));
-    currentTileX = currentTileZ = -1;
-    memset(current, 0, sizeof(current));
+    memset(m_MapTilesCache, 0, sizeof(m_MapTilesCache));
+    m_CurrentTileX = m_CurrentTileZ = -1;
+    memset(m_Current, 0, sizeof(m_Current));
     m_IsOnInvalidTile = false;
 
     Map_Shared::CreateMapArrays();
 
-    ADDCONSOLECOMMAND_CLASS("map_clear", Map, ClearCache);
+    ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 }
 
-Map::~Map()
+MapController::~MapController()
 {
 }
 
 //
 
-void Map::InitGlobalsWMOs()
+void MapController::InitGlobalsWMOs()
 {
     // Load global WMO
 
     Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", m_GlobalWMOPlacementInfo != nullptr ? "true" : "false");
     if (m_GlobalWMOPlacementInfo != nullptr)
     {
-        WMO* wmo = _WMOsMgr->Add(m_GlobalWMOName);
+        WMO* wmo = _World->WMOM()->Add(m_GlobalWMOName);
         m_GlobalWMO = new WMOInstance(wmo, *m_GlobalWMOPlacementInfo);
     }
 
@@ -50,7 +50,7 @@ void Map::InitGlobalsWMOs()
     {
         const string name = m_LowResolutionWMOsNames[it->nameIndex];
 
-        WMO* wmo = _WMOsMgr->Add(name);
+        WMO* wmo = _World->WMOM()->Add(name);
         WMOInstance* inst = new WMOInstance(wmo, *it);
         m_LowResolutionWMOs.push_back(inst);
     }
@@ -58,7 +58,7 @@ void Map::InitGlobalsWMOs()
 
 //
 
-void Map::Load_WDT(DBC_MapRecord* _map)
+void MapController::Load_WDT(DBC_MapRecord* _map)
 {
     m_DBC_Map = _map;
 
@@ -75,7 +75,7 @@ void Map::Load_WDT(DBC_MapRecord* _map)
     }
 
     // Load sky
-    _EnvironmentManager->InitSkies(m_DBC_Map);
+	_World->EnvM()->InitSkies(m_DBC_Map);
 
     char fourcc[5];
     uint32 size;
@@ -154,7 +154,7 @@ void Map::Load_WDT(DBC_MapRecord* _map)
     Load_WDL();
 }
 
-void Map::Load_WDL()
+void MapController::Load_WDL()
 {
     File f(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
     if (!f.Open())
@@ -367,28 +367,28 @@ void Map::Load_WDL()
                 }
 
                 // Vertex buffer
-                R_Buffer* __vb = _Render->r->createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
+                R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
 
                 //
 
-                lowrestiles[j][i] = _Render->r->beginCreatingGeometry(_RenderStorage->__layout_GxVBF_P);
+                m_LowResilutionTiles[j][i] = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
 
                 // Vertex params
-                _Render->r->setGeomVertexParams(lowrestiles[j][i], __vb, R_DataType::T_FLOAT, 0, 0);
+				m_LowResilutionTiles[j][i]->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 
                 // Index bufer
-                //uint32 __ib = _Render->r->createIndexBuffer(striplen, strip);
-                //_Render->r->setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
+                //uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
+                //_Render->r.setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
 
                 // Finish
-                _Render->r->finishCreatingGeometry(lowrestiles[j][i]);
+				m_LowResilutionTiles[j][i]->finishCreatingGeometry();
             }
         }
     }
 
     // Finish minimap
-    minimap = _Render->r->createTexture(R_TextureTypes::Tex2D, 512, 512, 1, R_TextureFormats::RGBA8, false, false, false, false);
-    _Render->r->uploadTextureData(minimap, 0, 0, texbuf);
+    minimap = _Render->r.createTexture(R_TextureTypes::Tex2D, 512, 512, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	minimap->uploadTextureData(0, 0, texbuf);
     delete[] texbuf;
 
 
@@ -396,24 +396,24 @@ void Map::Load_WDL()
     InitGlobalsWMOs();
 }
 
-void Map::Unload()
+void MapController::Unload()
 {
     for (int i = 0; i < 64; i++)
     {
         for (int j = 0; j < 64; j++)
         {
-            if (lowrestiles[i][j] != 0)
+            if (m_LowResilutionTiles[i][j] != 0)
             {
-                _Render->r->destroyGeometry(lowrestiles[i][j], true);
+				m_LowResilutionTiles[i][j]->destroyGeometry(true);
             }
         }
     }
 
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
-        if (maptilecache[i] != nullptr)
+        if (m_MapTilesCache[i] != nullptr)
         {
-            delete maptilecache[i];
+            delete m_MapTilesCache[i];
         }
     }
 
@@ -425,18 +425,18 @@ void Map::Unload()
 
 //
 
-void Map::Tick()
+void MapController::Tick()
 {
     bool loading = false;
     int enteredTileX, enteredTileZ;
     int midTile = static_cast<uint32>(C_RenderedTiles / 2);
-    if (current[midTile][midTile] != nullptr || m_IsOnInvalidTile)
+    if (m_Current[midTile][midTile] != nullptr || m_IsOnInvalidTile)
     {
         if (m_IsOnInvalidTile ||
-            (_Camera->Position.x < current[midTile][midTile]->m_GamePositionX) ||
-            (_Camera->Position.x > (current[midTile][midTile]->m_GamePositionX + C_TileSize)) ||
-            (_Camera->Position.z < current[midTile][midTile]->m_GamePositionZ) ||
-            (_Camera->Position.z > (current[midTile][midTile]->m_GamePositionZ + C_TileSize)))
+            (_Camera->Position.x < m_Current[midTile][midTile]->m_GamePositionX) ||
+            (_Camera->Position.x > (m_Current[midTile][midTile]->m_GamePositionX + C_TileSize)) ||
+            (_Camera->Position.z < m_Current[midTile][midTile]->m_GamePositionZ) ||
+            (_Camera->Position.z > (m_Current[midTile][midTile]->m_GamePositionZ + C_TileSize)))
         {
 
             enteredTileX = static_cast<int>(_Camera->Position.x / C_TileSize);
@@ -450,7 +450,7 @@ void Map::Tick()
     {
         if (enteredTileX != -1 && enteredTileZ != -1)
         {
-            enterTile(enteredTileX, enteredTileZ);
+            EnterMap(enteredTileX, enteredTileZ);
             enteredTileX = enteredTileZ = -1;
             loading = false;
         }
@@ -459,18 +459,18 @@ void Map::Tick()
 
 //
 
-void Map::RenderSky()
+void MapController::RenderSky()
 {
     for (int i = 0; i < C_RenderedTiles; i++)
     {
         for (int j = 0; j < C_RenderedTiles; j++)
         {
-            if (current[i][j] != nullptr)
+            if (m_Current[i][j] != nullptr)
             {
-                current[i][j]->drawSky();
+                m_Current[i][j]->drawSky();
             }
 
-            if (_EnvironmentManager->m_HasSky)
+            if (_World->EnvM()->m_HasSky)
             {
                 break;
             }
@@ -478,26 +478,26 @@ void Map::RenderSky()
     }
 }
 
-void Map::RenderLowResTiles()
+void MapController::RenderLowResTiles()
 {
     for (int i = 0; i < C_TilesInMap; i++)
     {
         for (int j = 0; j < C_TilesInMap; j++)
         {
-            if (lowrestiles[i][j])
+            if (m_LowResilutionTiles[i][j])
             {
-                _Render->r->setGeometry(lowrestiles[i][j]);
+                _Render->r.setGeometry(m_LowResilutionTiles[i][j]);
 
-                _Render->r->draw(PRIM_TRILIST, 0, 16 * 16 * 12);
+                _Render->r.draw(PRIM_TRILIST, 0, 16 * 16 * 12);
                 PERF_INC(PERF_MAP_LOWRESOLUTION);
             }
         }
     }
 
     /*const int lrr = 5;
-    for (int i = currentTileX - lrr; i <= currentTileX + lrr; i++)
+    for (int i = m_CurrentTileX - lrr; i <= m_CurrentTileX + lrr; i++)
     {
-        for (int j = currentTileZ - lrr; j <= currentTileZ + lrr; j++)
+        for (int j = m_CurrentTileZ - lrr; j <= m_CurrentTileZ + lrr; j++)
         {
             // OOB check
             if (IsBadTileIndex(i, j))
@@ -506,7 +506,7 @@ void Map::RenderLowResTiles()
             }
 
             // Don't draw current tile
-            if (i == currentTileX && j == currentTileZ)
+            if (i == m_CurrentTileX && j == m_CurrentTileZ)
             {
                 continue;
             }
@@ -532,14 +532,14 @@ void Map::RenderLowResTiles()
     }*/
 }
 
-void Map::RenderTiles()
+void MapController::RenderTiles()
 {
     // Draw cache
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
-        if (maptilecache[i] != nullptr)
+        if (m_MapTilesCache[i] != nullptr)
         {
-            maptilecache[i]->draw();
+            m_MapTilesCache[i]->draw();
         }
     }
 
@@ -550,45 +550,45 @@ void Map::RenderTiles()
                 current[i][j]->draw();*/
 }
 
-void Map::RenderObjects()
+void MapController::RenderObjects()
 {
     for (int i = 0; i < C_RenderedTiles; i++)
         for (int j = 0; j < C_RenderedTiles; j++)
-            if (current[i][j] != nullptr)
-                current[i][j]->drawObjects();
+            if (m_Current[i][j] != nullptr)
+                m_Current[i][j]->drawObjects();
 }
 
-void Map::RenderModels()
+void MapController::RenderModels()
 {
     for (int i = 0; i < C_RenderedTiles; i++)
         for (int j = 0; j < C_RenderedTiles; j++)
-            if (current[i][j] != nullptr)
-                current[i][j]->drawModels();
+            if (m_Current[i][j] != nullptr)
+                m_Current[i][j]->drawModels();
 }
 
-void Map::RenderWater()
+void MapController::RenderWater()
 {
     for (int i = 0; i < C_RenderedTiles; i++)
         for (int j = 0; j < C_RenderedTiles; j++)
-            if (current[i][j] != nullptr)
-                current[i][j]->drawWater();
+            if (m_Current[i][j] != nullptr)
+                m_Current[i][j]->drawWater();
 }
 
-void Map::Render_DEBUG()
+void MapController::Render_DEBUG()
 {
     // Draw cache
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
-        if (maptilecache[i] != nullptr)
+        if (m_MapTilesCache[i] != nullptr)
         {
-            maptilecache[i]->Render_DEBUG();
+            m_MapTilesCache[i]->Render_DEBUG();
         }
     }
 }
 
 //
 
-void Map::enterTile(int x, int z)
+void MapController::EnterMap(int32 x, int32 z)
 {
     if (IsBadTileIndex(x, z) || !m_TileFlag[x][z].Flag_HasTerrain)
     {
@@ -596,19 +596,19 @@ void Map::enterTile(int x, int z)
         return;
     }
 
-    currentTileX = x;
-    currentTileZ = z;
+    m_CurrentTileX = x;
+    m_CurrentTileZ = z;
 
     for (uint8 i = 0; i < C_RenderedTiles; i++)
     {
         for (uint8 j = 0; j < C_RenderedTiles; j++)
         {
-            current[i][j] = LoadTile(x - static_cast<uint32>(C_RenderedTiles / 2) + i, z - static_cast<uint32>(C_RenderedTiles / 2) + j);
+            m_Current[i][j] = LoadTile(x - static_cast<uint32>(C_RenderedTiles / 2) + i, z - static_cast<uint32>(C_RenderedTiles / 2) + j);
         }
     }
 }
 
-MapTile* Map::LoadTile(int x, int z)
+MapTile* MapController::LoadTile(int32 x, int32 z)
 {
     if (IsBadTileIndex(x, z))
     {
@@ -624,12 +624,12 @@ MapTile* Map::LoadTile(int x, int z)
     int firstnull = C_TilesCacheSize;
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
-        if ((maptilecache[i] != nullptr) && (maptilecache[i]->m_IndexX == x) && (maptilecache[i]->m_IndexZ == z))
+        if ((m_MapTilesCache[i] != nullptr) && (m_MapTilesCache[i]->m_IndexX == x) && (m_MapTilesCache[i]->m_IndexZ == z))
         {
-            return maptilecache[i];
+            return m_MapTilesCache[i];
         }
 
-        if (maptilecache[i] == nullptr && i < firstnull)
+        if ((m_MapTilesCache[i] == nullptr) && (i < firstnull))
         {
             firstnull = i;
         }
@@ -642,12 +642,12 @@ MapTile* Map::LoadTile(int x, int z)
         // oh shit we need to throw away a tile
         for (int i = 0; i < C_TilesCacheSize; i++)
         {
-            if (maptilecache[i] == nullptr)
+            if (m_MapTilesCache[i] == nullptr)
             {
                 continue;
             }
 
-            score = abs(maptilecache[i]->m_IndexX - currentTileX) + abs(maptilecache[i]->m_IndexZ - currentTileZ);
+            score = abs(m_MapTilesCache[i]->m_IndexX - m_CurrentTileX) + abs(m_MapTilesCache[i]->m_IndexZ - m_CurrentTileZ);
 
             if (score > maxscore)
             {
@@ -657,36 +657,36 @@ MapTile* Map::LoadTile(int x, int z)
         }
 
         // maxidx is the winner (loser)
-        delete maptilecache[maxidx];
-        maptilecache[maxidx] = nullptr;
+        delete m_MapTilesCache[maxidx];
+        m_MapTilesCache[maxidx] = nullptr;
         firstnull = maxidx;
     }
 
     // Create new tile
-    maptilecache[firstnull] = new MapTile(x, z);
-    if (!maptilecache[firstnull]->Load(m_DBC_Map->Get_Directory()))
+    m_MapTilesCache[firstnull] = new MapTile(x, z);
+    if (!m_MapTilesCache[firstnull]->Load(m_DBC_Map->Get_Directory()))
     {
-        delete maptilecache[firstnull];
+        delete m_MapTilesCache[firstnull];
         Log::Info("Map[%d]: Error loading tile [%d, %d].", m_MapFolder.c_str(), x, z);
         return nullptr;
     }
 
-    return maptilecache[firstnull];
+    return m_MapTilesCache[firstnull];
 }
 
-void Map::ClearCache()
+void MapController::ClearCache()
 {
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
-        if (maptilecache[i] != nullptr && !IsTileInCurrent(maptilecache[i]))
+        if (m_MapTilesCache[i] != nullptr && !IsTileInCurrent(m_MapTilesCache[i]))
         {
-            delete maptilecache[i];
-            maptilecache[i] = nullptr;
+            delete m_MapTilesCache[i];
+            m_MapTilesCache[i] = nullptr;
         }
     }
 }
 
-uint32 Map::getAreaID()
+uint32 MapController::getAreaID()
 {
     MapTile* curTile;
 
@@ -698,12 +698,12 @@ uint32 Map::getAreaID()
     chunkZ = (int)(fmod(_Camera->Position.z, C_TileSize) / C_ChunkSize);
 
     if (
-        (tileX < currentTileX - static_cast<int>(C_RenderedTiles / 2)) || (tileX > currentTileX + static_cast<int>(C_RenderedTiles / 2)) ||
-        (tileZ < currentTileZ - static_cast<int>(C_RenderedTiles / 2)) || (tileZ > currentTileZ + static_cast<int>(C_RenderedTiles / 2))
+        (tileX < m_CurrentTileX - static_cast<int>(C_RenderedTiles / 2)) || (tileX > m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2)) ||
+        (tileZ < m_CurrentTileZ - static_cast<int>(C_RenderedTiles / 2)) || (tileZ > m_CurrentTileZ + static_cast<int>(C_RenderedTiles / 2))
         )
         return 0;
 
-    curTile = current[tileZ - currentTileZ + static_cast<int>(C_RenderedTiles / 2)][tileX - currentTileX + static_cast<int>(C_RenderedTiles / 2)];
+    curTile = m_Current[tileZ - m_CurrentTileZ + static_cast<int>(C_RenderedTiles / 2)][tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2)];
     if (curTile == 0)
         return 0;
 
@@ -715,12 +715,12 @@ uint32 Map::getAreaID()
     return curChunk->areaID;
 }
 
-bool Map::IsTileInCurrent(MapTile* _mapTile)
+bool MapController::IsTileInCurrent(MapTile* _mapTile)
 {
     for (int i = 0; i < C_RenderedTiles; i++)
         for (int j = 0; j < C_RenderedTiles; j++)
-            if (current[i][j] != nullptr)
-                if (current[i][j] == _mapTile)
+            if (m_Current[i][j] != nullptr)
+                if (m_Current[i][j] == _mapTile)
                     return true;
     return false;
 }
