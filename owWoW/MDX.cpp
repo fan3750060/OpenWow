@@ -51,7 +51,7 @@ MDX::~MDX()
 		return;
 	}
 
-	Log::Info("MDX[%s]: Unloading...", m_ModelFileName.c_str());
+	//Log::Info("MDX[%s]: Unloading...", m_ModelFileName.c_str());
 
 	if (header.textures.size)
 	{
@@ -203,6 +203,14 @@ void MDX::drawModel()
 void MDX::Render()
 {
 	if (!m_Loaded)
+	{
+		return;
+	}
+
+	// Cull bounging box
+	BoundingBox aabb = m_Bounds;
+	aabb.transform(_Pipeline->GetWorld());
+	if (_CameraFrustum->_frustum.cullBox(aabb))
 	{
 		return;
 	}

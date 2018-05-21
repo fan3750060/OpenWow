@@ -166,6 +166,9 @@
     <ClCompile Include="Renderable3DObjectCollection.cpp">
       <Filter>Objects bindings\Renderable3D</Filter>
     </ClCompile>
+    <ClCompile Include="BindingController.cpp">
+      <Filter>Objects bindings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
@@ -305,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="Renderable3DObjectCollection.h">
       <Filter>Objects bindings\Renderable3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BindingController.h">
+      <Filter>Objects bindings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

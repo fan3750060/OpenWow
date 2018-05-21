@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseFile.cpp" />
+    <ClCompile Include="BindingController.cpp" />
     <ClCompile Include="ByteBuffer.cpp" />
     <ClCompile Include="ContainerAssync.cpp" />
     <ClCompile Include="File.cpp" />
@@ -58,6 +59,7 @@
   <ItemGroup>
     <ClInclude Include="..\shared\owCore.h" />
     <ClInclude Include="BaseFile.h" />
+    <ClInclude Include="BindingController.h" />
     <ClInclude Include="ByteBuffer.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="common.h" />

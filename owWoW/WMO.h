@@ -3,7 +3,7 @@
 #include "DoodadInstance.h"
 
 class WMOGroup;
-class WMOInstance;
+class ADT_WMO_Instance;
 class WMOManager;
 class Liquid;
 
@@ -135,7 +135,6 @@ public:
 	//-- Skybox --//
 	char* m_Skybox_Filename;                                 // MOSB chunk
 	MDX* m_Skybox;
-	//Sky_Model* m_SkyModel;
 
 
 	//-- Portals --//
@@ -157,7 +156,7 @@ public:
 	vector<WMO_DoodadSet*> doodadsets;                      // MODS chunk
 	char* m_MDXFilenames;                                   // MODN chunk
 	vector<string> m_MDXNames;                             
-	vector<DoodadInstance*> m_MDXInstances;                 // MODD chunk
+	vector<WMO_MODD*> m_MDXInstances;						// MODD chunk
 
 
 	//-- Fog --//
@@ -166,5 +165,5 @@ public:
 
 	//-- Volumes plane --//
 
-														   // MCVP chunk (optional)	
+	// MCVP chunk (optional)	
 };

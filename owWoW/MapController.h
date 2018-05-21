@@ -1,26 +1,10 @@
 #pragma once
 
 // Includes
-#include "Map_Tile.h"
+#include "ADT.h"
+#include "WDT.h"
+#include "WDL.h"
 
-struct WDT_MPHD_Flags
-{
-	uint32 Flag_GlobalWMO : 1;  // Use global map object definition.
-	uint32 Flag_UseMCCV : 1;    // Use vertex shading (ADT.MCNK.MCCV)
-    uint32 Flag_8bitMCAL : 1;   // Decides whether to use _env terrain shaders or not: funky and if MCAL has 4096 instead of 2048(?)
-    uint32 Flag_Unk0 : 1;       // Disables something. No idea what. Another rendering thing. Someone may check all them in wild life..
-    uint32 Flag_HasMCLV : 1;    // vertexBufferFormat = PNC2. (adds second color: ADT.MCNK.MCLV)
-	uint32 Flag_FlipGround : 1; // Flips the ground display upside down to create a ceiling (Cataclysm)
-	uint32 : 26;
-};
-
-struct WDT_MAIN_Flags
-{
-	uint32 Flag_HasTerrain : 1;
-	uint32 Flag_IsOcean : 1;
-	uint32 Flag_IsLoaded : 1;
-	uint32 : 29;
-};
 
 class MapController
 {
@@ -28,41 +12,31 @@ public:
 	MapController();
 	~MapController();
 
-    void InitGlobalsWMOs();
+	void InitWMOs();
 
-	void Load_WDT(DBC_MapRecord* _map);
-	void Load_WDL();
+	void PreLoad(DBC_MapRecord* _map);
+	void Load();
+
+	void PostLoad();
 	void Unload();
 
 	void Tick();
 
 	void RenderSky();
-	void RenderLowResTiles();
-	void RenderTiles();
 	void RenderObjects();
 	void RenderModels();
-	void RenderWater();
-    void Render_DEBUG();
+	void Render_DEBUG();
+
 	//
 
 	void EnterMap(int32 x, int32 z);
-	MapTile* LoadTile(int32 x, int32 z);
+	ADT* LoadTile(int32 x, int32 z);
 	void ClearCache();
-	uint32 getAreaID();
+	uint32 GetAreaID();
 
 public: // Getters
 	string GetFolder() { return m_MapFolder; }
 	DBC_MapRecord* GetDBCMap() { return m_DBC_Map; }
-
-	WMOInstance* GetGlobalWMOInstance() { return m_GlobalWMO; }
-	WMOPlacementInfo* GetGlobalWMOPlacementInfo() { return m_GlobalWMOPlacementInfo; }
-
-	bool MapHasTiles() { return m_IsTileBased; }
-	bool MapHasGlobalWMO() { return m_GlobalWMOPlacementInfo != nullptr; }
-
-	const WDT_MPHD_Flags& GetMapFlag() { return m_Flag; }
-
-    R_Texture* GetMinimap() { return minimap; }
 
 	int GetCurrentX() { return m_CurrentTileX; }
 	int GetCurrentZ() { return m_CurrentTileZ; }
@@ -71,60 +45,51 @@ public: // Getters
 	void SetOutOfBounds(bool _value) { m_IsOnInvalidTile = _value; }
 
 private:
-	bool IsTileInCurrent(MapTile* _mapTile);
+	bool IsTileInCurrent(ADT* _mapTile);
 
 private:
 	string                     m_MapFolder;
 	DBC_MapRecord*             m_DBC_Map;
-	WDT_MPHD_Flags             m_Flag;
+
 
 private:
-	bool                       m_IsTileBased;
-	WDT_MAIN_Flags             m_TileFlag[C_TilesInMap][C_TilesInMap];
-    R_GeometryInfo*            m_LowResilutionTiles[C_TilesInMap][C_TilesInMap];
-    R_Texture*                 minimap;
-	MapTile*                   m_MapTilesCache[C_TilesCacheSize];
-	MapTile*                   m_Current[C_RenderedTiles][C_RenderedTiles];
+	ADT*	m_ADTCache[C_TilesCacheSize];
+	ADT*	m_Current[C_RenderedTiles][C_RenderedTiles];
+	
+	int32	m_CurrentTileX, m_CurrentTileZ;
+	bool	m_IsOnInvalidTile;
 
-    int						   m_CurrentTileX, m_CurrentTileZ;
-	bool                       m_IsOnInvalidTile;
-
-private: // WMOs
-	string                     m_GlobalWMOName;
-	WMOPlacementInfo*          m_GlobalWMOPlacementInfo;
-	WMOInstance*               m_GlobalWMO;
-
-	vector<string>             m_LowResolutionWMOsNames;
-	vector<WMOPlacementInfo*>  m_LowResolutionWMOsPlacementInfo;
-	vector<WMOInstance*>       m_LowResolutionWMOs;
+public:
+	WDT     m_WDT;
+	WDL     m_WDL;
 };
 
 inline bool IsBadTileIndex(int i, int j)
 {
-    if (i < 0)
-    {
-        return true;
-    }
+	if (i < 0)
+	{
+		return true;
+	}
 
-    if (j < 0)
-    {
-        return true;
-    }
+	if (j < 0)
+	{
+		return true;
+	}
 
-    if (i >= C_TilesInMap)
-    {
-        return true;
-    }
+	if (i >= C_TilesInMap)
+	{
+		return true;
+	}
 
-    if (j >= C_TilesInMap)
-    {
-        return true;
-    }
+	if (j >= C_TilesInMap)
+	{
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 inline bool IsGoodTileIndex(int i, int j)
 {
-    return (!IsBadTileIndex(i, j));
+	return (!IsBadTileIndex(i, j));
 }

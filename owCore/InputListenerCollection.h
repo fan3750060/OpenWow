@@ -5,19 +5,19 @@
 class InputListenerObjectCollection
 {
 public:
-    static bool RegisterObject(InputListenerObject* _uiObject);
-    static void UnregisterObject(InputListenerObject* _uiObject);
+    bool RegisterObject(InputListenerObject* _uiObject);
+    void UnregisterObject(InputListenerObject* _uiObject);
 
     //
 
-    static void OnMouseMoved(cvec2 _mousePos);
-    static void OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos);
-    static void OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos);
-    static void OnMouseWheel(int _yoffset);
-    static void OnKeyboardPressed(int _key, int _scancode, int _mods);
-    static void OnKeyboardReleased(int _key, int _scancode, int _mods);
-    static void OnCharInput(uint32 _char);
+    void OnMouseMoved(cvec2 _mousePos);
+    void OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos);
+    void OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos);
+    void OnMouseWheel(int _yoffset);
+    void OnKeyboardPressed(int _key, int _scancode, int _mods);
+    void OnKeyboardReleased(int _key, int _scancode, int _mods);
+    void OnCharInput(uint32 _char);
 
 private:
-    static vector<InputListenerObject*> m_Objects;
+    vector<InputListenerObject*> m_Objects;
 };

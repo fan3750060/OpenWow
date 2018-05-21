@@ -1,9 +1,9 @@
 #pragma once
 
-enum Commands2
+enum Commands
 {
-	CMD_NONE2,
-	CMD_SELECT2
+	CMD_NONE,
+	CMD_SELECT
 };
 
 class GameState_Menu : public GameState
@@ -30,7 +30,7 @@ public:
 
     void OnBtn(DBC_MapRecord* _e);
 
-	bool LoadWorld(cvec3 _pos);
+	bool LoadWorld(vec3 _pos);
 
 	//
 
@@ -44,7 +44,7 @@ private:
     R_Texture* m_MinimapTexture;
     UIElement* m_MinimapUI;
 
-	Commands2 cmd;
+	Commands cmd;
 
 	MDX *backgroundModel;
 	float mt;

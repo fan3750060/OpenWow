@@ -10,7 +10,6 @@ DayNightCycle::DayNightCycle()
 	{
 		Log::Error("DayNightCycle[]: Can't init day-night cycle.");
         fail1();
-		return;
 	}
 
 	uint32 nFields1, nFields, d;

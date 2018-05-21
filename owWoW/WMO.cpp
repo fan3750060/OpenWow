@@ -26,7 +26,7 @@ WMO::WMO(cstring name) : RefItemNamed(name), m_Loaded(false)
 
 WMO::~WMO()
 {
-    Log::Info("WMO[%s]: Unloading...", GetName().c_str());
+    //Log::Info("WMO[%s]: Unloading...", GetName().c_str());
 
     //
 
@@ -138,9 +138,8 @@ bool WMO::Load()
                 m_Skybox_Filename = new char[size + 1];
                 f.ReadBytes(m_Skybox_Filename, size);
                 m_Skybox_Filename[size] = 0x00;
-                Log::Warn("WMO[%s]: Skybox [%s]", GetName().c_str(), m_Skybox_Filename);
-
-                //m_SkyModel = new Sky_Model(m_Skybox_Filename);
+                Log::Error("WMO[%s]: Skybox [%s]", GetName().c_str(), m_Skybox_Filename);
+				m_Skybox = _World->LoadMDX(m_Skybox_Filename);
             }
         }
         else if (strcmp(fourcc, "MOPV") == 0)
@@ -236,7 +235,7 @@ bool WMO::Load()
             m_Header.nDoodadNames = size / 40;
             for (uint32 i = 0; i < m_Header.nDoodadNames; i++)
             {
-                DoodadInstance* _doodadInstance = new DoodadInstance(f);
+                WMO_MODD* _doodadInstance = new WMO_MODD(f);
 
                 MDX* m = (MDX*)_World->MDXM()->objects[m_MDXFilenames + _doodadInstance->placementInfo->flags.nameIndex];
                 assert1(m != nullptr);
@@ -291,9 +290,9 @@ bool WMO::Render(uint32 _doodadSet)
         return false;
     }
 
+	// Cull bounging box
     BoundingBox aabb = m_Bounds;
     aabb.transform(_Pipeline->GetWorld());
-
     if (_CameraFrustum->_frustum.cullBox(aabb))
     {
        // return false;

@@ -79,19 +79,7 @@
     <ClCompile Include="DayNightPhase.cpp">
       <Filter>Environment\DayNight</Filter>
     </ClCompile>
-    <ClCompile Include="Model_Instance.cpp">
-      <Filter>Map\Instances</Filter>
-    </ClCompile>
-    <ClCompile Include="WMO_Instance.cpp">
-      <Filter>Map\Instances</Filter>
-    </ClCompile>
-    <ClCompile Include="Map_Chunk.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
     <ClCompile Include="Map_Shared.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Map_Tile.cpp">
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
@@ -163,6 +151,27 @@
     <ClCompile Include="WorldRender.cpp">
       <Filter>WorldController</Filter>
     </ClCompile>
+    <ClCompile Include="ADT_WMO_Instance.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_MDX_Instance.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_MCNK.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WDT.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxInstance.cpp">
+      <Filter>WMO\Instances</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -208,22 +217,7 @@
     <ClInclude Include="DayNightPhase.h">
       <Filter>Environment\DayNight</Filter>
     </ClInclude>
-    <ClInclude Include="Model_Instance.h">
-      <Filter>Map\Instances</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_Instance.h">
-      <Filter>Map\Instances</Filter>
-    </ClInclude>
-    <ClInclude Include="Map_Chunk.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Map_Chunk_Types.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="Map_Shared.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Map_Tile.h">
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="Animated_Types.h">
@@ -297,6 +291,27 @@
     </ClInclude>
     <ClInclude Include="WorldRender.h">
       <Filter>WorldController</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_WMO_Instance.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_MDX_Instance.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_MCNK.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WDT.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxInstance.h">
+      <Filter>WMO\Instances</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

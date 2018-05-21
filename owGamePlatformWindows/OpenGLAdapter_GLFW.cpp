@@ -3,9 +3,6 @@
 // General
 #include "OpenGLAdapter_GLFW.h"
 
-// Additional
-//#include "Engine.h"
-
 // Error callback
 void GLFWErrorCallback(int error, const char* description)
 {
@@ -18,26 +15,28 @@ void GLFWFramebufferCallback(GLFWwindow* _window, int _width, int _height)
 	//_Engine->GetAdapter()->SetWindowSize(_width, _height);
 }
 
+Input* _input = nullptr;
+
 // Input callbacks
 void GLFWMousePositionCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	Input::MousePositionCallback(vec2(static_cast<int>(xpos), static_cast<int>(ypos)));
+	_input->MousePositionCallback(vec2(static_cast<int>(xpos), static_cast<int>(ypos)));
 }
 void GLFWMouseCallback(GLFWwindow* window, int button, int action, int mods)
 {
-    Input::MouseCallback(button, action, mods);
+	_input->MouseCallback(button, action, mods);
 }
 void GLFWMouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    Input::MouseScrollCallback(static_cast<int>(yoffset));
+	_input->MouseScrollCallback(static_cast<int>(yoffset));
 }
 void GLFWKeyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    Input::KeyboardCallback(key, scancode, action, mods);
+	_input->KeyboardCallback(key, scancode, action, mods);
 }
 void GLFWCharCallback(GLFWwindow* window, unsigned int _char)
 {
-    Input::CharCallback(_char);
+	_input->CharCallback(_char);
 }
 
 //---------------------------------------------------------
@@ -98,7 +97,8 @@ bool OpenGLAdapter_GLFW::Init()
 	glfwSetFramebufferSizeCallback(window, GLFWFramebufferCallback);
 
 	// Input
-
+	m_Input = new Input();
+	_input = m_Input;
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, 0);
 	glfwSetMouseButtonCallback(window, GLFWMouseCallback);
 	glfwSetCursorPosCallback(window, GLFWMousePositionCallback);
@@ -125,6 +125,11 @@ bool OpenGLAdapter_GLFW::SwapWindowBuffers()
 double OpenGLAdapter_GLFW::GetTime()
 {
 	return glfwGetTime();
+}
+
+Input* OpenGLAdapter_GLFW::GetInput()
+{
+	return m_Input;
 }
 
 //

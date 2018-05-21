@@ -1,6 +1,6 @@
 #pragma once
 
-class OpenGLAdapter
+__interface IOpenGLAdapter
 {
 public:
 	virtual bool Init() = 0;
@@ -8,6 +8,10 @@ public:
 
 	virtual bool SwapWindowBuffers() = 0;
 	virtual double GetTime() = 0;
+
+	//
+
+	virtual Input* GetInput() = 0;
 
 	//
 

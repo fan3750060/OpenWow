@@ -6,7 +6,9 @@ template <class OBJECT_TYPE>
 class IntManager : public RefManager2Dim<OBJECT_TYPE, uint32>
 {
 public:
-	IntManager() : baseid(1) {}
+	IntManager() : 
+		baseid(1) 
+	{}
 
 protected:
 	uint32 GenerateID() override

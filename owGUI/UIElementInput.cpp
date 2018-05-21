@@ -30,7 +30,7 @@ On_Mouse_Moved(UIElement)
     for (auto it : m_Childs)
     {
         bool beforeMoveSelection = it->IsSelected();
-        bool afterMoveSelection = it->CheckSelection(Input::GetMouse());
+        bool afterMoveSelection = it->CheckSelection(_mousePos);
 
         if (!beforeMoveSelection && afterMoveSelection)
         {

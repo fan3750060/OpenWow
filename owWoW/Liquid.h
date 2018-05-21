@@ -31,19 +31,22 @@ struct Liquid_Layer
 // Includes and using
 
 class WMOMaterial;
-class MCNK_Header;
+class ADT_MCNK_Header;
 
 // Class
 
-class Liquid
+class Liquid : public Renderable3DObject
 {
 public:
 	Liquid(uint32 x, uint32 y, vec3 base);
 	~Liquid();
 
-	void CreateFromMCLQ(File& f, MCNK_Header header);
+	void CreateFromMCLQ(File& f, ADT_MCNK_Header header);
 	void CreateFromWMO(File& f, WMOMaterial* _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor);
-	void Render();
+	
+	void PreRender3D(double t, double dt) override;
+	void Render3D() override;
+	void PostRender3D() override;
 
 private:
 	void initGeometry(File& f);

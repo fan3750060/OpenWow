@@ -3,9 +3,6 @@
 // General(type
 #include "Renderable3DObjectCollection.h"
 
-vector<Renderable3DObject*> Renderable3DObjectCollection::m_Objects;
-bool                        Renderable3DObjectCollection::m_ObjectsNeedSort;
-
 struct Renderable3DObjectCompare
 {
 	bool operator() (const Renderable3DObject* left, const Renderable3DObject* right) const
@@ -14,8 +11,9 @@ struct Renderable3DObjectCompare
 	}
 };
 
-bool Renderable3DObjectCollection::RegisterObject(Renderable3DObject* _uiObject)
+bool Renderable3DObjectCollection::RegisterObject(Renderable3DObject* _uiObject, uint32 _DrawOrder)
 {
+	_uiObject->SetDrawOrder(_DrawOrder);
 	m_Objects.push_back(_uiObject);
 	m_ObjectsNeedSort = true;
 
@@ -27,7 +25,7 @@ void Renderable3DObjectCollection::UnregisterObject(Renderable3DObject * _uiObje
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 }
 
-void Renderable3DObjectCollection::RenderUI()
+void Renderable3DObjectCollection::Render3D(double t, double dt)
 {
 	if (m_ObjectsNeedSort)
 	{
@@ -35,18 +33,24 @@ void Renderable3DObjectCollection::RenderUI()
 		m_ObjectsNeedSort = false;
 	}
 
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
-		it->PreRender3D();
+		it->PreRender3D(t, dt);
 	}
 
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
-		it->Render3D();
+		if (it->IsVisible())
+		{
+			it->Render3D();
+		}
 	}
 
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
-		it->PostRender3D();
+		if (it->IsVisible())
+		{
+			it->PostRender3D();
+		}
 	}
 }

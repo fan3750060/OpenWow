@@ -20,14 +20,14 @@ struct DoodadPlacementInfo
 
 #include "MDX.h"
 
-class DoodadInstance : protected SceneNode, protected RenderableItem
+class WMO_MODD : protected SceneNode
 {
 public:
-	DoodadInstance(File& f);
-	~DoodadInstance();
+	WMO_MODD(File& f);
+	~WMO_MODD();
 
 	void SetModel(MDX* m);
-	MDX* GetMDX() { return modelObject; }
+	MDX* GetMDX() { return m_Object; }
 
 	void Render();
 
@@ -35,7 +35,7 @@ private:
 	void CalculateMatrix();
 
 public:
-	MDX* modelObject;
+	MDX* m_Object;
 	DoodadPlacementInfo* placementInfo;
 
 	int light;

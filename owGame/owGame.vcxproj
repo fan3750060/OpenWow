@@ -23,7 +23,6 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="OpenGLAdapter.cpp" />
-    <ClCompile Include="RenderableItem.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -38,7 +37,6 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="OpenGLAdapter.h" />
-    <ClInclude Include="RenderableItem.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

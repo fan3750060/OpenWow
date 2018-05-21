@@ -16,9 +16,6 @@
     <ClCompile Include="SceneNode.cpp">
       <Filter>General\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="RenderableItem.cpp">
-      <Filter>General\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="OpenGLAdapter.cpp">
       <Filter>General</Filter>
     </ClCompile>
@@ -36,9 +33,6 @@
     <ClInclude Include="..\shared\owGame.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SceneNode.h">
-      <Filter>General\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableItem.h">
       <Filter>General\Scene</Filter>
     </ClInclude>
     <ClInclude Include="OpenGLAdapter.h">

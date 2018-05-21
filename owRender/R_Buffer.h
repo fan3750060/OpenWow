@@ -1,12 +1,16 @@
 #pragma once
 
 class RenderDevice;
-#include "R_BufferBase.h"
 
-struct R_Buffer : public R_BufferBase
+struct R_Buffer
 {
 	R_Buffer(RenderDevice* _RenderDevice) :
-		R_BufferBase(_RenderDevice)
+		type(0),
+		glObj(0),
+		size(0),
+		isDynamic(true),
+		geometryRefCount(0),
+		m_RenderDevice(_RenderDevice)
 	{}
 
 	//
@@ -19,4 +23,17 @@ struct R_Buffer : public R_BufferBase
 	void updateBufferData(uint32 offset, uint32 size, const void *data);
 	void* mapBuffer(uint32 offset, uint32 size, R_BufferMappingTypes mapType);
 	void unmapBuffer();
+
+	void destroyBuffer();
+	void decreaseBufferRefCount();
+
+public:
+	uint32  type;
+	uint32  glObj;
+	uint32  size;
+	bool    isDynamic;
+	int geometryRefCount;
+
+private:
+	RenderDevice* m_RenderDevice;
 };

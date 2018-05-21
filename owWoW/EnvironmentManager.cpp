@@ -8,15 +8,10 @@
 
 EnvironmentManager::EnvironmentManager()
 {
-    time_t t = time(0);   // get time now
+    /*time_t t = time(0);   // get time now
     tm* now = localtime(&t);
-    cout << (now->tm_year + 1900) << '-'
-        << (now->tm_mon + 1) << '-'
-        << now->tm_mday
-        << endl;
-
-	m_GameTime.Set(now->tm_hour, now->tm_min);
-    m_GameTime.Set(9, 0);
+	m_GameTime.Set(now->tm_hour, now->tm_min);*/
+    m_GameTime.Set(11, 0);
 
 	skies = 0;
 	dayNightCycle = new DayNightCycle();
@@ -46,10 +41,6 @@ void EnvironmentManager::InitSkies(DBC_MapRecord* _mapRecord)
 	skies = new SkyManager(_mapRecord);
 }
 
-
-
-
-
 void EnvironmentManager::outdoorLighting()
 {
 	m_OutdoorAmbientColor = vec4(skies->GetColor(LIGHT_COLOR_GLOBAL_AMBIENT), 1.0f); // BLACK?
@@ -59,8 +50,6 @@ void EnvironmentManager::outdoorLighting()
 
 	m_OutdoorSpecularColor = vec4(1.4f, 1.4f, 1.4f, 1.0f);
 }
-
-
 
 void EnvironmentManager::SetAmbientLights(bool on)
 {
@@ -130,7 +119,7 @@ void EnvironmentManager::BeforeDraw()
 	m_HasSky = false;
 
 	dayNightPhase = dayNightCycle->getPhase(m_GameTime.GetTime());
-	skies->Calculate(_Camera->Position, m_GameTime.GetTime());
+	skies->Calculate(m_GameTime.GetTime());
 }
 
 

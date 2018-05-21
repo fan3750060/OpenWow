@@ -53,8 +53,4 @@ public:
     {
         return false;
     }
-
-protected:
-    bool Register();
-    void Unregister();
 };

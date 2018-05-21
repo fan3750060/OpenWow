@@ -71,9 +71,6 @@
     <ClCompile Include="R_Buffer.cpp">
       <Filter>RenderCore\Types</Filter>
     </ClCompile>
-    <ClCompile Include="R_BufferBase.cpp">
-      <Filter>RenderCore\Types</Filter>
-    </ClCompile>
     <ClCompile Include="R_TextureBuffer.cpp">
       <Filter>RenderCore\Types</Filter>
     </ClCompile>
@@ -203,9 +200,6 @@
       <Filter>RenderCore\Types</Filter>
     </ClInclude>
     <ClInclude Include="R_Buffer.h">
-      <Filter>RenderCore\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="R_BufferBase.h">
       <Filter>RenderCore\Types</Filter>
     </ClInclude>
     <ClInclude Include="R_TextureBuffer.h">

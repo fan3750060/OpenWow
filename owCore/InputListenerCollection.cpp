@@ -3,10 +3,6 @@
 // General
 #include "InputListenerCollection.h"
 
-vector<InputListenerObject*> InputListenerObjectCollection::m_Objects;
-
-//
-
 bool InputListenerObjectCollection::RegisterObject(InputListenerObject* _Object)
 {
     m_Objects.push_back(_Object);

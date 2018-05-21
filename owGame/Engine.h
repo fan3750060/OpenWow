@@ -5,10 +5,10 @@
 class Engine
 {
 public:
-	Engine(OpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[]);
+	Engine(IOpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[]);
 	~Engine();
 
-	OpenGLAdapter* GetAdapter() { return m_OpenGLAdapter; }
+	IOpenGLAdapter* GetAdapter() { return m_OpenGLAdapter; }
 
 	bool Tick();
 
@@ -24,10 +24,7 @@ public:
 		}
 	}
 	
-
 	uint32 GetFPS() const { return framesPerSecond; }
-
-	
 
 private:
 	vector<string> m_Arguments;
@@ -41,5 +38,5 @@ private:
 	uint32 last_t;
 	uint32 _time;
 
-	OpenGLAdapter* m_OpenGLAdapter;
+	IOpenGLAdapter* m_OpenGLAdapter;
 };

@@ -495,7 +495,7 @@ bool WMOGroup::drawLiquid()
 		glLightfv(GL_LIGHT2, GL_POSITION, vec4(0, 1, 0, 0));*/
 	}
 
-	m_Liquid->Render();
+	//m_Liquid->Render3D();
 
 	PERF_INC(PERF_MAP_MODELS_WMOs_LIQUIDS);
 

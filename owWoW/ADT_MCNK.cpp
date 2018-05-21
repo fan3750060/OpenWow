@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 // Include
-#include "Map_Tile.h"
+#include "ADT.h"
 
 // General
-#include "Map_Chunk.h"
+#include "ADT_MCNK.h"
 
 // Additional
 #include "MapController.h"
@@ -12,58 +12,35 @@
 
 //
 
-MapChunk::MapChunk(MapTile* _parentTile) :
+ADT_MCNK::ADT_MCNK(ADT* _parentTile) :
 	m_ParentTile(_parentTile),
-	m_GamePositionX(0),
-	m_GamePositionY(0),
-	m_GamePositionZ(0),
-	areaID(-1),
-	visible(false),
-	hasholes(false),
 	m_BlendRBGShadowATexture(0),
 	m_Indexes(nullptr),
-	m_IndexesCount(0)
+	m_IndexesCount(0),
+	m_Liquid(nullptr)
 {
 	memset(mcly, 0x00, 16 * 4);
 
-	waterlevel[0] = 0;
-	waterlevel[1] = 0;
-
 	m_BlendRBGShadowATexture = 0;
-
-
-	colorBufferEnable = false;
-
 }
 
-MapChunk::~MapChunk()
+ADT_MCNK::~ADT_MCNK()
 {
-	/*if (m_Liquid != nullptr)
-	{
-		delete m_Liquid;
-	}*/
+	_Bindings->UnregisterRenderable3DObject(this);
 }
 
 //
 
-void MapChunk::Load(File& f)
+void ADT_MCNK::Load(File& f)
 {
-	f.SeekRelative(8); // Skip CHUNK + SIZE
-
 	uint32_t startPos = f.GetPos();
 
 	// Read header
-	f.ReadBytes(&header, 0x80);
+	f.ReadBytes(&header, sizeof(ADT_MCNK_Header));
 
-	areaID = header.areaid;
-
-	m_GamePositionX = header.xpos;
-	m_GamePositionY = header.ypos;
-	m_GamePositionZ = header.zpos;
-	m_GamePositionX = m_GamePositionX * (-1.0f) + C_ZeroPoint;
-	m_GamePositionZ = m_GamePositionZ * (-1.0f) + C_ZeroPoint;
-
-	hasholes = (header.holes != 0);
+	m_GamePosition.x = header.xpos * (-1.0f) + C_ZeroPoint;
+	m_GamePosition.y = header.ypos;
+	m_GamePosition.z = header.zpos * (-1.0f) + C_ZeroPoint;
 
 	vec3 tempVertexes[C_MapBufferSize];
 	vec3 tempNormals[C_MapBufferSize];
@@ -71,7 +48,6 @@ void MapChunk::Load(File& f)
 	uint8* blendbuf = new uint8[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
 
-	//--
 
 	// Normals
 	f.Seek(startPos + header.ofsNormal);
@@ -94,8 +70,8 @@ void MapChunk::Load(File& f)
 	f.Seek(startPos + header.ofsHeight);
 	{
 		vec3* ttv = tempVertexes;
-		vec3 vmin = vec3(m_GamePositionX, Math::MaxFloat, m_GamePositionZ);
-		vec3 vmax = vec3(m_GamePositionX + C_ChunkSize, Math::MinFloat, m_GamePositionZ + C_ChunkSize);
+		vec3 vmin = vec3(m_GamePosition.x, Math::MaxFloat, m_GamePosition.z);
+		vec3 vmax = vec3(m_GamePosition.x + C_ChunkSize, Math::MinFloat, m_GamePosition.z + C_ChunkSize);
 
 		// vertices
 		for (uint32 j = 0; j < 17; j++)
@@ -112,7 +88,7 @@ void MapChunk::Load(File& f)
 					xpos += C_UnitSize * 0.5f;
 				}
 
-				vec3 v = vec3(m_GamePositionX + xpos, m_GamePositionY + h, m_GamePositionZ + zpos);
+				vec3 v = vec3(m_GamePosition.x + xpos, m_GamePosition.y + h, m_GamePosition.z + zpos);
 				*ttv++ = v;
 
 				vmin.y = minf(v.y, vmin.y);
@@ -127,24 +103,19 @@ void MapChunk::Load(File& f)
 	{
 		for (uint32 i = 0; i < header.nLayers; i++)
 		{
-			f.ReadBytes(&mcly[i], 16);
+			f.ReadBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
-			if (mcly[i].flags.animation_enabled)
-			{
-				//animated[i] = mcly[i].flags;
-				Log::Error("ANIMATED!!!");
-			}
-			else
-			{
-				animated[i] = 0;
-			}
+			m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].diffuseTexture;
+			m_SpecularTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].specularTexture;
 		}
 	}
 
 	// Shadows
 	f.Seek(startPos + header.ofsShadow);
 	{
-		uint8 sbuf[64 * 64], *p, c[8];
+		uint8 sbuf[64 * 64];
+		uint8* p;
+		uint8 c[8];
 		p = sbuf;
 		for (int j = 0; j < 64; j++)
 		{
@@ -173,9 +144,11 @@ void MapChunk::Load(File& f)
 			memset(amap, 0x00, 64 * 64);
 			uint8* abuf = f.GetDataFromCurrent() + mcly[i].offsetInMCAL, *p;
 			p = amap;
-			for (int j = 0; j < 64; j++) {
-				for (int i = 0; i < 32; i++) {
-					unsigned char c = *abuf++;
+			for (uint8 j = 0; j < 64; j++) 
+			{
+				for (uint8 i = 0; i < 32; i++)
+				{
+					uint8 c = *abuf++;
 					*p++ = (c & 0x0f) << 4;
 					*p++ = (c & 0xf0);
 				}
@@ -208,9 +181,8 @@ void MapChunk::Load(File& f)
 			CRange height;
 			f.ReadBytes(&height, 8);
 
-			Liquid* liquid = new Liquid(8, 8, vec3(m_GamePositionX, 0, m_GamePositionZ));
-			liquid->CreateFromMCLQ(f, header);
-			m_ParentTile->m_MH2O.push_back(liquid);
+			m_Liquid = new Liquid(8, 8, vec3(m_GamePosition.x, 0, m_GamePosition.z));
+			m_Liquid->CreateFromMCLQ(f, header);
 		}
 	}
 
@@ -220,29 +192,25 @@ void MapChunk::Load(File& f)
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(10 * t, nullptr);
-
 	__vb->updateBufferData(0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
 	__vb->updateBufferData(3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
 	__vb->updateBufferData(6 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordDetail());
 	__vb->updateBufferData(8 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordAlpha());
 
 
-	//
+	// Index Buffer
+	vector<uint16>& mapArray = Map_Shared::GenarateDefaultMapArray(header.holes);
+	m_Indexes = mapArray.data();
+	m_IndexesCount = mapArray.size();
+	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
 
+	// Geom
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
-
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * t, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 6 * t, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 8 * t, 0);
-
-	vector<uint16>& mapArray = Map_Shared::GenarateDefaultMapArray(header.holes);
-	m_Indexes = mapArray.data();
-	m_IndexesCount = mapArray.size();
-
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
 	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-
 	__geom->finishCreatingGeometry();
 
 
@@ -263,21 +231,71 @@ void MapChunk::Load(File& f)
 
 	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
+
+	_Bindings->RegisterRenderable3DObject(this, 20);
 }
 
-void MapChunk::Post_Load()
+void ADT_MCNK::PreRender3D(double t, double dt)
 {
-	// R_Texture layer definitions for this map chunk. 16 bytes per layer, up to 4 layers (thus, layer count = size / 16).
+	m_IsVisible = !_CameraFrustum->_frustum.cullBox(m_Bounds);
+	
+	// Draw chunk before fog
+	/*float mydist = (_Camera->Position - vcenter).length() - r;
+	if (mydist > _Config.culldistance)
+	{
+	if (_Config.uselowlod)
+	{
+	this->drawNoDetail();
+	return;
+	}
+	}*/
+}
+
+void ADT_MCNK::Render3D()
+{
+	PERF_START(PERF_MAP);
+	//------------------
+
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
+
+	// Bind m_DiffuseTextures
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
-		m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].diffuseTexture;
-		m_SpecularTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].specularTexture;
+		_Render->r.setTexture(i, m_DiffuseTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(5 + i, m_SpecularTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
+
+	// Bind blend
+	if (header.nLayers > 0)
+		_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+
+	// Bind shadow
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
+	if (header.flags.has_mcsh)
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
+
+	_Render->r.setGeometry(__geom);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
+
+	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Unbind();
+
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+
+	//---------------
+	PERF_STOP(PERF_MAP);
+}
+
+void ADT_MCNK::PostRender3D()
+{
 }
 
 //
 
-/*void MapChunk::drawPass(int anim)
+/*void ADT_MCNK::drawPass(int anim)
 {
 	if (anim)
 	{
@@ -295,11 +313,11 @@ void MapChunk::Post_Load()
 		int animspd = (int)(200.0f * C_DetailSize);
 		float f = (((int)(_TimeManager->animtime * (spd / 15.0f))) % animspd) / (float)animspd;
 		glTranslatef(f * fdx, f * fdy, 0);
-	}*/
+	}
 
-	//glDrawElements(GL_TRIANGLE_STRIP, striplen, GL_UNSIGNED_SHORT, m_Indexes);
+	glDrawElements(GL_TRIANGLE_STRIP, striplen, GL_UNSIGNED_SHORT, m_Indexes);
 
-	/*if (anim)
+	if (anim)
 	{
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
@@ -308,61 +326,7 @@ void MapChunk::Post_Load()
 }*/
 
 
-void MapChunk::Render()
-{
-	visible = false;
-
-	if (_CameraFrustum->_frustum.cullBox(m_Bounds))
-	{
-		return;
-	}
-
-	// Draw chunk before fog
-	/*float mydist = (_Camera->Position - vcenter).length() - r;
-	if (mydist > _Config.culldistance)
-	{
-		if (_Config.uselowlod)
-		{
-			this->drawNoDetail();
-			return;
-		}
-	}*/
-
-	visible = true;
-
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
-
-
-	_Render->r.setGeometry(__geom);
-
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	// Bind m_DiffuseTextures
-	for (uint32 i = 0; i < header.nLayers; i++)
-	{
-		_Render->r.setTexture(i, m_DiffuseTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
-		_Render->r.setTexture(5 + i, m_SpecularTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
-	}
-
-	// Bind blend
-	if (header.nLayers > 0)
-	{
-		_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
-	}
-
-	// Bind shadow
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
-	if (header.flags.has_mcsh)
-	{
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
-	}
-
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
-
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-}
-
-void MapChunk::Render_DEBUG()
+/*void ADT_MCNK::Render_DEBUG()
 {
 	if (_CameraFrustum->_frustum.cullBox(m_Bounds))
 	{
@@ -371,5 +335,5 @@ void MapChunk::Render_DEBUG()
 
 	_Render->r.setGeometry(__geomDebugNormals);
 	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
-}
+}*/
 

@@ -3,8 +3,6 @@
 // General
 #include "UpdatableObjectCollection.h"
 
-vector<UpdatableObject*> UpdatableObjectCollection::m_Objects;
-
 bool UpdatableObjectCollection::RegisterObject(UpdatableObject* _uiObject)
 {
 	m_Objects.push_back(_uiObject);
@@ -19,12 +17,12 @@ void UpdatableObjectCollection::UnregisterObject(UpdatableObject * _uiObject)
 
 void UpdatableObjectCollection::Update(double _Time, double _deltaTime)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
         it->Input(_Time, _deltaTime);
     }
 
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
 		it->Update(_Time, _deltaTime);
 	}

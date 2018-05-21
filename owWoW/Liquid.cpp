@@ -2,7 +2,6 @@
 
 // Includes
 #include "Wmo_Material.h"
-#include "Map_Chunk_Types.h"
 
 // General
 #include "liquid.h"
@@ -34,11 +33,13 @@ Liquid::~Liquid()
 	{
 		_Render->TexturesMgr()->Delete(textures[i]);
 	}
+
+	_Bindings->UnregisterRenderable3DObject(this);
 }
 
 //
 
-void Liquid::CreateFromMCLQ(File & f, MCNK_Header header)
+void Liquid::CreateFromMCLQ(File & f, ADT_MCNK_Header header)
 {
 	ydir = 1.0f;
 
@@ -82,35 +83,46 @@ void Liquid::CreateFromWMO(File& f, WMOMaterial* _material, const DBC_LiquidType
 	}
 }
 
-//
+void Liquid::PreRender3D(double t, double dt)
+{
+	m_IsVisible = true;
+}
 
-void Liquid::Render()
+void Liquid::Render3D()
 {
 	if (globalBufferSize == 0)
 	{
 		return;
 	}
 
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+
 	_Render->TechniquesMgr()->m_Water->Bind();
-	_Render->TechniquesMgr()->m_Water->SetPVW();
+	_Render->TechniquesMgr()->m_Water->SetPV();
 
 	uint32_t texidx = (uint32_t)(_World->EnvM()->animtime / 60.0f) % textures.size();
 	_Render->r.setTexture(10, textures[texidx], 0, 0);
 
 	/*_Render->TechniquesMgr()->m_Water->SetWaterColorLight(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_LIGHT));
 	_Render->TechniquesMgr()->m_Water->SetWaterColorDark(_EnvironmentManager->GetSkyColor(LIGHT_COLOR_OCEAN_DARK));
-    _Render->TechniquesMgr()->m_Water->SetShallowAlpha(_EnvironmentManager->skies->oceanShallowAlpha);
-    _Render->TechniquesMgr()->m_Water->SetDeepAlpha(_EnvironmentManager->skies->oceanDeepAlpha);*/
+	_Render->TechniquesMgr()->m_Water->SetShallowAlpha(_EnvironmentManager->skies->oceanShallowAlpha);
+	_Render->TechniquesMgr()->m_Water->SetDeepAlpha(_EnvironmentManager->skies->oceanDeepAlpha);*/
 
-    _Render->TechniquesMgr()->m_Water->SetWaterColorLight(_World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_LIGHT));
-    _Render->TechniquesMgr()->m_Water->SetWaterColorDark(_World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_DARK));
-    _Render->TechniquesMgr()->m_Water->SetShallowAlpha(_World->EnvM()->skies->GetWaterShallowAlpha());
-    _Render->TechniquesMgr()->m_Water->SetDeepAlpha(_World->EnvM()->skies->GetWaterDarkAlpha());
+	_Render->TechniquesMgr()->m_Water->SetWaterColorLight(_World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_LIGHT));
+	_Render->TechniquesMgr()->m_Water->SetWaterColorDark(_World->EnvM()->skies->GetColor(LIGHT_COLOR_RIVER_DARK));
+	_Render->TechniquesMgr()->m_Water->SetShallowAlpha(_World->EnvM()->skies->GetWaterShallowAlpha());
+	_Render->TechniquesMgr()->m_Water->SetDeepAlpha(_World->EnvM()->skies->GetWaterDarkAlpha());
 
 	_Render->r.setGeometry(__geom);
 
 	_Render->r.draw(PRIM_TRILIST, 0, globalBufferSize);
 	PERF_INC(PERF_MAP_CHUNK_MH20);
+
+	_Render->TechniquesMgr()->m_Water->Unbind();
+}
+
+void Liquid::PostRender3D()
+{
 }
 
 //
@@ -318,8 +330,6 @@ void Liquid::createBuffer(cvec3 _position)
 					vec3(t3.first, t3.second, a3),
 					defaultNormal
 					});
-
-
 			}
 		}
 	}
@@ -335,21 +345,18 @@ void Liquid::createBuffer(cvec3 _position)
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(Liquid_VertexData), mh2oVertices.data());
 
-	//
+	// Index bufer
+	//uint32 __ib = _Render->r.createIndexBuffer(m_IndicesCount, m_Indices);
 
+	// Geometry
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWater);
-
-	// Vertex params
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(Liquid_VertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(Liquid_VertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(Liquid_VertexData));
-
-	// Index bufer
-	//uint32 __ib = _Render->r.createIndexBuffer(m_IndicesCount, m_Indices);
 	//_Render->r.setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
-
-	// Finish
 	__geom->finishCreatingGeometry();
+
+	_Bindings->RegisterRenderable3DObject(this, 20);
 }
 
 void Liquid::InitTextures(DBC_LIQUIDTYPE_Type _liquidType)

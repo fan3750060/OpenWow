@@ -14,9 +14,10 @@ bool UIMgr::Init()
 
     //
 
-    UpdatableObject::Register();
-    RenderableUIObject::Register(500);
-    InputListenerObject::Register();
+	_Bindings->RegisterUpdatableObject(this);
+	_Bindings->RegisterRenderableUIObject(this, 500);
+	_Bindings->RegisterInputListener(this);
+
     return true;
 }
 
@@ -27,9 +28,9 @@ void UIMgr::Destroy()
 
     //
 
-    UpdatableObject::Unregister();
-    RenderableUIObject::Unregister();
-    InputListenerObject::Unregister();
+	_Bindings->UnregisterUpdatableObject(this);
+	_Bindings->UnregisterRenderableUIObject(this);
+	_Bindings->UnregisterInputListener(this);
 }
 
 //

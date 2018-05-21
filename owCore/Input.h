@@ -1,26 +1,31 @@
 #pragma once
 
 #include "InputKeys.h"
+#include "InputListenerCollection.h"
 
 class Input
 {
 public:
-    static bool Init();
-    static void Destroy();
+    Input();
+    ~Input();
 
-    static vec2 GetMouse() { return mousePos; }
-    static bool IsKeyPressed(int key) { return keyState[key]; }
-    static bool IsMousePressed(int button) { return mouseButtonState[button]; }
+    vec2 GetMouse() { return mousePos; }
+    bool IsKeyPressed(int key) { return keyState[key]; }
+    bool IsMousePressed(int button) { return mouseButtonState[button]; }
 
 	// GLFW Connector
-    static void MousePositionCallback(cvec2 _mousePos);
-    static void MouseCallback(int button, int action, int mods);
-    static void MouseScrollCallback(int yoffset);
-    static void KeyboardCallback(int key, int scancode, int action, int mods);
-    static void CharCallback(uint32 _char);
+    void MousePositionCallback(cvec2 _mousePos);
+    void MouseCallback(int button, int action, int mods);
+    void MouseScrollCallback(int yoffset);
+    void KeyboardCallback(int key, int scancode, int action, int mods);
+    void CharCallback(uint32 _char);
+
+	//
+
+	void RegisterInputListenerObject(InputListenerObject* _object);
 
 private:
-	static bool keyState[OW_KEYSCOUNT];
-    static bool mouseButtonState[OW_MOUSEBUTTONSCOUNT];
-    static vec2 mousePos;
+	bool keyState[OW_KEYSCOUNT];
+    bool mouseButtonState[OW_MOUSEBUTTONSCOUNT];
+    vec2 mousePos;
 };

@@ -88,3 +88,17 @@ void R_Buffer::unmapBuffer()
 
 	glUnmapBuffer(this->type);
 }
+
+void R_Buffer::destroyBuffer()
+{
+	if (this->geometryRefCount < 1)
+	{
+		glDeleteBuffers(1, &this->glObj);
+		m_RenderDevice->_bufferMem -= this->size;
+	}
+}
+
+void R_Buffer::decreaseBufferRefCount()
+{
+	this->geometryRefCount--;
+}

@@ -8,8 +8,8 @@ const float C_SkyRadius = 400.0f;
 const uint32 C_SkySegmentsCount = 32;
 
 //............................top....med....medh........horiz..........bottom
-const float C_SkyAngles[] = {90.0f, 30.0f, 15.0f, 5.0f, 0.0f, -30.0f, -90.0f};
-const uint32 C_Skycolors[] = {LIGHT_COLOR_SKY_0,      LIGHT_COLOR_SKY_1,      LIGHT_COLOR_SKY_2,    LIGHT_COLOR_SKY_3,    LIGHT_COLOR_SKY_4,    LIGHT_COLOR_FOG,     LIGHT_COLOR_FOG};
+const float C_SkyAngles[] = { 90.0f, 30.0f, 15.0f, 5.0f, 0.0f, -30.0f, -90.0f };
+const uint32 C_Skycolors[] = { LIGHT_COLOR_SKY_0,      LIGHT_COLOR_SKY_1,      LIGHT_COLOR_SKY_2,    LIGHT_COLOR_SKY_3,    LIGHT_COLOR_SKY_4,    LIGHT_COLOR_FOG,     LIGHT_COLOR_FOG };
 const uint32 C_SkycolorsCount = 7;
 
 SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
@@ -25,129 +25,141 @@ SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
 		}
 	}
 
-    std::sort(skies.begin(), skies.end(), [](const Sky* lhs, const Sky* rhs)
-    {
-        if (lhs->m_IsGlobalSky)
-            return false;
-        else if (rhs->m_IsGlobalSky)
-            return true;
-        else
-            return lhs->m_Range.max < rhs->m_Range.max;
-    });
+	std::sort(skies.begin(), skies.end(), [](const Sky* lhs, const Sky* rhs)
+	{
+		if (lhs->m_IsGlobalSky)
+			return false;
+		else if (rhs->m_IsGlobalSky)
+			return true;
+		else
+			return lhs->m_Range.max < rhs->m_Range.max;
+	});
 
-    if (skies.size() > 0 && !skies.back()->m_IsGlobalSky)
-    {
-        Log::Error("Sky for maps [%d] size [%d] don't have global sky!!!", _mapRecord->Get_ID(), skies.size());
-        skies.back()->m_IsGlobalSky = true;
-    }
+	if (skies.size() > 0 && !skies.back()->m_IsGlobalSky)
+	{
+		Log::Error("Sky for maps [%d] size [%d] don't have global sky!!!", _mapRecord->Get_ID(), skies.size());
+		skies.back()->m_IsGlobalSky = true;
+	}
 
 	InitBuffer();
 
 	/*stars = new MDX("Environments\\Stars\\Stars.m2");  // BOUZI FIXME ENABLE ME
 	stars->Init(true);*/
+
+	_Bindings->RegisterRenderable3DObject(this, 18);
 }
 
 SkyManager::~SkyManager()
 {
 	/*delete stars;*/  // BOUZI FIXME ENABLE ME
+	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-void SkyManager::Calculate(cvec3 _cameraPosition, uint32 _time)
+void SkyManager::Calculate(uint32 _time)
 {
-    if (skies.empty())
-    {
-        return;
-    }
+	if (skies.empty())
+	{
+		return;
+	}
 
-    CalculateSkiesWeights(_cameraPosition);
+	CalculateSkiesWeights(_Camera->Position);
 
-    m_Interpolated.Clear();
+	m_Interpolated.Clear();
 
-    // interpolation
-    for (auto it : skies)
-    {
-        if (it->m_Wight > 0.0f)
-        {
-            SkyParams params = it->GetByTime(_time);
-            params *= it->m_Wight;
+	// interpolation
+	for (auto it : skies)
+	{
+		if (it->m_Wight > 0.0f)
+		{
+			SkyParams params = it->GetByTime(_time);
+			params *= it->m_Wight;
 
-            m_Interpolated += params;
-        }
-    }
+			m_Interpolated += params;
+		}
+	}
 
-    vector<vec3> colors;
+	vector<vec3> colors;
 
-    for (uint32 h = 0; h < C_SkySegmentsCount; h++)
-    {
-        for (uint32 v = 0; v < C_SkycolorsCount - 1; v++)
-        {
-            colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v]]);
-            colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v + 1]]);
-            colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v + 1]]);
-            colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v + 1]]);
-            colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v]]);
-            colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v]]);
-        }
-    }
+	for (uint32 h = 0; h < C_SkySegmentsCount; h++)
+	{
+		for (uint32 v = 0; v < C_SkycolorsCount - 1; v++)
+		{
+			colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v]]);
+			colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v + 1]]);
+			colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v + 1]]);
+			colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v + 1]]);
+			colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v]]);
+			colors.push_back(m_Interpolated.m_InterpolatedColors[C_Skycolors[v]]);
+		}
+	}
 
-    // Fill buffer with color
+	// Fill buffer with color
 
 	__vb->updateBufferData(__vertsSize * sizeof(vec3), __vertsSize * sizeof(vec3), colors.data());
 }
 
-bool SkyManager::drawSky(cvec3 pos)
+
+
+/*bool SkyManager::DEBUG_Render()
 {
-    if (skies.empty())
-    {
-        return false;
-    }
+	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
 
-    _Pipeline->Clear();
-    _Pipeline->Translate(pos);
+	_Render->r.setGeometry(_Render->Storage()->_sphereGeo);
 
-    _Render->TechniquesMgr()->m_Sky_GeometryPass->Bind();
-    _Render->TechniquesMgr()->m_Sky_GeometryPass->SetPVW();
+	for (auto it : skies)
+	{
+		//_Pipeline->Clear();
+		//_Pipeline->Translate(it->position);
+		//_Pipeline->Scale(it->radiusInner);
 
-    _Render->r.setGeometry(__geom);
-    _Render->r.draw(PRIM_TRILIST, 0, __vertsSize);
+		//_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+		//_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
 
-    return true;
+		//_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
+
+		//---------------------------------------------------------------------------------
+
+		_Pipeline->Clear();
+		_Pipeline->Translate(it->m_Position);
+		_Pipeline->Scale(it->m_Range.max);
+
+		_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+		_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
+
+		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
+	}
+
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+
+	return false;
+}*/
+
+void SkyManager::PreRender3D(double t, double dt)
+{
+	m_IsVisible = !skies.empty();
 }
 
-bool SkyManager::DEBUG_Render()
+void SkyManager::Render3D()
 {
-    _Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-    _Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
+	_Render->r.setDepthTest(false);
 
-    _Render->r.setGeometry(_Render->Storage()->_sphereGeo);
+	_Render->TechniquesMgr()->m_Sky_GeometryPass->Bind();
+	_Pipeline->Clear();
+	_Pipeline->Translate(_Camera->Position);
+	_Render->TechniquesMgr()->m_Sky_GeometryPass->SetPVW();
 
-    for (auto it : skies)
-    {
-        /*_Pipeline->Clear();
-        _Pipeline->Translate(it->position);
-        _Pipeline->Scale(it->radiusInner);
+	_Render->r.setGeometry(__geom);
+	_Render->r.draw(PRIM_TRILIST, 0, __vertsSize);
 
-        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
+	_Render->TechniquesMgr()->m_Sky_GeometryPass->Unbind();
 
-        _Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);*/
+	_Render->r.setDepthTest(true);
+}
 
-        //---------------------------------------------------------------------------------
-
-        _Pipeline->Clear();
-        _Pipeline->Translate(it->m_Position);
-        _Pipeline->Scale(it->m_Range.max);
-
-        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-        _Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
-
-        _Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
-    }
-
-    _Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
-    _Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-
-    return false;
+void SkyManager::PostRender3D()
+{
 }
 
 void SkyManager::InitBuffer()
@@ -185,26 +197,17 @@ void SkyManager::InitBuffer()
 	__vb = _Render->r.createVertexBuffer(2 * __vertsSize * sizeof(vec3), nullptr);
 	__vb->updateBufferData(0, __vertsSize * sizeof(vec3), vertices.data());
 
-	//
-
+	// Geometry
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutSky);
-
-	// Vertex params
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0,                              0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3),     0);
-
-	// Index bufer
-	//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
-	//_Render->r.setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
-
-	// Finish
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3), 0);
 	__geom->finishCreatingGeometry();
 }
 
 void SkyManager::CalculateSkiesWeights(cvec3 pos)
 {
 	skies.back()->m_Wight = 1.0f;
-    assert1(skies.back()->m_IsGlobalSky);
+	assert1(skies.back()->m_IsGlobalSky);
 
 	for (int i = skies.size() - 2; i >= 0; i--)
 	{

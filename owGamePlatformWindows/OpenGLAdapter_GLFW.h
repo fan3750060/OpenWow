@@ -6,7 +6,7 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-class OpenGLAdapter_GLFW : public OpenGLAdapter
+class OpenGLAdapter_GLFW : public IOpenGLAdapter
 {
 public:
 	bool Init() override;
@@ -15,7 +15,12 @@ public:
 	bool SwapWindowBuffers() override;
 	double GetTime() override;
 
-	 //
+	//
+
+	Input* GetInput() override;
+
+
+	//
 
 	void SetWindowSize(int32 _width, int32 _height) override;
 	void SetWindowTitle(cstring _title) override;
@@ -28,4 +33,5 @@ public:
 private:
 	GLFWmonitor* primaryMonitor;
 	GLFWwindow* window;
+	Input* m_Input;
 };

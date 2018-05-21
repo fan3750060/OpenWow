@@ -1,4 +1,4 @@
 #include "stdafx.h"
 
 // General
-#include "RenderableItem.h"
+#include "SkyboxInstance.h"

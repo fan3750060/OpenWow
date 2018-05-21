@@ -61,7 +61,6 @@ private:
 
 class RenderDevice
 {
-	friend R_BufferBase;
 	friend R_Buffer;
 	friend R_TextureBuffer;
 	friend R_GeometryInfo;

@@ -93,8 +93,11 @@ void R_GeometryInfo::destroyGeometry(bool destroyBindedBuffers)
 			this->vertexBufInfo[i].vbObj->destroyBuffer();
 		}
 
-		this->indexBuf->decreaseBufferRefCount();
-		this->indexBuf->destroyBuffer();
+		if (this->indexBuf)
+		{
+			this->indexBuf->decreaseBufferRefCount();
+			this->indexBuf->destroyBuffer();
+		}
 	}
 	else
 	{
@@ -102,6 +105,10 @@ void R_GeometryInfo::destroyGeometry(bool destroyBindedBuffers)
 		{
 			this->vertexBufInfo[i].vbObj->decreaseBufferRefCount();
 		}
-		this->indexBuf->decreaseBufferRefCount();
+
+		if (this->indexBuf)
+		{
+			this->indexBuf->decreaseBufferRefCount();
+		}
 	}
 }

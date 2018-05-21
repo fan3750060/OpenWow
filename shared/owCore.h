@@ -42,3 +42,4 @@
 #include "../owCore/Renderable3DObjectCollection.h"
 #include "../owCore/RenderableUIObject.h"
 #include "../owCore/RenderableUIObjectCollection.h"
+#include "../owCore/BindingController.h"

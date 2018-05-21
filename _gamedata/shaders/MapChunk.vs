@@ -18,12 +18,11 @@ out struct
 // Uniforms
 uniform mat4 gProjection;
 uniform mat4 gView;
-uniform mat4 gWorld;
 
 void main(void)
 {
-	mat4 PVW = gProjection * gView * gWorld;
-	gl_Position = PVW * vec4(VertexPosition, 1.0);
+	mat4 PV = gProjection * gView;
+	gl_Position = PV * vec4(VertexPosition, 1.0);
 
 	VSInput.WorldSpacePos   = VertexPosition;
 	VSInput.Normal          = Normal;

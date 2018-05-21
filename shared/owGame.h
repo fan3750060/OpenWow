@@ -10,4 +10,3 @@
 #include "../owGame/GameStateManager.h"
 
 #include "../owGame/SceneNode.h"
-#include "../owGame/RenderableItem.h"

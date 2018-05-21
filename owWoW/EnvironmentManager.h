@@ -43,5 +43,3 @@ public:
 	DayNightCycle* dayNightCycle;
 	DayNightPhase dayNightPhase;
 };
-
-#define _EnvironmentManager EnvironmentManager::instance()

@@ -2,7 +2,7 @@
 
 #include "WorldController.h"
 
-class WorldRender : Renderable3DObject
+class WorldRender : public Renderable3DObject
 {
 public:
 	WorldRender(WorldController* _WorldContoller);
@@ -11,9 +11,9 @@ public:
 	inline Camera* GetTestCamera() { return m_TestCamera; }
 	inline R_RenderBuffer* GetTestRB() { return m_TestRenderBuffer; }
 
-	void PreRender3D();
-	void Render3D();
-	void PostRender3D();
+	void PreRender3D(double t, double dt) override;
+	void Render3D() override;
+	void PostRender3D() override;
 
 	void RenderGeom();
 	void RenderPostprocess();

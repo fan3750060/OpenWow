@@ -5,12 +5,12 @@
 class RenderableUIObjectCollection
 {
 public:
-	static bool RegisterObject(RenderableUIObject* _uiObject);
-	static void UnregisterObject(RenderableUIObject* _uiObject);
+	bool RegisterObject(RenderableUIObject* _uiObject, uint32 _DrawOrder = 0);
+	void UnregisterObject(RenderableUIObject* _uiObject);
 
-	static void RenderUI();
+	void RenderUI();
 
 private:
-	static vector<RenderableUIObject*>   m_Objects;
-	static bool                          m_ObjectsNeedSort;
+	vector<RenderableUIObject*>   m_Objects;
+	bool                          m_ObjectsNeedSort;
 };

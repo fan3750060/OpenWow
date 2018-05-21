@@ -51,6 +51,11 @@ R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List for
 
 void R_TextureBuffer::destroyTextureBuffer()
 {
-	destroyBuffer();
+	if (this->bufObj->geometryRefCount < 1)
+	{
+		glDeleteBuffers(1, &this->bufObj->glObj);
+		m_RenderDevice->_bufferMem -= this->bufObj->size;
+	}
+
 	glDeleteTextures(1, &this->glTexID);
 }

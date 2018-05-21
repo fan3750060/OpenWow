@@ -3,7 +3,7 @@
 class PlatformWindows
 {
 public:
-	static OpenGLAdapter* CreateAdapter_GLFW();
+	static IOpenGLAdapter* CreateAdapter_GLFW();
 
 	static DebugOutput* CreateDebugOutput_ConsoleWindows();
 	static DebugOutput* CreateDebugOutput_Log();

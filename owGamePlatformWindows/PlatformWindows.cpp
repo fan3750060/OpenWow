@@ -18,7 +18,7 @@ DebugOutput* PlatformWindows::CreateDebugOutput_Log()
 	return new DebugOutput_Log();
 }
 
-OpenGLAdapter* PlatformWindows::CreateAdapter_GLFW()
+IOpenGLAdapter* PlatformWindows::CreateAdapter_GLFW()
 {
 	return new OpenGLAdapter_GLFW();
 }

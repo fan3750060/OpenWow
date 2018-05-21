@@ -12,7 +12,6 @@
 bool Modules::Init()
 {
     assert1(Log::Init());
-    assert1(Input::Init());
 
 	return true;
 }

@@ -1156,6 +1156,11 @@ public:
 		*this = *this * ScaleMat(_v.x, _v.y, _v.z);
 	}
 
+	void scale(const float v)
+	{
+		*this = *this * ScaleMat(v, v, v);
+	}
+
 	
 
 	// ---------------

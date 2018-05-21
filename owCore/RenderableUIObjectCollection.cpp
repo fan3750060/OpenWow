@@ -3,9 +3,6 @@
 // General
 #include "RenderableUIObjectCollection.h"
 
-vector<RenderableUIObject*> RenderableUIObjectCollection::m_Objects;
-bool                        RenderableUIObjectCollection::m_ObjectsNeedSort;
-
 struct RenderableUIObjectCompare
 {
 	bool operator() (const RenderableUIObject* left, const RenderableUIObject* right) const
@@ -14,8 +11,9 @@ struct RenderableUIObjectCompare
 	}
 };
 
-bool RenderableUIObjectCollection::RegisterObject(RenderableUIObject* _uiObject)
+bool RenderableUIObjectCollection::RegisterObject(RenderableUIObject* _uiObject, uint32 _DrawOrder)
 {
+	_uiObject->SetDrawOrder(_DrawOrder);
 	m_Objects.push_back(_uiObject);
 	m_ObjectsNeedSort = true;
 
@@ -35,7 +33,7 @@ void RenderableUIObjectCollection::RenderUI()
 		m_ObjectsNeedSort = false;
 	}
 
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
 		it->RenderUI();
 	}

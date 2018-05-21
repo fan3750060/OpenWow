@@ -28,15 +28,15 @@ ConsoleOpenGL::ConsoleOpenGL()
 
     //
 
-    RenderableUIObject::Register(1000);
-    InputListenerObject::Register();
+	_Bindings->RegisterRenderableUIObject(this, 1000);
+	_Bindings->RegisterInputListener(this);
 }
 
 ConsoleOpenGL::~ConsoleOpenGL()
 {
-	RenderableUIObject::Unregister();
-	InputListenerObject::Unregister();
-
+	_Bindings->UnregisterRenderableUIObject(this);
+	_Bindings->UnregisterInputListener(this);
+	
 	_Render->FontsMgr()->Delete(consoleFont);
 }
 

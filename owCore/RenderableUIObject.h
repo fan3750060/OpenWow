@@ -1,5 +1,6 @@
 #pragma once
 
+
 class RenderableUIObject
 {
 public:
@@ -15,10 +16,6 @@ public:
 	{
 		return m_DrawOrder;
 	}
-
-protected:
-	bool Register(uint32 _order = 0);
-	void Unregister();
 
 private:
 	uint32 m_DrawOrder;

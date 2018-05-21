@@ -4,14 +4,9 @@
 #include "Input.h"
 
 // Additional
-#include "InputListenerCollection.h"
+#include "BindingController.h"
 
-// Static class
-bool Input::keyState[OW_KEYSCOUNT];
-bool Input::mouseButtonState[OW_MOUSEBUTTONSCOUNT];
-vec2 Input::mousePos;
-
-bool Input::Init()
+Input::Input()
 {
     for (int i = 0; i < OW_KEYSCOUNT; i++)
     {
@@ -23,10 +18,9 @@ bool Input::Init()
         mouseButtonState[i] = false;
     }
 
-    return true;
 }
 
-void Input::Destroy()
+Input::~Input()
 {}
 
 //
@@ -34,7 +28,7 @@ void Input::Destroy()
 void Input::MousePositionCallback(cvec2 _mousePos)
 {
     mousePos = _mousePos;
-    InputListenerObjectCollection::OnMouseMoved(mousePos);
+    _Bindings->m_InputListenerObjectCollection->OnMouseMoved(mousePos);
 }
 
 void Input::MouseCallback(int button, int action, int mods)
@@ -42,18 +36,18 @@ void Input::MouseCallback(int button, int action, int mods)
     if (action == OW_PRESS)
     {
         mouseButtonState[button] = true;
-        InputListenerObjectCollection::OnMouseButtonPressed(button, action, mousePos);
+		_Bindings->m_InputListenerObjectCollection->OnMouseButtonPressed(button, action, mousePos);
     }
     else if (action == OW_RELEASE)
     {
         mouseButtonState[button] = false;
-        InputListenerObjectCollection::OnMouseButtonReleased(button, action, mousePos);
+		_Bindings->m_InputListenerObjectCollection->OnMouseButtonReleased(button, action, mousePos);
     }
 }
 
 void Input::MouseScrollCallback(int yoffset)
 {
-    InputListenerObjectCollection::OnMouseWheel(yoffset);
+	_Bindings->m_InputListenerObjectCollection->OnMouseWheel(yoffset);
 }
 
 void Input::KeyboardCallback(int key, int scancode, int action, int mods)
@@ -61,16 +55,21 @@ void Input::KeyboardCallback(int key, int scancode, int action, int mods)
     if (action == OW_PRESS || action == OW_REPEAT)
     {
         keyState[key] = true;
-        InputListenerObjectCollection::OnKeyboardPressed(key, scancode, mods);
+		_Bindings->m_InputListenerObjectCollection->OnKeyboardPressed(key, scancode, mods);
     }
     else if (action == OW_RELEASE)
     {
         keyState[key] = false;
-        InputListenerObjectCollection::OnKeyboardReleased(key, scancode, mods);
+		_Bindings->m_InputListenerObjectCollection->OnKeyboardReleased(key, scancode, mods);
     }
 }
 
 void Input::CharCallback(uint32 _char)
 {
-    InputListenerObjectCollection::OnCharInput(_char);
+	_Bindings->m_InputListenerObjectCollection->OnCharInput(_char);
+}
+
+void Input::RegisterInputListenerObject(InputListenerObject* _object)
+{
+	_Bindings->m_InputListenerObjectCollection->RegisterObject(_object);
 }

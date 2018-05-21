@@ -3,7 +3,7 @@
 // General
 #include "DoodadInstance.h"
 
-DoodadInstance::DoodadInstance(File& f)
+WMO_MODD::WMO_MODD(File& f)
 {
 	placementInfo = new DoodadPlacementInfo;
 	f.ReadBytes(placementInfo, DoodadPlacementInfo::__size);
@@ -11,21 +11,21 @@ DoodadInstance::DoodadInstance(File& f)
 	CalculateMatrix();
 }
 
-DoodadInstance::~DoodadInstance()
+WMO_MODD::~WMO_MODD()
 {
 	delete placementInfo;
 }
 
-void DoodadInstance::SetModel(MDX* _model)
+void WMO_MODD::SetModel(MDX* _model)
 {
 	assert1(_model != nullptr);
 
-	modelObject = _model;
-	m_Bounds = modelObject->m_Bounds;
+	m_Object = _model;
+	m_Bounds = m_Object->m_Bounds;
 	m_Bounds.transform(m_AbsTransform);
 }
 
-void DoodadInstance::Render()
+void WMO_MODD::Render()
 {
 	BoundingBox aabb = m_Bounds;
 	aabb.transform(_Pipeline->GetWorld());
@@ -52,13 +52,13 @@ void DoodadInstance::Render()
 			return;
 		}
 
-		modelObject->Render();
+		m_Object->Render();
 		PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
 	}
 	_Pipeline->Pop();  // restore matrix
 }
 
-void DoodadInstance::CalculateMatrix()
+void WMO_MODD::CalculateMatrix()
 {
 	// Convert
 	placementInfo->position = From_XYZ_To_XZminusY_RET(placementInfo->position);

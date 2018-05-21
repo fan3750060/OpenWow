@@ -5,12 +5,12 @@
 class Renderable3DObjectCollection
 {
 public:
-	static bool RegisterObject(Renderable3DObject* _uiObject);
-	static void UnregisterObject(Renderable3DObject* _uiObject);
+	bool RegisterObject(Renderable3DObject* _uiObject, uint32 _DrawOrder = 0);
+	void UnregisterObject(Renderable3DObject* _uiObject);
 
-	static void RenderUI();
+	void Render3D(double t, double dt);
 
 private:
-	static vector<Renderable3DObject*>   m_Objects;
-	static bool                          m_ObjectsNeedSort;
+	vector<Renderable3DObject*>   m_Objects;
+	bool                          m_ObjectsNeedSort;
 };

@@ -7,7 +7,7 @@
 #include <ctime>
 #include "GameStateManager.h"
 
-Engine::Engine(OpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[])
+Engine::Engine(IOpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[])
 	: m_OpenGLAdapter(_OpenGLAdapter)
 {
 	// Arguments
@@ -68,9 +68,7 @@ bool Engine::Tick()
     //------------------------------------------------
 	//-- Update
     //------------------------------------------------
-    UpdatableObjectCollection::Update(dTime, dDtTime);
-
-	//
+	_Bindings->m_UpdatableObjectCollection->Update(dTime, dDtTime);
 
 	_Render->r.beginRendering();
 	_Render->r.clear();
@@ -79,16 +77,13 @@ bool Engine::Tick()
     //-- Render3D
     //------------------------------------------------
 	_Render->Set3D();
-	if (GameStateManager::GetGameState() != nullptr)
-	{
-        GameStateManager::GetGameState()->Render(dTime, dDtTime);
-	}
+	_Bindings->m_Renderable3DObjectCollection->Render3D(dTime, dDtTime);
 
     //------------------------------------------------
     //-- RenderUI
     //------------------------------------------------
 	_Render->Set2D();
-	RenderableUIObjectCollection::RenderUI();
+	_Bindings->m_RenderableUIObjectCollection->RenderUI();
 
 	//
 

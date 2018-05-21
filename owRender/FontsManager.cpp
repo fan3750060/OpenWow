@@ -186,12 +186,8 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	//
 
     R_GeometryInfo* __geom = m_RenderDevice->beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PT);
-
-	// Vertex params
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0,            sizeof(Texture_Vertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, sizeof(vec3), sizeof(Texture_Vertex));
-
-	// Finish
 	__geom->finishCreatingGeometry();
 
 	// Font texture

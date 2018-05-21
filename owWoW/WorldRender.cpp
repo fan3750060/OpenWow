@@ -10,15 +10,19 @@ WorldRender::WorldRender(WorldController * _WorldContoller)
 
 	m_TestCamera = new Camera;
 	m_TestCamera->setupViewParams(45.0f, _Config.aspectRatio, 2.0f, 15000.0f);
+
+	_Bindings->RegisterRenderable3DObject(this);
 }
 
 WorldRender::~WorldRender()
 {
+	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-void WorldRender::PreRender3D()
+void WorldRender::PreRender3D(double t, double dt)
 {
-	WMOInstance::reset();
+	ADT_WMO_Instance::reset();
+	ADT_MDX_Instance::reset();
 
 	_World->MDXM()->resetAnim();
 
@@ -41,7 +45,10 @@ void WorldRender::Render3D()
 	_Render->rb->setRenderBuffer();
 	_Render->r.clear();
 	RenderGeom();
+}
 
+void WorldRender::PostRender3D()
+{
 	//--------------------------------------------------
 	// Postprocess pass
 	//--------------------------------------------------
@@ -54,8 +61,8 @@ void WorldRender::Render3D()
 	RenderPostprocess();
 
 	// Result pass
-	/*_Render->r.setRenderBuffer(0);
-	_Render->r.setTexture(0, _Render->r.getRenderBufferTex(_Render->rbFinal, 0), 0, R_TextureUsage::R_Texture);
+	/*_Render->rb->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
+	_Render->r.setTexture(0, _Render->rbFinal->getRenderBufferTex(0), 0, R_TextureUsage::Texture);
 	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
 	DSResultQuad();*/
 
@@ -63,7 +70,8 @@ void WorldRender::Render3D()
 	// SECONDS PASS
 	//
 
-	/*WMOInstance::reset();
+	/*ADT_WMO_Instance::reset();
+	ADT_MDX_Instance::reset();
 
 	// Conf test camera
 	m_TestCamera->Position = _Render->mainCamera->Position + vec3(0, 1, 0) * 1000.0f;
@@ -75,28 +83,18 @@ void WorldRender::Render3D()
 	_PipelineGlobal->SetCamera(m_TestCamera);
 
 	// Geometry pass
-	_Render->r.setRenderBuffer(m_TestRenderBuffer);
+	m_TestRenderBuffer->setRenderBuffer();
 	_Render->r.clear();
 	RenderGeom();
 	//_PipelineGlobal->RenderCamera(_CameraFrustum);
 
-	_Render->r.setRenderBuffer(0);*/
-}
-
-void WorldRender::PostRender3D()
-{
+	m_TestRenderBuffer->resetRenderBuffer();*/
 }
 
 //***************************************
 
 void WorldRender::RenderGeom()
 {
-	//------------------------------------------------------------------------------
-	// Draw sky
-	//------------------------------------------------------------------------------
-	_Render->r.setDepthTest(false);
-	_World->EnvM()->skies->drawSky(_Camera->Position);
-
 	//------------------------------------------------------------------------------
 	// Draw sky from WMO
 	//------------------------------------------------------------------------------
@@ -110,40 +108,19 @@ void WorldRender::RenderGeom()
 	// Draw sky from GLOBAL WMO
 	//------------------------------------------------------------------------------
 	_Render->r.setDepthTest(true);
-	if (m_WorldContoller->Map()->MapHasGlobalWMO() && !_World->EnvM()->m_HasSky)
+	if (m_WorldContoller->Map()->m_WDT.MapHasGlobalWMO() && !_World->EnvM()->m_HasSky)
 	{
 		m_WorldContoller->Map()->SetOutOfBounds(false);
-		m_WorldContoller->Map()->GetGlobalWMOInstance()->GetWMO()->drawSkybox();
+		m_WorldContoller->Map()->m_WDT.GetGlobalWMOInstance()->GetWMO()->drawSkybox();
 	}
 
 	//
-	PERF_START(PERF_MAP);
+	
 	//
 
 	//=== DEBUG
 	//_EnvironmentManager->skies->DEBUG_Render();
 	//=== DEBUG
-
-	//------------------------------------------------------------------------------
-	// Map low-resolution tiles
-	//------------------------------------------------------------------------------
-	_Render->r.setDepthTest(false);
-
-	PERF_START(PERF_MAP_LOWRESOLUTION);
-	if (_Config.drawfog && _Config.draw_map_chunk)
-	{
-		_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->Bind();
-		_Pipeline->Clear();
-		_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->SetPVW();
-		_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->SetShadowColor(_World->EnvM()->skies->GetColor(LIGHT_COLOR_FOG));
-
-		m_WorldContoller->Map()->RenderLowResTiles();
-
-		_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->Unbind();
-	}
-	PERF_STOP(PERF_MAP_LOWRESOLUTION);
-
-	_Render->r.setDepthTest(true);
 
 	//=== DEBUG
 	_World->EnvM()->dayNightPhase.Render_DEBUG(_Camera->Position);
@@ -152,57 +129,18 @@ void WorldRender::RenderGeom()
 	//
 
 	//------------------------------------------------------------------------------
-	// Map chunks
-	//------------------------------------------------------------------------------
-	PERF_START(PERF_MAP_CHUNK_GEOMETRY);
-	if (_Config.draw_map_chunk)
-	{
-		//_Config.uselowlod = _Config.drawfog;
-
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
-		_Pipeline->Clear();
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPVW();
-
-		m_WorldContoller->Map()->RenderTiles();
-
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Unbind();
-	}
-	PERF_STOP(PERF_MAP_CHUNK_GEOMETRY);
-
-	//------------------------------------------------------------------------------
 	// Map chunks DEBUG
 	//------------------------------------------------------------------------------
 	/*if (_Config.draw_map_chunk)
 	{
-	//_Config.uselowlod = _Config.drawfog;
+		_Render->TechniquesMgr()->m_Debug_Normals->Bind();
+		_Pipeline->Clear();
+		_Render->TechniquesMgr()->m_Debug_Normals->SetPVW();
 
-	_Render->TechniquesMgr()->m_Debug_Normals->Bind();
-	_Pipeline->Clear();
-	_Render->TechniquesMgr()->m_Debug_Normals->SetPVW();
+		m_WorldContoller->Map()->Render_DEBUG();
 
-	m_WorldContoller->Map()->Render_DEBUG();
-
-	_Render->TechniquesMgr()->m_Debug_Normals->Unbind();
+		_Render->TechniquesMgr()->m_Debug_Normals->Unbind();
 	}*/
-
-	//
-
-	//------------------------------------------------------------------------------
-	// Map water
-	//------------------------------------------------------------------------------
-	//_Render->r.setCullMode(R_CullMode::RS_CULL_FRONT);
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-	//if (_Config.draw_map_chunk)
-	{
-		m_WorldContoller->Map()->RenderWater();
-	}
-
-	_Render->r.setBlendMode(false);
-	//_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	//
-
-	PERF_STOP(PERF_MAP);
 
 	//
 
@@ -210,10 +148,10 @@ void WorldRender::RenderGeom()
 	// Global WMO
 	//------------------------------------------------------------------------------
 	PERF_START(PERF_MAP_MODELS_WMO_GLOBAL);
-	if (m_WorldContoller->Map()->MapHasGlobalWMO())
+	if (m_WorldContoller->Map()->m_WDT.MapHasGlobalWMO())
 	{
 		m_WorldContoller->Map()->SetOutOfBounds(false);
-		m_WorldContoller->Map()->GetGlobalWMOInstance()->Render();
+		m_WorldContoller->Map()->m_WDT.GetGlobalWMOInstance()->Render();
 	}
 	PERF_STOP(PERF_MAP_MODELS_WMO_GLOBAL);
 
@@ -251,12 +189,12 @@ void WorldRender::RenderPostprocess()
 	light.ambient = _World->EnvM()->skies->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->skies->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);
+	DSDirectionalLightPass(light);*/
 
 	if (_Config.drawfog)
 	{
 		DSFogRenderPass();
-	}*/
+	}
 }
 
 void WorldRender::DSDirectionalLightPass(DirectionalLight& _light)

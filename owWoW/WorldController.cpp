@@ -10,12 +10,12 @@ WorldController::WorldController()
 	m_WMOsManager = new WMOsManager();
 	m_EnvironmentManager = new EnvironmentManager();
 
-	UpdatableObject::Register();
+	_Bindings->RegisterUpdatableObject(this);
 }
 
 WorldController::~WorldController()
 {
-	UpdatableObject::Unregister();
+	_Bindings->UnregisterUpdatableObject(this);
 
 	delete m_MapController;
 	delete m_WMOsManager;

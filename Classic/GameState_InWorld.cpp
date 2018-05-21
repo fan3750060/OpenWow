@@ -33,16 +33,16 @@ void GameState_InWorld::Input(double t, double dt)
     if (cameraSprint)
         speed *= 3.0f;
 
-    if (Input::IsKeyPressed(OW_KEY_W))
+    if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
         _Render->mainCamera->ProcessKeyboard(FORWARD, speed);
 
-    if (Input::IsKeyPressed(OW_KEY_S))
+    if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
         _Render->mainCamera->ProcessKeyboard(BACKWARD, speed);
 
-    if (Input::IsKeyPressed(OW_KEY_A))
+    if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
         _Render->mainCamera->ProcessKeyboard(LEFT, speed);
 
-    if (Input::IsKeyPressed(OW_KEY_D))
+    if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
         _Render->mainCamera->ProcessKeyboard(RIGHT, speed);
 }
 
@@ -53,12 +53,12 @@ void GameState_InWorld::Update(double t, double dt)
 
 void GameState_InWorld::Render(double t, double dt)
 {
-    if (!minimapActive)
+    /*if (!minimapActive)
     {
 		m_WorldRender->PreRender3D();
 		m_WorldRender->Render3D();
 		m_WorldRender->PostRender3D();
-    }
+    }*/
 }
 
 void GameState_InWorld::RenderUI()
@@ -73,11 +73,11 @@ void GameState_InWorld::RenderUI()
         int basex = 200;
         int basey = 0;
 
-        if (_World->Map()->GetMinimap() != 0)
+        if (_World->Map()->m_WDL.GetMinimap() != 0)
         {
             const int len = 768;
 
-            _Render->RenderTexture(vec2(basex, basey), _World->Map()->GetMinimap(), vec2(len, len));
+            _Render->RenderTexture(vec2(basex, basey), _World->Map()->m_WDL.GetMinimap(), vec2(len, len));
 
             // Player position
             /*glBegin(GL_LINES);
@@ -104,11 +104,11 @@ void GameState_InWorld::RenderUI()
 
 
 
-        // Area
+    // Area
     DBÑ_AreaTableRecord* areaRecord = nullptr;
     string areaName = "<unknown>";
 
-    areaRecord = DBÑ_AreaTable[_World->Map()->getAreaID()];
+    areaRecord = DBÑ_AreaTable[_World->Map()->GetAreaID()];
     if (areaRecord != nullptr)
     {
         areaName = areaRecord->Get_Name();
@@ -137,7 +137,7 @@ void GameState_InWorld::RenderUI()
     //
 
 
-    _Render->RenderText(vec2(5, 20), "Area: [" + areaName + "] [Area id = " + std::to_string(_World->Map()->getAreaID()) + "]");
+    _Render->RenderText(vec2(5, 20), "Area: [" + areaName + "] [Area id = " + std::to_string(_World->Map()->GetAreaID()) + "]");
     _Render->RenderText(vec2(5, 40), "Region: [" + regionName + "]");
     _Render->RenderText(vec2(5, 60), "CURRX: " + to_string(_World->Map()->GetCurrentX()) + ", CURRZ " + to_string(_World->Map()->GetCurrentZ()));
 

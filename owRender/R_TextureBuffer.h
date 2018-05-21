@@ -1,16 +1,15 @@
 #pragma once
 
 class RenderDevice;
-#include "R_BufferBase.h"
 
-struct R_TextureBuffer : public R_BufferBase
+struct R_TextureBuffer
 {
 public:
 	R_TextureBuffer(RenderDevice* _RenderDevice) :
-		R_BufferBase(_RenderDevice),
 		bufObj(nullptr),
 		glFmt(0),
-		glTexID(0)
+		glTexID(0),
+		m_RenderDevice(_RenderDevice)
 	{}
 
 	//
@@ -22,4 +21,7 @@ public:
 	R_Buffer* bufObj;
 	uint32    glFmt;
 	uint32	  glTexID;
+
+private:
+	RenderDevice* m_RenderDevice;
 };

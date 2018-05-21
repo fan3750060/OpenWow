@@ -26,9 +26,9 @@
     <ClCompile Include="EnvironmentManager.cpp" />
     <ClCompile Include="Liquid.cpp" />
     <ClCompile Include="MapController.cpp" />
-    <ClCompile Include="Map_Chunk.cpp" />
+    <ClCompile Include="ADT_MCNK.cpp" />
     <ClCompile Include="Map_Shared.cpp" />
-    <ClCompile Include="Map_Tile.cpp" />
+    <ClCompile Include="ADT.cpp" />
     <ClCompile Include="MDX.cpp" />
     <ClCompile Include="MDX_Animated.cpp" />
     <ClCompile Include="MDX_Part_Bone.cpp" />
@@ -40,12 +40,13 @@
     <ClCompile Include="MDX_Skin.cpp" />
     <ClCompile Include="MDX_Skin_Batch.cpp" />
     <ClCompile Include="MDXsManager.cpp" />
-    <ClCompile Include="Model_Instance.cpp" />
+    <ClCompile Include="ADT_MDX_Instance.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="RibbonEmitter.cpp" />
     <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="SkyboxInstance.cpp" />
     <ClCompile Include="SkyManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -53,10 +54,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WDL.cpp" />
+    <ClCompile Include="WDT.cpp" />
     <ClCompile Include="WMO.cpp" />
     <ClCompile Include="WMO_Fog.cpp" />
     <ClCompile Include="WMO_Group.cpp" />
-    <ClCompile Include="WMO_Instance.cpp" />
+    <ClCompile Include="ADT_WMO_Instance.cpp" />
     <ClCompile Include="WMO_Light.cpp" />
     <ClCompile Include="WMOsManager.cpp" />
     <ClCompile Include="WMO_Material.cpp" />
@@ -76,10 +79,9 @@
     <ClInclude Include="EnvironmentManager.h" />
     <ClInclude Include="Liquid.h" />
     <ClInclude Include="MapController.h" />
-    <ClInclude Include="Map_Chunk.h" />
-    <ClInclude Include="Map_Chunk_Types.h" />
+    <ClInclude Include="ADT_MCNK.h" />
     <ClInclude Include="Map_Shared.h" />
-    <ClInclude Include="Map_Tile.h" />
+    <ClInclude Include="ADT.h" />
     <ClInclude Include="MDX.h" />
     <ClInclude Include="MDX_Headers.h" />
     <ClInclude Include="MDX_Part_Bone.h" />
@@ -91,17 +93,20 @@
     <ClInclude Include="MDX_Skin.h" />
     <ClInclude Include="MDX_Skin_Batch.h" />
     <ClInclude Include="MDXsManager.h" />
-    <ClInclude Include="Model_Instance.h" />
+    <ClInclude Include="ADT_MDX_Instance.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="RibbonEmitter.h" />
     <ClInclude Include="Sky.h" />
+    <ClInclude Include="SkyboxInstance.h" />
     <ClInclude Include="SkyManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WDL.h" />
+    <ClInclude Include="WDT.h" />
     <ClInclude Include="WMO.h" />
     <ClInclude Include="WMO_Fog.h" />
     <ClInclude Include="WMO_Group.h" />
-    <ClInclude Include="WMO_Instance.h" />
+    <ClInclude Include="ADT_WMO_Instance.h" />
     <ClInclude Include="WMO_Light.h" />
     <ClInclude Include="WMOsManager.h" />
     <ClInclude Include="WMO_Material.h" />

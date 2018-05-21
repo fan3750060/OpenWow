@@ -184,7 +184,6 @@
     <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="R_Buffer.cpp" />
-    <ClCompile Include="R_BufferBase.cpp" />
     <ClCompile Include="R_GeometryInfo.cpp" />
     <ClCompile Include="R_RenderBuffer.cpp" />
     <ClCompile Include="R_Shader.cpp" />
@@ -235,7 +234,6 @@
     <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="R_Buffer.h" />
-    <ClInclude Include="R_BufferBase.h" />
     <ClInclude Include="R_GeometryInfo.h" />
     <ClInclude Include="R_RenderBuffer.h" />
     <ClInclude Include="R_Shader.h" />
