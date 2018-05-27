@@ -1,7 +1,7 @@
 #pragma once
 
 class Console;
-class InputListenerObject;
+class IInputListener;
 class DebugOutput;
 
 //
@@ -20,7 +20,7 @@ struct ConsoleMessage
 
 //
 
-class ConsoleOpenGL : public Console, public RenderableUIObject, public InputListenerObject, public DebugOutput
+class ConsoleOpenGL : public Console, public RenderableUIObject, public IInputListener, public DebugOutput
 {
 	typedef vector<ConsoleMessage*> ConsoleMessages;
 public:
@@ -30,9 +30,14 @@ public:
 
 	void RenderUI() override;
 
-	V_MOUSE_WHEEL;
-	V_KEYBD_PRESSED;
-	V_CHAR_INPUT;
+	// IInputListener
+	void OnMouseMoved(cvec2 _mousePos) override {}
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override { return false; }
+	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override { return false; }
+	bool OnMouseWheel(int _yoffset) override;
+	bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
+	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override { return false; }
+	bool OnCharInput(uint32 _char) override;
 
 protected:
 	void Print(string _messageFmt, DebugOutput::DebugMessageType _type);

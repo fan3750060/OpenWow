@@ -10,13 +10,7 @@ typedef unsigned int uint32;
 typedef long long int64;
 typedef unsigned long long uint64;
 
-// Misc functions
-#define OW_UNUSED_VAR(a)     ((void)(a))
-#define OW_ZERO_MEM(a)       (memset(a, 0, sizeof(a)));
-#define OW_COUNT_ELEMENTS(a) ((sizeof(a)) / (sizeof(a[0])))
-
 // Math types
-
 class Vec2f;
 class Vec3f;
 class Vec4f;
@@ -44,6 +38,9 @@ class Color;
 #include <string>
 #include <sstream>
 #include <queue>
-
-typedef const std::string& cstring;
 using namespace std;
+
+typedef const string& cstring;
+
+// Consts
+#include "Consts.h"

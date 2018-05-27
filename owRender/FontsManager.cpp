@@ -200,7 +200,6 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	//
 
 	Font* font = new Font(texture, __geom, charWidth, charHeight);
-	Fonts.insert(make_pair(_nameAndSize, font));
 
 	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f->Path_Name().c_str(), fontSize);
 

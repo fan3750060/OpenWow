@@ -45,12 +45,7 @@ UIElement::UIElement(uint32 _DeepAdding)
 
 UIElement::~UIElement()
 {
-    if (m_Image != nullptr)
-    {
-        delete m_Image;
-    }
-
-    //Log::Info("UI: [%s] destroyed.", name.c_str());
+    Log::Info("UI: [%s] destroyed.", m_Name.c_str());
 }
 
 void UIElement::Init(cvec2 _position, cvec2 _size, Image* _image, Color _color)

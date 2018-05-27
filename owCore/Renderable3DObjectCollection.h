@@ -11,6 +11,6 @@ public:
 	void Render3D(double t, double dt);
 
 private:
-	vector<Renderable3DObject*>   m_Objects;
-	bool                          m_ObjectsNeedSort;
+	vector<Renderable3DObject*>	m_Objects;
+	bool					    m_ObjectsNeedSort;
 };

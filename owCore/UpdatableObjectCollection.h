@@ -1,15 +1,13 @@
 #pragma once
 
-#include "UpdatableObject.h"
-
 class UpdatableObjectCollection
 {
 public:
-	bool RegisterObject(UpdatableObject* _uiObject);
-	void UnregisterObject(UpdatableObject* _uiObject);
+	bool RegisterObject(IUpdatable* _uiObject);
+	void UnregisterObject(IUpdatable* _uiObject);
 
-	void Update(double _Time, double _deltaTime);
+	void Update(double _time, double _dTime);
 
 private:
-	vector<UpdatableObject*> m_Objects;
+	vector<IUpdatable*> m_Objects;
 };

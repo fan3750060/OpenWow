@@ -21,7 +21,7 @@ Liquid_Instance::~Liquid_Instance()
 
 void Liquid_Instance::PreRender3D(double t, double dt)
 {
-	m_IsVisible = true;
+	SetVisible(true);
 }
 
 void Liquid_Instance::Render3D()

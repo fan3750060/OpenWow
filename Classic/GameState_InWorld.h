@@ -17,14 +17,14 @@ public:
 
     void RenderUIDebug();
 
-    //
-
-    V_MOUSE_MOVED;
-    V_MOUSE_PRESSED;
-    V_MOUSE_RELEASE;
-    V_MOUSE_WHEEL;
-    V_KEYBD_PRESSED;
-    V_KEYBD_RELEASE;
+    // IInputListener
+    void OnMouseMoved(cvec2 _mousePos) override;
+    bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+    bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
+    bool OnMouseWheel(int _yoffset) override;
+    bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
+    bool OnKeyboardReleased(int _key, int _scancode, int _mods) override;
+	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
     // Camera moving

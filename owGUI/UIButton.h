@@ -20,8 +20,10 @@ public:
 
     On_Mouse_Entered_V;
     On_Mouse_Leaved_V;
-    V_MOUSE_PRESSED;
-    V_MOUSE_RELEASE;
+
+	// IInputrListener
+    bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+    bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
 
 protected:
     Function* onPressFunction;

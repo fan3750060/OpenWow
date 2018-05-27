@@ -11,6 +11,7 @@ public:
 	inline Camera* GetTestCamera() { return m_TestCamera; }
 	inline R_RenderBuffer* GetTestRB() { return m_TestRenderBuffer; }
 
+	// IRenderable3D
 	void PreRender3D(double t, double dt) override;
 	void Render3D() override;
 	void PostRender3D() override;

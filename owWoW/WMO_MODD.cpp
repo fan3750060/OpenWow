@@ -6,31 +6,30 @@
 WMO_MODD::WMO_MODD(IFile* f)
 {
 	DoodadPlacementInfo placementInfo;
-	f->ReadBytes(&placementInfo, DoodadPlacementInfo::__size);
+	f->ReadBytes(&placementInfo, sizeof(DoodadPlacementInfo));
 
-	// Convert
-	placementInfo.position.toXZmY();
-	m_Rotate; // FIXME
-	m_Scale = vec3(placementInfo.scale, -placementInfo.scale, -placementInfo.scale);
+	m_NameIndex = placementInfo.flags.nameIndex;
 
-	// Build relative matrix
-	m_RelTransform.translate(m_Translate);
-	m_RelTransform *= Quaternion(-placementInfo.orientation.z, placementInfo.orientation.x, placementInfo.orientation.y, placementInfo.orientation.w);
-	m_RelTransform.scale(m_Scale);
-
-	if (m_Parent != nullptr)
 	{
-		m_AbsTransform = (m_Parent->getAbsTrans()) * m_RelTransform;
-	}
-	else
-	{
-		m_AbsTransform = m_RelTransform;
-	}
-}
+		// Convert
+		m_Translate = placementInfo.position.toXZmY();
+		m_Rotate; // FIXME
+		m_Scale = vec3(placementInfo.scale, -placementInfo.scale, -placementInfo.scale);
 
-WMO_MODD::~WMO_MODD()
-{
+		// Build relative matrix
+		m_RelTransform.translate(m_Translate);
+		m_RelTransform *= Quaternion(-placementInfo.orientation.z, placementInfo.orientation.x, placementInfo.orientation.y, placementInfo.orientation.w);
+		m_RelTransform.scale(m_Scale);
 
+		if (m_Parent != nullptr)
+		{
+			m_AbsTransform = (m_Parent->getAbsTrans()) * m_RelTransform;
+		}
+		else
+		{
+			m_AbsTransform = m_RelTransform;
+		}
+	}
 }
 
 void WMO_MODD::SetModel(MDX* _model)
@@ -49,7 +48,7 @@ void WMO_MODD::Render()
 
 	_Pipeline->Push(); // Save world matrix
 	{
-		_Pipeline->Mult(m_RelTransform);
+		_Pipeline->Mult(m_AbsTransform);
 
 		// Get actual position
 		//vec3 pos = _Pipeline->GetWorld() * vec3(1.0f, 1.0f, 1.0f);

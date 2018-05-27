@@ -49,7 +49,6 @@ SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
 
 SkyManager::~SkyManager()
 {
-	/*delete stars;*/  // BOUZI FIXME ENABLE ME
 	_Bindings->UnregisterRenderable3DObject(this);
 }
 
@@ -136,7 +135,7 @@ void SkyManager::Calculate(uint32 _time)
 
 void SkyManager::PreRender3D(double t, double dt)
 {
-	m_IsVisible = !skies.empty();
+	SetVisible(!skies.empty());
 }
 
 void SkyManager::Render3D()

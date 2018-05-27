@@ -5,14 +5,12 @@
 #include "WMOsManager.h"
 #include "EnvironmentManager.h"
 
-class WorldController : UpdatableObject
+class WorldController : public IUpdatable
 {
 	CLASS_INSTANCE(WorldController);
 public:
 	WorldController();
 	~WorldController();
-
-	void Update(double _Time, double _deltaTime);
 
 	inline MapController* Map() { return m_MapController; }
 	inline MDXsManager* MDXM() { return m_MDXsManager; }
@@ -22,6 +20,10 @@ public:
 	void EnterMap(int32 x, int32 z);
 	MDX* LoadMDX(cstring name);
 	WMO* LoadWMO(cstring name);
+
+	// IUpdatable
+	void Input(double _time, double _dTime) override {}
+	void Update(double _Time, double _deltaTime);
 
 private:
 	MapController*       m_MapController;

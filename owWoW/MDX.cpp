@@ -50,18 +50,7 @@ MDX::~MDX()
 		return;
 	}
 
-	//Log::Info("MDX[%s]: Unloading...", m_FileName.c_str());
-
-	if (header.textures.size)
-	{
-		for (uint32 i = 0; i < header.textures.size; i++)
-		{
-			if (m_Textures[i] != nullptr)
-			{
-				_Render->TexturesMgr()->Delete(m_Textures[i]);
-			}
-		}
-	}
+	Log::Info("MDX[%s]: Unloading...", m_FileName.c_str());
 }
 
 //
@@ -196,7 +185,10 @@ void MDX::drawModel()
 		(*it)->Draw();
 	}*/
 
-	m_Skins.back()->Draw();
+	if (m_Skins.size() > 0)
+	{
+		m_Skins.back()->Draw();
+	}
 }
 
 void MDX::Render()
@@ -206,7 +198,7 @@ void MDX::Render()
 		return;
 	}
 
-	assert1(getDeleted() == false);
+	//assert1(getDeleted() == false);
 
 	// Cull bounging box
 	BoundingBox aabb = m_Bounds;

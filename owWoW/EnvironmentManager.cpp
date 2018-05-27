@@ -28,16 +28,6 @@ EnvironmentManager::EnvironmentManager()
 
 EnvironmentManager::~EnvironmentManager()
 {
-	if (skies)
-	{
-		delete skies;
-	}
-
-	if (dayNightCycle)
-	{
-		delete dayNightCycle;
-	}
-
 	_Bindings->UnregisterUpdatableObject(this);
 	_Bindings->UnregisterRenderable3DObject(this);
 }
@@ -63,8 +53,6 @@ void EnvironmentManager::PreRender3D(double t, double dt)
 	{
 		skies->Calculate(m_GameTime.GetTime());
 	}
-
-	m_IsVisible = false;
 }
 
 void EnvironmentManager::InitSkies(DBC_MapRecord* _mapRecord)

@@ -152,7 +152,7 @@ public:
 	bool visible;
 	bool m_EnableOutdoorLights;
 
-    R_GeometryInfo* __geom;
+	SmartGeomPtr __geom;
 
 public:
 	//-- Triangles --//
@@ -192,5 +192,5 @@ public:
 	uint32** m_VertexColors;         // MOCV chunk
 
 	//-- Liquid --//
-	Liquid_Instance* m_LiquidInstance;
+	SmartPtr<Liquid_Instance> m_LiquidInstance;
 };

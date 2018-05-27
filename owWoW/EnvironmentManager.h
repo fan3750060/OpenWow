@@ -5,23 +5,26 @@
 
 //
 
-class EnvironmentManager : public Renderable3DObject, public UpdatableObject
+class EnvironmentManager : public Renderable3DObject, public IUpdatable
 {
 public:
 	EnvironmentManager();
 	~EnvironmentManager();
-
-	//-- UpdatableObject
-	void Update(double _Time, double _deltaTime) override;
-
-	//-- RenderableObject
-	void PreRender3D(double t, double dt) override;
 
 	//
 	void InitSkies(DBC_MapRecord* _mapRecord);
 	void outdoorLighting();
 	void SetAmbientLights(bool on);
 	void SetFog();
+
+	// IUpdatable
+	void Input(double _time, double _dTime) override {}
+	void Update(double _Time, double _deltaTime) override;
+
+	// IRenderable3D
+	void PreRender3D(double t, double dt) override;
+	void Render3D() override {}
+	void PostRender3D() override {}
 
 public:
 	vec4 m_OutdoorAmbientColor;
@@ -39,8 +42,8 @@ public:
 	WowTime m_GameTime;
 
 
-	SkyManager* skies;
+	SmartPtr<SkyManager> skies;
 
-	DayNightCycle* dayNightCycle;
+	SmartPtr<DayNightCycle> dayNightCycle;
 	DayNightPhase dayNightPhase;
 };

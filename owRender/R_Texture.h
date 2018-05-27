@@ -21,11 +21,6 @@ public:
 		m_RenderDevice(_RenderDevice)
 	{}
 
-	~R_Texture()
-	{
-		destroyTexture();
-	}
-
 	R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
 	void uploadTextureData(int slice, int mipLevel, const void *pixels);
 	void destroyTexture();
@@ -37,9 +32,8 @@ public:
 		return vec2(static_cast<float>(width), static_cast<float>(height));
 	}
 
-	// STATIC
+public: // Static
 	static uint32 calcTextureSize(R_TextureFormats::List format, int width, int height, int depth);
-
 
 public:
 	uint32                  glObj;
@@ -55,3 +49,13 @@ public:
 protected:
 	RenderDevice*           m_RenderDevice;
 };
+
+struct R_TextureDeleter
+{
+	void operator()(R_Texture* p)
+	{
+		p->destroyTexture();
+		GetManager<ITexturesManager>()->Delete(p);
+	}
+};
+typedef SmartPtr<R_Texture, R_TextureDeleter> SmartTexturePtr;

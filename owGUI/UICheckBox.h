@@ -14,7 +14,8 @@ public:
 
 	virtual void OnRenderUI();
 
-	V_MOUSE_PRESSED;
+	// IInputrListener
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
 
 protected:
 	bool isChecked;

@@ -22,7 +22,7 @@ public:
 
 	//
 
-	void RegisterInputListenerObject(InputListenerObject* _object);
+	void RegisterInputListenerObject(IInputListener* _object);
 
 private:
 	bool keyState[OW_KEYSCOUNT];

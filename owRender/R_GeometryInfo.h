@@ -2,7 +2,7 @@
 
 class RenderDevice;
 
-struct R_GeometryInfo
+struct R_GeometryInfo : public RefItem
 {
 	R_GeometryInfo(RenderDevice* _RenderDevice) :
 		vao(0),
@@ -31,3 +31,13 @@ public:
 protected:
 	RenderDevice* m_RenderDevice;
 };
+
+struct R_GeomDeleter
+{
+	void operator()(R_GeometryInfo* p)
+	{
+		p->destroyGeometry(true);
+		delete p;
+	}
+};
+typedef SmartPtr<R_GeometryInfo, R_GeomDeleter> SmartGeomPtr;

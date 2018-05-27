@@ -34,7 +34,7 @@ struct WMOMaterialDef
 	static const uint32 __size = 64;
 };
 
-class WMOMaterial
+class WMOMaterial : public RefItem
 {
 public:
 	WMOMaterial(const WMO* _parentWMO, IFile* _file);
@@ -59,5 +59,5 @@ private:
 
 public:
 	WMOMaterialDef matDef;
-	R_Texture* texture;
+	SmartTexturePtr texture;
 };

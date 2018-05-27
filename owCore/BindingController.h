@@ -12,15 +12,15 @@ public:
 	BindingController();
 	~BindingController();
 
-	void RegisterInputListener(InputListenerObject* _object);
+	void RegisterInputListener(IInputListener* _object);
 	void RegisterRenderable3DObject(Renderable3DObject* _object, uint32 m_DrawOrder = 0);
 	void RegisterRenderableUIObject(RenderableUIObject* _object, uint32 m_DrawOrder = 0);
-	void RegisterUpdatableObject(UpdatableObject* _object);
+	void RegisterUpdatableObject(IUpdatable* _object);
 
-	void UnregisterInputListener(InputListenerObject* _object);
+	void UnregisterInputListener(IInputListener* _object);
 	void UnregisterRenderable3DObject(Renderable3DObject* _object);
 	void UnregisterRenderableUIObject(RenderableUIObject* _object);
-	void UnregisterUpdatableObject(UpdatableObject* _object);
+	void UnregisterUpdatableObject(IUpdatable* _object);
 
 public:
 	InputListenerObjectCollection* m_InputListenerObjectCollection;

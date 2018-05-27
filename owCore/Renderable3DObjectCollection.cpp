@@ -11,6 +11,8 @@ struct Renderable3DObjectCompare
 	}
 };
 
+
+
 bool Renderable3DObjectCollection::RegisterObject(Renderable3DObject* _uiObject, uint32 _DrawOrder)
 {
 	_uiObject->SetDrawOrder(_DrawOrder);

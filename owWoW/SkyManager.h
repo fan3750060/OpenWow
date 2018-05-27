@@ -2,7 +2,7 @@
 
 #include "Sky.h"
 
-class SkyManager : public Renderable3DObject
+class SkyManager : public RefItem, public Renderable3DObject
 {
 public:
 	SkyManager(DBC_MapRecord* _mapRecord);
@@ -20,8 +20,10 @@ public:
 	float GetOceanShallowAlpha() { return m_Interpolated.m_oceanShallowAlpha; }
 	float GetOceanDarkAlpha() { return m_Interpolated.m_oceanDeepAlpha; }
 
+	// IRenderable3D
 	void PreRender3D(double t, double dt) override;
 	void Render3D() override;
+	void PostRender3D() override {};
 
 private:
 	void InitBuffer();
@@ -29,11 +31,11 @@ private:
 
 private:
 	SkyParams m_Interpolated;
-	R_Buffer* __vb;
-	R_GeometryInfo* __geom;
+	SmartBufferPtr __vb;
+	SmartGeomPtr __geom;
 	uint32 __vertsSize;
 
-	vector<Sky*> skies;
+	vector<SmartPtr<Sky>> skies;
 	//MDX* stars;  // BOUZI FIXME ENABLE ME
 };
 

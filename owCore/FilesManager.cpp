@@ -4,8 +4,18 @@
 #include "FilesManager.h"
 
 // Additional
+#include "BaseManager.h"
 #include "LocalFile.h"
 #include "MPQFile.h"
+
+FilesManager::FilesManager()
+{
+	CBaseManager::instance()->RegisterManager(Managers::MgrFiles, this);
+}
+
+FilesManager::~FilesManager()
+{
+}
 
 IFile* FilesManager::Open(cstring _fileName)
 {

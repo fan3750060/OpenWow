@@ -13,7 +13,7 @@ RefManager1Dim<T>::~RefManager1Dim()
 	{
 		T* item = it->second;
 		string name = GetNameByItem(item);
-		
+
 		this->DeleteAction(name);
 		delete item;
 		it = objects.erase(it);
@@ -24,24 +24,15 @@ RefManager1Dim<T>::~RefManager1Dim()
 template <class T>
 T* RefManager1Dim<T>::Add(cstring name)
 {
-	T* item;
+	T* item = nullptr;
 
-	// If exists then return
 	if ((item = GetItemByName(name)) != nullptr)
 	{
-		item->AddRef();
 		return item;
 	}
 
-	// else create
 	item = CreateAction(name);
-	//if (item == nullptr)
-	//{
-	//	return nullptr;
-	//}
 
-	// Add item
-	item->AddRef();
 	objects[name] = item;
 
 	return item;
@@ -59,19 +50,12 @@ void RefManager1Dim<T>::Delete(cstring name)
 	T* item = GetItemByName(name);
 	if (item != nullptr)
 	{
-		item->Release();
+		auto it = objects.find(name);
 
-		if (item->GetRefsCount() == 0)
-		{
-			Log::Info("-Item[%s] deleting", name.c_str());
-			auto it = objects.find(name);
-
-			this->DeleteAction(name);
-			//delete item;
-			objects.erase(name);
-			//item = nullptr;
-			item->setDeleted();
-		}
+		this->DeleteAction(name);
+		delete item;
+		objects.erase(name);
+		item = nullptr;
 	}
 
 }
@@ -84,7 +68,7 @@ void RefManager1Dim<T>::Delete(T* item)
 		if (it->second == item)
 		{
 			this->Delete(it->first);
-			return;
+			break;
 		}
 	}
 }

@@ -1,28 +1,32 @@
 #pragma once
 
-class TexturesManager : public RefManager1Dim<R_Texture>
+class TexturesManager : public ITexturesManager, public RefManager1Dim<R_Texture>
 {
 public:
 	TexturesManager(RenderDevice* _RenderDevice);
 	~TexturesManager();
 
-    R_Texture* Add(cstring _textureFileName);
-    R_Texture* Add(IFile* _textureFile);
+	R_Texture* DefaultTexture() { return m_DefaultTexture2DObj; }
 
-    R_Texture* DefaultTexture() { return m_DefaultTexture2DObj; }
+	// ITexturesManager
+	R_Texture* Add(cstring name) { return RefManager1Dim::Add(name); }
+	bool Exists(cstring name) const { return RefManager1Dim::Exists(name); }
+	void Delete(cstring name) { RefManager1Dim::Delete(name); }
+	void Delete(R_Texture* item) { RefManager1Dim::Delete(item); }
 
-protected:
+	// RefManager1Dim
     R_Texture* CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
 
-public:
-	bool LoadBLPTexture(IFile* _file, R_Texture*& _texture);
+private:
+	R_Texture* LoadBLPTexture(IFile* _file);
 
 private:
-    R_Texture*	m_DefaultTexture2DObj;
-	R_Texture*	m_DefaultTexture3DObj;
-	R_Texture*	m_DefaultTextureCubeObj;
+	SmartTexturePtr	m_DefaultTexture2DObj;
+	SmartTexturePtr	m_DefaultTexture3DObj;
+	SmartTexturePtr	m_DefaultTextureCubeObj;
 
 private:
 	RenderDevice* m_RenderDevice;
 };
+

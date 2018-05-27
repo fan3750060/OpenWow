@@ -12,7 +12,7 @@ public:
         m_Function->operator()();
     }
 
-    virtual void Execute(cstring _args)
+    void Execute(cstring _args)
     {
         fail2("Unable to call ConsoleCommand::Execute(cstring _args) in base class!");
     }
@@ -58,9 +58,7 @@ public:
 
 class Console
 {
-public:
 	typedef vector<ConsoleCommand*> ConsoleCommands;
-
 public:
 	static void AddCommonCommands();
 

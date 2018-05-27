@@ -12,18 +12,17 @@ public:
 
 	void InitLowResolutionWMOs();
 
-	void PreRender3D(double t, double dt) override;
-	void Render3D() override;
-	void PostRender3D() override;
-
 	R_Texture* GetMinimap() { return m_Minimap; }
 
+	// IRenderable3D
+	void PreRender3D(double t, double dt) override;
+	void Render3D() override;
+	void PostRender3D() override {};
+
 private:
-	R_Texture*				   m_Minimap;
-
-	R_GeometryInfo*            m_LowResilutionTiles[C_TilesInMap][C_TilesInMap];
-
-	vector<string>             m_LowResolutionWMOsNames;
-	vector<ADT_MODF>		   m_LowResolutionWMOsPlacementInfo;
-	vector<ADT_WMO_Instance>   m_LowResolutionWMOs;
+	SmartTexturePtr						m_Minimap;
+	SmartGeomPtr						m_LowResilutionTiles[C_TilesInMap][C_TilesInMap];
+	vector<string>						m_LowResolutionWMOsNames;
+	vector<ADT_MODF>					m_LowResolutionWMOsPlacementInfo;
+	vector<SmartPtr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
 };

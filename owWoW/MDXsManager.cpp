@@ -10,7 +10,7 @@ MDXsManager::MDXsManager()
 {
 	ADDCONSOLECOMMAND_CLASS("models_info", MDXsManager, PrintAllInfo);
 
-
+	CBaseManager::instance()->RegisterManager(Managers::MgrMDX, this);
 	_Bindings->RegisterUpdatableObject(this);
 }
 

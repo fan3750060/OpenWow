@@ -23,6 +23,7 @@ bool RenderableUIObjectCollection::RegisterObject(RenderableUIObject* _uiObject,
 void RenderableUIObjectCollection::UnregisterObject(RenderableUIObject * _uiObject)
 {
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
+	m_ObjectsNeedSort = true;
 }
 
 void RenderableUIObjectCollection::RenderUI()

@@ -34,11 +34,11 @@ void ADT_MDX_Instance::PreRender3D(double t, double dt)
 {
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		m_IsVisible = false;
+		SetVisible(false);
 		return;
 	}
 	m_AlreadyDraw.insert(m_UniqueId);
-	m_IsVisible = true;
+	SetVisible(true);
 }
 
 void ADT_MDX_Instance::Render3D()

@@ -4,7 +4,7 @@
 class GameStateManager;
 class UIWindow;
 
-class GameState : public UpdatableObject, public RenderableUIObject, public InputListenerObject
+class GameState : public IUpdatable, public RenderableUIObject, public IInputListener
 {
 	friend GameStateManager;
 public:

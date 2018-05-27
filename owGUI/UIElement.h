@@ -103,8 +103,8 @@ private:
 protected:
 	vec2        m_Position;
 	vec2        m_Size;
-	Image*      m_Image;
-    R_Texture*    m_Texture;
+	SmartPtr<Image>      m_Image;
+	SmartTexturePtr    m_Texture;
 	Color       m_Color;
 
 private:

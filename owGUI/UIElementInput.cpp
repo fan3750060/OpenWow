@@ -16,7 +16,7 @@ On_Mouse_Entered(UIElement)
     //Log::Info("Mouse Entered [%s]", GetName().c_str());
 }
 
-On_Mouse_Moved(UIElement)
+void UIElement::OnMouseMoved(cvec2 _mousePos)
 {
     if (m_IsHided)
     {
@@ -61,7 +61,7 @@ On_Mouse_Leaved(UIElement)
     //Log::Info("Mouse Leaved [%s]", GetName().c_str());
 }
 
-On_Mouse_Pressed(UIElement)
+bool UIElement::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
     if (m_IsHided)
     {
@@ -87,7 +87,7 @@ On_Mouse_Pressed(UIElement)
     return result;
 }
 
-On_Mouse_Released(UIElement)
+bool UIElement::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
     if (m_IsHided)
     {
@@ -109,7 +109,7 @@ On_Mouse_Released(UIElement)
     return result;
 }
 
-On_Mouse_WScrolled(UIElement)
+bool UIElement::OnMouseWheel(int _yoffset)
 {
     if (m_IsHided)
     {
@@ -135,7 +135,7 @@ On_Mouse_WScrolled(UIElement)
     return result;
 }
 
-On_Keyboard_Pressed(UIElement)
+bool UIElement::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
     if (m_IsHided)
     {
@@ -157,7 +157,7 @@ On_Keyboard_Pressed(UIElement)
     return result;
 }
 
-On_Keyboard_Released(UIElement)
+bool UIElement::OnKeyboardReleased(int _key, int _scancode, int _mods)
 {
     if (m_IsHided)
     {

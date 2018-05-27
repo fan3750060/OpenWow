@@ -83,10 +83,12 @@ class ADT_MCNK : public SceneNode, public Renderable3DObject
 {
 public:
 	ADT_MCNK(ADT* _parentTile);
+	ADT_MCNK(const ADT_MCNK& _other) = delete;
 	~ADT_MCNK();
 
 	void Load(IFile* f);
 
+	// IRenderable3D
 	void PreRender3D(double t, double dt) override;
 	void Render3D() override;
 	void PostRender3D() override;
@@ -97,18 +99,17 @@ public:
 
 	ADT_MCNK_MCLY mcly[4];
 
-	R_Texture* m_DiffuseTextures[4];
-	R_Texture* m_SpecularTextures[4];
+	SmartTexturePtr m_DiffuseTextures[4];
+	SmartTexturePtr m_SpecularTextures[4];
 
 
-	Liquid_Instance* m_LiquidInstance;
+	SmartPtr<Liquid_Instance> m_LiquidInstance;
 
-    R_Texture* m_BlendRBGShadowATexture;
+	SmartTexturePtr m_BlendRBGShadowATexture;
 
-    R_GeometryInfo* __geom;
+	SmartGeomPtr __geom;
 
-	uint16* m_Indexes;
 	uint16  m_IndexesCount;
 
-    R_GeometryInfo* __geomDebugNormals;
+	SmartGeomPtr __geomDebugNormals;
 };

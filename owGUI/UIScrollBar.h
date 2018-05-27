@@ -18,11 +18,12 @@ public:
 
 	void OnRenderUI();
 
-	V_MOUSE_MOVED;
-	virtual void OnMouseLeaved();
-	V_MOUSE_PRESSED;
-	V_MOUSE_RELEASE;
-	V_MOUSE_WHEEL;
+	// IInputrListener
+	void OnMouseMoved(cvec2 _mousePos) override;
+	void OnMouseLeaved() override;
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseWheel(int _yoffset) override;
 
 private:
 	double value;

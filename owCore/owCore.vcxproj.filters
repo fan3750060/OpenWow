@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Module">
-      <UniqueIdentifier>{0aac1f61-7524-4d73-a6d5-ac5839c221d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules">
-      <UniqueIdentifier>{4aa1f860-699a-4d6b-8666-bec8a72cc459}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Resource Manager">
-      <UniqueIdentifier>{c7b2f916-0dad-48d0-b7f5-33e8dc424232}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Input">
-      <UniqueIdentifier>{99cc3793-975f-4c86-9eee-6ca69f13a6d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Objects bindings">
       <UniqueIdentifier>{680fac37-3ad8-4dee-8e50-970c2b108e10}</UniqueIdentifier>
     </Filter>
@@ -24,12 +12,6 @@
     </Filter>
     <Filter Include="Objects bindings\Updatable">
       <UniqueIdentifier>{fff12d46-8046-4520-a392-ec2dd7cea339}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Log">
-      <UniqueIdentifier>{ef746966-5439-4659-9eaa-b5406a1f5be7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules\Log\Common">
-      <UniqueIdentifier>{154efe91-d5a0-4a4d-9b1d-d053b1d5228b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Files">
       <UniqueIdentifier>{96b64482-0656-4ab7-b92a-fc7b484b7a9d}</UniqueIdentifier>
@@ -55,9 +37,6 @@
     <Filter Include="RefManager\2 Dim">
       <UniqueIdentifier>{e6840d2f-52fd-4393-8f8e-ca1baa389a53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RefManager\Items">
-      <UniqueIdentifier>{a8177e25-5e52-46cd-91e9-79c5a50cae2f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Helpers">
       <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
     </Filter>
@@ -73,26 +52,29 @@
     <Filter Include="Common\Math">
       <UniqueIdentifier>{65c16df5-8780-49cd-9979-027c9bafdb50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{99cc3793-975f-4c86-9eee-6ca69f13a6d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log">
+      <UniqueIdentifier>{ef746966-5439-4659-9eaa-b5406a1f5be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log\Common">
+      <UniqueIdentifier>{154efe91-d5a0-4a4d-9b1d-d053b1d5228b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{5f3b03a0-2561-4da8-8a90-9a4a70fb319d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
-      <Filter>Modules\Input</Filter>
+      <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Console.cpp">
-      <Filter>Modules\Log\Common</Filter>
+      <Filter>Log\Common</Filter>
     </ClCompile>
     <ClCompile Include="DebugOutput.cpp">
-      <Filter>Modules\Log\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourcesManager.cpp">
-      <Filter>Modules\Resource Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Module.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
-    <ClCompile Include="InputListener.cpp">
-      <Filter>Objects bindings\InputListener</Filter>
+      <Filter>Log\Common</Filter>
     </ClCompile>
     <ClCompile Include="InputListenerCollection.cpp">
       <Filter>Objects bindings\InputListener</Filter>
@@ -103,17 +85,11 @@
     <ClCompile Include="RenderableUIObjectCollection.cpp">
       <Filter>Objects bindings\RenderableUI</Filter>
     </ClCompile>
-    <ClCompile Include="UpdatableObject.cpp">
-      <Filter>Objects bindings\Updatable</Filter>
-    </ClCompile>
     <ClCompile Include="UpdatableObjectCollection.cpp">
       <Filter>Objects bindings\Updatable</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp">
-      <Filter>Modules\Log</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules.cpp">
-      <Filter>Module</Filter>
+      <Filter>Log</Filter>
     </ClCompile>
     <ClCompile Include="XMLFile.cpp">
       <Filter>Files\XMLFile</Filter>
@@ -166,32 +142,26 @@
     <ClCompile Include="Plane.cpp">
       <Filter>Common\Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="BaseManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
-      <Filter>Modules\Input</Filter>
+      <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="..\shared\owCore.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="InputKeys.h">
-      <Filter>Modules\Input</Filter>
+      <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
-      <Filter>Modules\Log\Common</Filter>
+      <Filter>Log\Common</Filter>
     </ClInclude>
     <ClInclude Include="DebugOutput.h">
-      <Filter>Modules\Log\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourcesManager.h">
-      <Filter>Modules\Resource Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Module</Filter>
+      <Filter>Log\Common</Filter>
     </ClInclude>
     <ClInclude Include="common.h" />
-    <ClInclude Include="InputListener.h">
-      <Filter>Objects bindings\InputListener</Filter>
-    </ClInclude>
     <ClInclude Include="InputListenerCollection.h">
       <Filter>Objects bindings\InputListener</Filter>
     </ClInclude>
@@ -201,17 +171,11 @@
     <ClInclude Include="RenderableUIObject.h">
       <Filter>Objects bindings\RenderableUI</Filter>
     </ClInclude>
-    <ClInclude Include="UpdatableObject.h">
-      <Filter>Objects bindings\Updatable</Filter>
-    </ClInclude>
     <ClInclude Include="UpdatableObjectCollection.h">
       <Filter>Objects bindings\Updatable</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
-      <Filter>Modules\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules.h">
-      <Filter>Module</Filter>
+      <Filter>Log</Filter>
     </ClInclude>
     <ClInclude Include="XMLFile.h">
       <Filter>Files\XMLFile</Filter>
@@ -233,12 +197,6 @@
     </ClInclude>
     <ClInclude Include="Macros.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="RefItem.h">
-      <Filter>RefManager\Items</Filter>
-    </ClInclude>
-    <ClInclude Include="SmartItemPtr.h">
-      <Filter>RefManager\Items</Filter>
     </ClInclude>
     <ClInclude Include="RefManager2Dim.h">
       <Filter>RefManager\2 Dim</Filter>
@@ -282,9 +240,6 @@
     <ClInclude Include="File.h">
       <Filter>Files\Common</Filter>
     </ClInclude>
-    <ClInclude Include="UniquePtr.h">
-      <Filter>RefManager\Items</Filter>
-    </ClInclude>
     <ClInclude Include="BaseBindings.h">
       <Filter>Objects bindings</Filter>
     </ClInclude>
@@ -320,6 +275,18 @@
     </ClInclude>
     <ClInclude Include="MathCommon.h">
       <Filter>Common\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="UniquePtr.h">
+      <Filter>RefManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SmartPtr.h">
+      <Filter>RefManager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="RefItem.h">
+      <Filter>RefManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

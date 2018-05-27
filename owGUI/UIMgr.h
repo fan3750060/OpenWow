@@ -1,15 +1,15 @@
 #pragma once
 
-class Module;
-class InputListenerObject;
 class UIElement;
 
-class UIMgr : public UpdatableObject, public RenderableUIObject, public Module, public InputListenerObject
+class UIMgr : public IUpdatable, public RenderableUIObject, public IInputListener
 {
+	CLASS_INSTANCE(UIMgr);
 public:
-	DEF_MODULE(UIMgr);
+	UIMgr();
+	~UIMgr();
 
-    void Update(double t, double dt) override;
+    
     void RenderUI() override;
 
 	//
@@ -29,15 +29,18 @@ public:
 	UIElement* GetFocus() const { return m_FocusedElement; }
     void SetFocus(UIElement* _element);
 
-	// Input functional
+	// IUpdatable
+	void Input(double _time, double _dTime) override {}
+	void Update(double t, double dt) override;
 
-	V_MOUSE_MOVED;
-	V_MOUSE_PRESSED;
-	V_MOUSE_RELEASE;
-	V_MOUSE_WHEEL;
-	V_KEYBD_PRESSED;
-	V_KEYBD_RELEASE;
-	V_CHAR_INPUT;
+	// IInputListener
+	void OnMouseMoved(cvec2 _mousePos) override;
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseWheel(int _yoffset) override;
+	bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
+	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override;
+	bool OnCharInput(uint32 _char) override;
 
 private:
 	string GetNewName();

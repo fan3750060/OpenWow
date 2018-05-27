@@ -15,7 +15,6 @@ WMOMaterial::WMOMaterial(const WMO* _parentWMO, IFile* _file) : m_ParentWMO(_par
 
 WMOMaterial::~WMOMaterial()
 {
-	_Render->TexturesMgr()->Delete(texture);
 }
 
 /*switch (matDef.blendMode)

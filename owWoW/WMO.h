@@ -123,7 +123,7 @@ public:
 public:
 	//-- Materials --//
 	char* m_TexturesNames;                                          // MOTX chunk
-	vector<WMOMaterial*> m_Materials;                              // MOMT chunk
+	vector<SmartPtr<WMOMaterial>> m_Materials;                              // MOMT chunk
 
 
 	//-- Groups --//
@@ -133,7 +133,7 @@ public:
 
 	//-- Skybox --//
 	char* m_Skybox_Filename;                                 // MOSB chunk
-	MDX* m_Skybox;
+	SmartMDXPtr m_Skybox;
 
 
 	//-- Portals --//
@@ -155,7 +155,7 @@ public:
 	vector<WMO_DoodadSet*> doodadsets;                      // MODS chunk
 	char* m_MDXFilenames;                                   // MODN chunk
 	vector<string> m_MDXNames;                             
-	vector<WMO_MODD*> m_MDXInstances;						// MODD chunk
+	vector<SmartPtr<WMO_MODD>> m_MDXInstances;						// MODD chunk
 
 
 	//-- Fog --//
@@ -166,3 +166,12 @@ public:
 
 	// MCVP chunk (optional)	
 };
+
+struct WMODeleter
+{
+	void operator()(WMO* p)
+	{
+		GetManager<IWMOManager>()->Delete(p);
+	}
+};
+typedef SmartPtr<WMO, WMODeleter> SmartWMOPtr;

@@ -87,7 +87,7 @@ public:
 	void lightsOff(uint32 lbase);
 
 public:
-	std::vector<R_Texture*> m_Textures;
+	std::vector<SmartTexturePtr> m_Textures;
 	int m_SpecialTextures[TEXTURE_MAX];
 	R_Texture* m_TextureReplaced[TEXTURE_MAX];
 	bool m_TexturesUseSpecialTexture[TEXTURE_MAX];
@@ -100,3 +100,13 @@ public:
 
 	friend class MDX_Skin_Batch;
 };
+
+
+struct MDXDeleter
+{
+	void operator()(MDX* p)
+	{
+		GetManager<IMDXManager>()->Delete(p);
+	}
+};
+typedef SmartPtr<MDX, MDXDeleter> SmartMDXPtr;

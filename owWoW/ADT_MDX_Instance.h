@@ -17,25 +17,25 @@ struct ADT_MDDF
 
 #include "MDX.h"
 
-class ADT_MDX_Instance : protected SceneNode, public Renderable3DObject
+class ADT_MDX_Instance : public SceneNode, public Renderable3DObject
 {
 public:
 	ADT_MDX_Instance(MDX* _mdxObject, ADT_MDDF _placementInfo);
 	~ADT_MDX_Instance();
 
-	// Renderable3DObject
-	void PreRender3D(double t, double dt);
-	void Render3D();
-
     inline MDX* GetMDX() { return m_Object; }
 
+	// IRenderable3D
+	void PreRender3D(double t, double dt) override;
+	void Render3D()override;
+	void PostRender3D() override {}
+
 public: 
-	MDX*	m_Object;
-	uint32	m_UniqueId;
+	SmartMDXPtr	m_Object;
+	uint32		m_UniqueId;
 
 public:	// Static
 	static void reset();
-
 private:
 	static std::set<uint32> m_AlreadyDraw;
 };

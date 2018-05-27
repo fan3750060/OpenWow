@@ -3,7 +3,7 @@
 // General
 #include "ADT_WMO_Instance.h"
 
-ADT_WMO_Instance::ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF _placementInfo) : 
+ADT_WMO_Instance::ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF& _placementInfo) : 
     m_Object(_wmoObject)
 {
     assert1(m_Object);
@@ -43,11 +43,11 @@ void ADT_WMO_Instance::PreRender3D(double t, double dt)
 {
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		m_IsVisible = false;
+		SetVisible(false);
 		return;
 	}
 	m_AlreadyDraw.insert(m_UniqueId);
-	m_IsVisible = !_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_wmo;
+	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_wmo);
 }
 
 void ADT_WMO_Instance::Render3D()

@@ -6,7 +6,7 @@
 // General
 #include "UIMgr.h"
 
-bool UIMgr::Init()
+UIMgr::UIMgr()
 {
     m_IDCounter = 0;
     m_RootElement = nullptr;
@@ -17,11 +17,9 @@ bool UIMgr::Init()
 	_Bindings->RegisterUpdatableObject(this);
 	_Bindings->RegisterRenderableUIObject(this, 500);
 	_Bindings->RegisterInputListener(this);
-
-    return true;
 }
 
-void UIMgr::Destroy()
+UIMgr::~UIMgr()
 {
     assert1(m_RootElement != nullptr);
     m_RootElement->Delete();
@@ -193,13 +191,13 @@ void UIMgr::DeleteUIElement(UIElement* _element)
 
 #pragma region Input functional
 
-On_Mouse_Moved(UIMgr)
+void UIMgr::OnMouseMoved(cvec2 _mousePos)
 {
     //assert1(m_RootElement != nullptr);
     m_RootElement->OnMouseMoved(_mousePos);
 }
 
-On_Mouse_Pressed(UIMgr)
+bool UIMgr::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
     if (m_FocusedElement != nullptr)
     {
@@ -210,31 +208,31 @@ On_Mouse_Pressed(UIMgr)
     //return m_RootElement->OnMouseButtonPressed(_button, _mods, _mousePos);
 }
 
-On_Mouse_Released(UIMgr)
+bool UIMgr::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
     assert1(m_RootElement != nullptr);
     return m_RootElement->OnMouseButtonReleased(_button, _mods, _mousePos);
 }
 
-On_Mouse_WScrolled(UIMgr)
+bool UIMgr::OnMouseWheel(int _yoffset)
 {
     assert1(m_RootElement != nullptr);
     return m_RootElement->OnMouseWheel(_yoffset);
 }
 
-On_Keyboard_Pressed(UIMgr)
+bool UIMgr::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
     assert1(m_RootElement != nullptr);
     return m_RootElement->OnKeyboardPressed(_key, _scancode, _mods);
 }
 
-On_Keyboard_Released(UIMgr)
+bool UIMgr::OnKeyboardReleased(int _key, int _scancode, int _mods)
 {
     assert1(m_RootElement != nullptr);
     return m_RootElement->OnKeyboardReleased(_key, _scancode, _mods);
 }
 
-On_Character_Printed(UIMgr)
+bool UIMgr::OnCharInput(uint32 _char)
 {
     if (m_FocusedElement != nullptr)
     {

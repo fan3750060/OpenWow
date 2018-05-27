@@ -14,16 +14,13 @@ public:
 	//
 	
 	Font* GetMainFont() const { return mainFont; }
-	uint32_t GetFontsCount() const { return Fonts.size(); }
 
 protected:
 	Font* CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
 
 private:
-	map<string, Font*> Fonts;
-
-	Font* mainFont;
+	SmartPtr<Font> mainFont;
 
 private:
 	RenderDevice* m_RenderDevice;

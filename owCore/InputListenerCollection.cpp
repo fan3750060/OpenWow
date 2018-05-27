@@ -3,14 +3,14 @@
 // General
 #include "InputListenerCollection.h"
 
-bool InputListenerObjectCollection::RegisterObject(InputListenerObject* _Object)
+bool InputListenerObjectCollection::RegisterObject(IInputListener* _Object)
 {
     m_Objects.push_back(_Object);
 
     return true;
 }
 
-void InputListenerObjectCollection::UnregisterObject(InputListenerObject* _Object)
+void InputListenerObjectCollection::UnregisterObject(IInputListener* _Object)
 {
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _Object), m_Objects.end());
 }
@@ -25,68 +25,78 @@ void InputListenerObjectCollection::OnMouseMoved(cvec2 _mousePos)
     }
 }
 
-void InputListenerObjectCollection::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
+bool InputListenerObjectCollection::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
     for (auto it : m_Objects)
     {
         if (it->OnMouseButtonPressed(_button, _mods, _mousePos))
         {
-            return;
+            return true;
         }
     }
+
+	return false;
 }
 
-void InputListenerObjectCollection::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
+bool InputListenerObjectCollection::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
     for (auto it : m_Objects)
     {
         if (it->OnMouseButtonReleased(_button, _mods, _mousePos))
         {
-            return;
+            return true;
         }
     }
 }
 
-void InputListenerObjectCollection::OnMouseWheel(int _yoffset)
+bool InputListenerObjectCollection::OnMouseWheel(int _yoffset)
 {
     for (auto it : m_Objects)
     {
         if (it->OnMouseWheel(_yoffset))
         {
-            return;
+            return true;
         }
     }
+
+	return false;
 }
 
-void InputListenerObjectCollection::OnKeyboardPressed(int _key, int _scancode, int _mods)
+bool InputListenerObjectCollection::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
     for (auto it : m_Objects)
     {
         if (it->OnKeyboardPressed(_key, _scancode, _mods))
         {
-            return;
+            return true;
         }
     }
+
+	return false;
 }
 
-void InputListenerObjectCollection::OnKeyboardReleased(int _key, int _scancode, int _mods)
+bool InputListenerObjectCollection::OnKeyboardReleased(int _key, int _scancode, int _mods)
 {
     for (auto it : m_Objects)
     {
         if (it->OnKeyboardReleased(_key, _scancode, _mods))
         {
-            return;
+            return true;
         }
     }
+
+	return false;
 }
 
-void InputListenerObjectCollection::OnCharInput(uint32 _char)
+bool InputListenerObjectCollection::OnCharInput(uint32 _char)
 {
     for (auto it : m_Objects)
     {
         if (it->OnCharInput(_char))
         {
-            return;
+            return true;
         }
     }
+
+	return false;
 }

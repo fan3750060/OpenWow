@@ -35,10 +35,12 @@ bool GameState_Menu::Init()
 	unsigned mapsYStart = 10;
 	unsigned mapsYdelta = 20;
 
+	auto image = new Image(_Render->TexturesMgr()->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));
+
 	for (auto i = DBC_Map.Records().begin(); i != DBC_Map.Records().end(); ++i)
 	{
 		auto record = (i->second);
-		auto image = new Image(_Render->TexturesMgr()->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));
+		
 
 		// Add btn
 		auto btn = new UIButton();
@@ -168,9 +170,9 @@ void GameState_Menu::RenderUI()
 	if (cmd == CMD_SELECT)
 	{
 
-		if (_World->Map()->m_WDL.GetMinimap() != 0)
+		if (_World->Map()->m_WDL->GetMinimap() != 0)
 		{
-			m_MinimapUI->SetTexture(_World->Map()->m_WDL.GetMinimap());
+			m_MinimapUI->SetTexture(_World->Map()->m_WDL->GetMinimap());
 			m_MinimapUI->Show();
 		}
 		else
@@ -178,7 +180,7 @@ void GameState_Menu::RenderUI()
 			m_MinimapUI->Hide();
 		}
 
-		if (_World->Map()->m_WDT.MapHasTiles())
+		if (_World->Map()->m_WDT->MapHasTiles())
 		{
 			_Render->RenderText(vec2(400, 0), "Select your starting point");
 		}
@@ -207,9 +209,9 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
 	_World->Map()->PostLoad();
 
-	if (_World->Map()->m_WDT.MapHasGlobalWMO())
+	if (_World->Map()->m_WDT->MapHasGlobalWMO())
 	{
-		_pos = _World->Map()->m_WDT.GetGlobalWMOPlacementInfo()->position;
+		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
 	}
 
 	_Render->mainCamera->Position = _pos;
@@ -225,7 +227,7 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 
 #pragma region Input functional
 
-On_Mouse_Moved(GameState_Menu)
+void GameState_Menu::OnMouseMoved(cvec2 _mousePos)
 {
 	if (enableFreeCamera)
 	{
@@ -237,7 +239,7 @@ On_Mouse_Moved(GameState_Menu)
 	}
 }
 
-On_Mouse_Pressed(GameState_Menu)
+bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
 	// Select point
 	if (cmd == CMD_SELECT && _mousePos.x >= 200 && _mousePos.x < 200 + 12 * 64 && _mousePos.y < 12 * 64)
@@ -261,7 +263,7 @@ On_Mouse_Pressed(GameState_Menu)
 	return false;
 }
 
-On_Mouse_Released(GameState_Menu)
+bool GameState_Menu::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
 	enableFreeCamera = false;
 	lastMousePos = vec2();
@@ -269,7 +271,7 @@ On_Mouse_Released(GameState_Menu)
 	return true;
 }
 
-On_Keyboard_Pressed(GameState_Menu)
+bool GameState_Menu::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
 	if (_key == OW_KEY_ESCAPE)
 	{

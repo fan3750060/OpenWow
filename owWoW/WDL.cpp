@@ -6,32 +6,13 @@
 // Additional
 #include "WorldController.h"
 
-WDL::WDL() :
-	m_Minimap(nullptr)
+WDL::WDL()
 {
-	memset(m_LowResilutionTiles, 0x00, C_TilesInMap * C_TilesInMap * sizeof(R_GeometryInfo*));
+	memset(m_LowResilutionTiles, 0x00, C_TilesInMap * C_TilesInMap * sizeof(SmartGeomPtr));
 }
 
 WDL::~WDL()
 {
-	for (int i = 0; i < 64; i++)
-	{
-		for (int j = 0; j < 64; j++)
-		{
-			if (m_LowResilutionTiles[i][j] != nullptr)
-			{
-				m_LowResilutionTiles[i][j]->destroyGeometry(true);
-			}
-		}
-	}
-
-	_Render->TexturesMgr()->Delete(m_Minimap);
-
-	for (auto it = m_LowResolutionWMOs.begin(); it != m_LowResolutionWMOs.end(); ++it)
-	{
-		_World->WMOM()->Delete(it->GetWMO());
-	}
-
 	_Bindings->UnregisterRenderable3DObject(this);
 }
 
@@ -274,14 +255,14 @@ void WDL::InitLowResolutionWMOs()
 	{
 		const string name = m_LowResolutionWMOsNames[it.nameIndex];
 
-		WMO* wmo = _World->WMOM()->Add(name);
-		m_LowResolutionWMOs.push_back(ADT_WMO_Instance(wmo, it));
+		SmartWMOPtr wmo = _World->WMOM()->Add(name);
+		m_LowResolutionWMOs.push_back(new ADT_WMO_Instance(wmo, it));
 	}
 }
 
 void WDL::PreRender3D(double t, double dt)
 {
-	m_IsVisible = /*_Config.drawfog && _Config.draw_map_chunk*/ true;
+	SetVisible(/*_Config.drawfog && _Config.draw_map_chunk*/ true);
 }
 
 void WDL::Render3D()
@@ -314,10 +295,6 @@ void WDL::Render3D()
 
 	//---------------------------------
 	PERF_STOP(PERF_MAP_LOWRESOLUTION);
-}
-
-void WDL::PostRender3D()
-{
 }
 
 

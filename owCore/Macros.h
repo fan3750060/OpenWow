@@ -16,6 +16,10 @@
 // USEFULL MACROS
 // =================================================================================================
 
+#define OW_UNUSED_VAR(a)     ((void)(a))
+#define OW_ZERO_MEM(a)       (memset(a, 0, sizeof(a)));
+#define OW_COUNT_ELEMENTS(a) ((sizeof(a)) / (sizeof(a[0])))
+
 #define CLASS_INSTANCE(_className)\
 public:\
 static _className* instance()\

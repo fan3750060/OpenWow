@@ -2,7 +2,7 @@
 
 class RenderDevice;
 
-struct R_Buffer
+struct R_Buffer : public RefItem
 {
 	R_Buffer(RenderDevice* _RenderDevice) :
 		type(0),
@@ -37,3 +37,13 @@ public:
 private:
 	RenderDevice* m_RenderDevice;
 };
+
+struct R_BufferDeleter
+{
+	void operator()(R_Buffer* p)
+	{
+		p->destroyBuffer();
+		delete p;
+	}
+};
+typedef SmartPtr<R_Buffer, R_BufferDeleter> SmartBufferPtr;

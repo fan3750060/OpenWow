@@ -15,7 +15,7 @@ BindingController::~BindingController()
 {
 }
 
-void BindingController::RegisterInputListener(InputListenerObject* _object)
+void BindingController::RegisterInputListener(IInputListener* _object)
 {
 	m_InputListenerObjectCollection->RegisterObject(_object);
 }
@@ -30,17 +30,17 @@ void BindingController::RegisterRenderableUIObject(RenderableUIObject* _object, 
 	m_RenderableUIObjectCollection->RegisterObject(_object, _DrawOrder);
 }
 
-void BindingController::RegisterUpdatableObject(UpdatableObject* _object)
+void BindingController::RegisterUpdatableObject(IUpdatable* _object)
 {
 	m_UpdatableObjectCollection->RegisterObject(_object);
 }
 
-void BindingController::UnregisterInputListener(InputListenerObject * _object)
+void BindingController::UnregisterInputListener(IInputListener * _object)
 {
 	m_InputListenerObjectCollection->UnregisterObject(_object);
 }
 
-void BindingController::UnregisterRenderable3DObject(Renderable3DObject * _object)
+void BindingController::UnregisterRenderable3DObject(Renderable3DObject* _object)
 {
 	m_Renderable3DObjectCollection->UnregisterObject(_object);
 }
@@ -50,7 +50,7 @@ void BindingController::UnregisterRenderableUIObject(RenderableUIObject * _objec
 	m_RenderableUIObjectCollection->UnregisterObject(_object);
 }
 
-void BindingController::UnregisterUpdatableObject(UpdatableObject * _object)
+void BindingController::UnregisterUpdatableObject(IUpdatable * _object)
 {
 	m_UpdatableObjectCollection->UnregisterObject(_object);
 }

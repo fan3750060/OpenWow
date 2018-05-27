@@ -19,10 +19,8 @@ Engine::Engine(IOpenGLAdapter* _OpenGLAdapter, int argumentCount, char* argument
 	// System settings
 	Random::SetSeed(static_cast<unsigned long>(time(0)));
 
-	// Modules manager
-	Modules::Init();
-
 	// Files
+	Log::Init();
 	MPQArchiveStorage::InitCommonArchives();
 
 	Log::Green("Engine[]: Loading.");
@@ -49,7 +47,6 @@ Engine::~Engine()
 	Log::Green("Engine[]: Destroy engine.");
 
 	MPQArchiveStorage::ClearArchives();
-	Modules::Destroy();
 
 	exit(0);
 }

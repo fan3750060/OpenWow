@@ -15,7 +15,6 @@
 ADT_MCNK::ADT_MCNK(ADT* _parentTile) :
 	m_ParentTile(_parentTile),
 	m_BlendRBGShadowATexture(0),
-	m_Indexes(nullptr),
 	m_IndexesCount(0),
 	m_LiquidInstance(nullptr)
 {
@@ -27,6 +26,8 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile) :
 ADT_MCNK::~ADT_MCNK()
 {
 	_Bindings->UnregisterRenderable3DObject(this);
+
+	//Log::Info("Chunk deleted!");
 }
 
 //
@@ -114,8 +115,8 @@ void ADT_MCNK::Load(IFile* f)
 		{
 			f->ReadBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
-			m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].diffuseTexture;
-			m_SpecularTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].specularTexture;
+			m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex]->diffuseTexture;
+			m_SpecularTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex]->specularTexture;
 		}
 	}
 
@@ -212,9 +213,8 @@ void ADT_MCNK::Load(IFile* f)
 
 	// Index Buffer
 	vector<uint16>& mapArray = Map_Shared::GenarateDefaultMapArray(header.holes);
-	m_Indexes = mapArray.data();
 	m_IndexesCount = mapArray.size();
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndexesCount * sizeof(uint16), m_Indexes);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(mapArray.size() * sizeof(uint16), mapArray.data());
 
 	// Geom
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
@@ -249,7 +249,7 @@ void ADT_MCNK::Load(IFile* f)
 
 void ADT_MCNK::PreRender3D(double t, double dt)
 {
-	m_IsVisible = !_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_chunk;
+	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_chunk);
 	
 	// Draw chunk before fog
 	/*float mydist = (_Camera->Position - vcenter).length() - r;

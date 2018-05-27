@@ -86,6 +86,6 @@ private:
 	MDX*                     m_Parent;
 	vector<MDX_Skin_Batch*>  m_Batches;
 
-    R_GeometryInfo*          __geom;
+	SmartGeomPtr          __geom;
 	bool*                    showGeosets;
 };

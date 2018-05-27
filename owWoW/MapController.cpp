@@ -18,21 +18,15 @@ MapController::MapController()
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
+	m_WDL = new WDL();
+	m_WDT = new WDT();
+
 	_Bindings->RegisterUpdatableObject(this);
 }
 
 MapController::~MapController()
 {
 	_Bindings->UnregisterUpdatableObject(this);
-}
-
-//
-
-void MapController::InitWMOs()
-{
-    // Load global WMO
-
-	//!!!!!!!!!!!!!!!!!!!!!
 }
 
 //
@@ -45,8 +39,7 @@ void MapController::PreLoad(DBC_MapRecord* _map)
 
     m_MapFolder = "World\\Maps\\" + string(m_DBC_Map->Get_Directory()) + "\\";
 
-
-	m_WDL.Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
+	m_WDL->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
 }
 
 void MapController::Load()
@@ -55,15 +48,15 @@ void MapController::Load()
 
 	_World->EnvM()->InitSkies(m_DBC_Map);
 
-	m_WDT.Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
+	m_WDT->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
 }
 
 void MapController::PostLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
 
-	m_WDT.InitGlobalWMO();
-	m_WDL.InitLowResolutionWMOs();
+	m_WDT->InitGlobalWMO();
+	m_WDL->InitLowResolutionWMOs();
 }
 
 void MapController::Unload()
@@ -73,6 +66,7 @@ void MapController::Unload()
         if (m_ADTCache[i] != nullptr)
         {
             delete m_ADTCache[i];
+			m_ADTCache[i] == nullptr;
         }
     }
 }
@@ -135,7 +129,7 @@ void MapController::Update(double _Time, double _deltaTime)
 
 void MapController::EnterMap(int32 x, int32 z)
 {
-    if (IsBadTileIndex(x, z) || !m_WDT.m_TileFlag[x][z].flags.Flag_HasADT)
+    if (IsBadTileIndex(x, z) || !m_WDT->m_TileFlag[x][z].flags.Flag_HasADT)
     {
         m_IsOnInvalidTile = true;
         return;
@@ -160,7 +154,7 @@ ADT* MapController::LoadTile(int32 x, int32 z)
         return nullptr;
     }
 
-    if (!m_WDT.m_TileFlag[x][z].flags.Flag_HasADT)
+    if (!m_WDT->m_TileFlag[x][z].flags.Flag_HasADT)
     {
         return nullptr;
     }
@@ -244,7 +238,10 @@ uint32 MapController::GetAreaID()
 		return UINT32_MAX;
 	}
 
-	ADT* curTile = m_Current[tileZ - m_CurrentTileZ + static_cast<int>(C_RenderedTiles / 2)][tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2)];
+	int32 indexX = tileZ - m_CurrentTileZ + static_cast<int>(C_RenderedTiles / 2);
+	int32 indexY = tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2);
+
+	ADT* curTile = m_Current[indexX][indexY];
 	if (curTile == nullptr)
 	{
 		return UINT32_MAX;

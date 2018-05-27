@@ -12,6 +12,7 @@ WorldRender::WorldRender(WorldController * _WorldContoller)
 	m_TestCamera->setupViewParams(45.0f, _Config.aspectRatio, 2.0f, 15000.0f);
 
 	_Bindings->RegisterRenderable3DObject(this, 6);
+	SetVisible(true);
 }
 
 WorldRender::~WorldRender()
@@ -104,10 +105,10 @@ void WorldRender::RenderGeom()
 	// Draw sky from GLOBAL WMO
 	//------------------------------------------------------------------------------
 	/*_Render->r.setDepthTest(true);
-	if (m_WorldContoller->Map()->m_WDT.MapHasGlobalWMO() && !_World->EnvM()->m_HasSky)
+	if (m_WorldContoller->Map()->m_WDT->MapHasGlobalWMO() && !_World->EnvM()->m_HasSky)
 	{
 		m_WorldContoller->Map()->SetOutOfBounds(false);
-		m_WorldContoller->Map()->m_WDT.GetGlobalWMOInstance()->GetWMO()->drawSkybox();
+		m_WorldContoller->Map()->m_WDT->GetGlobalWMOInstance()->GetWMO()->drawSkybox();
 	}*/
 
 	//

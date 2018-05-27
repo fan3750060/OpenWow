@@ -69,7 +69,7 @@ void Input::CharCallback(uint32 _char)
 	_Bindings->m_InputListenerObjectCollection->OnCharInput(_char);
 }
 
-void Input::RegisterInputListenerObject(InputListenerObject* _object)
+void Input::RegisterInputListenerObject(IInputListener* _object)
 {
 	_Bindings->m_InputListenerObjectCollection->RegisterObject(_object);
 }

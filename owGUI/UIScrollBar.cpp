@@ -3,7 +3,8 @@
 // General
 #include "UIScrollBar.h"
 
-UIScrollBar::UIScrollBar() : base() {
+UIScrollBar::UIScrollBar() : base() 
+{
 	value = 0.5;
 
 	begunokPoint = vec2();
@@ -17,12 +18,16 @@ UIScrollBar::UIScrollBar() : base() {
 	begunokBoundsSize = 0;
 }
 
-UIScrollBar::~UIScrollBar() {
+UIScrollBar::~UIScrollBar() 
+{
 	if (begunokImage != nullptr)
+	{
 		delete begunokImage;
+	}
 }
 
-void UIScrollBar::Init(cvec2 _position, cvec2 _size) {
+void UIScrollBar::Init(cvec2 _position, cvec2 _size) 
+{
 	auto buttonTexture = _Render->TexturesMgr()->Add("images/ui/buttons/slider_default.png");
 
 	auto imageSize = vec2(buttonTexture->GetSize().x, buttonTexture->GetSize().y / 2);
@@ -39,18 +44,22 @@ void UIScrollBar::Init(cvec2 _position, cvec2 _size) {
 	base::Init(_position, _size, new Image(buttonTexture, vec2(), imageSize));
 }
 
-void UIScrollBar::OnRenderUI() {
+void UIScrollBar::OnRenderUI() 
+{
 	base::OnRenderUI();
 
 	begunokPoint = vec2(begunokBounds.x + value * begunokBoundsSize, begunokYOffset) - vec2(begunokSize.x / 2, 0);
 
 	if (begunokSelected)
+	{
 		_Render->RenderRectangleOutline(GetPosition() + begunokPoint, begunokSize);
+	}
 
 	_Render->RenderImage(GetPosition() + begunokPoint, begunokImage, begunokSize);
 }
 
-On_Mouse_Moved(UIScrollBar) {
+void UIScrollBar::OnMouseMoved(cvec2 _mousePos)
+{
 	begunokSelected = Utils::PointInRectangle(_mousePos, begunokPoint, begunokPoint + begunokSize);
 
 	if (begunokPressed) {
@@ -61,24 +70,28 @@ On_Mouse_Moved(UIScrollBar) {
 	}
 }
 
-void UIScrollBar::OnMouseLeaved() {
+void UIScrollBar::OnMouseLeaved() 
+{
 	begunokSelected = false;
 }
 
-On_Mouse_Pressed(UIScrollBar) {
+bool UIScrollBar::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
+{
 	if (begunokSelected)
 		begunokPressed = true;
 
 	return true;
 }
 
-On_Mouse_Released(UIScrollBar) {
+bool UIScrollBar::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
+{
 	begunokPressed = false;
 
 	return true;
 }
 
-On_Mouse_WScrolled(UIScrollBar) {
+bool UIScrollBar::OnMouseWheel(int _yoffset)
+{
 	value += static_cast<double>(_yoffset) / 100.0;
 	clamp(value, 0.0, 1.0);
 

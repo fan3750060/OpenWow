@@ -37,34 +37,6 @@ ADT::ADT(uint32 _intexX, uint32 _intexZ) :
 	m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
 }
 
-ADT::~ADT()
-{
-	Log::Info("ADT[%d, %d]: Unloading tile...", m_IndexX, m_IndexZ);
-
-	//---------------------------------------------------------------------------------
-
-
-	for (auto it : m_Textures)
-	{
-		_Render->TexturesMgr()->Delete(it.diffuseTexture);
-		_Render->TexturesMgr()->Delete(it.specularTexture);
-	}
-
-	for (auto it : m_WMOsInstances)
-	{
-		_World->WMOM()->Delete(it.GetWMO());
-	}
-
-	for (auto it : m_MDXsInstances)
-	{
-		_World->MDXM()->Delete(it.GetMDX());
-	}
-
-	//---------------------------------------------------------------------------------
-
-	Log::Green("ADT[%d, %d]: Unloaded.", m_IndexX, m_IndexZ);
-}
-
 void ADT::Load(cstring _filename)
 {
 	char name[256];
@@ -119,8 +91,8 @@ void ADT::Load(cstring _filename)
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 
-			Map_Tile_TextureInfo textureInfo;
-		textureInfo.textureName = _string;
+		SmartPtr<ADT_TextureInfo> textureInfo = new ADT_TextureInfo();
+		textureInfo->textureName = _string;
 
 		m_Textures.push_back(textureInfo);
 
@@ -228,12 +200,12 @@ void ADT::Load(cstring _filename)
 	for (auto& it : m_Textures)
 	{
 		// PreLoad diffuse texture
-		it.diffuseTexture = _Render->TexturesMgr()->Add(it.textureName);
+		it->diffuseTexture = _Render->TexturesMgr()->Add(it->textureName);
 
 		// PreLoad specular texture
-		string specularTextureName = it.textureName;
+		string specularTextureName = it->textureName;
 		specularTextureName = specularTextureName.insert(specularTextureName.length() - 4, "_s");
-		it.specularTexture = _Render->TexturesMgr()->Add(specularTextureName);
+		it->specularTexture = _Render->TexturesMgr()->Add(specularTextureName);
 	}
 
 	//-- Load Chunks ---------------------------------------------------------------------
@@ -248,10 +220,9 @@ void ADT::Load(cstring _filename)
 		f->ReadBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
 
-		ADT_MCNK* chunk = new ADT_MCNK(this);
+		SmartPtr<ADT_MCNK> chunk = new ADT_MCNK(this);
 		chunk->Load(f);
-
-		m_Chunks.push_back(*chunk);
+		m_Chunks.push_back(chunk);
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
@@ -261,10 +232,10 @@ void ADT::Load(cstring _filename)
 		_World->WMOM()->Add(m_WMOsNames[it.nameIndex]);
 
 		WMO* wmo = (WMO*)_World->WMOM()->objects[m_WMOsNames[it.nameIndex]];
-		ADT_WMO_Instance* inst = new ADT_WMO_Instance(wmo, it);
-		m_WMOsInstances.push_back(*inst);
+		SmartPtr<ADT_WMO_Instance> inst = new ADT_WMO_Instance(wmo, it);
+		m_WMOsInstances.push_back(inst);
 	}
-
+	
 	//-- MDXs -------------------------------------------------------------------------
 
 	for (auto it : m_MDXsPlacementInfo)
@@ -272,8 +243,8 @@ void ADT::Load(cstring _filename)
 		_World->MDXM()->Add(m_MDXsNames[it.nameIndex]);
 
 		MDX* mdx = (MDX*)_World->MDXM()->GetItemByName(m_MDXsNames[it.nameIndex]);
-		ADT_MDX_Instance* inst = new ADT_MDX_Instance(mdx, it);
-		m_MDXsInstances.push_back(*inst);
+		SmartPtr<ADT_MDX_Instance> inst = new ADT_MDX_Instance(mdx, it);
+		m_MDXsInstances.push_back(inst);
 	}
 
 	//---------------------------------------------------------------------------------

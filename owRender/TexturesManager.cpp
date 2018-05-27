@@ -65,23 +65,8 @@ TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
 
     //--------------
 
-    /*m_DefaultTextureCubeObj = m_RenderDevice->createTexture(R_TextureTypes::TexCube, 4, 4, 1, R_TextureFormats::RGBA8, true, true, false, false);
-    for (uint32 i = 0; i < 6; ++i)
-    {
-        m_RenderDevice->uploadTextureData(m_DefaultTextureCubeObj, i, 0, texData);
-    }*/
 
-    //-------------
-
-    /*unsigned char *texData2 = new unsigned char[256];
-    memcpy(texData2, texData, 64);
-    memcpy(texData2 + 64, texData, 64);
-    memcpy(texData2 + 128, texData, 64);
-    memcpy(texData2 + 192, texData, 64);
-
-    m_DefaultTexture3DObj = m_RenderDevice->createTexture(R_TextureTypes::Tex3D, 4, 4, 4, R_TextureFormats::RGBA8, true, true, false, false);
-    m_RenderDevice->uploadTextureData(m_DefaultTexture3DObj, 0, 0, texData2);
-    delete[] texData2;*/
+	CBaseManager::instance()->RegisterManager(Managers::MgrTextures, this);
 }
 
 TexturesManager::~TexturesManager()
@@ -91,8 +76,10 @@ TexturesManager::~TexturesManager()
 
 //
 
-bool TexturesManager::LoadBLPTexture(IFile* f, R_Texture*& _texture)
+R_Texture* TexturesManager::LoadBLPTexture(IFile* f)
 {
+	R_Texture* _texture = nullptr;
+
     // Read data
     BLPHeader header;
     f->ReadBytes(&header, 148);
@@ -220,21 +207,10 @@ bool TexturesManager::LoadBLPTexture(IFile* f, R_Texture*& _texture)
         //fail1();
     }
 
-    return true;
-}
-
-R_Texture* TexturesManager::Add(cstring _textureFileName)
-{
-    return RefManager1Dim::Add(_textureFileName);
-}
-
-R_Texture* TexturesManager::Add(IFile* _textureFile)
-{
-    return RefManager1Dim::Add(_textureFile->Path_Name());
+    return _texture;
 }
 
 // Protected
-
 
 R_Texture* TexturesManager::CreateAction(cstring _name)
 {
@@ -248,19 +224,9 @@ R_Texture* TexturesManager::CreateAction(cstring _name)
 		return DefaultTexture();
 	}
 
-	//Log::Info("TexturesManager[%s]: R_Texture loading.", f.Path_Name().c_str());
+	_texture = LoadBLPTexture(f);
 
-	// Load texture
-	bool result = LoadBLPTexture(f, _texture);
-
-	// Check result
-	if (!result)
-	{
-		Log::Error("TexturesManager[%s]: Error while loading texture data.", f->Path_Name().c_str());
-		return DefaultTexture();
-	}
-
-	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
+	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f->Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
 
 	return _texture;
 }

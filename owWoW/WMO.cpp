@@ -28,12 +28,11 @@ WMO::WMO(cstring name) :
 
 WMO::~WMO()
 {
-    //Log::Info("WMO[%s]: Unloading...", GetName().c_str());
+    Log::Info("WMO[%s]: Unloading...", m_FileName.c_str());
 
     //
 
     delete[] m_TexturesNames;
-    ERASE_VECTOR(m_Materials);
 
     delete[] m_GroupsNames;
     ERASE_VECTOR(m_Groups);
@@ -59,11 +58,6 @@ WMO::~WMO()
     ERASE_VECTOR(m_Lights);
 
     ERASE_VECTOR(doodadsets);
-    for (auto it = m_MDXNames.begin(); it != m_MDXNames.end(); ++it)
-    {
-		_World->MDXM()->Delete(*it);
-    }
-    ERASE_VECTOR(m_MDXInstances);
 
     ERASE_VECTOR(m_Fogs);
 }
@@ -111,7 +105,7 @@ bool WMO::Load()
         {
             for (uint32 i = 0; i < m_Header.nTextures; i++)
             {
-                WMOMaterial* _mat = new WMOMaterial(this, f);
+				SmartPtr<WMOMaterial> _mat = new WMOMaterial(this, f);
                 m_Materials.push_back(_mat);
             }
         }
@@ -230,17 +224,17 @@ bool WMO::Load()
         }
         else if (strcmp(fourcc, "MODD") == 0) // Information for doodad instances. 40 bytes per doodad instance, nDoodads entries.
         {
-            /*m_Header.nDoodadNames = size / 40;
+            m_Header.nDoodadNames = size / 40;
             for (uint32 i = 0; i < m_Header.nDoodadNames; i++)
             {
                 WMO_MODD* _doodadInstance = new WMO_MODD(f);
 
-                MDX* m = (MDX*)_World->MDXM()->objects[m_MDXFilenames + _doodadInstance->placementInfo->flags.nameIndex];
+                MDX* m = (MDX*)_World->MDXM()->objects[m_MDXFilenames + _doodadInstance->GetNameIndex()];
                 assert1(m != nullptr);
                 _doodadInstance->SetModel(m);
 
                 m_MDXInstances.push_back(_doodadInstance);
-            }*/
+            }
 
         }
         else if (strcmp(fourcc, "MFOG") == 0)
@@ -302,7 +296,7 @@ bool WMO::Render(uint32 _doodadSet)
         {
             for (auto it = m_Groups.begin(); it != m_Groups.end(); ++it)
             {
-                //(*it)->drawDoodads(_doodadSet);
+                (*it)->drawDoodads(_doodadSet);
             }
         }
         PERF_STOP(PERF_MAP_MODELS_WMOs_DOODADS);

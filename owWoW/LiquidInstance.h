@@ -2,16 +2,17 @@
 
 #include "Liquid.h"
 
-class Liquid_Instance : protected SceneNode, public Renderable3DObject
+class Liquid_Instance : public SceneNode, public Renderable3DObject
 {
 public:
 	Liquid_Instance(Liquid* _liquidObject, cvec3 _position);
 	~Liquid_Instance();
 
-	// Renderable3DObject
-	void PreRender3D(double t, double dt);
-	void Render3D();
+	// IRenderable3D
+	void PreRender3D(double t, double dt) override;
+	void Render3D() override;
+	void PostRender3D() override {};
 
 private:
-	Liquid* m_Object;
+	SmartPtr<Liquid> m_Object;
 };

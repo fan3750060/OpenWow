@@ -9,35 +9,30 @@ struct DoodadPlacementInfo
 		uint32 : 7;                     // unused as of 7.0.1.20994
 	} flags;
 
-	vec3 position;               // (X,Z,-Y)
-	C4ImQuaternion orientation;        // (X, Y, Z, W)
-	float scale;                      // scale factor
-	CBgra color;                 // (B,G,R,A) diffuse lighting color, used in place of global diffuse from DBCs
-
-	//
-	static const uint32 __size = 40;
+	vec3 position;				// (X,Z,-Y)
+	C4ImQuaternion orientation;	// (X, Y, Z, W)
+	float scale;				// scale factor
+	CBgra color;				// (B,G,R,A) diffuse lighting color, used in place of global diffuse from DBCs
 };
 
 #include "MDX.h"
 
-class WMO_MODD : protected SceneNode
+class WMO_MODD : public SceneNode
 {
 public:
 	WMO_MODD(IFile* f);
-	~WMO_MODD();
 
 	void SetModel(MDX* m);
 	MDX* GetMDX() { return m_Object; }
 
 	void Render();
 
+	uint32 GetNameIndex() { return m_NameIndex; }
+
 private:
 	void CalculateMatrix();
 
-public:
-	MDX* m_Object;
-
-	int light;
-	vec3 ldir;
-	vec4 lcol;
+private:
+	SmartMDXPtr	m_Object;
+	uint32		m_NameIndex;
 };

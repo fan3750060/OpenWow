@@ -4,8 +4,8 @@
 
 class UIWindow : public UIElement
 {
+	friend UIMgr;
 	typedef UIElement base;
-
 public:
 	UIWindow();
 
@@ -15,8 +15,4 @@ public:
 
 private:
     vector<UIElement*> m_Content;
-
-	//
-
-	friend UIMgr;
 };

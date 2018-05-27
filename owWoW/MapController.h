@@ -6,21 +6,17 @@
 #include "WDL.h"
 
 
-class MapController : public UpdatableObject
+class MapController : public IUpdatable
 {
 public:
 	MapController();
 	~MapController();
 
-	void InitWMOs();
-
 	void PreLoad(DBC_MapRecord* _map);
 	void Load();
-
 	void PostLoad();
-	void Unload();
 
-	void Update(double _Time, double _deltaTime) override;
+	void Unload();
 
 	//
 
@@ -28,6 +24,10 @@ public:
 	ADT* LoadTile(int32 x, int32 z);
 	void ClearCache();
 	uint32 GetAreaID();
+
+	// IUpdatable
+	void Input(double _time, double _dTime) override {}
+	void Update(double _Time, double _deltaTime) override;
 
 public: // Getters
 	string GetFolder() { return m_MapFolder; }
@@ -43,8 +43,8 @@ private:
 	bool IsTileInCurrent(ADT* _mapTile);
 
 private:
-	string                     m_MapFolder;
-	DBC_MapRecord*             m_DBC_Map;
+	string			m_MapFolder;
+	DBC_MapRecord*	m_DBC_Map;
 
 
 private:
@@ -55,8 +55,8 @@ private:
 	bool	m_IsOnInvalidTile;
 
 public:
-	WDT     m_WDT;
-	WDL     m_WDL;
+	WDT*    m_WDT;
+	WDL*    m_WDL;
 };
 
 inline bool IsBadTileIndex(int i, int j)

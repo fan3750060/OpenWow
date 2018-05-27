@@ -1,23 +1,20 @@
 #pragma once
 
-#include "InputListener.h"
-
-class InputListenerObjectCollection
+class InputListenerObjectCollection : public IInputListener
 {
 public:
-    bool RegisterObject(InputListenerObject* _uiObject);
-    void UnregisterObject(InputListenerObject* _uiObject);
+    bool RegisterObject(IInputListener* _object);
+    void UnregisterObject(IInputListener* _object);
 
-    //
-
-    void OnMouseMoved(cvec2 _mousePos);
-    void OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos);
-    void OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos);
-    void OnMouseWheel(int _yoffset);
-    void OnKeyboardPressed(int _key, int _scancode, int _mods);
-    void OnKeyboardReleased(int _key, int _scancode, int _mods);
-    void OnCharInput(uint32 _char);
+    // IInputListener
+    void OnMouseMoved(cvec2 _mousePos) override;
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseWheel(int _yoffset) override;
+	bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
+	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override;
+	bool OnCharInput(uint32 _char) override;
 
 private:
-    vector<InputListenerObject*> m_Objects;
+    vector<IInputListener*> m_Objects;
 };

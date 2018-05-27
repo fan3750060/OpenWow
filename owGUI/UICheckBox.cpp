@@ -32,7 +32,8 @@ void UICheckBox::OnRenderUI() {
 	base::OnRenderUI();
 }
 
-On_Mouse_Pressed(UICheckBox) {
+bool UICheckBox::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
+{
 	isChecked = !isChecked;
 
 	return true;

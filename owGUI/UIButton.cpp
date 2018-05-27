@@ -77,14 +77,14 @@ On_Mouse_Leaved(UIButton)
     }
 }
 
-On_Mouse_Pressed(UIButton)
+bool UIButton::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
 	buttonStatus = BUTTON_PRESSED;
 
 	return true;
 }
 
-On_Mouse_Released(UIButton)
+bool UIButton::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
 	if (IsSelected())
 	{

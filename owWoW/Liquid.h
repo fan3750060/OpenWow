@@ -32,11 +32,10 @@ class ADT_MCNK_Header;
 
 // Class
 
-class Liquid
+class Liquid : public RefItem
 {
 public:
 	Liquid(uint32 x, uint32 y);
-	~Liquid();
 
 	void CreateFromMCLQ(IFile* f, ADT_MCNK_Header header);
 	void CreateFromWMO(IFile* f, WMOMaterial* _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor);
@@ -55,10 +54,10 @@ private:
 	vec3 m_WaterColorLight;
 	vec3 m_WaterColorDark;
 
-    R_GeometryInfo* __geom;
+	SmartGeomPtr __geom;
 	uint32 globalBufferSize;
 
-	vector<R_Texture*> textures;
+	vector<SmartTexturePtr> textures;
 
 	vector<Liquid_Layer> m_WaterLayers;
 

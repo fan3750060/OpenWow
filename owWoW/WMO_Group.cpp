@@ -82,8 +82,6 @@ WMOGroup::~WMOGroup()
 {
 	delete[] m_WMOBatchIndexes;
 	delete[] m_DoodadsIndexes;
-
-	if (m_LiquidInstance) delete m_LiquidInstance;
 }
 
 void WMOGroup::Load()

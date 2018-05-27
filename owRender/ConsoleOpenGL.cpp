@@ -104,7 +104,7 @@ void ConsoleOpenGL::RenderUI()
 
 //
 
-On_Mouse_WScrolled(ConsoleOpenGL)
+bool ConsoleOpenGL::OnMouseWheel(int _yoffset)
 {
 	if (!opened)
 		return false;
@@ -118,7 +118,7 @@ On_Mouse_WScrolled(ConsoleOpenGL)
 	return true;
 }
 
-On_Keyboard_Pressed(ConsoleOpenGL)
+bool ConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
 	if (_key == OW_KEY_GRAVE_ACCENT)
 	{
@@ -177,7 +177,7 @@ On_Keyboard_Pressed(ConsoleOpenGL)
 	return false;
 }
 
-On_Character_Printed(ConsoleOpenGL)
+bool ConsoleOpenGL::OnCharInput(uint32 _char)
 {
     if (!opened)
     {

@@ -22,9 +22,10 @@ public:
 
     virtual void OnRenderUI();
 
-    V_MOUSE_PRESSED;
-    V_KEYBD_PRESSED;
-    V_CHAR_INPUT;
+	// IInputrListener
+    bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+    bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
+    bool OnCharInput(uint32 _char) override;
 
 private:
     int inputStringMaxLenght;

@@ -17,6 +17,7 @@ Font::Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _w
 Font::~Font()
 {
 	m_Geometry->destroyGeometry(true);
+	Log::Info("Fonts deleted!!!");
 }
 
 void Font::Render(cstring _string, vec2 _offset) const

@@ -2,7 +2,7 @@
 
 // Tiles
 const uint32 C_TilesInMap = 64;
-const uint32 C_RenderedTiles = 4;
+const uint32 C_RenderedTiles = 2;
 const uint32 C_TilesCacheSize = ((C_RenderedTiles + 1) * (C_RenderedTiles + 1));
 
 const float C_TileSize = 533.33333f;

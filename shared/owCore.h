@@ -5,7 +5,7 @@
 // Ref manager Sync
 
 #include "../owCore/RefItem.h"
-#include "../owCore/SmartItemPtr.h"
+#include "../owCore/SmartPtr.h"
 #include "../owCore/UniquePtr.h"
 #include "../owCore/RefManager1Dim.h"
 
@@ -25,13 +25,5 @@
 #include "../owCore/Input.h"
 
 // Objects bindings
-
-#include "../owCore/InputListener.h"
-#include "../owCore/InputListenerCollection.h"
-#include "../owCore/UpdatableObject.h"
-#include "../owCore/UpdatableObjectCollection.h"
-#include "../owCore/Renderable3DObject.h"
-#include "../owCore/Renderable3DObjectCollection.h"
-#include "../owCore/RenderableUIObject.h"
-#include "../owCore/RenderableUIObjectCollection.h"
+#include "../owCore/BaseManager.h"
 #include "../owCore/BindingController.h"

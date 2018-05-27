@@ -7,19 +7,8 @@
 #include "WorldController.h"
 
 WDT::WDT() :
-	m_IsTileBased(true),
-	m_GlobalWMO(nullptr),
-	m_GlobalWMOPlacementInfo(nullptr)
-{
-}
-
-WDT::~WDT()
-{
-	if (m_GlobalWMOPlacementInfo != nullptr)
-	{
-		_World->WMOM()->Delete(m_GlobalWMO->GetWMO());
-	}
-}
+	m_IsTileBased(true)
+{}
 
 void WDT::Load(cstring _name)
 {
@@ -83,8 +72,7 @@ void WDT::Load(cstring _name)
 		else if (strcmp(fourcc, "MODF") == 0)
 		{
 			assert1((size / sizeof(ADT_MODF)) == 1);
-			m_GlobalWMOPlacementInfo = new ADT_MODF;
-			f->ReadBytes(m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
+			f->ReadBytes(&m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
 		}
 		else
 		{
@@ -97,10 +85,10 @@ void WDT::Load(cstring _name)
 
 void WDT::InitGlobalWMO()
 {
-	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", m_GlobalWMOPlacementInfo != nullptr ? "true" : "false");
-	if (m_GlobalWMOPlacementInfo != nullptr)
+	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
+	if (!m_GlobalWMOName.empty())
 	{
 		WMO* wmo = _World->WMOM()->Add(m_GlobalWMOName);
-		m_GlobalWMO = new ADT_WMO_Instance(wmo, *m_GlobalWMOPlacementInfo);
+		m_GlobalWMO = new ADT_WMO_Instance(wmo, m_GlobalWMOPlacementInfo);
 	}
 }

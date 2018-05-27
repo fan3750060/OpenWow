@@ -1,6 +1,8 @@
 #pragma once
 
-class Image
+#include "TexturesManager.h"
+
+class Image : public RefItem
 {
 public:
     struct CoordsRotation
@@ -34,6 +36,11 @@ public:
         assert1((m_Texture != nullptr) && (m_Size != vec2()));
         CalculateCoords();
     }
+
+	~Image()
+	{
+		Log::Info("Image: destroyed.");
+	}
 
     //
 
@@ -105,7 +112,7 @@ private:
     }
 
 private:
-    R_Texture*  m_Texture;
+	SmartTexturePtr  m_Texture;
     vec2        m_Start;
     vec2        m_Size;
 

@@ -17,14 +17,6 @@ Liquid::Liquid(uint32 x, uint32 y) :
 	m_TilesCount = (m_TilesX + 1) * (m_TilesY + 1);
 }
 
-Liquid::~Liquid()
-{
-	for (uint32_t i = 0; i < textures.size(); i++)
-	{
-		_Render->TexturesMgr()->Delete(textures[i]);
-	}
-}
-
 //
 
 void Liquid::CreateFromMCLQ(IFile* f, ADT_MCNK_Header header)
@@ -372,6 +364,7 @@ void Liquid::InitTextures(DBC_LIQUIDTYPE_Type _liquidType)
 	char buf[256];
 	for (int i = 1; i <= 30; i++) {
 		sprintf(buf, "%s.%d.blp", baseName.c_str(), i);
-		textures.push_back(_Render->TexturesMgr()->Add(buf));
+		SmartTexturePtr texture = _Render->TexturesMgr()->Add(buf);
+		textures.push_back(texture);
 	}
 }

@@ -73,11 +73,11 @@ void GameState_InWorld::RenderUI()
         int basex = 200;
         int basey = 0;
 
-        if (_World->Map()->m_WDL.GetMinimap() != 0)
+        if (_World->Map()->m_WDL->GetMinimap() != 0)
         {
             const int len = 768;
 
-            _Render->RenderTexture(vec2(basex, basey), _World->Map()->m_WDL.GetMinimap(), vec2(len, len));
+            _Render->RenderTexture(vec2(basex, basey), _World->Map()->m_WDL->GetMinimap(), vec2(len, len));
 
             // Player position
             /*glBegin(GL_LINES);
@@ -241,7 +241,7 @@ void GameState_InWorld::RenderUIDebug()
 
 #pragma region Input functional
 
-On_Mouse_Moved(GameState_InWorld)
+void GameState_InWorld::OnMouseMoved(cvec2 _mousePos)
 {
     if (enableFreeCamera)
     {
@@ -253,7 +253,7 @@ On_Mouse_Moved(GameState_InWorld)
     }
 }
 
-On_Mouse_Pressed(GameState_InWorld)
+bool GameState_InWorld::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
     if (_button == OW_MOUSE_BUTTON_LEFT)
     {
@@ -266,7 +266,7 @@ On_Mouse_Pressed(GameState_InWorld)
     return false;
 }
 
-On_Mouse_Released(GameState_InWorld)
+bool GameState_InWorld::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
     if (_button == OW_MOUSE_BUTTON_LEFT)
     {
@@ -279,12 +279,12 @@ On_Mouse_Released(GameState_InWorld)
     return false;
 }
 
-On_Mouse_WScrolled(GameState_InWorld)
+bool GameState_InWorld::OnMouseWheel(int _yoffset)
 {
     return false;
 }
 
-On_Keyboard_Pressed(GameState_InWorld)
+bool GameState_InWorld::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
     if (_key == OW_KEY_ESCAPE)
     {
@@ -409,7 +409,7 @@ On_Keyboard_Pressed(GameState_InWorld)
     return false;
 }
 
-On_Keyboard_Released(GameState_InWorld)
+bool GameState_InWorld::OnKeyboardReleased(int _key, int _scancode, int _mods)
 {
     if (_key == OW_KEY_X)
     {

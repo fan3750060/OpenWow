@@ -31,7 +31,6 @@ class WDT
 	friend MapController;
 public:
 	WDT();
-	~WDT();
 
 	void Load(cstring _name);
 
@@ -40,10 +39,10 @@ public:
 	//--
 
 	bool MapHasTiles() { return m_IsTileBased; }
-	bool MapHasGlobalWMO() { return m_GlobalWMOPlacementInfo != nullptr; }
+	bool MapHasGlobalWMO() { return !m_GlobalWMOName.empty(); }
 
 	ADT_WMO_Instance* GetGlobalWMOInstance() { return m_GlobalWMO; }
-	ADT_MODF* GetGlobalWMOPlacementInfo() { return m_GlobalWMOPlacementInfo; }
+	ADT_MODF& GetGlobalWMOPlacementInfo() { return m_GlobalWMOPlacementInfo; }
 
 private:
 	WDT_MPHD_Flags		m_Flag;
@@ -51,7 +50,7 @@ private:
 	WDT_MAIN			m_TileFlag[C_TilesInMap][C_TilesInMap];
 
 private:
-	string				m_GlobalWMOName;
-	ADT_MODF*			m_GlobalWMOPlacementInfo;
-	ADT_WMO_Instance*	m_GlobalWMO;
+	string						m_GlobalWMOName;
+	ADT_MODF					m_GlobalWMOPlacementInfo;
+	SmartPtr<ADT_WMO_Instance>	m_GlobalWMO;
 };

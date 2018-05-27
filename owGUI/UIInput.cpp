@@ -36,7 +36,7 @@ void UIInput::OnRenderUI()
 		_Render->RenderRectangleOutline(GetPosition() + vec2(2, 2), m_Size - vec2(4, 4), COLOR_WHITE);
 }
 
-On_Mouse_Pressed(UIInput)
+bool UIInput::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
 	if (_UIMgr->GetFocus() == this)
 		_UIMgr->SetFocus(nullptr);
@@ -46,7 +46,7 @@ On_Mouse_Pressed(UIInput)
 	return true;
 }
 
-On_Keyboard_Pressed(UIInput)
+bool UIInput::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
 	if (_UIMgr->GetFocus() != this)
 		return false;
@@ -61,7 +61,7 @@ On_Keyboard_Pressed(UIInput)
 	return false;
 }
 
-On_Character_Printed(UIInput)
+bool UIInput::OnCharInput(uint32 _char)
 {
 	if (_UIMgr->GetFocus() != this)
 		return false;
