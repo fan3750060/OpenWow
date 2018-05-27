@@ -16,7 +16,13 @@ typedef unsigned long long uint64;
 #define OW_COUNT_ELEMENTS(a) ((sizeof(a)) / (sizeof(a[0])))
 
 // Math types
-#include "Math.h"
+
+class Vec2f;
+class Vec3f;
+class Vec4f;
+class Matrix4f;
+class Quaternion;
+
 typedef Vec2f vec2;
 typedef const Vec2f& cvec2;
 typedef Vec3f vec3;
@@ -28,10 +34,7 @@ typedef const Matrix4f& cmat4;
 typedef Quaternion quat;
 typedef const Quaternion& cquat;
 
-// Own types
-#include "Color.h"
-#include "Primitives.h"
-#include "Timer.h"
+class Color;
 
 // STL Types
 #include <map>
@@ -43,3 +46,4 @@ typedef const Quaternion& cquat;
 #include <queue>
 
 typedef const std::string& cstring;
+using namespace std;

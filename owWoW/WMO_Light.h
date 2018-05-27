@@ -12,13 +12,13 @@ struct WMOLightDef
 {
 	uint8 type;
 	uint8 useAtten;
-	uint8 pad[2];
+	uint8 unk0[2];
 	uint32 color;
 	vec3 pos;
 	float intensity;
 	float attenStart;
 	float attenEnd;
-	float unk[4];
+	float unk1[4];
 
 	//
 	static const uint32 __size = 48;
@@ -27,7 +27,7 @@ struct WMOLightDef
 class WMOLight
 {
 public:
-	WMOLight(File& f);
+	WMOLight(IFile* f);
 
 	void setup(uint32 light);
 

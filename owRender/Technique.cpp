@@ -5,19 +5,19 @@
 
 #pragma region Language
 
-string ProcessInclude(File& f)
+string ProcessInclude(IFile* f)
 {
-	if (!f.Open())
+	if (f == nullptr)
 	{
-		Log::Error("Error open shader [%s].", f.Path_Name().c_str());
+		Log::Error("Error open shader [%s].", f->Path_Name().c_str());
 		return "";
 	}
 
 	string data = "";
 
-	while (!f.IsEof())
+	while (!f->IsEof())
 	{
-		string line = f.ReadLine();
+		string line = f->ReadLine();
 
 		// Skip empty lines
 		if (line.length() == 0)
@@ -35,7 +35,8 @@ string ProcessInclude(File& f)
 			assert1(firstBracketPosition != lastBracketPosition);
 
 			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
-			data += ProcessInclude(File(f.Path() + inludeFileName)) + '\n';
+			File::FixFilePath(inludeFileName);
+			data += ProcessInclude(_Files->Open(f->Path() + inludeFileName)) + '\n';
 
 			continue;
 		}
@@ -51,8 +52,8 @@ string ProcessInclude(File& f)
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessInclude(File(_fileName + ".vs"));
-	string shFS = ProcessInclude(File(_fileName + ".fs"));
+	string shVS = ProcessInclude(_Files->Open(_fileName + ".vs"));
+	string shFS = ProcessInclude(_Files->Open(_fileName + ".fs"));
 
     Process(_fileName, shVS.c_str(), shFS.c_str(), nullptr);
 
@@ -62,8 +63,8 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS)
 	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessInclude(File(_fileNameVS));
-	string shFS = ProcessInclude(File(_fileNameFS));
+	string shVS = ProcessInclude(_Files->Open(_fileNameVS));
+	string shFS = ProcessInclude(_Files->Open(_fileNameFS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 
@@ -73,9 +74,9 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
 	: m_RenderDevice(_RenderDevice)
 {
-    string shVS = ProcessInclude(File(_fileNameVS));
-    string shFS = ProcessInclude(File(_fileNameFS));
-    string shGS = ProcessInclude(File(_fileNameGS));
+    string shVS = ProcessInclude(_Files->Open(_fileNameVS));
+    string shFS = ProcessInclude(_Files->Open(_fileNameFS));
+    string shGS = ProcessInclude(_Files->Open(_fileNameGS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), shGS.c_str());
 

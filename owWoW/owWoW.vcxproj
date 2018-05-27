@@ -22,7 +22,8 @@
     <ClCompile Include="Animated.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="DayNightPhase.cpp" />
-    <ClCompile Include="DoodadInstance.cpp" />
+    <ClCompile Include="LiquidInstance.cpp" />
+    <ClCompile Include="WMO_MODD.cpp" />
     <ClCompile Include="EnvironmentManager.cpp" />
     <ClCompile Include="Liquid.cpp" />
     <ClCompile Include="MapController.cpp" />
@@ -75,7 +76,8 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="DayNightPhase.h" />
-    <ClInclude Include="DoodadInstance.h" />
+    <ClInclude Include="LiquidInstance.h" />
+    <ClInclude Include="WMO_MODD.h" />
     <ClInclude Include="EnvironmentManager.h" />
     <ClInclude Include="Liquid.h" />
     <ClInclude Include="MapController.h" />

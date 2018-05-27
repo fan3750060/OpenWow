@@ -3,7 +3,7 @@
 // General
 #include "INIFile.h"
 
-bool INIFile::Open()
+/*bool INIFile::Open()
 {
 	SectionStruct newSection;
 	newSection.section = "root";
@@ -64,4 +64,4 @@ SectionStruct* INIFile::GetFirstSection(string _sectionName)
 			return &it;
 
 	return nullptr;
-}
+}*/

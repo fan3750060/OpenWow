@@ -1,7 +1,6 @@
 #pragma once
 
-//-- Libs --//
+#include <owIntfs.h>
 #include <owCore.h>
 
-//-- Common --//
 #include "common.h"

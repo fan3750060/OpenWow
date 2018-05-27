@@ -27,7 +27,7 @@ enum BlendModes
 	M2BLEND_MOD2X
 };
 
-class MDX : public RefItemNamed
+class MDX : public RefItem
 {
 public:
 	MDX(cstring name);
@@ -44,9 +44,8 @@ public:
     R_Buffer* __vb;
 
 private:
+	string m_FileName;
 	bool m_Loaded;
-	string m_ModelName;
-	string m_ModelFileName;
 	string m_ModelInternalName;
 
 private:
@@ -77,9 +76,9 @@ public:
 #endif
 
 	void drawModel();
-	void initCommon(File& f);
-	bool isAnimated(File& f);
-	void initAnimated(File& f);
+	void initCommon(IFile* f);
+	bool isAnimated(IFile* f);
+	void initAnimated(IFile* f);
 
 	void animate(uint32 _animationIndex);
 	void calcBones(uint32 _animationIndex, int time);

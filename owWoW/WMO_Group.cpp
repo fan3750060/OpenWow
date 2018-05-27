@@ -17,9 +17,6 @@ struct WMOGroupInfoDef
 	WMOGroupFlags flags;
 	CAaBox bounding_box;
 	int32 nameoffset;                                   // name in MOGN chunk (-1 for no name)
-
-	//
-	static const uint32 __size = 32;
 };
 
 struct WMO_Group_MLIQ
@@ -33,12 +30,11 @@ struct WMO_Group_MLIQ
 	vec3 pos;
 
 	uint16 type;
-
-	//
-	static const uint32 __size = 30;
 };
 
-WMOGroup::WMOGroup(const WMO* _parentWMO, const uint32 _groupIndex, File& f) : m_ParentWMO(_parentWMO), m_GroupIndex(_groupIndex)
+WMOGroup::WMOGroup(const WMO* _parentWMO, const uint32 _groupIndex, IFile* f) : 
+	m_ParentWMO(_parentWMO), 
+	m_GroupIndex(_groupIndex)
 {
 	m_MaterialsInfoCount = 0;
 	m_MaterialsInfo = nullptr;
@@ -65,11 +61,11 @@ WMOGroup::WMOGroup(const WMO* _parentWMO, const uint32 _groupIndex, File& f) : m
 
 	m_VertexColors = nullptr;
 
-	m_Liquid = nullptr;
+	m_LiquidInstance = nullptr;
 
 	// Read hgroup info for bounding box and name
 	WMOGroupInfoDef groupInfo;
-	f.ReadBytes(&groupInfo, WMOGroupInfoDef::__size);
+	f->ReadBytes(&groupInfo, sizeof(WMOGroupInfoDef));
 
 	if (groupInfo.nameoffset > 0)
 	{
@@ -87,24 +83,20 @@ WMOGroup::~WMOGroup()
 	delete[] m_WMOBatchIndexes;
 	delete[] m_DoodadsIndexes;
 
-	if (m_Liquid) delete m_Liquid;
+	if (m_LiquidInstance) delete m_LiquidInstance;
 }
 
 void WMOGroup::Load()
 {
-	// open group file
 	char temp[256];
-	strcpy_s(temp, m_ParentWMO->GetName().c_str());
-	temp[m_ParentWMO->GetName().length() - 4] = 0;
+	strcpy_s(temp, m_ParentWMO->m_FileName.c_str());
+	temp[m_ParentWMO->m_FileName.length() - 4] = 0;
 
 	char fname[256];
 	sprintf_s(fname, "%s_%03d.wmo", temp, m_GroupIndex);
 
-	File f = fname;
-	if (!f.Open())
-	{
-		return;
-	}
+	UniquePtr<IFile> f = _Files->Open(fname);
+	assert1(f != nullptr);
 
     //
 
@@ -113,28 +105,28 @@ void WMOGroup::Load()
 
 	char fourcc[5];
 	uint32 size = 0;
-	while (!f.IsEof())
+	while (!f->IsEof())
 	{
 		memset(fourcc, 0, 4);
 		size = 0;
-		f.ReadBytes(fourcc, 4);
-		f.ReadBytes(&size, 4);
+		f->ReadBytes(fourcc, 4);
+		f->ReadBytes(&size, 4);
 		flipcc(fourcc);
 		fourcc[4] = 0;
 		if (size == 0)	continue;
-		uint32_t nextpos = f.GetPos() + size;
+		uint32_t nextpos = f->GetPos() + size;
 
 		if (strcmp(fourcc, "MVER") == 0)
 		{
 			uint32 version;
-			f.ReadBytes(&version, 4);
+			f->ReadBytes(&version, 4);
 			assert1(version == 17);
 		}
 		else if (strcmp(fourcc, "MOGP") == 0)
 		{
-			nextpos = f.GetPos() + WMOGroupHeader::__size; // The MOGP chunk size will be way more than the header variables!
+			nextpos = f->GetPos() + WMOGroupHeader::__size; // The MOGP chunk size will be way more than the header variables!
 
-			f.ReadBytes(&m_Header, WMOGroupHeader::__size);
+			f->ReadBytes(&m_Header, WMOGroupHeader::__size);
 
 			// Bounds
 			m_Bounds.set(m_Header.boundingBox.min, m_Header.boundingBox.max, true);
@@ -171,25 +163,25 @@ void WMOGroup::Load()
 		else if (strcmp(fourcc, "MOPY") == 0) // Material info for triangles
 		{
 			m_MaterialsInfoCount = size / WMOGroup_MaterialInfo::__size;
-			m_MaterialsInfo = (WMOGroup_MaterialInfo*)f.GetDataFromCurrent();
+			m_MaterialsInfo = (WMOGroup_MaterialInfo*)f->GetDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MOVI") == 0) // Vertex indices for triangles
 		{
 			m_IndicesCount = size / sizeof(uint16);
-			m_Indices = (uint16*)f.GetDataFromCurrent();
+			m_Indices = (uint16*)f->GetDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MOVT") == 0) // Vertices chunk.
 		{
 			m_VertexesCount = size / sizeof(vec3);
-			m_Vertexes = (vec3*)f.GetDataFromCurrent();
+			m_Vertexes = (vec3*)f->GetDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MONR") == 0) // Normals
 		{
-			m_Normals = (vec3*)f.GetDataFromCurrent();
+			m_Normals = (vec3*)f->GetDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MOTV") == 0) // R_Texture coordinates
 		{
-			m_TextureCoords[MOTVCount] = (vec2*)f.GetDataFromCurrent();
+			m_TextureCoords[MOTVCount] = (vec2*)f->GetDataFromCurrent();
 			MOTVCount++;
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // Render m_WMOBatchIndexes.
@@ -199,7 +191,7 @@ void WMOGroup::Load()
 			for (uint32 i = 0; i < m_WMOBatchIndexesCount; i++)
 			{
 				// Read
-				f.ReadBytes(&m_WMOBatchIndexes[i], WMOBatch::__size);
+				f->ReadBytes(&m_WMOBatchIndexes[i], WMOBatch::__size);
 
 				// Set material
 				WMOBatch* _batch = &m_WMOBatchIndexes[i];
@@ -215,14 +207,14 @@ void WMOGroup::Load()
 		{
 			assert1(m_Header.flags.FLAG_HAS_LIGHTS);
 			m_WMOLightsIndexesCount = size / sizeof(uint16);
-			m_WMOLightsIndexes = (uint16*)f.GetDataFromCurrent();
+			m_WMOLightsIndexes = (uint16*)f->GetDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MODR") == 0) // Doodad references
 		{
 			assert1(m_Header.flags.FLAG_HAS_DOODADS);
 			m_DoodadsIndexesCount = size / sizeof(uint16);
 			m_DoodadsIndexes = new uint16[size / sizeof(uint16)];
-			f.ReadBytes(m_DoodadsIndexes, size);
+			f->ReadBytes(m_DoodadsIndexes, size);
 		}
 		else if (strcmp(fourcc, "MOBN") == 0)
 		{
@@ -236,13 +228,13 @@ void WMOGroup::Load()
 		{
 			assert1(m_Header.flags.FLAG_HAS_VERTEX_COLORS || m_Header.flags.FLAG_HAS_2_MOCV);
 			m_Header.flags.FLAG_HAS_VERTEX_COLORS = true;
-			m_VertexColors[MOCVCount] = (uint32*)f.GetDataFromCurrent();
+			m_VertexColors[MOCVCount] = (uint32*)f->GetDataFromCurrent();
 			MOCVCount++;
 		}
 		else if (strcmp(fourcc, "MLIQ") == 0) // Liquid
 		{
 			WMO_Group_MLIQ liquidHeader;
-			f.ReadBytes(&liquidHeader, WMO_Group_MLIQ::__size);
+			f->ReadBytes(&liquidHeader, sizeof(WMO_Group_MLIQ));
 
 			enum liquid_basic_types
 			{
@@ -256,31 +248,21 @@ void WMOGroup::Load()
 
 			if (m_Header.liquidType > 0)
 			{
-				Log::Green("WMO[%s]: Contain liquid! [%s]", m_ParentWMO->GetName().c_str(), DBC_LiquidType[m_Header.liquidType & 3]->Get_Name());
-				Log::Green("WMO[%s]: LiquidType CHUNK = [%d], WMO = [%d]", m_ParentWMO->GetName().c_str(), liquidHeader.type, m_Header.liquidType);
+				Log::Green("WMO[%s]: Contain liquid! [%s]", m_ParentWMO->m_FileName.c_str(), DBC_LiquidType[m_Header.liquidType & 3]->Get_Name());
+				Log::Green("WMO[%s]: LiquidType CHUNK = [%d], WMO = [%d]", m_ParentWMO->m_FileName.c_str(), liquidHeader.type, m_Header.liquidType);
 
-				m_Liquid = new Liquid(liquidHeader.A, liquidHeader.B, From_XYZ_To_XZminusY_RET(liquidHeader.pos));
+				Liquid* m_Liquid = new Liquid(liquidHeader.A, liquidHeader.B);
 				m_Liquid->CreateFromWMO(f, m_ParentWMO->m_Materials[liquidHeader.type], DBC_LiquidType[m_Header.liquidType & 3], m_Header.flags.FLAG_IS_INDOOR);
+
+				m_LiquidInstance = new Liquid_Instance(m_Liquid, liquidHeader.pos.toXZmY());
 			}
-		}
-		else if (strcmp(fourcc, "MORI") == 0)
-		{
-		}
-		else if (strcmp(fourcc, "MORB") == 0)
-		{
-		}
-		else if (strcmp(fourcc, "MOTA") == 0)
-		{
-		}
-		else if (strcmp(fourcc, "MOBS") == 0)
-		{
 		}
 		else
 		{
 			Log::Info("WMO_Group[]: No implement group chunk %s [%d].", fourcc, size);
 		}
 
-		f.Seek(nextpos);
+		f->Seek(nextpos);
 	}
 
 	//
@@ -305,8 +287,8 @@ void WMOGroup::Load()
 	// Converts
 	for (uint32 i = 0; i < m_VertexesCount; i++)
 	{
-		m_Vertexes[i] = From_XYZ_To_XZminusY_RET(m_Vertexes[i]);
-		m_Normals[i] = From_XYZ_To_XZminusY_RET(m_Normals[i]);
+		m_Vertexes[i].toXZmY();
+		m_Normals[i].toXZmY();
 	}
 
     initLighting();
@@ -400,7 +382,7 @@ void WMOGroup::initLighting()
 
 //
 
-bool WMOGroup::Render()
+void WMOGroup::Render()
 {
 	visible = false;
 
@@ -415,7 +397,7 @@ bool WMOGroup::Render()
 
 	if (_CameraFrustum->_frustum.cullBox(aabb))
 	{
-		return false;
+		return;
 	}
 
 	visible = true;
@@ -437,8 +419,6 @@ bool WMOGroup::Render()
 
 		_Render->r.drawIndexed(PRIM_TRILIST, batch->indexStart, batch->indexCount, batch->vertexStart, (batch->vertexEnd - batch->vertexStart), false);
 	}
-
-	return true;
 }
 
 bool WMOGroup::drawDoodads(uint32 _doodadSet)
@@ -463,41 +443,6 @@ bool WMOGroup::drawDoodads(uint32 _doodadSet)
 			m_ParentWMO->m_MDXInstances[doodadIndex]->Render();
 		}
 	}
-
-	return true;
-}
-
-bool WMOGroup::drawLiquid()
-{
-	if (!visible)
-	{
-		return false;
-	}
-
-	if (m_Liquid == nullptr)
-	{
-		return false;
-	}
-
-	//setupFog();
-
-	if (m_EnableOutdoorLights)
-	{
-		//_EnvironmentManager->SetAmbientLights(true);
-	}
-	else
-	{
-		// TODO: setup some kind of indoor lighting... ?
-		/*_EnvironmentManager->SetAmbientLights(false);
-		glEnable(GL_LIGHT2);
-		glLightfv(GL_LIGHT2, GL_AMBIENT, vec4(0.1f, 0.1f, 0.1f, 1));
-		glLightfv(GL_LIGHT2, GL_DIFFUSE, vec4(0.8f, 0.8f, 0.8f, 1));
-		glLightfv(GL_LIGHT2, GL_POSITION, vec4(0, 1, 0, 0));*/
-	}
-
-	//m_Liquid->Render3D();
-
-	PERF_INC(PERF_MAP_MODELS_WMOs_LIQUIDS);
 
 	return true;
 }

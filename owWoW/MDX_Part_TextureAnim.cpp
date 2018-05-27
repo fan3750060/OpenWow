@@ -6,7 +6,7 @@
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_TextureAnim::init(File& f, M2TextureTransform& mta, uint32 * global)
+void MDX_Part_TextureAnim::init(IFile* f, M2TextureTransform& mta, uint32 * global)
 {
 	trans.init(mta.translation, f, global);
 	roll.init(mta.rotation, f, global);

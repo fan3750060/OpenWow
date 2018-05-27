@@ -20,9 +20,10 @@ bool Renderable3DObjectCollection::RegisterObject(Renderable3DObject* _uiObject,
 	return true;
 }
 
-void Renderable3DObjectCollection::UnregisterObject(Renderable3DObject * _uiObject)
+void Renderable3DObjectCollection::UnregisterObject(Renderable3DObject* _uiObject)
 {
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
+	m_ObjectsNeedSort = true;
 }
 
 void Renderable3DObjectCollection::Render3D(double t, double dt)

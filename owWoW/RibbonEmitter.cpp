@@ -10,7 +10,7 @@
 // Additional
 #include "WorldController.h"
 
-void RibbonEmitter::init(File& f, M2Ribbon& mta, uint32 * globals)
+void RibbonEmitter::init(IFile* f, M2Ribbon& mta, uint32 * globals)
 {
 	color.init(mta.colorTrack, f, globals);
 	opacity.init(mta.alphaTrack, f, globals);
@@ -18,11 +18,11 @@ void RibbonEmitter::init(File& f, M2Ribbon& mta, uint32 * globals)
 	below.init(mta.heightBelowTrack, f, globals);
 
 	parent = model->m_Part_Bones + mta.boneIndex;
-	int *texlist = (int*)(f.GetData() + mta.textureIndices.offset);
+	int *texlist = (int*)(f->GetData() + mta.textureIndices.offset);
 	// just use the first texture for now; most models I've checked only had one
 	texture = model->m_Textures[texlist[0]];
 
-	tpos = pos = From_XYZ_To_XZminusY_RET(mta.position);
+	tpos = pos = mta.position.toXZmY();
 
 	// TODO: figure out actual correct way to calculate length
 	// in BFD, res is 60 and len is 0.6, the trails are very short (too long here)

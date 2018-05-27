@@ -5,7 +5,7 @@
 class MDX_Part_Bone
 {
 public:
-	void init(File& f, M2CompBone& b, uint32* global);
+	void init(IFile* f, M2CompBone& b, uint32* global);
 	void calcMatrix(MDX_Part_Bone* allbones, int anim, int time);
 
 private:

@@ -136,7 +136,7 @@ public:
 		}
 	}
 
-	void init(M2Track<D>& b, File& f, uint32* gs)
+	void init(M2Track<D>& b, IFile* f, uint32* gs)
 	{
 		globals = gs;
 		interpolation_type = b.interpolation_type;

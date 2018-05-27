@@ -17,10 +17,13 @@ MapController::MapController()
     Map_Shared::CreateMapArrays();
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
+
+	_Bindings->RegisterUpdatableObject(this);
 }
 
 MapController::~MapController()
 {
+	_Bindings->UnregisterUpdatableObject(this);
 }
 
 //
@@ -76,7 +79,7 @@ void MapController::Unload()
 
 //
 
-void MapController::Tick()
+void MapController::Update(double _Time, double _deltaTime)
 {
     bool loading = false;
     int enteredTileX, enteredTileZ;
@@ -84,10 +87,10 @@ void MapController::Tick()
     if (m_Current[midTile][midTile] != nullptr || m_IsOnInvalidTile)
     {
         if (m_IsOnInvalidTile ||
-            (_Camera->Position.x < m_Current[midTile][midTile]->m_GamePositionX) ||
-            (_Camera->Position.x > (m_Current[midTile][midTile]->m_GamePositionX + C_TileSize)) ||
-            (_Camera->Position.z < m_Current[midTile][midTile]->m_GamePositionZ) ||
-            (_Camera->Position.z > (m_Current[midTile][midTile]->m_GamePositionZ + C_TileSize)))
+            (_Camera->Position.x < m_Current[midTile][midTile]->getTranslate().x) ||
+            (_Camera->Position.x > (m_Current[midTile][midTile]->getTranslate().x + C_TileSize)) ||
+            (_Camera->Position.z < m_Current[midTile][midTile]->getTranslate().z) ||
+            (_Camera->Position.z > (m_Current[midTile][midTile]->getTranslate().z + C_TileSize)))
         {
 
             enteredTileX = static_cast<int>(_Camera->Position.x / C_TileSize);
@@ -110,26 +113,6 @@ void MapController::Tick()
 
 //
 
-void MapController::RenderSky()
-{
-    for (int i = 0; i < C_RenderedTiles; i++)
-    {
-        for (int j = 0; j < C_RenderedTiles; j++)
-        {
-            if (m_Current[i][j] != nullptr)
-            {
-                m_Current[i][j]->drawSky();
-            }
-
-            if (_World->EnvM()->m_HasSky)
-            {
-                break;
-            }
-        }
-    }
-}
-
-
 /*void MapController::RenderTiles()
 {
     // Draw cache
@@ -147,22 +130,6 @@ void MapController::RenderSky()
             if (current[i][j] != nullptr)
                 current[i][j]->draw();
 }*/
-
-void MapController::RenderObjects()
-{
-    for (int i = 0; i < C_RenderedTiles; i++)
-        for (int j = 0; j < C_RenderedTiles; j++)
-            if (m_Current[i][j] != nullptr)
-                m_Current[i][j]->drawObjects();
-}
-
-void MapController::RenderModels()
-{
-    for (int i = 0; i < C_RenderedTiles; i++)
-        for (int j = 0; j < C_RenderedTiles; j++)
-            if (m_Current[i][j] != nullptr)
-                m_Current[i][j]->drawModels();
-}
 
 //
 

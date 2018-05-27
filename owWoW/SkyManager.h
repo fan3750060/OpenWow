@@ -22,7 +22,6 @@ public:
 
 	void PreRender3D(double t, double dt) override;
 	void Render3D() override;
-	void PostRender3D() override;
 
 private:
 	void InitBuffer();

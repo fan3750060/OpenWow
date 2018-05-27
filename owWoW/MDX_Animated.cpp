@@ -6,16 +6,16 @@
 // Additional
 #include "EnvironmentManager.h"
 
-bool MDX::isAnimated(File& f)
+bool MDX::isAnimated(IFile* f)
 {
 	// see if we have any animated bones
-	M2CompBone* bo = (M2CompBone*)(f.GetData() + header.bones.offset);
+	M2CompBone* bo = (M2CompBone*)(f->GetData() + header.bones.offset);
 
 	animGeometry = false;
 	animBones = false;
 	m_IsBillboard = false;
 
-	M2Vertex* verts = (M2Vertex*)(f.GetData() + header.vertices.offset);
+	M2Vertex* verts = (M2Vertex*)(f->GetData() + header.vertices.offset);
 	for (uint32 i = 0; i < header.vertices.size && !animGeometry; i++)
 	{
 		for (uint32 b = 0; b < 4; b++)
@@ -67,7 +67,7 @@ bool MDX::isAnimated(File& f)
 	// animated colors
 	if (header.colors.size)
 	{
-		M2Color* cols = (M2Color*)(f.GetData() + header.colors.offset);
+		M2Color* cols = (M2Color*)(f->GetData() + header.colors.offset);
 		for (uint32 i = 0; i < header.colors.size; i++)
 		{
 			if (cols[i].color.interpolation_type || cols[i].alpha.interpolation_type)
@@ -81,7 +81,7 @@ bool MDX::isAnimated(File& f)
 	// animated transperancy
 	if (header.texture_weights.size)
 	{
-		M2TextureWeight* trs = (M2TextureWeight*)(f.GetData() + header.texture_weights.offset);
+		M2TextureWeight* trs = (M2TextureWeight*)(f->GetData() + header.texture_weights.offset);
 		for (uint32 i = 0; i < header.texture_weights.size; i++)
 		{
 			if (trs[i].weight.interpolation_type)
@@ -96,20 +96,20 @@ bool MDX::isAnimated(File& f)
 	return animGeometry || animTextures || animMisc;
 }
 
-void MDX::initAnimated(File& f)
+void MDX::initAnimated(IFile* f)
 {
 	initCommon(f);
 
 	if (header.sequences.size)
 	{
 		m_Sequences = new M2Sequence[header.sequences.size];
-		memcpy(m_Sequences, f.GetData() + header.sequences.offset, header.sequences.size * sizeof(M2Sequence));
+		memcpy(m_Sequences, f->GetData() + header.sequences.offset, header.sequences.size * sizeof(M2Sequence));
 	}
 
 	if (animBones)
 	{
 		m_Part_Bones = new MDX_Part_Bone[header.bones.size];
-		M2CompBone* bonesDefs = (M2CompBone*)(f.GetData() + header.bones.offset);
+		M2CompBone* bonesDefs = (M2CompBone*)(f->GetData() + header.bones.offset);
 		for (uint32 i = 0; i < header.bones.size; i++)
 		{
 			m_Part_Bones[i].init(f, bonesDefs[i], m_GlobalLoops);
@@ -119,7 +119,7 @@ void MDX::initAnimated(File& f)
 	if (header.texture_transforms.size)
 	{
 		m_TexturesAnims = new MDX_Part_TextureAnim[header.texture_transforms.size];
-		M2TextureTransform* textureAnimDefs = (M2TextureTransform*)(f.GetData() + header.texture_transforms.offset);
+		M2TextureTransform* textureAnimDefs = (M2TextureTransform*)(f->GetData() + header.texture_transforms.offset);
 		for (uint32 i = 0; i < header.texture_transforms.size; i++)
 		{
 			m_TexturesAnims[i].init(f, textureAnimDefs[i], m_GlobalLoops);
@@ -129,7 +129,7 @@ void MDX::initAnimated(File& f)
 	if (header.cameras.size)
 	{
 		m_Cameras = new MDX_Part_Camera[header.cameras.size];
-		M2Camera* cameraDefs = (M2Camera*)(f.GetData() + header.cameras.offset);
+		M2Camera* cameraDefs = (M2Camera*)(f->GetData() + header.cameras.offset);
 		for (uint32 i = 0; i < header.cameras.size; i++)
 		{
 			m_Cameras[i].init(f, cameraDefs[i], m_GlobalLoops);
@@ -139,7 +139,7 @@ void MDX::initAnimated(File& f)
 	if (header.lights.size)
 	{
 		m_Lights = new MDX_Part_Light[header.lights.size];
-		M2Light* lightsDefs = (M2Light*)(f.GetData() + header.lights.offset);
+		M2Light* lightsDefs = (M2Light*)(f->GetData() + header.lights.offset);
 		for (uint32 i = 0; i < header.lights.size; i++)
 		{
 			m_Lights[i].init(f, lightsDefs[i], m_GlobalLoops);
@@ -152,7 +152,7 @@ void MDX::initAnimated(File& f)
 	// particle systems
 	if (header.particle_emitters.size)
 	{
-		M2Particle* pdefs = (M2Particle*)(f.GetData() + header.particle_emitters.offset);
+		M2Particle* pdefs = (M2Particle*)(f->GetData() + header.particle_emitters.offset);
 		particleSystems = new ParticleSystem[header.particle_emitters.size];
 		for (uint32 i = 0; i < header.particle_emitters.size; i++)
 		{
@@ -164,7 +164,7 @@ void MDX::initAnimated(File& f)
 	// ribbons
 	if (header.ribbon_emitters.size)
 	{
-		M2Ribbon* rdefs = (M2Ribbon*)(f.GetData() + header.ribbon_emitters.offset);
+		M2Ribbon* rdefs = (M2Ribbon*)(f->GetData() + header.ribbon_emitters.offset);
 		ribbons = new RibbonEmitter[header.ribbon_emitters.size];
 		for (uint32 i = 0; i < header.ribbon_emitters.size; i++)
 		{

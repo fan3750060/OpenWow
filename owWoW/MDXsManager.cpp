@@ -10,16 +10,26 @@ MDXsManager::MDXsManager()
 {
 	ADDCONSOLECOMMAND_CLASS("models_info", MDXsManager, PrintAllInfo);
 
-	RefManager1DimAssync::Init();
+
+	_Bindings->RegisterUpdatableObject(this);
 }
 
 MDXsManager::~MDXsManager()
 {
-	RefManager1DimAssync::Destroy();
-
-	DeleteAll();
-
 	Log::Info("MDXsManager[]: All MDXs destroyed.");
+
+	_Bindings->UnregisterUpdatableObject(this);
+}
+
+void MDXsManager::Update(double _Time, double _deltaTime)
+{
+	while (_deltaTime > 0.1f)
+	{
+		updateEmitters(0.1f);
+		_deltaTime -= 0.1f;
+	}
+
+	updateEmitters(_deltaTime);
 }
 
 //
@@ -27,16 +37,9 @@ MDXsManager::~MDXsManager()
 MDX* MDXsManager::CreateAction(cstring name)
 {
 	MDX* model = new MDX(name);
+	model->Init();
 	return model;
 }
-
-void MDXsManager::LoadAction(string name, MDX*& _model)
-{
-	//wglMakeCurrent(_Render->dc, _Render->glrc3);
-
-	_model->Init();
-}
-
 bool MDXsManager::DeleteAction(cstring name)
 {
 	return true;

@@ -29,16 +29,13 @@ struct WMOFogDef
 		float startScalar;
 		CBgra color;
 	} underwater_fog;
-
-	//
-	static const uint32 __size = 48;
 };
 
 
 struct WMOFog
 {
 public:
-	WMOFog(File& f);
+	WMOFog(IFile* f);
 
 	void setup();
 

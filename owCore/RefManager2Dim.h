@@ -2,19 +2,30 @@
 
 #include "RefItem.h"
 
-template <class OBJECT_TYPE, class ID_TYPE>
+template <class T, class ID_TYPE>
 class RefManager2Dim
 {
 public:
-	inline OBJECT_TYPE* Add(cstring name);
+	RefManager2Dim() {}
+	~RefManager2Dim()
+	{
+		for (auto it = items.begin(); it != items.end(); ++it)
+		{
+			auto obj = *it;
+			pre_delete(it->first, it->second);
+			it = objects.erase(it);
+			delete obj.second;
+		}
+	}
+
+	inline T* Add(cstring name);
 
 	// Delete
 
 	inline void Delete(cstring name);
 	inline void Delete(ID_TYPE id);
-	inline void Delete(OBJECT_TYPE* item);
+	inline void Delete(T* item);
 
-	inline void DeleteAll();
 
 	// Exists
 
@@ -22,7 +33,6 @@ public:
 	{
 		return (names.find(name) != names.end());
 	}
-
 	inline bool ExistsID(ID_TYPE id)
 	{
 		return (items.find(id) != items.end());
@@ -31,18 +41,18 @@ public:
 	// Getters
 
 	inline ID_TYPE GetIDByName(cstring name);
-	inline OBJECT_TYPE* GetItemByID(ID_TYPE id);
-	inline OBJECT_TYPE* GetItemByName(cstring name);
+	inline T* GetItemByID(ID_TYPE id);
+	inline T* GetItemByName(cstring name);
 
 	// Console
 	inline void PrintAllInfo();
 
 protected:
 	virtual ID_TYPE GenerateID() = 0;
-	virtual OBJECT_TYPE* CreateAction(cstring name, ID_TYPE id) = 0;
+	virtual T* CreateAction(cstring name, ID_TYPE id) = 0;
 	virtual bool DeleteAction(cstring name, ID_TYPE id) = 0;
 
-	inline void do_add(cstring name, ID_TYPE id, OBJECT_TYPE* item)
+	inline void do_add(cstring name, ID_TYPE id, T* item)
 	{
 		item->AddRef();
 
@@ -51,24 +61,16 @@ protected:
 	}
 
 private:
-	inline void pre_delete(ID_TYPE id, OBJECT_TYPE* item)
+	inline void pre_delete(ID_TYPE id, T* item)
 	{
 		string itemName;
 
-		RefItemNamed* itemAsItemNamed = dynamic_cast<RefItemNamed*>(item);
-		if (itemAsItemNamed != nullptr)
+		for (auto it = names.begin(); it != names.end(); ++it)
 		{
-			itemName = itemAsItemNamed->GetName();
-		}
-		else
-		{
-			for (auto it = names.begin(); it != names.end(); ++it)
+			if (it->second == id)
 			{
-				if (it->second == id)
-				{
-					itemName = it->first;
-					break;
-				}
+				itemName = it->first;
+				break;
 			}
 		}
 
@@ -89,7 +91,7 @@ private:
 
 public:
 	map<string, ID_TYPE> names; // names - id
-	map<ID_TYPE, OBJECT_TYPE*> items; //id - item
+	map<ID_TYPE, T*> items; //id - item
 };
 
 #include "RefManager2Dim.inl"

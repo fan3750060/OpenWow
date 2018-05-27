@@ -6,23 +6,23 @@
 // General
 #include "MDX_Skin.h"
 
-Model_Skin::Model_Skin(MDX* _parent, File& f, M2SkinProfile& view) 
+Model_Skin::Model_Skin(MDX* _parent, IFile* f, M2SkinProfile& view) 
 	: m_Parent(_parent)
 {
 	// Skin data
-	uint16*        vertexesIndex = (uint16*)        (f.GetData() + view.vertices.offset);
-	uint16*        indexesIndex  = (uint16*)        (f.GetData() + view.indices.offset);
-	M2SkinBones*   bonesIndex    = (M2SkinBones*)        (f.GetData() + view.bones.offset);
-	M2SkinSection* skins         = (M2SkinSection*) (f.GetData() + view.submeshes.offset);
-	M2SkinBatch*   skinBatch     = (M2SkinBatch*)   (f.GetData() + view.batches.offset);
+	uint16*        vertexesIndex = (uint16*)        (f->GetData() + view.vertices.offset);
+	uint16*        indexesIndex  = (uint16*)        (f->GetData() + view.indices.offset);
+	M2SkinBones*   bonesIndex    = (M2SkinBones*)        (f->GetData() + view.bones.offset);
+	M2SkinSection* skins         = (M2SkinSection*) (f->GetData() + view.submeshes.offset);
+	M2SkinBatch*   skinBatch     = (M2SkinBatch*)   (f->GetData() + view.batches.offset);
     uint32         bonesMax      = view.boneCountMax;
 
 	//------------
 
-	M2Material*    m2Materials =   (M2Material*)    (f.GetData() + _parent->header.materials.offset);
-	uint16*        texlookup =     (uint16*)        (f.GetData() + _parent->header.texture_lookup_table.offset);
-	uint16*        texanimlookup = (uint16*)        (f.GetData() + _parent->header.texture_transforms_lookup_table.offset);
-	uint16*        texweightlookup=(uint16*)        (f.GetData() + _parent->header.transparency_lookup_table.offset);
+	M2Material*    m2Materials =   (M2Material*)    (f->GetData() + _parent->header.materials.offset);
+	uint16*        texlookup =     (uint16*)        (f->GetData() + _parent->header.texture_lookup_table.offset);
+	uint16*        texanimlookup = (uint16*)        (f->GetData() + _parent->header.texture_transforms_lookup_table.offset);
+	uint16*        texweightlookup=(uint16*)        (f->GetData() + _parent->header.transparency_lookup_table.offset);
 
 	for (uint32 j = 0; j < view.batches.size; j++)
 	{

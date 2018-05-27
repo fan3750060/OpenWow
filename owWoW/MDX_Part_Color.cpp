@@ -6,7 +6,7 @@
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_Color::init(File& f, M2Color& mcd, uint32* global)
+void MDX_Part_Color::init(IFile* f, M2Color& mcd, uint32* global)
 {
 	color.init(mcd.color, f, global);
 	alpha.init(mcd.alpha, f, global);

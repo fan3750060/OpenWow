@@ -4,55 +4,59 @@
 #include "ADT_WMO_Instance.h"
 
 ADT_WMO_Instance::ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF _placementInfo) : 
-    m_Object(_wmoObject),
-    m_PlacementInfo(_placementInfo)
+    m_Object(_wmoObject)
 {
     assert1(m_Object);
-	CalculateMatrix();
+	m_UniqueId = _placementInfo.uniqueId;
+	m_DoodadSetIndex = _placementInfo.doodadSetIndex;
+
+	// Scene node params
+	{
+		// Translate
+		m_Translate = _placementInfo.position;
+
+		// Rotate
+		vec3 rotate = _placementInfo.rotation.toRad();
+		rotate.x = -rotate.x;
+		rotate.y = rotate.y - Math::PiHalf;
+		m_Rotate = vec3(rotate.z, rotate.y, rotate.x);
+
+		// Bounds
+		m_Bounds.Min = _wmoObject->m_Header.bounding_box.min.toXZY();
+		m_Bounds.Max = _wmoObject->m_Header.bounding_box.max.toXZY();
+		m_Bounds.calculateInternal();	
+
+		CalculateMatrix();
+
+		m_Bounds.transform(m_AbsTransform);
+	}
+
+	_Bindings->RegisterRenderable3DObject(this, 21);
 }
 
 ADT_WMO_Instance::~ADT_WMO_Instance()
 {
+	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-//
-
-void ADT_WMO_Instance::Render()
+void ADT_WMO_Instance::PreRender3D(double t, double dt)
 {
-	if (m_AlreadyDraw.find(m_PlacementInfo.uniqueId) != m_AlreadyDraw.end())
+	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
+		m_IsVisible = false;
 		return;
 	}
-	m_AlreadyDraw.insert(m_PlacementInfo.uniqueId);
-
-	//
-	
-	_Pipeline->Clear();
-	{
-		_Pipeline->SetWorld(m_RelTransform);
-		m_Object->Render(m_PlacementInfo.doodadSetIndex);
-		PERF_INC(PERF_MAP_MODELS_WMOs);
-	}
+	m_AlreadyDraw.insert(m_UniqueId);
+	m_IsVisible = !_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_wmo;
 }
 
-void ADT_WMO_Instance::CalculateMatrix()
+void ADT_WMO_Instance::Render3D()
 {
-	// Convert rotation
-	m_PlacementInfo.rotation = degToRad(m_PlacementInfo.rotation);
-	m_PlacementInfo.rotation.x = -m_PlacementInfo.rotation.x;
-	m_PlacementInfo.rotation.y = m_PlacementInfo.rotation.y - Math::PiHalf;
-
-	// Build relative matrix
-	m_RelTransform.translate(m_PlacementInfo.position);
-	m_RelTransform.rotate(m_PlacementInfo.rotation.z, m_PlacementInfo.rotation.y, m_PlacementInfo.rotation.x);
-
-	if (m_Parent != nullptr)
+	_Pipeline->Clear();
 	{
-		m_AbsTransform = (m_Parent->getAbsTrans()) * m_RelTransform;
-	}
-	else
-	{
-		m_AbsTransform = m_RelTransform;
+		_Pipeline->SetWorld(m_AbsTransform);
+		m_Object->Render(m_DoodadSetIndex);
+		PERF_INC(PERF_MAP_MODELS_WMOs);
 	}
 }
 

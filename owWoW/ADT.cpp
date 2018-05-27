@@ -30,10 +30,11 @@ struct ADT_MCIN
 	uint32_t asyncId;
 };
 
-ADT::ADT(uint32 _intexX, uint32 _intexZ) : m_IndexX(_intexX), m_IndexZ(_intexZ)
+ADT::ADT(uint32 _intexX, uint32 _intexZ) : 
+	m_IndexX(_intexX), 
+	m_IndexZ(_intexZ)
 {
-	m_GamePositionX = _intexX * C_TileSize;
-	m_GamePositionZ = _intexZ * C_TileSize;
+	m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
 }
 
 ADT::~ADT()
@@ -69,52 +70,52 @@ void ADT::Load(cstring _filename)
 	char name[256];
 	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", _filename.c_str(), _filename.c_str(), m_IndexX, m_IndexZ);
 
-	File f = name;
-	if (!f.Open())
+	UniquePtr<IFile> f = _Files->Open(name);
+	if (f == nullptr)
 	{
 		Log::Error("ADT[%d, %d, %s]: Error open file!", m_IndexX, m_IndexZ, name);
 		fail1();
 	}
 
-	uint32_t startPos = f.GetPos() + 20;
+	uint32_t startPos = f->GetPos() + 20;
 	ADT_MCIN chunks[256];
 
 	// MVER + size (8)
-	f.SeekRelative(8);
+	f->SeekRelative(8);
 	{
 		uint32 version;
-		f.ReadBytes(&version, 4);
+		f->ReadBytes(&version, 4);
 		assert1(version == 18);
 	}
 
 	// MHDR + size (8)
 	ADT_MHDR m_Header;
-	f.SeekRelative(8);
+	f->SeekRelative(8);
 	{
-		f.ReadBytes(&m_Header, sizeof(ADT_MHDR));
+		f->ReadBytes(&m_Header, sizeof(ADT_MHDR));
 	}
 
 	// Chunks info
-	f.Seek(startPos + m_Header.MCIN);
+	f->Seek(startPos + m_Header.MCIN);
 	{
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(ADT_MCIN);
 		assert1(count == C_ChunksInTileGlobal);
 		for (uint32_t i = 0; i < count; i++)
 		{
-			f.ReadBytes(&chunks[i], sizeof(ADT_MCIN));
+			f->ReadBytes(&chunks[i], sizeof(ADT_MCIN));
 		}
 	}
 
 	// TextureInfo
-	f.Seek(startPos + m_Header.MTEX);
+	f->Seek(startPos + m_Header.MTEX);
 	{
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 
@@ -128,12 +129,12 @@ void ADT::Load(cstring _filename)
 
 	// MDX names
 	vector<string> m_MDXsNames;
-	f.Seek(startPos + m_Header.MMDX);
+	f->Seek(startPos + m_Header.MMDX);
 	{
 		
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 			m_MDXsNames.push_back(_string);
@@ -143,29 +144,29 @@ void ADT::Load(cstring _filename)
 
 	// MDX Offsets
 	vector<uint32> m_MDXsOffsets;
-	f.Seek(startPos + m_Header.MMID);
+	f->Seek(startPos + m_Header.MMID);
 	{
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(uint32);
 		assert1(count == m_MDXsNames.size());
 		for (uint32_t i = 0; i < count; i++)
 		{
 			uint32 offset;
-			f.ReadBytes(&offset, sizeof(uint32));
+			f->ReadBytes(&offset, sizeof(uint32));
 			m_MDXsOffsets.push_back(offset);
 		}
 	}
 
 	// WMO Names
 	vector<string> m_WMOsNames;
-	f.Seek(startPos + m_Header.MWMO);
+	f->Seek(startPos + m_Header.MWMO);
 	{
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 			m_WMOsNames.push_back(_string);
@@ -174,52 +175,50 @@ void ADT::Load(cstring _filename)
 
 	// WMO Offsets
 	vector<uint32> m_WMOsOffsets;
-	f.Seek(startPos + m_Header.MWID);
+	f->Seek(startPos + m_Header.MWID);
 	{
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(uint32);
 		assert1(count == m_WMOsNames.size());
 		for (uint32_t i = 0; i < count; i++)
 		{
 			uint32 offset;
-			f.ReadBytes(&offset, sizeof(uint32));
+			f->ReadBytes(&offset, sizeof(uint32));
 			m_WMOsOffsets.push_back(offset);
 		}
 	}
 
 	// MDX PlacementInfo
 	vector<ADT_MDDF> m_MDXsPlacementInfo;
-	f.Seek(startPos + m_Header.MDDF);
+	f->Seek(startPos + m_Header.MDDF);
 	{
-		
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		for (uint32 i = 0; i < size / sizeof(ADT_MDDF); i++)
 		{
 			ADT_MDDF placementInfo;
-			f.ReadBytes(&placementInfo, sizeof(ADT_MDDF));
+			f->ReadBytes(&placementInfo, sizeof(ADT_MDDF));
 			m_MDXsPlacementInfo.push_back(placementInfo);
 		}
-		
 	}
 
 	// WMO PlacementInfo
 	vector<ADT_MODF> m_WMOsPlacementInfo;
-	f.Seek(startPos + m_Header.MODF);
+	f->Seek(startPos + m_Header.MODF);
 	{
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 
 		for (uint32 i = 0; i < size / sizeof(ADT_MODF); i++)
 		{
 			ADT_MODF placementInfo;
-			f.ReadBytes(&placementInfo, sizeof(ADT_MODF));
+			f->ReadBytes(&placementInfo, sizeof(ADT_MODF));
 			m_WMOsPlacementInfo.push_back(placementInfo);
 		}
 	}
@@ -241,12 +240,12 @@ void ADT::Load(cstring _filename)
 
 	for (uint32_t i = 0; i < C_ChunksInTileGlobal; i++)
 	{
-		f.Seek(chunks[i].offset);
+		f->Seek(chunks[i].offset);
 
 		// Chunk + size (8)
-		f.SeekRelative(4);
+		f->SeekRelative(4);
 		uint32_t size;
-		f.ReadBytes(&size, sizeof(uint32_t));
+		f->ReadBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
 
 		ADT_MCNK* chunk = new ADT_MCNK(this);
@@ -262,7 +261,8 @@ void ADT::Load(cstring _filename)
 		_World->WMOM()->Add(m_WMOsNames[it.nameIndex]);
 
 		WMO* wmo = (WMO*)_World->WMOM()->objects[m_WMOsNames[it.nameIndex]];
-		m_WMOsInstances.push_back(ADT_WMO_Instance(wmo, it));
+		ADT_WMO_Instance* inst = new ADT_WMO_Instance(wmo, it);
+		m_WMOsInstances.push_back(*inst);
 	}
 
 	//-- MDXs -------------------------------------------------------------------------
@@ -272,41 +272,11 @@ void ADT::Load(cstring _filename)
 		_World->MDXM()->Add(m_MDXsNames[it.nameIndex]);
 
 		MDX* mdx = (MDX*)_World->MDXM()->GetItemByName(m_MDXsNames[it.nameIndex]);
-		m_MDXsInstances.push_back(ADT_MDX_Instance(mdx, it));
+		ADT_MDX_Instance* inst = new ADT_MDX_Instance(mdx, it);
+		m_MDXsInstances.push_back(*inst);
 	}
 
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, _filename.c_str());
-}
-
-//
-
-void ADT::drawObjects()
-{
-	for (auto& it : m_WMOsInstances)
-	{
-		it.Render();
-	}
-}
-
-void ADT::drawSky()
-{
-	for (auto& it : m_WMOsInstances)
-	{
-		if (_World->EnvM()->m_HasSky)
-		{
-			break;
-		}
-
-		it.GetWMO()->drawSkybox();
-	}
-}
-
-void ADT::drawModels()
-{
-	for (auto& it : m_MDXsInstances)
-	{
-		it.Render();
-	}
 }

@@ -5,8 +5,8 @@
 
 DayNightCycle::DayNightCycle()
 {
-	File f = "World\\dnc.db";
-	if (!f.Open())
+	UniquePtr<IFile> f = _Files->Open("World\\dnc.db");
+	if (f == nullptr)
 	{
 		Log::Error("DayNightCycle[]: Can't init day-night cycle.");
         fail1();
@@ -15,23 +15,23 @@ DayNightCycle::DayNightCycle()
 	uint32 nFields1, nFields, d;
 
 	// Header
-    f.ReadBytes(&nFields, 4);
-	f.ReadBytes(&nFields1, 4);
+    f->ReadBytes(&nFields, 4);
+	f->ReadBytes(&nFields1, 4);
 	assert1(nFields == nFields1);
 	assert1(nFields == 25);
 
 	// Field Descriptions
 	uint32 magic0x53;
-	f.ReadBytes(&magic0x53, 4);
+	f->ReadBytes(&magic0x53, 4);
 	assert1(magic0x53 == 0x53);
 
 	// Final offset
-	f.ReadBytes(&d, 4); // d is now the final offset
+	f->ReadBytes(&d, 4); // d is now the final offset
 
 	// Skip names
-	f.Seek(8 + nFields * 8);
+	f->Seek(8 + nFields * 8);
 
-	while (f.GetPos() < d)
+	while (f->GetPos() < d)
 	{
 		DayNightPhase ols(f);
 		dayNightPhases.push_back(ols);

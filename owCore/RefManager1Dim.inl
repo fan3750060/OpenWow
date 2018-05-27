@@ -1,9 +1,30 @@
+#include "RefManager1Dim.h"
 #pragma once
 
-template <class OBJECT_TYPE>
-inline OBJECT_TYPE* RefManager1Dim<OBJECT_TYPE>::Add(cstring name)
+template<class T>
+RefManager1Dim<T>::RefManager1Dim()
 {
-	OBJECT_TYPE* item;
+}
+
+template<class T>
+RefManager1Dim<T>::~RefManager1Dim()
+{
+	for (auto it = objects.begin(); it != objects.end(); )
+	{
+		T* item = it->second;
+		string name = GetNameByItem(item);
+		
+		this->DeleteAction(name);
+		delete item;
+		it = objects.erase(it);
+		item = nullptr;
+	}
+}
+
+template <class T>
+T* RefManager1Dim<T>::Add(cstring name)
+{
+	T* item;
 
 	// If exists then return
 	if ((item = GetItemByName(name)) != nullptr)
@@ -20,31 +41,43 @@ inline OBJECT_TYPE* RefManager1Dim<OBJECT_TYPE>::Add(cstring name)
 	//}
 
 	// Add item
-	do_add(name, item);
+	item->AddRef();
+	objects[name] = item;
 
 	return item;
 }
 
-// Delete
-
-template <class OBJECT_TYPE>
-inline void RefManager1Dim<OBJECT_TYPE>::Delete(cstring name)
+template<class T>
+bool RefManager1Dim<T>::Exists(cstring name) const
 {
-	OBJECT_TYPE* item = GetItemByName(name);
+	return objects.find(name) != objects.end();
+}
+
+template <class T>
+void RefManager1Dim<T>::Delete(cstring name)
+{
+	T* item = GetItemByName(name);
 	if (item != nullptr)
 	{
-		item->DelRef();
+		item->Release();
 
-		if (item->NeedDelete())
+		if (item->GetRefsCount() == 0)
 		{
-			pre_delete(item);
+			Log::Info("-Item[%s] deleting", name.c_str());
+			auto it = objects.find(name);
+
+			this->DeleteAction(name);
+			//delete item;
+			objects.erase(name);
+			//item = nullptr;
+			item->setDeleted();
 		}
 	}
 
 }
 
-template <class OBJECT_TYPE>
-inline void RefManager1Dim<OBJECT_TYPE>::Delete(OBJECT_TYPE* item)
+template <class T>
+void RefManager1Dim<T>::Delete(T* item)
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -56,22 +89,8 @@ inline void RefManager1Dim<OBJECT_TYPE>::Delete(OBJECT_TYPE* item)
 	}
 }
 
-template <class OBJECT_TYPE>
-inline void RefManager1Dim<OBJECT_TYPE>::DeleteAll()
-{
-	for (auto it = objects.begin(); it != objects.end(); ++it)
-	{
-		auto obj = *it;
-		pre_delete(it->second);
-		it = objects.erase(it);
-		delete obj.second;
-	}
-}
-
-// Getters
-
-template <class OBJECT_TYPE>
-inline OBJECT_TYPE* RefManager1Dim<OBJECT_TYPE>::GetItemByName(cstring name) const
+template <class T>
+T* RefManager1Dim<T>::GetItemByName(cstring name) const
 {
 	auto name_item = objects.find(name);
 	if (name_item != objects.end())
@@ -82,8 +101,8 @@ inline OBJECT_TYPE* RefManager1Dim<OBJECT_TYPE>::GetItemByName(cstring name) con
 	return nullptr;
 }
 
-template <class OBJECT_TYPE>
-inline std::string RefManager1Dim<OBJECT_TYPE>::GetNameByItem(OBJECT_TYPE* item) const
+template <class T>
+std::string RefManager1Dim<T>::GetNameByItem(T* item) const
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -98,8 +117,8 @@ inline std::string RefManager1Dim<OBJECT_TYPE>::GetNameByItem(OBJECT_TYPE* item)
 
 // Log
 
-template <class OBJECT_TYPE>
-inline void RefManager1Dim<OBJECT_TYPE>::PrintAllInfo()
+template <class T>
+void RefManager1Dim<T>::PrintAllInfo()
 {
 	uint32 refsCnt = 0;
 	for (auto it = objects.begin(); it != objects.end(); ++it)
@@ -111,3 +130,14 @@ inline void RefManager1Dim<OBJECT_TYPE>::PrintAllInfo()
 	Log::Info("Item's count [%d], items refs [%d]", objects.size(), refsCnt);
 }
 
+template<class T>
+inline T* RefManager1Dim<T>::CreateAction(cstring name)
+{
+	return NULL;
+}
+
+template<class T>
+inline bool RefManager1Dim<T>::DeleteAction(cstring name)
+{
+	return false;
+}

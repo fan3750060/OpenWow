@@ -4,7 +4,7 @@ class DayNightPhase
 {
 public:
 	DayNightPhase();
-	DayNightPhase(File& f);
+	DayNightPhase(IFile* f);
 	DayNightPhase(DayNightPhase* a, DayNightPhase* b, float r);
 
 	//

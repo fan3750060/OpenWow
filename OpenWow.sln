@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owCore", "owCore\owCore.vcxproj", "{A4E6F769-0036-4128-A409-495D9207F587}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0CC7FA61-23DE-4D9F-A6F4-FDA327AB5984} = {0CC7FA61-23DE-4D9F-A6F4-FDA327AB5984}
+		{69AEC773-3240-4644-A049-ABABD643DBEC} = {69AEC773-3240-4644-A049-ABABD643DBEC}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owGame", "owGame\owGame.vcxproj", "{25E4827B-D0DD-4758-B70F-DEA7217E7E70}"
@@ -60,6 +61,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owDBC", "owDBC\owDBC.vcxpro
 	ProjectSection(ProjectDependencies) = postProject
 		{A4E6F769-0036-4128-A409-495D9207F587} = {A4E6F769-0036-4128-A409-495D9207F587}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owIntfs", "owIntfs\owIntfs.vcxproj", "{69AEC773-3240-4644-A049-ABABD643DBEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,6 +144,14 @@ Global
 		{10AA0F38-EC1E-44F7-868F-3FE2D187AC7B}.Release|x64.Build.0 = Release|x64
 		{10AA0F38-EC1E-44F7-868F-3FE2D187AC7B}.Release|x86.ActiveCfg = Release|Win32
 		{10AA0F38-EC1E-44F7-868F-3FE2D187AC7B}.Release|x86.Build.0 = Release|Win32
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Debug|x64.ActiveCfg = Debug|x64
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Debug|x64.Build.0 = Debug|x64
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Debug|x86.ActiveCfg = Debug|Win32
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Debug|x86.Build.0 = Debug|Win32
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Release|x64.ActiveCfg = Release|x64
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Release|x64.Build.0 = Release|x64
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Release|x86.ActiveCfg = Release|Win32
+		{69AEC773-3240-4644-A049-ABABD643DBEC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

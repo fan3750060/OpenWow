@@ -37,7 +37,7 @@ struct WMOMaterialDef
 class WMOMaterial
 {
 public:
-	WMOMaterial(const WMO* _parentWMO, File& _file);
+	WMOMaterial(const WMO* _parentWMO, IFile* _file);
 	~WMOMaterial();
 
 	uint32 GetBlendMode() const { return matDef.blendMode; }

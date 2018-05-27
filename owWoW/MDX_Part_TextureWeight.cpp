@@ -6,7 +6,7 @@
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_TextureWeight::init(File& f, M2TextureWeight& mtd, uint32* global)
+void MDX_Part_TextureWeight::init(IFile* f, M2TextureWeight& mtd, uint32* global)
 {
 	trans.init(mtd.weight, f, global);
 

@@ -21,20 +21,21 @@ using namespace std;
 #include "Debug.h"
 #include "Macros.h"
 
-// Common types
-#include "Types.h"
-#include "Consts.h"
-
-// General
-#include "Random.h"
+// Primitives
+#include "Math.h"
+#include "BoundingBox.h"
+#include "Frustrum.h"
+#include "Plane.h"
 
 // Additional types
+#include "Color.h"
 #include "Function.h"
 #include "FunctionWA.h"
 #include "FunctionSA.h"
-//#include "Timer.h"
+#include "Timer.h"
 
 // Utils
+#include "Random.h"
 #include "Utils.h"
 
 #include "Module.h"

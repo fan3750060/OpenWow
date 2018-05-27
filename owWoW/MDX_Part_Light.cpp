@@ -6,9 +6,9 @@
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_Light::init(File& f, M2Light& mld, uint32* global)
+void MDX_Part_Light::init(IFile* f, M2Light& mld, uint32* global)
 {
-	tpos = pos = From_XYZ_To_XZminusY_RET(mld.position);
+	tpos = pos = mld.position.toXZmY();
 	tdir = dir = vec3(0, 1, 0); // no idea
 	type = mld.type;
 	parent = mld.bone;

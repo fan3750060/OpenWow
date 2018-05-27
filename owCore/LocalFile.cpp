@@ -3,13 +3,77 @@
 // General
 #include "LocalFile.h"
 
-const char* LocalFile::gamedata = "D:\\_programming\\OpenWow\\_gamedata\\";
+// Additional
+const char* m_LocalFilesFolder = "D:\\_programming\\OpenWow\\_gamedata\\";
+
+LocalFile::LocalFile(cstring _fullFileName)	: 
+	File(_fullFileName)
+{}
+
+LocalFile::LocalFile(cstring _name, cstring _path) :
+	File(_name, _path)
+{}
+
+LocalFile::~LocalFile()
+{}
+
+bool LocalFile::Open()
+{
+	// Open stream
+	ifstream stream;
+	stream.open(string(m_LocalFilesFolder + Path_Name()), ios::binary);
+
+	// Check stream
+	if (!stream.is_open())
+	{
+		//Log::Error("File1[%s]: Can not open file!", Path_Name().c_str());
+		return false;
+	}
+
+	// Filesize
+	stream.seekg(0, stream.end);
+	uint32_t fileSize = uint32_t(stream.tellg());
+	stream.seekg(0, stream.beg);
+
+	// Check filesize
+	if (fileSize == 0)
+	{
+		char buff[256];
+		sprintf(buff, "File1[%s]: Is empty!", Path_Name().c_str());
+		fail2(buff);
+
+		return false;
+	}
+
+	// Read data
+	m_ByteBuffer.Allocate(fileSize + 1);
+	stream.read((char*)&m_ByteBuffer.GetAccessToData()[0], fileSize);
+	m_ByteBuffer.SetFilled();
+
+	streamsize readedBytes = stream.gcount();
+	if (readedBytes < fileSize)
+	{
+		//memset(&data[0] + readedBytes, 0, fileSize - static_cast<uint32_t>(readedBytes));
+
+		char buff[256];
+		sprintf(buff, "File1[%s]: Stream reading error. Readed [%d], filesize [%d]", Path_Name().c_str(), readedBytes, fileSize);
+		fail2(buff);
+	}
+
+	m_ByteBuffer.GetAccessToData()[fileSize] = '\0';
+
+	// Close stream
+	stream.close();
+	stream.clear();
+
+	return true;
+}
 
 uint64_t LocalFile::GetFileSize(cstring _name)
 {
 	// Open stream
 	ifstream stream;
-	stream.open(string(gamedata + _name), ios::binary);
+	stream.open(string(m_LocalFilesFolder + _name), ios::binary);
 
 	// Check stream
 	if (!stream.is_open())
@@ -32,7 +96,7 @@ bool LocalFile::IsFileExists(cstring _name)
 {
 	// Open stream
 	ifstream stream;
-	stream.open(string(gamedata + _name), ios::binary);
+	stream.open(string(m_LocalFilesFolder + _name), ios::binary);
 
 	// Check stream
 	if (!stream.is_open())

@@ -23,8 +23,8 @@ WDT::~WDT()
 
 void WDT::Load(cstring _name)
 {
-	File f(_name);
-	if (!f.Open())
+	UniquePtr<IFile> f = _Files->Open(_name);
+	if (f == nullptr)
 	{
 		Log::Info("Map[%s]: WDT: Error opening.", _name.c_str());
 		return;
@@ -33,26 +33,26 @@ void WDT::Load(cstring _name)
 	char fourcc[5];
 	uint32 size;
 
-	while (!f.IsEof())
+	while (!f->IsEof())
 	{
 		memset(fourcc, 0, 4);
 		size = 0;
-		f.ReadBytes(fourcc, 4);
-		f.ReadBytes(&size, 4);
+		f->ReadBytes(fourcc, 4);
+		f->ReadBytes(&size, 4);
 		flipcc(fourcc);
 		fourcc[4] = 0;
 		if (size == 0) continue;
-		uint32_t nextpos = f.GetPos() + size;
+		uint32_t nextpos = f->GetPos() + size;
 
 		if (strcmp(fourcc, "MVER") == 0)
 		{
 			uint32 version;
-			f.ReadBytes(&version, 4);
+			f->ReadBytes(&version, 4);
 			assert1(version == 18);
 		}
 		else if (strcmp(fourcc, "MPHD") == 0)
 		{
-			f.ReadBytes(&m_Flag, 4);
+			f->ReadBytes(&m_Flag, 4);
 		}
 		else if (strcmp(fourcc, "MAIN") == 0) // Map tile table. Contains 64x64 = 4096 records of 8 bytes each.
 		{
@@ -61,7 +61,7 @@ void WDT::Load(cstring _name)
 				for (int j = 0; j < 64; j++)
 				{
 					// Flag
-					f.ReadBytes(&m_TileFlag[j][i], sizeof(WDT_MAIN));
+					f->ReadBytes(&m_TileFlag[j][i], sizeof(WDT_MAIN));
 
 					if (m_TileFlag[j][i].flags.Flag_HasADT)
 					{
@@ -75,7 +75,7 @@ void WDT::Load(cstring _name)
 			if (size > 0)
 			{
 				char* buf = new char[size];
-				f.ReadBytes(buf, size);
+				f->ReadBytes(buf, size);
 				m_GlobalWMOName = string(buf);
 				delete[] buf;
 			}
@@ -84,14 +84,14 @@ void WDT::Load(cstring _name)
 		{
 			assert1((size / sizeof(ADT_MODF)) == 1);
 			m_GlobalWMOPlacementInfo = new ADT_MODF;
-			f.ReadBytes(m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
+			f->ReadBytes(m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
 		}
 		else
 		{
 			Log::Info("Map[%s]: WDT: Chunks [%s], Size [%d] not implemented.", _name.c_str(), fourcc, size);
 		}
 
-		f.Seek(nextpos);
+		f->Seek(nextpos);
 	}
 }
 

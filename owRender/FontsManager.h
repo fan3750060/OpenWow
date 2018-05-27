@@ -9,7 +9,7 @@ public:
 	~FontsManager();
 
 	Font* Add(cstring _fontFileName, uint32 _fontSize);
-	Font* Add(File& _fontFileName, uint32 _fontSize);
+	Font* Add(IFile* _fontFile, uint32 _fontSize);
 
 	//
 	

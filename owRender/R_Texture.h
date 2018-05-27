@@ -21,6 +21,11 @@ public:
 		m_RenderDevice(_RenderDevice)
 	{}
 
+	~R_Texture()
+	{
+		destroyTexture();
+	}
+
 	R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
 	void uploadTextureData(int slice, int mipLevel, const void *pixels);
 	void destroyTexture();

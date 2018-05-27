@@ -52,9 +52,6 @@
     <ClCompile Include="Liquid.cpp">
       <Filter>Liquid</Filter>
     </ClCompile>
-    <ClCompile Include="DoodadInstance.cpp">
-      <Filter>WMO\Instances</Filter>
-    </ClCompile>
     <ClCompile Include="WMO.cpp">
       <Filter>WMO</Filter>
     </ClCompile>
@@ -172,6 +169,12 @@
     <ClCompile Include="SkyboxInstance.cpp">
       <Filter>WMO\Instances</Filter>
     </ClCompile>
+    <ClCompile Include="WMO_MODD.cpp">
+      <Filter>WMO\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="LiquidInstance.cpp">
+      <Filter>Liquid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -181,9 +184,6 @@
     </ClInclude>
     <ClInclude Include="..\shared\owWoW.h" />
     <ClInclude Include="_unused.h" />
-    <ClInclude Include="DoodadInstance.h">
-      <Filter>WMO\Instances</Filter>
-    </ClInclude>
     <ClInclude Include="WMO.h">
       <Filter>WMO</Filter>
     </ClInclude>
@@ -312,6 +312,12 @@
     </ClInclude>
     <ClInclude Include="SkyboxInstance.h">
       <Filter>WMO\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_MODD.h">
+      <Filter>WMO\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="LiquidInstance.h">
+      <Filter>Liquid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,79 +6,79 @@
 DayNightPhase::DayNightPhase()
 {}
 
-DayNightPhase::DayNightPhase(File& f)
+DayNightPhase::DayNightPhase(IFile* f)
 {
     float h, m;
 
-    f.SeekRelative(4); // Always 0x46
-    f.ReadBytes(&h, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&m, 4);
+    f->SeekRelative(4); // Always 0x46
+    f->ReadBytes(&h, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&m, 4);
 
-    f.SeekRelative(4);
-    f.ReadBytes(&dayIntensity, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayIntensity, 4);
     //
-    f.SeekRelative(4);
-    f.ReadBytes(&dayColor.x, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&dayColor.y, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&dayColor.z, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayColor.x, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayColor.y, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayColor.z, 4);
     //
-    f.SeekRelative(4);
-    f.ReadBytes(&dayDir.x, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&dayDir.y, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&dayDir.z, 4);
-    From_XYZ_To_XZminusY(dayDir);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayDir.x, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayDir.y, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&dayDir.z, 4);
+    dayDir.toXZmY();
     
 
     //
 
-    f.SeekRelative(4);
-    f.ReadBytes(&nightIntensity, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightIntensity, 4);
     //
-    f.SeekRelative(4);
-    f.ReadBytes(&nightColor.x, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&nightColor.y, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&nightColor.z, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightColor.x, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightColor.y, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightColor.z, 4);
     //
-    f.SeekRelative(4);
-    f.ReadBytes(&nightDir.x, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&nightDir.y, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&nightDir.z, 4);
-    From_XYZ_To_XZminusY(nightDir);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightDir.x, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightDir.y, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&nightDir.z, 4);
+	nightDir.toXZmY();
 
     //
 
-    f.SeekRelative(4);
-    f.ReadBytes(&ambientIntensity, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&ambientIntensity, 4);
     //
-    f.SeekRelative(4);
-    f.ReadBytes(&ambientColor.x, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&ambientColor.y, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&ambientColor.z, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&ambientColor.x, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&ambientColor.y, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&ambientColor.z, 4);
 
     //
 
-    f.SeekRelative(4);
-    f.ReadBytes(&fogDepth, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&fogIntensity, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&fogDepth, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&fogIntensity, 4);
     //
-    f.SeekRelative(4);
-    f.ReadBytes(&fogColor.x, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&fogColor.y, 4);
-    f.SeekRelative(4);
-    f.ReadBytes(&fogColor.z, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&fogColor.x, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&fogColor.y, 4);
+    f->SeekRelative(4);
+    f->ReadBytes(&fogColor.z, 4);
 
     uint32 time = (uint32)h * 60 * 2 + (uint32)m * 2;
 }

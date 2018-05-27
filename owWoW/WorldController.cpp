@@ -24,20 +24,7 @@ WorldController::~WorldController()
 
 void WorldController::Update(double _Time, double _deltaTime)
 {
-	m_EnvironmentManager->animtime += (_deltaTime * 1000.0f);
-	m_EnvironmentManager->globalTime = static_cast<int>(m_EnvironmentManager->animtime);
-
 	_Config.Distances.Update();
-
-	m_MapController->Tick();
-
-	while (_deltaTime > 0.1f)
-	{
-		m_MDXsManager->updateEmitters(0.1f);
-		_deltaTime -= 0.1f;
-	}
-
-	m_MDXsManager->updateEmitters(_deltaTime);
 }
 
 void WorldController::EnterMap(int32 x, int32 z)

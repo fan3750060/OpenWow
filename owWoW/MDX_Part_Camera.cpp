@@ -6,19 +6,19 @@
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_Camera::init(File& f, M2Camera& mcd, uint32* global)
+void MDX_Part_Camera::init(IFile* f, M2Camera& mcd, uint32* global)
 {
 	nearclip = mcd.near_clip;
 	farclip = mcd.far_clip;
 
-	pos = From_XYZ_To_XZminusY_RET(mcd.position_base);
-	target = From_XYZ_To_XZminusY_RET(mcd.target_position_base);
+	pos = mcd.position_base.toXZmY();
+	target = mcd.target_position_base.toXZmY();
 
 	tPos.init(mcd.positions, f, global);
-	tPos.fix(From_XYZ_To_XZminusY_RET);
+	tPos.fix(Fix_XZmY);
 
 	tTarget.init(mcd.target_position, f, global);
-	tTarget.fix(From_XYZ_To_XZminusY_RET);
+	tTarget.fix(Fix_XZmY);
 
 	tRoll.init(mcd.roll, f, global);
 	tFov.init(mcd.FoV, f, global);

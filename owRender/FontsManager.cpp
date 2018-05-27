@@ -18,8 +18,6 @@ FontsManager::FontsManager(RenderDevice* _RenderDevice)
 
 FontsManager::~FontsManager()
 {
-	DeleteAll();
-
 	Log::Info("FontsManager[]: All fonts destroyed.");
 }
 
@@ -28,9 +26,9 @@ Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 	return RefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
 }
 
-Font* FontsManager::Add(File& _fontFileName, uint32 _fontSize)
+Font* FontsManager::Add(IFile* _fontFile, uint32 _fontSize)
 {
-	return RefManager1Dim::Add(_fontFileName.Path_Name() + "__" + std::to_string(_fontSize));
+	return RefManager1Dim::Add(_fontFile->Path_Name() + "__" + std::to_string(_fontSize));
 }
 
 //
@@ -47,10 +45,10 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	string fontFileName = _nameAndSize.substr(0, _delimIndex - 1);
 	uint32 fontSize = Utils::ToType<uint32>(_nameAndSize.substr(_delimIndex + 1));
 
-	File f = fontFileName;
-	if (!f.Open())
+	UniquePtr<IFile> f = _Files->Open(fontFileName);
+	if (f == nullptr)
 	{
-		Log::Fatal("FontsManager[%s]: Error while loading font.", f.Path_Name().c_str());
+		Log::Fatal("FontsManager[%s]: Error while loading font.", f->Path_Name().c_str());
 		return nullptr;
 	}
 
@@ -63,9 +61,9 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	FT_Init_FreeType(&ftLibrary);
 
 	FT_Face face;
-	if (FT_New_Memory_Face(ftLibrary, f.GetData(), f.GetSize(), 0, &face) != 0)
+	if (FT_New_Memory_Face(ftLibrary, f->GetData(), f->GetSize(), 0, &face) != 0)
 	{
-		Log::Error("FontsManager[%s]: Error while loading font. Could not load font file.", f.Path_Name().c_str());
+		Log::Error("FontsManager[%s]: Error while loading font. Could not load font file.", f->Path_Name().c_str());
 
 		// Unload
 		FT_Done_Face(face);
@@ -75,7 +73,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 
 	if (!(face->face_flags & FT_FACE_FLAG_SCALABLE) || !(face->face_flags & FT_FACE_FLAG_HORIZONTAL))
 	{
-		Log::Error("FontsManager[%s]: Error while loading font. Error setting font size.", f.Path_Name().c_str());
+		Log::Error("FontsManager[%s]: Error while loading font. Error setting font size.", f->Path_Name().c_str());
 
 		// Unload
 		FT_Done_Face(face);
@@ -204,7 +202,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	Font* font = new Font(texture, __geom, charWidth, charHeight);
 	Fonts.insert(make_pair(_nameAndSize, font));
 
-	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f.Path_Name().c_str(), fontSize);
+	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f->Path_Name().c_str(), fontSize);
 
 	return font;
 }

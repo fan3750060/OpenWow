@@ -5,22 +5,14 @@
 // Ref manager Sync
 
 #include "../owCore/RefItem.h"
-#include "../owCore/RefItemNamed.h"
+#include "../owCore/SmartItemPtr.h"
+#include "../owCore/UniquePtr.h"
 #include "../owCore/RefManager1Dim.h"
-#include "../owCore/RefManager2Dim.h"
-#include "../owCore/RefSimpleManagers.h"
-
-// Ref manager Assync
-
-#include "../owCore/ContainerAssync.h"
-#include "../owCore/RefManager1DimAssync.h"
 
 // Files
-
-#include "../owCore/File.h"
-#include "../owCore/LocalFile.h"
-#include "../owCore/MPQFile.h"
 #include "../owCore/MPQArchiveStorage.h"
+#include "../owCore/FilesManager.h"
+#include "../owCore/File.h"
 #include "../owCore/INIFile.h"
 #include "../owCore/XMLFile.h"
 

@@ -1,19 +1,36 @@
 #include "stdafx.h"
 
 // General
-#include "DoodadInstance.h"
+#include "WMO_MODD.h"
 
-WMO_MODD::WMO_MODD(File& f)
+WMO_MODD::WMO_MODD(IFile* f)
 {
-	placementInfo = new DoodadPlacementInfo;
-	f.ReadBytes(placementInfo, DoodadPlacementInfo::__size);
+	DoodadPlacementInfo placementInfo;
+	f->ReadBytes(&placementInfo, DoodadPlacementInfo::__size);
 
-	CalculateMatrix();
+	// Convert
+	placementInfo.position.toXZmY();
+	m_Rotate; // FIXME
+	m_Scale = vec3(placementInfo.scale, -placementInfo.scale, -placementInfo.scale);
+
+	// Build relative matrix
+	m_RelTransform.translate(m_Translate);
+	m_RelTransform *= Quaternion(-placementInfo.orientation.z, placementInfo.orientation.x, placementInfo.orientation.y, placementInfo.orientation.w);
+	m_RelTransform.scale(m_Scale);
+
+	if (m_Parent != nullptr)
+	{
+		m_AbsTransform = (m_Parent->getAbsTrans()) * m_RelTransform;
+	}
+	else
+	{
+		m_AbsTransform = m_RelTransform;
+	}
 }
 
 WMO_MODD::~WMO_MODD()
 {
-	delete placementInfo;
+
 }
 
 void WMO_MODD::SetModel(MDX* _model)
@@ -60,13 +77,7 @@ void WMO_MODD::Render()
 
 void WMO_MODD::CalculateMatrix()
 {
-	// Convert
-	placementInfo->position = From_XYZ_To_XZminusY_RET(placementInfo->position);
-
-	// Build relative matrix
-	m_RelTransform.translate(placementInfo->position);
-	m_RelTransform *= Quaternion(-placementInfo->orientation.z, placementInfo->orientation.x, placementInfo->orientation.y, placementInfo->orientation.w);
-	m_RelTransform.scale(placementInfo->scale, -placementInfo->scale, -placementInfo->scale);
+	
 
 	if (m_Parent != nullptr)
 	{

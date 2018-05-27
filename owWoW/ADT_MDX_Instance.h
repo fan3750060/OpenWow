@@ -17,21 +17,21 @@ struct ADT_MDDF
 
 #include "MDX.h"
 
-class ADT_MDX_Instance : protected SceneNode
+class ADT_MDX_Instance : protected SceneNode, public Renderable3DObject
 {
 public:
 	ADT_MDX_Instance(MDX* _mdxObject, ADT_MDDF _placementInfo);
 	~ADT_MDX_Instance();
 
-    MDX* GetMDX() { return m_Object; }
-	void Render();
+	// Renderable3DObject
+	void PreRender3D(double t, double dt);
+	void Render3D();
 
-private:
-	void CalculateMatrix();
+    inline MDX* GetMDX() { return m_Object; }
 
 public: 
-	MDX*		m_Object;
-	ADT_MDDF	m_PlacementInfo;
+	MDX*	m_Object;
+	uint32	m_UniqueId;
 
 public:	// Static
 	static void reset();

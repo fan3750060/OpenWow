@@ -5,7 +5,7 @@
 class MDX_Part_Camera
 {
 public:
-	void init(File& f, M2Camera& mcd, uint32* global);
+	void init(IFile* f, M2Camera& mcd, uint32* global);
 	void setup(int time = 0);
 
 	Camera* GetCamera() { return &camera; }

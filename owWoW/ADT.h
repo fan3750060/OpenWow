@@ -18,7 +18,7 @@ struct Map_Tile_TextureInfo
 	R_Texture* specularTexture;
 };
 
-class ADT : public Renderable3DObject
+class ADT : public SceneNode
 {
 public:
 	ADT(uint32 _intexX, uint32 _intexZ);
@@ -26,18 +26,7 @@ public:
 
 	void Load(cstring _filename);
 
-	void PreRender3D(double t, double dt) {}
-	void Render3D() {}
-	void PostRender3D() {}
-
-	void drawObjects();
-	void drawSky();
-	void drawModels();
-
 	//
-
-	inline bool operator==(const ADT& t) const { return (t.m_IndexX == m_IndexX) && (t.m_IndexZ == m_IndexZ); }
-	inline bool operator!=(const ADT& t) const { return (t.m_IndexX != m_IndexX) || (t.m_IndexZ != m_IndexZ); }
 
 	inline ADT_MCNK* getChunk(uint32 x, uint32 z)
 	{
@@ -47,12 +36,11 @@ public:
 
 public:
 	int                         m_IndexX, m_IndexZ;
-	float                       m_GamePositionX, m_GamePositionZ;
 
 	vector<Map_Tile_TextureInfo> m_Textures;
 
-	vector<ADT_WMO_Instance>        m_WMOsInstances;
-	vector<ADT_MDX_Instance>      m_MDXsInstances;
+	vector<ADT_WMO_Instance>	m_WMOsInstances;
+	vector<ADT_MDX_Instance>	m_MDXsInstances;
 
-	vector<ADT_MCNK>           m_Chunks;
+	vector<ADT_MCNK>			m_Chunks;
 };

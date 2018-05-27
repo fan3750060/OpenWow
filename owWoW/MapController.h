@@ -6,7 +6,7 @@
 #include "WDL.h"
 
 
-class MapController
+class MapController : public UpdatableObject
 {
 public:
 	MapController();
@@ -20,12 +20,7 @@ public:
 	void PostLoad();
 	void Unload();
 
-	void Tick();
-
-	void RenderSky();
-	void RenderObjects();
-	void RenderModels();
-	void Render_DEBUG();
+	void Update(double _Time, double _deltaTime) override;
 
 	//
 

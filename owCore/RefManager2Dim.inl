@@ -2,8 +2,8 @@
 
 #include <map>
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Add(cstring name)
+template <class T, class ID_TYPE>
+inline T* RefManager2Dim<T, ID_TYPE>::Add(cstring name)
 {
 	ID_TYPE id;
 
@@ -19,7 +19,7 @@ inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Add(cstring name)
 	id = GenerateID();
 
 	// Create item
-	OBJECT_TYPE* item = CreateAction(name, id);
+	T* item = CreateAction(name, id);
 	//if (item == nullptr)
 	//{
 	//	return nullptr;
@@ -33,8 +33,8 @@ inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Add(cstring name)
 
 // Delete
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Delete(cstring name)
+template <class T, class ID_TYPE>
+inline void RefManager2Dim<T, ID_TYPE>::Delete(cstring name)
 {
 	std::map<string, ID_TYPE>::iterator name_id = names.find(name);
 	if (name_id != names.end())
@@ -43,14 +43,14 @@ inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Delete(cstring name)
 	}
 }
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Delete(ID_TYPE id)
+template <class T, class ID_TYPE>
+inline void RefManager2Dim<T, ID_TYPE>::Delete(ID_TYPE id)
 {
-	OBJECT_TYPE* item = GetItemByID(id);
+	T* item = GetItemByID(id);
 	if (item != nullptr)
 	{
 
-		item->DelRef();
+		item->Release();
 
 		if (item->NeedDelete())
 		{
@@ -59,8 +59,8 @@ inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Delete(ID_TYPE id)
 	}
 }
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Delete(OBJECT_TYPE* item)
+template <class T, class ID_TYPE>
+inline void RefManager2Dim<T, ID_TYPE>::Delete(T* item)
 {
 	for (auto it = items.begin(); it != items.end(); ++it)
 	{
@@ -72,20 +72,10 @@ inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::Delete(OBJECT_TYPE* item)
 	}
 }
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::DeleteAll()
-{
-	for (auto it = items.begin(); it != items.end(); ++it)
-	{
-		pre_delete(it->first, it->second);
-
-	}
-}
-
 // Getters
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline ID_TYPE RefManager2Dim<OBJECT_TYPE, ID_TYPE>::GetIDByName(cstring name)
+template <class T, class ID_TYPE>
+inline ID_TYPE RefManager2Dim<T, ID_TYPE>::GetIDByName(cstring name)
 {
 	std::map<string, ID_TYPE>::iterator name_id = names.find(name);
 	if (name_id != names.end())
@@ -96,10 +86,10 @@ inline ID_TYPE RefManager2Dim<OBJECT_TYPE, ID_TYPE>::GetIDByName(cstring name)
 	return 0;
 }
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::GetItemByID(ID_TYPE id)
+template <class T, class ID_TYPE>
+inline T* RefManager2Dim<T, ID_TYPE>::GetItemByID(ID_TYPE id)
 {
-	std::map<ID_TYPE, OBJECT_TYPE*>::iterator id_item = items.find(id);
+	std::map<ID_TYPE, T*>::iterator id_item = items.find(id);
 	if (id_item != items.end())
 	{
 		return id_item->second;
@@ -108,10 +98,10 @@ inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::GetItemByID(ID_TYPE id
 	return nullptr;
 }
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::GetItemByName(cstring name)
+template <class T, class ID_TYPE>
+inline T* RefManager2Dim<T, ID_TYPE>::GetItemByName(cstring name)
 {
-	OBJECT_TYPE* item = nullptr;
+	T* item = nullptr;
 
 	ID_TYPE id;
 	if ((id = GetIDByName(name)) == 0)
@@ -120,13 +110,13 @@ inline OBJECT_TYPE* RefManager2Dim<OBJECT_TYPE, ID_TYPE>::GetItemByName(cstring 
 	return GetItemByID(id)
 }
 
-template <class OBJECT_TYPE, class ID_TYPE>
-inline void RefManager2Dim<OBJECT_TYPE, ID_TYPE>::PrintAllInfo()
+template <class T, class ID_TYPE>
+inline void RefManager2Dim<T, ID_TYPE>::PrintAllInfo()
 {
 	uint32 refsCnt = 0;
 	for (auto it = names.begin(); it != names.end(); ++it)
 	{
-		OBJECT_TYPE* item = GetItemByID(it->second);
+		T* item = GetItemByID(it->second);
 		refsCnt += item->GetRefsCount();
 		Log::Info("Item (%d) [%d]-[%s]", item->GetRefsCount(), it->second, it->first.c_str());
 	}

@@ -8,7 +8,7 @@ inline void flipcc(char* fcc)
 
 #define WOWCHUNK_READ_STRINGS_BEGIN \
 char* __tbuf = new char[size + 1]; \
-f.ReadBytes(__tbuf, size); \
+f->ReadBytes(__tbuf, size); \
 __tbuf[size] = 0; \
 char* __tp = __tbuf; \
 while (__tp < __tbuf + size) \
@@ -22,7 +22,7 @@ delete[] __tbuf;
 
 
 #define WOWCHUNK_READ_STRINGS2_BEGIN \
-char* p = (char*)f.GetDataFromCurrent(); \
+char* p = (char*)(f->GetDataFromCurrent()); \
 char* end = p + size; \
 int t = 0; \
 while (p < end) \
@@ -33,4 +33,4 @@ while (p < end) \
 
 #define WOWCHUNK_READ_STRINGS2_END \
 } \
-f.SeekRelative(size);
+f->SeekRelative(size);

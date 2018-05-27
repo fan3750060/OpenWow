@@ -53,7 +53,7 @@ public:
 	ParticleSystem();
 	~ParticleSystem();
 
-	void init(File& f, M2Particle& mta, uint32 * globals);
+	void init(IFile* f, M2Particle& mta, uint32 * globals);
 	void update(float dt);
 	void setup(int anim, int time);
 	void draw();

@@ -33,7 +33,7 @@ ParticleSystem::~ParticleSystem()
 	delete emitter;
 }
 
-void ParticleSystem::init(File& f, M2Particle& mta, uint32* globals)
+void ParticleSystem::init(IFile* f, M2Particle& mta, uint32* globals)
 {
 	speed.init(mta.emissionSpeed, f, globals);
 	variation.init(mta.speedVariation, f, globals);
@@ -50,18 +50,18 @@ void ParticleSystem::init(File& f, M2Particle& mta, uint32* globals)
 	enabled.init(mta.enabledIn /*FIXME ???*/, f, globals);
 
 	vec3 colors2[3];
-	memcpy(colors2, f.GetData() + mta.colorTrack.values.offset, sizeof(vec3) * 3);
+	memcpy(colors2, f->GetData() + mta.colorTrack.values.offset, sizeof(vec3) * 3);
 	for (uint32 i = 0; i < 3; i++)
 	{
-		float opacity = *(short*)(f.GetData() + mta.alphaTrack.values.offset + i * 2);
+		float opacity = *(short*)(f->GetData() + mta.alphaTrack.values.offset + i * 2);
 		colors[i] = vec4(colors2[i].x / 255.0f, colors2[i].y / 255.0f, colors2[i].z / 255.0f, opacity / 32767.0f);
-		sizes[i] = (*(float*)(f.GetData() + mta.scaleTrack.values.offset + i * 4)) * mta.scales[i];
+		sizes[i] = (*(float*)(f->GetData() + mta.scaleTrack.values.offset + i * 4)) * mta.scales[i];
 	}
 
 	mid = 0.5;
 	slowdown = mta.slowdown; // FIXME
 	rotation = mta.rotation; // FIXME
-	pos = From_XYZ_To_XZminusY_RET(mta.Position);
+	pos = mta.Position.toXZmY();
 	texture = model->m_Textures[mta.texture];
 	blend = mta.blendingType;
 	rows = mta.textureDimensions_rows;

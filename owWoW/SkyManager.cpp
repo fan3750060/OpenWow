@@ -14,7 +14,7 @@ const uint32 C_SkycolorsCount = 7;
 
 SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
 {
-	for (auto it = DBC_Light.Records()->begin(); it != DBC_Light.Records()->end(); ++it)
+	for (auto it = DBC_Light.Records().begin(); it != DBC_Light.Records().end(); ++it)
 	{
 		if (_mapRecord == it->second->Get_MapID())
 		{
@@ -45,8 +45,6 @@ SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
 
 	/*stars = new MDX("Environments\\Stars\\Stars.m2");  // BOUZI FIXME ENABLE ME
 	stars->Init(true);*/
-
-	_Bindings->RegisterRenderable3DObject(this, 18);
 }
 
 SkyManager::~SkyManager()
@@ -144,6 +142,7 @@ void SkyManager::PreRender3D(double t, double dt)
 void SkyManager::Render3D()
 {
 	_Render->r.setDepthTest(false);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
 	_Render->TechniquesMgr()->m_Sky_GeometryPass->Bind();
 	_Pipeline->Clear();
@@ -156,10 +155,6 @@ void SkyManager::Render3D()
 	_Render->TechniquesMgr()->m_Sky_GeometryPass->Unbind();
 
 	_Render->r.setDepthTest(true);
-}
-
-void SkyManager::PostRender3D()
-{
 }
 
 void SkyManager::InitBuffer()
@@ -202,6 +197,8 @@ void SkyManager::InitBuffer()
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3), 0);
 	__geom->finishCreatingGeometry();
+
+	_Bindings->RegisterRenderable3DObject(this, 18);
 }
 
 void SkyManager::CalculateSkiesWeights(cvec3 pos)

@@ -5,7 +5,7 @@
 struct MDX_Part_TextureWeight
 {
 public:
-	void init(File& f, M2TextureWeight& mtd, uint32* global);
+	void init(IFile* f, M2TextureWeight& mtd, uint32* global);
 
 	void calc(int anim, int time);
 	inline float getValue()

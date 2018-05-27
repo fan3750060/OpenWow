@@ -1,6 +1,6 @@
 #pragma once
 
-struct KeyValueStruct
+/*struct KeyValueStruct
 {
 	string key, value;
 };
@@ -63,3 +63,4 @@ inline bool INIFile::Assign(T& addr, string _section, string _keyName)
 
 	return false;
 }
+*/

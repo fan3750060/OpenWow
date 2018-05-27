@@ -2,72 +2,32 @@
 
 #include "RefItem.h"
 
-template <class OBJECT_TYPE>
+template <class T>
 class RefManager1Dim
 {
 public:
-	inline OBJECT_TYPE* Add(cstring name);
+	RefManager1Dim();
+	~RefManager1Dim();
 
-	// Delete
+	T* Add(cstring name);
 
-	inline void Delete(cstring name);
-	inline void Delete(OBJECT_TYPE* item);
+	bool Exists(cstring name) const;
 
-	inline void DeleteAll();
+	void Delete(cstring name);
+	void Delete(T* item);
 
-	// Exists
-
-	inline bool Exists(cstring name) const
-	{
-		return (objects.find(name) != objects.end());
-	}
-
-	// Getters
-	inline OBJECT_TYPE* GetItemByName(cstring name) const;
-	inline string GetNameByItem(OBJECT_TYPE* item) const;
+	T* GetItemByName(cstring name) const;
+	string GetNameByItem(T* item) const;
 
 	// Console
-	inline void PrintAllInfo();
+	void PrintAllInfo();
 
 protected:
-	virtual OBJECT_TYPE* CreateAction(cstring name) = 0;
-	virtual bool DeleteAction(cstring name) = 0;
-
-private:
-	inline void do_add(cstring name, OBJECT_TYPE* item)
-	{
-		item->AddRef();
-
-		objects[name] = item;
-	}
-
-	inline void pre_delete(OBJECT_TYPE* item)
-	{
-		string itemName;
-
-		RefItemNamed* itemAsItemNamed = dynamic_cast<RefItemNamed*>(item);
-		if (itemAsItemNamed != nullptr)
-		{
-			itemName = itemAsItemNamed->GetName();
-		}
-		else
-		{
-			for (auto it : objects)
-			{
-				if (it.second == item)
-				{
-					itemName = it.first;
-					break;
-				}
-			}
-		}
-
-		// Delete action
-		DeleteAction(itemName);
-	}
+	virtual T* CreateAction(cstring name);
+	virtual bool DeleteAction(cstring name);
 
 public:
-	map<string, OBJECT_TYPE*> objects; // name - item
+	std::map<string, T*> objects; // name - item
 };
 
 #include "RefManager1Dim.inl"

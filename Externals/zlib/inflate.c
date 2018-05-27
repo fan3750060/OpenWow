@@ -187,7 +187,7 @@ int stream_size;
     state = (struct inflate_state FAR *)
             ZALLOC(strm, 1, sizeof(struct inflate_state));
     if (state == Z_NULL) return Z_MEM_ERROR;
-    Tracev((stderr, "inflate: allocated\n"));
+    Tracev((stderr, "inflate: m_IsAllocated\n"));
     strm->state = (struct internal_state FAR *)state;
     state->window = Z_NULL;
     ret = inflateReset2(strm, windowBits);

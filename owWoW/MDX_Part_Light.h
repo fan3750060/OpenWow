@@ -11,7 +11,7 @@ enum ModelLightTypes
 class MDX_Part_Light
 {
 public:
-	void init(File& f, M2Light& mld, uint32* global);
+	void init(IFile* f, M2Light& mld, uint32* global);
 	void setup(int time, uint32 l);
 
 private:

@@ -23,7 +23,7 @@ struct DoodadPlacementInfo
 class WMO_MODD : protected SceneNode
 {
 public:
-	WMO_MODD(File& f);
+	WMO_MODD(IFile* f);
 	~WMO_MODD();
 
 	void SetModel(MDX* m);
@@ -36,7 +36,6 @@ private:
 
 public:
 	MDX* m_Object;
-	DoodadPlacementInfo* placementInfo;
 
 	int light;
 	vec3 ldir;

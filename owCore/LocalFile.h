@@ -1,14 +1,18 @@
 #pragma once
 
-class LocalFile
+#include "File.h"
+
+class LocalFile : public File
 {
 public:
-	static  uint64_t GetFileSize(cstring _name);
-	static  bool IsFileExists(cstring _name);
+	LocalFile(cstring _fullFileName);
+	LocalFile(cstring _name, cstring _path);
+	~LocalFile();
 
-protected:
-	 virtual bool OpenLocalFile() = 0;
+	// IFile
+	bool Open() override;
 
 public:
-	 static const char* gamedata;
+	static uint64_t GetFileSize(cstring _name);
+	static bool IsFileExists(cstring _name);
 };

@@ -12,9 +12,6 @@ bool GameState_Menu::Init()
 
 	//
 
-	_World->MDXM()->Init();
-	_World->WMOM()->Init();
-
 	OpenDBs();
 
 	m_MinimapTexture = new R_Texture(&_Render->r);
@@ -38,7 +35,7 @@ bool GameState_Menu::Init()
 	unsigned mapsYStart = 10;
 	unsigned mapsYdelta = 20;
 
-	for (auto i = DBC_Map.Records()->begin(); i != DBC_Map.Records()->end(); ++i)
+	for (auto i = DBC_Map.Records().begin(); i != DBC_Map.Records().end(); ++i)
 	{
 		auto record = (i->second);
 		auto image = new Image(_Render->TexturesMgr()->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));

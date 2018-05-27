@@ -33,8 +33,6 @@ TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
 {
     ADDCONSOLECOMMAND_CLASS("tm_info", TexturesManager, PrintAllInfo);
 
-    RefManager1DimAssync::Init();
-
 	vec2 m_DefaultTextureSize = vec2(64, 64);
 
     struct
@@ -53,7 +51,16 @@ TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
         }
     }
 
-    m_DefaultTexture2DObj = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, m_DefaultTextureSize.x, m_DefaultTextureSize.y, 1, R_TextureFormats::RGBA8, true, true, false, false);
+	m_DefaultTexture2DObj = m_RenderDevice->createTexture(
+		R_TextureTypes::Tex2D,
+		m_DefaultTextureSize.x,
+		m_DefaultTextureSize.y,
+		1,
+		R_TextureFormats::RGBA8,
+		true,
+		true,
+		false,
+		false);
 	m_DefaultTexture2DObj->uploadTextureData(0, 0, defaultColors);
 
     //--------------
@@ -79,20 +86,16 @@ TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
 
 TexturesManager::~TexturesManager()
 {
-    RefManager1DimAssync::Destroy();
-
-    DeleteAll();
-
     Log::Info("TexturesManager[]: All textures destroyed.");
 }
 
 //
 
-bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
+bool TexturesManager::LoadBLPTexture(IFile* f, R_Texture*& _texture)
 {
     // Read data
     BLPHeader header;
-    _file.ReadBytes(&header, 148);
+    f->ReadBytes(&header, 148);
 
     assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
     assert1(header.type == 1);
@@ -129,8 +132,8 @@ bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
             {
                 assert1(header.mipSizes[i] > 0);
 
-                _file.Seek(header.mipOffsets[i]);
-                _file.ReadBytes(buf, header.mipSizes[i]);
+                f->Seek(header.mipOffsets[i]);
+                f->ReadBytes(buf, header.mipSizes[i]);
 
 				_texture->uploadTextureData(0, i, buf);
             }
@@ -146,7 +149,7 @@ bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
     else if (header.compression == 1)
     {
         unsigned int pal[256];
-        _file.ReadBytes(pal, 1024);
+        f->ReadBytes(pal, 1024);
 
         unsigned char* buf = new unsigned char[header.mipSizes[0]];
         unsigned int* buf2 = new unsigned int[header.width * header.height];
@@ -161,8 +164,8 @@ bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
         {
             if (header.mipOffsets[i] && header.mipSizes[i])
             {
-                _file.Seek(header.mipOffsets[i]);
-                _file.ReadBytes(buf, header.mipSizes[i]);
+                f->Seek(header.mipOffsets[i]);
+                f->ReadBytes(buf, header.mipSizes[i]);
 
                 int cnt = 0;
                 p = buf2;
@@ -213,7 +216,7 @@ bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
     }
     else
     {
-        Log::Warn("R_Texture[%s]: compression=[%d]", _file.Path_Name().c_str(), header.compression);
+        Log::Warn("R_Texture[%s]: compression=[%d]", f->Path_Name().c_str(), header.compression);
         //fail1();
     }
 
@@ -222,52 +225,44 @@ bool TexturesManager::LoadBLPTexture(File& _file, R_Texture*& _texture)
 
 R_Texture* TexturesManager::Add(cstring _textureFileName)
 {
-    return RefManager1DimAssync::Add(_textureFileName);
+    return RefManager1Dim::Add(_textureFileName);
 }
 
-R_Texture* TexturesManager::Add(File& _textureFile)
+R_Texture* TexturesManager::Add(IFile* _textureFile)
 {
-    return RefManager1DimAssync::Add(_textureFile.Path_Name());
+    return RefManager1Dim::Add(_textureFile->Path_Name());
 }
 
 // Protected
 
 
-R_Texture* TexturesManager::CreateAction(cstring name)
+R_Texture* TexturesManager::CreateAction(cstring _name)
 {
-   // R_Texture* texture = new R_Texture();
-    //    m_DefaultTexture2DObj;
+	R_Texture* _texture = new R_Texture(m_RenderDevice);
+	//wglMakeCurrent(_Render->dc, _Render->glrc2);
 
-    return nullptr;
-}
+	UniquePtr<IFile> f(_Files->Open(_name));
+	if (f == nullptr)
+	{
+		Log::Error("TexturesManager[%s]: Error while open texture.", _name.c_str());
+		return DefaultTexture();
+	}
 
-void TexturesManager::LoadAction(string _name, R_Texture*& _texture)
-{
-    //wglMakeCurrent(_Render->dc, _Render->glrc2);
+	//Log::Info("TexturesManager[%s]: R_Texture loading.", f.Path_Name().c_str());
 
-    File f = _name;
+	// Load texture
+	bool result = LoadBLPTexture(f, _texture);
 
-    if (!f.Open())
-    {
-        Log::Error("TexturesManager[%s]: Error while open texture.", f.Path_Name().c_str());
-        _texture = DefaultTexture();
-        return;
-    }
+	// Check result
+	if (!result)
+	{
+		Log::Error("TexturesManager[%s]: Error while loading texture data.", f->Path_Name().c_str());
+		return DefaultTexture();
+	}
 
-    //Log::Info("TexturesManager[%s]: R_Texture loading.", f.Path_Name().c_str());
+	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
 
-    // Load texture
-    bool result = LoadBLPTexture(f, _texture);
-
-    // Check result
-    if (!result)
-    {
-        Log::Error("TexturesManager[%s]: Error while loading texture data.", f.Path_Name().c_str());
-        _texture = DefaultTexture();
-        return;
-    }
-
-    //Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f.Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
+	return _texture;
 }
 
 bool TexturesManager::DeleteAction(cstring name)

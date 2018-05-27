@@ -77,7 +77,7 @@ struct M2SkinProfile
 class Model_Skin
 {
 public:
-	Model_Skin(MDX* _model, File& f, M2SkinProfile& view);
+	Model_Skin(MDX* _model, IFile* f, M2SkinProfile& view);
 	~Model_Skin();
 
 	void Draw();

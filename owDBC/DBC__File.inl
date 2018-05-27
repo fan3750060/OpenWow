@@ -1,37 +1,43 @@
+#include "DBC__File.h"
 #pragma once
 
-template <class RECORD_T>
-bool DBCFile<RECORD_T>::Open()
+template<class RECORD_T>
+inline DBCFile<RECORD_T>::DBCFile(const char* _fileName)
 {
-	// Try open file
-	if (!File::Open())
+	m_FileName = string("DBFilesClient\\") + string(_fileName);
+}
+
+template<class RECORD_T>
+inline bool DBCFile<RECORD_T>::Open()
+{
+	m_File = _Files->Open(m_FileName);
+	if (m_File == nullptr)
 	{
-		Log::Error("DBCFile[%s]: Can't open file.", Path_Name().c_str());
 		return false;
 	}
 
 	char header[5];
-	ByteBuffer::ReadBytes(header, 4);
+	m_File->ReadBytes(header, 4);
 	header[4] = '\0';
 	assert1(header[0] == 'W' && header[1] == 'D' && header[2] == 'B' && header[3] == 'C');
 
 
-	ByteBuffer::ReadBytes(&recordCount, 4);// Number of records
-	ByteBuffer::ReadBytes(&fieldCount, 4); // Number of fields
-	ByteBuffer::ReadBytes(&recordSize, 4); // Size of a record
-	ByteBuffer::ReadBytes(&stringSize, 4); // String size
+	m_File->ReadBytes(&recordCount, 4);// Number of records
+	m_File->ReadBytes(&fieldCount, 4); // Number of fields
+	m_File->ReadBytes(&recordSize, 4); // Size of a record
+	m_File->ReadBytes(&stringSize, 4); // String size
 
-	Log::Print("DBCFile[%s]: HEAD [%s], Size [%d]", Path_Name().c_str(), header, recordCount);
+	Log::Print("DBCFile[%s]: HEAD [%s], Size [%d]", m_File->Path_Name().c_str(), header, recordCount);
 
 	assert1(fieldCount * 4 == recordSize);
 
-	uint64_t stringTableOffset = GetPos() + recordSize * recordCount;
-	stringTable = data + stringTableOffset;
+	uint64_t stringTableOffset = m_File->GetPos() + recordSize * recordCount;
+	stringTable = m_File->GetData() + stringTableOffset;
 
 	// Fill record table
-	for (uint64_t _offset = GetPos(); _offset != stringTableOffset; _offset += recordSize)
+	for (uint64_t _offset = m_File->GetPos(); _offset != stringTableOffset; _offset += recordSize)
 	{
-		RECORD_T* record = new RECORD_T(this, data + _offset);
+		RECORD_T* record = new RECORD_T(this, const_cast<uint8*>(m_File->GetData() + _offset));
 		records.insert(make_pair(record->Get_ID(), record));
 	}
 

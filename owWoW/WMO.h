@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "DoodadInstance.h"
+#include "WMO_MODD.h"
 
 class WMOGroup;
 class ADT_WMO_Instance;
@@ -91,7 +91,7 @@ struct WMO_DoodadSet
 	static const uint32 __size = 32;
 };
 
-class WMO : public RefItemNamed
+class WMO : public RefItem
 {
 public:
 	WMO(cstring _fileName);
@@ -101,7 +101,6 @@ public:
 	bool Load();
 	inline bool IsLoaded() { return m_Loaded; }
 
-    //void Render() override;
 	bool Render(uint32 _doodadSet);
 
 	bool drawSkybox();
@@ -117,9 +116,9 @@ public:
 //#endif
 
 public:
+	string m_FileName;
 	bool m_Loaded;
 	WMOHeaderDef m_Header;                                   // MOHD chunk
-	BoundingBox m_Bounds;
 
 public:
 	//-- Materials --//

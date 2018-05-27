@@ -1,59 +1,42 @@
 #pragma once
 
-#include "BaseFile.h"
-#include "LocalFile.h"
-#include "MPQFile.h"
+#include "ByteBuffer.h"
 
-class File : public BaseFile, protected LocalFile, protected MPQFile
+class File : public IFile
 {
 public:
-	File();
-	File(const File& _file);
-	File(cstring _fullFileName);
-	File(const char* _fullFileName);
-	File(cstring _name, cstring _path);
-	~File();
+	 File(cstring _fullFileName);
+	 File(cstring _name, cstring _path);
+	 ~File();
 
-	//
+	 // IFile
+	 inline string Name() const override { return m_Name; }
+	 inline string Path() const override { return m_Path; }
+	 inline string Extension() const override { return m_Extension; }
+	 inline string Path_Name() const override { return string(m_Path + m_Name); }
 
-	static void InitCriticalSect()
-	{
-		InitializeCriticalSection(&cs);
-	}
+	 // IByteBuffer
+	 inline uint64_t GetSize() const override { return m_ByteBuffer.GetSize(); }
+	 inline uint64_t GetPos() const override { return m_ByteBuffer.GetPos(); }
+	 inline const uint8* GetData() const override { return m_ByteBuffer.GetData(); }
+	 inline const uint8* GetDataFromCurrent() const override { return m_ByteBuffer.GetDataFromCurrent(); }
+	 inline bool IsEof() const override { return m_ByteBuffer.IsEof(); }
+	 inline void Seek(uint64_t _bufferOffsetAbsolute) override { m_ByteBuffer.Seek(_bufferOffsetAbsolute); }
+	 inline void SeekRelative(uint64_t _bufferOffsetRelative) override { m_ByteBuffer.SeekRelative(_bufferOffsetRelative); }
+	 inline string ReadLine() override { return m_ByteBuffer.ReadLine(); }
+	 inline void ReadBytes(void* _destination, uint64_t _size) override { m_ByteBuffer.ReadBytes(_destination, _size); }
 
-	//
-
-	File& operator=(const File& _file);
-	File& operator=(cstring _fullFileName);
-	File& operator=(const char* _fullFileName);
-
-	//
-
-	void SetName(cstring _fullFileName) override;
-	void SetName(const char* _fullFileName) override;
-
-	//
-
-	string Name() const override;
-	string Path() const override;
-	string Extension() const override;
-	string Path_Name() const override;
-
-	string FullPath();
-
-	//
-
-	static  void SetDefaultFileLocation(FileLocation _fileLocation);
-
-	//
-
-	 virtual bool Open() override;
+public:
+	static void FixFilePath(string& _string);
 
 private:
-	 bool OpenLocalFile() override;
-	 bool OpenMPQFile() override;
+	void ParsePathAndExtension();
+
+protected:
+	ByteBuffer m_ByteBuffer;
 
 private:
-	static CRITICAL_SECTION cs;
-	static FileLocation m_DefaultFileLocation;
+	string m_Name;
+	string m_Path;
+	string m_Extension;
 };

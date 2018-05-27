@@ -4,8 +4,35 @@
 #include "GameState_Menu.h"
 #include "GameState_InWorld.h"
 
+class Test : public RefItem
+{
+public:
+	Test() { printf("Create\n"); }
+	~Test() { printf("Delete\n"); }
+	void Act() { printf("Act\n"); }
+};
+
+map<int, int> t;
+
+map<int, int>::iterator test()
+{
+	return t.find(1);
+}
+
 int main(int argumentCount, char* arguments[])
 {
+	{
+		map<int, int> tt;
+		map<int, int>::iterator y = t.find(2);
+		t.find(3);
+
+		SmartItemPtr<Test> tex = new Test();
+		tex->Act();
+
+		SmartItemPtr<Test> tex2 = tex;
+	}
+
+
 	Log::AddDebugOutput(PlatformWindows::CreateDebugOutput_ConsoleWindows());
 	//Log::AddDebugOutput(PlatformWindows::CreateDebugOutput_Log());
 

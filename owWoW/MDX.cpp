@@ -7,20 +7,19 @@
 #include "MDX_Skin_Batch.h"
 #include "WorldController.h"
 
-MDX::MDX(cstring name) : RefItemNamed(name), m_Loaded(false)
+MDX::MDX(cstring name) :
+	m_FileName(name),
+	m_Loaded(false)
 {
-	//Log::Info("MDX[%s]: Loading...", m_ModelFileName.c_str());
+	//Log::Info("MDX[%s]: Loading...", m_FileName.c_str());
 	
 	// Replace .MDX with .M2
-	m_ModelFileName = name;
-	if (m_ModelFileName.back() != '2')
+	if (m_FileName.back() != '2')
 	{
-		m_ModelFileName[m_ModelFileName.length() - 2] = '2';
-		m_ModelFileName[m_ModelFileName.length() - 1] = '\0';
-		m_ModelFileName.resize(m_ModelFileName.length() - 1);
+		m_FileName[m_FileName.length() - 2] = '2';
+		m_FileName[m_FileName.length() - 1] = '\0';
+		m_FileName.resize(m_FileName.length() - 1);
 	}
-
-	m_ModelName = m_ModelFileName.substr(0, m_ModelFileName.length() - 3);
 
 	//
 
@@ -51,7 +50,7 @@ MDX::~MDX()
 		return;
 	}
 
-	//Log::Info("MDX[%s]: Unloading...", m_ModelFileName.c_str());
+	//Log::Info("MDX[%s]: Unloading...", m_FileName.c_str());
 
 	if (header.textures.size)
 	{
@@ -69,15 +68,15 @@ MDX::~MDX()
 
 void MDX::Init(bool forceAnim)
 {
-	File f = m_ModelFileName;
-	if (!f.Open())
+	UniquePtr<IFile> f = _Files->Open(m_FileName);
+	if (f == nullptr)
 	{
-		Log::Info("MDX[%s]: Unable to open file.", m_ModelFileName.c_str());
+		Log::Info("MDX[%s]: Unable to open file.", m_FileName.c_str());
 		return;
 	}
 
 	// Header
-	memcpy(&header, f.GetData(), sizeof(ModelHeader));
+	memcpy(&header, f->GetData(), sizeof(ModelHeader));
 
 	m_Bounds.set(header.bounding_box.min, header.bounding_box.max, true);
 
@@ -87,7 +86,7 @@ void MDX::Init(bool forceAnim)
 	if (header.global_loops.size)
 	{
 		m_GlobalLoops = new uint32[header.global_loops.size];
-		memcpy(m_GlobalLoops, (f.GetData() + header.global_loops.offset), sizeof(M2Loop) * header.global_loops.size);
+		memcpy(m_GlobalLoops, (f->GetData() + header.global_loops.offset), sizeof(M2Loop) * header.global_loops.size);
 	}
 
 	if (animated)
@@ -104,22 +103,22 @@ void MDX::Init(bool forceAnim)
 
 
 
-void MDX::initCommon(File& f)
+void MDX::initCommon(IFile* f)
 {
-	M2Vertex* m_OriginalVertexes = (M2Vertex*)(f.GetData() + header.vertices.offset);
+	M2Vertex* m_OriginalVertexes = (M2Vertex*)(f->GetData() + header.vertices.offset);
 
 	// Convert vertices
 	for (uint32 i = 0; i < header.vertices.size; i++)
 	{
-		From_XYZ_To_XZminusY(m_OriginalVertexes[i].pos);
-		From_XYZ_To_XZminusY(m_OriginalVertexes[i].normal);
+		m_OriginalVertexes[i].pos.toXZmY();
+		m_OriginalVertexes[i].normal.toXZmY();
 	}
 
 	// m_DiffuseTextures
 	if (header.textures.size)
 	{
 		//m_Textures = new R_Texture*[header.textures.size];
-		m_M2Textures = (M2Texture*)(f.GetData() + header.textures.offset);
+		m_M2Textures = (M2Texture*)(f->GetData() + header.textures.offset);
 
 		
 		for (uint32 i = 0; i < header.textures.size; i++)
@@ -129,7 +128,7 @@ void MDX::initCommon(File& f)
 			if (m_M2Textures[i].type == 0) // Common texture
 			{
 				char buff[256];
-				strncpy_s(buff, (const char*)(f.GetData() + m_M2Textures[i].filename.offset), m_M2Textures[i].filename.size);
+				strncpy_s(buff, (const char*)(f->GetData() + m_M2Textures[i].filename.offset), m_M2Textures[i].filename.size);
 				buff[m_M2Textures[i].filename.size] = '\0';
 				m_Textures.push_back(_Render->TexturesMgr()->Add(buff));
 			}
@@ -158,7 +157,7 @@ void MDX::initCommon(File& f)
 		m_Colors = new MDX_Part_Color[header.colors.size];
 		for (uint32 i = 0; i < header.colors.size; i++)
 		{
-			m_Colors[i].init(f, ((M2Color*)(f.GetData() + header.colors.offset))[i], m_GlobalLoops);
+			m_Colors[i].init(f, ((M2Color*)(f->GetData() + header.colors.offset))[i], m_GlobalLoops);
 		}
 	}
 
@@ -168,7 +167,7 @@ void MDX::initCommon(File& f)
 		m_TextureWeights = new MDX_Part_TextureWeight[header.texture_weights.size];
 		for (uint32 i = 0; i < header.texture_weights.size; i++)
 		{
-			m_TextureWeights[i].init(f, ((M2TextureWeight*)(f.GetData() + header.texture_weights.offset))[i], m_GlobalLoops);
+			m_TextureWeights[i].init(f, ((M2TextureWeight*)(f->GetData() + header.texture_weights.offset))[i], m_GlobalLoops);
 		}
 	}
 	
@@ -179,7 +178,7 @@ void MDX::initCommon(File& f)
 	assert1(header.skin_profiles.size);
 	for (uint32 i = 0; i < header.skin_profiles.size; i++)
 	{
-		m_Skins.push_back(new Model_Skin(this, f, ((M2SkinProfile*)(f.GetData() + header.skin_profiles.offset))[i]));
+		m_Skins.push_back(new Model_Skin(this, f, ((M2SkinProfile*)(f->GetData() + header.skin_profiles.offset))[i]));
 	}
 }
 
@@ -206,6 +205,8 @@ void MDX::Render()
 	{
 		return;
 	}
+
+	assert1(getDeleted() == false);
 
 	// Cull bounging box
 	BoundingBox aabb = m_Bounds;

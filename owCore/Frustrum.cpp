@@ -1,12 +1,10 @@
 #include "stdafx.h"
 
 // General
-#include "Primitives.h"
+#include "Frustrum.h"
 
-
-// *************************************************************************************************
-// Frustum
-// *************************************************************************************************
+// Additional
+#include "Plane.h"
 
 void Frustum::buildViewFrustum(const Matrix4f &transMat, float fov, float aspect, float nearPlane, float farPlane)
 {
@@ -61,17 +59,17 @@ void Frustum::buildViewFrustum(const Matrix4f &viewMat, const Matrix4f &projMat)
 	Matrix4f m = projMat * viewMat;
 
 	_planes[0] = Plane(-(m.c[0][3] + m.c[0][0]), -(m.c[1][3] + m.c[1][0]),
-					   -(m.c[2][3] + m.c[2][0]), -(m.c[3][3] + m.c[3][0]));	// Left
+		-(m.c[2][3] + m.c[2][0]), -(m.c[3][3] + m.c[3][0]));	// Left
 	_planes[1] = Plane(-(m.c[0][3] - m.c[0][0]), -(m.c[1][3] - m.c[1][0]),
-					   -(m.c[2][3] - m.c[2][0]), -(m.c[3][3] - m.c[3][0]));	// Right
+		-(m.c[2][3] - m.c[2][0]), -(m.c[3][3] - m.c[3][0]));	// Right
 	_planes[2] = Plane(-(m.c[0][3] + m.c[0][1]), -(m.c[1][3] + m.c[1][1]),
-					   -(m.c[2][3] + m.c[2][1]), -(m.c[3][3] + m.c[3][1]));	// Bottom
+		-(m.c[2][3] + m.c[2][1]), -(m.c[3][3] + m.c[3][1]));	// Bottom
 	_planes[3] = Plane(-(m.c[0][3] - m.c[0][1]), -(m.c[1][3] - m.c[1][1]),
-					   -(m.c[2][3] - m.c[2][1]), -(m.c[3][3] - m.c[3][1]));	// Top
+		-(m.c[2][3] - m.c[2][1]), -(m.c[3][3] - m.c[3][1]));	// Top
 	_planes[4] = Plane(-(m.c[0][3] + m.c[0][2]), -(m.c[1][3] + m.c[1][2]),
-					   -(m.c[2][3] + m.c[2][2]), -(m.c[3][3] + m.c[3][2]));	// Near
+		-(m.c[2][3] + m.c[2][2]), -(m.c[3][3] + m.c[3][2]));	// Near
 	_planes[5] = Plane(-(m.c[0][3] - m.c[0][2]), -(m.c[1][3] - m.c[1][2]),
-					   -(m.c[2][3] - m.c[2][2]), -(m.c[3][3] - m.c[3][2]));	// Far
+		-(m.c[2][3] - m.c[2][2]), -(m.c[3][3] - m.c[3][2]));	// Far
 
 	_origin = viewMat.inverted() * Vec3f(0, 0, 0);
 

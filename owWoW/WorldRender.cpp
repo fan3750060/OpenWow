@@ -11,7 +11,7 @@ WorldRender::WorldRender(WorldController * _WorldContoller)
 	m_TestCamera = new Camera;
 	m_TestCamera->setupViewParams(45.0f, _Config.aspectRatio, 2.0f, 15000.0f);
 
-	_Bindings->RegisterRenderable3DObject(this);
+	_Bindings->RegisterRenderable3DObject(this, 6);
 }
 
 WorldRender::~WorldRender()
@@ -34,14 +34,10 @@ void WorldRender::PreRender3D(double t, double dt)
 
 void WorldRender::Render3D()
 {
-	_World->EnvM()->BeforeDraw();
 	_Render->mainCamera->onPostUpdate();
 
 	// Main frame
 
-	//--------------------------------------------------
-	// Geometry pass
-	//--------------------------------------------------
 	_Render->rb->setRenderBuffer();
 	_Render->r.clear();
 	RenderGeom();
@@ -98,32 +94,27 @@ void WorldRender::RenderGeom()
 	//------------------------------------------------------------------------------
 	// Draw sky from WMO
 	//------------------------------------------------------------------------------
-	_Render->r.setDepthTest(false);
+	//_Render->r.setDepthTest(false);
 	//if (_Config.draw_map_mdx)
 	//{
-	m_WorldContoller->Map()->RenderSky();
+	//m_WorldContoller->Map()->RenderSky();
 	//}
 
 	//------------------------------------------------------------------------------
 	// Draw sky from GLOBAL WMO
 	//------------------------------------------------------------------------------
-	_Render->r.setDepthTest(true);
+	/*_Render->r.setDepthTest(true);
 	if (m_WorldContoller->Map()->m_WDT.MapHasGlobalWMO() && !_World->EnvM()->m_HasSky)
 	{
 		m_WorldContoller->Map()->SetOutOfBounds(false);
 		m_WorldContoller->Map()->m_WDT.GetGlobalWMOInstance()->GetWMO()->drawSkybox();
-	}
+	}*/
 
-	//
-	
 	//
 
 	//=== DEBUG
 	//_EnvironmentManager->skies->DEBUG_Render();
-	//=== DEBUG
-
-	//=== DEBUG
-	_World->EnvM()->dayNightPhase.Render_DEBUG(_Camera->Position);
+	//_World->EnvM()->dayNightPhase.Render_DEBUG(_Camera->Position);
 	//=== DEBUG
 
 	//
@@ -141,43 +132,6 @@ void WorldRender::RenderGeom()
 
 		_Render->TechniquesMgr()->m_Debug_Normals->Unbind();
 	}*/
-
-	//
-
-	//------------------------------------------------------------------------------
-	// Global WMO
-	//------------------------------------------------------------------------------
-	PERF_START(PERF_MAP_MODELS_WMO_GLOBAL);
-	if (m_WorldContoller->Map()->m_WDT.MapHasGlobalWMO())
-	{
-		m_WorldContoller->Map()->SetOutOfBounds(false);
-		m_WorldContoller->Map()->m_WDT.GetGlobalWMOInstance()->Render();
-	}
-	PERF_STOP(PERF_MAP_MODELS_WMO_GLOBAL);
-
-	//
-
-	//------------------------------------------------------------------------------
-	// WMOs
-	//------------------------------------------------------------------------------
-	PERF_START(PERF_MAP_MODELS_WMOs);
-	if (_Config.draw_map_wmo)
-	{
-		m_WorldContoller->Map()->RenderObjects();
-	}
-	PERF_STOP(PERF_MAP_MODELS_WMOs);
-
-	//
-
-	//------------------------------------------------------------------------------
-	// Map MDXs
-	//------------------------------------------------------------------------------
-	PERF_START(PERF_MAP_MODELS_MDXs);
-	if (_Config.draw_map_mdx)
-	{
-		m_WorldContoller->Map()->RenderModels();
-	}
-	PERF_STOP(PERF_MAP_MODELS_MDXs);
 }
 
 void WorldRender::RenderPostprocess()

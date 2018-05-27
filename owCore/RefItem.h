@@ -3,27 +3,26 @@
 class RefItem
 {
 public:
-	RefItem() : m_RefsCount(0)	{}
-	virtual ~RefItem() {}
+	RefItem() : 
+		m_RefsCount(0),
+		m_IsDeleted(false)
+	{}
 
 	inline void AddRef()
 	{
 		m_RefsCount += 1;
 	}
-	inline void DelRef()
+	inline void Release()
 	{
-		if (NeedDelete())
-		{
-			assert1(false);
-			return;
-		}
-
 		m_RefsCount -= 1;
 	}
 
 	uint32 GetRefsCount() const { return m_RefsCount; }
-	bool NeedDelete() const { return (m_RefsCount <= 0); }
 
-protected:
+	void setDeleted() { m_IsDeleted = true; }
+	bool getDeleted() { return m_IsDeleted; }
+
+private:
 	uint32 m_RefsCount;
+	bool m_IsDeleted;
 };

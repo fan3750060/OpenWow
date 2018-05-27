@@ -3,11 +3,11 @@
 // General
 #include "Wmo_Fog.h"
 
-WMOFog::WMOFog(File& f)
+WMOFog::WMOFog(IFile* f)
 {
-	f.ReadBytes(&fogDef, WMOFogDef::__size);
+	f->ReadBytes(&fogDef, sizeof(WMOFogDef));
 	color = vec4(fogDef.fog.color.r, fogDef.fog.color.g, fogDef.fog.color.b, fogDef.fog.color.a);
-	From_XYZ_To_XZminusY(fogDef.position);
+	fogDef.position.toXZmY();
 	fogDef.fog.startScalar = fogDef.fog.startScalar * fogDef.fog.end;
 }
 

@@ -17,7 +17,7 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile) :
 	m_BlendRBGShadowATexture(0),
 	m_Indexes(nullptr),
 	m_IndexesCount(0),
-	m_Liquid(nullptr)
+	m_LiquidInstance(nullptr)
 {
 	memset(mcly, 0x00, 16 * 4);
 
@@ -31,16 +31,27 @@ ADT_MCNK::~ADT_MCNK()
 
 //
 
-void ADT_MCNK::Load(File& f)
+void ADT_MCNK::Load(IFile* f)
 {
-	uint32_t startPos = f.GetPos();
+	uint32_t startPos = f->GetPos();
 
 	// Read header
-	f.ReadBytes(&header, sizeof(ADT_MCNK_Header));
+	f->ReadBytes(&header, sizeof(ADT_MCNK_Header));
 
-	m_GamePosition.x = header.xpos * (-1.0f) + C_ZeroPoint;
-	m_GamePosition.y = header.ypos;
-	m_GamePosition.z = header.zpos * (-1.0f) + C_ZeroPoint;
+	// Scene node params
+	{
+		// Set translate
+		m_Translate.x = header.xpos * (-1.0f) + C_ZeroPoint;
+		m_Translate.y = header.ypos;
+		m_Translate.z = header.zpos * (-1.0f) + C_ZeroPoint;
+
+		// Bounds
+		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
+		m_Bounds.Max = vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize);
+		m_Bounds.calculateInternal();
+
+		// DO NOT CALCULATE MATRIX!!!!
+	}
 
 	vec3 tempVertexes[C_MapBufferSize];
 	vec3 tempNormals[C_MapBufferSize];
@@ -50,7 +61,7 @@ void ADT_MCNK::Load(File& f)
 
 
 	// Normals
-	f.Seek(startPos + header.ofsNormal);
+	f->Seek(startPos + header.ofsNormal);
 	{
 		// Normal vectors for each corresponding vector above. Its followed by some weird unknown data which is not included in the chunk itself and might be some edge flag bitmaps.
 		vec3* ttn = tempNormals;
@@ -59,7 +70,7 @@ void ADT_MCNK::Load(File& f)
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				int8 nor[3];
-				f.ReadBytes(nor, 3);
+				f->ReadBytes(nor, 3);
 
 				*ttn++ = vec3(-(float)nor[1] / 127.0f, (float)nor[2] / 127.0f, -(float)nor[0] / 127.0f);
 			}
@@ -67,11 +78,10 @@ void ADT_MCNK::Load(File& f)
 	}
 
 	// Heights
-	f.Seek(startPos + header.ofsHeight);
+	f->Seek(startPos + header.ofsHeight);
 	{
 		vec3* ttv = tempVertexes;
-		vec3 vmin = vec3(m_GamePosition.x, Math::MaxFloat, m_GamePosition.z);
-		vec3 vmax = vec3(m_GamePosition.x + C_ChunkSize, Math::MinFloat, m_GamePosition.z + C_ChunkSize);
+		
 
 		// vertices
 		for (uint32 j = 0; j < 17; j++)
@@ -79,7 +89,7 @@ void ADT_MCNK::Load(File& f)
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				float h;
-				f.ReadBytes(&h, sizeof(float));
+				f->ReadBytes(&h, sizeof(float));
 
 				float xpos = i * C_UnitSize;
 				float zpos = j * 0.5f * C_UnitSize;
@@ -88,22 +98,21 @@ void ADT_MCNK::Load(File& f)
 					xpos += C_UnitSize * 0.5f;
 				}
 
-				vec3 v = vec3(m_GamePosition.x + xpos, m_GamePosition.y + h, m_GamePosition.z + zpos);
+				vec3 v = m_Translate + vec3(xpos, h, zpos);
 				*ttv++ = v;
 
-				vmin.y = minf(v.y, vmin.y);
-				vmax.y = maxf(v.y, vmax.y);
+				m_Bounds.Min.y = minf(v.y, m_Bounds.Min.y);
+				m_Bounds.Max.y = maxf(v.y, m_Bounds.Max.y);
 			}
 		}
-		m_Bounds.set(vmin, vmax, false);
 	}
 
 	// Textures
-	f.Seek(startPos + header.ofsLayer);
+	f->Seek(startPos + header.ofsLayer);
 	{
 		for (uint32 i = 0; i < header.nLayers; i++)
 		{
-			f.ReadBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
+			f->ReadBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
 			m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].diffuseTexture;
 			m_SpecularTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex].specularTexture;
@@ -111,7 +120,7 @@ void ADT_MCNK::Load(File& f)
 	}
 
 	// Shadows
-	f.Seek(startPos + header.ofsShadow);
+	f->Seek(startPos + header.ofsShadow);
 	{
 		uint8 sbuf[64 * 64];
 		uint8* p;
@@ -119,7 +128,7 @@ void ADT_MCNK::Load(File& f)
 		p = sbuf;
 		for (int j = 0; j < 64; j++)
 		{
-			f.ReadBytes(c, 8);
+			f->ReadBytes(c, 8);
 			for (int i = 0; i < 8; i++)
 			{
 				for (int b = 0x01; b != 0x100; b <<= 1)
@@ -136,13 +145,14 @@ void ADT_MCNK::Load(File& f)
 	}
 
 	// Alpha
-	f.Seek(startPos + header.ofsAlpha);
+	f->Seek(startPos + header.ofsAlpha);
 	{
 		for (uint32 i = 1; i < header.nLayers; i++)
 		{
 			uint8 amap[64 * 64];
 			memset(amap, 0x00, 64 * 64);
-			uint8* abuf = f.GetDataFromCurrent() + mcly[i].offsetInMCAL, *p;
+			const uint8* abuf = f->GetDataFromCurrent() + mcly[i].offsetInMCAL;
+			uint8* p;
 			p = amap;
 			for (uint8 j = 0; j < 64; j++) 
 			{
@@ -174,15 +184,17 @@ void ADT_MCNK::Load(File& f)
 	}
 
 	// Liquids
-	f.Seek(startPos + header.ofsLiquid);
+	f->Seek(startPos + header.ofsLiquid);
 	{
 		if (header.sizeLiquid > 8)
 		{
 			CRange height;
-			f.ReadBytes(&height, 8);
+			f->ReadBytes(&height, 8);
 
-			m_Liquid = new Liquid(8, 8, vec3(m_GamePosition.x, 0, m_GamePosition.z));
+			Liquid* m_Liquid = new Liquid(8, 8);
 			m_Liquid->CreateFromMCLQ(f, header);
+
+			m_LiquidInstance = new Liquid_Instance(m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
 		}
 	}
 
@@ -237,7 +249,7 @@ void ADT_MCNK::Load(File& f)
 
 void ADT_MCNK::PreRender3D(double t, double dt)
 {
-	m_IsVisible = !_CameraFrustum->_frustum.cullBox(m_Bounds);
+	m_IsVisible = !_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_chunk;
 	
 	// Draw chunk before fog
 	/*float mydist = (_Camera->Position - vcenter).length() - r;
@@ -256,8 +268,9 @@ void ADT_MCNK::Render3D()
 	PERF_START(PERF_MAP);
 	//------------------
 
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	_Pipeline->Clear();
 
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
 	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
 	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);

@@ -2,15 +2,17 @@
 
 #include "MDX.h"
 
-class MDXsManager : public RefManager1DimAssync<MDX>
+class MDXsManager : public RefManager1Dim<MDX>, public UpdatableObject
 {
 public:
 	MDXsManager();
 	~MDXsManager();
 
+	// UpdatableObject
+	void Update(double _Time, double _deltaTime);
+
 	// RefManager override
 	MDX* CreateAction(cstring name) override;
-	void LoadAction(string name, MDX*& _model) override;
 	bool DeleteAction(cstring name) override;
 
 	void resetAnim();

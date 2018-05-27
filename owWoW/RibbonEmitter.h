@@ -12,7 +12,7 @@ struct RibbonSegment
 class RibbonEmitter
 {
 public:
-	void init(File& f, M2Ribbon &mta, uint32 *globals);
+	void init(IFile* f, M2Ribbon &mta, uint32 *globals);
 	void setup(int anim, int time);
 	void draw();
 

@@ -1,7 +1,8 @@
 #pragma once
 
-struct Color
+class Color
 {
+public:
 	Color()
 	{
 		red = 0.0f;

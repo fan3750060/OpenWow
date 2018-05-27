@@ -17,7 +17,6 @@ Engine::Engine(IOpenGLAdapter* _OpenGLAdapter, int argumentCount, char* argument
 	}
 
 	// System settings
-	File::InitCriticalSect();
 	Random::SetSeed(static_cast<unsigned long>(time(0)));
 
 	// Modules manager

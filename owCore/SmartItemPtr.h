@@ -1,49 +1,72 @@
 #pragma once
 
-template< class T > 
+template<class T>
 class SmartItemPtr
 {
 public:
-	SmartItemPtr(T *ptr = nullptr) : _ptr(ptr) { AddRef(); }
-	SmartItemPtr(const SmartItemPtr& smp) : _ptr(smp._ptr) { DelRef(); }
-	~SmartItemPtr() { subRef(); }
-
-	T& operator*() const { return *_ptr; }
-	T* operator->() const { return _ptr; }
-	operator T*() const { return _ptr; }
-	operator const T*() const { return _ptr; }
-	operator bool() const { return _ptr != nullptr; }
-	T* getPtr() const { return _ptr; }
-
-	SmartItemPtr& operator=(const SmartItemPtr& smp)
-	{ 
-		return *this = smp._ptr; 
+	SmartItemPtr(T* ptr = nullptr) : 
+		m_Ptr(ptr)
+	{
+		AddRef();
+	}
+	SmartItemPtr(SmartItemPtr& smp) : 
+		m_Ptr(smp.m_Ptr)
+	{
+		AddRef();
+	}
+	~SmartItemPtr()
+	{
+		Release();
 	}
 
-	SmartItemPtr& operator=(T *ptr)
+	T& operator*() const { return *m_Ptr; }
+	T* operator->() const { return m_Ptr; }
+	operator T*() const { return m_Ptr; }
+	operator const T*() const { return m_Ptr; }
+	operator bool() const { return m_Ptr != nullptr; }
+
+	bool operator==(T* _other)
 	{
-		DelRef(); 
-		_ptr = ptr; 
+		return m_Ptr == _other;
+	}
+	bool operator!=(T* _other)
+	{
+		return m_Ptr != _other;
+	}
+
+	SmartItemPtr& operator=(const SmartItemPtr& _other)
+	{
+		AddRef();
+		return *this;
+	}
+	SmartItemPtr& operator=(T* ptr)
+	{
+		Release();
+		m_Ptr = ptr;
 		AddRef();
 		return *this;
 	}
 
 private:
 	void AddRef()
-	{ 
-		if (_ptr != nullptr)
+	{
+		if (m_Ptr != nullptr)
 		{
-			_ptr->AddRef();
+			m_Ptr->AddRef();
 		}
 	}
-	void DelRef()
-	{ 
-		if (_ptr != nullptr)
+	void Release()
+	{
+		if (m_Ptr != nullptr)
 		{
-			_ptr->DelRef();
+			m_Ptr->Release();
+			if (m_Ptr->GetRefsCount() == 0)
+			{
+				delete m_Ptr;
+			}
 		}
 	}
 
 private:
-	T  *_ptr;
+	T* m_Ptr;
 };

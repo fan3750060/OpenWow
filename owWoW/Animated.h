@@ -108,7 +108,7 @@ public:
 		}
 	}
 
-	void init(M2Track<D>& b, File& f, uint32* gs)
+	void init(M2Track<D>& b, IFile* f, uint32* gs)
 	{
 		globals = gs;
 		interpolation_type = b.interpolation_type;
@@ -125,16 +125,16 @@ public:
 		}
 
 		// ranges
-		uint32* pranges = (uint32*)(f.GetData() + b.ofsRanges);
+		uint32* pranges = (uint32*)(f->GetData() + b.ofsRanges);
 		for (uint32 i = 0; i < b.nRanges; i++) ranges.push_back(AnimRange(pranges[i], pranges[i + 1]));
 
 		// times
 		assert1(b.nTimes == b.nKeys);
-		uint32 *ptimes = (uint32*)(f.GetData() + b.ofsTimes);
+		uint32 *ptimes = (uint32*)(f->GetData() + b.ofsTimes);
 		for (uint32 i = 0; i < b.nTimes; i++) times.push_back(ptimes[i]);
 
 		// keyframes
-		D *keys = (D*)(f.GetData() + b.ofsKeys);
+		D *keys = (D*)(f->GetData() + b.ofsKeys);
 		switch (interpolation_type)
 		{
 		case INTERPOLATION_NONE:

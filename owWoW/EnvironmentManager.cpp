@@ -21,6 +21,9 @@ EnvironmentManager::EnvironmentManager()
 	m_OutdoorDayDiffuseColor = vec4();
 	m_OutdoorNightDiffuseColor = vec4();
 	m_OutdoorSpecularColor = vec4();
+
+	_Bindings->RegisterUpdatableObject(this);
+	_Bindings->RegisterRenderable3DObject(this, 5);
 }
 
 EnvironmentManager::~EnvironmentManager()
@@ -34,6 +37,34 @@ EnvironmentManager::~EnvironmentManager()
 	{
 		delete dayNightCycle;
 	}
+
+	_Bindings->UnregisterUpdatableObject(this);
+	_Bindings->UnregisterRenderable3DObject(this);
+}
+
+void EnvironmentManager::Update(double _Time, double _deltaTime)
+{
+	animtime += (_deltaTime * 1000.0f);
+	globalTime = static_cast<int>(animtime);
+}
+
+void EnvironmentManager::PreRender3D(double t, double dt)
+{
+	if (_Config.timeEnable)
+	{
+		m_GameTime.Tick();
+	}
+
+	m_HasSky = false;
+
+	dayNightPhase = dayNightCycle->getPhase(m_GameTime.GetTime());
+
+	if (skies != nullptr)
+	{
+		skies->Calculate(m_GameTime.GetTime());
+	}
+
+	m_IsVisible = false;
 }
 
 void EnvironmentManager::InitSkies(DBC_MapRecord* _mapRecord)
@@ -106,20 +137,4 @@ void EnvironmentManager::SetFog()
 		_Config.Distances.culldistance = _Config.Distances.mapdrawdistance;
 	}
 }
-
-//
-
-void EnvironmentManager::BeforeDraw()
-{
-    if (_Config.timeEnable)
-    {
-        m_GameTime.Tick();
-    }
-
-	m_HasSky = false;
-
-	dayNightPhase = dayNightCycle->getPhase(m_GameTime.GetTime());
-	skies->Calculate(m_GameTime.GetTime());
-}
-
 

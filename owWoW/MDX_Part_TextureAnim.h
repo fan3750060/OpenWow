@@ -5,7 +5,7 @@
 class MDX_Part_TextureAnim
 {
 public:
-	void init(File& f, M2TextureTransform& mta, uint32* global);
+	void init(IFile* f, M2TextureTransform& mta, uint32* global);
 	void calc(int anim, int time);
 
 	Matrix4f getValue()

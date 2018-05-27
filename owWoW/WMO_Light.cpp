@@ -5,9 +5,9 @@
 // General
 #include "Wmo_Light.h"
 
-WMOLight::WMOLight(File& f)
+WMOLight::WMOLight(IFile* f)
 {
-	f.ReadBytes(&lightDef, WMOLightDef::__size);
+	f->ReadBytes(&lightDef, WMOLightDef::__size);
 
 	lightDef.pos = vec3(lightDef.pos.x, lightDef.pos.z, -lightDef.pos.y);
 

@@ -6,10 +6,10 @@
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_Bone::init(File& f, M2CompBone& b, uint32* global)
+void MDX_Part_Bone::init(IFile* f, M2CompBone& b, uint32* global)
 {
 	parent = b.parent_bone;
-	pivot = From_XYZ_To_XZminusY_RET(b.pivot);
+	pivot = b.pivot.toXZY();
 
 	m_BillboardType = BillboardType::BILLBOARD_DISABLED;
 
@@ -37,9 +37,9 @@ void MDX_Part_Bone::init(File& f, M2CompBone& b, uint32* global)
 	roll.init(b.rotation, f, global);
 	scale.init(b.scale, f, global);
 
-	trans.fix(From_XYZ_To_XZminusY_RET);
-	roll.fix(From_XYZW_To_XZminusYW_RET);
-	scale.fix(From_XYZ_To_XZY_RET);
+	trans.fix(Fix_XZmY);
+	roll.fix(Fix_XZmYW);
+	scale.fix(Fix_XZY);
 }
 
 void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, int anim, int time)

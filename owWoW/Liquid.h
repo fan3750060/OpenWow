@@ -5,9 +5,6 @@
 
 struct Liquid_Layer
 {
-	uint16 LiquidType;
-	uint16 LiquidObjectOrLVF;
-
 	float MinHeightLevel;
 	float MaxHeightLevel;
 
@@ -35,28 +32,25 @@ class ADT_MCNK_Header;
 
 // Class
 
-class Liquid : public Renderable3DObject
+class Liquid
 {
 public:
-	Liquid(uint32 x, uint32 y, vec3 base);
+	Liquid(uint32 x, uint32 y);
 	~Liquid();
 
-	void CreateFromMCLQ(File& f, ADT_MCNK_Header header);
-	void CreateFromWMO(File& f, WMOMaterial* _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor);
+	void CreateFromMCLQ(IFile* f, ADT_MCNK_Header header);
+	void CreateFromWMO(IFile* f, WMOMaterial* _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor);
 	
-	void PreRender3D(double t, double dt) override;
-	void Render3D() override;
-	void PostRender3D() override;
+	void Render();
 
 private:
-	void initGeometry(File& f);
-	void createBuffer(cvec3 _position);
+	void initGeometry(IFile* f);
+	void createBuffer();
 	void InitTextures(DBC_LIQUIDTYPE_Type _liquidType);
 
 private:
 	uint32 m_TilesX, m_TilesY;
 	uint32 m_TilesCount;
-	vec3 m_Position;
 
 	vec3 m_WaterColorLight;
 	vec3 m_WaterColorDark;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Liquid.h"
+#include "LiquidInstance.h"
 
 struct ADT_MCNK_Header
 {
@@ -79,13 +79,13 @@ struct ADT_MCNK_MCLY
 
 class ADT;
 
-class ADT_MCNK : public Renderable3DObject
+class ADT_MCNK : public SceneNode, public Renderable3DObject
 {
 public:
 	ADT_MCNK(ADT* _parentTile);
 	~ADT_MCNK();
 
-	void Load(File& f);
+	void Load(IFile* f);
 
 	void PreRender3D(double t, double dt) override;
 	void Render3D() override;
@@ -94,7 +94,6 @@ public:
 public:
 	ADT* m_ParentTile;
 	ADT_MCNK_Header header;
-	vec3 m_GamePosition;
 
 	ADT_MCNK_MCLY mcly[4];
 
@@ -102,7 +101,7 @@ public:
 	R_Texture* m_SpecularTextures[4];
 
 
-	Liquid* m_Liquid;
+	Liquid_Instance* m_LiquidInstance;
 
     R_Texture* m_BlendRBGShadowATexture;
 
@@ -111,10 +110,5 @@ public:
 	uint16* m_Indexes;
 	uint16  m_IndexesCount;
 
-	BoundingBox m_Bounds;
-
     R_GeometryInfo* __geomDebugNormals;
-
-
-	
 };

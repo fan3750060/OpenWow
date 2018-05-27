@@ -3,9 +3,9 @@
 class Renderable3DObject
 {
 public:
-	virtual void PreRender3D(double t, double dt) = 0;
-	virtual void Render3D() = 0;
-	virtual void PostRender3D() = 0;
+	virtual void PreRender3D(double t, double dt) {};
+	virtual void Render3D() {};
+	virtual void PostRender3D() {};
 
 	//
 

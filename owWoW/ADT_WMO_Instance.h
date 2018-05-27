@@ -15,21 +15,22 @@ struct ADT_MODF
 
 #include "WMO.h"
 
-class ADT_WMO_Instance : protected SceneNode
+class ADT_WMO_Instance : protected SceneNode, public Renderable3DObject
 {
 public:
 	ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF _placementInfo);
 	~ADT_WMO_Instance();
 
-	WMO* GetWMO() { return m_Object; }
-	void Render();
+	// Renderable3DObject
+	void PreRender3D(double t, double dt);
+	void Render3D();
+
+	inline WMO* GetWMO() { return m_Object; }
 
 private:
-	void CalculateMatrix();
-
-private:
-	WMO*		m_Object;
-	ADT_MODF	m_PlacementInfo;
+	WMO*	m_Object;
+	uint32	m_UniqueId;
+	uint16	m_DoodadSetIndex;
 
 public:	// Static
 	static void reset();

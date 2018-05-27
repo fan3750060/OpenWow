@@ -5,22 +5,23 @@
 
 //
 
-class EnvironmentManager
+class EnvironmentManager : public Renderable3DObject, public UpdatableObject
 {
 public:
 	EnvironmentManager();
 	~EnvironmentManager();
 
-	void InitSkies(DBC_MapRecord* _mapRecord);
+	//-- UpdatableObject
+	void Update(double _Time, double _deltaTime) override;
+
+	//-- RenderableObject
+	void PreRender3D(double t, double dt) override;
 
 	//
-
+	void InitSkies(DBC_MapRecord* _mapRecord);
 	void outdoorLighting();
 	void SetAmbientLights(bool on);
 	void SetFog();
-
-public:
-	void BeforeDraw();
 
 public:
 	vec4 m_OutdoorAmbientColor;

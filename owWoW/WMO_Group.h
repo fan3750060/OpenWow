@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Liquid.h"
+#include "LiquidInstance.h"
 
 class WMO;
 
@@ -128,15 +128,14 @@ struct WMOBatch
 class WMOGroup
 {
 public:
-	WMOGroup(const WMO* _parentWMO, const uint32 m_GroupIndex, File& f);
+	WMOGroup(const WMO* _parentWMO, const uint32 m_GroupIndex, IFile* f);
 	~WMOGroup();
 
 	void Load();
 	void initLighting();
 
-	bool Render();
+	void Render();
 	bool drawDoodads(uint32 _doodadSet);
-	bool drawLiquid();
 
 	void setupFog();
 
@@ -146,12 +145,12 @@ public:
 	const uint32 m_GroupIndex;
 	string m_GroupName;
 	WMOGroupHeader m_Header;
+	BoundingBox m_Bounds;
 
 public:
 	int fog;
 	bool visible;
 	bool m_EnableOutdoorLights;
-	BoundingBox m_Bounds;
 
     R_GeometryInfo* __geom;
 
@@ -193,5 +192,5 @@ public:
 	uint32** m_VertexColors;         // MOCV chunk
 
 	//-- Liquid --//
-	Liquid* m_Liquid;
+	Liquid_Instance* m_LiquidInstance;
 };

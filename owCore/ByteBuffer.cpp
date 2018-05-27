@@ -4,56 +4,56 @@
 #include "ByteBuffer.h"
 
 ByteBuffer::ByteBuffer() :
-	isFilled(false),
-	isOnlyPointerToData(false),
-	isEof(true),
-	allocated(false),
-	data(nullptr),
-	position(0),
-	bufferSize(0)
+	m_IsFilled(false),
+	m_IsOnlyPointer(false),
+	m_IsEOF(true),
+	m_IsAllocated(false),
+	m_Data(nullptr),
+	m_CurrentPosition(0),
+	m_BufferSize(0)
 {}
 
 ByteBuffer::ByteBuffer(const ByteBuffer& _other) :
-	isFilled(false),
-	isOnlyPointerToData(false),
-	isEof(_other.bufferSize == 0),
-	allocated(_other.bufferSize > 0),
-	data(nullptr),
-	position(0),
-	bufferSize(_other.bufferSize)
+	m_IsFilled(false),
+	m_IsOnlyPointer(false),
+	m_IsEOF(_other.m_BufferSize == 0),
+	m_IsAllocated(_other.m_BufferSize > 0),
+	m_Data(nullptr),
+	m_CurrentPosition(0),
+	m_BufferSize(_other.m_BufferSize)
 {
 
-	if (_other.bufferSize > 0)
+	if (_other.m_BufferSize > 0)
 	{
-		if (_other.data != nullptr)
+		if (_other.m_Data != nullptr)
 		{
-			data = _other.data;
-			isFilled = true;
-			isOnlyPointerToData = true;
+			m_Data = _other.m_Data;
+			m_IsFilled = true;
+			m_IsOnlyPointer = true;
 		}
 	}
 }
 
 ByteBuffer::ByteBuffer(uint64_t _size) :
-	isFilled(false),
-	isOnlyPointerToData(false),
-	isEof(true),
-	allocated(false),
-	data(nullptr),
-	position(0),
-	bufferSize(0)
+	m_IsFilled(false),
+	m_IsOnlyPointer(false),
+	m_IsEOF(true),
+	m_IsAllocated(false),
+	m_Data(nullptr),
+	m_CurrentPosition(0),
+	m_BufferSize(0)
 {
 	Allocate(_size);
 }
 
 ByteBuffer::ByteBuffer(uint8* _data, uint64_t _size) :
-	isFilled(false),
-	isOnlyPointerToData(false),
-	isEof(true),
-	allocated(false),
-	data(nullptr),
-	position(0),
-	bufferSize(0)
+	m_IsFilled(false),
+	m_IsOnlyPointer(false),
+	m_IsEOF(true),
+	m_IsAllocated(false),
+	m_Data(nullptr),
+	m_CurrentPosition(0),
+	m_BufferSize(0)
 {
 
 	Init(_data, _size);
@@ -68,114 +68,142 @@ ByteBuffer::~ByteBuffer()
 
 void ByteBuffer::Allocate(uint64_t _size)
 {
-	isEof = true;
+	m_IsEOF = true;
 
 	if (_size > 0)
 	{
-		assert1(!allocated);
-		data = new uint8[_size];
-		allocated = true;
+		assert1(!m_IsAllocated);
+		m_Data = new uint8[_size];
+		m_IsAllocated = true;
 
 	}
 
-	position = 0;
-	bufferSize = _size;
+	m_CurrentPosition = 0;
+	m_BufferSize = _size;
 }
 
 void ByteBuffer::SetFilled()
 {
-	isEof = (bufferSize == 0);
+	m_IsEOF = (m_BufferSize == 0);
 
-	isFilled = true;
-	isOnlyPointerToData = false;
+	m_IsFilled = true;
+	m_IsOnlyPointer = false;
 }
 
 void ByteBuffer::CopyData(uint8* _data, uint64_t _size)
 {
-	if (!allocated)
+	if (!m_IsAllocated)
 	{
 		Allocate(_size);
 	}
 
-	if (_size > bufferSize)
+	if (_size > m_BufferSize)
 	{
-		Log::Error("ByteBuffer[]: Source data size [%d] bigger than allocated memory [%d]!", _size, bufferSize);
-		Log::Error("ByteBuffer[]: Copy part of source data.");
-		_size = bufferSize;
+		Log::Error("ByteBuffer[]: Source m_Data size [%d] bigger than m_IsAllocated memory [%d]!", _size, m_BufferSize);
+		Log::Error("ByteBuffer[]: Copy part of source m_Data.");
+		_size = m_BufferSize;
 	}
 
 	if (_data != nullptr)
 	{
-		memcpy(data, _data, _size);
-		isFilled = true;
+		memcpy(m_Data, _data, _size);
+		m_IsFilled = true;
 	}
 
-	position = 0;
+	m_CurrentPosition = 0;
 }
 
 void ByteBuffer::Init(uint8* _dataPtr, uint64_t _size)
 {
-	isEof = (_size == 0);
+	m_IsEOF = (_size == 0);
 
 	if (_size > 0)
 	{
 		if (_dataPtr != nullptr)
 		{
-			data = _dataPtr;
-			isFilled = true;
-			isOnlyPointerToData = true;
+			m_Data = _dataPtr;
+			m_IsFilled = true;
+			m_IsOnlyPointer = true;
 		}
 	}
 
-	position = 0;
-	bufferSize = _size;
+	m_CurrentPosition = 0;
+	m_BufferSize = _size;
 }
 
 void ByteBuffer::Clear()
 {
-	isFilled = false;
-	isOnlyPointerToData = false;
-	isEof = true;
-	allocated = false;
-	position = 0;
-	bufferSize = 0;
+	m_IsFilled = false;
+	m_IsOnlyPointer = false;
+	m_IsEOF = true;
+	m_IsAllocated = false;
+	m_CurrentPosition = 0;
+	m_BufferSize = 0;
 
-	if (!allocated)
+	if (!m_IsAllocated)
 	{
 		return;
 	}
 
-	if (isOnlyPointerToData)
+	if (m_IsOnlyPointer)
 	{
 		return;
 	}
 
-	if (data != nullptr)
+	if (m_Data != nullptr)
 	{
 		//Log::Error("Data deleted!!!");
-		delete[] data;
-		data = nullptr;
+		delete[] m_Data;
+		m_Data = nullptr;
 	}
 }
 
 //
 
-const string ByteBuffer::ReadLine()
+void ByteBuffer::Seek(uint64_t _bufferOffsetAbsolute)
 {
-	if (isEof)
+	if (_bufferOffsetAbsolute >= m_BufferSize)
+	{
+		m_CurrentPosition = m_BufferSize;
+		m_IsEOF = true;
+	}
+	else
+	{
+		m_CurrentPosition = _bufferOffsetAbsolute;
+		m_IsEOF = false;
+	}
+}
+
+void ByteBuffer::SeekRelative(uint64_t _bufferOffsetRelative)
+{
+	if (m_CurrentPosition + _bufferOffsetRelative >= m_BufferSize)
+	{
+		m_CurrentPosition = m_BufferSize;
+		m_IsEOF = true;
+	}
+	else
+	{
+		m_CurrentPosition += _bufferOffsetRelative;
+		m_IsEOF = false;
+	}
+}
+
+string ByteBuffer::ReadLine()
+{
+	if (m_IsEOF)
 	{
 		return "";
 	}
 
 	// Find first incorrect symbol
 	uint64_t lineEndPos;
-	for (lineEndPos = position; (lineEndPos < bufferSize) && (data[lineEndPos] != '\n' && data[lineEndPos] != '\r'); lineEndPos++);
+	for (lineEndPos = m_CurrentPosition; (lineEndPos < m_BufferSize) && (m_Data[lineEndPos] != '\n' && m_Data[lineEndPos] != '\r'); lineEndPos++);
 
 	// Find first correct symbol after incorrects
 	uint64_t nextLineBeginPos;
-	for (nextLineBeginPos = lineEndPos; (nextLineBeginPos < bufferSize) && (data[nextLineBeginPos] == '\n' || data[nextLineBeginPos] == '\r'); nextLineBeginPos++);
+	for (nextLineBeginPos = lineEndPos; (nextLineBeginPos < m_BufferSize) && (m_Data[nextLineBeginPos] == '\n' || m_Data[nextLineBeginPos] == '\r'); nextLineBeginPos++);
 
-	uint64_t charsCount = lineEndPos - position;
+	uint64_t charsCount = lineEndPos - m_CurrentPosition;
 
 	char* _string = new char[charsCount + 1];
 	_string[charsCount] = '\0';
@@ -191,51 +219,21 @@ const string ByteBuffer::ReadLine()
 	return Utils::Trim(line);
 }
 
-const void ByteBuffer::ReadBytes(void* _destination, uint64_t _size)
+void ByteBuffer::ReadBytes(void* _destination, uint64_t _size)
 {
-	if (isEof)
+	if (m_IsEOF)
 	{
 		return;
 	}
 
-	uint64_t posAfterRead = position + _size;
-	if (posAfterRead > bufferSize)
+	uint64_t posAfterRead = m_CurrentPosition + _size;
+	if (posAfterRead > m_BufferSize)
 	{
-		_size = bufferSize - position;
-		isEof = true;
+		_size = m_BufferSize - m_CurrentPosition;
+		m_IsEOF = true;
 	}
 
-	memcpy(_destination, &(data[position]), _size);
+	memcpy(_destination, &(m_Data[m_CurrentPosition]), _size);
 
-	position = posAfterRead;
-}
-
-//
-
-void ByteBuffer::Seek(uint64_t _bufferOffsetAbsolute)
-{
-	if (_bufferOffsetAbsolute >= bufferSize)
-	{
-		position = bufferSize;
-		isEof = true;
-	}
-	else
-	{
-		position = _bufferOffsetAbsolute;
-		isEof = false;
-	}
-}
-
-void ByteBuffer::SeekRelative(uint64_t _bufferOffsetRelative)
-{
-	if (position + _bufferOffsetRelative >= bufferSize)
-	{
-		position = bufferSize;
-		isEof = true;
-	}
-	else
-	{
-		position += _bufferOffsetRelative;
-		isEof = false;
-	}
+	m_CurrentPosition = posAfterRead;
 }
