@@ -112,3 +112,7 @@ inline vec4 fromABGR(uint32 color)
     return vec4(r, g, b, a);
 }
 
+static inline void SwitchBool(bool& _value)
+{
+	_value = !_value;
+}

@@ -23,6 +23,8 @@
     <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="DayNightPhase.cpp" />
     <ClCompile Include="LiquidInstance.cpp" />
+    <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="MDXBuilder.cpp" />
     <ClCompile Include="WMO_MODD.cpp" />
     <ClCompile Include="EnvironmentManager.cpp" />
     <ClCompile Include="Liquid.cpp" />
@@ -77,6 +79,8 @@
     <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="DayNightPhase.h" />
     <ClInclude Include="LiquidInstance.h" />
+    <ClInclude Include="Loader.h" />
+    <ClInclude Include="MDXBuilder.h" />
     <ClInclude Include="WMO_MODD.h" />
     <ClInclude Include="EnvironmentManager.h" />
     <ClInclude Include="Liquid.h" />

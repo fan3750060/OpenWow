@@ -2,26 +2,18 @@
 
 #include "GameState.h"
 
-struct GameStatesNames
-{
-    enum List
-    {
-        GAME_STATE_MENU,
-        GAME_STATE_WORLD
-    };
-};
-
-class GameStateManager
+class GameStateManager : public IGameStateManager
 {
 public:
-    static void AddGameState(GameStatesNames::List _name, GameState* _gameState);
+	GameStateManager();
 
-    static bool SetGameState(GameStatesNames::List _name);
-    static bool SetGameState(GameState* _newGameState);
-
-    static GameState* GetGameState() { return currentGameState; }
+	// IGameStateManager
+    void AddGameState(GameStatesNames::List _name, IGameState* _gameState) override;
+    bool SetGameState(GameStatesNames::List _name) override;
+	bool SetGameState(IGameState* _newGameState) override;
+    IGameState* GetGameState() override { return m_CurrentGameState; }
 
 private:
-    static GameState* currentGameState;
-    static map<GameStatesNames::List, GameState*> m_GameStatesCollection;
+    IGameState*									m_CurrentGameState;
+    map<GameStatesNames::List, IGameState*>		m_GameStatesCollection;
 };

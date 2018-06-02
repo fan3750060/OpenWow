@@ -17,7 +17,7 @@ struct ADT_MDDF
 
 #include "MDX.h"
 
-class ADT_MDX_Instance : public SceneNode, public Renderable3DObject
+class ADT_MDX_Instance : public SceneNode, public CRenderable3DObject
 {
 public:
 	ADT_MDX_Instance(MDX* _mdxObject, ADT_MDDF _placementInfo);

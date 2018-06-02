@@ -1,4 +1,3 @@
-#include "RefManager1Dim.h"
 #pragma once
 
 template<class T>
@@ -24,15 +23,13 @@ RefManager1Dim<T>::~RefManager1Dim()
 template <class T>
 T* RefManager1Dim<T>::Add(cstring name)
 {
-	T* item = nullptr;
-
-	if ((item = GetItemByName(name)) != nullptr)
+	T* item = GetItemByName(name);
+	if (item != nullptr)
 	{
 		return item;
 	}
 
 	item = CreateAction(name);
-
 	objects[name] = item;
 
 	return item;
@@ -99,7 +96,7 @@ std::string RefManager1Dim<T>::GetNameByItem(T* item) const
 	return "";
 }
 
-// Log
+// CLog
 
 template <class T>
 void RefManager1Dim<T>::PrintAllInfo()

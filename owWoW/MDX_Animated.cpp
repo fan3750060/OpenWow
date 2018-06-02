@@ -59,11 +59,6 @@ bool MDX::isAnimated(IFile* f)
 
 	bool animMisc = header.cameras.size > 0 || header.lights.size > 0 || header.particle_emitters.size > 0 || header.ribbon_emitters.size > 0;
 
-	if (animMisc)
-	{
-		animBones = true;
-	}
-
 	// animated colors
 	if (header.colors.size)
 	{

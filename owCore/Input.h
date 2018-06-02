@@ -1,17 +1,15 @@
 #pragma once
 
 #include "InputKeys.h"
-#include "InputListenerCollection.h"
 
 class Input
 {
 public:
     Input();
-    ~Input();
 
-    vec2 GetMouse() { return mousePos; }
-    bool IsKeyPressed(int key) { return keyState[key]; }
-    bool IsMousePressed(int button) { return mouseButtonState[button]; }
+    vec2 GetMouse() { return m_MousePos; }
+    bool IsKeyPressed(int key) { return m_KeyState[key]; }
+    bool IsMousePressed(int button) { return m_MouseButtonState[button]; }
 
 	// GLFW Connector
     void MousePositionCallback(cvec2 _mousePos);
@@ -20,12 +18,8 @@ public:
     void KeyboardCallback(int key, int scancode, int action, int mods);
     void CharCallback(uint32 _char);
 
-	//
-
-	void RegisterInputListenerObject(IInputListener* _object);
-
 private:
-	bool keyState[OW_KEYSCOUNT];
-    bool mouseButtonState[OW_MOUSEBUTTONSCOUNT];
-    vec2 mousePos;
+	vec2 m_MousePos;
+	bool m_KeyState[OW_KEYSCOUNT];
+    bool m_MouseButtonState[OW_MOUSEBUTTONSCOUNT];
 };

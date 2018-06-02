@@ -58,8 +58,6 @@ class Pipeline
 	inline Camera* GetCamera() { return camera; }
 	inline Camera* GetCameraFrustum() { return cameraFrustum; }
 
-	void RenderCamera(Camera* _camera = nullptr);
-
 private: // Matrices
 	PipelineWorldTransformation worldTransformation;
 	PipelineWorldTransformation worldTransformationTest;

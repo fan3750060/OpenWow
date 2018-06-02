@@ -2,16 +2,12 @@
 
 class UIElement;
 
-class UIMgr : public IUpdatable, public RenderableUIObject, public IInputListener
+class UIMgr : public IUpdatable, public CRenderableUIObject, public IInputListener
 {
 	CLASS_INSTANCE(UIMgr);
 public:
 	UIMgr();
 	~UIMgr();
-
-    
-    void RenderUI() override;
-
 	//
 
 	void AttachToRoot(UIElement* _element);
@@ -32,6 +28,9 @@ public:
 	// IUpdatable
 	void Input(double _time, double _dTime) override {}
 	void Update(double t, double dt) override;
+
+	// IRenderableUI
+	void RenderUI() override;
 
 	// IInputListener
 	void OnMouseMoved(cvec2 _mousePos) override;

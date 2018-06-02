@@ -1,6 +1,6 @@
 #pragma once
 
-class SceneNode : public RefItem
+class SceneNode : public CRefItem
 {
 public:
 	SceneNode();

@@ -150,7 +150,7 @@ public: // Params
 };
 
 
-class Sky : public RefItem, public SkyParams
+class Sky : public CRefItem, public SkyParams
 {
 public:
     Sky();

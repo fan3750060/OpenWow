@@ -8,27 +8,28 @@
 #include "LocalFile.h"
 #include "MPQFile.h"
 
-FilesManager::FilesManager()
+CFilesManager::CFilesManager()
 {
-	CBaseManager::instance()->RegisterManager(Managers::MgrFiles, this);
+	AddManager<IFilesManager>(this);
 }
 
-FilesManager::~FilesManager()
+CFilesManager::~CFilesManager()
 {
+	DelManager<IFilesManager>();
 }
 
-IFile* FilesManager::Open(cstring _fileName)
+IFile* CFilesManager::Open(cstring _fileName)
 {
 	IFile* file = nullptr;
 
-	if (LocalFile::IsFileExists(_fileName))
+	if (CLocalFile::IsFileExists(_fileName))
 	{
-		file = new LocalFile(_fileName);
+		file = new CLocalFile(_fileName);
 		file->Open();
 	}
-	else if (MPQFile::IsFileExists(_fileName))
+	else if (CMPQFile::IsFileExists(_fileName))
 	{
-		file = new MPQFile(_fileName);
+		file = new CMPQFile(_fileName);
 		file->Open();
 	}
 

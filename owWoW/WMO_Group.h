@@ -72,9 +72,6 @@ struct WMOGroupHeader
 
 	uint32 unk1;
 	uint32 unk2;
-
-	//
-	static const uint32 __size = 68;
 };
 
 struct WMOGroup_MaterialInfo
@@ -166,7 +163,7 @@ public:
 	vec3* m_Vertexes;                   // MOVT chunk
 
 	vec3* m_Normals;                    // MONR chunk
-	vec2** m_TextureCoords;                  // MOTV chunk
+	vec2* m_TextureCoords;                  // MOTV chunk
 
 
 	//-- Render bathes --//
@@ -189,7 +186,7 @@ public:
 	// MOBR chunk
 
 	//-- Vertex colors --//
-	uint32** m_VertexColors;         // MOCV chunk
+	uint32* m_VertexColors;         // MOCV chunk
 
 	//-- Liquid --//
 	SmartPtr<Liquid_Instance> m_LiquidInstance;

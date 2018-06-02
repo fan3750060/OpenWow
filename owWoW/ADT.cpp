@@ -30,24 +30,25 @@ struct ADT_MCIN
 	uint32_t asyncId;
 };
 
-ADT::ADT(uint32 _intexX, uint32 _intexZ) : 
+ADT::ADT(uint32 _intexX, uint32 _intexZ, string _name, IFile* _file) :
 	m_IndexX(_intexX), 
-	m_IndexZ(_intexZ)
+	m_IndexZ(_intexZ),
+	m_Name(_name),
+	m_File(_file)
 {
 	m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
 }
 
-void ADT::Load(cstring _filename)
+bool ADT::Load()
 {
-	char name[256];
-	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", _filename.c_str(), _filename.c_str(), m_IndexX, m_IndexZ);
-
-	UniquePtr<IFile> f = _Files->Open(name);
+	/*UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_Name);
 	if (f == nullptr)
 	{
-		Log::Error("ADT[%d, %d, %s]: Error open file!", m_IndexX, m_IndexZ, name);
-		fail1();
-	}
+		Log::Error("ADT[%d, %d, %s]: Error open file!", m_IndexX, m_IndexZ, m_Name.c_str());
+		return false;
+	}*/
+
+	SmartPtr<IFile> f = m_File;
 
 	uint32_t startPos = f->GetPos() + 20;
 	ADT_MCIN chunks[256];
@@ -220,8 +221,8 @@ void ADT::Load(cstring _filename)
 		f->ReadBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
 
-		SmartPtr<ADT_MCNK> chunk = new ADT_MCNK(this);
-		chunk->Load(f);
+		SmartPtr<ADT_MCNK> chunk = new ADT_MCNK(this, f);
+		chunk->Load();
 		m_Chunks.push_back(chunk);
 	}
 
@@ -249,5 +250,7 @@ void ADT::Load(cstring _filename)
 
 	//---------------------------------------------------------------------------------
 
-	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, _filename.c_str());
+	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, m_Name.c_str());
+
+	return true;
 }

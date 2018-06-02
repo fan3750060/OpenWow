@@ -12,11 +12,13 @@
 
 //
 
-ADT_MCNK::ADT_MCNK(ADT* _parentTile) :
+ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	m_ParentTile(_parentTile),
+	m_File(_file),
 	m_BlendRBGShadowATexture(0),
 	m_IndexesCount(0),
-	m_LiquidInstance(nullptr)
+	m_LiquidInstance(nullptr),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	memset(mcly, 0x00, 16 * 4);
 
@@ -32,8 +34,9 @@ ADT_MCNK::~ADT_MCNK()
 
 //
 
-void ADT_MCNK::Load(IFile* f)
+bool ADT_MCNK::Load()
 {
+	SmartPtr<IFile> f = m_File;
 	uint32_t startPos = f->GetPos();
 
 	// Read header
@@ -245,11 +248,13 @@ void ADT_MCNK::Load(IFile* f)
 	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
 
 	_Bindings->RegisterRenderable3DObject(this, 20);
+
+	return true;
 }
 
 void ADT_MCNK::PreRender3D(double t, double dt)
 {
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_chunk);
+	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && m_QualitySettings.draw_map_chunk);
 	
 	// Draw chunk before fog
 	/*float mydist = (_Camera->Position - vcenter).length() - r;
@@ -278,8 +283,8 @@ void ADT_MCNK::Render3D()
 	// Bind m_DiffuseTextures
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
-		_Render->r.setTexture(i, m_DiffuseTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
-		_Render->r.setTexture(5 + i, m_SpecularTextures[i], _Config.Quality.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
 
 	// Bind blend

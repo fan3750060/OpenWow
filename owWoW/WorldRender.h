@@ -2,7 +2,7 @@
 
 #include "WorldController.h"
 
-class WorldRender : public Renderable3DObject
+class WorldRender : public CRenderable3DObject
 {
 public:
 	WorldRender(WorldController* _WorldContoller);
@@ -29,4 +29,6 @@ private:
 
 private:
 	WorldController* m_WorldContoller;
+	CGroupVideo&    groupVideo;
+	CGroupQuality&    groupQuality;
 };

@@ -6,24 +6,25 @@ enum Commands
 	CMD_SELECT
 };
 
-class GameState_Menu : public GameState
+class GameState_Menu : public CGameState, CRenderable3DObject
 {
 public:
-	GameState_Menu(Engine* _Engine) : GameState(_Engine) {}
-
+	// IGameState
 	bool Init() override;
 	void Destroy() override;
-
-    //
-
     bool Set() override;
     void Unset() override;
 
-    //
-
+    // IUpdatable
     void Input(double t, double dt) override;
 	void Update(double t, double dt) override;
-	void Render(double t, double dt);
+
+	// IRenderable
+	void PreRender3D(double t, double dt) override;
+	void Render3D() override;
+	void PostRender3D() override;
+
+	// IRenderableUI
 	void RenderUI() override;
 
 	//

@@ -550,6 +550,8 @@ bool isExtensionSupported(const char *extName)
 
 void getOpenGLVersion()
 {
+	CGroupOpenGL& openglSettings = GetSettingsGroup<CGroupOpenGL>();
+
     char version[8];
     uint32_t len = strlen((char*)glGetString(GL_VERSION));
     if (len >= 8)
@@ -563,11 +565,11 @@ void getOpenGLVersion()
     char* pos1 = strtok(version, ".");
     if (pos1)
     {
-        _Config.OpenGL.majorVersion = atoi(pos1);
+		openglSettings.majorVersion = atoi(pos1);
         char *pos2 = strtok(nullptr, ". ");
         if (pos2)
         {
-            _Config.OpenGL.minorVersion = atoi(pos2);
+            openglSettings.minorVersion = atoi(pos2);
         }
     }
 }
@@ -587,10 +589,12 @@ void* platGetProcAddress(const char *funcName)
 
 bool initOpenGLExtensions()
 {
+	CGroupOpenGL& openglSettings = GetSettingsGroup<CGroupOpenGL>();
+
     bool r = true;
 
     getOpenGLVersion();
-    assert1(_Config.OpenGL.majorVersion >= 3);
+    assert1(openglSettings.majorVersion >= 3);
 
 
     // GL 1.1
@@ -804,7 +808,7 @@ bool initOpenGLExtensions()
         r &= (glIsVertexArray = (PFNGLISVERTEXARRAYPROC)platGetProcAddress("glIsVertexArray")) != nullptr;
 
         // GL 3.1
-        if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 31)
+        if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 31)
         {
             r &= (glDrawArraysInstanced = (PFNGLDRAWARRAYSINSTANCEDPROC)platGetProcAddress("glDrawArraysInstanced")) != nullptr;
             r &= (glDrawElementsInstanced = (PFNGLDRAWELEMENTSINSTANCEDPROC)platGetProcAddress("glDrawElementsInstanced")) != nullptr;
@@ -821,7 +825,7 @@ bool initOpenGLExtensions()
         }
 
         // GL 3.2
-        if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 32)
+        if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 32)
         {
             r &= (glDrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXPROC)platGetProcAddress("glDrawElementsBaseVertex")) != nullptr;
             r &= (glDrawRangeElementsBaseVertex = (PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC)platGetProcAddress("glDrawRangeElementsBaseVertex")) != nullptr;
@@ -845,7 +849,7 @@ bool initOpenGLExtensions()
         }
 
         // GL 3.3
-        if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 33)
+        if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 33)
         {
             r &= (glBindFragDataLocationIndexed = (PFNGLBINDFRAGDATALOCATIONINDEXEDPROC)platGetProcAddress("glBindFragDataLocationIndexed")) != nullptr;
             r &= (glGetFragDataIndex = (PFNGLGETFRAGDATAINDEXPROC)platGetProcAddress("glGetFragDataIndex")) != nullptr;
@@ -880,7 +884,7 @@ bool initOpenGLExtensions()
 
     // GL 4.0 - GL 4.4
 #if (GL_VERSION_NUM >= 40)
-    if (_Config.OpenGL.majorVersion >= 4)
+    if (openglSettings.majorVersion >= 4)
     {
         // GL 4.0
         r &= (glMinSampleShading = (PFNGLMINSAMPLESHADINGPROC)platGetProcAddress("glMinSampleShading")) != nullptr;
@@ -933,7 +937,7 @@ bool initOpenGLExtensions()
 #endif
 
 #if (GL_VERSION_NUM >= 41)
-    if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 41)
+    if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 41)
     {
         // GL 4.1
         r &= (glReleaseShaderCompiler = (PFNGLRELEASESHADERCOMPILERPROC)platGetProcAddress("glReleaseShaderCompiler")) != nullptr;
@@ -1028,7 +1032,7 @@ bool initOpenGLExtensions()
 #endif
 
 #if (GL_VERSION_NUM >= 42)
-    if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 42)
+    if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 42)
     {
         // GL 4.2
         r &= (glDrawArraysInstancedBaseInstance = (PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC)platGetProcAddress("glDrawArraysInstancedBaseInstance")) != nullptr;
@@ -1047,7 +1051,7 @@ bool initOpenGLExtensions()
 #endif
 
 #if (GL_VERSION_NUM >= 43)
-    if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 43)
+    if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 43)
     {
         // GL 4.3
         r &= (glClearBufferData = (PFNGLCLEARBUFFERDATAPROC)platGetProcAddress("glClearBufferData")) != nullptr;
@@ -1097,7 +1101,7 @@ bool initOpenGLExtensions()
 #endif
 
 #if (GL_VERSION_NUM >= 44)
-    if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion >= 44)
+    if (openglSettings.majorVersion * 10 + openglSettings.minorVersion >= 44)
     {
         // GL 4.4
         r &= (glBufferStorage = (PFNGLBUFFERSTORAGEPROC)platGetProcAddress("glBufferStorage")) != nullptr;
@@ -1113,16 +1117,16 @@ bool initOpenGLExtensions()
 #endif
 
     // OES image
-    _Config.OpenGL.OES_EGL_image = isExtensionSupported("GL_OES_EGL_image");
-    if (_Config.OpenGL.OES_EGL_image)
+    openglSettings.OES_EGL_image = isExtensionSupported("GL_OES_EGL_image");
+    if (openglSettings.OES_EGL_image)
     {
         r &= (glEGLImageTargetTexture2DOES = (PFNGLEGLIMAGETARGETTEXTURE2DOESPROC)platGetProcAddress("glEGLImageTargetTexture2DOES")) != nullptr;
     }
 
     // Default extensions, suitable for any OpenGL version
-    _Config.OpenGL.EXT_texture_filter_anisotropic = isExtensionSupported("GL_EXT_texture_filter_anisotropic");
-    _Config.OpenGL.EXT_texture_compression_s3tc = isExtensionSupported("GL_EXT_texture_compression_s3tc") || isExtensionSupported("GL_S3_s3tc");
-    _Config.OpenGL.EXT_texture_sRGB = isExtensionSupported("GL_EXT_texture_sRGB");
+    openglSettings.EXT_texture_filter_anisotropic = isExtensionSupported("GL_EXT_texture_filter_anisotropic");
+    openglSettings.EXT_texture_compression_s3tc = isExtensionSupported("GL_EXT_texture_compression_s3tc") || isExtensionSupported("GL_S3_s3tc");
+    openglSettings.EXT_texture_sRGB = isExtensionSupported("GL_EXT_texture_sRGB");
 
     return r;
 }

@@ -6,7 +6,7 @@
 
 bool GameState_InWorld::Init()
 {
-    GameState::Init();
+    CGameState::Init();
 
     enableFreeCamera = false;
     cameraSprint = false;
@@ -20,7 +20,7 @@ bool GameState_InWorld::Init()
 
 void GameState_InWorld::Destroy()
 {
-    GameState::Destroy();
+    CGameState::Destroy();
 }
 
 void GameState_InWorld::Input(double t, double dt)
@@ -49,16 +49,6 @@ void GameState_InWorld::Input(double t, double dt)
 void GameState_InWorld::Update(double t, double dt)
 {
 
-}
-
-void GameState_InWorld::Render(double t, double dt)
-{
-    /*if (!minimapActive)
-    {
-		m_WorldRender->PreRender3D();
-		m_WorldRender->Render3D();
-		m_WorldRender->PostRender3D();
-    }*/
 }
 
 void GameState_InWorld::RenderUI()
@@ -131,7 +121,7 @@ void GameState_InWorld::RenderUI()
     //
     // DEBUG
     //
-    _Render->RenderTexture(vec2(_Config.windowSizeX * 2.0 / 3.0, _Config.windowSizeY * 2.0 / 3.0), m_WorldRender->GetTestRB()->getRenderBufferTex(2), vec2(_Config.windowSizeX / 3, _Config.windowSizeY / 3));
+    _Render->RenderTexture(vec2(m_VideoSettings.windowSizeX * 2.0 / 3.0, m_VideoSettings.windowSizeY * 2.0 / 3.0), m_WorldRender->GetTestRB()->getRenderBufferTex(2), vec2(m_VideoSettings.windowSizeX / 3, m_VideoSettings.windowSizeY / 3));
 
 
     //
@@ -146,12 +136,12 @@ void GameState_InWorld::RenderUI()
 
     _Perfomance->Draw(vec2(5, 100));
 
-    _Render->RenderText(vec2(5, _Config.windowSizeY - 66), "REAL CamPos: [" + to_string(_Render->mainCamera->Position.x) + "], [" + to_string(_Render->mainCamera->Position.y) + "], [" + to_string(_Render->mainCamera->Position.z) + "]");
-    _Render->RenderText(vec2(5, _Config.windowSizeY - 44), "CamPos: [" + to_string(-(_Render->mainCamera->Position.x - C_ZeroPoint)) + "], [" + to_string(-(_Render->mainCamera->Position.z - C_ZeroPoint)) + "], [" + to_string(_Render->mainCamera->Position.y) + "]");
-    _Render->RenderText(vec2(5, _Config.windowSizeY - 22), "CamRot: [" + to_string(_Render->mainCamera->Direction.x) + "], [" + to_string(_Render->mainCamera->Direction.y) + "], [" + to_string(_Render->mainCamera->Direction.z) + "]");
+    _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 66), "REAL CamPos: [" + to_string(_Render->mainCamera->Position.x) + "], [" + to_string(_Render->mainCamera->Position.y) + "], [" + to_string(_Render->mainCamera->Position.z) + "]");
+    _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 44), "CamPos: [" + to_string(-(_Render->mainCamera->Position.x - C_ZeroPoint)) + "], [" + to_string(-(_Render->mainCamera->Position.z - C_ZeroPoint)) + "], [" + to_string(_Render->mainCamera->Position.y) + "]");
+    _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 22), "CamRot: [" + to_string(_Render->mainCamera->Direction.x) + "], [" + to_string(_Render->mainCamera->Direction.y) + "], [" + to_string(_Render->mainCamera->Direction.z) + "]");
 
     // Time
-    _Render->RenderText(vec2(_Config.windowSizeX - 150, 0), "TIME [" + to_string(_World->EnvM()->m_GameTime.GetHour()) + "." + to_string(_World->EnvM()->m_GameTime.GetMinute()) + "]");
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 150, 0), "TIME [" + to_string(_World->EnvM()->m_GameTime.GetHour()) + "." + to_string(_World->EnvM()->m_GameTime.GetMinute()) + "]");
     char buff[256];
 
     // Ambient
@@ -160,7 +150,7 @@ void GameState_InWorld::RenderUI()
     _World->EnvM()->dayNightPhase.ambientColor.x, _World->EnvM()->dayNightPhase.ambientColor.y, _World->EnvM()->dayNightPhase.ambientColor.z,
     _World->EnvM()->dayNightPhase.ambientIntensity
     );
-    _Render->RenderText(vec2(_Config.windowSizeX - 400, 20), buff);
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 20), buff);
 
     // Day
     sprintf(buff, "Day[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]",
@@ -168,7 +158,7 @@ void GameState_InWorld::RenderUI()
     _World->EnvM()->dayNightPhase.dayIntensity,
     _World->EnvM()->dayNightPhase.dayDir.x, _World->EnvM()->dayNightPhase.dayDir.y, _World->EnvM()->dayNightPhase.dayDir.z
     );
-    _Render->RenderText(vec2(_Config.windowSizeX - 400, 40), buff);
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 40), buff);
 
     // Night
     sprintf(buff, "Nig[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]\0",
@@ -176,17 +166,17 @@ void GameState_InWorld::RenderUI()
     _World->EnvM()->dayNightPhase.nightIntensity,
     _World->EnvM()->dayNightPhase.nightDir.x, _World->EnvM()->dayNightPhase.nightDir.y, _World->EnvM()->dayNightPhase.nightDir.z
     );
-    _Render->RenderText(vec2(_Config.windowSizeX - 400, 60), buff);
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 60), buff);
 
     // Fog
     sprintf(buff, "Fog[end=[%f] koeff=[%f]]\0",
             _World->EnvM()->skies->GetFog(LIGHT_FOG_DISTANCE),
             _World->EnvM()->skies->GetFog(LIGHT_FOG_MULTIPLIER)
     );
-    _Render->RenderText(vec2(_Config.windowSizeX - 400, 80), buff);
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 80), buff);
 
     // Colors
-    float xPos = _Config.windowSizeX - 400;
+    float xPos = m_VideoSettings.windowSizeX - 400;
     float yPos = 100;
     const char* names[18] =
     {
@@ -231,24 +221,19 @@ void GameState_InWorld::RenderUIDebug()
 {
     char buff[256];
     sprintf(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
-    _Render->RenderText(vec2(_Config.windowSizeX - 400, _Config.windowSizeY - 40), buff);
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
 
     sprintf(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
-    _Render->RenderText(vec2(_Config.windowSizeX - 400, _Config.windowSizeY - 20), buff);
+    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 }
 
-//
-
-#pragma region Input functional
 
 void GameState_InWorld::OnMouseMoved(cvec2 _mousePos)
 {
     if (enableFreeCamera)
     {
-        vec2 mouseDelta = (_mousePos - lastMousePos) / _Config.GetWindowSize();
-
+        vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
         _Render->mainCamera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
-
         m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
     }
 }
@@ -288,7 +273,7 @@ bool GameState_InWorld::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
     if (_key == OW_KEY_ESCAPE)
     {
-        GameStateManager::SetGameState(GameStatesNames::GAME_STATE_MENU);
+		GetManager<IGameStateManager>()->SetGameState(GameStatesNames::GAME_STATE_MENU);
         return true;
     }
 
@@ -304,107 +289,12 @@ bool GameState_InWorld::OnKeyboardPressed(int _key, int _scancode, int _mods)
         return true;
     }
 
-    if (_key == OW_KEY_KP_1)
-    {
-        _Config.draw_map_chunk = !_Config.draw_map_chunk;
-        return true;
-    }
-    if (_key == OW_KEY_KP_2)
-    {
-        _Config.draw_map_wmo = !_Config.draw_map_wmo;
-        return true;
-    }
-    if (_key == OW_KEY_KP_3)
-    {
-        _Config.draw_map_wmo_doodads = !_Config.draw_map_wmo_doodads;
-        return true;
-    }
-
-    if (_key == OW_KEY_KP_4)
-    {
-        _Config.draw_map_mdx = !_Config.draw_map_mdx;
-        return true;
-    }
-
-    if (_key == OW_KEY_F1)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_FILTER_POINT;
-        return true;
-    }
-
-    if (_key == OW_KEY_F2)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_FILTER_BILINEAR;
-        return true;
-    }
-
-    if (_key == OW_KEY_F3)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_FILTER_TRILINEAR;
-        return true;
-    }
-
-    if (_key == OW_KEY_F6)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_ANISO1;
-        return true;
-    }
-
-    if (_key == OW_KEY_F7)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_ANISO2;
-        return true;
-    }
-
-    if (_key == OW_KEY_F8)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_ANISO4;
-        return true;
-    }
-
-    if (_key == OW_KEY_F9)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_ANISO8;
-        return true;
-    }
-
-    if (_key == OW_KEY_F10)
-    {
-        _Config.Quality.Texture_Sampler = R_SamplerState::SS_ANISO16;
-        return true;
-    }
-   
-    
-
-    if (_key == OW_KEY_C)
-    {
-        _Config.Switch(_Config.Quality.Terrain_MCCV);
-        return true;
-    }
-
-    if (_key == OW_KEY_V)
-    {
-        _Config.Switch(_Config.Quality.Terrain_MCLV);
-        return true;
-    }
-
-    if (_key == OW_KEY_F)
-    {
-        _Config.drawfog = !_Config.drawfog;
-        return true;
-    }
-
     if (_key == OW_KEY_M)
     {
-        minimapActive = !minimapActive;
+		SwitchBool(minimapActive);
         return true;
     }
 
-    if (_key == OW_KEY_T)
-    {
-        _Config.Switch(_Config.timeEnable);
-        return true;
-    }
 
     return false;
 }
@@ -425,5 +315,3 @@ bool GameState_InWorld::OnKeyboardReleased(int _key, int _scancode, int _mods)
 
     return false;
 }
-
-#pragma endregion

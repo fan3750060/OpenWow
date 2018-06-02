@@ -99,13 +99,12 @@ void Liquid::Render()
 
 #pragma region Types
 
-#include "../shared/pack_begin.h"
-
-struct Liquid_Vertex
+#include __PACK_BEGIN
+struct SLiquidVertex
 {
 	union
 	{
-		struct SWVert
+		struct SWaterVert
 		{
 			char depth;
 			char flow0Pct;
@@ -114,7 +113,7 @@ struct Liquid_Vertex
 			float height;
 		} waterVert;
 
-		struct SOVert
+		struct SOceanVert
 		{
 			char depth;
 			char foam;
@@ -122,7 +121,7 @@ struct Liquid_Vertex
 			char filler;
 		} oceanVert;
 
-		struct SMOMagmaVert
+		struct SMagmaVert
 		{
 			uint16 s;
 			uint16 t;
@@ -131,21 +130,20 @@ struct Liquid_Vertex
 	};
 };
 
-struct Liquid_Flag
+struct SLiquidFlag
 {
 	uint8 liquid : 6;    // 0x01 - 0x20
 	uint8 fishable : 1;  // 0x40
 	uint8 shared : 1;    // 0x80
 };
-
-#include "../shared/pack_end.h"
+#include __PACK_END
 
 #pragma endregion
 
 void Liquid::initGeometry(IFile* f)
 {
-	Liquid_Vertex* map = (Liquid_Vertex*)(f->GetDataFromCurrent());
-	Liquid_Flag* flags = (Liquid_Flag*)(f->GetDataFromCurrent() + m_TilesCount * sizeof(Liquid_Vertex));
+	SLiquidVertex* map = (SLiquidVertex*)(f->GetDataFromCurrent());
+	SLiquidFlag* flags = (SLiquidFlag*)(f->GetDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
 
 	Liquid_Layer layer;
 
@@ -183,24 +181,23 @@ void Liquid::initGeometry(IFile* f)
 }
 
 #pragma region Types
-
-struct Liquid_VertexData
+#include __PACK_BEGIN
+struct SLiquidVertexData
 {
 	vec3 position;
 	vec3 textureCoord;
 	vec3 normal;
 };
-
+#include __PACK_END
 #pragma endregion
 
 void Liquid::createBuffer()
 {
-	vector<Liquid_VertexData> mh2oVertices;
+	vector<SLiquidVertexData> mh2oVertices;
 
 	for (unsigned l = 0; l < m_WaterLayers.size(); l++)
 	{
 		Liquid_Layer& layer = m_WaterLayers[l];
-
 		for (uint8 y = layer.y; y < layer.Height + layer.y; y++)
 		{
 			for (uint8 x = layer.x; x < layer.Width + layer.x; x++)
@@ -320,16 +317,16 @@ void Liquid::createBuffer()
 
 
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(Liquid_VertexData), mh2oVertices.data());
+	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(SLiquidVertexData), mh2oVertices.data());
 
 	// Index bufer
 	//uint32 __ib = _Render->r.createIndexBuffer(m_IndicesCount, m_Indices);
 
 	// Geometry
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWater);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(Liquid_VertexData));
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(Liquid_VertexData));
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(Liquid_VertexData));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(SLiquidVertexData));
 	//_Render->r.setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
 	__geom->finishCreatingGeometry();
 

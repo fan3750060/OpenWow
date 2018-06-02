@@ -5,28 +5,28 @@
 #include "RenderableUIObjectCollection.h"
 #include "UpdatableObjectCollection.h"
 
-class BindingController
+class CBindingController
 {
-	CLASS_INSTANCE(BindingController);
+	CLASS_INSTANCE(CBindingController);
 public:
-	BindingController();
-	~BindingController();
+	CBindingController();
+	~CBindingController();
 
 	void RegisterInputListener(IInputListener* _object);
-	void RegisterRenderable3DObject(Renderable3DObject* _object, uint32 m_DrawOrder = 0);
-	void RegisterRenderableUIObject(RenderableUIObject* _object, uint32 m_DrawOrder = 0);
+	void RegisterRenderable3DObject(CRenderable3DObject* _object, uint32 m_DrawOrder = 0);
+	void RegisterRenderableUIObject(CRenderableUIObject* _object, uint32 m_DrawOrder = 0);
 	void RegisterUpdatableObject(IUpdatable* _object);
 
 	void UnregisterInputListener(IInputListener* _object);
-	void UnregisterRenderable3DObject(Renderable3DObject* _object);
-	void UnregisterRenderableUIObject(RenderableUIObject* _object);
+	void UnregisterRenderable3DObject(CRenderable3DObject* _object);
+	void UnregisterRenderableUIObject(CRenderableUIObject* _object);
 	void UnregisterUpdatableObject(IUpdatable* _object);
 
 public:
-	InputListenerObjectCollection* m_InputListenerObjectCollection;
-	Renderable3DObjectCollection*  m_Renderable3DObjectCollection;
-	RenderableUIObjectCollection*  m_RenderableUIObjectCollection;
-	UpdatableObjectCollection*     m_UpdatableObjectCollection;
+	CInputListenerObjectCollection* m_InputListenerObjectCollection;
+	CRenderable3DObjectCollection*  m_Renderable3DObjectCollection;
+	CRenderableUIObjectCollection*  m_RenderableUIObjectCollection;
+	CUpdatableObjectCollection*     m_UpdatableObjectCollection;
 };
 
-#define _Bindings BindingController::instance()
+#define _Bindings CBindingController::instance()

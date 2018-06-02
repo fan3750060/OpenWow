@@ -10,14 +10,12 @@ MDXsManager::MDXsManager()
 {
 	ADDCONSOLECOMMAND_CLASS("models_info", MDXsManager, PrintAllInfo);
 
-	CBaseManager::instance()->RegisterManager(Managers::MgrMDX, this);
+	AddManager<IMDXManager>(this);
 	_Bindings->RegisterUpdatableObject(this);
 }
 
 MDXsManager::~MDXsManager()
 {
-	Log::Info("MDXsManager[]: All MDXs destroyed.");
-
 	_Bindings->UnregisterUpdatableObject(this);
 }
 

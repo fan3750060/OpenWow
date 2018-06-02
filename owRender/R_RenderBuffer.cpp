@@ -8,7 +8,7 @@
 
 R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
 {
-	if ((format == R_TextureFormats::RGBA16F || format == R_TextureFormats::RGBA32F) && !_Config.DeviceCaps.texFloat)
+	if ((format == R_TextureFormats::RGBA16F || format == R_TextureFormats::RGBA32F) && !GetSettingsGroup<CGroupRenderCaps>().texFloat)
 	{
 		return 0;
 	}
@@ -16,7 +16,7 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 width, uint32 height, 
 	if (numColBufs > R_RenderBuffer::MaxColorAttachmentCount) return 0;
 
 	uint32 maxSamples = 0;
-	if (_Config.DeviceCaps.rtMultisampling)
+	if (GetSettingsGroup<CGroupRenderCaps>().rtMultisampling)
 	{
 		GLint value;
 		glGetIntegerv(GL_MAX_SAMPLES, &value);

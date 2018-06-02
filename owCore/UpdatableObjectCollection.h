@@ -1,6 +1,6 @@
 #pragma once
 
-class UpdatableObjectCollection
+class CUpdatableObjectCollection
 {
 public:
 	bool RegisterObject(IUpdatable* _uiObject);

@@ -6,18 +6,18 @@
 // Additional
 #include "OpenGL.h"
 
-R_Shader* R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc)
+void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc)
 {
 	// Compile and link shader
 	oglProgramObj = createShaderProgram(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
 	if (oglProgramObj == 0)
 	{
-		return 0;
+		fail1();
 	}
 
 	if (!linkShaderProgram())
 	{
-		return 0;
+		fail1();
 	}
 
 	int attribCount;
@@ -58,8 +58,6 @@ R_Shader* R_Shader::createShader(const char *vertexShaderSrc, const char *fragme
 
 		this->inputLayouts[i].valid = allAttribsFound;
 	}
-
-	return this;
 }
 
 void R_Shader::destroyShader()
@@ -95,7 +93,7 @@ int R_Shader::getShaderSamplerLoc(const char *name)
 
 int R_Shader::getShaderBufferLoc(const char *name)
 {
-	if (_Config.DeviceCaps.computeShaders)
+	if (GetSettingsGroup<CGroupRenderCaps>().computeShaders)
 	{
 		int idx = glGetProgramResourceIndex(oglProgramObj, GL_SHADER_STORAGE_BLOCK, name);
 		if (idx != -1)

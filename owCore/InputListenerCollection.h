@@ -1,6 +1,6 @@
 #pragma once
 
-class InputListenerObjectCollection : public IInputListener
+class CInputListenerObjectCollection : public IInputListener
 {
 public:
     bool RegisterObject(IInputListener* _object);

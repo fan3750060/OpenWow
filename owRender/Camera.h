@@ -13,15 +13,15 @@ const float PITCH = 0.0f;
 const float SPEED = 1.0f;
 const float SENSITIVTY = 20.1f;
 
-class Camera
+class Camera : public IUpdatable
 {
 public:
-	 Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-	 Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
+	Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
-	//
-
-	void Update(bool _dontUseAngles = false);
+	// IUpdatable
+	void Input(double _time, double _dTime) override {};
+	void Update(double _time, double _dTime) override;
 
 	void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 	void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
@@ -34,6 +34,10 @@ public:
 	const Frustum& getFrustum() const { return _frustum; }
 	const Matrix4f& getViewMat() const { return _viewMat; }
 	const Matrix4f& getProjMat() const { return _projMat; }
+
+	void SetNeedUpdate() { m_NeedUpdate = true; }
+
+	void CreateRenderable();
 
 public:
 	// Camera Attributes
@@ -52,6 +56,8 @@ public:
 	float MouseSensitivity;
 
 public:
+	float tan;
+	float asp;
 	Matrix4f            _viewMat, _projMat;
 	Frustum             _frustum;
 	int					_vpX, _vpY, _vpWidth, _vpHeight;
@@ -61,4 +67,11 @@ public:
 
 	bool                _orthographic;  // Perspective or orthographic frustum?
 	bool                _manualProjMat; // Projection matrix manually set?
+
+public:
+	SmartGeomPtr __geom;
+
+public:
+	bool m_NeedUpdate;
+	bool m_UseDir;
 };

@@ -4,7 +4,10 @@
 
 class MDX_Part_Camera
 {
+	friend class MDX;
 public:
+	MDX_Part_Camera();
+
 	void init(IFile* f, M2Camera& mcd, uint32* global);
 	void setup(int time = 0);
 
@@ -23,12 +26,9 @@ private:
 	Animated<float> tRoll;
 	float roll;
 
-	Animated<float> tFov;
 	float fov;
 
 	Camera camera;
 
-	//
-
-	friend class MDX;
+	CGroupVideo& m_VideoSettings;
 };

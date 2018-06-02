@@ -9,6 +9,13 @@ inline T interpolate(const float r, const T &v1, const T &v2)
 	return v1 * (1.0f - r) + v2 * r;
 }
 
+// "linear" interpolation for quaternions should be slerp by default
+template<>
+inline Quaternion interpolate<Quaternion>(const float r, const Quaternion &v1, const Quaternion &v2)
+{
+	return v1.slerp(v2, r);
+}
+
 template<class T>
 inline T interpolateHermite(const float r, const T &v1, const T &v2, const T &in, const T &out)
 {
@@ -25,12 +32,7 @@ inline T interpolateHermite(const float r, const T &v1, const T &v2, const T &in
 	return v1 * h1 + v2 * h2 + in * h3 + out * h4;
 }
 
-// "linear" interpolation for quaternions should be slerp by default
-template<>
-inline Quaternion interpolate<Quaternion>(const float r, const Quaternion &v1, const Quaternion &v2)
-{
-	return v1.slerp(v2, r);
-}
+
 
 
 /*
@@ -93,13 +95,18 @@ public:
 			uint32 t2 = times[pos + 1];
 			float r = (time - t1) / (float)(t2 - t1);
 
-			if (interpolation_type == INTERPOLATION_LINEAR)
+			switch (interpolation_type)
 			{
+			case INTERPOLATION_NONE:
+				break;
+
+			case INTERPOLATION_LINEAR:
 				return interpolate<T>(r, data[pos], data[pos + 1]);
-			}
-			else
-			{
+				break;
+
+			case INTERPOLATION_HERMITE:
 				return interpolateHermite<T>(r, data[pos], data[pos + 1], in[pos], out[pos]);
+				break;
 			}
 		}
 		else
@@ -129,9 +136,10 @@ public:
 		for (uint32 i = 0; i < b.nRanges; i++) ranges.push_back(AnimRange(pranges[i], pranges[i + 1]));
 
 		// times
-		assert1(b.nTimes == b.nKeys);
-		uint32 *ptimes = (uint32*)(f->GetData() + b.ofsTimes);
+		uint32* ptimes = (uint32*)(f->GetData() + b.ofsTimes);
 		for (uint32 i = 0; i < b.nTimes; i++) times.push_back(ptimes[i]);
+
+		assert1(b.nTimes == b.nKeys);
 
 		// keyframes
 		D *keys = (D*)(f->GetData() + b.ofsKeys);

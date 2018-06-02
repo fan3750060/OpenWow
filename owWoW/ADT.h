@@ -4,7 +4,7 @@
 #include "ADT_MDX_Instance.h"
 #include "ADT_WMO_Instance.h"
 
-struct ADT_TextureInfo : public RefItem
+struct ADT_TextureInfo : public CRefItem
 {
 	ADT_TextureInfo() :
 		diffuseTexture(nullptr),
@@ -18,14 +18,10 @@ struct ADT_TextureInfo : public RefItem
 	SmartTexturePtr specularTexture;
 };
 
-class ADT : public SceneNode
+class ADT : public SceneNode, public CLoadableObject
 {
 public:
-	ADT(uint32 _intexX, uint32 _intexZ);
-
-	void Load(cstring _filename);
-
-	//
+	ADT(uint32 _intexX, uint32 _intexZ, string _name, IFile* _file);
 
 	inline ADT_MCNK* getChunk(int32 x, int32 z)
 	{
@@ -33,13 +29,18 @@ public:
 		return m_Chunks[x * C_ChunksInTile + z];
 	}
 
-public:
-	int                         m_IndexX, m_IndexZ;
+	// ILoadableObject
+	bool Load() override;
 
-	vector<SmartPtr<ADT_TextureInfo>> m_Textures;
+public:
+	string								m_Name;
+	SmartPtr<IFile>						m_File;
+	int									m_IndexX, m_IndexZ;
+
+	vector<SmartPtr<ADT_TextureInfo>>	m_Textures;
 
 	vector<SmartPtr<ADT_WMO_Instance>>	m_WMOsInstances;
 	vector<SmartPtr<ADT_MDX_Instance>>	m_MDXsInstances;
 
-	vector<SmartPtr<ADT_MCNK>>    m_Chunks;
+	vector<SmartPtr<ADT_MCNK>>			m_Chunks;
 };

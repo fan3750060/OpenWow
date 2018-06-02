@@ -10,14 +10,13 @@
     <Filter Include="GameState">
       <UniqueIdentifier>{b37442df-879c-44da-953a-882457a73e27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{ac8bb547-bdd8-4ccc-86f7-0164eb3103c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="SceneNode.cpp">
       <Filter>General\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGLAdapter.cpp">
-      <Filter>General</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>General</Filter>
@@ -28,15 +27,14 @@
     <ClCompile Include="GameStateManager.cpp">
       <Filter>GameState</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGame.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="SceneNode.h">
       <Filter>General\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGLAdapter.h">
-      <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>General</Filter>
@@ -46,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="GameStateManager.h">
       <Filter>GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

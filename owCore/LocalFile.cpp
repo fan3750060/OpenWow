@@ -6,18 +6,18 @@
 // Additional
 const char* m_LocalFilesFolder = "D:\\_programming\\OpenWow\\_gamedata\\";
 
-LocalFile::LocalFile(cstring _fullFileName)	: 
-	File(_fullFileName)
+CLocalFile::CLocalFile(cstring _fullFileName)	: 
+	CFile(_fullFileName)
 {}
 
-LocalFile::LocalFile(cstring _name, cstring _path) :
-	File(_name, _path)
+CLocalFile::CLocalFile(cstring _name, cstring _path) :
+	CFile(_name, _path)
 {}
 
-LocalFile::~LocalFile()
+CLocalFile::~CLocalFile()
 {}
 
-bool LocalFile::Open()
+bool CLocalFile::Open()
 {
 	// Open stream
 	ifstream stream;
@@ -69,7 +69,7 @@ bool LocalFile::Open()
 	return true;
 }
 
-uint64_t LocalFile::GetFileSize(cstring _name)
+uint64_t CLocalFile::GetFileSize(cstring _name)
 {
 	// Open stream
 	ifstream stream;
@@ -92,7 +92,7 @@ uint64_t LocalFile::GetFileSize(cstring _name)
 	return fileSize;
 }
 
-bool LocalFile::IsFileExists(cstring _name)
+bool CLocalFile::IsFileExists(cstring _name)
 {
 	// Open stream
 	ifstream stream;

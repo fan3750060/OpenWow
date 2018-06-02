@@ -2,7 +2,7 @@
 
 class RenderDevice;
 
-class R_Texture : public RefItem
+class R_Texture : public CRefItem
 {
 public:
 	R_Texture(RenderDevice* _RenderDevice) :

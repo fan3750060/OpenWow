@@ -14,21 +14,14 @@ FontsManager::FontsManager(RenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice)
 {
 	mainFont = Add("Fonts\\Consolas.TTF", 12);
+
+	AddManager<IFontsManager>(this);
 }
 
-FontsManager::~FontsManager()
-{
-	Log::Info("FontsManager[]: All fonts destroyed.");
-}
 
 Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 {
 	return RefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
-}
-
-Font* FontsManager::Add(IFile* _fontFile, uint32 _fontSize)
-{
-	return RefManager1Dim::Add(_fontFile->Path_Name() + "__" + std::to_string(_fontSize));
 }
 
 //
@@ -45,7 +38,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	string fontFileName = _nameAndSize.substr(0, _delimIndex - 1);
 	uint32 fontSize = Utils::ToType<uint32>(_nameAndSize.substr(_delimIndex + 1));
 
-	UniquePtr<IFile> f = _Files->Open(fontFileName);
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fontFileName);
 	if (f == nullptr)
 	{
 		Log::Fatal("FontsManager[%s]: Error while loading font.", f->Path_Name().c_str());

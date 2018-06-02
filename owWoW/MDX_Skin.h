@@ -2,9 +2,14 @@
 
 #include "MDX_Skin_Batch.h"
 
-#include "../shared/pack_begin.h"
+#include __PACK_BEGIN
 
-struct M2SkinSection
+struct SM2_SkinBones
+{
+	uint8 index[4];
+};
+
+struct SM2_SkinSection
 {
 	uint16 meshPartID;
 	uint16 level;               // (level << 16) is added (|ed) to startTriangle and alike to avoid having to increase those fields to uint32s.
@@ -23,7 +28,7 @@ struct M2SkinSection
 	vec3 centerPosition;        // Average position of all the vertices in the sub mesh.
 };
 
-struct M2SkinBatch
+struct SM2_SkinBatch
 {
 	struct
 	{
@@ -51,26 +56,16 @@ struct M2SkinBatch
 	uint16 texture_TransformIndex; // Index into uvanimation lookup table. 
 };
 
-struct M2SkinBones
-{
-	uint8 index[4];
-};
-
-// GENERAL HEADER
-
 struct M2SkinProfile
 {
 	M2Array<uint16> vertices;
 	M2Array<uint16> indices;
-	M2Array<M2SkinBones> bones;
-	M2Array<M2SkinSection> submeshes;
-	M2Array<M2SkinBatch> batches;
-
+	M2Array<SM2_SkinBones> bones;
+	M2Array<SM2_SkinSection> submeshes;
+	M2Array<SM2_SkinBatch> batches;
 	uint32 boneCountMax;
 };
-
-
-#include "../shared/pack_end.h"
+#include __PACK_END
 
 // Skin is a part of model
 

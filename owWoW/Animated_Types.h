@@ -7,7 +7,7 @@ enum Interpolations
 	INTERPOLATION_HERMITE
 };
 
-#include "../shared/pack_begin.h"
+#include __PACK_BEGIN
 
 struct AnimRange
 {
@@ -69,7 +69,7 @@ struct M2CompQuat
 	int16 x, y, z, w;
 };
 
-#include "../shared/pack_end.h"
+#include __PACK_END
 
 //---------------------------------------------------------//
 //--                   Converters                        --//
@@ -91,10 +91,10 @@ public:
 	static const Quaternion conv(const M2CompQuat t)
 	{
 		return Quaternion(
-			float(t.x > 0 ? t.x - 32767 : t.x + 32767) / 32767.0f,
-			float(t.y > 0 ? t.y - 32767 : t.y + 32767) / 32767.0f,
-			float(t.z > 0 ? t.z - 32767 : t.z + 32767) / 32767.0f,
-			float(t.w > 0 ? t.w - 32767 : t.w + 32767) / 32767.0f);
+			float(t.x > 0 ? t.x - 32767i16 : t.x + 32767i16) / 32767.0f,
+			float(t.y > 0 ? t.y - 32767i16 : t.y + 32767i16) / 32767.0f,
+			float(t.z > 0 ? t.z - 32767i16 : t.z + 32767i16) / 32767.0f,
+			float(t.w > 0 ? t.w - 32767i16 : t.w + 32767i16) / 32767.0f);
 	}
 };
 

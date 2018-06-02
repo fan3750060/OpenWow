@@ -79,14 +79,15 @@ struct ADT_MCNK_MCLY
 
 class ADT;
 
-class ADT_MCNK : public SceneNode, public Renderable3DObject
+class ADT_MCNK : public SceneNode, public CLoadableObject, public CRenderable3DObject
 {
 public:
-	ADT_MCNK(ADT* _parentTile);
+	ADT_MCNK(ADT* _parentTile, IFile* _file);
 	ADT_MCNK(const ADT_MCNK& _other) = delete;
 	~ADT_MCNK();
 
-	void Load(IFile* f);
+	// ILoadableObject
+	bool Load() override;
 
 	// IRenderable3D
 	void PreRender3D(double t, double dt) override;
@@ -94,6 +95,7 @@ public:
 	void PostRender3D() override;
 
 public:
+	SmartPtr<IFile> m_File;
 	ADT* m_ParentTile;
 	ADT_MCNK_Header header;
 
@@ -112,4 +114,6 @@ public:
 	uint16  m_IndexesCount;
 
 	SmartGeomPtr __geomDebugNormals;
+
+	CGroupQuality& m_QualitySettings;
 };

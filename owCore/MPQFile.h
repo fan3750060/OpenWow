@@ -2,12 +2,12 @@
 
 #include "File.h"
 
-class MPQFile : public File
+class CMPQFile : public CFile
 {
 public:
-	MPQFile(cstring _fullFileName);
-	MPQFile(cstring _name, cstring _path);
-	~MPQFile();
+	CMPQFile(cstring _fullFileName);
+	CMPQFile(cstring _name, cstring _path);
+	~CMPQFile();
 
 	// IFile
 	bool Open() override;

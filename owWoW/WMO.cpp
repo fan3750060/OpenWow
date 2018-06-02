@@ -64,7 +64,7 @@ WMO::~WMO()
 
 bool WMO::Load()
 {
-    UniquePtr<IFile> f = _Files->Open(m_FileName);
+    UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
     if (f == nullptr)
     {
         return false;
@@ -235,7 +235,6 @@ bool WMO::Load()
 
                 m_MDXInstances.push_back(_doodadInstance);
             }
-
         }
         else if (strcmp(fourcc, "MFOG") == 0)
         {
@@ -290,7 +289,7 @@ bool WMO::Render(uint32 _doodadSet)
     }
 
     // WMO doodads
-    {
+    /*{
         PERF_START(PERF_MAP_MODELS_WMOs_DOODADS);
         if (_Config.draw_map_wmo_doodads)
         {
@@ -300,7 +299,7 @@ bool WMO::Render(uint32 _doodadSet)
             }
         }
         PERF_STOP(PERF_MAP_MODELS_WMOs_DOODADS);
-    }
+    }*/
 
     // Debug geometry
     {

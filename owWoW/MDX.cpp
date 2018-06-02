@@ -57,7 +57,7 @@ MDX::~MDX()
 
 void MDX::Init(bool forceAnim)
 {
-	UniquePtr<IFile> f = _Files->Open(m_FileName);
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
 	if (f == nullptr)
 	{
 		Log::Info("MDX[%s]: Unable to open file.", m_FileName.c_str());
@@ -165,7 +165,7 @@ void MDX::initCommon(IFile* f)
 
 	// Load LODs
 	assert1(header.skin_profiles.size);
-	for (uint32 i = 0; i < header.skin_profiles.size; i++)
+	for (uint32 i = 0; i < 1; i++)
 	{
 		m_Skins.push_back(new Model_Skin(this, f, ((M2SkinProfile*)(f->GetData() + header.skin_profiles.offset))[i]));
 	}
@@ -208,7 +208,7 @@ void MDX::Render()
 		return;
 	}
 	
-	if (animated && false)
+	if (animated)
 	{
 		uint32 duration = m_Sequences[m_AnimationIndex].end_timestamp - m_Sequences[m_AnimationIndex].start_timestamp;
 
@@ -220,6 +220,10 @@ void MDX::Render()
 			}*/
 			m_AnimationTime = _World->EnvM()->globalTime % duration;
 
+			if (duration - m_AnimationTime == 1)
+			{
+				int u = 0;
+			}
 
 			if (m_IsBillboard)
 			{

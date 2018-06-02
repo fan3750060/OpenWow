@@ -9,11 +9,11 @@
 TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice)
 {
+	CGroupVideo& groupVideo = GetSettingsGroup<CGroupVideo>();
+
 	m_Debug_GeometryPass = new Debug_GeometryPass(m_RenderDevice);
 
 	m_Debug_Normals = new Debug_Normals(m_RenderDevice);
-
-	//
 
 	m_Sky_GeometryPass = new Sky_GeometryPass(m_RenderDevice);
 
@@ -62,7 +62,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	m_POST_DirectionalLight = new POST_DirectionalLight(m_RenderDevice);
 	m_POST_DirectionalLight->Bind();
 	m_POST_DirectionalLight->BindToPostprocess();
-	m_POST_DirectionalLight->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
+	m_POST_DirectionalLight->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
 	m_POST_DirectionalLight->SetMatSpecularPower(32);
 	m_POST_DirectionalLight->Unbind();
 
@@ -71,14 +71,14 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	m_POST_Fog = new POST_Fog(m_RenderDevice);
 	m_POST_Fog->Bind();
 	m_POST_Fog->BindToPostprocess();
-	m_POST_Fog->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
+	m_POST_Fog->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
 	m_POST_Fog->Unbind();
 	//----------------------------------------------------------------//
 
 	m_POST_Simple = new POST_Simple(m_RenderDevice);
 	m_POST_Simple->Bind();
 	m_POST_Simple->BindToPostprocess();
-	m_POST_Simple->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
+	m_POST_Simple->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
 	m_POST_Simple->Unbind();
 
 	//

@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
 // General
-#include "DebugOutput_ConsoleWindows.h"
+#include "DebugOutputConsole.h"
 
 // Additional
 #include <iostream>
 
 DebugOutput_ConsoleWindows::DebugOutput_ConsoleWindows()
 {
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	defaultConsoleColor = ConsoleWindowsColor::GRAY;
+	m_ConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	m_DefaultConsoleColor = ConsoleWindowsColor::GRAY;
 
 }
 
@@ -19,7 +19,7 @@ DebugOutput_ConsoleWindows::~DebugOutput_ConsoleWindows()
 
 //
 
-void DebugOutput_ConsoleWindows::Print(string _messageFmt, DebugOutput::DebugMessageType _type)
+void DebugOutput_ConsoleWindows::Print(string _messageFmt, CDebugOutput::DebugMessageType _type)
 {
 	// Set color
 	unsigned short color;
@@ -44,7 +44,7 @@ void DebugOutput_ConsoleWindows::Print(string _messageFmt, DebugOutput::DebugMes
 	}
 
 	// Add
-	SetConsoleTextAttribute(hConsole, color);
+	SetConsoleTextAttribute(m_ConsoleHandle, color);
 	cout << _messageFmt << endl;
-	SetConsoleTextAttribute(hConsole, defaultConsoleColor);
+	SetConsoleTextAttribute(m_ConsoleHandle, m_DefaultConsoleColor);
 }

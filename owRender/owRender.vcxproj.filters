@@ -35,9 +35,6 @@
     <ClCompile Include="Image.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
-    <ClCompile Include="RenderConfig.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="RenderDevice.cpp">
       <Filter>RenderCore</Filter>
     </ClCompile>
@@ -112,13 +109,7 @@
     <ClInclude Include="Image.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="RenderConfig.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="RenderDevice.h">
-      <Filter>RenderCore</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderEnums.h">
       <Filter>RenderCore</Filter>
     </ClInclude>
     <ClInclude Include="RenderTypes.h">

@@ -1,18 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="..\shared\owGamePlatformWindows.h" />
-    <ClInclude Include="DebugOutput_ConsoleWindows.h" />
-    <ClInclude Include="DebugOutput_Log.h" />
-    <ClInclude Include="OpenGLAdapter_GLFW.h" />
-    <ClInclude Include="PlatformWindows.h" />
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsPlatformFactory.h">
+      <Filter>WindowsPlatformFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOutputConsole.h">
+      <Filter>WindowsPlatformFactory\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOutputLog.h">
+      <Filter>WindowsPlatformFactory\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLAdapterGLFW.h">
+      <Filter>WindowsPlatformFactory\Items</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="DebugOutput_ConsoleWindows.cpp" />
-    <ClCompile Include="DebugOutput_Log.cpp" />
-    <ClCompile Include="OpenGLAdapter_GLFW.cpp" />
-    <ClCompile Include="PlatformWindows.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsPlatformFactory.cpp">
+      <Filter>WindowsPlatformFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugOutputConsole.cpp">
+      <Filter>WindowsPlatformFactory\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugOutputLog.cpp">
+      <Filter>WindowsPlatformFactory\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLAdapterGLFW.cpp">
+      <Filter>WindowsPlatformFactory\Items</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="WindowsPlatformFactory">
+      <UniqueIdentifier>{466f5ace-5323-46e4-82a5-300ed96daa57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{26f81747-10f3-4aed-b51e-f609c88791bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WindowsPlatformFactory\Items">
+      <UniqueIdentifier>{f3891c4e-fc72-4875-b9cb-1602ca9f2ceb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 
 DayNightCycle::DayNightCycle()
 {
-	UniquePtr<IFile> f = _Files->Open("World\\dnc.db");
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open("World\\dnc.db");
 	if (f == nullptr)
 	{
 		Log::Error("DayNightCycle[]: Can't init day-night cycle.");

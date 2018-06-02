@@ -58,11 +58,20 @@
     <Filter Include="Log">
       <UniqueIdentifier>{ef746966-5439-4659-9eaa-b5406a1f5be7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Log\Common">
-      <UniqueIdentifier>{154efe91-d5a0-4a4d-9b1d-d053b1d5228b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{5f3b03a0-2561-4da8-8a90-9a4a70fb319d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log\Console">
+      <UniqueIdentifier>{fe194fc7-63c1-4646-9d6d-142a164c36d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log\DebugOutput">
+      <UniqueIdentifier>{154efe91-d5a0-4a4d-9b1d-d053b1d5228b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{dc6e8c13-6444-4560-953e-9a380f8fab7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Settings\Groups">
+      <UniqueIdentifier>{3067e420-7b54-4018-8d50-d4abb91d379a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,11 +79,8 @@
       <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Console.cpp">
-      <Filter>Log\Common</Filter>
-    </ClCompile>
     <ClCompile Include="DebugOutput.cpp">
-      <Filter>Log\Common</Filter>
+      <Filter>Log\DebugOutput</Filter>
     </ClCompile>
     <ClCompile Include="InputListenerCollection.cpp">
       <Filter>Objects bindings\InputListener</Filter>
@@ -121,9 +127,6 @@
     <ClCompile Include="LocalFile.cpp">
       <Filter>Files\Common</Filter>
     </ClCompile>
-    <ClCompile Include="MPQArchiveStorage.cpp">
-      <Filter>Files\Common</Filter>
-    </ClCompile>
     <ClCompile Include="MPQFile.cpp">
       <Filter>Files\Common</Filter>
     </ClCompile>
@@ -145,6 +148,36 @@
     <ClCompile Include="BaseManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleCommand.cpp">
+      <Filter>Log\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Log\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderConfig.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="MPQArchiveManager.cpp">
+      <Filter>Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupDistances.cpp">
+      <Filter>Settings\Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupRenderCaps.cpp">
+      <Filter>Settings\Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupQuality.cpp">
+      <Filter>Settings\Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupVideo.cpp">
+      <Filter>Settings\Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupOpenGL.cpp">
+      <Filter>Settings\Groups</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
@@ -155,11 +188,8 @@
     <ClInclude Include="InputKeys.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Console.h">
-      <Filter>Log\Common</Filter>
-    </ClInclude>
     <ClInclude Include="DebugOutput.h">
-      <Filter>Log\Common</Filter>
+      <Filter>Log\DebugOutput</Filter>
     </ClInclude>
     <ClInclude Include="common.h" />
     <ClInclude Include="InputListenerCollection.h">
@@ -228,9 +258,6 @@
     <ClInclude Include="LocalFile.h">
       <Filter>Files\Common</Filter>
     </ClInclude>
-    <ClInclude Include="MPQArchiveStorage.h">
-      <Filter>Files\Common</Filter>
-    </ClInclude>
     <ClInclude Include="MPQFile.h">
       <Filter>Files\Common</Filter>
     </ClInclude>
@@ -239,9 +266,6 @@
     </ClInclude>
     <ClInclude Include="File.h">
       <Filter>Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseBindings.h">
-      <Filter>Objects bindings</Filter>
     </ClInclude>
     <ClInclude Include="BoundingBox.h">
       <Filter>Common\Primitives</Filter>
@@ -287,6 +311,39 @@
     </ClInclude>
     <ClInclude Include="RefItem.h">
       <Filter>RefManager</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadableObject.h">
+      <Filter>RefManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCommand.h">
+      <Filter>Log\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Log\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderConfig.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="MPQArchiveManager.h">
+      <Filter>Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupDistances.h">
+      <Filter>Settings\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupRenderCaps.h">
+      <Filter>Settings\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupQuality.h">
+      <Filter>Settings\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupVideo.h">
+      <Filter>Settings\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupOpenGL.h">
+      <Filter>Settings\Groups</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

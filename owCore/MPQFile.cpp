@@ -4,22 +4,23 @@
 #include "MPQFile.h"
 
 // Additional
-#include "MPQArchiveStorage.h"
+#include "BaseManager.h"
+#include "MPQArchiveManager.h"
 
-MPQFile::MPQFile(cstring _fullFileName) :
-	File(_fullFileName)
+CMPQFile::CMPQFile(cstring _fullFileName) :
+	CFile(_fullFileName)
 {}
 
-MPQFile::MPQFile(cstring _name, cstring _path) :
-	File(_name, _path)
+CMPQFile::CMPQFile(cstring _name, cstring _path) :
+	CFile(_name, _path)
 {}
 
-MPQFile::~MPQFile()
+CMPQFile::~CMPQFile()
 {}
 
-bool MPQFile::Open()
+bool CMPQFile::Open()
 {
-	MPQFileLocation location = MPQArchiveStorage::GetFileLocation(Path_Name());
+	SMPQFileLocation location = GetManager<IMPQArchiveManager>()->GetFileLocation(Path_Name());
 
 	if (location.exists)
 	{
@@ -38,9 +39,9 @@ bool MPQFile::Open()
 	return false;
 }
 
-uint64_t MPQFile::GetFileSize(cstring _name)
+uint64_t CMPQFile::GetFileSize(cstring _name)
 {
-	MPQFileLocation location = MPQArchiveStorage::GetFileLocation(_name);
+	SMPQFileLocation location = GetManager<IMPQArchiveManager>()->GetFileLocation(_name);
 
 	if (location.exists)
 	{
@@ -52,9 +53,9 @@ uint64_t MPQFile::GetFileSize(cstring _name)
 	return 0;
 }
 
-bool MPQFile::IsFileExists(cstring _name)
+bool CMPQFile::IsFileExists(cstring _name)
 {
-	return MPQArchiveStorage::GetFileLocation(_name).exists;
+	return GetManager<IMPQArchiveManager>()->GetFileLocation(_name).exists;
 }
 
 

@@ -37,18 +37,18 @@ extern "C" {
 #include <sys/types.h>
 
 /* define errors. */
-#define LIBMPQ_ERROR_OPEN			-1		/* open error on file. */
-#define LIBMPQ_ERROR_CLOSE			-2		/* close error on file. */
-#define LIBMPQ_ERROR_SEEK			-3		/* lseek error on file. */
-#define LIBMPQ_ERROR_READ			-4		/* read error on file. */
-#define LIBMPQ_ERROR_WRITE			-5		/* write error on file. */
-#define LIBMPQ_ERROR_MALLOC			-6		/* memory allocation error. */
-#define LIBMPQ_ERROR_FORMAT			-7		/* format errror. */
-#define LIBMPQ_ERROR_NOT_INITIALIZED		-8		/* libmpq__init() wasn't called. */
-#define LIBMPQ_ERROR_SIZE			-9		/* buffer size is to small. */
-#define LIBMPQ_ERROR_EXIST			-10		/* file or block does not exist in archive. */
+#define LIBMPQ_ERROR_OPEN				-1		/* open error on file. */
+#define LIBMPQ_ERROR_CLOSE				-2		/* close error on file. */
+#define LIBMPQ_ERROR_SEEK				-3		/* lseek error on file. */
+#define LIBMPQ_ERROR_READ				-4		/* read error on file. */
+#define LIBMPQ_ERROR_WRITE				-5		/* write error on file. */
+#define LIBMPQ_ERROR_MALLOC				-6		/* memory allocation error. */
+#define LIBMPQ_ERROR_FORMAT				-7		/* format errror. */
+#define LIBMPQ_ERROR_NOT_INITIALIZED	-8		/* libmpq__init() wasn't called. */
+#define LIBMPQ_ERROR_SIZE				-9		/* buffer size is to small. */
+#define LIBMPQ_ERROR_EXIST				-10		/* file or block does not exist in archive. */
 #define LIBMPQ_ERROR_DECRYPT			-11		/* we don't know the decryption seed. */
-#define LIBMPQ_ERROR_UNPACK			-12		/* error on unpacking file. */
+#define LIBMPQ_ERROR_UNPACK				-12		/* error on unpacking file. */
 
 /* internal data structure. */
 typedef struct mpq_archive mpq_archive_s;
@@ -57,7 +57,7 @@ typedef struct mpq_archive mpq_archive_s;
 typedef int64_t libmpq__off_t;
 
 /* string error message for a libmpq return code. */
-const char *libmpq__strerror(int32_t return_code);
+const char* libmpq__strerror(int32_t return_code);
 
 /* generic mpq archive information. */
 int32_t libmpq__archive_open(mpq_archive_s **mpq_archive, const char *mpq_filename, libmpq__off_t archive_offset);

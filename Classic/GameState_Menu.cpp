@@ -8,7 +8,7 @@
 
 bool GameState_Menu::Init()
 {
-	GameState::Init();
+	CGameState::Init();
 
 	//
 
@@ -62,19 +62,21 @@ bool GameState_Menu::Init()
 	cameraSprint = false;
 	//
 
+	_Bindings->RegisterRenderable3DObject(this);
+
 	return true;
 }
 
 void GameState_Menu::Destroy()
 {
-	GameState::Destroy();
+	CGameState::Destroy();
 }
 
 //
 
 bool GameState_Menu::Set()
 {
-	GameState::Set();
+	CGameState::Set();
 
 	cmd = CMD_NONE;
 
@@ -83,7 +85,7 @@ bool GameState_Menu::Set()
 
 void GameState_Menu::Unset()
 {
-	GameState::Unset();
+	CGameState::Unset();
 }
 
 //
@@ -99,16 +101,16 @@ void GameState_Menu::Input(double t, double dt)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_Render->mainCamera->ProcessKeyboard(FORWARD, speed);
+		_PipelineGlobal->GetCamera()->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_Render->mainCamera->ProcessKeyboard(BACKWARD, speed);
+		_PipelineGlobal->GetCamera()->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_Render->mainCamera->ProcessKeyboard(LEFT, speed);
+		_PipelineGlobal->GetCamera()->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_Render->mainCamera->ProcessKeyboard(RIGHT, speed);
+		_PipelineGlobal->GetCamera()->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_Menu::Update(double t, double dt)
@@ -122,47 +124,76 @@ void GameState_Menu::Update(double t, double dt)
 	}
 }
 
-void GameState_Menu::Render(double t, double dt)
+void GameState_Menu::PreRender3D(double t, double dt)
 {
-	if (backgroundModel != nullptr)
-	{
-		//_ModelsMgr->resetAnim();
+	if (backgroundModel == nullptr) return;
 
-		_Render->rb->setRenderBuffer();
-		_Render->r.clear();
+	ADT_MDX_Instance::reset();
+	_World->MDXM()->resetAnim();
 
-		// Camera
-		_Pipeline->Clear();
-		/*backgroundModel->m_Cameras[0].setup(_EnvironmentManager->globalTime);
-		_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
-		_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());*/
+	SetVisible(true);
+}
 
-		_PipelineGlobal->SetCamera(_Render->mainCamera);
-		_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
+void GameState_Menu::Render3D()
+{
+	if (backgroundModel == nullptr) return;
+
+	_Render->rb->setRenderBuffer();
+	_Render->r.clear();
+
+	// Camera
+	_Pipeline->Clear();
+	backgroundModel->m_Cameras[0].setup(_World->EnvM()->animtime);
+
+	Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
+	_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
+	_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
+
+	//_PipelineGlobal->SetCamera(_Render->mainCamera);
+	//_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
 
 
-		// Geom
-		backgroundModel->Render();
+	// Geom
+	backgroundModel->Render();
 
-		// Postprocess pass
-		_Render->rb->resetRenderBuffer();
-		for (uint32 i = 0; i < 4; i++) _Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
-		_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
 
-		// Simple pass
-		_Render->TechniquesMgr()->m_POST_Simple->Bind();
-		_Render->TechniquesMgr()->m_POST_Simple->SetScreenSize(_Config.windowSizeX, _Config.windowSizeY);
+	/*_Pipeline->Clear();
 
-		_Render->r.setDepthTest(false);
-		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_ONE, R_BlendFunc::BS_BLEND_ONE);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-		_Render->RenderQuad();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
+	_Render->r.setGeometry(tt->__geom);
+	_Render->r.draw(PRIM_TRILIST, 0, 24);
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
 
-		_Render->r.setBlendMode(false);
-		_Render->r.setDepthTest(true);
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
+}
 
-		_Render->TechniquesMgr()->m_POST_Simple->Unbind();
-	}
+void GameState_Menu::PostRender3D()
+{
+	if (backgroundModel == nullptr) return;
+
+	// Postprocess pass
+	_Render->rb->resetRenderBuffer();
+	for (uint32 i = 0; i < 4; i++)
+		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
+	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
+
+	_Render->TechniquesMgr()->m_POST_Simple->Bind();
+	_Render->TechniquesMgr()->m_POST_Simple->SetCameraPos(_Camera->Position);
+
+	_Render->r.setDepthTest(false);
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+
+	_Render->RenderQuad();
+
+	_Render->r.setBlendMode(false);
+	_Render->r.setDepthTest(true);
+
+	_Render->TechniquesMgr()->m_POST_Simple->Unbind();
 }
 
 void GameState_Menu::RenderUI()
@@ -214,26 +245,26 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
 	}
 
-	_Render->mainCamera->Position = _pos;
-	_Render->mainCamera->Update();
+	_PipelineGlobal->GetCamera()->Position = _pos;
+	_PipelineGlobal->GetCamera()->SetNeedUpdate();
+
+	_Bindings->UnregisterRenderable3DObject(this);
 
 	// Change GameState
-	GameStateManager::SetGameState(GameStatesNames::GAME_STATE_WORLD);
+	GetManager<IGameStateManager>()->SetGameState(GameStatesNames::GAME_STATE_WORLD);
 
 	return true;
 }
 
 //
 
-#pragma region Input functional
-
 void GameState_Menu::OnMouseMoved(cvec2 _mousePos)
 {
 	if (enableFreeCamera)
 	{
-		vec2 mouseDelta = (_mousePos - lastMousePos) / _Config.GetWindowSize();
+		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_Render->mainCamera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_PipelineGlobal->GetCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}
@@ -260,6 +291,16 @@ bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePo
 		return true;
 	}
 
+	if (_button == OW_MOUSE_BUTTON_LEFT)
+	{
+		enableFreeCamera = true;
+		lastMousePos = _mousePos;
+		m_Engine->GetAdapter()->HideCursor();
+		return true;
+	}
+
+	return false;
+
 	return false;
 }
 
@@ -284,46 +325,19 @@ bool GameState_Menu::OnKeyboardPressed(int _key, int _scancode, int _mods)
 		}
 		else
 		{
-			delete m_Engine;
+			m_Engine->SetNeedExit();
 		}
 	}
 
-	if (_key == OW_KEY_KP_1)
+	if (_key == OW_KEY_X)
 	{
-		_Config.draw_map_chunk = !_Config.draw_map_chunk;
-		return true;
-	}
-	if (_key == OW_KEY_KP_2)
-	{
-		_Config.draw_map_wmo = !_Config.draw_map_wmo;
-		return true;
-	}
-	if (_key == OW_KEY_KP_3)
-	{
-		_Config.draw_map_wmo_doodads = !_Config.draw_map_wmo_doodads;
-		return true;
-	}
-	if (_key == OW_KEY_KP_4)
-	{
-		_Config.draw_map_mdx = !_Config.draw_map_mdx;
+		cameraSprint = true;
 		return true;
 	}
 
-	if (_key == OW_KEY_C)
+	if (_key == OW_KEY_Z)
 	{
-		_Config.Switch(_Config.Quality.Terrain_MCCV);
-		return true;
-	}
-
-	if (_key == OW_KEY_V)
-	{
-		_Config.Switch(_Config.Quality.Terrain_MCLV);
-		return true;
-	}
-
-	if (_key == OW_KEY_F)
-	{
-		_Config.drawfog = !_Config.drawfog;
+		cameraSlow = true;
 		return true;
 	}
 

@@ -7,17 +7,6 @@
 #include <memory>
 using namespace std;
 
-#ifndef WIN32_LEAN_AND_MEAN
-#   define WIN32_LEAN_AND_MEAN 1
-#endif
-
-#ifndef NOMINMAX
-#   define NOMINMAX
-#endif
-
-#include <windows.h>
-
-
 
 // Macros
 #include "Debug.h"
@@ -40,3 +29,5 @@ using namespace std;
 #include "Random.h"
 #include "Utils.h"
 #include "Log.h"
+#include "Input.h"
+#include "BindingController.h"

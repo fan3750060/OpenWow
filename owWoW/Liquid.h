@@ -1,8 +1,7 @@
 #pragma once
 
 
-#include "../shared/pack_begin.h"
-
+#include __PACK_BEGIN
 struct Liquid_Layer
 {
 	float MinHeightLevel;
@@ -18,12 +17,11 @@ struct Liquid_Layer
 
 	vector<float> heights;
 	vector<uint8> depths;
-	vector<std::pair<float, float>> textureCoords;
+	vector<pair<float, float>> textureCoords;
 
 	vector<bool> renderTiles;
 };
-
-#include "../shared/pack_end.h"
+#include __PACK_END
 
 // Includes and using
 
@@ -32,7 +30,7 @@ class ADT_MCNK_Header;
 
 // Class
 
-class Liquid : public RefItem
+class Liquid : public CRefItem
 {
 public:
 	Liquid(uint32 x, uint32 y);

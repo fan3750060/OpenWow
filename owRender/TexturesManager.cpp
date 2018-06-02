@@ -3,7 +3,7 @@
 // General
 #include "TexturesManager.h"
 
-#include "../shared/pack_begin.h"
+#include __PACK_BEGIN
 struct BLPHeader
 {
     uint8 magic[4];
@@ -19,7 +19,7 @@ struct BLPHeader
     uint32 mipOffsets[16];
     uint32 mipSizes[16];
 };
-#include "../shared/pack_end.h"
+#include __PACK_END
 
 //
 
@@ -66,12 +66,7 @@ TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
     //--------------
 
 
-	CBaseManager::instance()->RegisterManager(Managers::MgrTextures, this);
-}
-
-TexturesManager::~TexturesManager()
-{
-    Log::Info("TexturesManager[]: All textures destroyed.");
+	AddManager<ITexturesManager>(this);
 }
 
 //
@@ -217,7 +212,7 @@ R_Texture* TexturesManager::CreateAction(cstring _name)
 	R_Texture* _texture = new R_Texture(m_RenderDevice);
 	//wglMakeCurrent(_Render->dc, _Render->glrc2);
 
-	UniquePtr<IFile> f(_Files->Open(_name));
+	UniquePtr<IFile> f(GetManager<IFilesManager>()->Open(_name));
 	if (f == nullptr)
 	{
 		Log::Error("TexturesManager[%s]: Error while open texture.", _name.c_str());

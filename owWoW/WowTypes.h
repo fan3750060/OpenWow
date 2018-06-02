@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../shared/pack_begin.h"
-
+#include __PACK_BEGIN
 struct C33Matrix
 {
 	vec3 columns[3];
@@ -91,4 +90,4 @@ struct C3Ray
 	vec3 dir;
 };
 
-#include "../shared/pack_end.h"
+#include __PACK_END

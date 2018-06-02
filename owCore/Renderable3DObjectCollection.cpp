@@ -5,7 +5,7 @@
 
 struct Renderable3DObjectCompare
 {
-	bool operator() (const Renderable3DObject* left, const Renderable3DObject* right) const
+	bool operator() (const CRenderable3DObject* left, const CRenderable3DObject* right) const
 	{
 		return left->GetDrawOrder() < right->GetDrawOrder();
 	}
@@ -13,7 +13,7 @@ struct Renderable3DObjectCompare
 
 
 
-bool Renderable3DObjectCollection::RegisterObject(Renderable3DObject* _uiObject, uint32 _DrawOrder)
+bool CRenderable3DObjectCollection::RegisterObject(CRenderable3DObject* _uiObject, uint32 _DrawOrder)
 {
 	_uiObject->SetDrawOrder(_DrawOrder);
 	m_Objects.push_back(_uiObject);
@@ -22,13 +22,13 @@ bool Renderable3DObjectCollection::RegisterObject(Renderable3DObject* _uiObject,
 	return true;
 }
 
-void Renderable3DObjectCollection::UnregisterObject(Renderable3DObject* _uiObject)
+void CRenderable3DObjectCollection::UnregisterObject(CRenderable3DObject* _uiObject)
 {
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 	m_ObjectsNeedSort = true;
 }
 
-void Renderable3DObjectCollection::Render3D(double t, double dt)
+void CRenderable3DObjectCollection::Render3D(double t, double dt)
 {
 	if (m_ObjectsNeedSort)
 	{

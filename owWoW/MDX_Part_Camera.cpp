@@ -6,6 +6,11 @@
 // Additional
 #include "WorldController.h"
 
+MDX_Part_Camera::MDX_Part_Camera() :
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
+{
+}
+
 void MDX_Part_Camera::init(IFile* f, M2Camera& mcd, uint32* global)
 {
 	nearclip = mcd.near_clip;
@@ -21,24 +26,27 @@ void MDX_Part_Camera::init(IFile* f, M2Camera& mcd, uint32* global)
 	tTarget.fix(Fix_XZmY);
 
 	tRoll.init(mcd.roll, f, global);
-	tFov.init(mcd.FoV, f, global);
+	fov = mcd.fov;
+
+
+	camera.m_UseDir = true;
 }
 
 void MDX_Part_Camera::setup(int time)
 {
-	fov = tFov.getValue(0, time, _World->EnvM()->globalTime) * 34.5f;
-
 	vec3 p = pos + tPos.getValue(0, time, _World->EnvM()->globalTime);
 	vec3 t = target + tTarget.getValue(0, time, _World->EnvM()->globalTime);
 	vec3 u(0, 1, 0);
 
 	roll = tRoll.getValue(0, time, _World->EnvM()->globalTime) / Math::Pi * 180.0f;
 
-	camera.setupViewParams(fov, _Config.aspectRatio, nearclip, farclip);
+	camera.setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
 
 	camera.Position = p;
-	camera.Direction = t;
+	camera.Direction = t - p;
 	camera.CameraUp = u;
 
-    camera.Update(true);
+	camera.SetNeedUpdate();
+	camera.Update(0,0);
+	//camera.CreateRenderable();
 }

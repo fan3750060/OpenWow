@@ -6,7 +6,9 @@
 // Additiobal
 #include <ctime>
 
-EnvironmentManager::EnvironmentManager()
+EnvironmentManager::EnvironmentManager() :
+	m_DistancesSettings(GetSettingsGroup<CGroupDistances>()),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
     /*time_t t = time(0);   // get time now
     tm* now = localtime(&t);
@@ -28,8 +30,8 @@ EnvironmentManager::EnvironmentManager()
 
 EnvironmentManager::~EnvironmentManager()
 {
-	_Bindings->UnregisterUpdatableObject(this);
 	_Bindings->UnregisterRenderable3DObject(this);
+	_Bindings->UnregisterUpdatableObject(this);
 }
 
 void EnvironmentManager::Update(double _Time, double _deltaTime)
@@ -40,7 +42,7 @@ void EnvironmentManager::Update(double _Time, double _deltaTime)
 
 void EnvironmentManager::PreRender3D(double t, double dt)
 {
-	if (_Config.timeEnable)
+	if (m_QualitySettings.timeEnable)
 	{
 		m_GameTime.Tick();
 	}
@@ -106,12 +108,12 @@ void EnvironmentManager::SetAmbientLights(bool on)
 
 void EnvironmentManager::SetFog()
 {
-	if (_Config.drawfog)
+	if (m_QualitySettings.drawfog)
 	{
-		float fogdist = _Config.Distances.fogdistance;
+		float fogdist = m_DistancesSettings.fogdistance;
 		float fogstart = 0.5f;
 
-		_Config.Distances.culldistance = fogdist;
+		m_DistancesSettings.culldistance = fogdist;
 
 		vec4 fogcolor(skies->GetColor(LIGHT_COLOR_FOG), 1);
 		//glFogfv(GL_FOG_COLOR, fogcolor); // TODO: retreive fogstart and fogend from lights.lit somehow
@@ -122,7 +124,7 @@ void EnvironmentManager::SetFog()
 	else
 	{
 		//glDisable(GL_FOG);
-		_Config.Distances.culldistance = _Config.Distances.mapdrawdistance;
+		m_DistancesSettings.culldistance = m_DistancesSettings.mapdrawdistance;
 	}
 }
 

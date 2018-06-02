@@ -10,7 +10,7 @@ inline DBCFile<RECORD_T>::DBCFile(const char* _fileName)
 template<class RECORD_T>
 inline bool DBCFile<RECORD_T>::Open()
 {
-	m_File = _Files->Open(m_FileName);
+	m_File = GetManager<IFilesManager>()->Open(m_FileName);
 	if (m_File == nullptr)
 	{
 		return false;

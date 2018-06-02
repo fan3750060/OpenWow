@@ -47,7 +47,7 @@ void ADT_WMO_Instance::PreRender3D(double t, double dt)
 		return;
 	}
 	m_AlreadyDraw.insert(m_UniqueId);
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && _Config.draw_map_wmo);
+	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void ADT_WMO_Instance::Render3D()

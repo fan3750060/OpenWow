@@ -2,7 +2,7 @@
 
 #include "Sky.h"
 
-class SkyManager : public RefItem, public Renderable3DObject
+class SkyManager : public CRefItem, public CRenderable3DObject
 {
 public:
 	SkyManager(DBC_MapRecord* _mapRecord);

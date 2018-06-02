@@ -4,7 +4,6 @@ class TexturesManager : public ITexturesManager, public RefManager1Dim<R_Texture
 {
 public:
 	TexturesManager(RenderDevice* _RenderDevice);
-	~TexturesManager();
 
 	R_Texture* DefaultTexture() { return m_DefaultTexture2DObj; }
 

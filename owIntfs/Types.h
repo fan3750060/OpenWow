@@ -30,6 +30,14 @@ typedef const Quaternion& cquat;
 
 class Color;
 
+#ifndef WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN 1
+#endif
+#ifndef NOMINMAX
+#   define NOMINMAX
+#endif
+#include <windows.h>
+
 // STL Types
 #include <map>
 #include <set>
@@ -38,9 +46,33 @@ class Color;
 #include <string>
 #include <sstream>
 #include <queue>
+#include <unordered_map>
 using namespace std;
 
 typedef const string& cstring;
 
 // Consts
-#include "Consts.h"
+typedef enum TextAlignW
+{
+	TEXT_ALIGNW_LEFT = 0,
+	TEXT_ALIGNW_CENTER,
+	TEXT_ALIGNW_RIGHT
+};
+
+typedef enum TextAlignH
+{
+	TEXT_ALIGNH_TOP = 0,
+	TEXT_ALIGNH_CENTER,
+	TEXT_ALIGNH_BOTTOM
+};
+
+typedef enum InputMode
+{
+	MODE_CHARACTERS = 0,
+	MODE_NUMBERS,
+	MODE_ANY
+};
+
+// Usefull macros
+#define __PACK_BEGIN  "../shared/pack_begin.h"
+#define __PACK_END  "../shared/pack_end.h"

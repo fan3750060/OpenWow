@@ -2,15 +2,15 @@
 
 #include "RenderableUIObject.h"
 
-class RenderableUIObjectCollection
+class CRenderableUIObjectCollection
 {
 public:
-	bool RegisterObject(RenderableUIObject* _uiObject, uint32 _DrawOrder = 0);
-	void UnregisterObject(RenderableUIObject* _uiObject);
+	bool RegisterObject(CRenderableUIObject* _uiObject, uint32 _DrawOrder = 0);
+	void UnregisterObject(CRenderableUIObject* _uiObject);
 
 	void RenderUI();
 
 private:
-	vector<RenderableUIObject*>   m_Objects;
+	vector<CRenderableUIObject*>   m_Objects;
 	bool                          m_ObjectsNeedSort;
 };

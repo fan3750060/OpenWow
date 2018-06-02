@@ -11,20 +11,32 @@
 #include "TechniquesManager.h"
 #include "RenderStorage.h"
 
-RenderGL::RenderGL()
+RenderGL::RenderGL() :
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
+	
+
+	hdc = wglGetCurrentDC();
+	glrc1 = wglCreateContext(hdc);
+	glrc2 = wglCreateContext(hdc);
+	assert1(wglShareLists(glrc1, glrc2));
+	wglMakeCurrent(hdc, glrc1);
+
 	r.init();
-    r.setViewport(0, 0, _Config.windowSizeX, _Config.windowSizeY);
+    r.setViewport(0, 0, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 
-    m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, _Config.windowSizeX, _Config.windowSizeY, 0.0f, -1.0f, 1.0f);
+    m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 
-    rb = r.createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
-    rbFinal = r.createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA32F, false, 1, 0);
+    rb = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
+    rbFinal = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, false, 1, 0);
 
     // Main game camera
     mainCamera = new Camera;
-    mainCamera->setupViewParams(45.0f, _Config.aspectRatio, 2.0f, 10000.0f);
+    mainCamera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 10000.0f);
     _PipelineGlobal->SetCamera(mainCamera);
+	_PipelineGlobal->SetCameraFrustum(mainCamera);
+
+
 }
 
 RenderGL::~RenderGL()
@@ -286,17 +298,17 @@ void RenderGL::DrawBoundingBox(BoundingBox& _box, cmat4 _mat)
 void RenderGL::OnWindowResized(uint32 _width, uint32 _height)
 {
     // Window size
-    _Config.windowSizeX = _width;
-    _Config.windowSizeY = _height;
+	m_VideoSettings.windowSizeX = _width;
+	m_VideoSettings.windowSizeY = _height;
 
     // Aspect
-    _Config.CalculateAspectFactor();
+	m_VideoSettings.CalculateAspectFactor();
 
     // Set viewport
-    r.setViewport(0, 0, _Config.windowSizeX, _Config.windowSizeY);
+    r.setViewport(0, 0, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 
     // Projection matix
-    m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, _Config.windowSizeX, _Config.windowSizeY, 0.0f, -1.0f, 1.0f);
+    m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 }
 
 

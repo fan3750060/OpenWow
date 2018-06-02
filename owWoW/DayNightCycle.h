@@ -2,7 +2,7 @@
 
 #include "DayNightPhase.h"
 
-class DayNightCycle : public RefItem
+class DayNightCycle : public CRefItem
 {
 public:
 	DayNightCycle();

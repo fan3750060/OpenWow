@@ -35,7 +35,7 @@ R_Buffer* R_Buffer::createIndexBuffer(uint32 size, const void *data, bool _isDyn
 
 R_Buffer* R_Buffer::createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic)
 {
-	if (_Config.DeviceCaps.computeShaders)
+	if (GetSettingsGroup<CGroupRenderCaps>().computeShaders)
 	{
 		return createBuffer(GL_SHADER_STORAGE_BUFFER, size, data, _isDynamic);
 	}

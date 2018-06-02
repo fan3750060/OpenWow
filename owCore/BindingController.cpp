@@ -3,54 +3,55 @@
 // General
 #include "BindingController.h"
 
-BindingController::BindingController()
+CBindingController::CBindingController()
 {
-	m_InputListenerObjectCollection = new InputListenerObjectCollection();
-	m_Renderable3DObjectCollection = new Renderable3DObjectCollection();
-	m_RenderableUIObjectCollection = new RenderableUIObjectCollection();
-	m_UpdatableObjectCollection = new UpdatableObjectCollection();
+	m_InputListenerObjectCollection = new CInputListenerObjectCollection();
+	m_Renderable3DObjectCollection = new CRenderable3DObjectCollection();
+	m_RenderableUIObjectCollection = new CRenderableUIObjectCollection();
+	m_UpdatableObjectCollection = new CUpdatableObjectCollection();
 }
 
-BindingController::~BindingController()
+CBindingController::~CBindingController()
 {
+	OutputDebugString(L"CBindingController destroyed.\n");
 }
 
-void BindingController::RegisterInputListener(IInputListener* _object)
+void CBindingController::RegisterInputListener(IInputListener* _object)
 {
 	m_InputListenerObjectCollection->RegisterObject(_object);
 }
 
-void BindingController::RegisterRenderable3DObject(Renderable3DObject* _object, uint32 _DrawOrder)
+void CBindingController::RegisterRenderable3DObject(CRenderable3DObject* _object, uint32 _DrawOrder)
 {
 	m_Renderable3DObjectCollection->RegisterObject(_object, _DrawOrder);
 }
 
-void BindingController::RegisterRenderableUIObject(RenderableUIObject* _object, uint32 _DrawOrder)
+void CBindingController::RegisterRenderableUIObject(CRenderableUIObject* _object, uint32 _DrawOrder)
 {
 	m_RenderableUIObjectCollection->RegisterObject(_object, _DrawOrder);
 }
 
-void BindingController::RegisterUpdatableObject(IUpdatable* _object)
+void CBindingController::RegisterUpdatableObject(IUpdatable* _object)
 {
 	m_UpdatableObjectCollection->RegisterObject(_object);
 }
 
-void BindingController::UnregisterInputListener(IInputListener * _object)
+void CBindingController::UnregisterInputListener(IInputListener * _object)
 {
 	m_InputListenerObjectCollection->UnregisterObject(_object);
 }
 
-void BindingController::UnregisterRenderable3DObject(Renderable3DObject* _object)
+void CBindingController::UnregisterRenderable3DObject(CRenderable3DObject* _object)
 {
 	m_Renderable3DObjectCollection->UnregisterObject(_object);
 }
 
-void BindingController::UnregisterRenderableUIObject(RenderableUIObject * _object)
+void CBindingController::UnregisterRenderableUIObject(CRenderableUIObject * _object)
 {
 	m_RenderableUIObjectCollection->UnregisterObject(_object);
 }
 
-void BindingController::UnregisterUpdatableObject(IUpdatable * _object)
+void CBindingController::UnregisterUpdatableObject(IUpdatable * _object)
 {
 	m_UpdatableObjectCollection->UnregisterObject(_object);
 }

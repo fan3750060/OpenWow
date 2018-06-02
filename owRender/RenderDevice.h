@@ -5,56 +5,6 @@
 const uint32 MaxNumVertexLayouts = 64;
 const uint32 MaxComputeImages = 8;
 
-// ---------------------------------------------------------
-// General
-// ---------------------------------------------------------
-
-template<class T>
-class R_Objects
-{
-public:
-	uint32 add(const T &obj)
-	{
-		/*if (!_freeList.empty())
-		{
-			uint32 index = _freeList.back();
-			_freeList.pop_back();
-			_objects[index] = obj;
-			return index + 1;
-		}
-		else
-		{*/
-		_objects.push_back(obj);
-		return (uint32)_objects.size();
-		/*}*/
-	}
-
-	void remove(uint32 handle)
-	{
-		assert1(handle > 0 && handle <= _objects.size());
-		assert1(find(_freeList.begin(), _freeList.end(), handle - 1) == _freeList.end());
-
-		_objects[handle - 1] = T();  // Destruct and replace with default object
-		_freeList.push_back(handle - 1);
-	}
-
-	T& getRef(uint32 handle)
-	{
-		assert1(handle > 0 && handle <= _objects.size());
-
-		return _objects[handle - 1];
-	}
-
-private:
-	vector< T >       _objects;
-	vector< uint32 >  _freeList;
-};
-
-
-
-
-
-#include "RenderEnums.h"
 #include "RenderTypes.h"
 
 // =================================================================================================
@@ -327,9 +277,7 @@ protected:
 
 	bool                               _doubleBuffered;
 
-	//--------------------------------------------------
 	// DEFAULT
-	//--------------------------------------------------
 
 	// 8 ssbo
 
@@ -354,4 +302,7 @@ protected:
 
 	int							_defaultFBO;
 	bool                        _defaultFBOMultisampled;
+
+	CGroupRenderCaps&			m_DeviceCapsSettings;
+	CGroupOpenGL&				m_OpenGLSettings;
 };

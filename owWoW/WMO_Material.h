@@ -34,7 +34,7 @@ struct WMOMaterialDef
 	static const uint32 __size = 64;
 };
 
-class WMOMaterial : public RefItem
+class WMOMaterial : public CRefItem
 {
 public:
 	WMOMaterial(const WMO* _parentWMO, IFile* _file);

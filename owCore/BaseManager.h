@@ -1,41 +1,44 @@
 #pragma once
 
+#include "SmartPtr.h"
+
+inline bool operator<(const GUID& lhs, const GUID& rhs)
+{
+	return memcmp(&lhs, &rhs, sizeof(GUID)) < 0;
+}
+
 class CBaseManager : public IBaseManager
 {
 	CLASS_INSTANCE(CBaseManager)
 public:
-	void RegisterManager(Managers _type, IManager* _manager) override;
-	void UnregisterManager(IManager* _manager) override;
+	CBaseManager();
+	~CBaseManager();
 
-	IManager* GetManager(Managers _type) override;
+	// IBaseManager
+	void RegisterManager(GUID _type, IManager* _manager) override;
+	void UnregisterManager(GUID _type) override;
+	IManager* GetManager(GUID _type) override;
 
 private:
-	map<Managers, IManager*> m_Managers;
+	map<GUID, IManager*> m_Managers;
 };
 
+#define _BaseManager CBaseManager::instance()
+
 template<class T>
-static inline T* GetManager(Managers _manager)
+static inline void AddManager(IManager* _manager)
 {
-	return (T*)(CBaseManager::instance()->GetManager(_manager));
+	_BaseManager->RegisterManager(__uuidof(T), _manager);
+}
+
+template<class T>
+static inline void DelManager()
+{
+	_BaseManager->UnregisterManager(__uuidof(T));
 }
 
 template<class T>
 static inline T* GetManager()
 {
-	if (typeid(T) == typeid(ITexturesManager))
-	{
-		return (T*)(CBaseManager::instance()->GetManager(Managers::MgrTextures));
-	}
-	else if (typeid(T) == typeid(IWMOManager))
-	{
-		return (T*)(CBaseManager::instance()->GetManager(Managers::MgrWMO));
-	}
-	else if (typeid(T) == typeid(IMDXManager))
-	{
-		return (T*)(CBaseManager::instance()->GetManager(Managers::MgrMDX));
-	}
-	else if (typeid(T) == typeid(IFilesManager))
-	{
-		return (T*)(CBaseManager::instance()->GetManager(Managers::MgrFiles));
-	}
+	return (T*)(_BaseManager->GetManager(__uuidof(T)));
 }

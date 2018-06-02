@@ -8,11 +8,12 @@
 #include "TexturesManager.h"
 #include "Render.h"
 
-ConsoleOpenGL::ConsoleOpenGL()
+CConsoleOpenGL::CConsoleOpenGL() :
+	windowSize(GetSettingsGroup<CGroupVideo>().GetWindowSize()),
+	consoleFont(_Render->FontsMgr()->GetMainFont()),
+	m_MainConsole(GetManager<IConsole>())
 {
-	windowSize = _Config.GetWindowSize();
-	opened = false;
-	consoleFont = _Render->FontsMgr()->GetMainFont();
+	m_IsOpened = false;
 	assert1(consoleFont != nullptr);
 	fontHeight = consoleFont->GetHeight();
 	consoleHeight = windowSize.y / 2.0f;
@@ -24,25 +25,21 @@ ConsoleOpenGL::ConsoleOpenGL()
 	helperSelected = 0;
 	helperOffset = vec2(consoleFont->GetStringWidth(">"), 0.0f);
 
-	AddCommonCommands();
-
     //
 
 	_Bindings->RegisterRenderableUIObject(this, 1000);
 	_Bindings->RegisterInputListener(this);
 }
 
-ConsoleOpenGL::~ConsoleOpenGL()
+CConsoleOpenGL::~CConsoleOpenGL()
 {
 	_Bindings->UnregisterRenderableUIObject(this);
 	_Bindings->UnregisterInputListener(this);
-	
-	_Render->FontsMgr()->Delete(consoleFont);
 }
 
-void ConsoleOpenGL::RenderUI()
+void CConsoleOpenGL::RenderUI()
 {
-	if (!opened)
+	if (!m_IsOpened)
 	{
 		return;
 	}
@@ -104,13 +101,17 @@ void ConsoleOpenGL::RenderUI()
 
 //
 
-bool ConsoleOpenGL::OnMouseWheel(int _yoffset)
+bool CConsoleOpenGL::OnMouseWheel(int _yoffset)
 {
-	if (!opened)
+	if (!m_IsOpened)
+	{
 		return false;
+	}
 
 	if (messages.size() < linesInConsole)
+	{
 		return true;
+	}
 
 	lineOffset += _yoffset;
 	lineOffset = clamp(lineOffset, 0, (int)messages.size() - (int)linesInConsole - 1);
@@ -118,11 +119,11 @@ bool ConsoleOpenGL::OnMouseWheel(int _yoffset)
 	return true;
 }
 
-bool ConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
+bool CConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
 	if (_key == OW_KEY_GRAVE_ACCENT)
 	{
-		opened = !opened;
+		m_IsOpened = !m_IsOpened;
 		inputString = "";
 		commandsHelper.clear();
 		helperSelected = 0;
@@ -136,7 +137,7 @@ bool ConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
 		if (!inputString.empty())
 		{
 			if (inputString.back() != ' ')
-				commandsHelper = GetConsoleCommandHelp(inputString);
+				commandsHelper = m_MainConsole->GetConsoleCommandHelp(inputString);
 			else
 				commandsHelper.clear();
 			helperSelected = 0;
@@ -169,7 +170,7 @@ bool ConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
 		}
 
 		Log::Print(inputString.c_str());
-		Console::ProcessConsoleCommand(inputString);
+		m_MainConsole->ProcessConsoleCommand(inputString);
 		inputString = "";
 		return true;
 	}
@@ -177,9 +178,9 @@ bool ConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
 	return false;
 }
 
-bool ConsoleOpenGL::OnCharInput(uint32 _char)
+bool CConsoleOpenGL::OnCharInput(uint32 _char)
 {
-    if (!opened)
+    if (!m_IsOpened)
     {
         return false;
     }
@@ -205,7 +206,7 @@ bool ConsoleOpenGL::OnCharInput(uint32 _char)
 	inputString += _char;
 
 	if (inputString.back() != ' ')
-		commandsHelper = GetConsoleCommandHelp(inputString);
+		commandsHelper = m_MainConsole->GetConsoleCommandHelp(inputString);
 	else
 		commandsHelper.clear();
 	helperSelected = 0;
@@ -215,7 +216,7 @@ bool ConsoleOpenGL::OnCharInput(uint32 _char)
 
 //
 
-void ConsoleOpenGL::Print(string _messageFmt, DebugMessageType _type)
+void CConsoleOpenGL::Print(string _messageFmt, DebugMessageType _type)
 {
 	Color color = COLOR_WHITE;
 

@@ -2,7 +2,7 @@
 
 #include "ADT_WMO_Instance.h"
 
-class WDL : public Renderable3DObject
+class WDL : public CRenderable3DObject
 {
 public:
 	WDL();

@@ -1,34 +1,24 @@
 #pragma once
 
-#include "OpenGLAdapter.h"
-
-class Engine
+class CEngine : public IEngine
 {
 public:
-	Engine(IOpenGLAdapter* _OpenGLAdapter, int argumentCount, char* arguments[]);
-	~Engine();
+	CEngine(IOpenGLAdapter* _OpenGLAdapter);
+	~CEngine();
 
-	IOpenGLAdapter* GetAdapter() { return m_OpenGLAdapter; }
+	void SetArguments(int argumentCount, char* arguments[]);
 
+	// IEngine
 	bool Tick();
-
-	string GetArgument(uint8 index) 
-	{ 
-		if (m_Arguments.size() > (index + 1))
-		{
-			return m_Arguments[index + 1];
-		}
-		else
-		{
-			return "";
-		}
-	}
-	
+	IOpenGLAdapter* GetAdapter() { return m_OpenGLAdapter; }
+	string GetArgument(uint8 index) const { return m_Arguments[index]; }
 	uint32 GetFPS() const { return framesPerSecond; }
+	void SetNeedExit() override { m_IsNeedExit = true; }
+	bool IsNeedExit() const override { return m_IsNeedExit;	}
 
 private:
-	vector<string> m_Arguments;
-	bool needExit;
+	vector<string>	m_Arguments;
+	bool			m_IsNeedExit;
 
 
 	uint32 framesCounter, framesPerSecond;

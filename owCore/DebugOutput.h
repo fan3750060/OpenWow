@@ -1,22 +1,11 @@
 #pragma once
 
-class DebugOutput
+class CDebugOutput : public IDebugOutput
 {
 public:
-	enum DebugMessageType
-	{
-		TYPE_INFO = 0,
-		TYPE_PRINT,
-		TYPE_GREEN,
-		TYPE_WARNING,
-		TYPE_ERROR,
-		TYPE_FATAL
-	};
-
-public:
-	 void PushMessage(cstring _message, DebugOutput::DebugMessageType _type);
-	 void PushMessage(DebugOutput::DebugMessageType _type, const char* _message, va_list& _vaList);
+	 void PushMessage(cstring _message, IDebugOutput::DebugMessageType _type) override;
+	 void PushMessage(IDebugOutput::DebugMessageType _type, const char* _message, va_list& _vaList) override;
 
 protected:
-	virtual void Print(string _messageFmt, DebugOutput::DebugMessageType _type) = 0;
+	virtual void Print(string _messageFmt, CDebugOutput::DebugMessageType _type) = 0;
 };

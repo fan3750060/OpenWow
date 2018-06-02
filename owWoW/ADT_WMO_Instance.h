@@ -15,7 +15,7 @@ struct ADT_MODF
 
 #include "WMO.h"
 
-class ADT_WMO_Instance : public SceneNode, public Renderable3DObject
+class ADT_WMO_Instance : public SceneNode, public CRenderable3DObject
 {
 public:
 	ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF& _placementInfo);

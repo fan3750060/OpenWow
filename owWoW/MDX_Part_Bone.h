@@ -4,9 +4,14 @@
 
 class MDX_Part_Bone
 {
+	friend class MDX;
+	friend class Model_Skin;
+	friend class PlaneParticleEmitter;
+	friend class SphereParticleEmitter;
+	friend class RibbonEmitter;
 public:
 	void init(IFile* f, M2CompBone& b, uint32* global);
-	void calcMatrix(MDX_Part_Bone* allbones, int anim, int time);
+	void calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time);
 
 private:
 	
@@ -37,14 +42,6 @@ private:
 	Animated<vec3> trans;
 	Animated<quat> roll;
 	Animated<vec3> scale;
-
-	//
-
-	friend class MDX;
-    friend class Model_Skin;
-	friend class PlaneParticleEmitter;
-	friend class SphereParticleEmitter;
-	friend class RibbonEmitter;
 };
 
 

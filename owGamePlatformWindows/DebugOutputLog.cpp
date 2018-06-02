@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // General
-#include "DebugOutput_Log.h"
+#include "DebugOutputLog.h"
 
 #define LOGFILENAME "log.txt"
 
@@ -15,26 +15,26 @@ DebugOutput_Log::DebugOutput_Log()
 		fail1();
 	}
 
-	logStream.open(fileName.c_str(), ios::out);
-	if (!logStream.is_open())
+	m_LogStream.open(fileName.c_str(), ios::out);
+	if (!m_LogStream.is_open())
 	{
 		Log::Error("LogFile[%s]: Can not open file!", fileName.c_str());
-		logStream.clear();
+		m_LogStream.clear();
 		fail1();
 	}
 }
 
 DebugOutput_Log::~DebugOutput_Log()
 {
-	logStream.flush();
-	logStream.close();
-	logStream.clear();
+	m_LogStream.flush();
+	m_LogStream.close();
+	m_LogStream.clear();
 }
 
 //
 
-void DebugOutput_Log::Print(string _messageFmt, DebugOutput::DebugMessageType _type)
+void DebugOutput_Log::Print(string _messageFmt, CDebugOutput::DebugMessageType _type)
 {
-	logStream << _messageFmt << endl;
-	logStream.flush();
+	m_LogStream << _messageFmt << endl;
+	m_LogStream.flush();
 }

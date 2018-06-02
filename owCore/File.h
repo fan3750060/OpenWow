@@ -1,14 +1,20 @@
 #pragma once
 
+#include "RefItem.h"
 #include "ByteBuffer.h"
 
-class File : public IFile
+class CFile : public CRefItem, public IFile
 {
 public:
-	 File(cstring _fullFileName);
-	 File(cstring _name, cstring _path);
-	 ~File();
+	 CFile(cstring _fullFileName);
+	 CFile(cstring _name, cstring _path);
+	 ~CFile();
 
+	 // IRefItem
+	 void AddRef() override { CRefItem::AddRef(); }
+	 void Release() override { CRefItem::Release(); }
+	 uint32 GetRefsCount() const { return CRefItem::GetRefsCount();
+	 }
 	 // IFile
 	 inline string Name() const override { return m_Name; }
 	 inline string Path() const override { return m_Path; }

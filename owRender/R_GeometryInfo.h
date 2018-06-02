@@ -2,7 +2,7 @@
 
 class RenderDevice;
 
-struct R_GeometryInfo : public RefItem
+struct R_GeometryInfo : public CRefItem
 {
 	R_GeometryInfo(RenderDevice* _RenderDevice) :
 		vao(0),

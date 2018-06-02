@@ -172,7 +172,6 @@
     </ClCompile>
     <ClCompile Include="Perfomance.cpp" />
     <ClCompile Include="PipelineWorldTransformation.cpp" />
-    <ClCompile Include="RenderConfig.cpp" />
     <ClCompile Include="RenderDevice.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -221,11 +220,9 @@
     <ClInclude Include="POST_DirectionalLight.h" />
     <ClInclude Include="POST_Fog.h" />
     <ClInclude Include="POST_Simple.h" />
-    <ClInclude Include="RenderConfig.h" />
     <ClInclude Include="RenderDevice.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="RenderEnums.h" />
     <ClInclude Include="RenderStorage.h" />
     <ClInclude Include="RenderTypes.h" />
     <ClInclude Include="Font.h" />

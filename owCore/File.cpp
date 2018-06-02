@@ -3,25 +3,25 @@
 // General
 #include "File.h"
 
-File::File(cstring _fullFileName) :
+CFile::CFile(cstring _fullFileName) :
 	m_Name(_fullFileName),
 	m_Path("")
 {
 	ParsePathAndExtension();
 }
 
-File::File(cstring _name, cstring _path) :
+CFile::CFile(cstring _name, cstring _path) :
 	m_Name(_name),
 	m_Path(_path)
 {
 	ParsePathAndExtension();
 }
 
-File::~File()
+CFile::~CFile()
 {
 }
 
-void File::FixFilePath(string& _string)
+void CFile::FixFilePath(string& _string)
 {
 	size_t index = 0;
 	while (true)
@@ -36,7 +36,7 @@ void File::FixFilePath(string& _string)
 	}
 }
 
-void File::ParsePathAndExtension()
+void CFile::ParsePathAndExtension()
 {
 	// Replace slahes
 	FixFilePath(m_Name);

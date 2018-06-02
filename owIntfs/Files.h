@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Refs.h"
 
 __interface IByteBuffer
 {
@@ -15,7 +16,7 @@ __interface IByteBuffer
 	void ReadBytes(void* _destination, uint64 _size);
 };
 
-__interface IFile : public IByteBuffer
+__interface IFile : public IByteBuffer, public IRefItem
 {
 	bool Open();
 
@@ -25,7 +26,40 @@ __interface IFile : public IByteBuffer
 	string Path_Name() const;
 };
 
-__interface IFilesManager : public IManager
+__interface 
+	__declspec(uuid("5DC32EB8-9A63-4FAD-A4BF-81916B8EF86A"))
+	IFilesManager : public IManager
 {
 	IFile* Open(cstring _fileName);
+};
+
+// FORWARD BEGIN
+struct mpq_archive;
+// FORWARD END
+
+struct SMPQFileLocation
+{
+	SMPQFileLocation() : 
+		archive(nullptr), 
+		fileNumber(0), 
+		exists(false) 
+	{}
+
+	SMPQFileLocation(mpq_archive* _archive, uint32 _fileNumber) : 
+		archive(_archive), 
+		fileNumber(_fileNumber), 
+		exists(true) 
+	{}
+
+	bool exists;
+	mpq_archive* archive;
+	uint32 fileNumber;
+};
+
+__interface
+	__declspec(uuid("6658FDFF-48AB-4712-8FAE-A1C32DFF8815"))
+	IMPQArchiveManager : public IManager
+{
+	void AddArchive(string _filename);
+	SMPQFileLocation GetFileLocation(cstring _filename);
 };

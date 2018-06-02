@@ -12,12 +12,7 @@ WMOsManager::WMOsManager()
 {
 	ADDCONSOLECOMMAND_CLASS("wmo_info", WMOsManager, PrintAllInfo);
 
-	CBaseManager::instance()->RegisterManager(Managers::MgrWMO, this);
-}
-
-WMOsManager::~WMOsManager()
-{
-	Log::Info("WMOsManager[]: All WMOs destroyed.");
+	AddManager<IWMOManager>(this);
 }
 
 WMO* WMOsManager::CreateAction(cstring name)

@@ -202,8 +202,11 @@ ADT* MapController::LoadTile(int32 x, int32 z)
     }
 
     // Create new tile
-    m_ADTCache[firstnull] = new ADT(x, z);
-	m_ADTCache[firstnull]->Load(m_DBC_Map->Get_Directory());
+	char name[256];
+	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_Directory(), x, z);
+
+    m_ADTCache[firstnull] = new ADT(x, z, name, GetManager<IFilesManager>()->Open(name));
+	GetManager<ILoader>()->AddToQueue(m_ADTCache[firstnull]);
     return m_ADTCache[firstnull];
 }
 
@@ -242,7 +245,7 @@ uint32 MapController::GetAreaID()
 	int32 indexY = tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2);
 
 	ADT* curTile = m_Current[indexX][indexY];
-	if (curTile == nullptr)
+	if (curTile == nullptr || !curTile->IsLoaded())
 	{
 		return UINT32_MAX;
 	}

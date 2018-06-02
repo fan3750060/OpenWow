@@ -15,7 +15,7 @@ void MDX_Part_Color::init(IFile* f, M2Color& mcd, uint32* global)
 	vAlpha = 1.0f;
 }
 
-void MDX_Part_Color::calc(int anim, int time)
+void MDX_Part_Color::calc(uint32 anim, uint32 time)
 {
 	if (color.uses(anim))
 	{

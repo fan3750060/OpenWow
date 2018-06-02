@@ -35,8 +35,8 @@ string ProcessInclude(IFile* f)
 			assert1(firstBracketPosition != lastBracketPosition);
 
 			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
-			File::FixFilePath(inludeFileName);
-			data += ProcessInclude(_Files->Open(f->Path() + inludeFileName)) + '\n';
+			CFile::FixFilePath(inludeFileName);
+			data += ProcessInclude(GetManager<IFilesManager>()->Open(f->Path() + inludeFileName)) + '\n';
 
 			continue;
 		}
@@ -52,8 +52,8 @@ string ProcessInclude(IFile* f)
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessInclude(_Files->Open(_fileName + ".vs"));
-	string shFS = ProcessInclude(_Files->Open(_fileName + ".fs"));
+	string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".vs"));
+	string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".fs"));
 
     Process(_fileName, shVS.c_str(), shFS.c_str(), nullptr);
 
@@ -63,8 +63,8 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS)
 	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessInclude(_Files->Open(_fileNameVS));
-	string shFS = ProcessInclude(_Files->Open(_fileNameFS));
+	string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
+	string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 
@@ -74,9 +74,9 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
 	: m_RenderDevice(_RenderDevice)
 {
-    string shVS = ProcessInclude(_Files->Open(_fileNameVS));
-    string shFS = ProcessInclude(_Files->Open(_fileNameFS));
-    string shGS = ProcessInclude(_Files->Open(_fileNameGS));
+    string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
+    string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
+    string shGS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameGS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), shGS.c_str());
 

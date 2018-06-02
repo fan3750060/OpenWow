@@ -18,7 +18,7 @@ WDL::~WDL()
 
 void WDL::Load(cstring _name)
 {
-	UniquePtr<IFile> f = _Files->Open(_name);
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(_name);
 	if (f == nullptr)
 	{
 		Log::Info("World[%s]: WDL: Error opening.", _name.c_str());

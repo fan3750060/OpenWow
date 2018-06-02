@@ -3,10 +3,13 @@
 // General
 #include "GameStateManager.h"
 
-GameState*                              GameStateManager::currentGameState = nullptr;
-map<GameStatesNames::List, GameState*>  GameStateManager::m_GameStatesCollection;
+GameStateManager::GameStateManager() :
+	m_CurrentGameState(nullptr)
+{
+	AddManager<IGameStateManager>(this);
+}
 
-void GameStateManager::AddGameState(GameStatesNames::List _name, GameState* _gameState)
+void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _gameState)
 {
     assert1(_gameState != nullptr);
     assert1(m_GameStatesCollection.find(_name) == m_GameStatesCollection.end());
@@ -18,46 +21,48 @@ bool GameStateManager::SetGameState(GameStatesNames::List _name)
 {
     assert1(m_GameStatesCollection.find(_name) != m_GameStatesCollection.end());
 
-    GameState* gameState = m_GameStatesCollection[_name];
+    IGameState* gameState = m_GameStatesCollection[_name];
     return SetGameState(gameState);
 }
 
-bool GameStateManager::SetGameState(GameState* _newGameState)
+bool GameStateManager::SetGameState(IGameState* _newGameState)
 {
     assert1(_newGameState);
 
-    Log::Print("Engine[]: Setting new GameState.");
+    Log::Print("GameStateManager[]: Setting new CGameState.");
 
     // 1. Unset current GameState
-    if (currentGameState != nullptr)
+    if (m_CurrentGameState != nullptr)
     {
-        currentGameState->Unset();
-        currentGameState->m_IsCurrent = false;
+        m_CurrentGameState->Unset();
+        m_CurrentGameState->SetCurrent(false);
     }
 
     // 2. If new GameState not inited, init them
     if (!_newGameState->IsInited())
     {
-        Log::Warn("Engine[]: New GameState in not inited. Initializating.");
+        Log::Warn("GameStateManager[]: New CGameState in not inited. Initializating.");
         if (_newGameState->Init())
         {
-            _newGameState->m_IsInited = true;
+			Log::Error("GameStateManager[]: New CGameState is inited successfully.");
+			_newGameState->SetInited(true);
         }
         else
         {
-            Log::Error("Engine[]: Error initing new GameState.");
+            Log::Error("GameStateManager[]: Error initing new CGameState.");
         }
     }
 
     // 3. Set new GameState
-    currentGameState = _newGameState;
-    if (currentGameState->Set())
+    m_CurrentGameState = dynamic_cast<CGameState*>(_newGameState);
+    if (m_CurrentGameState->Set())
     {
-        currentGameState->m_IsCurrent = true;
+		Log::Error("GameStateManager[]: New CGameState is current now.");
+        m_CurrentGameState->SetCurrent(true);
     }
     else
     {
-        Log::Error("Engine[]: Error setting current new GameState.");
+        Log::Error("CEngine[]: Error setting current new CGameState.");
     }
 
     return true;

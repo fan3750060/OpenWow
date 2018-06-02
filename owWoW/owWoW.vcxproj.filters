@@ -175,6 +175,12 @@
     <ClCompile Include="LiquidInstance.cpp">
       <Filter>Liquid</Filter>
     </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MDXBuilder.cpp">
+      <Filter>MDX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -318,6 +324,12 @@
     </ClInclude>
     <ClInclude Include="LiquidInstance.h">
       <Filter>Liquid</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="MDXBuilder.h">
+      <Filter>MDX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

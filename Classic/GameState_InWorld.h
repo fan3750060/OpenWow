@@ -1,20 +1,17 @@
 #pragma once
 
-class GameState_InWorld : public GameState
+class GameState_InWorld : public CGameState
 {
 public:
-    GameState_InWorld(Engine* _Engine) : GameState(_Engine) {}
-
     bool Init() override;
     void Destroy() override;
 
-    //
-
+    // IUpdatable
     void Input(double t, double dt) override;
     void Update(double t, double dt) override;
-    void Render(double t, double dt);
-    void RenderUI() override;
 
+	// IRenderableUI
+	void RenderUI() override;
     void RenderUIDebug();
 
     // IInputListener

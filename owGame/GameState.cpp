@@ -3,27 +3,31 @@
 // General
 #include "GameState.h"
 
-GameState::GameState(Engine* _Engine) 
-	: m_IsInited(false), 
+CGameState::CGameState() : 
+	m_IsInited(false), 
 	m_IsCurrent(false),
-	m_Engine(_Engine)
-{}
+	m_DistancesSettings(GetSettingsGroup<CGroupDistances>()),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
+{
+	m_Engine = GetManager<IEngine>();
+}
 
-bool GameState::Init()
+bool CGameState::Init()
 {
     m_Window = new UIWindow();
-    m_Window->Init(vec2(0.0f, 0.0f), vec2(_Config.windowSizeX, _Config.windowSizeY), nullptr);
+    m_Window->Init(vec2(0.0f, 0.0f), vec2(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY), nullptr);
 
     m_IsInited = true;
 
     return true;
 }
 
-void GameState::Destroy()
+void CGameState::Destroy()
 {
 }
 
-bool GameState::Set()
+bool CGameState::Set()
 {
 	_Bindings->RegisterUpdatableObject(this);
 	_Bindings->RegisterRenderableUIObject(this, 100);
@@ -34,7 +38,7 @@ bool GameState::Set()
     return true;
 }
 
-void GameState::Unset()
+void CGameState::Unset()
 {
 	_Bindings->UnregisterUpdatableObject(this);
 	_Bindings->UnregisterRenderableUIObject(this);

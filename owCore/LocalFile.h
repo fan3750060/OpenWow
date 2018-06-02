@@ -2,12 +2,12 @@
 
 #include "File.h"
 
-class LocalFile : public File
+class CLocalFile : public CFile
 {
 public:
-	LocalFile(cstring _fullFileName);
-	LocalFile(cstring _name, cstring _path);
-	~LocalFile();
+	CLocalFile(cstring _fullFileName);
+	CLocalFile(cstring _name, cstring _path);
+	~CLocalFile();
 
 	// IFile
 	bool Open() override;

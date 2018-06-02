@@ -9,7 +9,7 @@ struct R_Shader
 		m_RenderDevice(_RenderDevice)
 	{}
 	
-	R_Shader* createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
+	void createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
 	void destroyShader();
 	void bindShader();
 	void unbindShader();

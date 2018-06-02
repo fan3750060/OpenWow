@@ -91,7 +91,7 @@ struct WMO_DoodadSet
 	static const uint32 __size = 32;
 };
 
-class WMO : public RefItem
+class WMO : public CRefItem
 {
 public:
 	WMO(cstring _fileName);

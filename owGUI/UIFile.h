@@ -1,9 +1,7 @@
 #pragma once
 
-class XMLNode;
-class XMLFile;
-
-class UIFile {
+class UIFile 
+{
 public:
 	 bool Load(cstring _filename);
 	 void Destroy();

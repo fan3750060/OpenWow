@@ -5,13 +5,13 @@
 
 struct RenderableUIObjectCompare
 {
-	bool operator() (const RenderableUIObject* left, const RenderableUIObject* right) const
+	bool operator() (const CRenderableUIObject* left, const CRenderableUIObject* right) const
 	{
 		return left->GetDrawOrder() < right->GetDrawOrder();
 	}
 };
 
-bool RenderableUIObjectCollection::RegisterObject(RenderableUIObject* _uiObject, uint32 _DrawOrder)
+bool CRenderableUIObjectCollection::RegisterObject(CRenderableUIObject* _uiObject, uint32 _DrawOrder)
 {
 	_uiObject->SetDrawOrder(_DrawOrder);
 	m_Objects.push_back(_uiObject);
@@ -20,13 +20,13 @@ bool RenderableUIObjectCollection::RegisterObject(RenderableUIObject* _uiObject,
 	return true;
 }
 
-void RenderableUIObjectCollection::UnregisterObject(RenderableUIObject * _uiObject)
+void CRenderableUIObjectCollection::UnregisterObject(CRenderableUIObject * _uiObject)
 {
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 	m_ObjectsNeedSort = true;
 }
 
-void RenderableUIObjectCollection::RenderUI()
+void CRenderableUIObjectCollection::RenderUI()
 {
 	if (m_ObjectsNeedSort)
 	{

@@ -3,13 +3,17 @@
 // General
 #include "WorldRender.h"
 
-WorldRender::WorldRender(WorldController * _WorldContoller)
-	: m_WorldContoller(_WorldContoller)
+
+
+WorldRender::WorldRender(WorldController * _WorldContoller)	: 
+	m_WorldContoller(_WorldContoller),
+	groupVideo(GetSettingsGroup<CGroupVideo>()),
+	groupQuality(GetSettingsGroup<CGroupQuality>())
 {
-	m_TestRenderBuffer = _Render->r.createRenderBuffer(_Config.windowSizeX, _Config.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 0);
+	m_TestRenderBuffer = _Render->r.createRenderBuffer(groupVideo.windowSizeX, groupVideo.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 0);
 
 	m_TestCamera = new Camera;
-	m_TestCamera->setupViewParams(45.0f, _Config.aspectRatio, 2.0f, 15000.0f);
+	m_TestCamera->setupViewParams(Math::Pi / 4.0f, groupVideo.aspectRatio, 2.0f, 15000.0f);
 
 	_Bindings->RegisterRenderable3DObject(this, 6);
 	SetVisible(true);
@@ -35,10 +39,6 @@ void WorldRender::PreRender3D(double t, double dt)
 
 void WorldRender::Render3D()
 {
-	_Render->mainCamera->onPostUpdate();
-
-	// Main frame
-
 	_Render->rb->setRenderBuffer();
 	_Render->r.clear();
 	RenderGeom();
@@ -146,7 +146,7 @@ void WorldRender::RenderPostprocess()
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
 	DSDirectionalLightPass(light);*/
 
-	if (_Config.drawfog)
+	if (groupQuality.drawfog)
 	{
 		DSFogRenderPass();
 	}

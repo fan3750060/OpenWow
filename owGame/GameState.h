@@ -4,26 +4,30 @@
 class GameStateManager;
 class UIWindow;
 
-class GameState : public IUpdatable, public RenderableUIObject, public IInputListener
+class CGameState : public IGameState, public IUpdatable, public CRenderableUIObject, public IInputListener
 {
 	friend GameStateManager;
 public:
-    GameState(Engine* _Engine);
+    CGameState();
 
-	virtual bool Init();
-	virtual void Destroy();
-
-    virtual bool Set();
-    virtual void Unset();
-
-    virtual void Render(double t, double dt) {};
-
-	bool IsInited() const { return m_IsInited; }
-    bool IsCurrent() const { return m_IsCurrent; }
+	// IGameState
+	virtual bool Init() override;
+	virtual void Destroy() override;
+    virtual bool Set() override;
+    virtual void Unset() override;
+	void SetInited(bool _value) override { m_IsInited = _value; }
+	bool IsInited() const override { return m_IsInited; }
+	void SetCurrent(bool _value) override { m_IsCurrent = _value; }
+    bool IsCurrent() const override { return m_IsCurrent; }
 
 protected:
+    UIWindow*			m_Window;
+	IEngine*			m_Engine;
+	CGroupDistances&	m_DistancesSettings;
+	CGroupQuality&		m_QualitySettings;
+	CGroupVideo&		m_VideoSettings;
+
+private:
 	bool      m_IsInited;
-    bool      m_IsCurrent;
-    UIWindow* m_Window;
-	Engine*   m_Engine;
+	bool      m_IsCurrent;
 };

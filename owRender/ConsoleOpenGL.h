@@ -1,11 +1,5 @@
 #pragma once
 
-class Console;
-class IInputListener;
-class DebugOutput;
-
-//
-
 struct ConsoleMessage
 {
 	ConsoleMessage(cstring _text, const Color _color)
@@ -20,14 +14,15 @@ struct ConsoleMessage
 
 //
 
-class ConsoleOpenGL : public Console, public RenderableUIObject, public IInputListener, public DebugOutput
+class CConsoleOpenGL : public CRenderableUIObject, public IInputListener, public CDebugOutput
 {
 	typedef vector<ConsoleMessage*> ConsoleMessages;
 public:
 
-	ConsoleOpenGL();
-	~ConsoleOpenGL();
+	CConsoleOpenGL();
+	~CConsoleOpenGL();
 
+	// IRenderableUI
 	void RenderUI() override;
 
 	// IInputListener
@@ -40,13 +35,15 @@ public:
 	bool OnCharInput(uint32 _char) override;
 
 protected:
-	void Print(string _messageFmt, DebugOutput::DebugMessageType _type);
+	// CDebugOutput
+	void Print(string _messageFmt, CDebugOutput::DebugMessageType _type);
 
 private:
 	vec2 windowSize;
-
-	bool opened;
 	Font* consoleFont;
+
+	bool m_IsOpened;
+	
 	int fontHeight;
 	int linesInConsole;
 	int consoleHeight;
@@ -58,7 +55,9 @@ private:
 	string inputString;
 
 	// Help commands
-	vector<ConsoleCommand*> commandsHelper;
+	vector<IConsoleCommand*> commandsHelper;
 	vec2 helperOffset;
 	int helperSelected;
+
+	IConsole* m_MainConsole;
 };

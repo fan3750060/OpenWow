@@ -1,6 +1,6 @@
 #pragma once
 
-class RenderableUIObject : public IRenderableUI, public IOrderedObject
+class CRenderableUIObject : public IRenderableUI, public IOrderedObject
 {
 public:
 	void SetDrawOrder(uint32 _order) override { m_DrawOrder = _order; }

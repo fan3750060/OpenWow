@@ -3,7 +3,7 @@
 #include "Animated.h"
 #include "MDX_Skin.h"
 
-#include "../shared/pack_begin.h"
+#include __PACK_BEGIN
 
 struct M2Bounds
 {
@@ -210,6 +210,8 @@ struct M2Camera // TODO Spline keys
 {
     uint32 type; // 0: portrait, 1: characterinfo; -1: else (flyby etc.); referenced backwards in the lookup table.
 
+	float fov;
+
     float far_clip;
     float near_clip;
 
@@ -220,7 +222,6 @@ struct M2Camera // TODO Spline keys
     vec3 target_position_base;
 
     M2Track<float> roll; // The camera can have some roll-effect. Its 0 to 2*Pi. 
-    M2Track<float> FoV;  // Units are not radians. Multiplying by 35 seems to be the correct # of degrees. This is incredibly important, as otherwise e.g. loading screen models will look totally wrong.
 };
 
 //
@@ -465,4 +466,4 @@ struct ModelHeader
 
 #define	TEXTURE_MAX	128
 
-#include "../shared/pack_end.h"
+#include __PACK_END

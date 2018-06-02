@@ -1,28 +1,44 @@
 #pragma once
 
-class DebugOutput;
+// FORWARD BEGIN
+class Log;
+// FORWARD END
+
+class CLog : public ILog
+{
+	friend class Log;
+public:
+    CLog();
+	~CLog();
+
+    void Info(const char* _message, ...);
+    void Print(const char* _message, ...);
+    void Green(const char* _message, ...);
+    void Warn(const char* _message, ...);
+    void Error(const char* _message, ...);
+    void Fatal(const char* _message, ...);
+
+	// ILog
+	bool AddDebugOutput(IDebugOutput* _debugOutput) override;
+	bool DeleteDebugOutput(IDebugOutput* _debugOutput) override;
+
+private:
+    void PushMessageToAllDebugOutputs(const char* _message, IDebugOutput::DebugMessageType _type, va_list& _vaList);
+
+private:
+    vector<IDebugOutput*> m_DebugOutputs;
+    CRITICAL_SECTION debugCS;
+};
+
+// Helper class to fast access
 
 class Log
 {
 public:
-    static bool Init();
-    static void Destroy();
-
-	static bool AddDebugOutput(DebugOutput* _debugOutput);
-    static bool DeleteDebugOutput(DebugOutput* _debugOutput);
-
-    static void Info(const char* _message, ...);
-    static void Print(const char* _message, ...);
-    static void Green(const char* _message, ...);
-    static void Warn(const char* _message, ...);
-    static void Error(const char* _message, ...);
-
-    static void Fatal(const char* _message, ...);
-
-private:
-    static void PushMessageToAllDebugOutputs(const char* _message, int _type, va_list& _vaList);
-
-private:
-    static vector<DebugOutput*> debugOutputs;
-    static CRITICAL_SECTION debugCS;
+	static void Info(const char* _message, ...);
+	static void Print(const char* _message, ...);
+	static void Green(const char* _message, ...);
+	static void Warn(const char* _message, ...);
+	static void Error(const char* _message, ...);
+	static void Fatal(const char* _message, ...);
 };

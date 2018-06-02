@@ -7,9 +7,7 @@ __interface IOrderedObject
 };
 
 __interface IObject
-{
-
-};
+{};
 
 __interface IInputListener : public IObject
 {

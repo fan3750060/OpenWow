@@ -1,14 +1,11 @@
 #pragma once
 
-class FilesManager : public IFilesManager
+class CFilesManager : public IFilesManager
 {
-	CLASS_INSTANCE(FilesManager);
 public:
-	FilesManager();
-	~FilesManager();
+	CFilesManager();
+	~CFilesManager();
 
 	// IFilesManager
 	IFile* Open(cstring _fileName) override;
 };
-
-#define _Files FilesManager::instance()

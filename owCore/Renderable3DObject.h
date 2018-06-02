@@ -1,9 +1,9 @@
 #pragma once
 
-class Renderable3DObject : public IRenderable3D, public IOrderedObject
+class CRenderable3DObject : public IRenderable3D, public IOrderedObject
 {
 public:
-	Renderable3DObject() :
+	CRenderable3DObject() :
 		m_IsVisible(false)
 	{}
 

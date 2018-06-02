@@ -27,7 +27,7 @@ enum BlendModes
 	M2BLEND_MOD2X
 };
 
-class MDX : public RefItem
+class MDX : public CRefItem
 {
 public:
 	MDX(cstring name);

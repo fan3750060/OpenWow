@@ -12,9 +12,9 @@ Model_Skin::Model_Skin(MDX* _parent, IFile* f, M2SkinProfile& view)
 	// Skin data
 	uint16*        vertexesIndex = (uint16*)        (f->GetData() + view.vertices.offset);
 	uint16*        indexesIndex  = (uint16*)        (f->GetData() + view.indices.offset);
-	M2SkinBones*   bonesIndex    = (M2SkinBones*)        (f->GetData() + view.bones.offset);
-	M2SkinSection* skins         = (M2SkinSection*) (f->GetData() + view.submeshes.offset);
-	M2SkinBatch*   skinBatch     = (M2SkinBatch*)   (f->GetData() + view.batches.offset);
+	SM2_SkinBones*   bonesIndex    = (SM2_SkinBones*)	(f->GetData() + view.bones.offset);
+	SM2_SkinSection* skins         = (SM2_SkinSection*) (f->GetData() + view.submeshes.offset);
+	SM2_SkinBatch*   skinBatch     = (SM2_SkinBatch*)   (f->GetData() + view.batches.offset);
     uint32         bonesMax      = view.boneCountMax;
 
 	//------------
@@ -227,18 +227,6 @@ void Model_Skin::Draw()
 	{
 		return;
 	}
-
-	bool one = false;
-	for (uint32_t i = 0; i < m_Batches.size(); i++)
-	{
-		if (showGeosets[m_Batches[i]->m2SkinIndex])
-		{
-			one = true;
-			break;
-		}
-	}
-
-	assert1(one);
 
 	_Render->TechniquesMgr()->m_Model->Bind();
 	_Render->TechniquesMgr()->m_Model->SetPVW();

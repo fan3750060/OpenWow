@@ -3,7 +3,7 @@
 // General
 #include "DebugOutput.h"
 
-void DebugOutput::PushMessage(DebugOutput::DebugMessageType _type, const char* _message, va_list& _vaList)
+void CDebugOutput::PushMessage(CDebugOutput::DebugMessageType _type, const char* _message, va_list& _vaList)
 {
 	// Parse args end
 	int len = vsnprintf(NULL, 0, _message, _vaList);
@@ -16,7 +16,7 @@ void DebugOutput::PushMessage(DebugOutput::DebugMessageType _type, const char* _
 	}
 }
 
-void DebugOutput::PushMessage(cstring _message, DebugOutput::DebugMessageType _type)
+void CDebugOutput::PushMessage(cstring _message, CDebugOutput::DebugMessageType _type)
 {
 	string messageWithPrefix;
 

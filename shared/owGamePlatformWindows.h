@@ -3,4 +3,4 @@
 //---------------------------------------------------------//
 //--                    Common                           --//
 //---------------------------------------------------------//
-#include "../owGamePlatformWindows/PlatformWindows.h"
+#include "../owGamePlatformWindows/WindowsPlatformFactory.h"

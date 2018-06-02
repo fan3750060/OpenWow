@@ -2,7 +2,7 @@
 
 #include "TexturesManager.h"
 
-class Image : public RefItem
+class Image : public CRefItem
 {
 public:
     struct CoordsRotation

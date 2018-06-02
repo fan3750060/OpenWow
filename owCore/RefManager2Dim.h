@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RefItem.h"
+#include "CRefItem.h"
 
 template <class T, class ID_TYPE>
 class RefManager2Dim

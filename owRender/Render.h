@@ -83,12 +83,17 @@ public:
     R_RenderBuffer* rbFinal;
     Camera* mainCamera;
 
+	HGLRC glrc1;
+	HGLRC glrc2;
+	HDC hdc;
+
 private:
-	RenderStorage * m_RenderStorage;
+	RenderStorage*			m_RenderStorage;
 	TexturesManager*        m_TexturesManager;
 	FontsManager*           m_FontsManager;
 	TechniquesManager*      m_TechniquesManager;
 	
+	CGroupVideo& m_VideoSettings;
 };
 
 #define _Render RenderGL::instance()

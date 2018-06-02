@@ -38,11 +38,11 @@
 
 /* define values used by blizzard as flags. */
 #define LIBMPQ_FLAG_EXISTS			0x80000000	/* set if file exists, reset when the file was deleted. */
-#define LIBMPQ_FLAG_ENCRYPTED			0x00010000	/* indicates whether file is encrypted. */
-#define LIBMPQ_FLAG_COMPRESSED			0x0000FF00	/* file is compressed. */
-#define LIBMPQ_FLAG_COMPRESS_PKZIP		0x00000100	/* compression made by pkware data compression library. */
-#define LIBMPQ_FLAG_COMPRESS_MULTI		0x00000200	/* multiple compressions. */
-#define LIBMPQ_FLAG_COMPRESS_NONE		0x00000300	/* no compression (no blizzard flag used by myself). */
+#define LIBMPQ_FLAG_ENCRYPTED		0x00010000	/* indicates whether file is encrypted. */
+#define LIBMPQ_FLAG_COMPRESSED		0x0000FF00	/* file is compressed. */
+#define LIBMPQ_FLAG_COMPRESS_PKZIP	0x00000100	/* compression made by pkware data compression library. */
+#define LIBMPQ_FLAG_COMPRESS_MULTI	0x00000200	/* multiple compressions. */
+#define LIBMPQ_FLAG_COMPRESS_NONE	0x00000300	/* no compression (no blizzard flag used by myself). */
 #define LIBMPQ_FLAG_SINGLE			0x01000000	/* file is stored in one single sector, first seen in world of warcraft. */
 #define LIBMPQ_FLAG_CRC				0x04000000	/* compressed block offset table has CRC checksum. */
 
@@ -75,7 +75,7 @@ typedef struct
 	uint32_t	block_table_offset;	/* file position of mpq_block, each entry has 16 bytes. */
 	uint32_t	hash_table_count;	/* number of entries in hash table. */
 	uint32_t	block_table_count;	/* number of entries in the block table. */
-} PACK_STRUCT mpq_header_s;
+} mpq_header_s;
 
 /* mpq extended archive header, used since world of warcraft - the burning crusade. */
 typedef struct
@@ -83,7 +83,7 @@ typedef struct
 	uint64_t	extended_offset;	/* offset to the beginning of the extended block table, relative to the beginning of the archive. */
 	uint16_t	hash_table_offset_high;	/* upper 16 bits of the hash table offset for large archives. */
 	uint16_t	block_table_offset_high;/* upper 16 bits of the block table offset for large archives.*/
-} PACK_STRUCT mpq_header_ex_s;
+} mpq_header_ex_s;
 
 /* hash entry, all files in the archive are searched by their hashes. */
 typedef struct
@@ -93,7 +93,7 @@ typedef struct
 	uint16_t	locale;			/* locale information. */
 	uint16_t	platform;		/* platform information and zero is default. */
 	uint32_t	block_table_index;	/* index to file description block. */
-} PACK_STRUCT mpq_hash_s;
+} mpq_hash_s;
 
 /* file description block contains informations about the file. */
 typedef struct
@@ -102,13 +102,13 @@ typedef struct
 	uint32_t	packed_size;		/* packed file size. */
 	uint32_t	unpacked_size;		/* unpacked file size. */
 	uint32_t	flags;			/* flags. */
-} PACK_STRUCT mpq_block_s;
+} mpq_block_s;
 
 /* extended file description block contains information about the offset beyond 2^32 (4GB). */
 typedef struct
 {
 	uint16_t	offset_high;		/* upper 16 bit of the file offset in archive. */
-} PACK_STRUCT mpq_block_ex_s;
+} mpq_block_ex_s;
 
 /* file structure used since diablo 1.00 (0x38 bytes). */
 typedef struct
@@ -116,20 +116,19 @@ typedef struct
 	uint32_t	seed;			/* seed used for file decrypt. */
 	uint32_t	*packed_offset;		/* position of each file block (only for packed files). */
 	uint32_t	open_count;		/* number of times it has been opened - used for freeing */
-} PACK_STRUCT mpq_file_s;
+} mpq_file_s;
 
 /* map structure for valid blocks and hashes (first seen in warcraft 3 archives). */
 typedef struct
 {
 	uint32_t	block_table_indices;	/* real mapping for file number to block entry. */
 	uint32_t	block_table_diff;	/* block table difference between valid blocks and invalid blocks before. */
-} PACK_STRUCT mpq_map_s;
+} mpq_map_s;
 #include "../../shared/pack_end.h"
 
 /* archive structure used since diablo 1.00 by blizzard. */
 struct mpq_archive
 {
-
 	/* generic file information. */
 	FILE		*fp;			/* file handle. */
 

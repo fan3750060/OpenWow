@@ -6,7 +6,6 @@ class WMOsManager : public IWMOManager, public RefManager1Dim<WMO>
 {
 public:
 	WMOsManager();
-	~WMOsManager();
 
 	// IWMOManager
 	WMO* Add(cstring name) { return RefManager1Dim::Add(name); }

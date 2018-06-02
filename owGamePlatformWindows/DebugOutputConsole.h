@@ -1,15 +1,16 @@
 #pragma once
 
-class DebugOutput_ConsoleWindows : public DebugOutput
+class DebugOutput_ConsoleWindows : public CDebugOutput
 {
 public:
 	DebugOutput_ConsoleWindows();
 	~DebugOutput_ConsoleWindows();
 
 protected:
-	 void Print(string _messageFmt, DebugOutput::DebugMessageType _type);
+	// CDebugOutput
+	void Print(string _messageFmt, CDebugOutput::DebugMessageType _type);
 
-protected:
+private:
 	enum ConsoleWindowsColor
 	{
 		GRAY = 8,
@@ -22,7 +23,6 @@ protected:
 		WHITE = 15
 	};
 
-private:
-	HANDLE hConsole;
-	unsigned short defaultConsoleColor;
+	HANDLE m_ConsoleHandle;
+	uint16 m_DefaultConsoleColor;
 };

@@ -83,7 +83,9 @@ void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 // Common
 // =================================================================================================
 
-RenderDevice::RenderDevice()
+RenderDevice::RenderDevice() :
+	m_DeviceCapsSettings(GetSettingsGroup<CGroupRenderCaps>()),
+	m_OpenGLSettings(GetSettingsGroup<CGroupOpenGL>())
 {
 	_numVertexLayouts = 0;
 
@@ -161,24 +163,24 @@ bool RenderDevice::init()
 	}
 
 	// Check that OpenGL 3.3 is available
-	if (_Config.OpenGL.majorVersion * 10 + _Config.OpenGL.minorVersion < 33)
+	if (m_OpenGLSettings.majorVersion * 10 + m_OpenGLSettings.minorVersion < 33)
 	{
 		Log::Error("OpenGL 3.3 not available");
 		failed = true;
 	}
 
 	// Check that required extensions are supported
-	if (!_Config.OpenGL.EXT_texture_filter_anisotropic)
+	if (!m_OpenGLSettings.EXT_texture_filter_anisotropic)
 	{
 		Log::Error("Extension EXT_texture_filter_anisotropic not supported");
 		failed = true;
 	}
-	if (!_Config.OpenGL.EXT_texture_compression_s3tc)
+	if (!m_OpenGLSettings.EXT_texture_compression_s3tc)
 	{
 		Log::Error("Extension EXT_texture_compression_s3tc not supported");
 		failed = true;
 	}
-	if (!_Config.OpenGL.EXT_texture_sRGB)
+	if (!m_OpenGLSettings.EXT_texture_sRGB)
 	{
 		Log::Error("Extension EXT_texture_sRGB not supported");
 		failed = true;
@@ -186,7 +188,7 @@ bool RenderDevice::init()
 
 	if (failed)
 	{
-		Log::Error("Failed to init renderer backend (OpenGL %d.%d), retrying with legacy OpenGL 2.1 backend", _Config.OpenGL.majorVersion, _Config.OpenGL.minorVersion);
+		Log::Error("Failed to init renderer backend (OpenGL %d.%d), retrying with legacy OpenGL 2.1 backend", m_OpenGLSettings.majorVersion, m_OpenGLSettings.minorVersion);
 		return false;
 	}
 
@@ -196,15 +198,15 @@ bool RenderDevice::init()
 	glDebugMessageCallback(glDebugOutput, nullptr);
 
 	// Set capabilities
-	_Config.DeviceCaps.texFloat = true;
-	_Config.DeviceCaps.texNPOT = true;
-	_Config.DeviceCaps.rtMultisampling = true;
-	_Config.DeviceCaps.geometryShaders = true;
-	_Config.DeviceCaps.tesselation = _Config.OpenGL.majorVersion >= 4 && _Config.OpenGL.minorVersion >= 1;
-	_Config.DeviceCaps.computeShaders = _Config.OpenGL.majorVersion >= 4 && _Config.OpenGL.minorVersion >= 3;
-	_Config.DeviceCaps.instancing = true;
-	_Config.DeviceCaps.maxJointCount = 75; // currently, will be changed soon
-	_Config.DeviceCaps.maxTexUnitCount = 96; // for most modern hardware it is 192 (GeForce 400+, Radeon 7000+, Intel 4000+). Although 96 should probably be enough.
+	m_DeviceCapsSettings.texFloat = true;
+	m_DeviceCapsSettings.texNPOT = true;
+	m_DeviceCapsSettings.rtMultisampling = true;
+	m_DeviceCapsSettings.geometryShaders = true;
+	m_DeviceCapsSettings.tesselation = m_OpenGLSettings.majorVersion >= 4 && m_OpenGLSettings.minorVersion >= 1;
+	m_DeviceCapsSettings.computeShaders = m_OpenGLSettings.majorVersion >= 4 && m_OpenGLSettings.minorVersion >= 3;
+	m_DeviceCapsSettings.instancing = true;
+	m_DeviceCapsSettings.maxJointCount = 75; // currently, will be changed soon
+	m_DeviceCapsSettings.maxTexUnitCount = 96; // for most modern hardware it is 192 (GeForce 400+, Radeon 7000+, Intel 4000+). Although 96 should probably be enough.
 
 	// Find maximum number of storage buffers in compute shader
 	glGetIntegerv(GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS, (GLint *)&_maxComputeBufferAttachments);
@@ -264,6 +266,8 @@ void RenderDevice::beginRendering()
 	resetStates();
 }
 
+
+
 // =================================================================================================
 // Geometry
 // =================================================================================================
@@ -279,6 +283,8 @@ R_GeometryInfo* RenderDevice::beginCreatingGeometry(uint32 vlObj)
 
 	return vao;
 }
+
+
 
 // =================================================================================================
 // Buffers
@@ -300,7 +306,7 @@ R_Buffer* RenderDevice::createIndexBuffer(uint32 size, const void *data, bool _i
 
 R_Buffer* RenderDevice::createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic)
 {
-	if (_Config.DeviceCaps.computeShaders)
+	if (m_DeviceCapsSettings.computeShaders)
 	{
 		R_Buffer* buf = new R_Buffer(this);
 		buf->createShaderStorageBuffer(size, data, _isDynamic);
@@ -340,7 +346,7 @@ R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int
 R_Shader* RenderDevice::createShader(const char * vertexShaderSrc, const char * fragmentShaderSrc, const char * geometryShaderSrc, const char * tessControlShaderSrc, const char * tessEvaluationShaderSrc, const char * computeShaderSrc)
 {
 	R_Shader* shader = new R_Shader(this);
-	assert1(shader->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc));
+	shader->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
 	return shader;
 }
 
@@ -389,233 +395,6 @@ uint32 RenderDevice::getQueryResult(uint32 queryObj)
 	uint32 samples = 0;
 	glGetQueryObjectuiv(queryObj, GL_QUERY_RESULT, &samples);
 	return samples;
-}
-
-
-
-// =================================================================================================
-// Internal state management
-// =================================================================================================
-
-void RenderDevice::checkError()
-{
-	uint32 error = glGetError();
-	assert1(error != GL_INVALID_ENUM);
-	assert1(error != GL_INVALID_VALUE);
-	assert1(error != GL_INVALID_OPERATION);
-	assert1(error != GL_OUT_OF_MEMORY);
-	assert1(error != GL_STACK_OVERFLOW && error != GL_STACK_UNDERFLOW);
-}
-
-bool RenderDevice::applyVertexLayout(R_GeometryInfo& geo)
-{
-	uint32 newVertexAttribMask = 0;
-
-	if (_curShaderId == 0)
-	{
-		return false;
-	}
-
-	if (geo.layout == 0)
-	{
-		return false;
-	}
-
-	R_VertexLayout &vl = _vertexLayouts[geo.layout - 1];
-	R_InputLayout &inputLayout = _curShaderId->inputLayouts[geo.layout - 1];
-
-	if (!inputLayout.valid)
-	{
-		return false;
-	}
-
-	// Set vertex attrib pointers
-	for (uint32 i = 0; i < vl.numAttribs; ++i)
-	{
-		int8 attribIndex = inputLayout.attribIndices[i];
-		if (attribIndex >= 0)
-		{
-			R_VertexLayoutAttrib& attrib = vl.attribs[i];
-			const R_VertexBufferSlot& vbSlot = geo.vertexBufInfo[attrib.vbSlot];
-
-			assert1(geo.vertexBufInfo[attrib.vbSlot].vbObj->glObj != 0 && geo.vertexBufInfo[attrib.vbSlot].vbObj->type == GL_ARRAY_BUFFER);
-
-			glBindBuffer(GL_ARRAY_BUFFER, geo.vertexBufInfo[attrib.vbSlot].vbObj->glObj);
-			glVertexAttribPointer(attribIndex, attrib.size, GL_FLOAT, GL_FALSE, vbSlot.stride, (char *)0 + vbSlot.offset + attrib.offset);
-
-			newVertexAttribMask |= 1 << attribIndex;
-		}
-	}
-
-
-	for (uint32 i = 0; i < 16; ++i)
-	{
-		uint32 curBit = 1 << i;
-		if ((newVertexAttribMask & curBit) != (_activeVertexAttribsMask & curBit))
-		{
-			if (newVertexAttribMask & curBit)
-			{
-				glEnableVertexAttribArray(i);
-			}
-			else
-			{
-				glDisableVertexAttribArray(i);
-			}
-		}
-	}
-	_activeVertexAttribsMask = newVertexAttribMask;
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return true;
-}
-
-void RenderDevice::applySamplerState(R_Texture* tex)
-{
-	uint32 state = tex->samplerState;
-	uint32 target = tex->type;
-
-	const uint32 magFilters[] = {GL_LINEAR, GL_LINEAR, GL_NEAREST};
-	const uint32 minFiltersMips[] = {GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST_MIPMAP_NEAREST};
-	const uint32 maxAniso[] = {1, 2, 4, 0, 8, 0, 0, 0, 16};
-	const uint32 wrapModes[] = {GL_CLAMP_TO_EDGE, GL_REPEAT, GL_CLAMP_TO_BORDER};
-
-	if (tex->hasMips)
-		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFiltersMips[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
-	else
-		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, magFilters[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
-
-	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilters[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
-	glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso[(state & SS_ANISO_MASK) >> SS_ANISO_START]);
-	glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapModes[(state & SS_ADDRU_MASK) >> SS_ADDRU_START]);
-	glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapModes[(state & SS_ADDRV_MASK) >> SS_ADDRV_START]);
-	glTexParameteri(target, GL_TEXTURE_WRAP_R, wrapModes[(state & SS_ADDRW_MASK) >> SS_ADDRW_START]);
-
-	if (state & SS_COMP_LEQUAL)
-	{
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	}
-	else
-	{
-        glTexParameteri(target, GL_TEXTURE_COMPARE_MODE, GL_NONE);
-	}
-}
-
-void RenderDevice::applyRenderStates()
-{
-	// Rasterizer state
-	if (_newRasterState.hash != _curRasterState.hash)
-	{
-		// FILL MODE
-		if (_newRasterState.fillMode == RS_FILL_SOLID)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-
-		// CULLING
-		if (_newRasterState.cullMode == RS_CULL_BACK)
-		{
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
-		}
-		else if (_newRasterState.cullMode == RS_CULL_FRONT)
-		{
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
-		}
-		else
-		{
-			glDisable(GL_CULL_FACE);
-		}
-
-		// SCISSOR
-		if (!_newRasterState.scissorEnable)
-		{
-			glDisable(GL_SCISSOR_TEST);
-		}
-		else
-		{
-			glEnable(GL_SCISSOR_TEST);
-		}
-
-		// MASK
-		if (_newRasterState.renderTargetWriteMask)
-		{
-			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-		}
-		else
-		{
-			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-		}
-
-		_curRasterState.hash = _newRasterState.hash;
-	}
-
-	// Blend state
-	if (_newBlendState.hash != _curBlendState.hash)
-	{
-		if (!_newBlendState.alphaToCoverageEnable)
-		{
-			glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-		}
-		else
-		{
-			glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-		}
-
-		if (!_newBlendState.blendEnable)
-		{
-			glDisable(GL_BLEND);
-		}
-		else
-		{
-            glEnable(GL_BLEND);
-            glBlendFuncSeparate(oglBlendFuncs[_newBlendState.srcRGBBlendFunc], oglBlendFuncs[_newBlendState.destRGBBlendFunc],
-                                oglBlendFuncs[_newBlendState.srcABlendFunc], oglBlendFuncs[_newBlendState.destABlendFunc]);
-		}
-
-		_curBlendState.hash = _newBlendState.hash;
-	}
-
-	// Depth-stencil state
-	if (_newDepthStencilState.hash != _curDepthStencilState.hash)
-	{
-		if (_newDepthStencilState.depthWriteMask)
-		{
-			glDepthMask(GL_TRUE);
-		}
-		else
-		{
-			glDepthMask(GL_FALSE);
-		}
-
-		if (_newDepthStencilState.depthEnable)
-		{
-			uint32 oglDepthFuncs[8] = {GL_LEQUAL, GL_LESS, GL_EQUAL, GL_GREATER, GL_GEQUAL, GL_ALWAYS, GL_ALWAYS, GL_ALWAYS};
-
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(oglDepthFuncs[_newDepthStencilState.depthFunc]);
-		}
-		else
-		{
-			glDisable(GL_DEPTH_TEST);
-		}
-
-		_curDepthStencilState.hash = _newDepthStencilState.hash;
-	}
-
-	// Number of vertices in patch. Used in tesselation.
-	if (_tessPatchVerts != _lastTessPatchVertsValue)
-	{
-		glPatchParameteri(GL_PATCH_VERTICES, _tessPatchVerts);
-
-		_lastTessPatchVertsValue = _tessPatchVerts;
-	}
 }
 
 
@@ -871,5 +650,232 @@ void RenderDevice::drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint
 		}
 
 		CHECK_GL_ERROR
+	}
+}
+
+
+
+// =================================================================================================
+// Internal state management
+// =================================================================================================
+
+void RenderDevice::checkError()
+{
+	uint32 error = glGetError();
+	assert1(error != GL_INVALID_ENUM);
+	assert1(error != GL_INVALID_VALUE);
+	assert1(error != GL_INVALID_OPERATION);
+	assert1(error != GL_OUT_OF_MEMORY);
+	assert1(error != GL_STACK_OVERFLOW && error != GL_STACK_UNDERFLOW);
+}
+
+bool RenderDevice::applyVertexLayout(R_GeometryInfo& geo)
+{
+	uint32 newVertexAttribMask = 0;
+
+	if (_curShaderId == 0)
+	{
+		return false;
+	}
+
+	if (geo.layout == 0)
+	{
+		return false;
+	}
+
+	R_VertexLayout &vl = _vertexLayouts[geo.layout - 1];
+	R_InputLayout &inputLayout = _curShaderId->inputLayouts[geo.layout - 1];
+
+	if (!inputLayout.valid)
+	{
+		return false;
+	}
+
+	// Set vertex attrib pointers
+	for (uint32 i = 0; i < vl.numAttribs; ++i)
+	{
+		int8 attribIndex = inputLayout.attribIndices[i];
+		if (attribIndex >= 0)
+		{
+			R_VertexLayoutAttrib& attrib = vl.attribs[i];
+			const R_VertexBufferSlot& vbSlot = geo.vertexBufInfo[attrib.vbSlot];
+
+			assert1(geo.vertexBufInfo[attrib.vbSlot].vbObj->glObj != 0 && geo.vertexBufInfo[attrib.vbSlot].vbObj->type == GL_ARRAY_BUFFER);
+
+			glBindBuffer(GL_ARRAY_BUFFER, geo.vertexBufInfo[attrib.vbSlot].vbObj->glObj);
+			glVertexAttribPointer(attribIndex, attrib.size, GL_FLOAT, GL_FALSE, vbSlot.stride, (char *)0 + vbSlot.offset + attrib.offset);
+
+			newVertexAttribMask |= 1 << attribIndex;
+		}
+	}
+
+
+	for (uint32 i = 0; i < 16; ++i)
+	{
+		uint32 curBit = 1 << i;
+		if ((newVertexAttribMask & curBit) != (_activeVertexAttribsMask & curBit))
+		{
+			if (newVertexAttribMask & curBit)
+			{
+				glEnableVertexAttribArray(i);
+			}
+			else
+			{
+				glDisableVertexAttribArray(i);
+			}
+		}
+	}
+	_activeVertexAttribsMask = newVertexAttribMask;
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return true;
+}
+
+void RenderDevice::applySamplerState(R_Texture* tex)
+{
+	uint32 state = tex->samplerState;
+	uint32 target = tex->type;
+
+	const uint32 magFilters[] = { GL_LINEAR, GL_LINEAR, GL_NEAREST };
+	const uint32 minFiltersMips[] = { GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST_MIPMAP_NEAREST };
+	const uint32 maxAniso[] = { 1, 2, 4, 0, 8, 0, 0, 0, 16 };
+	const uint32 wrapModes[] = { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_CLAMP_TO_BORDER };
+
+	if (tex->hasMips)
+		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFiltersMips[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
+	else
+		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, magFilters[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
+
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilters[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
+	glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso[(state & SS_ANISO_MASK) >> SS_ANISO_START]);
+	glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapModes[(state & SS_ADDRU_MASK) >> SS_ADDRU_START]);
+	glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapModes[(state & SS_ADDRV_MASK) >> SS_ADDRV_START]);
+	glTexParameteri(target, GL_TEXTURE_WRAP_R, wrapModes[(state & SS_ADDRW_MASK) >> SS_ADDRW_START]);
+
+	if (state & SS_COMP_LEQUAL)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	}
+	else
+	{
+		glTexParameteri(target, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+	}
+}
+
+void RenderDevice::applyRenderStates()
+{
+	// Rasterizer state
+	if (_newRasterState.hash != _curRasterState.hash)
+	{
+		// FILL MODE
+		if (_newRasterState.fillMode == RS_FILL_SOLID)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+
+		// CULLING
+		if (_newRasterState.cullMode == RS_CULL_BACK)
+		{
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+		}
+		else if (_newRasterState.cullMode == RS_CULL_FRONT)
+		{
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_FRONT);
+		}
+		else
+		{
+			glDisable(GL_CULL_FACE);
+		}
+
+		// SCISSOR
+		if (!_newRasterState.scissorEnable)
+		{
+			glDisable(GL_SCISSOR_TEST);
+		}
+		else
+		{
+			glEnable(GL_SCISSOR_TEST);
+		}
+
+		// MASK
+		if (_newRasterState.renderTargetWriteMask)
+		{
+			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		}
+		else
+		{
+			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		}
+
+		_curRasterState.hash = _newRasterState.hash;
+	}
+
+	// Blend state
+	if (_newBlendState.hash != _curBlendState.hash)
+	{
+		if (!_newBlendState.alphaToCoverageEnable)
+		{
+			glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		}
+		else
+		{
+			glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		}
+
+		if (!_newBlendState.blendEnable)
+		{
+			glDisable(GL_BLEND);
+		}
+		else
+		{
+			glEnable(GL_BLEND);
+			glBlendFuncSeparate(oglBlendFuncs[_newBlendState.srcRGBBlendFunc], oglBlendFuncs[_newBlendState.destRGBBlendFunc],
+				oglBlendFuncs[_newBlendState.srcABlendFunc], oglBlendFuncs[_newBlendState.destABlendFunc]);
+		}
+
+		_curBlendState.hash = _newBlendState.hash;
+	}
+
+	// Depth-stencil state
+	if (_newDepthStencilState.hash != _curDepthStencilState.hash)
+	{
+		if (_newDepthStencilState.depthWriteMask)
+		{
+			glDepthMask(GL_TRUE);
+		}
+		else
+		{
+			glDepthMask(GL_FALSE);
+		}
+
+		if (_newDepthStencilState.depthEnable)
+		{
+			uint32 oglDepthFuncs[8] = { GL_LEQUAL, GL_LESS, GL_EQUAL, GL_GREATER, GL_GEQUAL, GL_ALWAYS, GL_ALWAYS, GL_ALWAYS };
+
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(oglDepthFuncs[_newDepthStencilState.depthFunc]);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+
+		_curDepthStencilState.hash = _newDepthStencilState.hash;
+	}
+
+	// Number of vertices in patch. Used in tesselation.
+	if (_tessPatchVerts != _lastTessPatchVertsValue)
+	{
+		glPatchParameteri(GL_PATCH_VERTICES, _tessPatchVerts);
+
+		_lastTessPatchVertsValue = _tessPatchVerts;
 	}
 }

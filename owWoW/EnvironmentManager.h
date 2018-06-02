@@ -5,13 +5,12 @@
 
 //
 
-class EnvironmentManager : public Renderable3DObject, public IUpdatable
+class EnvironmentManager : public IUpdatable, public CRenderable3DObject
 {
 public:
 	EnvironmentManager();
 	~EnvironmentManager();
 
-	//
 	void InitSkies(DBC_MapRecord* _mapRecord);
 	void outdoorLighting();
 	void SetAmbientLights(bool on);
@@ -46,4 +45,7 @@ public:
 
 	SmartPtr<DayNightCycle> dayNightCycle;
 	DayNightPhase dayNightPhase;
+
+	CGroupDistances& m_DistancesSettings;
+	CGroupQuality& m_QualitySettings;
 };

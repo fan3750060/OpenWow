@@ -7,7 +7,7 @@
 #include "TechniquesManager.h"
 
 Font::Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _widthArray, uint32 _height) :
-	RefItem(),
+	CRefItem(),
 	m_Texture(_texture),
 	m_Geometry(_fontGeometry),
 	m_WidthArray(_widthArray),

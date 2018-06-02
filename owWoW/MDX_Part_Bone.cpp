@@ -13,7 +13,7 @@ void MDX_Part_Bone::init(IFile* f, M2CompBone& b, uint32* global)
 
 	m_BillboardType = BillboardType::BILLBOARD_DISABLED;
 
-	//if (b.translation.interpolation_type || b.rotation.interpolation_type || b.scale.interpolation_type)
+	if (b.translation.interpolation_type || b.rotation.interpolation_type || b.scale.interpolation_type)
 	{
 		if (b.flags.spherical_billboard)
 		{
@@ -42,7 +42,7 @@ void MDX_Part_Bone::init(IFile* f, M2CompBone& b, uint32* global)
 	scale.fix(Fix_XZY);
 }
 
-void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, int anim, int time)
+void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time)
 {
 	if (m_IsCalculated)
 	{

@@ -2,7 +2,7 @@
 
 class RenderDevice;
 
-struct R_Buffer : public RefItem
+struct R_Buffer : public CRefItem
 {
 	R_Buffer(RenderDevice* _RenderDevice) :
 		type(0),

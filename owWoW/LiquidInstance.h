@@ -2,7 +2,7 @@
 
 #include "Liquid.h"
 
-class Liquid_Instance : public SceneNode, public Renderable3DObject
+class Liquid_Instance : public SceneNode, public CRenderable3DObject
 {
 public:
 	Liquid_Instance(Liquid* _liquidObject, cvec3 _position);

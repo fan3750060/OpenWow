@@ -3,7 +3,7 @@
 struct R_GeometryInfo;
 #include "TexturesManager.h"
 
-class Font : public RefItem
+class Font : public CRefItem
 {
 public:
 	Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _widthArray, uint32 _height);

@@ -6,65 +6,131 @@
 // General
 #include "Log.h"
 
-vector<DebugOutput*> Log::debugOutputs;
-CRITICAL_SECTION     Log::debugCS;
+// Additional
+#include "BaseManager.h"
 
-bool Log::Init()
+CLog::CLog()
 {
 	InitializeCriticalSection(&debugCS);
 
-    return true;
+	AddManager<ILog>(this);
 }
 
-void Log::Destroy()
+CLog::~CLog()
 {
+	DelManager<ILog>();
+
 	DeleteCriticalSection(&debugCS);
 
-	debugOutputs.clear();
+	OutputDebugString(L"Log destroyed.\n");
 }
 
-// Log outputs functional
+//--
 
-bool Log::AddDebugOutput(DebugOutput* _debugOutput)
+void CLog::Info(const char* _message, ...)
+{
+	va_list args;
+	va_start(args, _message);
+	PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_INFO, args);
+	va_end(args);
+}
+
+void CLog::Print(const char* _message, ...)
+{
+	va_list args;
+	va_start(args, _message);
+	PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_PRINT, args);
+	va_end(args);
+}
+
+void CLog::Green(const char* _message, ...)
+{
+	va_list args;
+	va_start(args, _message);
+	PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_GREEN, args);
+	va_end(args);
+}
+
+void CLog::Warn(const char* _message, ...)
+{
+	va_list args;
+	va_start(args, _message);
+	PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_WARNING, args);
+	va_end(args);
+}
+
+void CLog::Error(const char* _message, ...)
+{
+	va_list args;
+	va_start(args, _message);
+	PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_ERROR, args);
+	va_end(args);
+}
+
+void CLog::Fatal(const char* _message, ...)
+{
+	FatalMessageBox(_message, "Fatal");
+}
+
+//--
+
+bool CLog::AddDebugOutput(IDebugOutput* _debugOutput)
 {
 	assert1(_debugOutput != nullptr);
 
-	if (find(debugOutputs.begin(), debugOutputs.end(), _debugOutput) != debugOutputs.end())
+	if (find(m_DebugOutputs.begin(), m_DebugOutputs.end(), _debugOutput) != m_DebugOutputs.end())
 	{
 		return false;
 	}
 
-	debugOutputs.push_back(_debugOutput);
+	m_DebugOutputs.push_back(_debugOutput);
 
 	return true;
 }
 
-bool Log::DeleteDebugOutput(DebugOutput* _debugOutput)
+bool CLog::DeleteDebugOutput(IDebugOutput* _debugOutput)
 {
 	assert1(_debugOutput != nullptr);
 
-	auto _debugOutputsIt = find(debugOutputs.begin(), debugOutputs.end(), _debugOutput);
+	auto _debugOutputsIt = find(m_DebugOutputs.begin(), m_DebugOutputs.end(), _debugOutput);
 
 	// Not exists
-	if (_debugOutputsIt == debugOutputs.end())
+	if (_debugOutputsIt == m_DebugOutputs.end())
 	{
 		return false;
 	}
 
-	debugOutputs.erase(_debugOutputsIt);
+	m_DebugOutputs.erase(_debugOutputsIt);
 
 	return true;
 }
 
-// Logs
+void CLog::PushMessageToAllDebugOutputs(const char* _message, IDebugOutput::DebugMessageType _type, va_list& _vaList)
+{
+	EnterCriticalSection(&debugCS); // THREAD
+
+	for (auto it : m_DebugOutputs)
+	{
+		it->PushMessage(_type, _message, _vaList);
+	}
+
+	LeaveCriticalSection(&debugCS); // THREAD
+}
+
+//---------------------------------------------
+//-- Static Log
+//---------------------------------------------
+
+inline CLog* getLog()
+{
+	return dynamic_cast<CLog*>(GetManager<ILog>());
+}
 
 void Log::Info(const char* _message, ...)
 {
 	va_list args;
 	va_start(args, _message);
-
-	PushMessageToAllDebugOutputs(_message, DebugOutput::DebugMessageType::TYPE_INFO, args);
-
+	getLog()->PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_INFO, args);
 	va_end(args);
 }
 
@@ -72,9 +138,7 @@ void Log::Print(const char* _message, ...)
 {
 	va_list args;
 	va_start(args, _message);
-
-	PushMessageToAllDebugOutputs(_message, DebugOutput::DebugMessageType::TYPE_PRINT, args);
-
+	getLog()->PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_PRINT, args);
 	va_end(args);
 }
 
@@ -82,9 +146,7 @@ void Log::Green(const char* _message, ...)
 {
 	va_list args;
 	va_start(args, _message);
-
-	PushMessageToAllDebugOutputs(_message, DebugOutput::DebugMessageType::TYPE_GREEN, args);
-
+	getLog()->PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_GREEN, args);
 	va_end(args);
 }
 
@@ -92,9 +154,7 @@ void Log::Warn(const char* _message, ...)
 {
 	va_list args;
 	va_start(args, _message);
-
-	PushMessageToAllDebugOutputs(_message, DebugOutput::DebugMessageType::TYPE_WARNING, args);
-
+	getLog()->PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_WARNING, args);
 	va_end(args);
 }
 
@@ -102,38 +162,11 @@ void Log::Error(const char* _message, ...)
 {
 	va_list args;
 	va_start(args, _message);
-
-	PushMessageToAllDebugOutputs(_message, DebugOutput::DebugMessageType::TYPE_ERROR, args);
-
+	getLog()->PushMessageToAllDebugOutputs(_message, CDebugOutput::DebugMessageType::TYPE_ERROR, args);
 	va_end(args);
 }
-
-// Fatal & exit
 
 void Log::Fatal(const char* _message, ...)
 {
 	FatalMessageBox(_message, "Fatal");
 }
-
-//
-
-void Log::PushMessageToAllDebugOutputs(const char* _message, int _type, va_list& _vaList)
-{
-	EnterCriticalSection(&debugCS); // THREAD
-
-	if (debugOutputs.empty())
-	{
-		return;
-	}
-
-	for (auto it : debugOutputs)
-	{
-		it->PushMessage(static_cast<DebugOutput::DebugMessageType>(_type), _message, _vaList);
-	}
-
-	LeaveCriticalSection(&debugCS); // THREAD
-}
-
-//
-
-

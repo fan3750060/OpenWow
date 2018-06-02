@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RenderEnums.h"
-
 class Material
 {
 public:
@@ -59,6 +57,8 @@ private:
 	bool m_BlendEnabled;
 	R_BlendFunc m_Blend_SrcFunc;
 	R_BlendFunc m_Blend_DstFunc;
+
+	CGroupQuality& m_QualitySettings;
 
 public:
 	static const uint32 C_DiffuseTextureIndex = 10;

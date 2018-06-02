@@ -35,7 +35,7 @@ R_Texture* R_Texture::createTexture(R_TextureTypes::List type, int width, int he
 {
 	assert1(depth > 0);
 
-	if (!_Config.DeviceCaps.texNPOT)
+	if (!GetSettingsGroup<CGroupRenderCaps>().texNPOT)
 	{
 		// Check if texture is NPOT
 		if ((width & (width - 1)) != 0 || (height & (height - 1)) != 0)
@@ -224,7 +224,7 @@ bool R_Texture::getTextureData(int slice, int mipLevel, void *buffer)
 
 void R_Texture::bindImageToTexture(void *eglImage)
 {
-	if (!_Config.OpenGL.OES_EGL_image)
+	if (!GetSettingsGroup<CGroupOpenGL>().OES_EGL_image)
 	{
 		Log::Error("OES_egl_image not supported");
 	}

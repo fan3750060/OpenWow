@@ -13,16 +13,16 @@ WMOFog::WMOFog(IFile* f)
 
 void WMOFog::setup()
 {
-	if (_Config.drawfog)
+	/*if (_Config.drawfog)
 	{
-		//glFogfv(GL_FOG_COLOR, color);
-		//glFogf(GL_FOG_START, fogDef.fog.startScalar);
-		//glFogf(GL_FOG_END, fogDef.fog.end);
+		glFogfv(GL_FOG_COLOR, color);
+		glFogf(GL_FOG_START, fogDef.fog.startScalar);
+		glFogf(GL_FOG_END, fogDef.fog.end);
 
-		//glEnable(GL_FOG);
+		glEnable(GL_FOG);
 	}
 	else
 	{
-		//glDisable(GL_FOG);
-	}
+		glDisable(GL_FOG);
+	}*/
 }
