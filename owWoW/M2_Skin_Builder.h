@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MDX.h"
-#include "MDX_Skin.h"
+#include "M2_Skin.h"
 
 class CM2_Skin_Builder
 {
@@ -21,7 +21,7 @@ private:
 	MDX*					m_MDX;
 	const SM2_SkinProfile&	m_SkinProto;
 	CM2_Skin*				m_Skin;
-	IFile*					m_F;
+	IFile*					m_F;				// Don't delete this!
 
 	//
 
@@ -30,5 +30,4 @@ private:
 	vector<SM2_SkinBones>	bonesIndexes;
 	vector<SM2_SkinSection> skins;
 	vector<SM2_SkinBatch>	batches;
-
 };

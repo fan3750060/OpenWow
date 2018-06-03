@@ -196,6 +196,9 @@
     <ClInclude Include="R_TextureBuffer.h">
       <Filter>RenderCore\Types</Filter>
     </ClInclude>
+    <ClInclude Include="RibbonEmitters.h">
+      <Filter>Techniques\Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">

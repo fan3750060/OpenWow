@@ -1,7 +1,7 @@
 #pragma once
 
 #include "M2_SkinTypes.h"
-#include "MDX_Skin_Batch.h"
+#include "M2_Skin_Batch.h"
 
 // FORWARD BEGIN
 class CM2_Skin_Builder;
@@ -17,9 +17,9 @@ public:
 	void Draw();
 
 private:
-	MDX* m_MDX;
-	vector<MDX_Skin_Batch*>  m_Batches;
+	MDX*						m_MDX;
+	vector<MDX_Skin_Batch*>		m_Batches;
 
-	SmartGeomPtr          __geom;
-	vector<bool>			m_VisibleSubmeshes;
+	SmartGeomPtr				__geom;
+	vector<bool>				m_VisibleSubmeshes;
 };

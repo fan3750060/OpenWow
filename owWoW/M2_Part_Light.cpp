@@ -6,34 +6,61 @@
 // Additional
 #include "WorldController.h"
 
-void CM2_Part_Light::init(IFile* f, SM2_Light& mld, const vector<SM2_Loop>* global)
+CM2_Part_Light::CM2_Part_Light(IFile* f, const SM2_Light& _proto, cGlobalLoopSeq global)
 {
-	tpos = pos = mld.position.toXZmY();
-	tdir = dir = vec3(0, 1, 0); // no idea
-	type = mld.type;
-	parent = mld.bone;
+	type = _proto.type;
+	bone = _proto.bone;
+	position = _proto.position.toXZmY();
 
-	ambColor.init(mld.ambient_color, f, global);
-	ambIntensity.init(mld.ambient_intensity, f, global);
-	diffColor.init(mld.diffuse_color, f, global);
-	diffIntensity.init(mld.diffuse_intensity, f, global);
+	direction = vec3(0, 1, 0);
+	
+	
+
+	ambColor.init(_proto.ambient_color, f, global);
+	ambIntensity.init(_proto.ambient_intensity, f, global);
+
+	diffColor.init(_proto.diffuse_color, f, global);
+	diffIntensity.init(_proto.diffuse_intensity, f, global);
+
+	attenuation_start.init(_proto.attenuation_start, f, global);
+	attenuation_end.init(_proto.attenuation_end, f, global);
+
+	visibility.init(_proto.visibility, f, global);
 }
 
 void CM2_Part_Light::setup(uint32 time, uint32 globalTime)
 {
-	vec4 ambcol(ambColor.getValue(0, time, globalTime) * ambIntensity.getValue(0, time, globalTime), 1.0f);
-	vec4 diffcol(diffColor.getValue(0, time, globalTime) * diffIntensity.getValue(0, time, globalTime), 1.0f);
+	if (ambColor.uses())
+	{
+		ambColorValue = ambColor.getValue(0, time, globalTime);
+	}
+	if (ambIntensity.uses())
+	{
+		ambIntensityValue = ambIntensity.getValue(0, time, globalTime);
+	}
+
+	if (diffColor.uses())
+	{
+		diffColorValue = diffColor.getValue(0, time, globalTime);
+	}
+	if (diffIntensity.uses())
+	{
+		diffIntensityValue = diffIntensity.getValue(0, time, globalTime);
+	}
+
+	vec4 ambcol(ambColorValue * ambIntensityValue, 1.0f);
+	vec4 diffcol(diffColorValue * diffIntensityValue, 1.0f);
 	vec4 p;
 
 	if (type == MODELLIGHT_DIRECTIONAL)
 	{
 		// directional
-		p = vec4(tdir, 0.0f);
+		p = vec4(direction, 0.0f);
 	}
 	else if (type == MODELLIGHT_POINT)
 	{
 		// point
-		p = vec4(tpos, 1.0f);
+		p = vec4(position, 1.0f);
 	}
 	else
 	{

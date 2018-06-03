@@ -4,12 +4,9 @@
 
 class CM2_Part_Color
 {
-	friend class MDX;
-	friend class MDX_Skin_Batch;
 public:
-	CM2_Part_Color();
+	CM2_Part_Color(IFile* f, const SM2_Color& _proto, cGlobalLoopSeq global);
 
-	void init(IFile* f, SM2_Color& mcd, const vector<SM2_Loop>* global);
 	void calc(uint32 anim, uint32 time, uint32 globalTime);
 
 	vec4 getValue() { return vec4(vColor, vAlpha); }

@@ -1,8 +1,7 @@
 #pragma once
 
-class MDX_Skin_Batch
+struct MDX_Skin_Batch
 {
-public:
     uint16 m2SkinIndex;
 
 	int16    __colorIndex;

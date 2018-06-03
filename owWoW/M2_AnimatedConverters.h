@@ -3,7 +3,7 @@
 #include "M2_CommonTypes.h"
 
 template <class T>
-class Identity
+class NoConvert
 {
 public:
 	static const T& conv(const T& t)

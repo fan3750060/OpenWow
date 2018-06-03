@@ -8,6 +8,8 @@ struct SM2_Loop
 {
 	uint32 timestamp;
 };
+typedef vector<SM2_Loop> GlobalLoopSeq;
+typedef const vector<SM2_Loop>* cGlobalLoopSeq;
 
 struct SM2_Sequence
 {
@@ -140,20 +142,20 @@ struct M2Event
 
 struct SM2_Light
 {
-	uint16 type;                      // Types are listed below.
-	int16 bone;                       // -1 if not attached to a bone
-	vec3 position;                 // relative to bone, if given
+	uint16			type;						// Types are listed below.
+	int16			bone;                       // -1 if not attached to a bone
+	vec3			position;					// relative to bone, if given
 
-	M2Track<vec3> ambient_color;
-	M2Track<float> ambient_intensity;   // defaults to 1.0
+	M2Track<vec3>	ambient_color;
+	M2Track<float>	ambient_intensity;			// defaults to 1.0
 
-	M2Track<vec3> diffuse_color;
-	M2Track<float> diffuse_intensity;   // defaults to 1.0
+	M2Track<vec3>	diffuse_color;
+	M2Track<float>	diffuse_intensity;			// defaults to 1.0
 
-	M2Track<float> attenuation_start;
-	M2Track<float> attenuation_end;
+	M2Track<float>	attenuation_start;
+	M2Track<float>	attenuation_end;
 
-	M2Track<uint8> visibility;          // enabled?
+	M2Track<uint8>	visibility;					// enabled?
 };
 
 struct SM2_Camera // TODO Spline keys
@@ -175,5 +177,7 @@ struct SM2_Camera // TODO Spline keys
 };
 
 #include __PACK_END
+
+#include "M2_Animated.h"
 
 #include "M2_ParticlesTypes.h"

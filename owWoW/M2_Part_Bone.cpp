@@ -6,20 +6,17 @@
 // Additional
 #include "WorldController.h"
 
-void CM2_Part_Bone::init(IFile* f, SM2_Bone& b, const vector<SM2_Loop>* global)
+CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global)
 {
-	m_Flags = b.flags;
-	parent = b.parent_bone;
+	m_Id = _proto.key_bone_id;
+	m_Flags = _proto.flags;
+	parent = _proto.parent_bone;
 	
-	trans.init(b.translation, f, global);
-	roll.init(b.rotation, f, global);
-	scale.init(b.scale, f, global);
+	trans.init(_proto.translation, f, global, Fix_XZmY);
+	roll.init(_proto.rotation, f, global, Fix_XZmYW);
+	scale.init(_proto.scale, f, global, Fix_XZY);
 
-	trans.fix(Fix_XZmY);
-	roll.fix(Fix_XZmYW);
-	scale.fix(Fix_XZY);
-
-	pivot = b.pivot.toXZmY();
+	pivot = _proto.pivot.toXZmY();
 }
 
 void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time, uint32 globalTime)
@@ -31,16 +28,16 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time
 
 	mat4 m;
 
-	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim) || (IsBillboard()))
+	if (roll.uses() || scale.uses() || trans.uses() || (IsBillboard()))
 	{
 		m.translate(pivot);
 
-		if (trans.uses(anim))
+		if (trans.uses())
 		{
 			m.translate(trans.getValue(anim, time, globalTime));
 		}
 
-		if (roll.uses(anim))
+		if (roll.uses())
 		{
 			quat q = roll.getValue(anim, time, globalTime);
 			m.rotate(q);
@@ -55,7 +52,7 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time
 			}
 		}
 
-		if (scale.uses(anim))
+		if (scale.uses())
 		{
 			m.scale(scale.getValue(anim, time, globalTime));
 		}

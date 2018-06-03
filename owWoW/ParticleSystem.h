@@ -10,33 +10,7 @@ typedef list<Particle> ParticleList;
 #define MAX_PARTICLES 10000
 
 // Classes
-class CM2_Part_Bone;
-class MDX;
 class ParticleSystem;
-
-class ParticleEmitter
-{
-public:
-	ParticleEmitter(ParticleSystem *sys) : sys(sys) {}
-	virtual Particle newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2) = 0;
-
-protected:
-	ParticleSystem* sys;
-};
-
-class PlaneParticleEmitter : public ParticleEmitter
-{
-public:
-	PlaneParticleEmitter(ParticleSystem *sys) : ParticleEmitter(sys) {}
-	Particle newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
-};
-
-class SphereParticleEmitter : public ParticleEmitter
-{
-public:
-	SphereParticleEmitter(ParticleSystem *sys) : ParticleEmitter(sys) {}
-	Particle newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2);
-};
 
 //
 
@@ -45,21 +19,24 @@ struct TexCoordSet
 	vec2 tc[4];
 };
 
+#include "ParticleEmitters.h"
+
 class ParticleSystem
 {
+	friend class ParticleEmitter;
 	friend class PlaneParticleEmitter;
 	friend class SphereParticleEmitter;
 public:
 	ParticleSystem();
 	~ParticleSystem();
 
-	void init(IFile* f, M2Particle& mta, const vector<SM2_Loop>* globals);
+	void init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals);
 	void update(float dt);
 	void setup(int anim, int time);
 	void draw();
 
 public:
-	MDX* model;
+	MDX* m_MDX;
 	float tofs;
 
 private:

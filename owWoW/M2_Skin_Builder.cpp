@@ -81,10 +81,10 @@ void CM2_Skin_Builder::Step2InitBatches()
 		SM2_Material& rf = m_MDX->m_Materials[it.materialIndex];
 
 		// Diffuse texture
-		CM2_Part_Texture& texture = m_MDX->GetTexture(it.texture_Index);
-		if (texture.m_SpecialTextures == -1)
+		const CM2_Part_Texture& texture = m_MDX->GetTexture(it.texture_Index);
+		if (texture.getSpecialTexture() == -1)
 		{
-			batch->__material.SetDiffuseTexture(texture.m_Texture);
+			batch->__material.SetDiffuseTexture(texture.getTexture());
 		}
 		else
 		{

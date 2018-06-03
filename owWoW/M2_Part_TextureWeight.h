@@ -4,12 +4,12 @@
 
 struct CM2_Part_TextureWeight
 {
-	friend class MDX;
-	friend class MDX_Skin_Batch;
 public:
-	void init(IFile* f, SM2_TextureWeight& mtd, const vector<SM2_Loop>* global);
+	CM2_Part_TextureWeight(IFile* f, const SM2_TextureWeight& _proto, cGlobalLoopSeq global);
+
 	void calc(uint32 anim, uint32 time, uint32 globalTime);
-	float getValue() { return tVal; }
+
+	float getValue() const { return tVal; }
 
 private:
 	M2_Animated<float, short, ShortToFloat> trans;

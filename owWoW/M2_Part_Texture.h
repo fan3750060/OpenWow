@@ -8,15 +8,11 @@ class CM2_Skin_Builder;
 
 class CM2_Part_Texture
 {
-	friend class MDX;
-	friend class CM2_Skin;
-	friend class CM2_Skin_Builder;
 public:
-	CM2_Part_Texture();
+	CM2_Part_Texture(IFile* f, const SM2_Texture& _proto);
 
-	void init(IFile* f, SM2_Texture& data);
-
-	R_Texture* getTexture() { return m_Texture; }
+	R_Texture* getTexture() const { return m_Texture; }
+	int	getSpecialTexture() const { return m_SpecialTextures; }
 
 private:
 	SmartTexturePtr	m_Texture;

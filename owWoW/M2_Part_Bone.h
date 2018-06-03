@@ -4,22 +4,18 @@
 
 class CM2_Part_Bone
 {
-	friend class MDX;
-	friend class CM2_Skin;
-	friend class PlaneParticleEmitter;
-	friend class SphereParticleEmitter;
-	friend class RibbonEmitter;
 public:
-	void init(IFile* f, SM2_Bone& b, const vector<SM2_Loop>* global);
+	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global);
+
 	void calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time, uint32 globalTime);
 
 	bool IsInterpolated() const
 	{
-		return trans.uses(0) || roll.uses(0) || scale.uses(0);
+		return trans.uses() || roll.uses() || scale.uses();
 	}
 
-	bool IsBillboard() const 
-	{ 
+	bool IsBillboard() const
+	{
 		return
 			m_Flags.spherical_billboard ||
 			m_Flags.cylindrical_billboard_lock_x ||
@@ -27,10 +23,22 @@ public:
 			m_Flags.cylindrical_billboard_lock_z;
 	}
 
+	void SetNeedCalculate() { m_IsCalculated = false; }
+	bool IsCalculated() const { return m_IsCalculated; }
+
+	//
+
+	int16 getParentBoneId() const { return parent; }
+	cmat4 getTransformMatrix() const { return m_TransformMatrix; }
+	cmat4 getRotateMatrix() const { return m_RotationMatrix; }
+	cvec3 getPivot() const { return pivot; }
+
 private:
+	int32           m_Id; // Bones lookup table
 	SM2_Bone::Flags m_Flags;
-	
-	int16 parent;
+
+	int16			parent;
+	uint16			submesh;
 
 	vec3 pivot, transPivot;
 

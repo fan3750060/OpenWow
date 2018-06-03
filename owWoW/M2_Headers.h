@@ -82,7 +82,7 @@ struct SM2_Header
 
 
     // Emitters and particles
-    M2Array<M2Ribbon>				ribbon_emitters;
+    M2Array<SM2_RibbonEmitter>				ribbon_emitters;
     M2Array<M2Particle>				particle_emitters;
 };
 

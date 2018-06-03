@@ -6,16 +6,15 @@
 // Additional
 #include "WorldController.h"
 
-void CM2_Part_TextureWeight::init(IFile* f, SM2_TextureWeight& mtd, const vector<SM2_Loop>* global)
+CM2_Part_TextureWeight::CM2_Part_TextureWeight(IFile* f, const SM2_TextureWeight& _proto, cGlobalLoopSeq global) :
+	tVal(1.0f)
 {
-	trans.init(mtd.weight, f, global);
-
-	tVal = 1.0f;
+	trans.init(_proto.weight, f, global);
 }
 
 void CM2_Part_TextureWeight::calc(uint32 anim, uint32 time, uint32 globalTime)
 {
-	if (trans.uses(anim))
+	if (trans.uses())
 	{
 		tVal = trans.getValue(anim, time, globalTime);
 	}

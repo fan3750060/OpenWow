@@ -123,8 +123,7 @@ void CM2_Builder::Step3Bones()
 		m_M2Bones = (SM2_Bone*)(m_F->GetData() + m_Header->bones.offset);
 		for (uint32 i = 0; i < m_Header->bones.size; i++)
 		{
-			CM2_Part_Bone bone;
-			bone.init(m_F, m_M2Bones[i], m_GlobalLoops);
+			CM2_Part_Bone bone(m_F, m_M2Bones[i], m_GlobalLoops);
 			m_MDX->m_Bones.push_back(bone);
 		}
 
@@ -174,8 +173,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		SM2_Color* m_Colors = (SM2_Color*)(m_F->GetData() + m_Header->colors.offset);
 		for (uint32 i = 0; i < m_Header->colors.size; i++)
 		{
-			CM2_Part_Color color;
-			color.init(m_F, m_Colors[i], m_GlobalLoops);
+			CM2_Part_Color color(m_F, m_Colors[i], m_GlobalLoops);
 			m_MDX->m_Colors.push_back(color);
 
 			// Animated
@@ -204,8 +202,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_Textures = (SM2_Texture*)(m_F->GetData() + m_Header->textures.offset);	
 		for (uint32 i = 0; i < m_Header->textures.size; i++)
 		{
-			CM2_Part_Texture texture;
-			texture.init(m_F, m_Textures[i]);
+			CM2_Part_Texture texture(m_F, m_Textures[i]);
 			m_MDX->m_Textures.push_back(texture);
 		}
 	}
@@ -228,8 +225,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesWeight = (SM2_TextureWeight*)(m_F->GetData() + m_Header->textureWeights.offset);
 		for (uint32 i = 0; i < m_Header->textureWeights.size; i++)
 		{
-			CM2_Part_TextureWeight textureWeight;
-			textureWeight.init(m_F, m_TexturesWeight[i], m_GlobalLoops);
+			CM2_Part_TextureWeight textureWeight(m_F, m_TexturesWeight[i], m_GlobalLoops);
 			m_MDX->m_TextureWeights.push_back(textureWeight);
 
 			// Animated
@@ -258,8 +254,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesTransform = (SM2_TextureTransform*)(m_F->GetData() + m_Header->textureTransforms.offset);
 		for (uint32 i = 0; i < m_Header->textureTransforms.size; i++)
 		{
-			CM2_Part_TextureTransform textureTransform;
-			textureTransform.init(m_F, m_TexturesTransform[i], m_GlobalLoops);
+			CM2_Part_TextureTransform textureTransform(m_F, m_TexturesTransform[i], m_GlobalLoops);
 			m_MDX->m_TexturesTransform.push_back(textureTransform);
 		}
 	}
@@ -285,8 +280,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Light* m_Lights = (SM2_Light*)(m_F->GetData() + m_Header->lights.offset);
 		for (uint32 i = 0; i < m_Header->lights.size; i++)
 		{
-			CM2_Part_Light light;
-			light.init(m_F, m_Lights[i], m_GlobalLoops);
+			CM2_Part_Light light(m_F, m_Lights[i], m_GlobalLoops);
 			m_MDX->m_Lights.push_back(light);
 		}
 
@@ -300,8 +294,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Camera* m_Cameras = (SM2_Camera*)(m_F->GetData() + m_Header->cameras.offset);
 		for (uint32 i = 0; i < m_Header->cameras.size; i++)
 		{
-			CM2_Part_Camera camera;
-			camera.init(m_F, m_Cameras[i], m_GlobalLoops);
+			CM2_Part_Camera camera(m_F, m_Cameras[i], m_GlobalLoops);
 			m_MDX->m_Cameras.push_back(camera);
 		}
 
@@ -312,23 +305,23 @@ void CM2_Builder::Step6Misc()
 
 void CM2_Builder::Step7Particles()
 {
-#ifdef MDX_PARTICLES_ENABLE
-
 	// Ribbons
 	if (m_Header->ribbon_emitters.size > 0)
 	{
-		M2Ribbon* rdefs = (M2Ribbon*)(m_F->GetData() + m_Header->ribbon_emitters.offset);
-		m_MDX->ribbons = new RibbonEmitter[m_Header->ribbon_emitters.size];
+		fail1();
+
+		SM2_RibbonEmitter* Ribbons = (SM2_RibbonEmitter*)(m_F->GetData() + m_Header->ribbon_emitters.offset);
 		for (uint32 i = 0; i < m_Header->ribbon_emitters.size; i++)
 		{
-			m_MDX->ribbons[i].model = m_MDX;
-			m_MDX->ribbons[i].init(m_F, rdefs[i], m_GlobalLoops->data());
+			CM2_RibbonEmitters ribbon(m_MDX, m_F, Ribbons[i], m_GlobalLoops);
+			m_MDX->m_RibbonEmitters.push_back(ribbon);
 		}
 
 		// Animated
 		m_MDX->m_HasMisc = true;
 	}
 
+#ifdef MDX_PARTICLES_ENABLE
 	// Particle systems
 	if (m_Header->particle_emitters.size > 0)
 	{
@@ -336,7 +329,7 @@ void CM2_Builder::Step7Particles()
 		m_MDX->particleSystems = new ParticleSystem[m_Header->particle_emitters.size];
 		for (uint32 i = 0; i < m_Header->particle_emitters.size; i++)
 		{
-			m_MDX->particleSystems[i].model = m_MDX;
+			m_MDX->particleSystems[i].m_MDX = m_MDX;
 			m_MDX->particleSystems[i].init(m_F, pdefs[i], m_GlobalLoops->data());
 		}
 

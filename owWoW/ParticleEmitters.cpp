@@ -4,7 +4,7 @@
 #include "MDX.h"
 
 // General
-#include "ParticleSystem.h"
+#include "ParticleEmitters.h"
 
 // Additional
 #include "WorldController.h"
@@ -100,11 +100,11 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 	mat4 mrot;
 
 	CalcSpreadMatrix(spr, spr, 1.0f, 1.0f);
-	mrot = sys->parent->m_RotationMatrix * SpreadMat;
+	mrot = sys->parent->getRotateMatrix() * SpreadMat;
 
 	if (sys->flags == 1041)
 	{ // Trans Halo
-		p.pos = sys->parent->m_TransformMatrix * (sys->pos + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w)));
+		p.pos = sys->parent->getTransformMatrix() * (sys->pos + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w)));
 
 		const float t = Random::GenerateRange(0.0f, Math::TwoPi);
 
@@ -118,35 +118,40 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 
 		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var);
 	}
-	else if (sys->flags == 25 && sys->parent->parent < 1)
+	else if (sys->flags == 25 && sys->parent->getParentBoneId() < 1)
 	{ // Weapon Flame
-		p.pos = sys->parent->pivot * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		p.pos = sys->parent->getPivot() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = mrot * vec3(0.0f, 1.0f, 0.0f);
 		p.dir = dir.normalized();
 		//vec3 dir = sys->model->bones[sys->parent->parent].mrot * sys->parent->mrot * vec3(0.0f, 1.0f, 0.0f);
 		//p.speed = dir.Normalize() * spd;
 
 	}
-	else if (sys->flags == 25 && sys->parent->parent > 0)
+	else if (sys->flags == 25 && sys->parent->getParentBoneId() > 0)
 	{ // Weapon with built-in Flame (Avenger lightsaber!)
-		p.pos = sys->parent->m_TransformMatrix * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
-		vec3 dir = vec3(sys->parent->m_TransformMatrix.c[1][0], sys->parent->m_TransformMatrix.c[1][1], sys->parent->m_TransformMatrix.c[1][2]) * vec3(0.0f, 1.0f, 0.0f);
+		p.pos = sys->parent->getTransformMatrix() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		vec3 dir = vec3
+		(
+			sys->parent->getTransformMatrix().c[1][0], 
+			sys->parent->getTransformMatrix().c[1][1], 
+			sys->parent->getTransformMatrix().c[1][2]
+		) * vec3(0.0f, 1.0f, 0.0f);
 		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var * 2);
 
 	}
-	else if (sys->flags == 17 && sys->parent->parent < 1)
+	else if (sys->flags == 17 && sys->parent->getParentBoneId() < 1)
 	{ // Weapon Glow
-		p.pos = sys->parent->pivot * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		p.pos = sys->parent->getPivot() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = mrot * vec3(0, 1, 0);
 		p.dir = dir.normalized();
 	}
 	else
 	{
 		p.pos = sys->pos + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w));
-		p.pos = sys->parent->m_TransformMatrix * p.pos;
+		p.pos = sys->parent->getTransformMatrix() * p.pos;
 
 		//vec3 dir = mrot * vec3(0,1,0);
-		vec3 dir = sys->parent->m_RotationMatrix * vec3(0, 1, 0);
+		vec3 dir = sys->parent->getRotateMatrix() * vec3(0, 1, 0);
 
 		p.dir = dir;//.Normalize();
 		p.down = vec3(0, -1.0f, 0); // dir * -1.0f;
@@ -193,7 +198,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	mat4 mrot;
 
 	CalcSpreadMatrix(spr * 2, spr2 * 2, w, l);
-	mrot = sys->parent->m_RotationMatrix*SpreadMat;
+	mrot = sys->parent->getRotateMatrix()*SpreadMat;
 
 	// New
 	// Length should never technically be zero ?
@@ -224,13 +229,13 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		vec3 bdir(w*cosf(t)*1.6, 0.0f, l*sinf(t)*1.6);
 
 		p.pos = sys->pos + bdir;
-		p.pos = sys->parent->m_TransformMatrix * p.pos;
+		p.pos = sys->parent->getTransformMatrix() * p.pos;
 
 		if (bdir.length2() == 0)
 			p.speed = vec3(0, 0, 0);
 		else
 		{
-			dir = sys->parent->m_RotationMatrix * (bdir.normalized());//mrot * vec3(0, 1.0f,0);
+			dir = sys->parent->getRotateMatrix() * (bdir.normalized());//mrot * vec3(0, 1.0f,0);
 			p.speed = dir.normalized() * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
 		}
 
@@ -245,7 +250,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		bdir.z = bdir.y;
 		bdir.y = temp;
 
-		p.pos = sys->parent->m_TransformMatrix * sys->pos + bdir;
+		p.pos = sys->parent->getTransformMatrix() * sys->pos + bdir;
 
 
 		//p.pos = sys->pos + bdir;
@@ -255,12 +260,12 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		if ((bdir.length2() == 0) && ((sys->flags & 0x100) != 0x100))
 		{
 			p.speed = vec3(0, 0, 0);
-			dir = sys->parent->m_RotationMatrix * vec3(0, 1, 0);
+			dir = sys->parent->getRotateMatrix() * vec3(0, 1, 0);
 		}
 		else
 		{
 			if (sys->flags & 0x100)
-				dir = sys->parent->m_RotationMatrix * vec3(0, 1, 0);
+				dir = sys->parent->getRotateMatrix() * vec3(0, 1, 0);
 			else
 				dir = bdir.normalized();
 

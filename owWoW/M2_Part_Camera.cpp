@@ -6,27 +6,20 @@
 // Additional
 #include "WorldController.h"
 
-CM2_Part_Camera::CM2_Part_Camera() :
+CM2_Part_Camera::CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoopSeq global) :
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
-}
+	nearclip = _proto.near_clip;
+	farclip = _proto.far_clip;
 
-void CM2_Part_Camera::init(IFile* f, SM2_Camera& mcd, const vector<SM2_Loop>* global)
-{
-	nearclip = mcd.near_clip;
-	farclip = mcd.far_clip;
+	pos = _proto.position_base.toXZmY();
+	target = _proto.target_position_base.toXZmY();
 
-	pos = mcd.position_base.toXZmY();
-	target = mcd.target_position_base.toXZmY();
+	tPos.init(_proto.positions, f, global, Fix_XZmY);
+	tTarget.init(_proto.target_position, f, global, Fix_XZmY);
 
-	tPos.init(mcd.positions, f, global);
-	tPos.fix(Fix_XZmY);
-
-	tTarget.init(mcd.target_position, f, global);
-	tTarget.fix(Fix_XZmY);
-
-	tRoll.init(mcd.roll, f, global);
-	fov = mcd.fov;
+	tRoll.init(_proto.roll, f, global);
+	fov = _proto.fov;
 
 
 	camera.m_UseDir = true;

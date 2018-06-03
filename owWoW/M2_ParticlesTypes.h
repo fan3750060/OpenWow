@@ -2,24 +2,25 @@
 
 #include __PACK_BEGIN
 
-struct M2Ribbon
+struct SM2_RibbonEmitter
 {
-	uint32 ribbonId;                  // Always (as I have seen): -1.
-	uint32 boneIndex;                 // A bone to attach to.
-	vec3 position;                 // And a position, relative to that bone.
-	M2Array<uint16> textureIndices;   // into m_DiffuseTextures
-	M2Array<uint16> materialIndices;  // into materials
+	uint32 ribbonId;					// Always (as I have seen): -1.
+	uint32 boneIndex;					// A bone to attach to.
+	vec3 position;						// And a position, relative to that bone.
+
+	M2Array<uint16> textureIndices;		// into m_DiffuseTextures
+	M2Array<uint16> materialIndices;	// into materials
 
 	M2Track<vec3> colorTrack;
-	M2Track<short> alphaTrack;          // FIXME FIXED 16               // And an alpha value in a short, where: 0 - transparent, 0x7FFF - opaque.
+	M2Track<short> alphaTrack;          // And an alpha value in a short, where: 0 - transparent, 0x7FFF - opaque.
 	M2Track<float> heightAboveTrack;
-	M2Track<float> heightBelowTrack;        // do not set to same!
+	M2Track<float> heightBelowTrack;	// do not set to same!
 
-	float edgesPerSecond;                  // this defines how smooth the ribbon is. A low value may produce a lot of edges.
-	float edgeLifetime;                    // the length aka Lifespan. in seconds
+	float edgesPerSecond;				// this defines how smooth the ribbon is. A low value may produce a lot of edges.
+	float edgeLifetime;					// the length aka Lifespan. in seconds
 	float gravity;                      // use arcsin(val) to get the emission angle in degree
 
-	uint16 textureRows;                    // tiles in texture
+	uint16 textureRows;					// tiles in texture
 	uint16 textureCols;
 
 	M2Track<uint16> texSlotTrack;

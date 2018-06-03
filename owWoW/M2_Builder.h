@@ -20,7 +20,6 @@ public:
 	void Step7Particles();
 	void Step8Skins();
 
-
 	//
 
 	void SetAnimated();
@@ -34,7 +33,7 @@ private:
 	// !! Don't delete this, it's temp data !! //
 
 	// Global loop, animation and bones
-	vector<SM2_Loop>*		m_GlobalLoops;
+	cGlobalLoopSeq			m_GlobalLoops;
 
 	// Bones
 	SM2_Bone*				m_M2Bones;

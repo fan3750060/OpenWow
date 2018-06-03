@@ -18,9 +18,9 @@
 // Particles
 #include "Particle.h"
 #include "ParticleSystem.h"
-#include "RibbonEmitter.h"
+#include "M2_RibbonEmitters.h"
 
-#include "MDX_Skin.h"
+#include "M2_Skin.h"
 
 enum BlendModes
 {
@@ -41,8 +41,6 @@ class CM2_Skin_Builder;
 class MDX : public CRefItem
 {
 	friend class CM2_Builder;
-	friend class CM2_Skin;
-	friend class MDX_Skin_Batch;
 	friend class CM2_Skin_Builder;
 public:
 	MDX(cstring name);
@@ -65,48 +63,56 @@ public:
 
 #pragma region Getters
 public:
-	BoundingBox& GetBounds() { return m_Bounds; }
+	const BoundingBox& GetBounds() const 
+	{ 
+		return m_Bounds; 
+	}
 
 
-	SM2_Sequence& GetSequence(uint32 _index) 
+	const SM2_Sequence& GetSequence(uint32 _index) const
 	{ 
 		assert1(_index < m_Header.sequencesLookup.size);
 		uint32 newIndex = m_SequencesLookup[_index];
 		assert1(newIndex < m_Header.sequences.size);
 		return m_Sequences[newIndex];
 	}
-	CM2_Part_Bone& GetBone(uint32 _index) 
+	const CM2_Part_Bone& GetBone(uint32 _index) const
 	{ 
 		assert1(_index < m_Header.bonesLookup.size);
 		uint32 newIndex = m_BonesLookup[_index];
 		assert1(newIndex < m_Header.bones.size);
 		return m_Bones[newIndex];
 	}
-	CM2_Skin* GetSkin(uint32 _index) 
+	const CM2_Skin* GetSkin(uint32 _index) const
 	{ 
 		assert1(_index < m_Header.skin_profiles.size);
 		return m_Skins[_index]; 
 	}
-	CM2_Part_Color& GetColor(uint32 _index)
+	const CM2_Part_Color& GetColor(uint32 _index) const
 	{
 		assert1(_index < m_Header.colors.size);
 		return m_Colors[_index];
 	}
-	CM2_Part_Texture& GetTexture(uint32 _index)
+	const SM2_Material& GetMaterial(uint32 _index) const
+	{
+		assert1(_index < m_Header.materials.size);
+		return m_Materials[_index];
+	}
+	const CM2_Part_Texture& GetTexture(uint32 _index) const
 	{
 		assert1(_index < m_Header.texturesLookup.size);
 		uint32 newIndex = m_TexturesLookup[_index];
 		assert1(newIndex < m_Header.textures.size);
 		return m_Textures[newIndex];
 	}
-	CM2_Part_TextureWeight& GetTextureWeight(uint32 _index)
+	const CM2_Part_TextureWeight& GetTextureWeight(uint32 _index) const
 	{
 		assert1(_index < m_Header.textureWeightsLookup.size);
 		uint32 newIndex = m_TextureWeightsLookup[_index];
 		assert1(newIndex < m_Header.textureWeights.size);
 		return m_TextureWeights[newIndex];
 	}
-	CM2_Part_TextureTransform& GetTextureTransform(uint32 _index)
+	const CM2_Part_TextureTransform& GetTextureTransform(uint32 _index) const
 	{
 		assert1(_index < m_Header.textureTransformsLookup.size);
 		uint32 newIndex = m_TexturesTransformLookup[_index];
@@ -124,7 +130,7 @@ public:
 	string								m_UniqueName;
 
 	// Loops & Sequences
-	vector<SM2_Loop>					m_GlobalLoops;
+	GlobalLoopSeq						m_GlobalLoops;
 	vector<SM2_Sequence>				m_Sequences;
 	vector<uint16>						m_SequencesLookup;
 	bool								m_IsAnimated;
@@ -157,8 +163,8 @@ public:
 	vector<CM2_Part_Camera>				m_Cameras;
 
 	// Particles
+	vector<CM2_RibbonEmitters>				m_RibbonEmitters;
 #ifdef MDX_PARTICLES_ENABLE
-	RibbonEmitter*				ribbons;
 	ParticleSystem*				particleSystems;
 #endif
 	bool						m_HasMisc;

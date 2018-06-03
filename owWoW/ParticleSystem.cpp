@@ -19,7 +19,7 @@ ParticleSystem::ParticleSystem() : emitter(0), mid(0), rem(0)
 	rows = 0;
 	cols = 0;
 
-	model = 0;
+	m_MDX = 0;
 	parent = 0;
 	texture = 0;
 
@@ -33,7 +33,7 @@ ParticleSystem::~ParticleSystem()
 	delete emitter;
 }
 
-void ParticleSystem::init(IFile* f, M2Particle& mta, const vector<SM2_Loop>* globals)
+void ParticleSystem::init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals)
 {
 	speed.init(mta.emissionSpeed, f, globals);
 	variation.init(mta.speedVariation, f, globals);
@@ -62,14 +62,14 @@ void ParticleSystem::init(IFile* f, M2Particle& mta, const vector<SM2_Loop>* glo
 	slowdown = mta.slowdown; // FIXME
 	rotation = mta.rotation; // FIXME
 	pos = mta.Position.toXZmY();
-	texture = model->m_Textures[mta.texture].getTexture();
+	texture = m_MDX->m_Textures[mta.texture].getTexture();
 	blend = mta.blendingType;
 	rows = mta.textureDimensions_rows;
 	cols = mta.textureDimensions_columns;
 	type = mta.particleColorIndex;
 	//order = mta.s2;
 	order = mta.particleColorIndex > 0 ? -1 : 0;
-	parent = model->m_Bones.data() + mta.bone;
+	parent = m_MDX->m_Bones.data() + mta.bone;
 
 	switch (mta.emitterType)
 	{
@@ -148,7 +148,7 @@ void ParticleSystem::update(float dt)
 			float spr = spread.getValue(manim, mtime, _World->EnvM()->globalTime);
 			float spr2 = lat.getValue(manim, mtime, _World->EnvM()->globalTime);
 			bool en = true;
-			if (enabled.uses(manim))
+			if (enabled.uses())
 				en = enabled.getValue(manim, mtime, _World->EnvM()->globalTime) != 0;
 
 			//rem = 0;

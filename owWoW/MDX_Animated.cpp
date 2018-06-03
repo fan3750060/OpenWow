@@ -10,7 +10,7 @@ void MDX::calcBones(uint32 _animationIndex, uint32 time, uint32 globalTime)
 {
 	for (uint32 i = 0; i < m_Header.bones.size; i++)
 	{
-		m_Bones[i].m_IsCalculated = false;
+		m_Bones[i].SetNeedCalculate();
 	}
 
 	for (uint32 i = 0; i < m_Header.bones.size; i++)
@@ -28,40 +28,19 @@ void MDX::animate(uint32 _animationIndex, uint32 globalTime)
 		calcBones(_animationIndex, m_AnimationTime, globalTime);
 	}
 
-	/* Old animation without shader
-	if (animGeometry)
+	/*for (uint32 i = 0; i < m_Header.lights.size; i++)
 	{
-		M2Vertex* ov = m_OriginalVertexes;
-		for (uint32 i = 0, k = 0; i < m_Header.vertices.size; ++i, ++ov)
+		if (m_Lights[i].getBoneIndex() >= 0)
 		{
-			vec3 vertex(0, 0, 0);
-			vec3 normal(0, 0, 0);
-
-			for (uint32 b = 0; b < 4; b++)
-			{
-				if (ov->bone_weights[b] > 0)
-				{
-					vertex += m_Bones[ov->bone_indices[b]].m_TransformMatrix * ov->pos * ((float)ov->bone_weights[b] / 255.0f);
-					normal += m_Bones[ov->bone_indices[b]].m_RotationMatrix * ov->normal * ((float)ov->bone_weights[b] / 255.0f);
-				}
-			}
-
-			m_Vertices[i] = vertex;
-			m_Normals[i] = normal.normalized(); // shouldn't these be normal by default?
+			m_Lights[i].tpos = m_Bones[m_Lights[i].getBoneIndex()].getTransformMatrix() * m_Lights[i].pos;
+			m_Lights[i].tdir = m_Bones[m_Lights[i].getBoneIndex()].getRotateMatrix() * m_Lights[i].dir;
 		}
-
-		// Add sub-data
-		_Render->r.updateBufferData(m_VBuffer, m_Header.vertices.size * 0 * sizeof(float), m_Header.vertices.size * sizeof(vec3), m_Vertices);
-		_Render->r.updateBufferData(m_VBuffer, m_Header.vertices.size * 3 * sizeof(float), m_Header.vertices.size * sizeof(vec3), m_Normals);
 	}*/
 
-	for (uint32 i = 0; i < m_Header.lights.size; i++)
+
+	for (auto it : m_RibbonEmitters)
 	{
-		if (m_Lights[i].parent >= 0)
-		{
-			m_Lights[i].tpos = m_Bones[m_Lights[i].parent].m_TransformMatrix * m_Lights[i].pos;
-			m_Lights[i].tdir = m_Bones[m_Lights[i].parent].m_RotationMatrix * m_Lights[i].dir;
-		}
+		it.setup(_animationIndex, m_AnimationTime, globalTime);
 	}
 
 #ifdef MDX_PARTICLES_ENABLE
@@ -71,12 +50,6 @@ void MDX::animate(uint32 _animationIndex, uint32 globalTime)
 		int pt = (animtime + (int)(tmax*particleSystems[i].tofs)) % tmax;
 		particleSystems[i].setup(_animationIndex, pt);
 	}
-
-	for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
-	{
-		ribbons[i].setup(_animationIndex, animtime);
-	}
-
 #endif
 
 	if (m_AnimTextures)

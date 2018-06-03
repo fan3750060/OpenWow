@@ -70,5 +70,3 @@ struct M2Range
 };
 
 #include __PACK_END
-
-#include "M2_Animated.h"

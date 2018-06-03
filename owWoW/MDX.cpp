@@ -4,7 +4,6 @@
 #include "MDX.h"
 
 // Additional
-#include "MDX_Skin_Batch.h"
 #include "WorldController.h"
 
 MDX::MDX(cstring name) :
@@ -57,11 +56,16 @@ void MDX::drawModel()
 		return;
 	}
 
+	_Render->TechniquesMgr()->m_Model->Bind();
+	_Render->TechniquesMgr()->m_Model->SetPVW();
+
 	for (auto it : m_Skins)
 	{
 		it->Draw();
 		break;
 	}
+
+	_Render->TechniquesMgr()->m_Model->Unbind();
 }
 
 void MDX::Render()
@@ -106,17 +110,17 @@ void MDX::Render()
 				}
 			}
 
-			// draw particle systems
+			// draw ribbons
+			for (auto it : m_RibbonEmitters)
+			{
+				it.draw();
+			}
+
 #ifdef MDX_PARTICLES_ENABLE
+			// draw particle systems
 			for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 			{
 				particleSystems[i].draw();
-			}
-
-			// draw ribbons
-			for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
-			{
-				ribbons[i].draw();
 			}
 #endif
 		}

@@ -230,6 +230,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="RibbonEmitters.h" />
     <ClInclude Include="R_Buffer.h" />
     <ClInclude Include="R_GeometryInfo.h" />
     <ClInclude Include="R_RenderBuffer.h" />

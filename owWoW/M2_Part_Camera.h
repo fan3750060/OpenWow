@@ -4,11 +4,9 @@
 
 class CM2_Part_Camera
 {
-	friend class MDX;
 public:
-	CM2_Part_Camera();
+	CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoopSeq global);
 
-	void init(IFile* f, SM2_Camera& mcd, const vector<SM2_Loop>* global);
 	void setup(uint32 time, uint32 globalTime);
 
 	Camera* GetCamera() { return &camera; }

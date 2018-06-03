@@ -3,21 +3,17 @@
 // General
 #include "M2_Part_Texture.h"
 
-CM2_Part_Texture::CM2_Part_Texture() :
+CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_Texture(nullptr),
 	m_SpecialTextures(-1),
 	m_TextureReplaced(nullptr),
 	m_TexturesUseSpecialTexture(false)
 {
-}
-
-void CM2_Part_Texture::init(IFile* f, SM2_Texture& data)
-{
-	if (data.type == 0) // Common texture
+	if (_proto.type == 0) // Common texture
 	{
 		char buff[256];
-		strncpy_s(buff, (const char*)(f->GetData() + data.filename.offset), data.filename.size);
-		buff[data.filename.size] = '\0';
+		strncpy_s(buff, (const char*)(f->GetData() + _proto.filename.offset), _proto.filename.size);
+		buff[_proto.filename.size] = '\0';
 		m_Texture = _Render->TexturesMgr()->Add(buff);
 	}
 	else // special texture - only on characters and such...

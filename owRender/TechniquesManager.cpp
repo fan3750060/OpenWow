@@ -43,6 +43,13 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	//----------------------------------------------------------------//
 
+	m_Ribbons = new RibbonEmitters_Pass(m_RenderDevice);
+	m_Ribbons->Bind();
+	m_Ribbons->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
+	m_Ribbons->Unbind();
+
+	//----------------------------------------------------------------//
+
 	m_WMO_GeometryPass = new WMO_GeomertyPass(m_RenderDevice);
 	m_WMO_GeometryPass->Bind();
 	m_WMO_GeometryPass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);

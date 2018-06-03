@@ -49,6 +49,15 @@
     <Filter Include="MDX\Builders">
       <UniqueIdentifier>{fb2cb63b-d38c-4335-a4a6-e60e725174ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MDX\Skins">
+      <UniqueIdentifier>{9b4c4f2c-c241-4bc5-815a-90e6ce186188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MDX\Particles\Ribbon">
+      <UniqueIdentifier>{f2f63c6f-ef88-49cb-b957-a4b325449a93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MDX\Particles\Particle">
+      <UniqueIdentifier>{74069097-38bc-4d66-bc04-1f1a8ed4c72c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -82,28 +91,10 @@
     <ClCompile Include="Map_Shared.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>MDX\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleEmitters.cpp">
-      <Filter>MDX\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>MDX\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="RibbonEmitter.cpp">
-      <Filter>MDX\Particles</Filter>
-    </ClCompile>
     <ClCompile Include="MDX.cpp">
       <Filter>MDX</Filter>
     </ClCompile>
     <ClCompile Include="MDX_Animated.cpp">
-      <Filter>MDX</Filter>
-    </ClCompile>
-    <ClCompile Include="MDX_Skin.cpp">
-      <Filter>MDX</Filter>
-    </ClCompile>
-    <ClCompile Include="MDX_Skin_Batch.cpp">
       <Filter>MDX</Filter>
     </ClCompile>
     <ClCompile Include="WMO_Light.cpp">
@@ -187,6 +178,24 @@
     <ClCompile Include="M2_Skin_Builder.cpp">
       <Filter>MDX\Builders</Filter>
     </ClCompile>
+    <ClCompile Include="M2_Skin.cpp">
+      <Filter>MDX\Skins</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Skin_Batch.cpp">
+      <Filter>MDX\Skins</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_RibbonEmitters.cpp">
+      <Filter>MDX\Particles\Ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>MDX\Particles\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitters.cpp">
+      <Filter>MDX\Particles\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>MDX\Particles\Particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -232,22 +241,7 @@
     <ClInclude Include="Map_Shared.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>MDX\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>MDX\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="RibbonEmitter.h">
-      <Filter>MDX\Particles</Filter>
-    </ClInclude>
     <ClInclude Include="MDX.h">
-      <Filter>MDX</Filter>
-    </ClInclude>
-    <ClInclude Include="MDX_Skin.h">
-      <Filter>MDX</Filter>
-    </ClInclude>
-    <ClInclude Include="MDX_Skin_Batch.h">
       <Filter>MDX</Filter>
     </ClInclude>
     <ClInclude Include="WMO_Light.h">
@@ -351,6 +345,24 @@
     </ClInclude>
     <ClInclude Include="M2_Animated.h">
       <Filter>MDX\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Skin.h">
+      <Filter>MDX\Skins</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Skin_Batch.h">
+      <Filter>MDX\Skins</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_RibbonEmitters.h">
+      <Filter>MDX\Particles\Ribbon</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>MDX\Particles\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitters.h">
+      <Filter>MDX\Particles\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>MDX\Particles\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

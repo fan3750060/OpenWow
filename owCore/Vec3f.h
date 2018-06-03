@@ -233,7 +233,6 @@ public:
 	}
 };
 
-
 static inline Vec3f Fix_XZY(const Vec3f& _vec)
 {
 	return _vec.toXZY();

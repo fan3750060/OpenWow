@@ -4,4 +4,4 @@
 #include "MDX.h"
 
 // General
-#include "MDX_Skin_Batch.h"
+#include "M2_Skin_Batch.h"

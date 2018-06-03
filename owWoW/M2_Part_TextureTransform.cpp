@@ -6,37 +6,37 @@
 // Additional
 #include "WorldController.h"
 
-void CM2_Part_TextureTransform::init(IFile* f, SM2_TextureTransform& mta, const vector<SM2_Loop>* global)
+CM2_Part_TextureTransform::CM2_Part_TextureTransform(IFile* f, const SM2_TextureTransform& _proto, cGlobalLoopSeq global)
 {
-	trans.init(mta.translation, f, global);
-	roll.init(mta.rotation, f, global);
-	scale.init(mta.scaling, f, global);
+	trans.init(_proto.translation, f, global);
+	roll.init(_proto.rotation, f, global);
+	scale.init(_proto.scaling, f, global);
 }
 
 void CM2_Part_TextureTransform::calc(uint32 anim, uint32 time, uint32 globalTime)
 {
 	matrix = Matrix4f();
 	
-	if (trans.uses(anim))
+	if (trans.uses())
 	{
-		tval = trans.getValue(anim, time, globalTime);
-		matrix.translate(tval);
+		transValue = trans.getValue(anim, time, globalTime);
+		matrix.translate(transValue);
 	}
 
-	if (roll.uses(anim))
+	if (roll.uses())
 	{
 		matrix.translate(vec3(0.5f, 0.5f, 0.5f));
 
-		rval = roll.getValue(anim, time, globalTime);
-		matrix.rotate(rval);
+		rollValue = roll.getValue(anim, time, globalTime);
+		matrix.rotate(rollValue);
 
 		matrix.translate(vec3(-0.5f, -0.5f, -0.5f));
 	}
 
-	if (scale.uses(anim))
+	if (scale.uses())
 	{
-		sval = scale.getValue(anim, time, globalTime);
-		matrix.scale(sval);
+		scaleVal = scale.getValue(anim, time, globalTime);
+		matrix.scale(scaleVal);
 	}
 }
 

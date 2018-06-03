@@ -8,6 +8,7 @@
 #include "MapChunk_GeometryPass.h"
 #include "WMO_GeomertyPass.h"
 #include "Water_Pass.h"
+#include "RibbonEmitters.h"
 #include "Model_Shader.h"
 
 // After
@@ -37,6 +38,7 @@ public:
 	WMO_GeomertyPass* m_WMO_GeometryPass;
 	Water_Pass* m_Water;
 	Model_Shader* m_Model;
+	RibbonEmitters_Pass* m_Ribbons;
 
 	// Lights
 

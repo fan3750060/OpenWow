@@ -4,7 +4,7 @@
 #include "MDX.h"
 
 // General
-#include "MDX_Skin.h"
+#include "M2_Skin.h"
 
 CM2_Skin::CM2_Skin(MDX* _model) :
 	m_MDX(_model),
@@ -18,8 +18,7 @@ CM2_Skin::~CM2_Skin()
 
 void CM2_Skin::Draw()
 {
-	_Render->TechniquesMgr()->m_Model->Bind();
-	_Render->TechniquesMgr()->m_Model->SetPVW();
+
 
     _Render->TechniquesMgr()->m_Model->SetAnimated(m_MDX->m_HasBones && m_MDX->m_IsAnimated);
     if (m_MDX->m_HasBones && m_MDX->m_IsAnimated)
@@ -30,7 +29,7 @@ void CM2_Skin::Draw()
         vector<mat4> bones;
         for (uint32 i = 0; i < m_MDX->m_Header.bones.size; i++)
         {
-            bones.push_back(m_MDX->m_Bones[i].m_TransformMatrix);
+            bones.push_back(m_MDX->m_Bones[i].getTransformMatrix());
         }
         _Render->TechniquesMgr()->m_Model->SetBones(bones);
     }
@@ -85,5 +84,5 @@ void CM2_Skin::Draw()
 		}
 	}
 
-	_Render->TechniquesMgr()->m_Model->Unbind();
+
 }
