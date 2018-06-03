@@ -210,8 +210,8 @@ bool ADT_MCNK::Load()
 	R_Buffer* __vb = _Render->r.createVertexBuffer(10 * t, nullptr);
 	__vb->updateBufferData(0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
 	__vb->updateBufferData(3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
-	__vb->updateBufferData(6 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordDetail());
-	__vb->updateBufferData(8 * t, C_MapBufferSize * sizeof(vec2), Map_Shared::GetTextureCoordAlpha());
+	__vb->updateBufferData(6 * t, C_MapBufferSize * sizeof(vec2), &_Map_Shared->GetTextureCoordDetail());
+	__vb->updateBufferData(8 * t, C_MapBufferSize * sizeof(vec2), &_Map_Shared->GetTextureCoordAlpha());
 
 
 	// Index Buffer

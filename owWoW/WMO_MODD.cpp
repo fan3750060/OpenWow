@@ -37,7 +37,7 @@ void WMO_MODD::SetModel(MDX* _model)
 	assert1(_model != nullptr);
 
 	m_Object = _model;
-	m_Bounds = m_Object->m_Bounds;
+	m_Bounds = m_Object->GetBounds();
 	m_Bounds.transform(m_AbsTransform);
 }
 

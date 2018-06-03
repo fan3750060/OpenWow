@@ -7,7 +7,7 @@
 #include "WorldController.h"
 
 WDT::WDT() :
-	m_IsTileBased(true)
+	m_IsTileBased(false)
 {}
 
 void WDT::Load(cstring _name)

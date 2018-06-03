@@ -37,9 +37,9 @@ public:
 		setVec4(gColor, _color);
 	}
 
-    inline void SetAnimated(int32 animated)
+    inline void SetAnimated(int32 m_IsAnimated)
     {
-        setInt(gIsAnimated, animated);
+        setInt(gIsAnimated, m_IsAnimated);
     }
 
     inline void SetBones(vector<mat4>& _bones)

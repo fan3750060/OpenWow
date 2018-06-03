@@ -3,12 +3,6 @@
 // General
 #include "Map_Shared.h"
 
-// Static
-vec2            Map_Shared::m_TCDetailMap[C_MapBufferSize];
-vec2            Map_Shared::m_TCAlphaMap[C_MapBufferSize];
-vector<uint16>  Map_Shared::m_DefaultMapStrip;
-vector<uint16>  Map_Shared::m_LowResMapStrip;
-
 bool isHole(uint16 holes, uint16 i, uint16 j)
 {
     const uint16 holetab_h[4] = {0x1111, 0x2222, 0x4444, 0x8888};
@@ -17,51 +11,51 @@ bool isHole(uint16 holes, uint16 i, uint16 j)
     return (holes & holetab_h[i] & holetab_v[j]) != 0;
 }
 
-void Map_Shared::CreateMapArrays()
+void Map_Shared::Init()
 {
-    m_DefaultMapStrip = GenarateDefaultMapArray();
-    m_LowResMapStrip = GenarateLowResMapArray();
+	m_DefaultMapStrip = GenarateDefaultMapArray();
+	m_LowResMapStrip = GenarateLowResMapArray();
 
-    // init texture coordinates for detail map:
-    vec2* detailTextureCoord = m_TCDetailMap;
-    const float detail_half = 0.5f * C_DetailSize / 8.0f;
-    for (int j = 0; j < 17; j++)
-    {
-        for (int i = 0; i < ((j % 2) ? 8 : 9); i++)
-        {
-            float tx = C_DetailSize / 8.0f * i;
-            float ty = C_DetailSize / 8.0f * j * 0.5f;
-            if (j % 2)
-            {
-                tx += detail_half;
-            }
-            *detailTextureCoord++ = vec2(tx, ty);
-        }
-    }
+	// init texture coordinates for detail map:
+	vec2* detailTextureCoord = m_TCDetailMap;
+	const float detail_half = 0.5f * C_DetailSize / 8.0f;
+	for (int j = 0; j < 17; j++)
+	{
+		for (int i = 0; i < ((j % 2) ? 8 : 9); i++)
+		{
+			float tx = C_DetailSize / 8.0f * i;
+			float ty = C_DetailSize / 8.0f * j * 0.5f;
+			if (j % 2)
+			{
+				tx += detail_half;
+			}
+			*detailTextureCoord++ = vec2(tx, ty);
+		}
+	}
 
-    // init texture coordinates for alpha map:
-    vec2* alphaTextureCoord = m_TCAlphaMap;
-    const float alpha_half = 0.5f * 1.0f / 8.0f;
-    for (int j = 0; j < 17; j++)
-    {
-        for (int i = 0; i < ((j % 2) ? 8 : 9); i++)
-        {
-            float tx = 1.0f / 8.0f * i;
-            float ty = 1.0f / 8.0f * j * 0.5f;
-            if (j % 2)
-            {
-                tx += alpha_half;
-            }
-            *alphaTextureCoord++ = vec2(tx, ty);
-        }
-    }
+	// init texture coordinates for alpha map:
+	vec2* alphaTextureCoord = m_TCAlphaMap;
+	const float alpha_half = 0.5f * 1.0f / 8.0f;
+	for (int j = 0; j < 17; j++)
+	{
+		for (int i = 0; i < ((j % 2) ? 8 : 9); i++)
+		{
+			float tx = 1.0f / 8.0f * i;
+			float ty = 1.0f / 8.0f * j * 0.5f;
+			if (j % 2)
+			{
+				tx += alpha_half;
+			}
+			*alphaTextureCoord++ = vec2(tx, ty);
+		}
+	}
 }
 
 vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
 {
-    if (_holes == 0 && !m_DefaultMapStrip.empty())
+    if (_holes == 0 && !_Map_Shared->m_DefaultMapStrip.empty())
     {
-        return m_DefaultMapStrip;
+        return _Map_Shared->m_DefaultMapStrip;
     }
 
     int16 outerArray[9][9];
@@ -108,9 +102,9 @@ vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
 
 vector<uint16> Map_Shared::GenarateLowResMapArray(uint16 _holes)
 {
-    if (_holes == 0 && !m_LowResMapStrip.empty())
+    if (_holes == 0 && !_Map_Shared->m_LowResMapStrip.empty())
     {
-        return m_LowResMapStrip;
+        return _Map_Shared->m_LowResMapStrip;
     }
 
     int16 outerArray[9][9];

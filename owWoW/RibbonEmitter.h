@@ -1,6 +1,6 @@
 #pragma once
 
-class MDX_Part_Bone;
+class CM2_Part_Bone;
 class MDX;
 
 struct RibbonSegment
@@ -12,7 +12,7 @@ struct RibbonSegment
 class RibbonEmitter
 {
 public:
-	void init(IFile* f, M2Ribbon &mta, uint32 *globals);
+	void init(IFile* f, M2Ribbon &mta, const vector<SM2_Loop>* globals);
 	void setup(int anim, int time);
 	void draw();
 
@@ -20,12 +20,12 @@ public:
 	MDX* model;
 
 private:
-	Animated<vec3> color;
-	Animated<float, short, ShortToFloat> opacity;
-	Animated<float> above;
-	Animated<float> below;
+	M2_Animated<vec3> color;
+	M2_Animated<float, short, ShortToFloat> opacity;
+	M2_Animated<float> above;
+	M2_Animated<float> below;
 
-	MDX_Part_Bone* parent;
+	CM2_Part_Bone* parent;
 	float f1, f2;
 
 	vec3 pos;
@@ -38,7 +38,7 @@ private:
 	vec4 tcolor;
 	float tabove, tbelow;
 
-	R_Texture* texture;
+	SmartTexturePtr texture;
 
 	list<RibbonSegment> segs;
 };

@@ -143,7 +143,7 @@ void GameState_Menu::Render3D()
 
 	// Camera
 	_Pipeline->Clear();
-	backgroundModel->m_Cameras[0].setup(_World->EnvM()->animtime);
+	backgroundModel->m_Cameras[0].setup(_World->EnvM()->animtime, _World->EnvM()->globalTime);
 
 	Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
 	_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());

@@ -23,22 +23,22 @@ private:
 	map<GUID, IManager*> m_Managers;
 };
 
-#define _BaseManager CBaseManager::instance()
+// Helpers
 
 template<class T>
 static inline void AddManager(IManager* _manager)
 {
-	_BaseManager->RegisterManager(__uuidof(T), _manager);
+	CBaseManager::instance()->RegisterManager(__uuidof(T), _manager);
 }
 
 template<class T>
 static inline void DelManager()
 {
-	_BaseManager->UnregisterManager(__uuidof(T));
+	CBaseManager::instance()->UnregisterManager(__uuidof(T));
 }
 
 template<class T>
 static inline T* GetManager()
 {
-	return (T*)(_BaseManager->GetManager(__uuidof(T)));
+	return (T*)(CBaseManager::instance()->GetManager(__uuidof(T)));
 }

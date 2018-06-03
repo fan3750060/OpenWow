@@ -2,27 +2,23 @@
 
 class Map_Shared
 {
+	CLASS_INSTANCE(Map_Shared);
 public:
-    static void CreateMapArrays();
+	void Init();
 
-    //
+	//
 
-    static vector<uint16> GenarateDefaultMapArray(uint16 _holes = 0);
-    static vector<uint16> GenarateLowResMapArray(uint16 _holes = 0);
+	const vec2& GetTextureCoordDetail() { return m_TCDetailMap[0]; }
+	const vec2& GetTextureCoordAlpha() { return m_TCAlphaMap[0]; }
 
-    static const vec2* GetTextureCoordDetail()
-    {
-        return &m_TCDetailMap[0];
-    }
-
-    static const vec2* GetTextureCoordAlpha()
-    {
-        return &m_TCAlphaMap[0];
-    }  
+	static vector<uint16> GenarateDefaultMapArray(uint16 _holes = 0);
+	static vector<uint16> GenarateLowResMapArray(uint16 _holes = 0);
 
 private:
-    static vec2            m_TCDetailMap[C_MapBufferSize];
-    static vec2            m_TCAlphaMap[C_MapBufferSize];
-    static vector<uint16>  m_DefaultMapStrip;
-    static vector<uint16>  m_LowResMapStrip;
+	vec2            m_TCDetailMap[C_MapBufferSize];
+	vec2            m_TCAlphaMap[C_MapBufferSize];
+	vector<uint16>  m_DefaultMapStrip;
+	vector<uint16>  m_LowResMapStrip;
 };
+
+#define _Map_Shared Map_Shared::instance()

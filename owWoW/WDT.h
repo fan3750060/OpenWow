@@ -15,13 +15,13 @@ struct WDT_MPHD_Flags
 
 struct WDT_MAIN
 {
-	struct
+	struct Flags
 	{
 		uint32 Flag_HasADT : 1;
 		uint32 Flag_IsLoaded : 1;
 		uint32 : 30;
-	} flags;
-	uint32_t asyncId;    // only set during runtime.
+	}			flags;
+	uint32_t	asyncId;
 };
 
 class MapController;

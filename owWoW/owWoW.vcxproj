@@ -19,12 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animated.cpp" />
+    <ClCompile Include="M2_Part_Texture.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="DayNightPhase.cpp" />
     <ClCompile Include="LiquidInstance.cpp" />
     <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="MDXBuilder.cpp" />
+    <ClCompile Include="M2_Builder.cpp" />
+    <ClCompile Include="M2_Skin_Builder.cpp" />
     <ClCompile Include="WMO_MODD.cpp" />
     <ClCompile Include="EnvironmentManager.cpp" />
     <ClCompile Include="Liquid.cpp" />
@@ -34,12 +35,12 @@
     <ClCompile Include="ADT.cpp" />
     <ClCompile Include="MDX.cpp" />
     <ClCompile Include="MDX_Animated.cpp" />
-    <ClCompile Include="MDX_Part_Bone.cpp" />
-    <ClCompile Include="MDX_Part_Camera.cpp" />
-    <ClCompile Include="MDX_Part_Color.cpp" />
-    <ClCompile Include="MDX_Part_Light.cpp" />
-    <ClCompile Include="MDX_Part_TextureAnim.cpp" />
-    <ClCompile Include="MDX_Part_TextureWeight.cpp" />
+    <ClCompile Include="M2_Part_Bone.cpp" />
+    <ClCompile Include="M2_Part_Camera.cpp" />
+    <ClCompile Include="M2_Part_Color.cpp" />
+    <ClCompile Include="M2_Part_Light.cpp" />
+    <ClCompile Include="M2_Part_TextureTransform.cpp" />
+    <ClCompile Include="M2_Part_TextureWeight.cpp" />
     <ClCompile Include="MDX_Skin.cpp" />
     <ClCompile Include="MDX_Skin_Batch.cpp" />
     <ClCompile Include="MDXsManager.cpp" />
@@ -72,15 +73,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owWoW.h" />
-    <ClInclude Include="AnimatedOld.h" />
-    <ClInclude Include="Animated.h" />
-    <ClInclude Include="Animated_Types.h" />
+    <ClInclude Include="M2_Animated.h" />
+    <ClInclude Include="M2_AnimatedConverters.h" />
+    <ClInclude Include="M2_Part_Texture.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="DayNightPhase.h" />
     <ClInclude Include="LiquidInstance.h" />
     <ClInclude Include="Loader.h" />
-    <ClInclude Include="MDXBuilder.h" />
+    <ClInclude Include="M2_CommonTypes.h" />
+    <ClInclude Include="M2_ParticlesTypes.h" />
+    <ClInclude Include="M2_SkinTypes.h" />
+    <ClInclude Include="M2_Skin_Builder.h" />
+    <ClInclude Include="M2_Types.h" />
+    <ClInclude Include="M2_Builder.h" />
     <ClInclude Include="WMO_MODD.h" />
     <ClInclude Include="EnvironmentManager.h" />
     <ClInclude Include="Liquid.h" />
@@ -89,13 +95,13 @@
     <ClInclude Include="Map_Shared.h" />
     <ClInclude Include="ADT.h" />
     <ClInclude Include="MDX.h" />
-    <ClInclude Include="MDX_Headers.h" />
-    <ClInclude Include="MDX_Part_Bone.h" />
-    <ClInclude Include="MDX_Part_Camera.h" />
-    <ClInclude Include="MDX_Part_Color.h" />
-    <ClInclude Include="MDX_Part_Light.h" />
-    <ClInclude Include="MDX_Part_TextureAnim.h" />
-    <ClInclude Include="MDX_Part_TextureWeight.h" />
+    <ClInclude Include="M2_Headers.h" />
+    <ClInclude Include="M2_Part_Bone.h" />
+    <ClInclude Include="M2_Part_Camera.h" />
+    <ClInclude Include="M2_Part_Color.h" />
+    <ClInclude Include="M2_Part_Light.h" />
+    <ClInclude Include="M2_Part_TextureTransform.h" />
+    <ClInclude Include="M2_Part_TextureWeight.h" />
     <ClInclude Include="MDX_Skin.h" />
     <ClInclude Include="MDX_Skin_Batch.h" />
     <ClInclude Include="MDXsManager.h" />

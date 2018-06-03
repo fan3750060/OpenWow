@@ -8,8 +8,24 @@
 #include "WorldController.h"
 
 MDX::MDX(cstring name) :
+	m_Loaded(false),
 	m_FileName(name),
-	m_Loaded(false)
+	m_UniqueName(""),
+	// Loops and sequences
+	m_IsAnimated(false),
+	// Bones
+	m_HasBones(nullptr),
+	m_AnimBones(false),
+	m_IsBillboard(false),
+	// Vertices
+	m_ContainGeom(false),
+	// Colors and textures
+	m_AnimTextures(false),
+	// Misc
+	m_HasMisc(false),
+	// My types
+	m_AnimationIndex(0),
+	m_AnimationTime(0)
 {
 	//Log::Info("MDX[%s]: Loading...", m_FileName.c_str());
 	
@@ -20,174 +36,31 @@ MDX::MDX(cstring name) :
 		m_FileName[m_FileName.length() - 1] = '\0';
 		m_FileName.resize(m_FileName.length() - 1);
 	}
-
-	//
-
-	for (int i = 0; i < TEXTURE_MAX; i++)
-	{
-		m_SpecialTextures[i] = -1;
-		m_TextureReplaced[i] = nullptr;
-		m_TexturesUseSpecialTexture[i] = false;
-	}
-
-	m_GlobalLoops = nullptr;
-	m_AnimationTime = 0;
-	m_AnimationIndex = 0;
-	m_Colors = nullptr;
-	m_Lights = nullptr;
-	m_TextureWeights = nullptr;
-
-#ifdef MDX_PARTICLES_ENABLE
-	particleSystems = nullptr;
-	ribbons = nullptr;
-#endif
 }
 
 MDX::~MDX()
 {
-	if (!m_Loaded)
-	{
-		return;
-	}
-
 	Log::Info("MDX[%s]: Unloading...", m_FileName.c_str());
-}
-
-//
-
-void MDX::Init(bool forceAnim)
-{
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
-	if (f == nullptr)
-	{
-		Log::Info("MDX[%s]: Unable to open file.", m_FileName.c_str());
-		return;
-	}
-
-	// Header
-	memcpy(&header, f->GetData(), sizeof(ModelHeader));
-
-	m_Bounds.set(header.bounding_box.min, header.bounding_box.max, true);
-
-	// Is animated
-	animated = isAnimated(f) || forceAnim;
-
-	if (header.global_loops.size)
-	{
-		m_GlobalLoops = new uint32[header.global_loops.size];
-		memcpy(m_GlobalLoops, (f->GetData() + header.global_loops.offset), sizeof(M2Loop) * header.global_loops.size);
-	}
-
-	if (animated)
-	{
-		initAnimated(f);
-	}
-	else
-	{
-		initCommon(f);
-	}
-
-	m_Loaded = true;
-}
-
-
-
-void MDX::initCommon(IFile* f)
-{
-	M2Vertex* m_OriginalVertexes = (M2Vertex*)(f->GetData() + header.vertices.offset);
-
-	// Convert vertices
-	for (uint32 i = 0; i < header.vertices.size; i++)
-	{
-		m_OriginalVertexes[i].pos.toXZmY();
-		m_OriginalVertexes[i].normal.toXZmY();
-	}
-
-	// m_DiffuseTextures
-	if (header.textures.size)
-	{
-		//m_Textures = new R_Texture*[header.textures.size];
-		m_M2Textures = (M2Texture*)(f->GetData() + header.textures.offset);
-
-		
-		for (uint32 i = 0; i < header.textures.size; i++)
-		{
-			assert1(i < TEXTURE_MAX);
-
-			if (m_M2Textures[i].type == 0) // Common texture
-			{
-				char buff[256];
-				strncpy_s(buff, (const char*)(f->GetData() + m_M2Textures[i].filename.offset), m_M2Textures[i].filename.size);
-				buff[m_M2Textures[i].filename.size] = '\0';
-				m_Textures.push_back(_Render->TexturesMgr()->Add(buff));
-			}
-			else // special texture - only on characters and such...
-			{
-				/*m_Textures[i] = nullptr;
-				m_SpecialTextures[i] = m_M2Textures[i].type;
-
-				if (m_M2Textures[i].type < TEXTURE_MAX)
-				{
-					m_TexturesUseSpecialTexture[m_M2Textures[i].type] = true;
-				}
-
-				// a fix for weapons with type-3 m_DiffuseTextures.
-				if (m_M2Textures[i].type == 3)
-				{
-					m_TextureReplaced[m_M2Textures[i].type] = _Render->TexturesMgr()->Add("Item\\ObjectComponents\\Weapon\\ArmorReflect4.BLP");
-				}*/
-			}
-		}
-	}
-
-	// init colors
-	if (header.colors.size)
-	{
-		m_Colors = new MDX_Part_Color[header.colors.size];
-		for (uint32 i = 0; i < header.colors.size; i++)
-		{
-			m_Colors[i].init(f, ((M2Color*)(f->GetData() + header.colors.offset))[i], m_GlobalLoops);
-		}
-	}
-
-	// init transparency
-	if (header.texture_weights.size)
-	{
-		m_TextureWeights = new MDX_Part_TextureWeight[header.texture_weights.size];
-		for (uint32 i = 0; i < header.texture_weights.size; i++)
-		{
-			m_TextureWeights[i].init(f, ((M2TextureWeight*)(f->GetData() + header.texture_weights.offset))[i], m_GlobalLoops);
-		}
-	}
-	
-	// Vertex buffer
-	__vb = _Render->r.createVertexBuffer(header.vertices.size * 12 * sizeof(float), m_OriginalVertexes);
-
-	// Load LODs
-	assert1(header.skin_profiles.size);
-	for (uint32 i = 0; i < 1; i++)
-	{
-		m_Skins.push_back(new Model_Skin(this, f, ((M2SkinProfile*)(f->GetData() + header.skin_profiles.offset))[i]));
-	}
 }
 
 //
 
 void MDX::drawModel()
 {
-	for (uint32 i = 0; i < header.colors.size; i++)
+	for (uint32 i = 0; i < m_Header.colors.size; i++)
 	{
-		m_Colors[i].calc(m_AnimationIndex, m_AnimationTime);
+		m_Colors[i].calc(m_AnimationIndex, m_AnimationTime, _World->EnvM()->globalTime);
 	}
 
-	/*for (auto it = m_Skins.begin(); it != m_Skins.end(); ++it)
+	if (!m_ContainGeom)
 	{
-		(*it)->Draw();
-	}*/
+		return;
+	}
 
-	if (m_Skins.size() > 0)
+	for (auto it : m_Skins)
 	{
-		m_Skins.back()->Draw();
+		it->Draw();
+		break;
 	}
 }
 
@@ -208,7 +81,7 @@ void MDX::Render()
 		return;
 	}
 	
-	if (animated)
+	if (m_IsAnimated)
 	{
 		uint32 duration = m_Sequences[m_AnimationIndex].end_timestamp - m_Sequences[m_AnimationIndex].start_timestamp;
 
@@ -218,35 +91,30 @@ void MDX::Render()
 			{
 				duration = 50;
 			}*/
-			m_AnimationTime = _World->EnvM()->globalTime % duration;
-
-			if (duration - m_AnimationTime == 1)
-			{
-				int u = 0;
-			}
+			m_AnimationTime = ((_World->EnvM()->globalTime) % duration) + m_Sequences[m_AnimationIndex].start_timestamp;
 
 			if (m_IsBillboard)
 			{
-				animate(0);
+				animate(0, (_World->EnvM()->globalTime ));
 			}
 			else
 			{
 				if (!animcalc)
 				{
-					animate(0);
+					animate(0, _World->EnvM()->globalTime );
 					animcalc = true;
 				}
 			}
 
 			// draw particle systems
 #ifdef MDX_PARTICLES_ENABLE
-			for (uint32 i = 0; i < header.particle_emitters.size; i++)
+			for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 			{
 				particleSystems[i].draw();
 			}
 
 			// draw ribbons
-			for (uint32 i = 0; i < header.ribbon_emitters.size; i++)
+			for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
 			{
 				ribbons[i].draw();
 			}
@@ -267,7 +135,7 @@ void MDX::lightsOn(uint32 lbase)
 	}*/
 
 	// setup lights
-	for (uint32 i = 0, l = lbase; i < header.lights.size; i++)
+	for (uint32 i = 0, l = lbase; i < m_Header.lights.size; i++)
 	{
 		m_Lights[i].setup(m_AnimationTime, l++);
 	}
@@ -280,7 +148,7 @@ void MDX::lightsOff(uint32 lbase)
 		return;
 	}*/
 
-	for (uint32 i = 0, l = lbase; i < header.lights.size; i++)
+	for (uint32 i = 0, l = lbase; i < m_Header.lights.size; i++)
 	{
 		//glDisable(l++);
 	}
@@ -294,7 +162,7 @@ void MDX::updateEmitters(float dt)
 	}
 
 #ifdef MDX_PARTICLES_ENABLE
-	for (uint32 i = 0; i < header.particle_emitters.size; i++)
+	for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 	{
 		particleSystems[i].update(dt);
 	}

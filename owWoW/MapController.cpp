@@ -14,7 +14,7 @@ MapController::MapController()
     memset(m_Current, 0, sizeof(m_Current));
     m_IsOnInvalidTile = false;
 
-    Map_Shared::CreateMapArrays();
+	_Map_Shared->Init();
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
@@ -224,6 +224,11 @@ void MapController::ClearCache()
 
 uint32 MapController::GetAreaID()
 {
+	if (!m_WDT->MapHasTiles())
+	{
+		return UINT32_MAX;
+	}
+
     int tileX, tileZ, chunkX, chunkZ;
     tileX = (int)(_Camera->Position.x / C_TileSize);
     tileZ = (int)(_Camera->Position.z / C_TileSize);

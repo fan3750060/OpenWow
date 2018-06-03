@@ -2,7 +2,7 @@
 
 // Include
 #include "MDX.h"
-#include "MDX_Part_Bone.h"
+#include "M2_Part_Bone.h"
 
 // General
 #include "RibbonEmitter.h"
@@ -10,17 +10,17 @@
 // Additional
 #include "WorldController.h"
 
-void RibbonEmitter::init(IFile* f, M2Ribbon& mta, uint32 * globals)
+void RibbonEmitter::init(IFile* f, M2Ribbon& mta, const vector<SM2_Loop>* globals)
 {
 	color.init(mta.colorTrack, f, globals);
 	opacity.init(mta.alphaTrack, f, globals);
 	above.init(mta.heightAboveTrack, f, globals);
 	below.init(mta.heightBelowTrack, f, globals);
 
-	parent = model->m_Part_Bones + mta.boneIndex;
+	parent = model->m_Bones.data() + mta.boneIndex;
 	int *texlist = (int*)(f->GetData() + mta.textureIndices.offset);
 	// just use the first texture for now; most models I've checked only had one
-	texture = model->m_Textures[texlist[0]];
+	texture = model->m_Textures[texlist[0]].getTexture();
 
 	tpos = pos = mta.position.toXZmY();
 

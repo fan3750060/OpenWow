@@ -37,7 +37,7 @@ void main(void)
 	}
 	else if(gBlendMode == 1)
 	{
-		if (resultColor.a < (128.0 / 255.0))
+		if (resultColor.a < (224.0 / 255.0))
 			discard;
 	}
 	else 

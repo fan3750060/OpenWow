@@ -1,17 +1,17 @@
 #include "stdafx.h"
 
 // General
-#include "MDX_Part_Camera.h"
+#include "M2_Part_Camera.h"
 
 // Additional
 #include "WorldController.h"
 
-MDX_Part_Camera::MDX_Part_Camera() :
+CM2_Part_Camera::CM2_Part_Camera() :
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 }
 
-void MDX_Part_Camera::init(IFile* f, M2Camera& mcd, uint32* global)
+void CM2_Part_Camera::init(IFile* f, SM2_Camera& mcd, const vector<SM2_Loop>* global)
 {
 	nearclip = mcd.near_clip;
 	farclip = mcd.far_clip;
@@ -32,13 +32,13 @@ void MDX_Part_Camera::init(IFile* f, M2Camera& mcd, uint32* global)
 	camera.m_UseDir = true;
 }
 
-void MDX_Part_Camera::setup(int time)
+void CM2_Part_Camera::setup(uint32 time, uint32 globalTime)
 {
-	vec3 p = pos + tPos.getValue(0, time, _World->EnvM()->globalTime);
-	vec3 t = target + tTarget.getValue(0, time, _World->EnvM()->globalTime);
+	vec3 p = pos + tPos.getValue(0, time, globalTime);
+	vec3 t = target + tTarget.getValue(0, time, globalTime);
 	vec3 u(0, 1, 0);
 
-	roll = tRoll.getValue(0, time, _World->EnvM()->globalTime) / Math::Pi * 180.0f;
+	roll = tRoll.getValue(0, time, globalTime) / Math::Pi * 180.0f;
 
 	camera.setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
 

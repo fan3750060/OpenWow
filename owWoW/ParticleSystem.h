@@ -10,7 +10,7 @@ typedef list<Particle> ParticleList;
 #define MAX_PARTICLES 10000
 
 // Classes
-class MDX_Part_Bone;
+class CM2_Part_Bone;
 class MDX;
 class ParticleSystem;
 
@@ -53,7 +53,7 @@ public:
 	ParticleSystem();
 	~ParticleSystem();
 
-	void init(IFile* f, M2Particle& mta, uint32 * globals);
+	void init(IFile* f, M2Particle& mta, const vector<SM2_Loop>* globals);
 	void update(float dt);
 	void setup(int anim, int time);
 	void draw();
@@ -66,13 +66,13 @@ private:
 	void initTile(vec2 *tc, int num);
 
 private:
-	Animated<float> speed, variation, spread, lat, gravity, lifespan, rate, areal, areaw, deacceleration;
-	Animated<uint8> enabled;
+	M2_Animated<float> speed, variation, spread, lat, gravity, lifespan, rate, areal, areaw, deacceleration;
+	M2_Animated<uint8> enabled;
 	vec4 colors[3];
 	float sizes[3];
 	float mid, slowdown, rotation;
 	vec3 pos;
-	R_Texture* texture;
+	SmartTexturePtr texture;
 	ParticleEmitter* emitter;
 	ParticleList particles;
 	int blend, order, type;
@@ -89,7 +89,7 @@ private:
 	int32 flags;
 	int16 pType;
 
-	MDX_Part_Bone* parent;
+	CM2_Part_Bone* parent;
 
 };
 

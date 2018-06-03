@@ -26,7 +26,7 @@ void CGroupQuality::InitDefault()
 	draw_map_mdx = true;
 	draw_water = true;
 
-	drawfog = true;
+	drawfog = false;
 	timeEnable = false;
 }
 

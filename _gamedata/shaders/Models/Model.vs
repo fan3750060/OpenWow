@@ -41,16 +41,16 @@ void main(void)
 	if(gIsAnimated)
 	{
 		uint blendWeights[4];
-		blendWeights[0] = blendWeight & 0xFF000000u;
-		blendWeights[1] = blendWeight & 0x00FF0000u;
-		blendWeights[2] = blendWeight & 0x0000FF00u;
-		blendWeights[3] = blendWeight & 0x000000FFu;
+		blendWeights[0] = (blendWeight & 0xFF000000u >> 24) & 0x000000FFu;
+		blendWeights[1] = (blendWeight & 0x00FF0000u >> 16) & 0x000000FFu;
+		blendWeights[2] = (blendWeight & 0x0000FF00u >>  8) & 0x000000FFu;
+		blendWeights[3] = (blendWeight & 0x000000FFu      ) & 0x000000FFu;
 			
 		uint blendIndicess[4];
-		blendIndicess[0] = blendIndices & 0xFF000000u;
-		blendIndicess[1] = blendIndices & 0x00FF0000u;
-		blendIndicess[2] = blendIndices & 0x0000FF00u;
-		blendIndicess[3] = blendIndices & 0x000000FFu;
+		blendIndicess[0] = (blendIndices & 0xFF000000u >> 24) & 0x000000FFu;
+		blendIndicess[1] = (blendIndices & 0x00FF0000u >> 16) & 0x000000FFu;
+		blendIndicess[2] = (blendIndices & 0x0000FF00u >>  8) & 0x000000FFu;
+		blendIndicess[3] = (blendIndices & 0x000000FFu      ) & 0x000000FFu;
 
 		for(int i = 0; i < 4; i++)
 		{

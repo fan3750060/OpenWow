@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 // General
-#include "MDX_Part_Light.h"
+#include "M2_Part_Light.h"
 
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_Light::init(IFile* f, M2Light& mld, uint32* global)
+void CM2_Part_Light::init(IFile* f, SM2_Light& mld, const vector<SM2_Loop>* global)
 {
 	tpos = pos = mld.position.toXZmY();
 	tdir = dir = vec3(0, 1, 0); // no idea
@@ -19,10 +19,10 @@ void MDX_Part_Light::init(IFile* f, M2Light& mld, uint32* global)
 	diffIntensity.init(mld.diffuse_intensity, f, global);
 }
 
-void MDX_Part_Light::setup(int time, uint32 l)
+void CM2_Part_Light::setup(uint32 time, uint32 globalTime)
 {
-	vec4 ambcol(ambColor.getValue(0, time, _World->EnvM()->globalTime) * ambIntensity.getValue(0, time, _World->EnvM()->globalTime), 1.0f);
-	vec4 diffcol(diffColor.getValue(0, time, _World->EnvM()->globalTime) * diffIntensity.getValue(0, time, _World->EnvM()->globalTime), 1.0f);
+	vec4 ambcol(ambColor.getValue(0, time, globalTime) * ambIntensity.getValue(0, time, globalTime), 1.0f);
+	vec4 diffcol(diffColor.getValue(0, time, globalTime) * diffIntensity.getValue(0, time, globalTime), 1.0f);
 	vec4 p;
 
 	if (type == MODELLIGHT_DIRECTIONAL)

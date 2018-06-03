@@ -289,9 +289,9 @@ bool WMO::Render(uint32 _doodadSet)
     }
 
     // WMO doodads
-    /*{
+    {
         PERF_START(PERF_MAP_MODELS_WMOs_DOODADS);
-        if (_Config.draw_map_wmo_doodads)
+        //if (_Config.draw_map_wmo_doodads)
         {
             for (auto it = m_Groups.begin(); it != m_Groups.end(); ++it)
             {
@@ -299,7 +299,7 @@ bool WMO::Render(uint32 _doodadSet)
             }
         }
         PERF_STOP(PERF_MAP_MODELS_WMOs_DOODADS);
-    }*/
+    }
 
     // Debug geometry
     {

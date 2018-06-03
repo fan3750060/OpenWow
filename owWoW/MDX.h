@@ -1,15 +1,21 @@
 #pragma once
 
-#include "MDX_Headers.h"
+#include "M2_Headers.h"
 
-#include "MDX_Part_Bone.h"
-#include "MDX_Part_Color.h"
-#include "MDX_Part_TextureAnim.h"
-#include "MDX_Part_TextureWeight.h"
+// Bones
+#include "M2_Part_Bone.h"
 
-#include "MDX_Part_Light.h"
-#include "MDX_Part_Camera.h"
+// Colors and textures
+#include "M2_Part_Color.h"
+#include "M2_Part_Texture.h"
+#include "M2_Part_TextureTransform.h"
+#include "M2_Part_TextureWeight.h"
 
+// Misc
+#include "M2_Part_Light.h"
+#include "M2_Part_Camera.h"
+
+// Particles
 #include "Particle.h"
 #include "ParticleSystem.h"
 #include "RibbonEmitter.h"
@@ -27,78 +33,154 @@ enum BlendModes
 	M2BLEND_MOD2X
 };
 
+// FORWARD BEGIN
+class CM2_Builder;
+class CM2_Skin_Builder;
+// FORWARD END
+
 class MDX : public CRefItem
 {
+	friend class CM2_Builder;
+	friend class CM2_Skin;
+	friend class MDX_Skin_Batch;
+	friend class CM2_Skin_Builder;
 public:
 	MDX(cstring name);
 	~MDX();
 
-	void Init(bool forceAnim = false);
+	string GetFileName() const { return m_FileName; }
+
 	bool IsLoaded() { return m_Loaded; }
 
 	void Render();
 	void updateEmitters(float dt);
 
-	ModelHeader header;
-
-    R_Buffer* __vb;
-
-private:
-	string m_FileName;
-	bool m_Loaded;
-	string m_ModelInternalName;
-
-private:
-	std::vector<Model_Skin*> m_Skins;
-
-public:
-	bool animated;
-	bool animGeometry, animTextures, animBones;
-
-	bool forceAnim;
-
-	M2Sequence* m_Sequences;
-	uint32* m_GlobalLoops;
-
-	MDX_Part_Bone* m_Part_Bones;
-
-	MDX_Part_Color* m_Colors;
-	M2Texture* m_M2Textures;
-	MDX_Part_TextureWeight* m_TextureWeights;
-	MDX_Part_TextureAnim* m_TexturesAnims;
-
-	MDX_Part_Light* m_Lights;
-	MDX_Part_Camera* m_Cameras;
-
-#ifdef MDX_PARTICLES_ENABLE
-	ParticleSystem* particleSystems;
-	RibbonEmitter* ribbons;
-#endif
-
 	void drawModel();
-	void initCommon(IFile* f);
-	bool isAnimated(IFile* f);
-	void initAnimated(IFile* f);
 
-	void animate(uint32 _animationIndex);
-	void calcBones(uint32 _animationIndex, int time);
+	void animate(uint32 _animationIndex, uint32 globalTime);
+	void calcBones(uint32 _animationIndex, uint32 time, uint32 globalTime);
 
 	void lightsOn(uint32 lbase);
 	void lightsOff(uint32 lbase);
 
+#pragma region Getters
 public:
-	std::vector<SmartTexturePtr> m_Textures;
-	int m_SpecialTextures[TEXTURE_MAX];
-	R_Texture* m_TextureReplaced[TEXTURE_MAX];
-	bool m_TexturesUseSpecialTexture[TEXTURE_MAX];
+	BoundingBox& GetBounds() { return m_Bounds; }
 
-	bool m_IsBillboard;
 
-	BoundingBox m_Bounds;
+	SM2_Sequence& GetSequence(uint32 _index) 
+	{ 
+		assert1(_index < m_Header.sequencesLookup.size);
+		uint32 newIndex = m_SequencesLookup[_index];
+		assert1(newIndex < m_Header.sequences.size);
+		return m_Sequences[newIndex];
+	}
+	CM2_Part_Bone& GetBone(uint32 _index) 
+	{ 
+		assert1(_index < m_Header.bonesLookup.size);
+		uint32 newIndex = m_BonesLookup[_index];
+		assert1(newIndex < m_Header.bones.size);
+		return m_Bones[newIndex];
+	}
+	CM2_Skin* GetSkin(uint32 _index) 
+	{ 
+		assert1(_index < m_Header.skin_profiles.size);
+		return m_Skins[_index]; 
+	}
+	CM2_Part_Color& GetColor(uint32 _index)
+	{
+		assert1(_index < m_Header.colors.size);
+		return m_Colors[_index];
+	}
+	CM2_Part_Texture& GetTexture(uint32 _index)
+	{
+		assert1(_index < m_Header.texturesLookup.size);
+		uint32 newIndex = m_TexturesLookup[_index];
+		assert1(newIndex < m_Header.textures.size);
+		return m_Textures[newIndex];
+	}
+	CM2_Part_TextureWeight& GetTextureWeight(uint32 _index)
+	{
+		assert1(_index < m_Header.textureWeightsLookup.size);
+		uint32 newIndex = m_TextureWeightsLookup[_index];
+		assert1(newIndex < m_Header.textureWeights.size);
+		return m_TextureWeights[newIndex];
+	}
+	CM2_Part_TextureTransform& GetTextureTransform(uint32 _index)
+	{
+		assert1(_index < m_Header.textureTransformsLookup.size);
+		uint32 newIndex = m_TexturesTransformLookup[_index];
+		assert1(newIndex < m_Header.textureTransforms.size);
+		return m_TexturesTransform[newIndex];
+	}
+#pragma endregion
+
+
+#pragma region Header
+public:
+	bool								m_Loaded;
+	string								m_FileName;
+	SM2_Header							m_Header;
+	string								m_UniqueName;
+
+	// Loops & Sequences
+	vector<SM2_Loop>					m_GlobalLoops;
+	vector<SM2_Sequence>				m_Sequences;
+	vector<uint16>						m_SequencesLookup;
+	bool								m_IsAnimated;
+
+	// Bones
+	vector<CM2_Part_Bone>				m_Bones;
+	vector<int16>						m_BonesLookup;
+	bool								m_HasBones;
+	bool								m_AnimBones;
+	bool								m_IsBillboard;
+
+	// Vertices
+	bool								m_ContainGeom;
+	// Skins
+	vector<CM2_Skin*>					m_Skins;
+
+	// Colors and textures
+	vector<CM2_Part_Color>				m_Colors;
+	vector<SM2_Material>				m_Materials;
+	vector<CM2_Part_Texture>			m_Textures;
+	vector<uint16>						m_TexturesLookup;
+	vector<CM2_Part_TextureWeight>		m_TextureWeights;
+	vector<uint16>						m_TextureWeightsLookup;
+	vector<CM2_Part_TextureTransform>	m_TexturesTransform;
+	vector<uint16>						m_TexturesTransformLookup;
+	bool								m_AnimTextures;
+
+	// Attachments, events, lights and cameras
+	vector<CM2_Part_Light>				m_Lights;
+	vector<CM2_Part_Camera>				m_Cameras;
+
+	// Particles
+#ifdef MDX_PARTICLES_ENABLE
+	RibbonEmitter*				ribbons;
+	ParticleSystem*				particleSystems;
+#endif
+	bool						m_HasMisc;
+#pragma endregion
+
+
+#pragma region Header
+private:
+	// Buffers and geom
+	SmartBufferPtr				m_VBuffer;
+	BoundingBox					m_Bounds;
+#pragma endregion
+
+
+public:
 	bool animcalc;
-	int m_AnimationIndex, m_AnimationTime;
+	int m_AnimationIndex;
+	int	m_AnimationTime;
 
-	friend class MDX_Skin_Batch;
+private: // Static and Consts
+	const uint8 C_TexturesMaxCount = 128;
+	const uint8 C_BonesInfluences = 4;
 };
 
 

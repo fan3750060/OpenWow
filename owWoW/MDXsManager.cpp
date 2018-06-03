@@ -5,6 +5,7 @@
 
 // Additional
 #include "MDX.h"
+#include "M2_Builder.h"
 
 MDXsManager::MDXsManager()
 {
@@ -35,7 +36,10 @@ void MDXsManager::Update(double _Time, double _deltaTime)
 MDX* MDXsManager::CreateAction(cstring name)
 {
 	MDX* model = new MDX(name);
-	model->Init();
+
+	CM2_Builder builder(model);
+	builder.Load();
+
 	return model;
 }
 bool MDXsManager::DeleteAction(cstring name)

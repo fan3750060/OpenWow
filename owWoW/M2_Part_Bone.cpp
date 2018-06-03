@@ -1,38 +1,16 @@
 #include "stdafx.h"
 
 // General
-#include "MDX_Part_Bone.h"
+#include "M2_Part_Bone.h"
 
 // Additional
 #include "WorldController.h"
 
-void MDX_Part_Bone::init(IFile* f, M2CompBone& b, uint32* global)
+void CM2_Part_Bone::init(IFile* f, SM2_Bone& b, const vector<SM2_Loop>* global)
 {
+	m_Flags = b.flags;
 	parent = b.parent_bone;
-	pivot = b.pivot.toXZY();
-
-	m_BillboardType = BillboardType::BILLBOARD_DISABLED;
-
-	if (b.translation.interpolation_type || b.rotation.interpolation_type || b.scale.interpolation_type)
-	{
-		if (b.flags.spherical_billboard)
-		{
-			m_BillboardType = BillboardType::BILLBOARD_SPHERICAL;
-		}
-		else if (b.flags.cylindrical_billboard_lock_x)
-		{
-			m_BillboardType = BillboardType::BILLBOARD_CYLINDRICAL_X;
-		}
-		else if (b.flags.cylindrical_billboard_lock_y)
-		{
-			m_BillboardType = BillboardType::BILLBOARD_CYLINDRICAL_Y;
-		}
-		else if (b.flags.cylindrical_billboard_lock_z)
-		{
-			m_BillboardType = BillboardType::BILLBOARD_CYLINDRICAL_Z;
-		}
-	}
-
+	
 	trans.init(b.translation, f, global);
 	roll.init(b.rotation, f, global);
 	scale.init(b.scale, f, global);
@@ -40,9 +18,11 @@ void MDX_Part_Bone::init(IFile* f, M2CompBone& b, uint32* global)
 	trans.fix(Fix_XZmY);
 	roll.fix(Fix_XZmYW);
 	scale.fix(Fix_XZY);
+
+	pivot = b.pivot.toXZmY();
 }
 
-void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time)
+void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time, uint32 globalTime)
 {
 	if (m_IsCalculated)
 	{
@@ -51,18 +31,18 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time
 
 	mat4 m;
 
-	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim) || (m_BillboardType))
+	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim) || (IsBillboard()))
 	{
 		m.translate(pivot);
 
 		if (trans.uses(anim))
 		{
-			m.translate(trans.getValue(anim, time, _World->EnvM()->globalTime));
+			m.translate(trans.getValue(anim, time, globalTime));
 		}
 
 		if (roll.uses(anim))
 		{
-			quat q = roll.getValue(anim, time, _World->EnvM()->globalTime);
+			quat q = roll.getValue(anim, time, globalTime);
 			m.rotate(q);
 
 			if (parent >= 0)
@@ -77,14 +57,14 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time
 
 		if (scale.uses(anim))
 		{
-			m.scale(scale.getValue(anim, time, _World->EnvM()->globalTime));
+			m.scale(scale.getValue(anim, time, globalTime));
 		}
 
-		/*if (m_BillboardType)
+		if (IsBillboard())
 		{
 			if (parent != -1)
 			{
-				if (allbones[parent].m_BillboardType)
+				if (allbones[parent].IsBillboard())
 				{
 					goto xxx;
 				}
@@ -108,27 +88,22 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time
 			vec3 vRight = (vec3(matrix.c[0][0], matrix.c[1][0], matrix.c[2][0]) / scaleX) * -1.0f;
 
 			// Calc billboard type
-			switch (m_BillboardType)
+			if (m_Flags.spherical_billboard)
 			{
-				case BillboardType::BILLBOARD_SPHERICAL:
 				vUp = vec3(matrix.c[0][1], matrix.c[1][1], matrix.c[2][1]) / scaleY;
-				break;
-
-				case BillboardType::BILLBOARD_CYLINDRICAL_X:
-				vUp = vec3(1, 0, 0);
-				break;
-
-				case BillboardType::BILLBOARD_CYLINDRICAL_Y:
-				vUp = vec3(0, 0, 1);
-				break;
-
-				case BillboardType::BILLBOARD_CYLINDRICAL_Z:
-				vUp = vec3(0, 1, 0);
-				break;
-
-				//default: vUp = vec3(0, 1, 0);
 			}
-
+			else if (m_Flags.cylindrical_billboard_lock_x)
+			{
+				vUp = vec3(1, 0, 0);
+			}
+			else if(m_Flags.cylindrical_billboard_lock_y)
+			{
+				vUp = vec3(0, 0, 1);
+			}
+			else if(m_Flags.cylindrical_billboard_lock_z)
+			{
+				vUp = vec3(0, 1, 0);
+			}
 
 			//vec3 vForward = vec3(matrix.c[0][2], matrix.c[1][2], matrix.c[2][2]) / scaleZ;
 			//m.c[0][0] = vForward.x;
@@ -142,15 +117,14 @@ void MDX_Part_Bone::calcMatrix(MDX_Part_Bone* allbones, uint32 anim, uint32 time
 			m.c[2][0] = vRight.x;
 			m.c[2][1] = vRight.y;
 			m.c[2][2] = vRight.z;
-		}*/
+		}
 xxx:
-
 		m.translate(pivot * -1.0f);
 	}
 
 	if (parent >= 0)
 	{
-		allbones[parent].calcMatrix(allbones, anim, time);
+		allbones[parent].calcMatrix(allbones, anim, time, globalTime);
 		m_TransformMatrix = allbones[parent].m_TransformMatrix * m;
 	}
 	else
