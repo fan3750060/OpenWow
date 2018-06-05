@@ -19,14 +19,17 @@
 #include <owRender.h>
 #pragma comment(lib, "owRender.lib")
 
+#include <owGUI.h>
+#pragma comment(lib, "owGUI.lib")
+
+#include <owGameShared.h>
+#pragma comment(lib, "owGameShared.lib")
+
+#include <owGameM2Models.h>
+#pragma comment(lib, "owGameM2Models.lib")
+
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
 
-#include <owWoW.h>
-#pragma comment(lib, "owWoW.lib")
-
 #include <owGamePlatformWindows.h>
 #pragma comment(lib, "owGamePlatformWindows.lib")
-
-#include <owGUI.h>
-#pragma comment(lib, "owGUI.lib")

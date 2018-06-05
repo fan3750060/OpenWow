@@ -1,13 +1,10 @@
 #pragma once
 
-#include "GPUTimer.h"
-
 const uint32 MaxNumVertexLayouts = 64;
 const uint32 MaxComputeImages = 8;
 
+#include "GPUTimer.h"
 #include "RenderTypes.h"
-
-// =================================================================================================
 
 class RenderDevice
 {
@@ -21,7 +18,6 @@ public:
 	RenderDevice();
 	~RenderDevice();
 
-	void initStates();
 	bool init();
 
 	// Vertex layouts
@@ -38,24 +34,15 @@ public:
 	R_Buffer* createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
 	R_Buffer* createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
 	R_TextureBuffer* createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
-	uint32 getBufferMem() const
-	{
-		return _bufferMem;
-	}
+	uint32 getBufferMem() const { return _bufferMem; }
 
 	// Textures
 	R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
-	uint32 getTextureMem() const
-	{
-		return _textureMem;
-	}
+	uint32 getTextureMem() const { return _textureMem; }
 
 	// Shaders
 	R_Shader* createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
-	string getShaderLog() const
-	{
-		return _shaderLog;
-	}
+	string getShaderLog() const { return _shaderLog; }
 
 	// Renderbuffers
 	R_RenderBuffer* createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
@@ -68,20 +55,17 @@ public:
 	uint32 getQueryResult(uint32 queryObj);
 
 	// Render Device dependent GPU Timer
-	GPUTimer* createGPUTimer()
-	{
-		return new GPUTimer();
-	}
+	GPUTimer* createGPUTimer() { return new GPUTimer(); }
 
 	// -----------------------------------------------------------------------------
 	// Commands
 	// -----------------------------------------------------------------------------
 	void setViewport(int x, int y, int width, int height)
 	{
-		_vpX = x;
-		_vpY = y;
-		_vpWidth = width;
-		_vpHeight = height;
+		m_ViewportX = x;
+		m_ViewportY = y;
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
 		_pendingMask |= PM_VIEWPORT;
 	}
 	void setScissorRect(int x, int y, int width, int height)
@@ -248,8 +232,7 @@ protected:
 	bool commitStates(uint32 filter = 0xFFFFFFFF);
 	void resetStates();
 
-public:
-	// Draw calls and clears
+public: // Draw calls and clears
 	void clear(uint32 flags = CLR_COLOR_RT0 | CLR_COLOR_RT1 | CLR_COLOR_RT2 | CLR_COLOR_RT3 | CLR_DEPTH, float* colorRGBA = 0x0, float depth = 1.0f);
 	void draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts);
 	void drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, bool _softReset = true);
@@ -261,29 +244,29 @@ protected:
 	void applyRenderStates();
 
 protected:
-	R_VertexLayout                _vertexLayouts[MaxNumVertexLayouts];
-	vector< R_ShaderStorage >     _storageBufs;
-	R_TexSlot					  _texSlots[16];
-	R_RasterState				  _curRasterState, _newRasterState;
-	R_BlendState				  _curBlendState, _newBlendState;
-	R_DepthStencilState		      _curDepthStencilState, _newDepthStencilState;
-	R_DrawBarriers				  _memBarriers;
+	R_VertexLayout				_vertexLayouts[MaxNumVertexLayouts];
+	vector< R_ShaderStorage >	_storageBufs;
+	R_TexSlot					_texSlots[16];
+	R_RasterState				_curRasterState, _newRasterState;
+	R_BlendState				_curBlendState, _newBlendState;
+	R_DepthStencilState			_curDepthStencilState, _newDepthStencilState;
+	R_DrawBarriers				_memBarriers;
 
-	bool                             m_IsIndexFormat32;
-	uint32                             _activeVertexAttribsMask;
+	bool						m_IsIndexFormat32;
+	uint32						_activeVertexAttribsMask;
 
-	uint16                             _lastTessPatchVertsValue;
-	uint16                             _maxComputeBufferAttachments;
+	uint16						_lastTessPatchVertsValue;
+	uint16						_maxComputeBufferAttachments;
 
-	bool                               _doubleBuffered;
+	bool						_doubleBuffered;
 
 	// DEFAULT
 
 	// 8 ssbo
 
 	string					    _shaderLog;
-	uint32						_depthFormat;
-	int							_vpX, _vpY, _vpWidth, _vpHeight;
+	uint32						m_DepthFormat;
+	int							m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight;
 	int							_scX, _scY, _scWidth, _scHeight;
 	int							_fbWidth, _fbHeight;
 	R_RenderBuffer*				_curRendBuf;
@@ -300,8 +283,8 @@ protected:
 
 	uint32						_tessPatchVerts; // number of vertices in patch. Used for tesselation.
 
-	int							_defaultFBO;
-	bool                        _defaultFBOMultisampled;
+	int							m_DefaultFBO;
+	bool                        M_DefaultFBOMultisampled;
 
 	CGroupRenderCaps&			m_DeviceCapsSettings;
 	CGroupOpenGL&				m_OpenGLSettings;

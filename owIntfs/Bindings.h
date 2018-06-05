@@ -1,11 +1,5 @@
 #pragma once
 
-__interface IOrderedObject
-{
-	void SetDrawOrder(uint32 _order);
-	uint32 GetDrawOrder() const;
-};
-
 __interface IObject
 {};
 
@@ -28,15 +22,20 @@ __interface IUpdatable : public IObject
 
 __interface IRenderable3D : public IObject
 {
-	void PreRender3D(double t, double dt);
+	void PreRender3D(double _time, double _dTime);
 	void Render3D();
 	void PostRender3D();
 
 	bool IsVisible() const;
 	void SetVisible(bool _value);
+	void SetDrawOrder(uint32 _order);
+	uint32 GetDrawOrder() const;
 };
 
 __interface IRenderableUI : public IObject
 {
 	void RenderUI();
+
+	void SetDrawOrder(uint32 _order);
+	uint32 GetDrawOrder() const;
 };

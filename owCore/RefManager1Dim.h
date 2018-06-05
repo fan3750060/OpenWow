@@ -3,11 +3,11 @@
 #include "RefItem.h"
 
 template <class T>
-class RefManager1Dim
+class CRefManager1Dim
 {
 public:
-	RefManager1Dim();
-	~RefManager1Dim();
+	CRefManager1Dim();
+	~CRefManager1Dim();
 
 	T* Add(cstring name);
 

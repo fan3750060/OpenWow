@@ -83,7 +83,7 @@ void UIMgr::SetFocus(UIElement* _element)
 
 //
 
-void UIMgr::Update(double t, double dt)
+void UIMgr::Update(double _time, double _dTime)
 {
     // Detach from parent
     for (auto it = m_ObjectsToDetach.begin(); it != m_ObjectsToDetach.end(); )

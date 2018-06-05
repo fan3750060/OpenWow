@@ -3,6 +3,7 @@
 // Common
 #include "DBC__File.h"
 
+DBC_DEFINE(DBÑ_AnimationData);
 DBC_DEFINE(DBÑ_AreaTable);
 DBC_DEFINE(DBC_GroundEffectDoodad);
 DBC_DEFINE(DBC_GroundEffectTexture);
@@ -18,6 +19,7 @@ DBC_DEFINE(DBC_WMOAreaTable)
 
 
 // My files
+#include "DBC_AnimationData.h"
 #include "DBC_AreaTable.h"
 #include "DBC_GroundEffectDoodad.h"
 #include "DBC_GroundEffectTexture.h"

@@ -51,6 +51,9 @@
     <ClInclude Include="DBC_WMOAreaTable.h">
       <Filter>DBCs</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_AnimationData.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

@@ -39,7 +39,7 @@ const PerfomanceDebugOutput Messages[] =
 
 	{PERF_DELIM, "", false},
 
-	// MDX (Map)
+	// M2 (Map)
 	{PERF_MAP_MODELS_MDXs, "Map MDXs", true}
 };
 

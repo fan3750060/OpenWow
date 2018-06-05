@@ -4,7 +4,7 @@
 class R_Texture;
 class Font;
 class WMO;
-class MDX;
+class M2;
 
 __interface 
 	__declspec(uuid("BDC2768B-055D-42EA-ABE3-CF17CD21178D"))
@@ -40,8 +40,10 @@ __interface
 
 __interface 
 	__declspec(uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))
-	IMDXManager : public IRefManager<MDX>
-{};
+	IM2Manager : public IRefManager<M2>
+{
+	void ResetAnim();
+};
 
 //--
 

@@ -1,6 +1,6 @@
 #pragma once
 
-class TexturesManager : public ITexturesManager, public RefManager1Dim<R_Texture>
+class TexturesManager : public ITexturesManager, public CRefManager1Dim<R_Texture>
 {
 public:
 	TexturesManager(RenderDevice* _RenderDevice);
@@ -8,12 +8,12 @@ public:
 	R_Texture* DefaultTexture() { return m_DefaultTexture2DObj; }
 
 	// ITexturesManager
-	R_Texture* Add(cstring name) { return RefManager1Dim::Add(name); }
-	bool Exists(cstring name) const { return RefManager1Dim::Exists(name); }
-	void Delete(cstring name) { RefManager1Dim::Delete(name); }
-	void Delete(R_Texture* item) { RefManager1Dim::Delete(item); }
+	R_Texture* Add(cstring name) { return CRefManager1Dim::Add(name); }
+	bool Exists(cstring name) const { return CRefManager1Dim::Exists(name); }
+	void Delete(cstring name) { CRefManager1Dim::Delete(name); }
+	void Delete(R_Texture* item) { CRefManager1Dim::Delete(item); }
 
-	// RefManager1Dim
+	// CRefManager1Dim
     R_Texture* CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
 

@@ -1,52 +1,233 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="General">
-      <UniqueIdentifier>{24c337e0-a2b6-44f6-8f76-c24a9b084161}</UniqueIdentifier>
+    <Filter Include="WMO">
+      <UniqueIdentifier>{b1cac847-eaba-48be-aa67-fe553c0c414b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="General\Scene">
-      <UniqueIdentifier>{1d5a6f0a-304b-4a06-b799-c1ee3e3099c9}</UniqueIdentifier>
+    <Filter Include="Map">
+      <UniqueIdentifier>{a36b5e59-c60a-4f44-b7b3-9977636ed0d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameState">
-      <UniqueIdentifier>{b37442df-879c-44da-953a-882457a73e27}</UniqueIdentifier>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{5855bdd1-81fa-42f5-a488-036763f96299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map\Instances">
+      <UniqueIdentifier>{aa7fbffb-1487-4cbf-9eba-5f2d6c4ca15f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WMO\Instances">
+      <UniqueIdentifier>{4cacdc22-0be2-480f-91e2-b7ef974ad3e9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common">
-      <UniqueIdentifier>{ac8bb547-bdd8-4ccc-86f7-0164eb3103c6}</UniqueIdentifier>
+      <UniqueIdentifier>{d0033b79-fd0f-4221-80fa-9a9bedd64d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environment\DayNight">
+      <UniqueIdentifier>{28b97f23-4ed2-4ece-b969-7b97bd834fdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environment\Skies">
+      <UniqueIdentifier>{179d7822-1b17-4d5c-9dcf-34999c82a998}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WMO\Parts">
+      <UniqueIdentifier>{b0f56994-9fa8-494f-a732-b6f401df22f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorldController">
+      <UniqueIdentifier>{86cc816c-079e-4fc1-8454-67b7ce64a75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{3d7a60d2-1033-48b8-827e-29b998c278fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SceneNode.cpp">
-      <Filter>General\Scene</Filter>
+    <ClCompile Include="WMO.cpp">
+      <Filter>WMO</Filter>
     </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>General</Filter>
+    <ClCompile Include="WMO_Group.cpp">
+      <Filter>WMO</Filter>
     </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>GameState</Filter>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Environment\Skies</Filter>
     </ClCompile>
-    <ClCompile Include="GameStateManager.cpp">
-      <Filter>GameState</Filter>
+    <ClCompile Include="SkyManager.cpp">
+      <Filter>Environment\Skies</Filter>
+    </ClCompile>
+    <ClCompile Include="DayNightCycle.cpp">
+      <Filter>Environment\DayNight</Filter>
+    </ClCompile>
+    <ClCompile Include="DayNightPhase.cpp">
+      <Filter>Environment\DayNight</Filter>
+    </ClCompile>
+    <ClCompile Include="Map_Shared.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Light.cpp">
+      <Filter>WMO\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Fog.cpp">
+      <Filter>WMO\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Material.cpp">
+      <Filter>WMO\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldController.cpp">
+      <Filter>WorldController</Filter>
+    </ClCompile>
+    <ClCompile Include="WMOsManager.cpp">
+      <Filter>WMO</Filter>
+    </ClCompile>
+    <ClCompile Include="MapController.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldRender.cpp">
+      <Filter>WorldController</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_WMO_Instance.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_MDX_Instance.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_MCNK.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WDT.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxInstance.cpp">
+      <Filter>WMO\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_MODD.cpp">
+      <Filter>WMO\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentManager.cpp">
+      <Filter>Environment</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="WMO_Liquid.cpp">
+      <Filter>WMO\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_Liquid.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared\owGame.h" />
-    <ClInclude Include="SceneNode.h">
-      <Filter>General\Scene</Filter>
+    <ClInclude Include="WMO.h">
+      <Filter>WMO</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>General</Filter>
+    <ClInclude Include="WMO_Group.h">
+      <Filter>WMO</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>GameState</Filter>
+    <ClInclude Include="Sky.h">
+      <Filter>Environment\Skies</Filter>
     </ClInclude>
-    <ClInclude Include="GameStateManager.h">
-      <Filter>GameState</Filter>
+    <ClInclude Include="SkyManager.h">
+      <Filter>Environment\Skies</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentManager.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="DayNightCycle.h">
+      <Filter>Environment\DayNight</Filter>
+    </ClInclude>
+    <ClInclude Include="DayNightPhase.h">
+      <Filter>Environment\DayNight</Filter>
+    </ClInclude>
+    <ClInclude Include="Map_Shared.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Light.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Fog.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Material.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldController.h">
+      <Filter>WorldController</Filter>
+    </ClInclude>
+    <ClInclude Include="WMOsManager.h">
+      <Filter>WMO</Filter>
+    </ClInclude>
+    <ClInclude Include="MapController.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldRender.h">
+      <Filter>WorldController</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_WMO_Instance.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_MDX_Instance.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_MCNK.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WDT.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxInstance.h">
+      <Filter>WMO\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_MODD.h">
+      <Filter>WMO\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="WMO_Liquid.h">
+      <Filter>WMO\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateManager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owGame.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_Liquid.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sky.inl">
+      <Filter>Environment\Skies</Filter>
+    </None>
   </ItemGroup>
 </Project>

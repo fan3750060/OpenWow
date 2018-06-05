@@ -13,12 +13,12 @@ public:
 	~CBindingController();
 
 	void RegisterInputListener(IInputListener* _object);
-	void RegisterRenderable3DObject(CRenderable3DObject* _object, uint32 m_DrawOrder = 0);
+	void RegisterRenderable3DObject(IRenderable3D* _object, uint32 m_DrawOrder = 0);
 	void RegisterRenderableUIObject(CRenderableUIObject* _object, uint32 m_DrawOrder = 0);
 	void RegisterUpdatableObject(IUpdatable* _object);
 
 	void UnregisterInputListener(IInputListener* _object);
-	void UnregisterRenderable3DObject(CRenderable3DObject* _object);
+	void UnregisterRenderable3DObject(IRenderable3D* _object);
 	void UnregisterRenderableUIObject(CRenderableUIObject* _object);
 	void UnregisterUpdatableObject(IUpdatable* _object);
 

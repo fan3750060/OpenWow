@@ -7,7 +7,6 @@
 #include <memory>
 using namespace std;
 
-
 // Macros
 #include "Debug.h"
 #include "Macros.h"

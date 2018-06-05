@@ -73,12 +73,14 @@
     <Filter Include="Settings\Groups">
       <UniqueIdentifier>{3067e420-7b54-4018-8d50-d4abb91d379a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{52e0479f-a650-434b-9e68-09e99972ff67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="DebugOutput.cpp">
       <Filter>Log\DebugOutput</Filter>
     </ClCompile>
@@ -178,20 +180,23 @@
     <ClCompile Include="GroupOpenGL.cpp">
       <Filter>Settings\Groups</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\owCore.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="InputKeys.h">
       <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="DebugOutput.h">
       <Filter>Log\DebugOutput</Filter>
     </ClInclude>
-    <ClInclude Include="common.h" />
     <ClInclude Include="InputListenerCollection.h">
       <Filter>Objects bindings\InputListener</Filter>
     </ClInclude>
@@ -312,9 +317,6 @@
     <ClInclude Include="RefItem.h">
       <Filter>RefManager</Filter>
     </ClInclude>
-    <ClInclude Include="LoadableObject.h">
-      <Filter>RefManager</Filter>
-    </ClInclude>
     <ClInclude Include="ConsoleCommand.h">
       <Filter>Log\Console</Filter>
     </ClInclude>
@@ -344,6 +346,18 @@
     </ClInclude>
     <ClInclude Include="GroupOpenGL.h">
       <Filter>Settings\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owCore.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNode.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

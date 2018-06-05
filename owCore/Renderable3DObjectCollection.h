@@ -5,12 +5,12 @@
 class CRenderable3DObjectCollection
 {
 public:
-	bool RegisterObject(CRenderable3DObject* _uiObject, uint32 _DrawOrder = 0);
-	void UnregisterObject(CRenderable3DObject* _uiObject);
+	bool RegisterObject(IRenderable3D* _uiObject, uint32 _DrawOrder = 0);
+	void UnregisterObject(IRenderable3D* _uiObject);
 
-	void Render3D(double t, double dt);
+	void Render3D(double _time, double _dTime);
 
 private:
-	vector<CRenderable3DObject*>	m_Objects;
+	vector<IRenderable3D*>		m_Objects;
 	bool					    m_ObjectsNeedSort;
 };

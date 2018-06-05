@@ -115,7 +115,7 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 width, uint32 height, 
 			// Create a multisampled renderbuffer
 			glGenRenderbuffers(1, &this->depthBuf);
 			glBindRenderbuffer(GL_RENDERBUFFER, this->depthBuf);
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, this->samples, m_RenderDevice->_depthFormat, this->width, this->height);
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, this->samples, m_RenderDevice->m_DepthFormat, this->width, this->height);
 
 			// Attach the renderbuffer
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, this->depthBuf);
@@ -126,14 +126,14 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 width, uint32 height, 
 	bool valid = true;
 	glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
 	uint32 status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
 	if (status != GL_FRAMEBUFFER_COMPLETE) valid = false;
 
 	if (samples > 0)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, this->fboMS);
 		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
 		if (status != GL_FRAMEBUFFER_COMPLETE) valid = false;
 	}
 
@@ -148,7 +148,7 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 width, uint32 height, 
 
 void R_RenderBuffer::destroyRenderBuffer()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
 
 	if (this->depthTex != 0)
 	{
@@ -257,8 +257,8 @@ void R_RenderBuffer::resetRenderBuffer()
 	// Set new render buffer
 	m_RenderDevice->_curRendBuf = nullptr;
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
-	if (m_RenderDevice->_defaultFBO == 0)
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+	if (m_RenderDevice->m_DefaultFBO == 0)
 	{
 		if (m_RenderDevice->_doubleBuffered)
 			glDrawBuffer(m_RenderDevice->_outputBufferIndex == 1 ? GL_BACK_RIGHT : GL_BACK_LEFT);
@@ -266,10 +266,10 @@ void R_RenderBuffer::resetRenderBuffer()
 			glDrawBuffer(m_RenderDevice->_outputBufferIndex == 1 ? GL_FRONT_RIGHT : GL_FRONT_LEFT);
 	}
 
-	m_RenderDevice->_fbWidth = m_RenderDevice->_vpWidth + m_RenderDevice->_vpX;
-	m_RenderDevice->_fbHeight = m_RenderDevice->_vpHeight + m_RenderDevice->_vpY;
+	m_RenderDevice->_fbWidth = m_RenderDevice->m_ViewportWidth + m_RenderDevice->m_ViewportX;
+	m_RenderDevice->_fbHeight = m_RenderDevice->m_ViewportHeight + m_RenderDevice->m_ViewportY;
 
-	if (m_RenderDevice->_defaultFBOMultisampled)
+	if (m_RenderDevice->M_DefaultFBOMultisampled)
 	{
 		glEnable(GL_MULTISAMPLE);
 	}
@@ -292,12 +292,12 @@ bool R_RenderBuffer::getRenderBufferData(int bufIndex, int *width, int *height, 
 	if (this == 0)
 	{
 		if (bufIndex != 32 && bufIndex != 0) return false;
-		if (width != 0x0) *width = m_RenderDevice->_vpWidth;
-		if (height != 0x0) *height = m_RenderDevice->_vpHeight;
+		if (width != 0x0) *width = m_RenderDevice->m_ViewportWidth;
+		if (height != 0x0) *height = m_RenderDevice->m_ViewportHeight;
 
-		x = m_RenderDevice->_vpX; y = m_RenderDevice->_vpY; w = m_RenderDevice->_vpWidth; h = m_RenderDevice->_vpHeight;
+		x = m_RenderDevice->m_ViewportX; y = m_RenderDevice->m_ViewportY; w = m_RenderDevice->m_ViewportWidth; h = m_RenderDevice->m_ViewportHeight;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
 		if (bufIndex != 32)
 		{
 			if (m_RenderDevice->_doubleBuffered)
@@ -346,7 +346,7 @@ bool R_RenderBuffer::getRenderBufferData(int bufIndex, int *width, int *height, 
 		glReadPixels(x, y, w, h, format, type, dataBuffer);
 		retVal = true;
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
 
 	return retVal;
 }
@@ -388,6 +388,6 @@ void R_RenderBuffer::resolveRenderBuffer()
 		glBlitFramebuffer(0, 0, this->width, this->height, 0, 0, this->width, this->height, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	}
 
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RenderDevice->_defaultFBO);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
 }

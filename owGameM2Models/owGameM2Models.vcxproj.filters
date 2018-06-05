@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{1de6e8a9-a626-400c-aadc-e153dab53c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animations">
+      <UniqueIdentifier>{79b6e830-78af-4f87-9b0e-d9914545d4a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Builders">
+      <UniqueIdentifier>{fb2cb63b-d38c-4335-a4a6-e60e725174ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{f41af646-31b1-4540-87df-3fc70ba95292}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Ribbon">
+      <UniqueIdentifier>{f2f63c6f-ef88-49cb-b957-a4b325449a93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Particle">
+      <UniqueIdentifier>{74069097-38bc-4d66-bc04-1f1a8ed4c72c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts">
+      <UniqueIdentifier>{42a5139b-a07d-4ff0-a59e-cebbb8457673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Skins">
+      <UniqueIdentifier>{9b4c4f2c-c241-4bc5-815a-90e6ce186188}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{463aaf1c-5203-4b03-8b8c-892035f7ab98}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="M2_Part_Bone.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_Camera.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_Color.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_Light.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_TextureTransform.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_TextureWeight.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_Texture.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Builder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Skin_Builder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Skin.cpp">
+      <Filter>Skins</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Skin_Batch.cpp">
+      <Filter>Skins</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_RibbonEmitters.cpp">
+      <Filter>Particles\Ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Particles\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitters.cpp">
+      <Filter>Particles\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Particles\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Animator.cpp">
+      <Filter>Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Animation.cpp">
+      <Filter>Animations</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="M2.cpp" />
+    <ClCompile Include="M2_Manager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="M2_SkinTypes.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Types.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_CommonTypes.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_ParticlesTypes.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Headers.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Bone.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Camera.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Color.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Light.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_TextureTransform.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_TextureWeight.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Texture.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_AnimatedConverters.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Builder.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Skin_Builder.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Animated.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Skin.h">
+      <Filter>Skins</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Skin_Batch.h">
+      <Filter>Skins</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_RibbonEmitters.h">
+      <Filter>Particles\Ribbon</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Particles\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitters.h">
+      <Filter>Particles\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Particles\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Animator.h">
+      <Filter>Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Animation.h">
+      <Filter>Animations</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="M2.h" />
+    <ClInclude Include="M2_Manager.h" />
+    <ClInclude Include="..\shared\owWoWM2Models.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

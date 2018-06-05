@@ -23,7 +23,7 @@ void GameState_InWorld::Destroy()
     CGameState::Destroy();
 }
 
-void GameState_InWorld::Input(double t, double dt)
+void GameState_InWorld::Input(double _time, double _dTime)
 {
     float speed = 4.5f;
 
@@ -46,7 +46,7 @@ void GameState_InWorld::Input(double t, double dt)
         _Render->mainCamera->ProcessKeyboard(RIGHT, speed);
 }
 
-void GameState_InWorld::Update(double t, double dt)
+void GameState_InWorld::Update(double _time, double _dTime)
 {
 
 }
@@ -85,7 +85,7 @@ void GameState_InWorld::RenderUI()
 
     // HUD
         // Skyname
-        //char* sn = _World->skies->getSkyName();
+        //char* sn = _World->m_SkyManager->getSkyName();
         //if(sn)
         //	_Render->RenderText(vec2(200, 0), string(sn));
 
@@ -170,8 +170,8 @@ void GameState_InWorld::RenderUI()
 
     // Fog
     sprintf(buff, "Fog[end=[%f] koeff=[%f]]\0",
-            _World->EnvM()->skies->GetFog(LIGHT_FOG_DISTANCE),
-            _World->EnvM()->skies->GetFog(LIGHT_FOG_MULTIPLIER)
+            _World->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE),
+            _World->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_MULTIPLIER)
     );
     _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 80), buff);
 
@@ -210,7 +210,7 @@ void GameState_InWorld::RenderUI()
     };
     for (uint8 i = 0; i < 18; i++)
     {
-        _Render->RenderRectangle(vec2(xPos,      yPos + i * 16), vec2(16.0f, 16.0f), Color(_World->EnvM()->skies->GetColor((LightColors)i)));
+        _Render->RenderRectangle(vec2(xPos,      yPos + i * 16), vec2(16.0f, 16.0f), Color(_World->EnvM()->m_SkyManager->GetColor((LightColors)i)));
         _Render->RenderText(     vec2(xPos + 20, yPos + i * 16), names[i]);
     }
 

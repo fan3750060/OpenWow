@@ -5,6 +5,7 @@
 
 // Tables
 
+DBC_LOAD(DBÑ_AnimationData, "AnimationData.dbc")
 DBC_LOAD(DBÑ_AreaTable, "AreaTable.dbc")
 DBC_LOAD(DBC_GroundEffectDoodad, "GroundEffectDoodad.dbc")
 DBC_LOAD(DBC_GroundEffectTexture, "GroundEffectTexture.dbc")
@@ -21,18 +22,19 @@ DBC_LOAD(DBC_WMOAreaTable, "WMOAreaTable.dbc")
 
 void OpenDBs()
 {
-	assert1(DBÑ_AreaTable.Open());
-    assert1(DBC_GroundEffectDoodad.Open());
-    assert1(DBC_GroundEffectTexture.Open());
-    assert1(DBC_Light.Open());
-    assert1(DBC_LightFloatBand.Open());
-    assert1(DBC_LightIntBand.Open());
-    assert1(DBC_LightParams.Open());
-    assert1(DBC_LightSkybox.Open());
-    assert1(DBC_LiquidType.Open());
-    assert1(DBC_LoadingScreen.Open());
-    assert1(DBC_Map.Open());
-    assert1(DBC_WMOAreaTable.Open());
+	DBÑ_AnimationData.Open();
+	DBÑ_AreaTable.Open();
+    DBC_GroundEffectDoodad.Open();
+    DBC_GroundEffectTexture.Open();
+    DBC_Light.Open();
+    DBC_LightFloatBand.Open();
+    DBC_LightIntBand.Open();
+    DBC_LightParams.Open();
+    DBC_LightSkybox.Open();
+    DBC_LiquidType.Open();
+    DBC_LoadingScreen.Open();
+    DBC_Map.Open();
+    DBC_WMOAreaTable.Open();
 }
 
 bool DBC__Storage::Init()

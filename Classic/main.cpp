@@ -10,11 +10,7 @@ int main(int argumentCount, char* arguments[])
 	Random::SetSeed(static_cast<unsigned long>(time(0)));
 
 	CSettings settings;
-	AddSettingsGroup<CGroupDistances>(new CGroupDistances);
-	AddSettingsGroup<CGroupOpenGL>(new CGroupOpenGL);
-	AddSettingsGroup<CGroupQuality>(new CGroupQuality);
-	AddSettingsGroup<CGroupRenderCaps>(new CGroupRenderCaps);
-	AddSettingsGroup<CGroupVideo>(new CGroupVideo);
+	settings.AddDefaults();
 
 	CWindowsPlatformFactory winPlatformFactory;
 
@@ -34,7 +30,6 @@ int main(int argumentCount, char* arguments[])
 	CConsoleOpenGL openGLConsole;
 	log.AddDebugOutput(&openGLConsole);
 
-    //----------------------------------------------------------------
 	GameStateManager gsManager;
 	gsManager.AddGameState(GameStatesNames::GAME_STATE_MENU, new GameState_Menu());
 	gsManager.AddGameState(GameStatesNames::GAME_STATE_WORLD, new GameState_InWorld());

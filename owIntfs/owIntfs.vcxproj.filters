@@ -7,69 +7,76 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Bindings.h" />
-    <ClInclude Include="Refs.h" />
-    <ClInclude Include="BaseManager.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Loader.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="ConsoleCommand.h">
-      <Filter>Debug, Console &amp; Log</Filter>
+      <Filter>Core\Debug, Console &amp; Log</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
-      <Filter>Debug, Console &amp; Log</Filter>
+      <Filter>Core\Debug, Console &amp; Log</Filter>
     </ClInclude>
     <ClInclude Include="DebugOutput.h">
-      <Filter>Debug, Console &amp; Log</Filter>
+      <Filter>Core\Debug, Console &amp; Log</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
-      <Filter>Debug, Console &amp; Log</Filter>
+      <Filter>Core\Debug, Console &amp; Log</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>GameStates</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="GameStateManager.h">
-      <Filter>GameStates</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformFactory.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="..\shared\owIntfs.h" />
-    <ClInclude Include="OpenGLAdapter.h" />
-    <ClInclude Include="Settings.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderEnums.h">
-      <Filter>Common</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Files.h">
-      <Filter>Files</Filter>
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Bindings.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformFactory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLAdapter.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Refs.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owIntfs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyManager.h">
+      <Filter>Game\Wow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
       <UniqueIdentifier>{06b24d03-f662-4f6f-9c69-988783e830f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Managers">
-      <UniqueIdentifier>{2cc0dc34-b1fb-4a96-8466-3bc97ffa371e}</UniqueIdentifier>
+    <Filter Include="Core">
+      <UniqueIdentifier>{5c265354-6698-48b5-b4f1-9fcd76d633da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug, Console &amp; Log">
+    <Filter Include="Game">
+      <UniqueIdentifier>{09ac166e-fa8f-4f25-b9bb-8f5dac828b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Debug, Console &amp; Log">
       <UniqueIdentifier>{ea46065f-3629-447b-86c7-eaf0605943d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameStates">
-      <UniqueIdentifier>{b22e21cc-c92e-44cc-9142-aa46a2eb6db0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{2e0bebd1-29a4-4796-b83d-ee6088c0965e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Render">
-      <UniqueIdentifier>{4e20e78a-679f-4265-92f5-e215777db117}</UniqueIdentifier>
+      <UniqueIdentifier>{70f72ad1-2656-4af2-ac49-a89a3f92b159}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Files">
-      <UniqueIdentifier>{99834022-96bd-42a1-b394-5c7658fbf58c}</UniqueIdentifier>
+    <Filter Include="Game\Wow">
+      <UniqueIdentifier>{21602bdc-920c-4d59-bd62-644ceb5f4589}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

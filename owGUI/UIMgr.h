@@ -27,7 +27,7 @@ public:
 
 	// IUpdatable
 	void Input(double _time, double _dTime) override {}
-	void Update(double t, double dt) override;
+	void Update(double _time, double _dTime) override;
 
 	// IRenderableUI
 	void RenderUI() override;

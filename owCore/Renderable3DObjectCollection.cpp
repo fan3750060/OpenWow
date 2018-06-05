@@ -5,7 +5,7 @@
 
 struct Renderable3DObjectCompare
 {
-	bool operator() (const CRenderable3DObject* left, const CRenderable3DObject* right) const
+	bool operator() (const IRenderable3D* left, const IRenderable3D* right) const
 	{
 		return left->GetDrawOrder() < right->GetDrawOrder();
 	}
@@ -13,22 +13,23 @@ struct Renderable3DObjectCompare
 
 
 
-bool CRenderable3DObjectCollection::RegisterObject(CRenderable3DObject* _uiObject, uint32 _DrawOrder)
+bool CRenderable3DObjectCollection::RegisterObject(IRenderable3D* _uiObject, uint32 _DrawOrder)
 {
 	_uiObject->SetDrawOrder(_DrawOrder);
+
 	m_Objects.push_back(_uiObject);
 	m_ObjectsNeedSort = true;
 
 	return true;
 }
 
-void CRenderable3DObjectCollection::UnregisterObject(CRenderable3DObject* _uiObject)
+void CRenderable3DObjectCollection::UnregisterObject(IRenderable3D* _uiObject)
 {
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 	m_ObjectsNeedSort = true;
 }
 
-void CRenderable3DObjectCollection::Render3D(double t, double dt)
+void CRenderable3DObjectCollection::Render3D(double _time, double _dTime)
 {
 	if (m_ObjectsNeedSort)
 	{
@@ -38,7 +39,7 @@ void CRenderable3DObjectCollection::Render3D(double t, double dt)
 
 	for (auto& it : m_Objects)
 	{
-		it->PreRender3D(t, dt);
+		it->PreRender3D(_time, _dTime);
 	}
 
 	for (auto& it : m_Objects)

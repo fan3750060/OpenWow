@@ -1,6 +1,6 @@
 #pragma once
 
-class CRenderable3DObject : public IRenderable3D, public IOrderedObject
+class CRenderable3DObject : public IRenderable3D
 {
 public:
 	CRenderable3DObject() :
@@ -10,8 +10,6 @@ public:
 	// IRenderable
 	bool IsVisible() const { return m_IsVisible; }
 	void SetVisible(bool _value) override { m_IsVisible = _value; }
-
-	// IOrderedObject
 	inline void SetDrawOrder(uint32 _order) override { m_DrawOrder = _order; }
 	inline uint32 GetDrawOrder() const override { return m_DrawOrder; }
 

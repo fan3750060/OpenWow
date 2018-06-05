@@ -2,7 +2,9 @@
 
 #include "RenderDevice.h"
 
+// FORWARD BEGIN
 class TechniquesManager;
+// FORWARD END
 
 class Technique
 {
@@ -43,7 +45,6 @@ protected:
 public:
 	inline void SetPVW();
     inline void SetPV();
-    inline void SetW(cmat4 _mat);
 
 	inline void SetWorldMatrix(cmat4 WorldInverse);
 	inline void SetViewMatrix(cmat4 WorldInverse);

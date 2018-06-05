@@ -199,6 +199,9 @@
     <ClInclude Include="RibbonEmitters.h">
       <Filter>Techniques\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="RenderEnums.h">
+      <Filter>RenderCore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">

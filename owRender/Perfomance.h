@@ -18,7 +18,7 @@ enum PerfomanceTimer : uint8
 	PERF_MAP_MODELS_WMOs_DOODADS = 32,
 	PERF_MAP_MODELS_WMOs_LIQUIDS = 33,
 
-	// MDX (Map)
+	// M2 (Map)
 	PERF_MAP_MODELS_MDXs = 40,
 	
 	//

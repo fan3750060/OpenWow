@@ -19,19 +19,28 @@ public:
     Image() : m_Texture(nullptr), m_Start(vec2()), m_Size(vec2()), m_CoordsCalculated(false)
     {}
 
-    Image(R_Texture* _texture) : m_Texture(_texture), m_Start(vec2()), m_Size(vec2(_texture->width, _texture->height))
+    Image(R_Texture* _texture) : 
+		m_Texture(_texture), 
+		m_Start(vec2()), 
+		m_Size(vec2(_texture->width, _texture->height))
     {
         assert1((m_Texture != nullptr) && (m_Size != vec2()));
         CalculateCoords();
     }
 
-    Image(R_Texture* _texture, cvec2 _size) : m_Texture(_texture), m_Start(vec2()), m_Size(_size)
+    Image(R_Texture* _texture, cvec2 _size) : 
+		m_Texture(_texture), 
+		m_Start(vec2()), 
+		m_Size(_size)
     {
         assert1((m_Texture != nullptr) && (m_Size != vec2()));
         CalculateCoords();
     }
 
-    Image(R_Texture* _texture, cvec2 _start, cvec2 _size) : m_Texture(_texture), m_Start(_start), m_Size(_size)
+    Image(R_Texture* _texture, cvec2 _start, cvec2 _size) : 
+		m_Texture(_texture), 
+		m_Start(_start), 
+		m_Size(_size)
     {
         assert1((m_Texture != nullptr) && (m_Size != vec2()));
         CalculateCoords();
@@ -44,27 +53,20 @@ public:
 
     //
 
-    R_Texture* GetTexture()
-    {
-        return m_Texture;
-    }
+    R_Texture* GetTexture()   {       return m_Texture;    }
 
     void SetStart(cvec2 _start)
     {
         m_Start = _start;
         CalculateCoords();
     }
-
     void SetSize(cvec2 _size)
     {
         m_Size = _size;
         CalculateCoords();
     }
 
-    vec2 GetSize()
-    {
-        return m_Size;
-    }
+    vec2 GetSize()    {        return m_Size;    }
 
     vec2 GetP0() { return m_P0; }
     vec2 GetP1() { return m_P1; }

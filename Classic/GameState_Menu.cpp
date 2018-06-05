@@ -6,6 +6,39 @@
 // Additional
 #include "GameState_InWorld.h"
 
+
+void GameState_Menu::OnBtn(DBC_MapRecord* _e)
+{
+	Log::Green("Load level %s [%d]", _e->Get_Directory(), _e->Get_ID());
+
+	_World->Map()->PreLoad(_e);
+	cmd = CMD_SELECT;
+
+	m_MinimapUI->AttachTo(m_Window);
+}
+
+bool GameState_Menu::LoadWorld(vec3 _pos)
+{
+	_World->Map()->Load();
+	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
+	_World->Map()->PostLoad();
+
+	if (_World->Map()->m_WDT->MapHasGlobalWMO())
+	{
+		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
+	}
+
+	_PipelineGlobal->GetCamera()->Position = _pos;
+	_PipelineGlobal->GetCamera()->SetNeedUpdate();
+
+	_Bindings->UnregisterRenderable3DObject(this);
+
+	// Change GameState
+	GetManager<IGameStateManager>()->SetGameState(GameStatesNames::GAME_STATE_WORLD);
+
+	return true;
+}
+
 bool GameState_Menu::Init()
 {
 	CGameState::Init();
@@ -19,9 +52,6 @@ bool GameState_Menu::Init()
 	m_MinimapUI = new UIElement(100);
 	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), m_MinimapTexture, COLOR_WHITE);
 	m_MinimapUI->Hide();
-
-	_World->EnvM()->globalTime = 0;
-	_World->EnvM()->animtime = 0;
 
 	cmd = CMD_NONE;
 	backgroundModel = 0;
@@ -62,7 +92,6 @@ bool GameState_Menu::Init()
 	cameraSprint = false;
 	//
 
-	_Bindings->RegisterRenderable3DObject(this);
 
 	return true;
 }
@@ -72,13 +101,13 @@ void GameState_Menu::Destroy()
 	CGameState::Destroy();
 }
 
-//
-
 bool GameState_Menu::Set()
 {
 	CGameState::Set();
 
 	cmd = CMD_NONE;
+
+	_Bindings->RegisterRenderable3DObject(this);
 
 	return true;
 }
@@ -86,11 +115,13 @@ bool GameState_Menu::Set()
 void GameState_Menu::Unset()
 {
 	CGameState::Unset();
+
+	_Bindings->UnregisterRenderable3DObject(this);
 }
 
 //
 
-void GameState_Menu::Input(double t, double dt)
+void GameState_Menu::Input(double _time, double _dTime)
 {
 	float speed = 4.5f;
 
@@ -113,23 +144,17 @@ void GameState_Menu::Input(double t, double dt)
 		_PipelineGlobal->GetCamera()->ProcessKeyboard(RIGHT, speed);
 }
 
-void GameState_Menu::Update(double t, double dt)
+void GameState_Menu::Update(double _time, double _dTime)
 {
-	_World->EnvM()->animtime += (dt * 1000.0f);
-	_World->EnvM()->globalTime = (int)_World->EnvM()->animtime;
-
 	if (backgroundModel)
 	{
-		backgroundModel->updateEmitters(dt);
+		backgroundModel->updateEmitters(_dTime);
 	}
 }
 
-void GameState_Menu::PreRender3D(double t, double dt)
+void GameState_Menu::PreRender3D(double _time, double _dTime)
 {
 	if (backgroundModel == nullptr) return;
-
-	ADT_MDX_Instance::reset();
-	_World->MDXM()->resetAnim();
 
 	SetVisible(true);
 }
@@ -146,15 +171,15 @@ void GameState_Menu::Render3D()
 	backgroundModel->m_Cameras[0].setup(_World->EnvM()->animtime, _World->EnvM()->globalTime);
 
 	Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
-	_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
-	_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
+	//_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
+	//_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
 
-	//_PipelineGlobal->SetCamera(_Render->mainCamera);
-	//_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
+	_PipelineGlobal->SetCamera(_Render->mainCamera);
+	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
 
 
 	// Geom
-	backgroundModel->Render();
+	backgroundModel->Render(_World->EnvM()->globalTime);
 
 
 	/*_Pipeline->Clear();
@@ -224,40 +249,6 @@ void GameState_Menu::RenderUI()
 
 //
 
-void GameState_Menu::OnBtn(DBC_MapRecord* _e)
-{
-	Log::Green("Load level %s [%d]", _e->Get_Directory(), _e->Get_ID());
-
-	_World->Map()->PreLoad(_e);
-	cmd = CMD_SELECT;
-
-	m_MinimapUI->AttachTo(m_Window);
-}
-
-bool GameState_Menu::LoadWorld(vec3 _pos)
-{
-	_World->Map()->Load();
-	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
-	_World->Map()->PostLoad();
-
-	if (_World->Map()->m_WDT->MapHasGlobalWMO())
-	{
-		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
-	}
-
-	_PipelineGlobal->GetCamera()->Position = _pos;
-	_PipelineGlobal->GetCamera()->SetNeedUpdate();
-
-	_Bindings->UnregisterRenderable3DObject(this);
-
-	// Change GameState
-	GetManager<IGameStateManager>()->SetGameState(GameStatesNames::GAME_STATE_WORLD);
-
-	return true;
-}
-
-//
-
 void GameState_Menu::OnMouseMoved(cvec2 _mousePos)
 {
 	if (enableFreeCamera)
@@ -282,8 +273,8 @@ bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePo
 
 		if (backgroundModel != nullptr)
 		{
-			delete backgroundModel;
-			backgroundModel = nullptr;
+			//delete backgroundModel;
+			//backgroundModel = nullptr;
 		}
 
 		LoadWorld(pointInWorld);
@@ -348,16 +339,11 @@ bool GameState_Menu::OnKeyboardPressed(int _key, int _scancode, int _mods)
 
 void GameState_Menu::randBackground()
 {
-	if (backgroundModel != nullptr)
-		delete backgroundModel;
-
 	char* ui[] = { "MainMenu", "NightElf", "Human", "Dwarf", "Orc", "Tauren", "Scourge" };
 
 	char* randui = ui[Random::GenerateMax(7)];
 	char path[256];
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
 
-	/*backgroundModel = new MDX(path);
-	backgroundModel->Init();
-	backgroundModel->m_IsBillboard = true;*/
+	//backgroundModel = GetManager<IM2Manager>()->Add(path);
 }

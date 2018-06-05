@@ -21,7 +21,7 @@ FontsManager::FontsManager(RenderDevice* _RenderDevice)
 
 Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 {
-	return RefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
+	return CRefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
 }
 
 //

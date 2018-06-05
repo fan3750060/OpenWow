@@ -3,7 +3,6 @@
 #include "../owCore/common.h"
 
 // Ref manager Sync
-#include "../owCore/LoadableObject.h"
 #include "../owCore/RefItem.h"
 #include "../owCore/SmartPtr.h"
 #include "../owCore/UniquePtr.h"
@@ -26,4 +25,5 @@
 // Objects bindings
 #include "../owCore/BaseManager.h"
 #include "../owCore/BindingController.h"
+#include "../owCore/SceneNode.h"
 #include "../owCore/Settings.h"

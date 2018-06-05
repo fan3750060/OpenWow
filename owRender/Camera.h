@@ -56,8 +56,8 @@ public:
 	float MouseSensitivity;
 
 public:
-	float tan;
-	float asp;
+	float				tan;
+	float				asp;
 	Matrix4f            _viewMat, _projMat;
 	Frustum             _frustum;
 	int					_vpX, _vpY, _vpWidth, _vpHeight;

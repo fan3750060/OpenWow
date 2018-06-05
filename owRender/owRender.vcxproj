@@ -223,6 +223,7 @@
     <ClInclude Include="RenderDevice.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="RenderEnums.h" />
     <ClInclude Include="RenderStorage.h" />
     <ClInclude Include="RenderTypes.h" />
     <ClInclude Include="Font.h" />

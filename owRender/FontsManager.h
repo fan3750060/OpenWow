@@ -2,7 +2,7 @@
 
 #include "Font.h"
 
-class FontsManager : public IFontsManager, public RefManager1Dim<Font>
+class FontsManager : public IFontsManager, public CRefManager1Dim<Font>
 {
 public:
 	FontsManager(RenderDevice* _RenderDevice);
@@ -12,12 +12,12 @@ public:
 	Font* GetMainFont() const { return mainFont; }
 
 	// IFontsManager
-	Font* Add(cstring name) { return RefManager1Dim::Add(name); }
-	bool Exists(cstring name) const { return RefManager1Dim::Exists(name); }
-	void Delete(cstring name) { RefManager1Dim::Delete(name); }
-	void Delete(Font* item) { RefManager1Dim::Delete(item); }
+	Font* Add(cstring name) { return CRefManager1Dim::Add(name); }
+	bool Exists(cstring name) const { return CRefManager1Dim::Exists(name); }
+	void Delete(cstring name) { CRefManager1Dim::Delete(name); }
+	void Delete(Font* item) { CRefManager1Dim::Delete(item); }
 
-	// RefManager1Dim
+	// CRefManager1Dim
 	Font* CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
 

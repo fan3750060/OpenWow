@@ -48,6 +48,7 @@
     <ClCompile Include="RenderableUIObject.cpp" />
     <ClCompile Include="RenderableUIObjectCollection.cpp" />
     <ClCompile Include="RenderConfig.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -70,7 +71,6 @@
     <ClInclude Include="GroupQuality.h" />
     <ClInclude Include="GroupRenderCaps.h" />
     <ClInclude Include="GroupVideo.h" />
-    <ClInclude Include="LoadableObject.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="BindingController.h" />
@@ -107,6 +107,7 @@
     <ClInclude Include="RenderableUIObject.h" />
     <ClInclude Include="RenderableUIObjectCollection.h" />
     <ClInclude Include="RenderConfig.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SmartPtr.h" />
     <ClInclude Include="stdafx.h" />

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "SmartPtr.h"
-
 inline bool operator<(const GUID& lhs, const GUID& rhs)
 {
 	return memcmp(&lhs, &rhs, sizeof(GUID)) < 0;

@@ -4,13 +4,12 @@
 //--                    Common                           --//
 //---------------------------------------------------------//
 #include "../owIntfs/Types.h"
-#include "../owIntfs/RenderEnums.h"
-
 
 //---------------------------------------------------------//
 //--                   Interfaces                        --//
 //---------------------------------------------------------//
 #include "../owIntfs/BaseManager.h"
+
 #include "../owIntfs/Bindings.h"
 #include "../owIntfs/Console.h"
 #include "../owIntfs/ConsoleCommand.h"
@@ -24,4 +23,5 @@
 #include "../owIntfs/OpenGLAdapter.h"
 #include "../owIntfs/PlatformFactory.h"
 #include "../owIntfs/Settings.h"
+#include "../owIntfs/SkyManager.h"
 

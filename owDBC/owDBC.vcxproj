@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owDBC.h" />
+    <ClInclude Include="DBC_AnimationData.h" />
     <ClInclude Include="DBC_AreaTable.h" />
     <ClInclude Include="DBC_GroundEffectDoodad.h" />
     <ClInclude Include="DBC_GroundEffectTexture.h" />

@@ -89,7 +89,7 @@ RenderDevice::RenderDevice() :
 {
 	_numVertexLayouts = 0;
 
-	_vpX = 0; _vpY = 0; _vpWidth = 320; _vpHeight = 240;
+	m_ViewportX = 0; m_ViewportY = 0; m_ViewportWidth = 320; m_ViewportHeight = 240;
 	_scX = 0; _scY = 0; _scWidth = 320; _scHeight = 240;
 
 	_curShaderId = 0;
@@ -98,8 +98,8 @@ RenderDevice::RenderDevice() :
 	_curRasterState.hash = _newRasterState.hash = 0;
 	_curBlendState.hash = _newBlendState.hash = 0;
 	_curDepthStencilState.hash = _newDepthStencilState.hash = 0;
-	_defaultFBO = 0;
-	_defaultFBOMultisampled = false;
+	m_DefaultFBO = 0;
+	M_DefaultFBOMultisampled = false;
 	m_IsIndexFormat32 = false;
 	_activeVertexAttribsMask = 0;
 	_pendingMask = 0;
@@ -123,22 +123,6 @@ RenderDevice::RenderDevice() :
 RenderDevice::~RenderDevice()
 {}
 
-void RenderDevice::initStates()
-{
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	GLint value;
-	glGetIntegerv(GL_SAMPLE_BUFFERS, &value);
-	_defaultFBOMultisampled = value > 0;
-
-	GLboolean doubleBuffered;
-	glGetBooleanv(GL_DOUBLEBUFFER, &doubleBuffered);
-	_doubleBuffered = doubleBuffered != 0;
-
-	// Get the currently bound frame buffer object to avoid reset to invalid FBO
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_defaultFBO);
-}
-
 bool RenderDevice::init()
 {
 	bool failed = false;
@@ -153,7 +137,8 @@ bool RenderDevice::init()
 		return false;
 	}
 
-	Log::Info("Initializing GL4 backend using OpenGL driver '%s' by '%s' on '%s'", version, vendor, renderer);
+	Log::Info("Initializing GL4 backend.");
+	Log::Info("OpenGL driver[%s] by[%s] on[%s]", version, vendor, renderer);
 
 	// Init extensions
 	if (!initOpenGLExtensions())
@@ -212,14 +197,27 @@ bool RenderDevice::init()
 	glGetIntegerv(GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS, (GLint *)&_maxComputeBufferAttachments);
 
 	// Init states before creating test render buffer, to ensure binding the current FBO again
-	initStates();
+	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		GLint value;
+		glGetIntegerv(GL_SAMPLE_BUFFERS, &value);
+		M_DefaultFBOMultisampled = value > 0;
+
+		GLboolean doubleBuffered;
+		glGetBooleanv(GL_DOUBLEBUFFER, &doubleBuffered);
+		_doubleBuffered = doubleBuffered != 0;
+
+		// Get the currently bound frame buffer object to avoid reset to invalid FBO
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_DefaultFBO);
+	}
 
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
-	_depthFormat = GL_DEPTH_COMPONENT24;
+	m_DepthFormat = GL_DEPTH_COMPONENT24;
 	R_RenderBuffer* testBuf = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
-	if (testBuf == 0)
+	if (testBuf == nullptr)
 	{
-		_depthFormat = GL_DEPTH_COMPONENT16;
+		m_DepthFormat = GL_DEPTH_COMPONENT16;
 		Log::Warn("Render target depth precision limited to 16 bit");
 	}
 	else
@@ -233,10 +231,7 @@ bool RenderDevice::init()
 }
 
 
-
-// =================================================================================================
 // Vertex layouts
-// =================================================================================================
 
 uint32 RenderDevice::registerVertexLayout(uint32 numAttribs, R_VertexLayoutAttrib *attribs)
 {
@@ -255,22 +250,16 @@ uint32 RenderDevice::registerVertexLayout(uint32 numAttribs, R_VertexLayoutAttri
 	return ++_numVertexLayouts;
 }
 
-
-
 void RenderDevice::beginRendering()
 {
 	CHECK_GL_ERROR
 
 	//	Get the currently bound frame buffer object. 
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &_defaultFBO);
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_DefaultFBO);
 	resetStates();
 }
 
-
-
-// =================================================================================================
 // Geometry
-// =================================================================================================
 
 R_GeometryInfo* RenderDevice::beginCreatingGeometry(uint32 vlObj)
 {
@@ -284,11 +273,7 @@ R_GeometryInfo* RenderDevice::beginCreatingGeometry(uint32 vlObj)
 	return vao;
 }
 
-
-
-// =================================================================================================
 // Buffers
-// =================================================================================================
 
 R_Buffer* RenderDevice::createVertexBuffer(uint32 size, const void *data, bool _isDynamic)
 {
@@ -327,10 +312,7 @@ R_TextureBuffer* RenderDevice::createTextureBuffer(R_TextureFormats::List format
 	return buf;
 }
 
-
-// =================================================================================================
 // Textures
-// =================================================================================================
 
 R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB)
 {
@@ -339,9 +321,7 @@ R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int
 	return tex;
 }
 
-// =================================================================================================
 // Shaders
-// =================================================================================================
 
 R_Shader* RenderDevice::createShader(const char * vertexShaderSrc, const char * fragmentShaderSrc, const char * geometryShaderSrc, const char * tessControlShaderSrc, const char * tessEvaluationShaderSrc, const char * computeShaderSrc)
 {
@@ -350,9 +330,7 @@ R_Shader* RenderDevice::createShader(const char * vertexShaderSrc, const char * 
 	return shader;
 }
 
-// =================================================================================================
 // Renderbuffers
-// =================================================================================================
 
 R_RenderBuffer* RenderDevice::createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
 {
@@ -361,10 +339,7 @@ R_RenderBuffer* RenderDevice::createRenderBuffer(uint32 width, uint32 height, R_
 	return rb;
 }
 
-
-// =================================================================================================
 // Queries
-// =================================================================================================
 
 uint32 RenderDevice::createOcclusionQuery()
 {
@@ -397,11 +372,7 @@ uint32 RenderDevice::getQueryResult(uint32 queryObj)
 	return samples;
 }
 
-
-
-// =================================================================================================
 // Public state management
-// =================================================================================================
 
 bool RenderDevice::commitStates(uint32 filter)
 {
@@ -412,7 +383,7 @@ bool RenderDevice::commitStates(uint32 filter)
 		// Set viewport
 		if (mask & PM_VIEWPORT)
 		{
-			glViewport(_vpX, _vpY, _vpWidth, _vpHeight);
+			glViewport(m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight);
 			_pendingMask &= ~PM_VIEWPORT;
 		}
 
@@ -548,14 +519,10 @@ void RenderDevice::resetStates()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, _defaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_DefaultFBO);
 }
 
-
-
-// =================================================================================================
 // Draw calls and clears
-// =================================================================================================
 
 void RenderDevice::clear(uint32 flags, float *colorRGBA, float depth)
 {
@@ -653,11 +620,7 @@ void RenderDevice::drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint
 	}
 }
 
-
-
-// =================================================================================================
 // Internal state management
-// =================================================================================================
 
 void RenderDevice::checkError()
 {

@@ -12,6 +12,8 @@ public:
 	CSettings();
 	~CSettings();
 
+	void AddDefaults();
+
 	// ISettings
 	void RegisterBool(cstring _name, bool _defaultValue) override;
 	bool& GetBool(cstring _name) override;

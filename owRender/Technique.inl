@@ -111,11 +111,6 @@ inline void Technique::SetPV()
 	m_Shader->setShaderConst(gView,       CONST_FLOAT44, &(_PipelineGlobal->GetView()).x[0]);
 }
 
-inline void Technique::SetW(cmat4 _mat)
-{
-	m_Shader->setShaderConst(gWorld, CONST_FLOAT44, &_mat.x[0]);
-}
-
 //--
 
 inline void Technique::SetWorldMatrix(cmat4 WorldInverse)

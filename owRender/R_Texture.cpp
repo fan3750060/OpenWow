@@ -72,7 +72,7 @@ R_Texture* R_Texture::createTexture(R_TextureTypes::List type, int width, int he
 		this->glFmt = GL_RGBA32F;
 		break;
 	case R_TextureFormats::DEPTH:
-		this->glFmt = m_RenderDevice->_depthFormat;
+		this->glFmt = m_RenderDevice->m_DepthFormat;
 		break;
 	default:
 		fail1();

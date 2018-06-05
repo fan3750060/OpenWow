@@ -125,7 +125,6 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f)
             }
         }
 
-
         delete[] buf;
     }
     else if (header.compression == 1)

@@ -10,9 +10,10 @@ public:
 
 	// IEngine
 	bool Tick();
-	IOpenGLAdapter* GetAdapter() { return m_OpenGLAdapter; }
-	string GetArgument(uint8 index) const { return m_Arguments[index]; }
-	uint32 GetFPS() const { return framesPerSecond; }
+	IOpenGLAdapter* GetAdapter() override { return m_OpenGLAdapter; }
+	uint8 GetArgumentsCount() const override { return m_Arguments.size(); };
+	string GetArgument(uint8 index) const override { return m_Arguments[index]; }
+	uint32 GetFPS() const override { return framesPerSecond; }
 	void SetNeedExit() override { m_IsNeedExit = true; }
 	bool IsNeedExit() const override { return m_IsNeedExit;	}
 

@@ -9,6 +9,9 @@ enum Commands
 class GameState_Menu : public CGameState, CRenderable3DObject
 {
 public:
+	void OnBtn(DBC_MapRecord* _e);
+	bool LoadWorld(vec3 _pos);
+
 	// IGameState
 	bool Init() override;
 	void Destroy() override;
@@ -16,22 +19,16 @@ public:
     void Unset() override;
 
     // IUpdatable
-    void Input(double t, double dt) override;
-	void Update(double t, double dt) override;
+    void Input(double _time, double _dTime) override;
+	void Update(double _time, double _dTime) override;
 
 	// IRenderable
-	void PreRender3D(double t, double dt) override;
+	void PreRender3D(double _time, double _dTime) override;
 	void Render3D() override;
 	void PostRender3D() override;
 
 	// IRenderableUI
 	void RenderUI() override;
-
-	//
-
-    void OnBtn(DBC_MapRecord* _e);
-
-	bool LoadWorld(vec3 _pos);
 
 	// IInputListener
     void OnMouseMoved(cvec2 _mousePos) override;
@@ -48,7 +45,7 @@ private:
 
 	Commands cmd;
 
-	MDX *backgroundModel;
+	SmartM2Ptr backgroundModel;
 	float mt;
 
 	void randBackground();

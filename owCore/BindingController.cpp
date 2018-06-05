@@ -21,7 +21,7 @@ void CBindingController::RegisterInputListener(IInputListener* _object)
 	m_InputListenerObjectCollection->RegisterObject(_object);
 }
 
-void CBindingController::RegisterRenderable3DObject(CRenderable3DObject* _object, uint32 _DrawOrder)
+void CBindingController::RegisterRenderable3DObject(IRenderable3D* _object, uint32 _DrawOrder)
 {
 	m_Renderable3DObjectCollection->RegisterObject(_object, _DrawOrder);
 }
@@ -41,7 +41,7 @@ void CBindingController::UnregisterInputListener(IInputListener * _object)
 	m_InputListenerObjectCollection->UnregisterObject(_object);
 }
 
-void CBindingController::UnregisterRenderable3DObject(CRenderable3DObject* _object)
+void CBindingController::UnregisterRenderable3DObject(IRenderable3D* _object)
 {
 	m_Renderable3DObjectCollection->UnregisterObject(_object);
 }
