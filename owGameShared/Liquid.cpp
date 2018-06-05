@@ -25,10 +25,13 @@ void Liquid::Render()
 	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/0.0f / 60.0f) % textures.size();
 	_Render->r.setTexture(10, textures[texidx], 0, 0);
 
-	_Render->TechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_LIGHT));
-	_Render->TechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_DARK));
-	_Render->TechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
-	_Render->TechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
+	if (m_SkyManager != nullptr)
+	{
+		_Render->TechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_LIGHT));
+		_Render->TechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_DARK));
+		_Render->TechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
+		_Render->TechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
+	}
 
 	_Render->r.setGeometry(__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, m_VerticesCnt);

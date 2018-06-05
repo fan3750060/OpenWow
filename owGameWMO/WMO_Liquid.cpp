@@ -3,9 +3,6 @@
 // General
 #include "WMO_Liquid.h"
 
-// Additional
-#include "WorldController.h"
-
 CWMO_Liquid::CWMO_Liquid(uint32 _x, uint32 _y) :
 	Liquid(_x, _y)
 {}
@@ -17,7 +14,7 @@ void CWMO_Liquid::CreateFromWMO(IFile* f, WMOMaterial* _material, const DBC_Liqu
 	initGeometry(f);
 	InitTextures((DBC_LIQUIDTYPE_Type)_liquidType->Get_Type());
 
-	if (_indoor)
+	/*if (_indoor)
 	{
 		m_WaterColorLight = fromRGB(_material->GetDiffuseColor());
 		m_WaterColorDark = m_WaterColorLight;
@@ -26,5 +23,5 @@ void CWMO_Liquid::CreateFromWMO(IFile* f, WMOMaterial* _material, const DBC_Liqu
 	{
 		m_WaterColorLight = _World->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_RIVER_LIGHT);
 		m_WaterColorDark = _World->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_RIVER_DARK);
-	}
+	}*/
 }

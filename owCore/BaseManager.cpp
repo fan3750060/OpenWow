@@ -34,7 +34,7 @@ IManager* CBaseManager::GetManager(GUID _type)
 {
 	if (m_Managers.find(_type) == m_Managers.end())
 	{
-		fail2("Manager not found.");
+		return nullptr;
 	}
 
 	return m_Managers.at(_type);

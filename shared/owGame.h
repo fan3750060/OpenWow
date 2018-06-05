@@ -5,15 +5,10 @@
 //---------------------------------------------------------//
 #include "../owGame/common.h"
 #include "../owGame/Loader.h"
-#include "../owGame/Engine.h"
-#include "../owGame/GameStateManager.h"
 
 //---------------------------------------------------------//
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
-
-// WMO
-#include "../owGame/WMOsManager.h"
 
 // Map
 #include "../owGame/MapController.h"

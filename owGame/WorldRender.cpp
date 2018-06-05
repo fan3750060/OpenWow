@@ -135,14 +135,14 @@ void WorldRender::RenderGeom()
 
 void WorldRender::RenderPostprocess()
 {
-	DSSimpleRenderPass();
+	//DSSimpleRenderPass();
 
-	/*DirectionalLight light;
+	DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.ambient = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);*/
+	DSDirectionalLightPass(light);
 
 	if (groupQuality.drawfog)
 	{

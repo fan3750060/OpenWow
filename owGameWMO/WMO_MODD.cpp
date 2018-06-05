@@ -3,9 +3,6 @@
 // General
 #include "WMO_MODD.h"
 
-// Additional
-#include "WorldController.h"
-
 WMO_MODD::WMO_MODD(IFile* f)
 {
 	DoodadPlacementInfo placementInfo;
@@ -60,7 +57,7 @@ void WMO_MODD::Render()
 			return;
 		}
 
-		m_Object->Render(_World->EnvM()->globalTime);
+		m_Object->Render(/*_World->EnvM()->globalTime*/0);
 		PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
 	}
 	_Pipeline->Pop();  // restore matrix

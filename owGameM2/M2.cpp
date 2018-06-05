@@ -79,13 +79,13 @@ void M2::Render(uint32 _globalTime)
 	{
 		if (m_IsBillboard)
 		{
-			animate(m_Animator->getSId(), m_Animator->getCurrentTime(_globalTime), _globalTime);
+			animate(/*m_Animator->getSId()*/0, m_Animator->getCurrentTime(_globalTime), _globalTime);
 		}
 		else
 		{
 			if (!animcalc)
 			{
-				animate(m_Animator->getSId(), m_Animator->getCurrentTime(_globalTime), _globalTime);
+				animate(/*m_Animator->getSId()*/0, m_Animator->getCurrentTime(_globalTime), _globalTime);
 				animcalc = true;
 			}
 		}

@@ -9,8 +9,6 @@
 #include "wmo.h"
 
 // Additional
-#include "EnvironmentManager.h"
-#include "WorldController.h"
 #include "Wmo_Group.h"
 
 WMO::WMO(cstring name) : 
@@ -338,9 +336,9 @@ bool WMO::drawSkybox()
     _Pipeline->Translate(_Camera->Position);
     _Pipeline->Scale(2.0f);
 
-    m_Skybox->Render(_World->EnvM()->globalTime);
+    m_Skybox->Render(/*_World->EnvM()->globalTime*/0);
 
-	_World->EnvM()->m_HasSky = true;
+	//_World->EnvM()->m_HasSky = true;
 
     return true;
 }

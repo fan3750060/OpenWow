@@ -4,7 +4,7 @@ class WMO;
 
 struct WMOMaterialDef
 {
-	struct
+	struct Flags
 	{
 		uint32 F_UNLIT : 1;                    // disable lighting logic in shader (but can still use vertex colors)
 		uint32 F_UNFOGGED : 1;                 // disable fog shading (rarely used)
@@ -29,9 +29,6 @@ struct WMOMaterialDef
 	uint32 color_2;
 	uint32 flags_2;
 	uint32 unk[4];
-
-	// Size
-	static const uint32 __size = 64;
 };
 
 class WMOMaterial : public CRefItem

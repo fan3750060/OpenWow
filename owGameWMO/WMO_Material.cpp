@@ -8,7 +8,7 @@
 
 WMOMaterial::WMOMaterial(const WMO* _parentWMO, IFile* _file) : m_ParentWMO(_parentWMO)
 {
-	_file->ReadBytes(&matDef, WMOMaterialDef::__size);
+	_file->ReadBytes(&matDef, sizeof(WMOMaterialDef));
 
 	texture = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + matDef.diffuseNameIndex);
 }

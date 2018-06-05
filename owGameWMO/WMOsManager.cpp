@@ -1,12 +1,7 @@
 #include "stdafx.h"
 
-// Includes
-
 // General
 #include "WMOsManager.h"
-
-// Additional
-#include "Wmo.h"
 
 WMOsManager::WMOsManager()
 {

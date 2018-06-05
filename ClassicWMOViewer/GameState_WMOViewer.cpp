@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
 // General
-#include "GameState_M2Viewer.h"
+#include "GameState_WMOViewer.h"
 
-GameState_M2Viewer::GameState_M2Viewer() :
+GameState_WMOViewer::GameState_WMOViewer() :
 	animtime(0),
 	globalTime(0)
 {}
 
-void GameState_M2Viewer::CreateDebugGeom()
+void GameState_WMOViewer::CreateDebugGeom()
 {
 	vector<vec3> vecrtices;
 			vecrtices.push_back(vec3(-100, 0, 100));
@@ -26,12 +26,7 @@ void GameState_M2Viewer::CreateDebugGeom()
 	m_DebugGeom->finishCreatingGeometry();
 }
 
-void GameState_M2Viewer::PlayAnim(uint16 _anim)
-{
-	backgroundModel->m_Animator->PlayAnimation(_anim);
-}
-
-bool GameState_M2Viewer::Init()
+bool GameState_WMOViewer::Init()
 {
 	CGameState::Init();
 
@@ -40,6 +35,7 @@ bool GameState_M2Viewer::Init()
 	OpenDBs();
 
 	new CM2_Manager();
+	new WMOsManager();
 
 	CreateDebugGeom();
 
@@ -49,11 +45,11 @@ bool GameState_M2Viewer::Init()
 		int pos = path.find("ExData");
 		assert1(pos != -1);
 		path = path.substr(pos + 7);
-		backgroundModel = GetManager<IM2Manager>()->Add(path);
+		backgroundModel = GetManager<IWMOManager>()->Add(path);
 	}
 	else
 	{
-		backgroundModel = GetManager<IM2Manager>()->Add("Creature\\Ragnaros\\Ragnaros.m2");
+		backgroundModel = GetManager<IWMOManager>()->Add("World\\wmo\\cameron.wmo");
 	}
 
 	_PipelineGlobal->GetCamera()->Position = vec3(50, 50, 50);
@@ -63,18 +59,15 @@ bool GameState_M2Viewer::Init()
 	enableFreeCamera = false;
 	cameraSprint = false;
 
-
-	ADDCONSOLECOMMAND_CLASS_WITHARGS("play", GameState_M2Viewer, PlayAnim, uint16);
-
 	return true;
 }
 
-void GameState_M2Viewer::Destroy()
+void GameState_WMOViewer::Destroy()
 {
 	CGameState::Destroy();
 }
 
-bool GameState_M2Viewer::Set()
+bool GameState_WMOViewer::Set()
 {
 	CGameState::Set();
 
@@ -83,7 +76,7 @@ bool GameState_M2Viewer::Set()
 	return true;
 }
 
-void GameState_M2Viewer::Unset()
+void GameState_WMOViewer::Unset()
 {
 	CGameState::Unset();
 
@@ -92,7 +85,7 @@ void GameState_M2Viewer::Unset()
 
 //
 
-void GameState_M2Viewer::Input(double _time, double _dTime)
+void GameState_WMOViewer::Input(double _time, double _dTime)
 {
 	float speed = 4.5f;
 
@@ -115,23 +108,18 @@ void GameState_M2Viewer::Input(double _time, double _dTime)
 		_PipelineGlobal->GetCamera()->ProcessKeyboard(RIGHT, speed);
 }
 
-void GameState_M2Viewer::Update(double _time, double _dTime)
+void GameState_WMOViewer::Update(double _time, double _dTime)
 {
 	animtime += (_dTime * 1000.0f);
 	globalTime = static_cast<int>(animtime);
-
-	if (backgroundModel)
-	{
-		backgroundModel->updateEmitters(_dTime);
-	}
 }
 
-void GameState_M2Viewer::PreRender3D(double _time, double _dTime)
+void GameState_WMOViewer::PreRender3D(double _time, double _dTime)
 {
 	SetVisible(backgroundModel != nullptr);
 }
 
-void GameState_M2Viewer::Render3D()
+void GameState_WMOViewer::Render3D()
 {
 	_Render->rb->setRenderBuffer();
 	_Render->r.clear();
@@ -140,36 +128,25 @@ void GameState_M2Viewer::Render3D()
 	_Pipeline->Clear();
 
 	// Debug
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	/*_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
 	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
 	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
 	_Render->r.setGeometry(m_DebugGeom);
 	_Render->r.draw(PRIM_TRILIST, 0, 6);
 	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);*/
 
 	Camera* tt = nullptr;
 
-	/*if (backgroundModel->m_Cameras.size() > 0)
-	{
-		backgroundModel->m_Cameras[0].setup(animtime, globalTime);
-		tt = backgroundModel->m_Cameras[0].GetCamera();
-		_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
-		_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
-	}
-	else*/
-	{
-		tt = _Render->mainCamera;
-		_PipelineGlobal->SetCamera(_Render->mainCamera);
-		_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
-	}
+	tt = _Render->mainCamera;
+	_PipelineGlobal->SetCamera(_Render->mainCamera);
+	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
 
 
 	// Geom
 	_Pipeline->Clear();
-	_Pipeline->Scale(5);
-	backgroundModel->Render(globalTime);
+	backgroundModel->Render(0);
 	
 
 
@@ -188,7 +165,7 @@ void GameState_M2Viewer::Render3D()
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 }
 
-void GameState_M2Viewer::PostRender3D()
+void GameState_WMOViewer::PostRender3D()
 {
 	if (backgroundModel == nullptr) return;
 
@@ -214,7 +191,7 @@ void GameState_M2Viewer::PostRender3D()
 	_Render->TechniquesMgr()->m_POST_Simple->Unbind();
 }
 
-void GameState_M2Viewer::RenderUI()
+void GameState_WMOViewer::RenderUI()
 {
 	_Render->RenderText
 	(
@@ -237,7 +214,7 @@ void GameState_M2Viewer::RenderUI()
 
 //
 
-void GameState_M2Viewer::OnMouseMoved(cvec2 _mousePos)
+void GameState_WMOViewer::OnMouseMoved(cvec2 _mousePos)
 {
 	if (enableFreeCamera)
 	{
@@ -249,7 +226,7 @@ void GameState_M2Viewer::OnMouseMoved(cvec2 _mousePos)
 	}
 }
 
-bool GameState_M2Viewer::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
+bool GameState_WMOViewer::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
 	if (_button == OW_MOUSE_BUTTON_LEFT)
 	{
@@ -262,7 +239,7 @@ bool GameState_M2Viewer::OnMouseButtonPressed(int _button, int _mods, cvec2 _mou
 	return false;
 }
 
-bool GameState_M2Viewer::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
+bool GameState_WMOViewer::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
 	enableFreeCamera = false;
 	lastMousePos = vec2();
@@ -270,7 +247,7 @@ bool GameState_M2Viewer::OnMouseButtonReleased(int _button, int _mods, cvec2 _mo
 	return true;
 }
 
-bool GameState_M2Viewer::OnKeyboardPressed(int _key, int _scancode, int _mods)
+bool GameState_WMOViewer::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
 	if (_key == OW_KEY_ESCAPE)
 	{

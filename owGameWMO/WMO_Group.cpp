@@ -11,8 +11,6 @@
 #include "WMO_Light.h"
 #include "WMO_Liquid.h"
 #include "WMO_Material.h"
-#include "WorldController.h"
-
 
 struct WMOGroupInfoDef
 {
@@ -407,7 +405,7 @@ void WMOGroup::setupFog()
 {
 	if (m_EnableOutdoorLights || fog == -1)
 	{
-		_World->EnvM()->SetFog();
+		//_World->EnvM()->SetFog();
 	}
 	else
 	{

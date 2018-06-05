@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MapController.h"
-#include "WMOsManager.h"
 #include "EnvironmentManager.h"
 
 class WorldController

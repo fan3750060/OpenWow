@@ -41,9 +41,6 @@ protected:
 	uint32						m_TilesX, m_TilesY;
 	uint32						m_TilesCount;
 
-	vec3						m_WaterColorLight;
-	vec3						m_WaterColorDark;
-
 	SmartGeomPtr				__geom;
 	uint32						m_VerticesCnt;
 

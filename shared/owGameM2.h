@@ -3,13 +3,11 @@
 //---------------------------------------------------------//
 //--                    Common                           --//
 //---------------------------------------------------------//
-#include "../owGameShared/common.h"
-#include "../owGameShared/Engine.h"
-#include "../owGameShared/GameStateManager.h"
+#include "../owGameM2/common.h"
 
 //---------------------------------------------------------//
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
 
-// Liquid
-#include "../owGameShared/LiquidInstance.h"
+// M2
+#include "../owGameM2/M2_Manager.h"

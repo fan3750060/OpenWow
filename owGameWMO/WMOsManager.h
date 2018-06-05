@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Wmo.h"
+#include "WMO.h"
 
 class WMOsManager : public IWMOManager, public CRefManager1Dim<WMO>
 {

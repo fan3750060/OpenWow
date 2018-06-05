@@ -13,8 +13,6 @@ struct ADT_MODF
 	uint16 unk0; 
 };
 
-#include "WMO.h"
-
 class ADT_WMO_Instance : public SceneNode
 {
 public:
