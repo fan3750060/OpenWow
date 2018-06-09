@@ -12,7 +12,7 @@ public:
 	inline R_RenderBuffer* GetTestRB() { return m_TestRenderBuffer; }
 
 	// IRenderable3D
-	void PreRender3D(double _time, double _dTime) override;
+	void PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override;
 

@@ -15,6 +15,9 @@ bool GameState_InWorld::Init()
 
 	m_WorldRender = new WorldRender(_World);
 
+	CSceneManager* sceneManager = new CSceneManager();
+	sceneManager->SetRootNode(_World->Map());
+
     return true;
 }
 
@@ -134,7 +137,7 @@ void GameState_InWorld::RenderUI()
 
     ///
 
-    _Perfomance->Draw(vec2(5, 100));
+    _Render->DrawPerfomance(vec2(5, 100));
 
     _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 66), "REAL CamPos: [" + to_string(_Render->mainCamera->Position.x) + "], [" + to_string(_Render->mainCamera->Position.y) + "], [" + to_string(_Render->mainCamera->Position.z) + "]");
     _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 44), "CamPos: [" + to_string(-(_Render->mainCamera->Position.x - C_ZeroPoint)) + "], [" + to_string(-(_Render->mainCamera->Position.z - C_ZeroPoint)) + "], [" + to_string(_Render->mainCamera->Position.y) + "]");

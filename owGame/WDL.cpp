@@ -6,28 +6,122 @@
 // Additional
 #include "WorldController.h"
 
-WDL::WDL()
-{
-	memset(m_LowResilutionTiles, 0x00, C_TilesInMap * C_TilesInMap * sizeof(SmartGeomPtr));
-}
+WDL::WDL(cstring _fileName) :
+	m_FileName(_fileName),
+	m_Minimap(nullptr)
+{}
 
 WDL::~WDL()
 {
-	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-void WDL::Load(cstring _name)
+void WDL::CreateInsances(SceneNode * _parent)
 {
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(_name);
+	// Low-resolution tiles
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
 	if (f == nullptr)
 	{
-		Log::Info("World[%s]: WDL: Error opening.", _name.c_str());
+		Log::Info("World[%s]: WDL: Error opening.", m_FileName.c_str());
+		return;
+	}
+
+	// Heightmap
+	vec3 lowres[17][17];
+	vec3 lowsub[16][16];
+
+	for (uint8 j = 0; j < C_TilesInMap; j++)
+	{
+		for (uint8 i = 0; i < C_TilesInMap; i++)
+		{
+			if (m_MAREOffsets[j][i])
+			{
+				// Read data             
+				f->Seek(m_MAREOffsets[j][i] + 4 + 4);
+
+				int16 tilebuf[17 * 17];
+				f->ReadBytes(tilebuf, 17 * 17 * 2);
+
+				int16 tilebuf2[16 * 16];
+				f->ReadBytes(tilebuf2, 16 * 16 * 2);
+
+				for (int y = 0; y < 17; y++)
+					for (int x = 0; x < 17; x++)
+						lowres[y][x] = vec3(C_TileSize*(i + x / 16.0f), tilebuf[y * 17 + x], C_TileSize*(j + y / 16.0f));
+
+				for (int y = 0; y < 16; y++)
+					for (int x = 0; x < 16; x++)
+						lowsub[y][x] = vec3(C_TileSize*(i + (x + 0.5f) / 16.0f), tilebuf2[y * 16 + x], C_TileSize*(j + (y + 0.5f) / 16.0f));
+
+
+				vector<vec3> vecrtices;
+
+				for (int y = 0; y < 16; y++)
+				{
+					for (int x = 0; x < 16; x++)
+					{
+						vecrtices.push_back(lowres[y][x]);
+						vecrtices.push_back(lowsub[y][x]);
+						vecrtices.push_back(lowres[y][x + 1]);
+
+						vecrtices.push_back(lowres[y][x + 1]);
+						vecrtices.push_back(lowsub[y][x]);
+						vecrtices.push_back(lowres[y + 1][x + 1]);
+
+						vecrtices.push_back(lowres[y + 1][x + 1]);
+						vecrtices.push_back(lowsub[y][x]);
+						vecrtices.push_back(lowres[y + 1][x]);
+
+						vecrtices.push_back(lowres[y + 1][x]);
+						vecrtices.push_back(lowsub[y][x]);
+						vecrtices.push_back(lowres[y][x]);
+					}
+				}
+
+				// Vertex buffer
+				R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
+
+				//
+
+				R_GeometryInfo* __geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+
+				// Vertex params
+				__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
+
+				// Index bufer
+				//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
+				//_Render->r.setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
+
+				// Finish
+				__geom->finishCreatingGeometry();
+
+
+				m_LowResilutionTiles.push_back(new CWDL_LowResTile(_parent, j, i, __geom));
+			}
+		}
+	}
+
+	// Load low-resolution WMOs
+	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
+	for (auto it : m_LowResolutionWMOsPlacementInfo)
+	{
+		const string name = m_LowResolutionWMOsNames[it.nameIndex];
+
+		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
+		m_LowResolutionWMOs.push_back(new ADT_WMO_Instance(_parent, wmo, it));
+	}
+}
+
+void WDL::Load()
+{
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
+	if (f == nullptr)
+	{
+		Log::Info("World[%s]: WDL: Error opening.", m_FileName.c_str());
 		return;
 	}
 
 	// Offsets to MARE
-	uint32 MARE_Offsets[C_TilesInMap][C_TilesInMap];
-	memset(MARE_Offsets, 0x00, C_TilesInMap * C_TilesInMap * sizeof(uint32));
+	memset(m_MAREOffsets, 0x00, C_TilesInMap * C_TilesInMap * sizeof(uint32));
 
 	char fourcc[5];
 	uint32 size;
@@ -70,7 +164,7 @@ void WDL::Load(cstring _name)
 		}
 		else if (strncmp(fourcc, "MAOF", 4) == 0) // Contains 64*64 = 4096 unsigned 32-bit integers, these are absolute offsets in the file to each map tile's MapAreaLow-array-entry. For unused tiles the value is 0.
 		{
-			f->ReadBytes(MARE_Offsets, C_TilesInMap * C_TilesInMap * sizeof(uint32));
+			f->ReadBytes(m_MAREOffsets, C_TilesInMap * C_TilesInMap * sizeof(uint32));
 		}
 		else if (strncmp(fourcc, "MARE", 4) == 0) // Heightmap for one map tile.
 		{
@@ -82,7 +176,7 @@ void WDL::Load(cstring _name)
 		}
 		else
 		{
-			Log::Info("Map[%s]: WDL: Chunks [%s], Size [%d] not implemented.", _name.c_str(), fourcc, size);
+			Log::Info("Map[%s]: WDL: Chunks [%s], Size [%d] not implemented.", m_FileName.c_str(), fourcc, size);
 		}
 		f->Seek(nextpos);
 	}
@@ -93,22 +187,18 @@ void WDL::Load(cstring _name)
 
 	// Heightmap
 	vec3 lowres[17][17];
-	vec3 lowsub[16][16];
 
-	for (uint8 j = 0; j < 64; j++)
+	for (uint8 j = 0; j < C_TilesInMap; j++)
 	{
-		for (uint8 i = 0; i < 64; i++)
+		for (uint8 i = 0; i < C_TilesInMap; i++)
 		{
-			if (MARE_Offsets[j][i])
+			if (m_MAREOffsets[j][i])
 			{
 				// Read data             
-				f->Seek(MARE_Offsets[j][i] + 4 + 4);
+				f->Seek(m_MAREOffsets[j][i] + 4 + 4);
 
 				int16 tilebuf[17 * 17];
 				f->ReadBytes(tilebuf, 17 * 17 * 2);
-
-				int16 tilebuf2[16 * 16];
-				f->ReadBytes(tilebuf2, 16 * 16 * 2);
 
 				// make minimap
 				// for a 512x512 minimap texture, and 64x64 tiles, one tile is 8x8 pixels
@@ -128,18 +218,6 @@ void WDL::Load(cstring _name)
 						}
 						else
 						{
-							// above water = should apply a palette :(
-							/*
-							float fh = hval / 1600.0f;
-							if (fh > 1.0f) fh = 1.0f;
-							uint8 c = (uint8) (fh * 255.0f);
-							r = g = b = c;
-							*/
-
-							// green: 20,149,7		0-600
-							// brown: 137, 84, 21	600-1200
-							// gray: 96, 96, 96		1200-1600
-							// white: 255, 255, 255
 							uint8 r1, r2, g1, g2, b1, b2;
 							float t;
 
@@ -185,56 +263,6 @@ void WDL::Load(cstring _name)
 						texbuf[(j * 8 + z) * 512 + i * 8 + x] = (r) | (g << 8) | (b << 16) | (255 << 24);
 					}
 				}
-
-				for (int y = 0; y < 17; y++)
-					for (int x = 0; x < 17; x++)
-						lowres[y][x] = vec3(C_TileSize*(i + x / 16.0f), tilebuf[y * 17 + x], C_TileSize*(j + y / 16.0f));
-
-				for (int y = 0; y < 16; y++)
-					for (int x = 0; x < 16; x++)
-						lowsub[y][x] = vec3(C_TileSize*(i + (x + 0.5f) / 16.0f), tilebuf2[y * 16 + x], C_TileSize*(j + (y + 0.5f) / 16.0f));
-
-
-				vector<vec3> vecrtices;
-
-				for (int y = 0; y < 16; y++)
-				{
-					for (int x = 0; x < 16; x++)
-					{
-						vecrtices.push_back(lowres[y][x]);
-						vecrtices.push_back(lowsub[y][x]);
-						vecrtices.push_back(lowres[y][x + 1]);
-
-						vecrtices.push_back(lowres[y][x + 1]);
-						vecrtices.push_back(lowsub[y][x]);
-						vecrtices.push_back(lowres[y + 1][x + 1]);
-
-						vecrtices.push_back(lowres[y + 1][x + 1]);
-						vecrtices.push_back(lowsub[y][x]);
-						vecrtices.push_back(lowres[y + 1][x]);
-
-						vecrtices.push_back(lowres[y + 1][x]);
-						vecrtices.push_back(lowsub[y][x]);
-						vecrtices.push_back(lowres[y][x]);
-					}
-				}
-
-				// Vertex buffer
-				R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
-
-				//
-
-				m_LowResilutionTiles[j][i] = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
-
-				// Vertex params
-				m_LowResilutionTiles[j][i]->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-
-				// Index bufer
-				//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
-				//_Render->r.setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
-
-				// Finish
-				m_LowResilutionTiles[j][i]->finishCreatingGeometry();
 			}
 		}
 	}
@@ -243,95 +271,4 @@ void WDL::Load(cstring _name)
 	m_Minimap = _Render->r.createTexture(R_TextureTypes::Tex2D, 512, 512, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	m_Minimap->uploadTextureData(0, 0, texbuf);
 	delete[] texbuf;
-
-	//_Bindings->RegisterRenderable3DObject(this, 19);
 }
-
-void WDL::InitLowResolutionWMOs()
-{
-	// Load low-resolution WMOs
-	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
-	for (auto it : m_LowResolutionWMOsPlacementInfo)
-	{
-		const string name = m_LowResolutionWMOsNames[it.nameIndex];
-		
-		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
-		m_LowResolutionWMOs.push_back(new ADT_WMO_Instance(wmo, it));
-	}
-}
-
-void WDL::PreRender3D(double _time, double _dTime)
-{
-	SetVisible(/*_Config.drawfog && _Config.draw_map_chunk*/ true);
-}
-
-void WDL::Render3D()
-{
-	PERF_START(PERF_MAP_LOWRESOLUTION);
-	//---------------------------------
-
-	_Render->r.setDepthTest(false);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->SetPV();
-	_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->SetShadowColor(vec3(1.0, 0.0, 0.0)/*_World->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_FOG)*/);
-	for (uint8 i = 0; i < C_TilesInMap; i++)
-	{
-		for (uint8 j = 0; j < C_TilesInMap; j++)
-		{
-			if (m_LowResilutionTiles[i][j])
-			{
-				_Render->r.setGeometry(m_LowResilutionTiles[i][j]);
-				_Render->r.draw(PRIM_TRILIST, 0, 16 * 16 * 12);
-				PERF_INC(PERF_MAP_LOWRESOLUTION);
-			}
-		}
-	}
-	_Render->TechniquesMgr()->m_MapTileLowRes_GeometryPass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setDepthTest(true);
-
-	//---------------------------------
-	PERF_STOP(PERF_MAP_LOWRESOLUTION);
-}
-
-
-
-/*const int lrr = 5;
-for (int i = m_CurrentTileX - lrr; i <= m_CurrentTileX + lrr; i++)
-{
-for (int j = m_CurrentTileZ - lrr; j <= m_CurrentTileZ + lrr; j++)
-{
-// OOB check
-if (IsBadTileIndex(i, j))
-{
-continue;
-}
-
-// Don't draw current tile
-if (i == m_CurrentTileX && j == m_CurrentTileZ)
-{
-continue;
-}
-
-// TODO: some annoying visual artifacts when the verylowres terrain overlaps
-// maptiles that are close (1-off) - figure out how to fix.
-// still less annoying than hoels in the horizon when only 2-off verylowres tiles are drawn
-if (lowrestiles[i][j])
-{
-glBindBuffer(GL_ARRAY_BUFFER, lowrestiles[i][j]);
-
-// Vertex
-glEnableVertexAttribArray(0);
-glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-//glDrawElements(GL_TRIANGLE_STRIP, striplen, GL_UNSIGNED_SHORT, strip);
-glDrawBuffer(GL_TRIANGLES);
-PERF_INC(PERF_MAP_LOWRES_TILES);
-
-glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-}
-}*/

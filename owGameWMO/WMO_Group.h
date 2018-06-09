@@ -118,6 +118,21 @@ struct WMOBatch
 	Material __material;
 };
 
+struct WMO_Group_MLIQ
+{
+	uint32 X;
+	uint32 Y;
+
+	uint32 A;
+	uint32 B;
+
+	vec3 pos;
+
+	uint16 type;
+};
+
+#include "WMO_Liquid.h"
+
 //---
 
 class WMOGroup
@@ -125,6 +140,8 @@ class WMOGroup
 public:
 	WMOGroup(const WMO* _parentWMO, const uint32 m_GroupIndex, IFile* f);
 	~WMOGroup();
+
+	void CreateInsances(SceneNode* _parent);
 
 	void Load();
 	void initLighting();
@@ -187,5 +204,7 @@ public:
 	uint32* m_VertexColors;         // MOCV chunk
 
 	//-- Liquid --//
-	SmartPtr<Liquid_Instance> m_LiquidInstance;
+	WMO_Group_MLIQ				m_LiquidHeader;
+	CWMO_Liquid*				m_WMOLiqiud;
+	SmartPtr<Liquid_Instance>	m_LiquidInstance;
 };

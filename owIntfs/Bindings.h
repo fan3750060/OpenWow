@@ -22,7 +22,7 @@ __interface IUpdatable : public IObject
 
 __interface IRenderable3D : public IObject
 {
-	void PreRender3D(double _time, double _dTime);
+	void PreRender3D();
 	void Render3D();
 	void PostRender3D();
 

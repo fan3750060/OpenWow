@@ -170,7 +170,6 @@
     <ClCompile Include="OpenGL.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Perfomance.cpp" />
     <ClCompile Include="PipelineWorldTransformation.cpp" />
     <ClCompile Include="RenderDevice.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -214,7 +213,6 @@
     <ClInclude Include="OpenGL.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Perfomance.h" />
     <ClInclude Include="PipelineWorldTransformation.h" />
     <ClInclude Include="PostProcess_Common.h" />
     <ClInclude Include="POST_DirectionalLight.h" />

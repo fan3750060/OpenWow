@@ -114,7 +114,7 @@ void GameState_WMOViewer::Update(double _time, double _dTime)
 	globalTime = static_cast<int>(animtime);
 }
 
-void GameState_WMOViewer::PreRender3D(double _time, double _dTime)
+void GameState_WMOViewer::PreRender3D()
 {
 	SetVisible(backgroundModel != nullptr);
 }

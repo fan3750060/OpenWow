@@ -18,6 +18,7 @@ class Camera : public IUpdatable
 public:
 	Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
+	~Camera();
 
 	// IUpdatable
 	void Input(double _time, double _dTime) override {};

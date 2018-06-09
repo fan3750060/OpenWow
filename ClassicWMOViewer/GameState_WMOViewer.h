@@ -20,7 +20,7 @@ public:
 	void Update(double _time, double _dTime) override;
 
 	// IRenderable
-	void PreRender3D(double _time, double _dTime) override;
+	void PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override;
 

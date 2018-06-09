@@ -11,7 +11,7 @@ void GameState_Menu::OnBtn(DBC_MapRecord* _e)
 {
 	Log::Green("Load level %s [%d]", _e->Get_Directory(), _e->Get_ID());
 
-	_World->Map()->PreLoad(_e);
+	_World->Map()->MapPreLoad(_e);
 	cmd = CMD_SELECT;
 
 	m_MinimapUI->AttachTo(m_Window);
@@ -19,9 +19,9 @@ void GameState_Menu::OnBtn(DBC_MapRecord* _e)
 
 bool GameState_Menu::LoadWorld(vec3 _pos)
 {
-	_World->Map()->Load();
+	_World->Map()->MapLoad();
 	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
-	_World->Map()->PostLoad();
+	_World->Map()->MapPostLoad();
 
 	if (_World->Map()->m_WDT->MapHasGlobalWMO())
 	{
@@ -148,11 +148,14 @@ void GameState_Menu::Update(double _time, double _dTime)
 {
 	if (backgroundModel)
 	{
+		backgroundModel->m_Cameras[0].setup(_time, _time);
+
 		backgroundModel->updateEmitters(_dTime);
+		backgroundModel->Update(_time, _dTime);
 	}
 }
 
-void GameState_Menu::PreRender3D(double _time, double _dTime)
+void GameState_Menu::PreRender3D()
 {
 	if (backgroundModel == nullptr) return;
 
@@ -168,7 +171,7 @@ void GameState_Menu::Render3D()
 
 	// Camera
 	_Pipeline->Clear();
-	backgroundModel->m_Cameras[0].setup(_World->EnvM()->animtime, _World->EnvM()->globalTime);
+	
 
 	Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
 	//_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
@@ -179,7 +182,7 @@ void GameState_Menu::Render3D()
 
 
 	// Geom
-	backgroundModel->Render(_World->EnvM()->globalTime);
+	backgroundModel->Render();
 
 
 	/*_Pipeline->Clear();
@@ -226,7 +229,7 @@ void GameState_Menu::RenderUI()
 	if (cmd == CMD_SELECT)
 	{
 
-		if (_World->Map()->m_WDL->GetMinimap() != 0)
+		if (_World->Map()->m_WDL->GetMinimap() != nullptr)
 		{
 			m_MinimapUI->SetTexture(_World->Map()->m_WDL->GetMinimap());
 			m_MinimapUI->Show();

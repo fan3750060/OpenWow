@@ -6,7 +6,8 @@
 // Additional
 #include "WorldController.h"
 
-WDT::WDT() :
+WDT::WDT(SceneNode* _parent) :
+	SceneNode(_parent),
 	m_IsTileBased(false)
 {}
 
@@ -89,6 +90,6 @@ void WDT::InitGlobalWMO()
 	if (!m_GlobalWMOName.empty())
 	{
 		WMO* wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
-		m_GlobalWMO = new ADT_WMO_Instance(wmo, m_GlobalWMOPlacementInfo);
+		m_GlobalWMO = new ADT_WMO_Instance(this, wmo, m_GlobalWMOPlacementInfo);
 	}
 }

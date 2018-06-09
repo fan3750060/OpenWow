@@ -18,13 +18,15 @@ struct ADT_MDDF
 class ADT_MDX_Instance : public SceneNode
 {
 public:
-	ADT_MDX_Instance(M2* _mdxObject, ADT_MDDF _placementInfo);
-	~ADT_MDX_Instance();
+	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, ADT_MDDF _placementInfo);
 
-    inline M2* GetMDX() { return m_Object; }
+    M2* GetMDX() { return m_Object; }
+
+	// IUpdateble
+	void Update(double _time, double _dTime) override;
 
 	// IRenderable3D
-	void PreRender3D(double _time, double _dTime) override;
+	void PreRender3D() override;
 	void Render3D()override;
 
 public: 

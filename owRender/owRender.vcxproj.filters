@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Font.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
@@ -10,9 +9,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="Perfomance.cpp">
-      <Filter>Perfomance</Filter>
     </ClCompile>
     <ClCompile Include="PipelineWorldTransformation.cpp">
       <Filter>Pipeline</Filter>
@@ -71,11 +67,11 @@
     <ClCompile Include="R_TextureBuffer.cpp">
       <Filter>RenderCore\Types</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.h" />
-    <ClInclude Include="..\shared\owRender.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Font.h">
       <Filter>Fonts</Filter>
     </ClInclude>
@@ -84,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Perfomance.h">
-      <Filter>Perfomance</Filter>
     </ClInclude>
     <ClInclude Include="PipelineWorldTransformation.h">
       <Filter>Pipeline</Filter>
@@ -202,6 +195,15 @@
     <ClInclude Include="RenderEnums.h">
       <Filter>RenderCore</Filter>
     </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owRender.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">
@@ -219,9 +221,6 @@
     <Filter Include="Techniques\UI">
       <UniqueIdentifier>{6b0560c6-62a4-4fef-bc46-e4040e3313b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Perfomance">
-      <UniqueIdentifier>{2a08d97b-3b8b-4165-a0ac-b16dacad43da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Techniques\Postprocess">
       <UniqueIdentifier>{3bbd68ab-1670-40fe-b4d5-46393853cd68}</UniqueIdentifier>
     </Filter>
@@ -236,6 +235,9 @@
     </Filter>
     <Filter Include="RenderCore\Types">
       <UniqueIdentifier>{6589b742-140d-40d1-bc7d-eaafa3fcfe2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{98fc8d94-3730-4821-bb53-d891aea80641}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

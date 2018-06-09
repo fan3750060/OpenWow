@@ -54,9 +54,6 @@
     <ClCompile Include="ADT_MDX_Instance.cpp">
       <Filter>Map\Instances</Filter>
     </ClCompile>
-    <ClCompile Include="ADT_MCNK.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
     <ClCompile Include="ADT.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
     <ClCompile Include="WDT.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="Loader.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="EnvironmentManager.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
@@ -76,7 +70,13 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="ADT_Liquid.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_MCNK.cpp">
       <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL_LowResTile.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +113,6 @@
     <ClInclude Include="ADT_MDX_Instance.h">
       <Filter>Map\Instances</Filter>
     </ClInclude>
-    <ClInclude Include="ADT_MCNK.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="ADT.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -124,9 +121,6 @@
     </ClInclude>
     <ClInclude Include="WDT.h">
       <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Loader.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="common.h">
       <Filter>Common</Filter>
@@ -138,7 +132,16 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="ADT_Liquid.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_MCNK.h">
       <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="Map_Headers.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_LowResTile.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

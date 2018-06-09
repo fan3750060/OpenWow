@@ -34,6 +34,7 @@
     <ClCompile Include="GroupVideo.cpp" />
     <ClCompile Include="INIFile.cpp" />
     <ClCompile Include="InputListenerCollection.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="LocalFile.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -41,6 +42,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MPQArchiveManager.cpp" />
     <ClCompile Include="MPQFile.cpp" />
+    <ClCompile Include="Perfomance.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Renderable3DObject.cpp" />
@@ -48,6 +50,7 @@
     <ClCompile Include="RenderableUIObject.cpp" />
     <ClCompile Include="RenderableUIObjectCollection.cpp" />
     <ClCompile Include="RenderConfig.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -85,6 +88,7 @@
     <ClInclude Include="INIFile.h" />
     <ClInclude Include="InputKeys.h" />
     <ClInclude Include="InputListenerCollection.h" />
+    <ClInclude Include="Loader.h" />
     <ClInclude Include="LocalFile.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Math.h" />
@@ -96,6 +100,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="MPQArchiveManager.h" />
     <ClInclude Include="MPQFile.h" />
+    <ClInclude Include="Perfomance.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Random.h" />
@@ -107,6 +112,7 @@
     <ClInclude Include="RenderableUIObject.h" />
     <ClInclude Include="RenderableUIObjectCollection.h" />
     <ClInclude Include="RenderConfig.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SmartPtr.h" />

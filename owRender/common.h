@@ -7,6 +7,3 @@
 // Types
 #include "Image.h"
 #include "Font.h"
-
-// Common
-#include "Perfomance.h"

@@ -9,7 +9,6 @@
 // Additional
 #include "WMO_Fog.h"
 #include "WMO_Light.h"
-#include "WMO_Liquid.h"
 #include "WMO_Material.h"
 
 struct WMOGroupInfoDef
@@ -19,18 +18,6 @@ struct WMOGroupInfoDef
 	int32 nameoffset;                                   // name in MOGN chunk (-1 for no name)
 };
 
-struct WMO_Group_MLIQ
-{
-	uint32 X;
-	uint32 Y;
-
-	uint32 A;
-	uint32 B;
-
-	vec3 pos;
-
-	uint16 type;
-};
 
 WMOGroup::WMOGroup(const WMO* _parentWMO, const uint32 _groupIndex, IFile* f) : 
 	m_ParentWMO(_parentWMO), 
@@ -61,6 +48,7 @@ WMOGroup::WMOGroup(const WMO* _parentWMO, const uint32 _groupIndex, IFile* f) :
 
 	m_VertexColors = nullptr;
 
+	m_WMOLiqiud = nullptr;
 	m_LiquidInstance = nullptr;
 
 	// Read hgroup info for bounding box and name
@@ -82,6 +70,14 @@ WMOGroup::~WMOGroup()
 {
 	delete[] m_WMOBatchIndexes;
 	delete[] m_DoodadsIndexes;
+}
+
+void WMOGroup::CreateInsances(SceneNode * _parent)
+{
+	if (m_WMOLiqiud != nullptr)
+	{
+		m_LiquidInstance = new Liquid_Instance(_parent, m_WMOLiqiud, m_LiquidHeader.pos.toXZmY());
+	}
 }
 
 void WMOGroup::Load()
@@ -200,8 +196,7 @@ void WMOGroup::Load()
 		}
 		else if (strcmp(fourcc, "MLIQ") == 0) // Liquid
 		{
-			WMO_Group_MLIQ liquidHeader;
-			f->ReadBytes(&liquidHeader, sizeof(WMO_Group_MLIQ));
+			f->ReadBytes(&m_LiquidHeader, sizeof(WMO_Group_MLIQ));
 
 			enum liquid_basic_types
 			{
@@ -216,12 +211,10 @@ void WMOGroup::Load()
 			if (m_Header.liquidType > 0)
 			{
 				Log::Green("WMO[%s]: Contain liquid! [%s]", m_ParentWMO->m_FileName.c_str(), DBC_LiquidType[m_Header.liquidType & 3]->Get_Name());
-				Log::Green("WMO[%s]: LiquidType CHUNK = [%d], WMO = [%d]", m_ParentWMO->m_FileName.c_str(), liquidHeader.type, m_Header.liquidType);
+				Log::Green("WMO[%s]: LiquidType CHUNK = [%d], WMO = [%d]", m_ParentWMO->m_FileName.c_str(), m_LiquidHeader.type, m_Header.liquidType);
 
-				CWMO_Liquid* liquid = new CWMO_Liquid(liquidHeader.A, liquidHeader.B);
-				liquid->CreateFromWMO(f, m_ParentWMO->m_Materials[liquidHeader.type], DBC_LiquidType[m_Header.liquidType & 3], m_Header.flags.FLAG_IS_INDOOR);
-
-				m_LiquidInstance = new Liquid_Instance(liquid, liquidHeader.pos.toXZmY());
+				CWMO_Liquid* liquid = new CWMO_Liquid(m_LiquidHeader.A, m_LiquidHeader.B);
+				liquid->CreateFromWMO(f, m_ParentWMO->m_Materials[m_LiquidHeader.type], DBC_LiquidType[m_Header.liquidType & 3], m_Header.flags.FLAG_IS_INDOOR);
 			}
 		}
 		else
@@ -394,7 +387,7 @@ bool WMOGroup::drawDoodads(uint32 _doodadSet)
 
 		if (m_ParentWMO->doodadsets[_doodadSet]->InSet(doodadIndex) || m_ParentWMO->doodadsets[0]->InSet(doodadIndex))
 		{
-			m_ParentWMO->m_MDXInstances[doodadIndex]->Render();
+			m_ParentWMO->m_MDXInstances[doodadIndex]->Render3D();
 		}
 	}
 

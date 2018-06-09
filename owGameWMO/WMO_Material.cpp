@@ -6,9 +6,10 @@
 // General
 #include "Wmo_Material.h"
 
-WMOMaterial::WMOMaterial(const WMO* _parentWMO, IFile* _file) : m_ParentWMO(_parentWMO)
+WMOMaterial::WMOMaterial(const WMO* _parentWMO, const WMOMaterialDef& _proto) :
+	m_ParentWMO(_parentWMO)
 {
-	_file->ReadBytes(&matDef, sizeof(WMOMaterialDef));
+	matDef = _proto;
 
 	texture = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + matDef.diffuseNameIndex);
 }

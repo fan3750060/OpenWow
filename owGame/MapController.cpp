@@ -7,7 +7,8 @@
 #include "WorldController.h"
 #include "Map_Shared.h"
 
-MapController::MapController()
+MapController::MapController() :
+	m_WDL(nullptr)
 {
     memset(m_ADTCache, 0, sizeof(m_ADTCache));
     m_CurrentTileX = m_CurrentTileZ = -1;
@@ -18,20 +19,19 @@ MapController::MapController()
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
-	m_WDL = new WDL();
-	m_WDT = new WDT();
+	m_WDT = new WDT(this);
 
-	_Bindings->RegisterUpdatableObject(this);
+	AddManager<IMapManager>(this);
 }
 
 MapController::~MapController()
 {
-	_Bindings->UnregisterUpdatableObject(this);
+	DelManager<IMapManager>();
 }
 
 //
 
-void MapController::PreLoad(DBC_MapRecord* _map)
+void MapController::MapPreLoad(DBC_MapRecord* _map)
 {
     m_DBC_Map = _map;
 
@@ -39,10 +39,18 @@ void MapController::PreLoad(DBC_MapRecord* _map)
 
     m_MapFolder = "World\\Maps\\" + string(m_DBC_Map->Get_Directory()) + "\\";
 
-	m_WDL->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
+	// Delete if exists
+	if (m_WDL != nullptr)
+	{
+		delete m_WDL;
+		m_WDL = nullptr;
+	}
+
+	m_WDL = new WDL(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
+	m_WDL->Load();
 }
 
-void MapController::Load()
+void MapController::MapLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Loading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
 
@@ -51,12 +59,12 @@ void MapController::Load()
 	m_WDT->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
 }
 
-void MapController::PostLoad()
+void MapController::MapPostLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
 
 	m_WDT->InitGlobalWMO();
-	m_WDL->InitLowResolutionWMOs();
+	m_WDL->CreateInsances(this);
 }
 
 void MapController::Unload()
@@ -66,14 +74,14 @@ void MapController::Unload()
         if (m_ADTCache[i] != nullptr)
         {
             delete m_ADTCache[i];
-			m_ADTCache[i] == nullptr;
+			m_ADTCache[i] = nullptr;
         }
     }
 }
 
 //
 
-void MapController::Update(double _Time, double _deltaTime)
+void MapController::Update()
 {
     bool loading = false;
     int enteredTileX, enteredTileZ;
@@ -104,28 +112,6 @@ void MapController::Update(double _Time, double _deltaTime)
         }
     }
 }
-
-//
-
-/*void MapController::RenderTiles()
-{
-    // Draw cache
-    for (int i = 0; i < C_TilesCacheSize; i++)
-    {
-        if (m_ADTCache[i] != nullptr)
-        {
-            m_ADTCache[i]->draw();
-        }
-    }
-
-    // Draw current
-    for (int i = 0; i < C_RenderedTiles; i++)
-        for (int j = 0; j < C_RenderedTiles; j++)
-            if (current[i][j] != nullptr)
-                current[i][j]->draw();
-}*/
-
-//
 
 void MapController::EnterMap(int32 x, int32 z)
 {
@@ -196,6 +182,7 @@ ADT* MapController::LoadTile(int32 x, int32 z)
         }
 
         // maxidx is the winner (loser)
+		//GetManager<ILoader>()->AddToDeleteQueue(m_ADTCache[maxidx]);
         delete m_ADTCache[maxidx];
         m_ADTCache[maxidx] = nullptr;
         firstnull = maxidx;
@@ -205,8 +192,9 @@ ADT* MapController::LoadTile(int32 x, int32 z)
 	char name[256];
 	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_Directory(), x, z);
 
-    m_ADTCache[firstnull] = new ADT(x, z, name, GetManager<IFilesManager>()->Open(name));
-	GetManager<ILoader>()->AddToQueue(m_ADTCache[firstnull]);
+    m_ADTCache[firstnull] = new ADT(this, x, z, name, GetManager<IFilesManager>()->Open(name));
+	m_ADTCache[firstnull]->Load();
+	//GetManager<ILoader>()->AddToLoadQueue(m_ADTCache[firstnull]);
     return m_ADTCache[firstnull];
 }
 
@@ -262,6 +250,11 @@ uint32 MapController::GetAreaID()
 	}
 
     return curChunk->header.areaid;
+}
+
+void MapController::PreRender3D()
+{
+	SetVisible(true);
 }
 
 bool MapController::IsTileInCurrent(ADT* _mapTile)

@@ -40,7 +40,7 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="WMO_Liquid.cpp">
-      <Filter>WMO\Instances</Filter>
+      <Filter>WMO\Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,11 +71,14 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="WMO_Liquid.h">
-      <Filter>WMO\Instances</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared\owGameWMO.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Liquid.h">
+      <Filter>WMO\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Headers.h">
+      <Filter>WMO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

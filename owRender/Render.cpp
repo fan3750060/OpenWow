@@ -161,29 +161,10 @@ void RenderGL::RenderRectangle(vec2 _pos, vec2 _size, const Color& _color)
 
 void RenderGL::RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color)
 {
-    // Transform
-    /*_Pipeline->Clear();
-    _Pipeline->Translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
-    _Pipeline->Scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
-
-    // Shader
-    m_TechniquesManager->m_UI_Color->Bind();
-    m_TechniquesManager->m_UI_Color->SetProjectionMatrix(m_OrhoMatrix * _Pipeline->GetWorld());
-    m_TechniquesManager->m_UI_Color->SetColor(_color);
-
     r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-    r.setGeometry(_RenderStorage->__Quad);
-    r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
-
-    r.setFillMode(R_FillMode::RS_FILL_SOLID);
-
-    m_TechniquesManager->m_UI_Color->Unbind();*/
-
-
-
-    r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
     RenderRectangle(_pos, _size, _color);
+
     r.setFillMode(R_FillMode::RS_FILL_SOLID);
 }
 
@@ -291,6 +272,24 @@ void RenderGL::DrawBoundingBox(BoundingBox& _box, cmat4 _mat)
 
     m_TechniquesManager->m_Debug_GeometryPass->Unbind();
     _Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+}
+
+void RenderGL::DrawPerfomance(vec2 _startPoint)
+{
+	vec2 point = _startPoint;
+	float diff = 15.0f;
+
+	for (uint8 i = 0; i < OW_COUNT_ELEMENTS(PerfomanceMessages); i++)
+	{
+		if (PerfomanceMessages[i].what != PERF_DELIM)
+		{
+			_Render->RenderText(point, PerfomanceMessages[i].descr + string(": t[") + _Perfomance->GetTimer(PerfomanceMessages[i].what) + (PerfomanceMessages[i].showInc ? "], c[" + _Perfomance->GetInc(PerfomanceMessages[i].what) + "]" : "]"));
+		}
+
+		point.y += diff;
+	}
+
+	_Render->RenderText(point, "SUMMA: " + _Perfomance->Sum());
 }
 
 //

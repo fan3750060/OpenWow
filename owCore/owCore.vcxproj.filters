@@ -186,6 +186,15 @@
     <ClCompile Include="SceneNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Objects bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="Perfomance.cpp">
+      <Filter>Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
@@ -357,6 +366,15 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="SceneNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Objects bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="Perfomance.h">
+      <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>

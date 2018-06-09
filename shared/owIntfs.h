@@ -20,6 +20,7 @@
 #include "../owIntfs/GameStateManager.h"
 #include "../owIntfs/Loader.h"
 #include "../owIntfs/Log.h"
+#include "../owIntfs/MapManager.h"
 #include "../owIntfs/OpenGLAdapter.h"
 #include "../owIntfs/PlatformFactory.h"
 #include "../owIntfs/Settings.h"

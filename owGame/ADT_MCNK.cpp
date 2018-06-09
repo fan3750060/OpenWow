@@ -14,23 +14,19 @@
 //
 
 ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
-	m_ParentTile(_parentTile),
+	SceneNode(_parentTile),
+	m_ParentTextures(&_parentTile->m_Textures),
 	m_File(_file),
 	m_BlendRBGShadowATexture(0),
-	m_IndexesCount(0),
+	m_IndexesCountDefault(0),
 	m_LiquidInstance(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	memset(mcly, 0x00, 16 * 4);
 
 	m_BlendRBGShadowATexture = 0;
-}
 
-ADT_MCNK::~ADT_MCNK()
-{
-	_Bindings->UnregisterRenderable3DObject(this);
-
-	//Log::Info("Chunk deleted!");
+	SetDrawOrder(20);
 }
 
 //
@@ -54,16 +50,14 @@ bool ADT_MCNK::Load()
 		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
 		m_Bounds.Max = vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize);
 		m_Bounds.calculateInternal();
-
-		// DO NOT CALCULATE MATRIX!!!!
+		// CalculateMatrix(); DO NOT CALCULATE MATRIX!!!!
 	}
 
 	vec3 tempVertexes[C_MapBufferSize];
 	vec3 tempNormals[C_MapBufferSize];
 
-	uint8* blendbuf = new uint8[64 * 64 * 4];
+	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
-
 
 	// Normals
 	f->Seek(startPos + header.ofsNormal);
@@ -86,7 +80,6 @@ bool ADT_MCNK::Load()
 	f->Seek(startPos + header.ofsHeight);
 	{
 		vec3* ttv = tempVertexes;
-		
 
 		// vertices
 		for (uint32 j = 0; j < 17; j++)
@@ -109,6 +102,8 @@ bool ADT_MCNK::Load()
 				m_Bounds.Min.y = minf(v.y, m_Bounds.Min.y);
 				m_Bounds.Max.y = maxf(v.y, m_Bounds.Max.y);
 			}
+
+			m_Bounds.calculateInternal();
 		}
 	}
 
@@ -119,8 +114,8 @@ bool ADT_MCNK::Load()
 		{
 			f->ReadBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
-			m_DiffuseTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex]->diffuseTexture;
-			m_SpecularTextures[i] = m_ParentTile->m_Textures[mcly[i].textureIndex]->specularTexture;
+			m_DiffuseTextures[i] = m_ParentTextures->at(mcly[i].textureIndex)->diffuseTexture;
+			m_SpecularTextures[i] = m_ParentTextures->at(mcly[i].textureIndex)->specularTexture;
 		}
 	}
 
@@ -199,7 +194,7 @@ bool ADT_MCNK::Load()
 			CADT_Liquid* m_Liquid = new CADT_Liquid(8, 8);
 			m_Liquid->CreateFromMCLQ(f, header);
 
-			m_LiquidInstance = new Liquid_Instance(m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
+			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
 		}
 	}
 
@@ -215,10 +210,14 @@ bool ADT_MCNK::Load()
 	__vb->updateBufferData(8 * t, C_MapBufferSize * sizeof(vec2), &_Map_Shared->GetTextureCoordAlpha());
 
 
-	// Index Buffer
-	vector<uint16>& mapArray = Map_Shared::GenarateDefaultMapArray(header.holes);
-	m_IndexesCount = mapArray.size();
-	R_Buffer* __ib = _Render->r.createIndexBuffer(mapArray.size() * sizeof(uint16), mapArray.data());
+	// Index Buffer DefaultResolution
+	vector<uint16>& mapArrayDefault = Map_Shared::GenarateDefaultMapArray(header.holes);
+	m_IndexesCountDefault = mapArrayDefault.size();
+	__ibDefault = _Render->r.createIndexBuffer(m_IndexesCountDefault * sizeof(uint16), mapArrayDefault.data());
+
+	vector<uint16>& mapArrayLowResolution = Map_Shared::GenarateLowResMapArray(header.holes);
+	m_IndexesCountLowResolution = mapArrayLowResolution.size();
+	__ibLowResolution = _Render->r.createIndexBuffer(m_IndexesCountLowResolution * sizeof(uint16), mapArrayLowResolution.data());
 
 	// Geom
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
@@ -226,7 +225,7 @@ bool ADT_MCNK::Load()
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 6 * t, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 8 * t, 0);
-	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
+	__geom->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
 	__geom->finishCreatingGeometry();
 
 
@@ -240,7 +239,7 @@ bool ADT_MCNK::Load()
 	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PN);
 	__geomDebugNormals->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * t, 0);
 	__geomDebugNormals->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
-	__geomDebugNormals->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
+	__geomDebugNormals->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
 	__geomDebugNormals->finishCreatingGeometry();
 
 	//--
@@ -248,12 +247,15 @@ bool ADT_MCNK::Load()
 	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
 
-	_Bindings->RegisterRenderable3DObject(this, 20);
-
-	return true;
+	return SceneNode::Load();
 }
 
-void ADT_MCNK::PreRender3D(double _time, double _dTime)
+bool ADT_MCNK::Delete()
+{
+	return SceneNode::Delete();
+}
+
+void ADT_MCNK::PreRender3D()
 {
 	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && m_QualitySettings.draw_map_chunk);
 	
@@ -276,6 +278,7 @@ void ADT_MCNK::Render3D()
 
 	_Pipeline->Clear();
 
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
 	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
@@ -298,11 +301,12 @@ void ADT_MCNK::Render3D()
 		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
 
 	_Render->r.setGeometry(__geom);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize);
 
 	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Unbind();
 
 	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 
 	//---------------
 	PERF_STOP(PERF_MAP);
@@ -353,6 +357,6 @@ void ADT_MCNK::PostRender3D()
 	}
 
 	_Render->r.setGeometry(__geomDebugNormals);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCount, 0, C_MapBufferSize);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize);
 }*/
 

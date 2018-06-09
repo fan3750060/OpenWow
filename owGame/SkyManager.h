@@ -22,7 +22,7 @@ public:
 	float GetOceanDarkAlpha() override { return m_Interpolated.m_oceanDeepAlpha; }
 
 	// IRenderable3D
-	void PreRender3D(double _time, double _dTime) override;
+	void PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override {};
 

@@ -1,27 +1,26 @@
 #pragma once
 
+#include "WDL_LowResTile.h"
 #include "ADT_WMO_Instance.h"
 
-class WDL : public CRenderable3DObject
+class WDL
 {
 public:
-	WDL();
+	WDL(cstring _fileName);
 	~WDL();
 
-	void Load(cstring _name);
+	void CreateInsances(SceneNode* _parent);
 
-	void InitLowResolutionWMOs();
+	void Load();
 
 	R_Texture* GetMinimap() { return m_Minimap; }
 
-	// IRenderable3D
-	void PreRender3D(double _time, double _dTime) override;
-	void Render3D() override;
-	void PostRender3D() override {};
-
 private:
+	const string 						m_FileName;
+
 	SmartTexturePtr						m_Minimap;
-	SmartGeomPtr						m_LowResilutionTiles[C_TilesInMap][C_TilesInMap];
+	uint32								m_MAREOffsets[C_TilesInMap][C_TilesInMap];
+	vector<SmartPtr<CWDL_LowResTile>>	m_LowResilutionTiles;
 	vector<string>						m_LowResolutionWMOsNames;
 	vector<ADT_MODF>					m_LowResolutionWMOsPlacementInfo;
 	vector<SmartPtr<ADT_WMO_Instance>>	m_LowResolutionWMOs;

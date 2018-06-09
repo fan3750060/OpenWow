@@ -7,8 +7,6 @@
 #include <ctime>
 
 EnvironmentManager::EnvironmentManager() :
-	animtime(0),
-	globalTime(0),
 	m_DistancesSettings(GetSettingsGroup<CGroupDistances>()),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
@@ -38,11 +36,9 @@ EnvironmentManager::~EnvironmentManager()
 
 void EnvironmentManager::Update(double _Time, double _deltaTime)
 {
-	animtime += (_deltaTime * 1000.0f);
-	globalTime = static_cast<int>(animtime);
 }
 
-void EnvironmentManager::PreRender3D(double _time, double _dTime)
+void EnvironmentManager::PreRender3D()
 {
 	if (m_QualitySettings.timeEnable)
 	{

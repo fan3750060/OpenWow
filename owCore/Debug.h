@@ -28,9 +28,6 @@ inline void FatalMessageBox(const char* _title, const char* _message, ...)
 	}
 
 	va_end(args);
-
-	system("pause");
-	exit(0);
 }
 
 //

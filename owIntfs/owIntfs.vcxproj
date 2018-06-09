@@ -39,6 +39,7 @@
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="OpenGLAdapter.h" />
     <ClInclude Include="PlatformFactory.h" />
     <ClInclude Include="Refs.h" />

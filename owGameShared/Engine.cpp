@@ -10,8 +10,9 @@ CEngine::CEngine(IOpenGLAdapter* _OpenGLAdapter) :
 	m_OpenGLAdapter(_OpenGLAdapter),
 	m_IsNeedExit(false),
 	framesCounter(0),
-	framesPerSecond(0),
+	m_FPS(0),
 	framesTimer(0),
+	_time(0),
 	t(0)
 {
 	Log::Green("CEngine[]: Loading.");
@@ -44,8 +45,19 @@ bool CEngine::Tick()
 	uint32 dt = t - last_t;
 	_time += dt;
 
-	double dTime = static_cast<double>(_time) / 1000.0;
-	double dDtTime = static_cast<double>(dt) / 1000.0;
+	double dTime = static_cast<double>(_time);
+	double dDtTime = static_cast<double>(dt);
+
+	_Perfomance->FrameBegin();
+
+	//GetManager<ILoader>()->LoadAll();
+	//GetManager<ILoader>()->DeleteAll();
+
+	IMapManager* mapMgr = nullptr;
+	if ((mapMgr = GetManager<IMapManager>()) != nullptr)
+	{
+		mapMgr->Update();
+	}
 
     //------------------------------------------------
 	//-- Update
@@ -59,7 +71,7 @@ bool CEngine::Tick()
     //-- Render3D
     //------------------------------------------------
 	_Render->Set3D();
-	_Bindings->m_Renderable3DObjectCollection->Render3D(dTime, dDtTime);
+	_Bindings->m_Renderable3DObjectCollection->Render3D();
 
     //------------------------------------------------
     //-- RenderUI
@@ -82,11 +94,11 @@ bool CEngine::Tick()
 	framesCounter++;
 	if (delta > 1.0)
 	{
-		framesPerSecond = static_cast<int>(static_cast<double>(framesCounter) / delta);
+		m_FPS = static_cast<int>(static_cast<double>(framesCounter) / delta);
 		framesTimer = currentTime;
 		framesCounter = 0;
 
-		m_OpenGLAdapter->SetWindowTitle("FPS: " + to_string(framesPerSecond));
+		m_OpenGLAdapter->SetWindowTitle("FPS: " + to_string(m_FPS));
 	}
 
 	return true;

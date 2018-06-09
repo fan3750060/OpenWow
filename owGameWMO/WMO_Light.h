@@ -8,26 +8,12 @@ enum LightType
 	AMBIENT_LGT
 };
 
-struct WMOLightDef
-{
-	uint8 type;
-	uint8 useAtten;
-	uint8 unk0[2];
-	uint32 color;
-	vec3 pos;
-	float intensity;
-	float attenStart;
-	float attenEnd;
-	float unk1[4];
-
-	//
-	static const uint32 __size = 48;
-};
+#include "WMO_Headers.h"
 
 class WMOLight
 {
 public:
-	WMOLight(IFile* f);
+	WMOLight(const WMO_LightDef& _proto);
 
 	void setup(uint32 light);
 
@@ -37,5 +23,5 @@ public:
 	vec4 fcolor;
 
 public:
-	WMOLightDef lightDef;
+	WMO_LightDef lightDef;
 };

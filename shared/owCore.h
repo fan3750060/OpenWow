@@ -23,7 +23,9 @@
 #include "../owCore/Input.h"
 
 // Objects bindings
+#include "../owCore/Loader.h"
 #include "../owCore/BaseManager.h"
 #include "../owCore/BindingController.h"
-#include "../owCore/SceneNode.h"
+#include "../owCore/SceneManager.h"
 #include "../owCore/Settings.h"
+#include "../owCore/Perfomance.h"

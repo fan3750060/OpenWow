@@ -21,7 +21,7 @@ public:
 	void Update(double _Time, double _deltaTime) override;
 
 	// IRenderable3D
-	void PreRender3D(double _time, double _dTime) override;
+	void PreRender3D() override;
 	void Render3D() override {}
 	void PostRender3D() override {}
 
@@ -32,9 +32,6 @@ public:
 	vec4 m_OutdoorSpecularColor;
 	
 public:
-	float animtime;
-	int globalTime;
-
 
 	bool m_HasSky;
 	WowTime m_GameTime;

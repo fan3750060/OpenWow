@@ -6,7 +6,8 @@
 // Additional
 #include "WorldController.h"
 
-ADT_MDX_Instance::ADT_MDX_Instance(M2* _mdxObject, ADT_MDDF _placementInfo) : 
+ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, ADT_MDDF _placementInfo) :
+	SceneNode(_parent),
     m_Object(_mdxObject)
 {
     assert1(_mdxObject);
@@ -25,22 +26,24 @@ ADT_MDX_Instance::ADT_MDX_Instance(M2* _mdxObject, ADT_MDDF _placementInfo) :
 		//
 		CalculateMatrix();
 	}
-	_Bindings->RegisterRenderable3DObject(this, 21);
+	
+	SetDrawOrder(21);
+	Load();
 }
 
-ADT_MDX_Instance::~ADT_MDX_Instance()
+void ADT_MDX_Instance::Update(double _time, double _dTime)
 {
-	_Bindings->UnregisterRenderable3DObject(this);
+	m_Object->Update(_time, _dTime);
 }
 
-void ADT_MDX_Instance::PreRender3D(double _time, double _dTime)
+void ADT_MDX_Instance::PreRender3D()
 {
-	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+	/*if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
 		SetVisible(false);
 		return;
 	}
-	m_AlreadyDraw.insert(m_UniqueId);
+	m_AlreadyDraw.insert(m_UniqueId);*/
 	SetVisible(true);
 }
 
@@ -48,8 +51,8 @@ void ADT_MDX_Instance::Render3D()
 {
 	_Pipeline->Clear();
 	{
-		_Pipeline->SetWorld(m_RelTransform);
-		m_Object->Render(_World->EnvM()->globalTime);
+		_Pipeline->SetWorld(m_AbsTransform);
+		m_Object->Render();
 		PERF_INC(PERF_MAP_MODELS_MDXs);
 	}
 }

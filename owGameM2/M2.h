@@ -38,7 +38,7 @@ class CM2_Builder;
 class CM2_Skin_Builder;
 // FORWARD END
 
-class M2 : public CRefItem
+class M2 : public CRefItem, public IUpdatable
 {
 	friend class CM2_Builder;
 	friend class CM2_Skin_Builder;
@@ -46,7 +46,10 @@ public:
 	M2(cstring name);
 	~M2();
 
-	void Render(uint32 _globalTime);
+	void Input(double _time, double _dTime) override {};
+	void Update(double _time, double _dTime) override;
+
+	void Render();
 	void updateEmitters(float dt);
 
 	void drawModel();

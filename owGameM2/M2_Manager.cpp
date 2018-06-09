@@ -12,6 +12,7 @@ CM2_Manager::CM2_Manager()
 	ADDCONSOLECOMMAND_CLASS("models_info", CM2_Manager, PrintAllInfo);
 
 	AddManager<IM2Manager>(this);
+
 	_Bindings->RegisterUpdatableObject(this);
 }
 
@@ -24,10 +25,10 @@ void CM2_Manager::Update(double _Time, double _deltaTime)
 {
 	ResetAnim();
 
-	while (_deltaTime > 0.1f)
+	while (_deltaTime > 100.f)
 	{
-		updateEmitters(0.1f);
-		_deltaTime -= 0.1f;
+		updateEmitters(100.f);
+		_deltaTime -= 100.f;
 	}
 
 	updateEmitters(_deltaTime);

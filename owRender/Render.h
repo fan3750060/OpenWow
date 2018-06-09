@@ -48,7 +48,6 @@ public:
 	inline FontsManager* FontsMgr() { return m_FontsManager; }
 	inline TechniquesManager* TechniquesMgr() { return m_TechniquesManager; }
 	
-
 	void Set3D();
 	void Set2D();
 
@@ -70,6 +69,8 @@ public:
     void RenderQuadVT();
 
     void DrawBoundingBox(BoundingBox& _box, cmat4 _mat);
+
+	void DrawPerfomance(vec2 _startPoint);
 
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);

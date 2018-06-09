@@ -13,7 +13,7 @@ public:
 	IOpenGLAdapter* GetAdapter() override { return m_OpenGLAdapter; }
 	uint8 GetArgumentsCount() const override { return m_Arguments.size(); };
 	string GetArgument(uint8 index) const override { return m_Arguments[index]; }
-	uint32 GetFPS() const override { return framesPerSecond; }
+	uint32 GetFPS() const override { return m_FPS; }
 	void SetNeedExit() override { m_IsNeedExit = true; }
 	bool IsNeedExit() const override { return m_IsNeedExit;	}
 
@@ -22,8 +22,8 @@ private:
 	bool			m_IsNeedExit;
 
 
-	uint32 framesCounter, framesPerSecond;
-	double framesTimer;
+	uint32			framesCounter, m_FPS;
+	double			framesTimer;
 
 	uint32 t;
 	uint32 last_t;

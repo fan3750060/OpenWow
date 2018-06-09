@@ -24,13 +24,15 @@ struct WDT_MAIN
 	uint32_t	asyncId;
 };
 
+// FORWARD BEGIN
 class MapController;
+// FORWARD END
 
-class WDT
+class WDT : SceneNode
 {
 	friend MapController;
 public:
-	WDT();
+	WDT(SceneNode* _parent);
 
 	void Load(cstring _name);
 

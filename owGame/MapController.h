@@ -1,20 +1,18 @@
 #pragma once
 
-// Includes
 #include "ADT.h"
 #include "WDT.h"
 #include "WDL.h"
 
-
-class MapController : public IUpdatable
+class MapController : public SceneNode, public IMapManager
 {
 public:
 	MapController();
 	~MapController();
 
-	void PreLoad(DBC_MapRecord* _map);
-	void Load();
-	void PostLoad();
+	void MapPreLoad(DBC_MapRecord* _map);
+	void MapLoad();
+	void MapPostLoad();
 
 	void Unload();
 
@@ -25,9 +23,11 @@ public:
 	void ClearCache();
 	uint32 GetAreaID();
 
-	// IUpdatable
-	void Input(double _time, double _dTime) override {}
-	void Update(double _Time, double _deltaTime) override;
+	// IRenderable3D
+	void PreRender3D() override;
+
+	// IMapManager
+	void Update() override;
 
 public: // Getters
 	string GetFolder() { return m_MapFolder; }
@@ -59,7 +59,7 @@ public:
 	WDL*    m_WDL;
 };
 
-inline bool IsBadTileIndex(int i, int j)
+inline static bool IsBadTileIndex(int i, int j)
 {
 	if (i < 0)
 	{
@@ -84,7 +84,7 @@ inline bool IsBadTileIndex(int i, int j)
 	return false;
 }
 
-inline bool IsGoodTileIndex(int i, int j)
+inline static bool IsGoodTileIndex(int i, int j)
 {
 	return (!IsBadTileIndex(i, j));
 }

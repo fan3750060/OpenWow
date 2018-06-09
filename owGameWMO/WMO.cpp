@@ -41,22 +41,36 @@ WMO::~WMO()
     if (m_Header.nPortals)
     {
         delete[] m_PortalVertices;
-        ERASE_VECTOR(m_PortalInformation);
-        ERASE_VECTOR(m_PortalReferences);
     }
 
     // Clean visible block verts
     if (m_VisibleBlockList.size())
     {
         delete[] m_VisibleBlockVertices;
-        ERASE_VECTOR(m_VisibleBlockList);
     }
-
-    ERASE_VECTOR(m_Lights);
 
     ERASE_VECTOR(doodadsets);
 
     ERASE_VECTOR(m_Fogs);
+}
+
+void WMO::CreateInsances(SceneNode* _parent)
+{
+	for (auto it : m_Groups)
+	{
+		it->CreateInsances(_parent);
+	}
+
+	/*for (auto it : m_MDX_Placement)
+	{
+		SmartPtr<WMO_MODD> _doodadInstance = new WMO_MODD(_parent, it);
+
+		M2* m = (M2*)GetManager<IM2Manager>()->Add(m_MDXFilenames + _doodadInstance->GetNameIndex()); // GET
+		assert1(m != nullptr);
+		_doodadInstance->SetModel(m);
+
+		m_MDXInstances.push_back(_doodadInstance);
+	}*/
 }
 
 bool WMO::Load()
@@ -90,7 +104,7 @@ bool WMO::Load()
         }
         else if (strcmp(fourcc, "MOHD") == 0)               // Header
         {
-            f->ReadBytes(&m_Header, WMOHeaderDef::__size);
+            f->ReadBytes(&m_Header, sizeof(WMO_HeaderDef));
         }
         else if (strcmp(fourcc, "MOTX") == 0)               // List of m_DiffuseTextures (BLP Files) used in this map object.
         {
@@ -102,7 +116,10 @@ bool WMO::Load()
         {
             for (uint32 i = 0; i < m_Header.nTextures; i++)
             {
-				SmartPtr<WMOMaterial> _mat = new WMOMaterial(this, f);
+				WMOMaterialDef material;
+				f->ReadBytes(&material, sizeof(WMOMaterialDef));
+
+				SmartPtr<WMOMaterial> _mat = new WMOMaterial(this, material);
                 m_Materials.push_back(_mat);
             }
         }
@@ -145,22 +162,22 @@ bool WMO::Load()
         }
         else if (strcmp(fourcc, "MOPT") == 0)
         {
-            assert1((size % WMO_PortalInformation::__size) == 0);
-            assert1((size / WMO_PortalInformation::__size) == m_Header.nPortals);
+            assert1((size % sizeof(WMO_PortalDef)) == 0);
+            assert1((size / sizeof(WMO_PortalDef)) == m_Header.nPortals);
 
-            for (uint32 i = 0; i < size / WMO_PortalInformation::__size; i++)
+            for (uint32 i = 0; i < size / sizeof(WMO_PortalDef); i++)
             {
-                WMO_PortalInformation* portalInformation = new WMO_PortalInformation;
-                f->ReadBytes(portalInformation, WMO_PortalInformation::__size);
+                WMO_PortalDef portalInformation;
+                f->ReadBytes(&portalInformation, sizeof(WMO_PortalDef));
                 m_PortalInformation.push_back(portalInformation);
             }
         }
         else if (strcmp(fourcc, "MOPR") == 0)
         {
-            for (uint32 i = 0; i < size / WMO_PortalReferences::__size; i++)
+            for (uint32 i = 0; i < size / sizeof(WMO_PortalReferencesDef); i++)
             {
-                WMO_PortalReferences* portalReference = new WMO_PortalReferences;
-                f->ReadBytes(portalReference, WMO_PortalReferences::__size);
+                WMO_PortalReferencesDef portalReference;
+                f->ReadBytes(&portalReference, sizeof(WMO_PortalReferencesDef));
                 m_PortalReferences.push_back(portalReference);
             }
         }
@@ -178,12 +195,12 @@ bool WMO::Load()
         }
         else if (strcmp(fourcc, "MOVB") == 0)
         {
-            assert1((size % WMO_VisibleBlockList::__size) == 0);
+            assert1((size % sizeof(WMO_VisibleBlockListDef)) == 0);
 
-            for (uint32 i = 0; i < size / WMO_VisibleBlockList::__size; i++)
+            for (uint32 i = 0; i < size / sizeof(WMO_VisibleBlockListDef); i++)
             {
-                WMO_VisibleBlockList* visibleBlockList = new WMO_VisibleBlockList;
-                f->ReadBytes(visibleBlockList, WMO_VisibleBlockList::__size);
+                WMO_VisibleBlockListDef visibleBlockList;
+                f->ReadBytes(&visibleBlockList, sizeof(WMO_VisibleBlockListDef));
                 m_VisibleBlockList.push_back(visibleBlockList);
             }
 
@@ -192,7 +209,10 @@ bool WMO::Load()
         {
             for (uint32 i = 0; i < m_Header.nLights; i++)
             {
-                WMOLight* _wmoLight = new WMOLight(f);
+				WMO_LightDef lightDef;
+				f->ReadBytes(&lightDef, sizeof(WMO_LightDef));
+
+                WMOLight _wmoLight(lightDef);
                 m_Lights.push_back(_wmoLight);
             }
         }
@@ -200,8 +220,8 @@ bool WMO::Load()
         {
             for (uint32 i = 0; i < m_Header.nDoodadSets; i++)
             {
-                WMO_DoodadSet* dds = new WMO_DoodadSet();
-                f->ReadBytes(dds, WMO_DoodadSet::__size);
+                WMO_DoodadSetDef* dds = new WMO_DoodadSetDef();
+                f->ReadBytes(dds, sizeof(WMO_DoodadSetDef));
                 doodadsets.push_back(dds);
             }
         }
@@ -224,18 +244,14 @@ bool WMO::Load()
             m_Header.nDoodadNames = size / 40;
             for (uint32 i = 0; i < m_Header.nDoodadNames; i++)
             {
-                WMO_MODD* _doodadInstance = new WMO_MODD(f);
-
-                M2* m = (M2*)GetManager<IM2Manager>()->Add(m_MDXFilenames + _doodadInstance->GetNameIndex()); // GET
-                assert1(m != nullptr);
-                _doodadInstance->SetModel(m);
-
-                m_MDXInstances.push_back(_doodadInstance);
+				WMO_MODD_PlacementInfo placementInfo;
+				f->ReadBytes(&placementInfo, sizeof(WMO_MODD_PlacementInfo));
+				m_MDX_Placement.push_back(placementInfo);
             }
         }
         else if (strcmp(fourcc, "MFOG") == 0)
         {
-            for (uint32 i = 0; i < (size / sizeof(WMOFogDef)); i++)
+            for (uint32 i = 0; i < (size / sizeof(WMO_FogDef)); i++)
             {
                 WMOFog* fog = new WMOFog(f);
                 m_Fogs.push_back(fog);
@@ -268,6 +284,21 @@ bool WMO::Load()
 
 //
 
+void WMO::Update(double _time, double _dTime)
+{
+	if (!m_Loaded)
+	{
+		return;
+	}
+
+	if (m_Skybox == nullptr)
+	{
+		return;
+	}
+
+	m_Skybox->Update(_time, _dTime);
+}
+
 bool WMO::Render(uint32 _doodadSet)
 {
     if (!m_Loaded)
@@ -292,7 +323,7 @@ bool WMO::Render(uint32 _doodadSet)
         {
             for (auto it = m_Groups.begin(); it != m_Groups.end(); ++it)
             {
-                (*it)->drawDoodads(_doodadSet);
+                //(*it)->drawDoodads(_doodadSet);
             }
         }
         PERF_STOP(PERF_MAP_MODELS_WMOs_DOODADS);
@@ -336,7 +367,7 @@ bool WMO::drawSkybox()
     _Pipeline->Translate(_Camera->Position);
     _Pipeline->Scale(2.0f);
 
-    m_Skybox->Render(/*_World->EnvM()->globalTime*/0);
+    m_Skybox->Render();
 
 	//_World->EnvM()->m_HasSky = true;
 
@@ -454,8 +485,8 @@ void WMO::DEBUG_DrawPortalsRelations()
 {
     for (uint32_t i = 0; i < m_Header.nPortals; i++)
     {
-        /*WMO_PortalInformation* portalInformation = m_PortalInformation[i];
-        WMO_PortalReferences* portalReference = m_PortalReferences[i];
+        /*WMO_PortalDef* portalInformation = m_PortalInformation[i];
+        WMO_PortalReferencesDef* portalReference = m_PortalReferences[i];
         vec3 pv = m_PortalVertices[portalReference->portalIndex];
 
         if (portalReference->side > 0)
@@ -506,7 +537,7 @@ void WMO::DEBUG_DrawPortals()
 
     for (uint32 i = 0; i < m_Header.nPortals; i++)
     {
-        /*WMO_PortalInformation* portalInformation = m_PortalInformation[i];
+        /*WMO_PortalDef* portalInformation = m_PortalInformation[i];
 
         vector<vec3> verts;
         for (uint32 j = portalInformation->startVertex; j < portalInformation->count; j++)

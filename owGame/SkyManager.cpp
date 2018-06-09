@@ -135,7 +135,7 @@ void SkyManager::Calculate(uint32 _time)
 	return false;
 }*/
 
-void SkyManager::PreRender3D(double _time, double _dTime)
+void SkyManager::PreRender3D()
 {
 	SetVisible(!skies.empty());
 }
@@ -199,7 +199,7 @@ void SkyManager::InitBuffer()
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3), 0);
 	__geom->finishCreatingGeometry();
 
-	_Bindings->RegisterRenderable3DObject(this, 18);
+	_Bindings->RegisterRenderable3DObject(this, 15);
 }
 
 void SkyManager::CalculateSkiesWeights(cvec3 pos)

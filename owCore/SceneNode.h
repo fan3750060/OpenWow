@@ -11,6 +11,9 @@ class SceneNode :
 public:
 	SceneNode();
 	SceneNode(SceneNode* _parent);
+	~SceneNode();
+
+	vector<SceneNode*>& getChilds() { return m_Childs; }
 
 	cvec3 getTranslate() const { return m_Translate; }
 	cvec3 getRotate() const { return m_Rotate; }
@@ -21,7 +24,8 @@ public:
 	cmat4 getAbsTrans() const { return m_AbsTransform; }
 
 	// ILoadable
-	virtual bool Load() override { return false; };
+	virtual bool Load() override;
+	virtual bool Delete() override;
 	bool IsLoaded() const override { return m_IsLoaded; }
 	void SetLoaded() override { m_IsLoaded = true; }
 
@@ -30,19 +34,19 @@ public:
 	virtual void Update(double _time, double _dTime) override {};
 
 	// IRenderable
-	virtual void PreRender3D(double _time, double _dTime) override {};
+	virtual void PreRender3D() override {};
 	virtual void Render3D() override {}
-	virtual void PostRender3D() override {}
+	void PostRender3D() override {}
 	bool IsVisible() const { return m_IsVisible; }
 	void SetVisible(bool _value) override { m_IsVisible = _value; }
-	inline void SetDrawOrder(uint32 _order) override { m_DrawOrder = _order; }
+	inline void SetDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
 	inline uint32 GetDrawOrder() const override { return m_DrawOrder; }
 
 protected:
 	void CalculateMatrix(bool _isRotationQuat = false);
 
 protected:
-	SceneNode*          m_Parent;
+	SceneNode*			m_Parent;
 	vector<SceneNode*>  m_Childs;
 
 	vec3                m_Translate;

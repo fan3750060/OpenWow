@@ -3,12 +3,8 @@
 // General
 #include "WorldController.h"
 
-// Additional
-#include "Loader.h"
-
 WorldController::WorldController()
 {
-	new CLoader();
 
 	m_MapController = new MapController();
 	m_MDXsManager = new CM2_Manager();

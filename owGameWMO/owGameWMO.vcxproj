@@ -37,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="..\shared\owGameWMO.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="WMO_Headers.h" />
     <ClInclude Include="WMO_Liquid.h" />
     <ClInclude Include="WMO_MODD.h" />
     <ClInclude Include="stdafx.h" />

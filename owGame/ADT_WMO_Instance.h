@@ -16,13 +16,15 @@ struct ADT_MODF
 class ADT_WMO_Instance : public SceneNode
 {
 public:
-	ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF& _placementInfo);
-	~ADT_WMO_Instance();
+	ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo);
 
-	inline WMO* GetWMO() { return m_Object; }
+	WMO* GetWMO() { return m_Object; }
+
+	// IUpdatable
+	void Update(double _time, double _dTime) override;
 
 	// IRenderable3D
-	void PreRender3D(double _time, double _dTime) override;
+	void PreRender3D() override;
 	void Render3D() override;
 
 private:

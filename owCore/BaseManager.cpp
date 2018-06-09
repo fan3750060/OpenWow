@@ -6,9 +6,9 @@
 // Additional
 #include "FilesManager.h"
 
-CBaseManager::CBaseManager()
-{
-}
+CBaseManager::CBaseManager() :
+	m_CurrentPhase(Phase_NONE)
+{}
 
 CBaseManager::~CBaseManager()
 {
@@ -38,4 +38,14 @@ IManager* CBaseManager::GetManager(GUID _type)
 	}
 
 	return m_Managers.at(_type);
+}
+
+void CBaseManager::SetPhase(SBaseManagerPhases _phase)
+{
+	m_CurrentPhase = _phase;
+}
+
+SBaseManagerPhases CBaseManager::GetPhase()
+{
+	return m_CurrentPhase;
 }

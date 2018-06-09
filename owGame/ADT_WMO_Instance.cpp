@@ -3,7 +3,8 @@
 // General
 #include "ADT_WMO_Instance.h"
 
-ADT_WMO_Instance::ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF& _placementInfo) : 
+ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo) :
+	SceneNode(_parent),
     m_Object(_wmoObject)
 {
     assert1(m_Object);
@@ -29,22 +30,25 @@ ADT_WMO_Instance::ADT_WMO_Instance(WMO* _wmoObject, ADT_MODF& _placementInfo) :
 		m_Bounds.transform(m_AbsTransform);
 	}
 
-	_Bindings->RegisterRenderable3DObject(this, 21);
+	_wmoObject->CreateInsances(this);
+
+	SetDrawOrder(21);
+	Load();
 }
 
-ADT_WMO_Instance::~ADT_WMO_Instance()
+void ADT_WMO_Instance::Update(double _time, double _dTime)
 {
-	_Bindings->UnregisterRenderable3DObject(this);
+	m_Object->Update(_time, _dTime);
 }
 
-void ADT_WMO_Instance::PreRender3D(double _time, double _dTime)
+void ADT_WMO_Instance::PreRender3D()
 {
-	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+	/*if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
 		SetVisible(false);
 		return;
 	}
-	m_AlreadyDraw.insert(m_UniqueId);
+	m_AlreadyDraw.insert(m_UniqueId);*/
 	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 

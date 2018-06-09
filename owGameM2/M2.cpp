@@ -58,14 +58,37 @@ void M2::drawModel()
 	_Render->TechniquesMgr()->m_Model->Unbind();
 }
 
-void M2::Render(uint32 _globalTime)
+void M2::Update(double _time, double _dTime)
 {
 	if (!m_Loaded)
 	{
 		return;
 	}
 
-	//assert1(getDeleted() == false);
+
+	if (m_IsAnimated)
+	{
+		if (m_IsBillboard)
+		{
+			animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
+		}
+		else
+		{
+			if (!animcalc)
+			{
+				animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
+				animcalc = true;
+			}
+		}
+	}
+}
+
+void M2::Render()
+{
+	if (!m_Loaded)
+	{
+		return;
+	}
 
 	// Cull bounging box
 	BoundingBox aabb = m_Bounds;
@@ -77,19 +100,6 @@ void M2::Render(uint32 _globalTime)
 
 	if (m_IsAnimated)
 	{
-		if (m_IsBillboard)
-		{
-			animate(/*m_Animator->getSId()*/0, m_Animator->getCurrentTime(_globalTime), _globalTime);
-		}
-		else
-		{
-			if (!animcalc)
-			{
-				animate(/*m_Animator->getSId()*/0, m_Animator->getCurrentTime(_globalTime), _globalTime);
-				animcalc = true;
-			}
-		}
-
 		// draw ribbons
 		for (auto it : m_RibbonEmitters)
 		{

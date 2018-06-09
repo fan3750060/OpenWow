@@ -47,6 +47,17 @@ __interface
 
 //--
 
+typedef enum SBaseManagerPhases : uint8
+{
+	Phase_Input = 0,
+	Phase_Update,
+	Phase_Pre3D,
+	Phase_3D,
+	Phase_Post3D,
+	Phase_UI,
+	Phase_NONE
+};
+
 __interface 
 	__declspec(uuid("BB9FD479-C7AD-4F57-837B-E299A04AF171"))
 	IBaseManager
@@ -55,4 +66,7 @@ __interface
 	void UnregisterManager(GUID _type);
 
 	IManager* GetManager(GUID _type);
+
+	void SetPhase(SBaseManagerPhases _phase);
+	SBaseManagerPhases GetPhase();
 };

@@ -24,15 +24,13 @@ WorldRender::~WorldRender()
 	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-void WorldRender::PreRender3D(double _time, double _dTime)
+void WorldRender::PreRender3D()
 {
 	ADT_WMO_Instance::reset();
 	ADT_MDX_Instance::reset();
 
 	_PipelineGlobal->SetCamera(_Render->mainCamera);
 	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
-
-	_Perfomance->FrameBegin();
 }
 
 void WorldRender::Render3D()
@@ -135,14 +133,14 @@ void WorldRender::RenderGeom()
 
 void WorldRender::RenderPostprocess()
 {
-	//DSSimpleRenderPass();
+	DSSimpleRenderPass();
 
-	DirectionalLight light;
+	/*DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.ambient = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);
+	DSDirectionalLightPass(light);*/
 
 	if (groupQuality.drawfog)
 	{

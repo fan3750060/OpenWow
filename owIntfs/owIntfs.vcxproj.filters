@@ -58,6 +58,9 @@
     <ClInclude Include="SkyManager.h">
       <Filter>Game\Wow</Filter>
     </ClInclude>
+    <ClInclude Include="MapManager.h">
+      <Filter>Game\Wow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

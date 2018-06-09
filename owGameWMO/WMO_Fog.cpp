@@ -5,7 +5,7 @@
 
 WMOFog::WMOFog(IFile* f)
 {
-	f->ReadBytes(&fogDef, sizeof(WMOFogDef));
+	f->ReadBytes(&fogDef, sizeof(WMO_FogDef));
 	color = vec4(fogDef.fog.color.r, fogDef.fog.color.g, fogDef.fog.color.b, fogDef.fog.color.a);
 	fogDef.position.toXZmY();
 	fogDef.fog.startScalar = fogDef.fog.startScalar * fogDef.fog.end;

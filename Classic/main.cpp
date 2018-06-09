@@ -7,6 +7,10 @@
 
 int main(int argumentCount, char* arguments[])
 {
+/*#ifdef _DEBUG 
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif*/
+
 	Random::SetSeed(static_cast<unsigned long>(time(0)));
 
 	CSettings settings;
@@ -29,6 +33,8 @@ int main(int argumentCount, char* arguments[])
 
 	CConsoleOpenGL openGLConsole;
 	log.AddDebugOutput(&openGLConsole);
+
+	CLoader loader;
 
 	GameStateManager gsManager;
 	gsManager.AddGameState(GameStatesNames::GAME_STATE_MENU, new GameState_Menu());

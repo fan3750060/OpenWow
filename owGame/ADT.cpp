@@ -6,6 +6,8 @@
 // Additional
 #include "WorldController.h"
 
+#include __PACK_BEGIN
+
 struct ADT_MHDR
 {
 	uint32 unk0;
@@ -30,24 +32,33 @@ struct ADT_MCIN
 	uint32_t asyncId;
 };
 
-ADT::ADT(uint32 _intexX, uint32 _intexZ, string _name, IFile* _file) :
+#include __PACK_END
+
+ADT::ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file) :
+	SceneNode(_parent),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
 	m_Name(_name),
-	m_File(_file)
+	m_File(_file),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
+	// Scene node params
+	{
+		// Set translate
+		m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
+
+		// Bounds
+		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
+		m_Bounds.Max = vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize);
+		m_Bounds.calculateInternal();
+		// CalculateMatrix(); DON'T CALCULATE MATRIX
+	}
+
+	SetDrawOrder(20);
 }
 
 bool ADT::Load()
 {
-	/*UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_Name);
-	if (f == nullptr)
-	{
-		Log::Error("ADT[%d, %d, %s]: Error open file!", m_IndexX, m_IndexZ, m_Name.c_str());
-		return false;
-	}*/
-
 	SmartPtr<IFile> f = m_File;
 
 	uint32_t startPos = f->GetPos() + 20;
@@ -104,7 +115,6 @@ bool ADT::Load()
 	vector<string> m_MDXsNames;
 	f->Seek(startPos + m_Header.MMDX);
 	{
-		
 		f->SeekRelative(4);
 		uint32_t size;
 		f->ReadBytes(&size, sizeof(uint32_t));
@@ -228,25 +238,36 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	for (auto it : m_WMOsPlacementInfo)
+	for (auto& it : m_WMOsPlacementInfo)
 	{
 		WMO* wmo = (WMO*)GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]); // GET
-		SmartPtr<ADT_WMO_Instance> inst = new ADT_WMO_Instance(wmo, it);
+		SmartPtr<ADT_WMO_Instance> inst = new ADT_WMO_Instance(this, wmo, it);
 		m_WMOsInstances.push_back(inst);
 	}
 	
 	//-- MDXs -------------------------------------------------------------------------
 
-	for (auto it : m_MDXsPlacementInfo)
+	/*for (auto& it : m_MDXsPlacementInfo)
 	{
 		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
-		SmartPtr<ADT_MDX_Instance> inst = new ADT_MDX_Instance(mdx, it);
+		SmartPtr<ADT_MDX_Instance> inst = new ADT_MDX_Instance(this, mdx, it);
 		m_MDXsInstances.push_back(inst);
-	}
+	}*/
 
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, m_Name.c_str());
 
-	return true;
+	return SceneNode::Load();
+}
+
+bool ADT::Delete()
+{
+	return SceneNode::Delete();
+}
+
+void ADT::PreRender3D()
+{
+	//SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && m_QualitySettings.draw_map_chunk);
+	SetVisible(true);
 }

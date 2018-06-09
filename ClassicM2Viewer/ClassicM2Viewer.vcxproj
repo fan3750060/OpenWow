@@ -35,9 +35,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8B0F9C59-076D-42AE-9B18-2F538250A0DC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ClassicModelViewer</RootNamespace>
+    <RootNamespace>ClassicM2Viewer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>ClassicModelViewer</ProjectName>
+    <ProjectName>ClassicM2Viewer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

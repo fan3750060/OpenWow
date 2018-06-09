@@ -3,9 +3,7 @@
 // General
 #include "GameState_M2Viewer.h"
 
-GameState_M2Viewer::GameState_M2Viewer() :
-	animtime(0),
-	globalTime(0)
+GameState_M2Viewer::GameState_M2Viewer()
 {}
 
 void GameState_M2Viewer::CreateDebugGeom()
@@ -117,16 +115,14 @@ void GameState_M2Viewer::Input(double _time, double _dTime)
 
 void GameState_M2Viewer::Update(double _time, double _dTime)
 {
-	animtime += (_dTime * 1000.0f);
-	globalTime = static_cast<int>(animtime);
-
 	if (backgroundModel)
 	{
 		backgroundModel->updateEmitters(_dTime);
+		backgroundModel->Update(_time, _dTime);
 	}
 }
 
-void GameState_M2Viewer::PreRender3D(double _time, double _dTime)
+void GameState_M2Viewer::PreRender3D()
 {
 	SetVisible(backgroundModel != nullptr);
 }
@@ -169,7 +165,7 @@ void GameState_M2Viewer::Render3D()
 	// Geom
 	_Pipeline->Clear();
 	_Pipeline->Scale(5);
-	backgroundModel->Render(globalTime);
+	backgroundModel->Render();
 	
 
 
