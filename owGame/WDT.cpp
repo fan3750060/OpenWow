@@ -6,10 +6,19 @@
 // Additional
 #include "WorldController.h"
 
-WDT::WDT(SceneNode* _parent) :
-	SceneNode(_parent),
+WDT::WDT() :
 	m_IsTileBased(false)
 {}
+
+void WDT::CreateInsances(SceneNode* _parent)
+{
+	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
+	if (!m_GlobalWMOName.empty())
+	{
+		WMO* wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
+		m_GlobalWMO = new ADT_WMO_Instance(_parent, wmo, m_GlobalWMOPlacementInfo);
+	}
+}
 
 void WDT::Load(cstring _name)
 {
@@ -81,15 +90,5 @@ void WDT::Load(cstring _name)
 		}
 
 		f->Seek(nextpos);
-	}
-}
-
-void WDT::InitGlobalWMO()
-{
-	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
-	if (!m_GlobalWMOName.empty())
-	{
-		WMO* wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
-		m_GlobalWMO = new ADT_WMO_Instance(this, wmo, m_GlobalWMOPlacementInfo);
 	}
 }

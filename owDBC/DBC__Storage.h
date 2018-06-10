@@ -15,6 +15,7 @@ DBC_DEFINE(DBC_LightSkybox);
 DBC_DEFINE(DBC_LiquidType);
 DBC_DEFINE(DBC_LoadingScreen);
 DBC_DEFINE(DBC_Map);
+DBC_DEFINE(DBC_TerrainType);
 DBC_DEFINE(DBC_WMOAreaTable)
 
 
@@ -31,6 +32,7 @@ DBC_DEFINE(DBC_WMOAreaTable)
 #include "DBC_LiquidType.h"
 #include "DBC_LoadingScreen.h"
 #include "DBC_Map.h"
+#include "DBC_TerrainType.h"
 #include "DBC_WMOAreaTable.h"
 
  void OpenDBs();

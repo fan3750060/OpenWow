@@ -7,11 +7,11 @@ class CM2_Part_Bone
 public:
 	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global);
 
-	void calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time, uint32 globalTime);
+	void calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time, uint32 globalTime);
 
-	bool IsInterpolated() const
+	bool IsInterpolated(uint16 anim) const
 	{
-		return trans.uses() || roll.uses() || scale.uses();
+		return trans.uses(anim) || roll.uses(anim) || scale.uses(anim);
 	}
 
 	bool IsBillboard() const

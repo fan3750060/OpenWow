@@ -10,6 +10,7 @@ public:
 	uint16 getID() const { return m_ID; }
 	uint32 getCurrentTime(uint32 _global) const { return (_global % m_Duration) + m_StartTimeStamp; }
 
+	uint16			m_Number;
 	uint16			m_SID;
 
 private:

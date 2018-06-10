@@ -61,6 +61,9 @@
     <ClInclude Include="MapManager.h">
       <Filter>Game\Wow</Filter>
     </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

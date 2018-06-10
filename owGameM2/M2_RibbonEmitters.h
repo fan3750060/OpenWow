@@ -15,7 +15,7 @@ class CM2_RibbonEmitters
 public:
 	CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmitter& mta, cGlobalLoopSeq globals);
 
-	void setup(uint32 anim, uint32 time, uint32 _globalTime);
+	void setup(uint16 anim, uint32 time, uint32 _globalTime);
 
 	void draw();
 

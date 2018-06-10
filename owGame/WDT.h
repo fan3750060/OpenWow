@@ -28,15 +28,15 @@ struct WDT_MAIN
 class MapController;
 // FORWARD END
 
-class WDT : SceneNode
+class WDT
 {
 	friend MapController;
 public:
-	WDT(SceneNode* _parent);
+	WDT();
+
+	void CreateInsances(SceneNode* _parent);
 
 	void Load(cstring _name);
-
-	void InitGlobalWMO();
 
 	//--
 

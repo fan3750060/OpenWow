@@ -6,7 +6,7 @@ struct VSOutput
 	vec3 WorldSpacePos;
 	vec2 TexCoord;
 	vec3 Normal;
-	//vec3 Color;
+	vec4 Color;
 };
 
 // Input
@@ -17,16 +17,28 @@ uniform sampler2D gColorMap;
 uniform sampler2D gSpecularMap;
 
 uniform bool gHasMOCV;
-uniform vec3 gDiffuseColor;
+
+// Ambient color
+uniform bool gUseAmbColor;
+uniform vec4 gAmbColor;
 
 void main(void)
 {
+	vec4 finalColor = texture(gColorMap, VSout.TexCoord);
+
+	if (gHasMOCV)
+	{
+		finalColor *= VSout.Color;
+	}
+	
+	if (gUseAmbColor)
+	{
+		finalColor *= gAmbColor;
+	}
+	
 	setMatID(1.0);
 	setPos(VSout.WorldSpacePos);
 	setNormal(normalize(VSout.Normal));
-	setAlbedo(texture(gColorMap, VSout.TexCoord).rgb);
+	setAlbedo4(finalColor);
 	setSpecParams(texture(gSpecularMap, VSout.TexCoord).rgb, 1.0);
-	
-	
-	fragData2.a = texture(gColorMap, VSout.TexCoord).a;
 };

@@ -10,17 +10,17 @@ CM2_Part_TextureTransform::CM2_Part_TextureTransform(IFile* f, const SM2_Texture
 	scale.init(_proto.scaling, f, global);
 }
 
-void CM2_Part_TextureTransform::calc(uint32 anim, uint32 time, uint32 globalTime)
+void CM2_Part_TextureTransform::calc(uint16 anim, uint32 time, uint32 globalTime)
 {
 	matrix = Matrix4f();
 	
-	if (trans.uses())
+	if (trans.uses(anim))
 	{
 		transValue = trans.getValue(anim, time, globalTime);
 		matrix.translate(transValue);
 	}
 
-	if (roll.uses())
+	if (roll.uses(anim))
 	{
 		matrix.translate(vec3(0.5f, 0.5f, 0.5f));
 
@@ -30,7 +30,7 @@ void CM2_Part_TextureTransform::calc(uint32 anim, uint32 time, uint32 globalTime
 		matrix.translate(vec3(-0.5f, -0.5f, -0.5f));
 	}
 
-	if (scale.uses())
+	if (scale.uses(anim))
 	{
 		scaleVal = scale.getValue(anim, time, globalTime);
 		matrix.scale(scaleVal);

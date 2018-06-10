@@ -9,8 +9,12 @@ public:
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");
+
+
         gHasMOCV = getLocation("gHasMOCV");
-        gDiffuseColor = getLocation("gDiffuseColor");
+
+		gUseAmbColor = getLocation("gUseAmbColor");
+        gAmbColor = getLocation("gAmbColor");
     }
 
     inline void SetColorTextureUnit(int TextureUnit)
@@ -30,14 +34,19 @@ public:
         setInt(gHasMOCV, hasMOCV);
     }
 
-    void SetDiffuseColor(vec3 _Color)
+	void SetUseAmbColor(bool _use)
+	{
+		setInt(gUseAmbColor, _use);
+	}
+    void SetAmbColor(vec4 _Color)
     {
-        setVec3(gDiffuseColor, _Color);
+        setVec4(gAmbColor, _Color);
     }
 
 private:
     int32 gColorMap;
     int32 gSpecularMap;
     int32 gHasMOCV;
-    int32 gDiffuseColor;
+	int32 gUseAmbColor;
+    int32 gAmbColor;
 };

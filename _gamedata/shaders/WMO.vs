@@ -5,14 +5,14 @@ struct VSOutput
 	vec3 WorldSpacePos;
 	vec2 TexCoord;
 	vec3 Normal;
-	//vec3 Color;
+	vec4 Color;
 };
 
 // Vertex attrib
 layout(location = 0) in vec3 VertexPosition;
 layout(location = 1) in vec2 TexCoord;
 layout(location = 2) in vec3 Normal;
-//layout(location = 3) in vec3 Color;
+layout(location = 3) in vec4 Color;
 
 // Input
 
@@ -32,5 +32,5 @@ void main(void)
 	VSout.WorldSpacePos = (gWorld * vec4(VertexPosition, 1.0)).xyz;
 	VSout.TexCoord = TexCoord;
 	VSout.Normal = (gWorld * vec4(Normal, 0.0)).xyz;
-	//VSout.Color = Color;
+	VSout.Color = Color;
 };

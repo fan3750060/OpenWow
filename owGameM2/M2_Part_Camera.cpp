@@ -26,17 +26,17 @@ void CM2_Part_Camera::setup(uint32 time, uint32 globalTime)
 {
 	vec3 p;
 	vec3 t;
-	if (tPos.uses())
+	if (tPos.uses(0))
 	{
 		p = pos + tPos.getValue(0, time, globalTime);
 	}
-	if (tTarget.uses())
+	if (tTarget.uses(0))
 	{
 		t = target + tTarget.getValue(0, time, globalTime);
 	}
 	vec3 u(0, 1, 0);
 
-	if (tRoll.uses())
+	if (tRoll.uses(0))
 	{
 		roll = tRoll.getValue(0, time, globalTime) / Math::Pi * 180.0f;
 	}

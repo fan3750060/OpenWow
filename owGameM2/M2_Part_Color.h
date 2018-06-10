@@ -7,7 +7,7 @@ class CM2_Part_Color
 public:
 	CM2_Part_Color(IFile* f, const SM2_Color& _proto, cGlobalLoopSeq global);
 
-	void calc(uint32 anim, uint32 time, uint32 globalTime);
+	void calc(uint16 anim, uint32 time, uint32 globalTime);
 
 	vec4 getValue() { return vec4(vColor, vAlpha); }
 	cvec3 getValueColor() const { return vColor; }

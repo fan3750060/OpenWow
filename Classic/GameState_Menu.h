@@ -40,7 +40,6 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-    R_Texture* m_MinimapTexture;
     UIElement* m_MinimapUI;
 
 	Commands cmd;

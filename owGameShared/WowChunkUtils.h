@@ -29,7 +29,7 @@ while (p < end) \
 { \
 	string _string(p); \
 	p += strlen(p) + 1; \
-	while ((p < end) && (*p == 0)) p++;
+	while ((p < end) && (*p == 0)) p++; \
 
 #define WOWCHUNK_READ_STRINGS2_END \
 } \

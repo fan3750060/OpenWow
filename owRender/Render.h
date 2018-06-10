@@ -68,7 +68,7 @@ public:
 	void RenderQuad();
     void RenderQuadVT();
 
-    void DrawBoundingBox(BoundingBox& _box, cmat4 _mat);
+    void DrawBoundingBox(BoundingBox& _box);
 
 	void DrawPerfomance(vec2 _startPoint);
 

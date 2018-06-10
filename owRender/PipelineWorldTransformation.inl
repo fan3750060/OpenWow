@@ -49,23 +49,6 @@ inline void PipelineWorldTransformation::Scale(cvec3 _scale)
 	worldTransformation.scale(_scale.x, _scale.y, _scale.z);
 }
 
-// Pure
-
-inline void PipelineWorldTransformation::Quat(cquat _quat)
-{
-	worldTransformation = worldTransformation * _quat;
-}
-inline void PipelineWorldTransformation::Quat(float w, float x, float y, float z)
-{
-	worldTransformation = worldTransformation * (Quaternion(x, y, z, w));
-}
-
-inline void PipelineWorldTransformation::Mult(cmat4 mat)
-{
-	worldTransformation = worldTransformation * mat;
-}
-
-// Push / Pop
 
 inline void PipelineWorldTransformation::SetWorld(const mat4 _world)
 {
@@ -75,18 +58,4 @@ inline void PipelineWorldTransformation::SetWorld(const mat4 _world)
 inline const mat4& PipelineWorldTransformation::GetWorld()
 {
 	return worldTransformation;
-}
-
-inline void PipelineWorldTransformation::Push()
-{
-	assert1(!m_IsMatrixPushed);
-	m_PushedWorldTranformation = worldTransformation;
-	m_IsMatrixPushed = true;
-}
-
-inline void PipelineWorldTransformation::Pop()
-{
-	assert1(m_IsMatrixPushed);
-	worldTransformation = m_PushedWorldTranformation;
-	m_IsMatrixPushed = false;
 }

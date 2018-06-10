@@ -36,7 +36,7 @@ void CSceneManager::RenderRecursy(SceneNode* _node)
 	std::sort(_node->getChilds().begin(), _node->getChilds().end(), Renderable3DObjectCompare());
 
 	// Childs
-	for (auto it : _node->getChilds())
+	for (auto& it : _node->getChilds())
 	{
 		RenderRecursy(it);
 	}

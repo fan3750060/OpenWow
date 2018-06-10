@@ -29,6 +29,6 @@ void main(void)
 
 	VSout.WorldSpacePos = (gWorld * vec4(VertexPosition, 1.0)).xyz;
 	VSout.TexCoord = TexCoord;
-	VSout.Normal = Normal;
+	VSout.Normal = (gWorld * vec4(Normal, 0.0)).xyz;
 };
 

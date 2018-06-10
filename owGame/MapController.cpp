@@ -8,6 +8,7 @@
 #include "Map_Shared.h"
 
 MapController::MapController() :
+	m_WDT(nullptr),
 	m_WDL(nullptr)
 {
     memset(m_ADTCache, 0, sizeof(m_ADTCache));
@@ -18,8 +19,6 @@ MapController::MapController() :
 	_Map_Shared->Init();
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
-
-	m_WDT = new WDT(this);
 
 	AddManager<IMapManager>(this);
 }
@@ -48,6 +47,16 @@ void MapController::MapPreLoad(DBC_MapRecord* _map)
 
 	m_WDL = new WDL(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
 	m_WDL->Load();
+
+	// Delete if exists
+	if (m_WDT != nullptr)
+	{
+		delete m_WDT;
+		m_WDT = nullptr;
+	}
+
+	m_WDT = new WDT();
+	m_WDT->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
 }
 
 void MapController::MapLoad()
@@ -56,6 +65,7 @@ void MapController::MapLoad()
 
 	_World->EnvM()->InitSkies(m_DBC_Map);
 
+	// Load data
 	m_WDT->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
 }
 
@@ -63,7 +73,8 @@ void MapController::MapPostLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
 
-	m_WDT->InitGlobalWMO();
+	// Create all instances
+	m_WDT->CreateInsances(this);
 	m_WDL->CreateInsances(this);
 }
 

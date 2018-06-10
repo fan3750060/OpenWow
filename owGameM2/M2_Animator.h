@@ -10,6 +10,7 @@ public:
 	~CM2_Animator();
 
 	void PlayAnimation(uint16 _id);
+	uint16 getNubmer() const { return m_CurrentAnimation->m_Number; }
 	uint16 getSId() const { return m_CurrentAnimation->m_SID; }
 	uint16 getCurrentId() const { return m_CurrentAnimation->getID(); }
 	uint32 getCurrentTime(uint32 _global) const { return m_CurrentAnimation->getCurrentTime(_global); }

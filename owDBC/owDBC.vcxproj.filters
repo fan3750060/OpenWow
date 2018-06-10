@@ -54,6 +54,9 @@
     <ClInclude Include="DBC_AnimationData.h">
       <Filter>DBCs</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_TerrainType.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

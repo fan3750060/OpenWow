@@ -3,9 +3,9 @@
 // Includes
 
 // General
-#include "Wmo_Light.h"
+#include "Wmo_Part_Light.h"
 
-WMOLight::WMOLight(const WMO_LightDef& _proto)
+WMO_Part_Light::WMO_Part_Light(const WMO_LightDef& _proto)
 {
 	lightDef = _proto;
 
@@ -18,7 +18,7 @@ WMOLight::WMOLight(const WMO_LightDef& _proto)
 	//Log::Warn("Atten = %f, %f", lightDef.attenStart, lightDef.attenEnd);
 }
 
-void WMOLight::setup(uint32 light)
+void WMO_Part_Light::setup(uint32 light)
 {
 	float LightAmbient[] = {0, 0, 0, 1.0f};
 	float LightPosition[] = {lightDef.pos.x, lightDef.pos.y, lightDef.pos.z, 0.0f};
@@ -26,20 +26,6 @@ void WMOLight::setup(uint32 light)
 	//glLightfv(light, GL_AMBIENT, LightAmbient);
 	//glLightfv(light, GL_DIFFUSE, fcolor);
 	//glLightfv(light, GL_POSITION, LightPosition);
-
-	//glEnable(light);
-}
-
-void WMOLight::setupOnce(uint32 light, vec3 dir, vec4 lcol)
-{
-	vec4 position(dir, 0);
-
-	vec4 ambient = lcol * 0.3f;
-	vec4 diffuse = lcol;
-
-	//glLightfv(light, GL_AMBIENT, ambient);
-	//glLightfv(light, GL_DIFFUSE, diffuse);
-	//glLightfv(light, GL_POSITION, position);
 
 	//glEnable(light);
 }

@@ -37,6 +37,9 @@ bool GameState_M2Viewer::Init()
 
 	OpenDBs();
 
+	CSceneManager* sceneManager = new CSceneManager();
+	
+
 	new CM2_Manager();
 
 	CreateDebugGeom();
@@ -53,6 +56,8 @@ bool GameState_M2Viewer::Init()
 	{
 		backgroundModel = GetManager<IM2Manager>()->Add("Creature\\Ragnaros\\Ragnaros.m2");
 	}
+
+	//sceneManager->SetRootNode(backgroundModel);;
 
 	_PipelineGlobal->GetCamera()->Position = vec3(50, 50, 50);
 	_PipelineGlobal->GetCamera()->SetNeedUpdate();

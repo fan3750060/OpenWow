@@ -5,7 +5,7 @@
 class Liquid_Instance : public SceneNode
 {
 public:
-	Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, cvec3 _position);
+	Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3 _position);
 
 	// IRenderable3D
 	void PreRender3D() override;

@@ -25,22 +25,22 @@ CM2_Part_Light::CM2_Part_Light(IFile* f, const SM2_Light& _proto, cGlobalLoopSeq
 	visibility.init(_proto.visibility, f, global);
 }
 
-void CM2_Part_Light::setup(uint32 time, uint32 globalTime)
+void CM2_Part_Light::setup(uint16 anim, uint32 time, uint32 globalTime)
 {
-	if (ambColor.uses())
+	if (ambColor.uses(anim))
 	{
 		ambColorValue = ambColor.getValue(0, time, globalTime);
 	}
-	if (ambIntensity.uses())
+	if (ambIntensity.uses(anim))
 	{
 		ambIntensityValue = ambIntensity.getValue(0, time, globalTime);
 	}
 
-	if (diffColor.uses())
+	if (diffColor.uses(anim))
 	{
 		diffColorValue = diffColor.getValue(0, time, globalTime);
 	}
-	if (diffIntensity.uses())
+	if (diffIntensity.uses(anim))
 	{
 		diffIntensityValue = diffIntensity.getValue(0, time, globalTime);
 	}

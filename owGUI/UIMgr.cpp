@@ -206,6 +206,7 @@ bool UIMgr::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 
     //assert1(m_RootElement != nullptr);
     //return m_RootElement->OnMouseButtonPressed(_button, _mods, _mousePos);
+	return false;
 }
 
 bool UIMgr::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)

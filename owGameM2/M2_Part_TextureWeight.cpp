@@ -9,9 +9,9 @@ CM2_Part_TextureWeight::CM2_Part_TextureWeight(IFile* f, const SM2_TextureWeight
 	trans.init(_proto.weight, f, global);
 }
 
-void CM2_Part_TextureWeight::calc(uint32 anim, uint32 time, uint32 globalTime)
+void CM2_Part_TextureWeight::calc(uint16 anim, uint32 time, uint32 globalTime)
 {
-	if (trans.uses())
+	if (trans.uses(anim))
 	{
 		tVal = trans.getValue(anim, time, globalTime);
 	}

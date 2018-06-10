@@ -10,14 +10,12 @@ enum LightType
 
 #include "WMO_Headers.h"
 
-class WMOLight
+class WMO_Part_Light : public CRefItem
 {
 public:
-	WMOLight(const WMO_LightDef& _proto);
+	WMO_Part_Light(const WMO_LightDef& _proto);
 
 	void setup(uint32 light);
-
-	static void setupOnce(uint32 light, vec3 dir, vec4 lcol);
 
 public:
 	vec4 fcolor;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Single_WMO_Instance.h"
+
 class GameState_WMOViewer : public CGameState, CRenderable3DObject
 {
 public:
@@ -37,7 +39,7 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-	SmartWMOPtr backgroundModel;
+	Single_WMO_Instance* backgroundModel;
 
 	float	animtime;
 	uint32	globalTime;

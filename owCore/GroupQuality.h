@@ -9,9 +9,6 @@ public:
 	~CGroupQuality();
 
 	bool Terrain_LowDetail;
-	bool Terrain_MCCV;
-	bool Terrain_MCLV;
-
 	uint16 Texture_Sampler;
 
 	bool draw_map_chunk;
@@ -19,6 +16,9 @@ public:
 	bool draw_map_wmo_doodads;
 	bool draw_map_mdx;
 	bool draw_water;
+
+	bool WMO_MOCV;
+	bool WMO_AmbColor;
 
 	bool drawfog;
 	bool timeEnable;

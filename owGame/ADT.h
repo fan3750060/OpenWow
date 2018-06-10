@@ -23,6 +23,7 @@ public:
 
 	// IRenderable3D
 	void PreRender3D() override;
+	void Render3D() override;
 
 public:
 	const string						m_Name;

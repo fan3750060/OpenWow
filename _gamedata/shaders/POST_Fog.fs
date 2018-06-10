@@ -27,7 +27,7 @@ vec4 applyFog()
 	float fogFactor = (gFogDistance - cameraDistance2D) / (gFogDistance - fogStart);
 	fogFactor = 1.0 - clamp(fogFactor, 0.0, 1.0);
 
-	if (materialID >=0 && materialID <= 2) 
+	if (materialID >=0 && materialID <= 2)
 	{
 		color.rgb = gFogColor.rgb * fogFactor;
 		color.a = fogFactor;

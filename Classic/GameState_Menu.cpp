@@ -47,10 +47,8 @@ bool GameState_Menu::Init()
 
 	OpenDBs();
 
-	m_MinimapTexture = new R_Texture(&_Render->r);
-
 	m_MinimapUI = new UIElement(100);
-	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), m_MinimapTexture, COLOR_WHITE);
+	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), (R_Texture*)nullptr, COLOR_WHITE);
 	m_MinimapUI->Hide();
 
 	cmd = CMD_NONE;

@@ -5,41 +5,41 @@
 
 SceneNode::SceneNode() : 
 	m_Parent(nullptr),
+	m_Rotate(vec3(0.0f, 0.0f, 0.0f)),
 	m_Scale(vec3(1.0f, 1.0f, 1.0f)),
 	m_IsVisible(false),
 	m_DrawOrder(0)
 {
-	CalculateMatrix();
-
-	//_Bindings->RegisterRenderable3DObject(this);
-	_Bindings->RegisterUpdatableObject(this);
+	//CalculateMatrix();
 }
 
 SceneNode::SceneNode(SceneNode* _parent) : 
 	m_Parent(_parent),
+	m_Rotate(vec3(0.0f, 0.0f, 0.0f)),
 	m_Scale(vec3(1.0f, 1.0f, 1.0f)),
+	m_IsVisible(false),
 	m_DrawOrder(0)
 {
-	CalculateMatrix();
+	//CalculateMatrix();
 
 	if (m_Parent != nullptr)
 	{
-		m_Parent->m_Childs.push_back(this);
+		m_Parent->addChild(this);
 	}
-
-	//_Bindings->RegisterRenderable3DObject(this);
-	_Bindings->RegisterUpdatableObject(this);
 }
 
 SceneNode::~SceneNode()
 {
-	if (m_Parent != nullptr)
+	for (auto it : m_Childs)
 	{
-		m_Parent->getChilds().erase(std::remove(m_Parent->getChilds().begin(), m_Parent->getChilds().end(), this), m_Parent->getChilds().end());
+		it->setParent(nullptr);
+		//fail1();
 	}
 
-	_Bindings->UnregisterUpdatableObject(this);
-	//_Bindings->UnregisterRenderable3DObject(this);
+	if (m_Parent != nullptr)
+	{
+		m_Parent->removeChild(this);
+	}
 }
 
 bool SceneNode::Load()
@@ -54,6 +54,8 @@ bool SceneNode::Delete()
 
 void SceneNode::CalculateMatrix(bool _isRotationQuat)
 {
+	m_RelTransform = mat4();
+
 	m_RelTransform.translate(m_Translate);
 	if (_isRotationQuat)
 	{

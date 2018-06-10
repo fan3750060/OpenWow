@@ -105,12 +105,22 @@ public:
 
 	}
 
-	bool uses() const
+	bool uses(uint16 anim) const
 	{
-		return m_Type != INTERPOLATION_NONE;
+		if (m_Type == INTERPOLATION_NONE)
+		{
+			return false;
+		}
+
+		if (m_GlobalSecIndex == -1 && m_Ranges.size() <= anim)
+		{
+			return false;
+		}
+
+		return true;
 	}
 	
-	T getValue(uint32 anim, uint32 time, uint32 globalTime) const
+	T getValue(uint16 anim, uint32 time, uint32 globalTime) const
 	{
 		assert1(m_Type != INTERPOLATION_NONE);
 

@@ -42,7 +42,7 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	segs.push_back(rs);
 }
 
-void CM2_RibbonEmitters::setup(uint32 anim, uint32 time, uint32 _globalTime)
+void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime)
 {
 	vec3 ntpos = m_Bone->getTransformMatrix() * pos;
 	vec3 ntup = m_Bone->getTransformMatrix() * (pos + vec3(0, 0, 1));
@@ -93,17 +93,17 @@ void CM2_RibbonEmitters::setup(uint32 anim, uint32 time, uint32 _globalTime)
 	}
 
 	posValue = ntpos;
-	if (m_Color.uses() && m_Alpha.uses())
+	if (m_Color.uses(anim) && m_Alpha.uses(anim))
 	{
 		tcolor = vec4(m_Color.getValue(anim, time, _globalTime), m_Alpha.getValue(anim, time, _globalTime));
 	}
 
-	if (m_HeightAbove.uses())
+	if (m_HeightAbove.uses(anim))
 	{
 		tabove = m_HeightAbove.getValue(anim, time, _globalTime);
 	}
 
-	if (m_HeightBelow.uses())
+	if (m_HeightBelow.uses(anim))
 	{
 		tbelow = m_HeightBelow.getValue(anim, time, _globalTime);
 	}

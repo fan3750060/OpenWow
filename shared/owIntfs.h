@@ -23,6 +23,7 @@
 #include "../owIntfs/MapManager.h"
 #include "../owIntfs/OpenGLAdapter.h"
 #include "../owIntfs/PlatformFactory.h"
+#include "../owIntfs/Scene.h"
 #include "../owIntfs/Settings.h"
 #include "../owIntfs/SkyManager.h"
 

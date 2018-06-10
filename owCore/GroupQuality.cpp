@@ -47,9 +47,10 @@ CGroupQuality::~CGroupQuality()
 void CGroupQuality::InitDefault()
 {
 	Terrain_LowDetail = false;
-	Terrain_MCCV = true;
-	Terrain_MCLV = true;
 	Texture_Sampler = R_SamplerState2::SS_ANISO16;
+
+	WMO_MOCV = true;
+	WMO_AmbColor = false;
 
 	draw_map_chunk = true;
 	draw_map_wmo = true;
@@ -135,13 +136,13 @@ bool CGroupQuality::OnKeyboardPressed(int _key, int _scancode, int _mods)
 
 	if (_key == OW_KEY_C)
 	{
-		SwitchBool(Terrain_MCCV);
+		SwitchBool(WMO_MOCV);
 		return true;
 	}
 
 	if (_key == OW_KEY_V)
 	{
-		SwitchBool(Terrain_MCLV);
+		SwitchBool(WMO_AmbColor);
 		return true;
 	}
 

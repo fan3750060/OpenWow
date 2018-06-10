@@ -1,17 +1,18 @@
 #include "stdafx.h"
 
 // General
-#include "Wmo_Fog.h"
+#include "Wmo_Part_Fog.h"
 
-WMOFog::WMOFog(IFile* f)
+WMO_Part_Fog::WMO_Part_Fog(const WMO_FogDef& _proto)
 {
-	f->ReadBytes(&fogDef, sizeof(WMO_FogDef));
+	fogDef = _proto;
+
 	color = vec4(fogDef.fog.color.r, fogDef.fog.color.g, fogDef.fog.color.b, fogDef.fog.color.a);
-	fogDef.position.toXZmY();
+	fogDef.position = fogDef.position.toXZmY();
 	fogDef.fog.startScalar = fogDef.fog.startScalar * fogDef.fog.end;
 }
 
-void WMOFog::setup()
+void WMO_Part_Fog::setup()
 {
 	/*if (_Config.drawfog)
 	{

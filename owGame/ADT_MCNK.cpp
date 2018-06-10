@@ -257,7 +257,7 @@ bool ADT_MCNK::Delete()
 
 void ADT_MCNK::PreRender3D()
 {
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds) && m_QualitySettings.draw_map_chunk);
+	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 	
 	// Draw chunk before fog
 	/*float mydist = (_Camera->Position - vcenter).length() - r;
@@ -273,40 +273,48 @@ void ADT_MCNK::PreRender3D()
 
 void ADT_MCNK::Render3D()
 {
+	if (!m_QualitySettings.draw_map_chunk)
+	{
+		return;
+	}
+
+
 	PERF_START(PERF_MAP);
 	//------------------
 
 	_Pipeline->Clear();
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
-
-	// Bind m_DiffuseTextures
-	for (uint32 i = 0; i < header.nLayers; i++)
 	{
-		_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-		_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+		//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
+
+		// Bind m_DiffuseTextures
+		for (uint32 i = 0; i < header.nLayers; i++)
+		{
+			_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+			_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		}
+
+		// Bind blend
+		if (header.nLayers > 0)
+			_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+
+		// Bind shadow
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
+		if (header.flags.has_mcsh)
+			_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
+
+		_Render->r.setGeometry(__geom);
+		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
+
+		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Unbind();
+
+		//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+		_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	}
-
-	// Bind blend
-	if (header.nLayers > 0)
-		_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
-
-	// Bind shadow
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
-	if (header.flags.has_mcsh)
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
-
-	_Render->r.setGeometry(__geom);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize);
-
-	_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Unbind();
-
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	_Pipeline->Clear();
 
 	//---------------
 	PERF_STOP(PERF_MAP);

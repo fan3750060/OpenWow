@@ -6,11 +6,13 @@ public:
 	PipelineWorldTransformation() 
 	{ 
 		Clear();
-		m_IsMatrixPushed = false;
 	}
 	inline void Clear()
 	{
-		worldTransformation = mat4();
+		worldTransformation.c[0][0] = 1; worldTransformation.c[1][0] = 0; worldTransformation.c[2][0] = 0; worldTransformation.c[3][0] = 0;
+		worldTransformation.c[0][1] = 0; worldTransformation.c[1][1] = 1; worldTransformation.c[2][1] = 0; worldTransformation.c[3][1] = 0;
+		worldTransformation.c[0][2] = 0; worldTransformation.c[1][2] = 0; worldTransformation.c[2][2] = 1; worldTransformation.c[3][2] = 0;
+		worldTransformation.c[0][3] = 0; worldTransformation.c[1][3] = 0; worldTransformation.c[2][3] = 0; worldTransformation.c[3][3] = 1;
 	}
 
 	inline void Translate(float x, float y, float z);
@@ -26,22 +28,13 @@ public:
 	inline void Scale(float _scaleX, float _scaleY, float _scaleZ);
 	inline void Scale(cvec3 _scale);
 
-	inline void Quat(cquat _quat);
-	inline void Quat(float w, float x, float y, float z);
-
-	inline void Mult(cmat4 mat);
-
 	//
 
 	inline void SetWorld(const mat4 _world);
 	inline const mat4& GetWorld();
-	inline void Push();
-	inline void Pop();
 
 private:
 	mat4 worldTransformation;
-	bool m_IsMatrixPushed;
-	mat4 m_PushedWorldTranformation;
 };
 
 #include "PipelineWorldTransformation.inl"

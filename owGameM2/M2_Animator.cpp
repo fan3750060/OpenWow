@@ -9,6 +9,7 @@
 CM2_Animator::CM2_Animator(const M2* _m2) :
 	m_M2(_m2)
 {
+	uint16 u = 0;
 	for (auto i = DBÑ_AnimationData.Records().begin(); i != DBÑ_AnimationData.Records().end(); ++i)
 	{
 		DBÑ_AnimationDataRecord* record = (i->second);
@@ -25,6 +26,7 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 		}
 
 		CM2_Animation* animation = new CM2_Animation(m_M2, m_M2->m_Sequences[indexIntoSequences]);
+		animation->m_Number = u++;
 		animation->m_SID = indexIntoSequences;
 
 		m_Animations.insert(make_pair(record->Get_ID(), animation));
@@ -32,7 +34,7 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 	}
 
 	assert1(m_Animations.size() > 0);
-	m_CurrentAnimation = m_Animations[0];
+	m_CurrentAnimation = m_Animations.begin()->second;
 }
 
 CM2_Animator::~CM2_Animator() 

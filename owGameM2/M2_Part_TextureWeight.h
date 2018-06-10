@@ -7,7 +7,7 @@ struct CM2_Part_TextureWeight
 public:
 	CM2_Part_TextureWeight(IFile* f, const SM2_TextureWeight& _proto, cGlobalLoopSeq global);
 
-	void calc(uint32 anim, uint32 time, uint32 globalTime);
+	void calc(uint16 anim, uint32 time, uint32 globalTime);
 
 	float getValue() const { return tVal; }
 

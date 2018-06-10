@@ -1,9 +1,10 @@
 #pragma once
 
 #include "RefItem.h"
+#include "SmartPtr.h"
 
 class SceneNode : 
-	public CRefItem, 
+	public CRefItem,
 	public ILoadable, 
 	public IUpdatable, 
 	public IRenderable3D
@@ -15,6 +16,25 @@ public:
 
 	vector<SceneNode*>& getChilds() { return m_Childs; }
 
+	// ISceneNode
+	void setParent(SceneNode* _parent) { m_Parent = _parent; }
+	SceneNode* getParent() { return m_Parent; }
+	void addChild(SceneNode* _child)
+	{ 
+		assert1(std::find(m_Childs.begin(), m_Childs.end(), this) == m_Childs.end());
+		m_Childs.push_back(_child); 
+	}
+	void removeChild(SceneNode* _child) 
+	{
+		if (m_Childs.empty())
+		{
+			return;
+		}
+
+		assert1(std::find(m_Childs.begin(), m_Childs.end(), _child) != m_Childs.end());
+		m_Childs.erase(std::remove(m_Childs.begin(), m_Childs.end(), _child), m_Childs.end());
+	}
+	
 	cvec3 getTranslate() const { return m_Translate; }
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
@@ -54,9 +74,11 @@ protected:
 	quat				m_RotateQuat;
 	vec3                m_Scale;
 
+private:
 	mat4				m_RelTransform;
 	mat4				m_AbsTransform;
 
+protected:
 	BoundingBox         m_Bounds;
 
 private: // ILoadable

@@ -9,6 +9,7 @@ public:
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");
+
         gColorLight = getLocation("gColorLight");
         gColorDark = getLocation("gColorDark");
         gShallowAlpha = getLocation("gShallowAlpha");

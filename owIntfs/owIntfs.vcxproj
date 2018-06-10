@@ -43,6 +43,7 @@
     <ClInclude Include="OpenGLAdapter.h" />
     <ClInclude Include="PlatformFactory.h" />
     <ClInclude Include="Refs.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SkyManager.h" />
     <ClInclude Include="stdafx.h" />

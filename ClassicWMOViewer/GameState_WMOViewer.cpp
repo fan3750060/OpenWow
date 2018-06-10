@@ -39,18 +39,30 @@ bool GameState_WMOViewer::Init()
 
 	CreateDebugGeom();
 
+	SceneNode* root = new SceneNode();
+	root->SetVisible(true);
+
 	if (m_Engine->GetArgumentsCount() > 1)
 	{
 		string path = m_Engine->GetArgument(1);
 		int pos = path.find("ExData");
 		assert1(pos != -1);
 		path = path.substr(pos + 7);
-		backgroundModel = GetManager<IWMOManager>()->Add(path);
+			
+		WMO* wmo = GetManager<IWMOManager>()->Add(path);
+		backgroundModel = new Single_WMO_Instance(root, wmo);
+
 	}
 	else
 	{
-		backgroundModel = GetManager<IWMOManager>()->Add("World\\wmo\\cameron.wmo");
+		WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Lorderon\\Undercity\\Undercity.wmo");
+		new Single_WMO_Instance(root, wmo);
+		new Single_WMO_Instance(root, wmo); 
+		//new Single_WMO_Instance(root, wmo);
 	}
+
+	CSceneManager* sceneManager = new CSceneManager();
+	sceneManager->SetRootNode(root);
 
 	_PipelineGlobal->GetCamera()->Position = vec3(50, 50, 50);
 	_PipelineGlobal->GetCamera()->SetNeedUpdate();
@@ -71,7 +83,7 @@ bool GameState_WMOViewer::Set()
 {
 	CGameState::Set();
 
-	_Bindings->RegisterRenderable3DObject(this);
+	_Bindings->RegisterRenderable3DObject(this, 15);
 
 	return true;
 }
@@ -116,66 +128,28 @@ void GameState_WMOViewer::Update(double _time, double _dTime)
 
 void GameState_WMOViewer::PreRender3D()
 {
-	SetVisible(backgroundModel != nullptr);
+	_Render->rb->setRenderBuffer();
+	_Render->r.clear();
+
+	_PipelineGlobal->SetCamera(_Render->mainCamera);
+	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
+
+	SetVisible(true);
 }
 
 void GameState_WMOViewer::Render3D()
 {
-	_Render->rb->setRenderBuffer();
-	_Render->r.clear();
-
-	// Camera
-	_Pipeline->Clear();
-
-	// Debug
-	/*_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
-	_Render->r.setGeometry(m_DebugGeom);
-	_Render->r.draw(PRIM_TRILIST, 0, 6);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);*/
-
-	Camera* tt = nullptr;
-
-	tt = _Render->mainCamera;
-	_PipelineGlobal->SetCamera(_Render->mainCamera);
-	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
-
-
-	// Geom
-	_Pipeline->Clear();
-	backgroundModel->Render(0);
-	
-
-
-	/*_Pipeline->Clear();
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
-	_Render->r.setGeometry(tt->__geom);
-	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 }
 
 void GameState_WMOViewer::PostRender3D()
 {
-	if (backgroundModel == nullptr) return;
-
 	// Postprocess pass
 	_Render->rb->resetRenderBuffer();
 	for (uint32 i = 0; i < 4; i++)
 	{
 		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
 	}
-	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
+	_Render->r.clear();
 
 	_Render->TechniquesMgr()->m_POST_Simple->Bind();
 	_Render->TechniquesMgr()->m_POST_Simple->SetCameraPos(_Camera->Position);

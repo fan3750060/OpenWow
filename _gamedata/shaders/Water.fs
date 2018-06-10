@@ -32,6 +32,6 @@ void main(void)
 	setMatID(1.0);
 	setPos(VSout.WorldSpacePos);
 	setNormal(normalize(VSout.Normal));
-	setAlbedo4(resultColor);
+	setAlbedo4(/*vec4(0.0, 1.0, 0.0f, 1.0f)*/resultColor);
 	setSpecParams(texture(gSpecularMap, VSout.TexCoord.xy).rgb, 1.0);
 };

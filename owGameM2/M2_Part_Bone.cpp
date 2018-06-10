@@ -16,7 +16,7 @@ CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq gl
 	pivot = _proto.pivot.toXZmY();
 }
 
-void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time, uint32 globalTime)
+void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time, uint32 globalTime)
 {
 	if (m_IsCalculated)
 	{
@@ -25,16 +25,16 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time
 
 	mat4 m;
 
-	if (roll.uses() || scale.uses() || trans.uses() || (IsBillboard()))
+	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim) || (IsBillboard()))
 	{
 		m.translate(pivot);
 
-		if (trans.uses())
+		if (trans.uses(anim))
 		{
 			m.translate(trans.getValue(anim, time, globalTime));
 		}
 
-		if (roll.uses())
+		if (roll.uses(anim))
 		{
 			quat q = roll.getValue(anim, time, globalTime);
 			m.rotate(q);
@@ -49,7 +49,7 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint32 anim, uint32 time
 			}
 		}
 
-		if (scale.uses())
+		if (scale.uses(anim))
 		{
 			m.scale(scale.getValue(anim, time, globalTime));
 		}

@@ -4,9 +4,9 @@
 #include "Wmo.h"
 
 // General
-#include "Wmo_Material.h"
+#include "Wmo_Part_Material.h"
 
-WMOMaterial::WMOMaterial(const WMO* _parentWMO, const WMOMaterialDef& _proto) :
+WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const WMO_MaterialDef& _proto) :
 	m_ParentWMO(_parentWMO)
 {
 	matDef = _proto;
@@ -14,7 +14,7 @@ WMOMaterial::WMOMaterial(const WMO* _parentWMO, const WMOMaterialDef& _proto) :
 	texture = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + matDef.diffuseNameIndex);
 }
 
-WMOMaterial::~WMOMaterial()
+WMO_Part_Material::~WMO_Part_Material()
 {
 }
 

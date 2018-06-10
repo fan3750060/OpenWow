@@ -2,10 +2,10 @@
 
 #include "WMO_Headers.h"
 
-class WMOFog
+class WMO_Part_Fog : public CRefItem
 {
 public:
-	WMOFog(IFile* f);
+	WMO_Part_Fog(const WMO_FogDef& _proto);
 
 	void setup();
 

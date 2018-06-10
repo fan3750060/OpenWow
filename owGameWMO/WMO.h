@@ -1,16 +1,12 @@
 ﻿#pragma once
 
-#include "WMO_MODD.h"
-
-class WMOGroup;
-class ADT_WMO_Instance;
-class WMOManager;
-
-class WMOFog;
-class WMOLight;
-class WMOMaterial;
-
 #include "WMO_Headers.h"
+
+#include "WMO_Group.h"
+#include "WMO_MODD_Instance.h"
+#include "WMO_Part_Material.h"
+#include "WMO_Part_Light.h"
+#include "WMO_Part_Fog.h"
 
 class WMO : public CRefItem, public IUpdatable
 {
@@ -18,11 +14,21 @@ public:
 	WMO(cstring _fileName);
 	~WMO();
 
+	bool useAmbColor() const { return !(m_Header.flags.FLAG_skip_base_color); }
+	vec4 getAmbColor() const 
+	{
+		return vec4
+		(
+			static_cast<float>(m_Header.ambColor.r) / 255.0f,
+			static_cast<float>(m_Header.ambColor.g) / 255.0f,
+			static_cast<float>(m_Header.ambColor.b) / 255.0f,
+			static_cast<float>(m_Header.ambColor.a) / 255.0f
+		);
+	}
+
 	void CreateInsances(SceneNode* _parent);
 
-public:
 	bool Load();
-	inline bool IsLoaded() { return m_Loaded; }
 
 	// IUpdatable
 	void Input(double _time, double _dTime) override {};
@@ -43,51 +49,50 @@ public:
 //#endif
 
 public:
-	string m_FileName;
-	bool m_Loaded;
-	WMO_HeaderDef m_Header;                                   // MOHD chunk
+	const string							m_FileName;
+	bool									m_Loaded;
+	WMO_HeaderDef							m_Header;				// MOHD chunk
+	BoundingBox								m_Bounds;
 
 public:
 	//-- Materials --//
-	char* m_TexturesNames;                                          // MOTX chunk
-	vector<SmartPtr<WMOMaterial>> m_Materials;                              // MOMT chunk
+	char*									m_TexturesNames;		// MOTX chunk
+	vector<SmartPtr<WMO_Part_Material>>		m_Materials;			// MOMT chunk
 
 
 	//-- Groups --//
-	char* m_GroupsNames;									   // MOGN chunk
-	vector<WMOGroup*> m_Groups;                              // MOGI chunk
+	char*									m_GroupsNames;			// MOGN chunk
+	vector<WMO_Group*>						m_Groups;				// MOGI chunk
 
 
 	//-- Skybox --//
-	char* m_Skybox_Filename;                                 // MOSB chunk
-	SmartM2Ptr m_Skybox;
+	char*									m_Skybox_Filename;		// MOSB chunk
+	SmartM2Ptr								m_Skybox;
 
 
 	//-- Portals --//
-	vec3* m_PortalVertices;                                 // MOPV chunk
-	vector<WMO_PortalDef> m_PortalInformation;     // MOPT chunk
-	vector<WMO_PortalReferencesDef> m_PortalReferences;       // MOPR chunk
+	vector<vec3>							m_PortalVertices;		// MOPV chunk
+	vector<WMO_PortalDef>					m_PortalInformation;	// MOPT chunk
+	vector<WMO_PortalReferencesDef>			m_PortalReferences;		// MOPR chunk
 
 
 	//-- Visible block
-	vec3* m_VisibleBlockVertices;                           // MOVV chunk
-	vector<WMO_VisibleBlockListDef> m_VisibleBlockList;		// MOVB chunk
+	vector<vec3>							m_VisibleBlockVertices;	// MOVV chunk
+	vector<WMO_VisibleBlockListDef>			m_VisibleBlockList;		// MOVB chunk
 
 
 	// -- Lights --//
-	vector<WMOLight> m_Lights;                               // MOLT chunk
+	vector<SmartPtr<WMO_Part_Light>>		m_Lights;				// MOLT chunk
 
 
 	//-- Doodads --//
-	vector<WMO_DoodadSetDef*> doodadsets;                      // MODS chunk
-	char* m_MDXFilenames;                                   // MODN chunk
-	vector<string> m_MDXNames;                             
-	vector<WMO_MODD_PlacementInfo> m_MDX_Placement;
-	vector<SmartPtr<WMO_MODD>> m_MDXInstances;						// MODD chunk
+	vector<WMO_MODD_SetInfo>				m_M2SetInfos;				// MODS chunk
+	char*									m_M2Filenames;         // MODN chunk        
+	vector<WMO_MODD_PlacementInfo>			m_M2PlacementInfos;
 
 
 	//-- Fog --//
-	vector<WMOFog*> m_Fogs;                                   // MFOG chunk
+	vector<SmartPtr<WMO_Part_Fog>>			m_Fogs;					// MFOG chunk
 
 
 	//-- Volumes plane --//

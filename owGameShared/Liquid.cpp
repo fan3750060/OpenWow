@@ -19,10 +19,22 @@ void Liquid::Render()
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 
+	/*
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1, 1, 1, 1));
+
+	_Render->r.setGeometry(_Render->Storage()->_cubeGeo);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	*/
+	_Render->r.setGeometry(__geom);
+
 	_Render->TechniquesMgr()->m_Water->Bind();
 	_Render->TechniquesMgr()->m_Water->SetPVW();
 
-	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/0.0f / 60.0f) % textures.size();
+	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % textures.size();
 	_Render->r.setTexture(10, textures[texidx], 0, 0);
 
 	if (m_SkyManager != nullptr)
@@ -32,9 +44,16 @@ void Liquid::Render()
 		_Render->TechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
 		_Render->TechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
 	}
+	else
+	{
+		_Render->TechniquesMgr()->m_Water->SetWaterColorLight(vec3(0.0f, 0.0f, 1.0f));
+		_Render->TechniquesMgr()->m_Water->SetWaterColorDark(vec3(0.0f, 0.0f, 1.0f));
+		_Render->TechniquesMgr()->m_Water->SetShallowAlpha(1.0f);
+		_Render->TechniquesMgr()->m_Water->SetDeepAlpha(1.0f);
+	}
 
-	_Render->r.setGeometry(__geom);
-	_Render->r.draw(PRIM_TRILIST, 0, m_VerticesCnt);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndCnt, 0, m_VerticesCnt, false);
+
 	PERF_INC(PERF_MAP_CHUNK_MH20);
 
 	_Render->TechniquesMgr()->m_Water->Unbind();
@@ -139,6 +158,9 @@ struct SLiquidVertexData
 void Liquid::createBuffer()
 {
 	vector<SLiquidVertexData> mh2oVertices;
+	vector<uint16> m_Indices;
+
+	uint32 cntr = 0;
 
 	for (unsigned l = 0; l < m_WaterLayers.size(); l++)
 	{
@@ -226,51 +248,44 @@ void Liquid::createBuffer()
 					defaultNormal
 					});
 
-				//
-
-				mh2oVertices.push_back
-				({
-					vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h4, ydir * (C_UnitSize * static_cast<float>(y))),
-					vec3(t4.first, t4.second, a4),
-					defaultNormal
-					});
-
-				mh2oVertices.push_back
-				({
-					vec3(C_UnitSize * static_cast<float>(x), h2, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
-					vec3(t2.first, t2.second, a2),
-					defaultNormal
-					});
-
 				mh2oVertices.push_back
 				({
 					vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h3, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
 					vec3(t3.first, t3.second, a3),
 					defaultNormal
 					});
+
+				m_Indices.push_back(cntr + 2);
+				m_Indices.push_back(cntr + 1);
+				m_Indices.push_back(cntr + 0);
+				m_Indices.push_back(cntr + 3);
+				m_Indices.push_back(cntr + 1);
+				m_Indices.push_back(cntr + 2);
+
+				cntr += 4;
 			}
 		}
 	}
 
-	m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
-	if (m_VerticesCnt == 0)
-	{
-		return;
-	}
+	
 
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(SLiquidVertexData), mh2oVertices.data());
+	m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
+	assert1(m_VerticesCnt > 0);
 
 	// Index bufer
-	//uint32 __ib = _Render->r.createIndexBuffer(m_IndicesCount, m_Indices);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data());
+	m_IndCnt = static_cast<uint32>(m_Indices.size());
+	assert1(m_IndCnt > 0);
 
 	// Geometry
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWater);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(SLiquidVertexData));
-	//_Render->r.setGeomIndexParams(__geom, __ib, R_IndexFormat::IDXFMT_16);
+	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 	__geom->finishCreatingGeometry();
 
 

@@ -171,12 +171,6 @@ public:
 	{
 		return Quaternion(x, z, -y, w);
 	}
-
-	Quaternion& toXZmYW()
-	{
-		Quaternion v = Quaternion(x, z, -y, w);
-		return *this = v;
-	}
 };
 
 static inline Quaternion Fix_XZmYW(const Quaternion& _quat)

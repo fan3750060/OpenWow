@@ -13,7 +13,7 @@ class CM2_Part_Light
 public:
 	CM2_Part_Light(IFile* f, const SM2_Light& _proto, cGlobalLoopSeq global);
 
-	void setup(uint32 time, uint32 globalTime);
+	void setup(uint16 anim, uint32 time, uint32 globalTime);
 
 	uint16 getType() const { return type; }
 	int16 getBoneIndex() const { return bone; }

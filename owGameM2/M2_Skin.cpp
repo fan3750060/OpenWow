@@ -74,11 +74,11 @@ void CM2_Skin::Draw()
 
 			_Render->r.drawIndexed
 			(
-				PRIM_TRILIST, 
-				p->m_SkinSection.indexStart, 
-				p->m_SkinSection.indexCount, 
-				p->m_SkinSection.vertexStart, 
-				p->m_SkinSection.vertexCount, 
+				PRIM_TRILIST,
+				p->m_SkinSection.indexStart,
+				p->m_SkinSection.indexCount,
+				p->m_SkinSection.vertexStart,
+				p->m_SkinSection.vertexCount,
 				false
 			);
 		}

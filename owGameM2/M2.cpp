@@ -90,14 +90,6 @@ void M2::Render()
 		return;
 	}
 
-	// Cull bounging box
-	BoundingBox aabb = m_Bounds;
-	aabb.transform(_Pipeline->GetWorld());
-	if (_CameraFrustum->_frustum.cullBox(aabb))
-	{
-		return;
-	}
-
 	if (m_IsAnimated)
 	{
 		// draw ribbons

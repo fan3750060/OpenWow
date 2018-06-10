@@ -18,7 +18,8 @@ struct ADT_MDDF
 class ADT_MDX_Instance : public SceneNode
 {
 public:
-	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, ADT_MDDF _placementInfo);
+	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo);
+	~ADT_MDX_Instance();
 
     M2* GetMDX() { return m_Object; }
 
@@ -30,8 +31,8 @@ public:
 	void Render3D()override;
 
 public: 
-	SmartM2Ptr	m_Object;
-	uint32		m_UniqueId;
+	const SmartM2Ptr	m_Object;
+	uint32				m_UniqueId;
 
 public:	// Static
 	static void reset();

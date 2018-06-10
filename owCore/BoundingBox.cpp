@@ -11,8 +11,8 @@ void BoundingBox::set(cvec3 _min, cvec3 _max, bool _needConvert)
 	// Fix bounding box
 	if (_needConvert)
 	{
-		Min.toXZmY();
-		Max.toXZmY();
+		Min = Min.toXZmY();
+		Max = Max.toXZmY();
 		std::swap(Min.z, Max.z);
 	}
 

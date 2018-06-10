@@ -31,7 +31,7 @@ DayNightPhase::DayNightPhase(IFile* f)
     f->ReadBytes(&dayDir.y, 4);
     f->SeekRelative(4);
     f->ReadBytes(&dayDir.z, 4);
-    dayDir.toXZmY();
+	dayDir = dayDir.toXZmY();
     
 
     //
@@ -52,7 +52,7 @@ DayNightPhase::DayNightPhase(IFile* f)
     f->ReadBytes(&nightDir.y, 4);
     f->SeekRelative(4);
     f->ReadBytes(&nightDir.z, 4);
-	nightDir.toXZmY();
+	nightDir = nightDir.toXZmY();
 
     //
 

@@ -12,7 +12,6 @@ class Pipeline
 
 	void SetCamera(Camera* _camera);
 	void SetCameraFrustum(Camera* _camera);
-//	void SetCamera(const vec3& _position, const vec3& _rotation, const vec3& _up = vec3(0.0f, 1.0f, 0.0f));
 	
 	//
 
@@ -48,10 +47,6 @@ class Pipeline
 	{
 		return &worldTransformation;
 	}
-	inline PipelineWorldTransformation* GetWorldTransformationTest()
-	{
-		return &worldTransformationTest;
-	}
 
 	//
 
@@ -60,7 +55,6 @@ class Pipeline
 
 private: // Matrices
 	PipelineWorldTransformation worldTransformation;
-	PipelineWorldTransformation worldTransformationTest;
 
 	Camera* camera;
 	Camera* cameraFrustum;
@@ -79,7 +73,6 @@ private:
 #define _PipelineGlobal Pipeline::instance()
 
 #define _Pipeline Pipeline::instance()->GetWorldTransformation()
-#define _PipelineTest Pipeline::instance()->GetWorldTransformationTest()
 
 #define _Camera  Pipeline::instance()->GetCamera()
 #define _CameraFrustum   Pipeline::instance()->GetCameraFrustum()

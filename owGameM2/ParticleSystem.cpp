@@ -145,7 +145,7 @@ void ParticleSystem::update(float dt, uint32 _globalTime)
 			float spr = spread.getValue(manim, mtime, _globalTime);
 			float spr2 = lat.getValue(manim, mtime, _globalTime);
 			bool en = true;
-			if (enabled.uses())
+			if (enabled.uses(0/*FIXME*/))
 				en = enabled.getValue(manim, mtime, _globalTime) != 0;
 
 			//rem = 0;

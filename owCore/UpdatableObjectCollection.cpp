@@ -24,7 +24,7 @@ void CUpdatableObjectCollection::Update(double _time, double _dTime)
 {
 	PERF_START(PERF_PHASE_INPUT);
 	GetBaseManager()->SetPhase(Phase_Input);
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
 		it->Input(_time, _dTime);
 	}
@@ -34,7 +34,7 @@ void CUpdatableObjectCollection::Update(double _time, double _dTime)
 
 	PERF_START(PERF_PHASE_UPDATE);
 	GetBaseManager()->SetPhase(Phase_Update);
-	for (auto it : m_Objects)
+	for (auto& it : m_Objects)
 	{
 		it->Update(_time, _dTime);
 	}

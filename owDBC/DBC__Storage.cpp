@@ -17,6 +17,7 @@ DBC_LOAD(DBC_LightSkybox, "LightSkybox.dbc")
 DBC_LOAD(DBC_LiquidType, "LiquidType.dbc")
 DBC_LOAD(DBC_LoadingScreen, "LoadingScreens.dbc")
 DBC_LOAD(DBC_Map, "Map.dbc")
+DBC_LOAD(DBC_TerrainType, "TerrainType.dbc")
 DBC_LOAD(DBC_WMOAreaTable, "WMOAreaTable.dbc")
 
 
@@ -34,6 +35,7 @@ void OpenDBs()
     DBC_LiquidType.Open();
     DBC_LoadingScreen.Open();
     DBC_Map.Open();
+	DBC_TerrainType.Open();
     DBC_WMOAreaTable.Open();
 }
 

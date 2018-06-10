@@ -43,6 +43,7 @@ protected:
 
 	SmartGeomPtr				__geom;
 	uint32						m_VerticesCnt;
+	uint32						m_IndCnt;
 
 	vector<SmartTexturePtr>		textures;
 

@@ -91,7 +91,7 @@ void main(void)
 		gl_Position = gProjection * gView * gWorld * newVertex;
 	//}
 	
-	VSout.position = (gWorld * newVertex).xyz;
+	VSout.position = (gWorld * vec4(newVertex.xyz, 1.0f)).xyz;
 	VSout.normal = (gWorld * vec4(normal, 0.0)).xyz;
 	
 	if (gTextureAnimEnable > 0)

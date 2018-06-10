@@ -20,20 +20,23 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
 		m_Rotate = vec3(rotate.z, rotate.y, rotate.x);
-		// Bounds
-		m_Bounds.Min = _wmoObject->m_Header.bounding_box.min.toXZY();
-		m_Bounds.Max = _wmoObject->m_Header.bounding_box.max.toXZY();
-		m_Bounds.calculateInternal();	
 		//
 		CalculateMatrix();
 		//
-		m_Bounds.transform(m_AbsTransform);
+		m_Bounds.Min = _placementInfo.boundingBox.min; // Don't use from WMO model!!!
+		m_Bounds.Max = _placementInfo.boundingBox.max;
+		m_Bounds.calculateInternal();
 	}
 
 	_wmoObject->CreateInsances(this);
 
-	SetDrawOrder(21);
-	Load();
+	SetDrawOrder(20);
+	_Bindings->RegisterUpdatableObject(this);
+}
+
+ADT_WMO_Instance::~ADT_WMO_Instance()
+{
+	_Bindings->UnregisterUpdatableObject(this);
 }
 
 void ADT_WMO_Instance::Update(double _time, double _dTime)
@@ -43,23 +46,27 @@ void ADT_WMO_Instance::Update(double _time, double _dTime)
 
 void ADT_WMO_Instance::PreRender3D()
 {
-	/*if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
 		SetVisible(false);
 		return;
 	}
-	m_AlreadyDraw.insert(m_UniqueId);*/
+	m_AlreadyDraw.insert(m_UniqueId);
+
 	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void ADT_WMO_Instance::Render3D()
 {
+	//_Render->DrawBoundingBox(m_Bounds);
+
 	_Pipeline->Clear();
 	{
-		_Pipeline->SetWorld(m_AbsTransform);
+		_Pipeline->SetWorld(getAbsTrans());
 		m_Object->Render(m_DoodadSetIndex);
 		PERF_INC(PERF_MAP_MODELS_WMOs);
 	}
+	_Pipeline->Clear();
 }
 
 //

@@ -208,21 +208,9 @@ public:
 		return Vec3f(x, z, y);
 	}
 
-	Vec3f& toXZY()
-	{
-		Vec3f v = Vec3f(x, z, y);
-		return *this = v;
-	}
-
 	Vec3f toXZmY() const
 	{
 		return Vec3f(x, z, -y);
-	}
-
-	Vec3f& toXZmY()
-	{
-		Vec3f v = Vec3f(x, z, -y);
-		return *this = v;
 	}
 
 	//
