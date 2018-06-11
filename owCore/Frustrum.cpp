@@ -141,7 +141,7 @@ bool Frustum::cullBox(BoundingBox& b) const
 	// Idea for optimized AABB testing from www.lighthouse3d.com
 	for (uint32 i = 0; i < 6; ++i)
 	{
-		const Vec3f &n = _planes[i].normal;
+		cvec3 n = _planes[i].normal;
 
 		Vec3f positive = b.Min;
 		if (n.x <= 0) positive.x = b.Max.x;

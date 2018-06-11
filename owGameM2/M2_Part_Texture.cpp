@@ -9,12 +9,7 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_TextureReplaced(nullptr),
 	m_TexturesUseSpecialTexture(false)
 {
-	string textureFileName = "";
-	const char* FileName = (const char*)(f->GetData() + _proto.filename.offset);
-	for (uint32 i = 0; i < _proto.filename.size; i++)
-	{
-		textureFileName += FileName[i];
-	}
+	string textureFileName = (const char*)(f->GetData() + _proto.filename.offset);
 
 	if (_proto.type == 0) // Common texture
 	{
@@ -22,8 +17,9 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	}
 	else // special texture - only on characters and such...
 	{
-		Log::Green("Normal texture is [%s]", textureFileName);
-		m_Texture = _Render->TexturesMgr()->Add(f->Path() + "RagnarosSkin.blp");
+		m_Texture = _Render->TexturesMgr()->DefaultTexture();
+		//Log::Green("Normal texture is [%s]", textureFileName);
+		//m_Texture = _Render->TexturesMgr()->Add(f->Path() + "RagnarosSkin.blp");
 		/*m_SpecialTexture = _proto.type;
 
 		if (_proto.type < TEXTURE_MAX)

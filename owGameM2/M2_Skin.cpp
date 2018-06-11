@@ -18,22 +18,6 @@ CM2_Skin::~CM2_Skin()
 
 void CM2_Skin::Draw()
 {
-
-
-    _Render->TechniquesMgr()->m_Model->SetAnimated(m_MDX->m_HasBones && m_MDX->m_IsAnimated);
-    if (m_MDX->m_HasBones && m_MDX->m_IsAnimated)
-    {
-        //_Render->TechniquesMgr()->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
-        //_Render->TechniquesMgr()->m_Model->SetBoneMaxCount(p->boneInfluences);
-
-        vector<mat4> bones;
-        for (uint32 i = 0; i < m_MDX->m_Header.bones.size; i++)
-        {
-            bones.push_back(m_MDX->m_Bones[i].getTransformMatrix());
-        }
-        _Render->TechniquesMgr()->m_Model->SetBones(bones);
-    }
-
 	_Render->r.setGeometry(__geom);
 
 	for (auto p : m_Batches)
@@ -42,6 +26,7 @@ void CM2_Skin::Draw()
 		{
 			p->__material.Set();
 
+		
 			// Color
 			if (p->__colorIndex != -1)
 			{
@@ -59,7 +44,7 @@ void CM2_Skin::Draw()
 			_Render->TechniquesMgr()->m_Model->SetTextureWeight(m_MDX->m_TextureWeights[p->__textureWeight].getValue());
 
 			// Billboard
-			_Render->TechniquesMgr()->m_Model->SetBillboard(m_MDX->m_IsBillboard);
+			_Render->TechniquesMgr()->m_Model->SetBillboard(p->m_IsBilldoard);
 
 			// R_Texture anim
 			_Render->TechniquesMgr()->m_Model->SetTextureAnimEnable(p->__textureAnims != -1);

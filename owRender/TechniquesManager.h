@@ -4,18 +4,26 @@
 #include "Debug_Normals.h"
 
 #include "Sky_GeometryPass.h"
-#include "MapTileLowRes_GeometryPass.h"
-#include "MapChunk_GeometryPass.h"
 #include "WMO_GeomertyPass.h"
-#include "Water_Pass.h"
-#include "RibbonEmitters.h"
-#include "Model_Shader.h"
 
-// After
-#include "PostProcess_Common.h"
-#include "POST_DirectionalLight.h"
-#include "POST_Fog.h"
-#include "POST_Simple.h"
+
+
+// Map
+#include "MCNK_Pass.h"
+#include "WDL_LowRes_Pass.h"
+
+// M2
+#include "M2_Pass.h"
+#include "M2_RibbonEmitters_Pass.h"
+
+// Liquids
+#include "Magma_Pass.h"
+#include "Water_Pass.h"
+
+// Postprocess
+#include "Postprocess_Fog.h"
+#include "Postprocess_Light_Direction.h"
+#include "Postprocess_Simple.h"
 
 // UI
 #include "UI_Color.h"
@@ -33,12 +41,13 @@ public:
     Debug_Normals* m_Debug_Normals;
 
 	Sky_GeometryPass* m_Sky_GeometryPass;
-	MapChunk_GeometryPass* m_MapChunk_GeometryPass;
-	MapTileLowRes_GeometryPass* m_MapTileLowRes_GeometryPass;
+	MCNK_Pass* m_MapChunk_GeometryPass;
+	WDL_LowRes_Pass* m_MapTileLowRes_GeometryPass;
 	WMO_GeomertyPass* m_WMO_GeometryPass;
+	Magma_Pass* m_Magma;
 	Water_Pass* m_Water;
-	Model_Shader* m_Model;
-	RibbonEmitters_Pass* m_Ribbons;
+	M2_Pass* m_Model;
+	M2_RibbonEmitters_Pass* m_Ribbons;
 
 	// Lights
 

@@ -26,7 +26,7 @@ public:
 	Vec3f(const float x, const float y, const float z) : x(x), y(y), z(z)
 	{}
 
-	Vec3f(const Vec3f &v) : x(v.x), y(v.y), z(v.z)
+	Vec3f(cvec3 v) : x(v.x), y(v.y), z(v.z)
 	{}
 
 	// ------
@@ -45,14 +45,14 @@ public:
 	// -----------
 	// Comparisons
 	// -----------
-	bool operator==(const Vec3f &v) const
+	bool operator==(cvec3 v) const
 	{
 		return (x > v.x - Math::Epsilon && x < v.x + Math::Epsilon &&
 			y > v.y - Math::Epsilon && y < v.y + Math::Epsilon &&
 			z > v.z - Math::Epsilon && z < v.z + Math::Epsilon);
 	}
 
-	bool operator!=(const Vec3f &v) const
+	bool operator!=(cvec3 v) const
 	{
 		return (x < v.x - Math::Epsilon || x > v.x + Math::Epsilon ||
 			y < v.y - Math::Epsilon || y > v.y + Math::Epsilon ||
@@ -69,42 +69,42 @@ public:
 
 	// Vector
 
-	Vec3f operator+(const Vec3f &v) const
+	Vec3f operator+(cvec3 v) const
 	{
 		return Vec3f(x + v.x, y + v.y, z + v.z);
 	}
 
-	Vec3f &operator+=(const Vec3f &v)
+	Vec3f &operator+=(cvec3 v)
 	{
 		return *this = *this + v;
 	}
 
-	Vec3f operator-(const Vec3f &v) const
+	Vec3f operator-(cvec3 v) const
 	{
 		return Vec3f(x - v.x, y - v.y, z - v.z);
 	}
 
-	Vec3f &operator-=(const Vec3f &v)
+	Vec3f &operator-=(cvec3 v)
 	{
 		return *this = *this - v;
 	}
 
-	Vec3f operator*(const Vec3f &v) const
+	Vec3f operator*(cvec3 v) const
 	{
 		return Vec3f(x * v.x, y * v.y, z / v.z);
 	}
 
-	Vec3f &operator*=(const Vec3f &v)
+	Vec3f &operator*=(cvec3 v)
 	{
 		return *this = *this * v;
 	}
 
-	Vec3f operator/(const Vec3f &v) const
+	Vec3f operator/(cvec3 v) const
 	{
 		return Vec3f(x / v.x, y / v.y, z / v.z);
 	}
 
-	Vec3f& operator/=(const Vec3f &v)
+	Vec3f& operator/=(cvec3 v)
 	{
 		return *this = *this / v;
 	}
@@ -134,12 +134,12 @@ public:
 	// ----------------
 	// Special products
 	// ----------------
-	float dot(const Vec3f &v) const
+	float dot(cvec3 v) const
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
 
-	Vec3f cross(const Vec3f &v) const
+	Vec3f cross(cvec3 v) const
 	{
 		return Vec3f(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
 	}
@@ -185,7 +185,7 @@ public:
 		return v;
 	}
 
-	Vec3f lerp(const Vec3f &v, float f) const
+	Vec3f lerp(cvec3 v, float f) const
 	{
 		return Vec3f(x + (v.x - x) * f, y + (v.y - y) * f, z + (v.z - z) * f);
 	}

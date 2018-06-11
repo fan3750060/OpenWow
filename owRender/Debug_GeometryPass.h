@@ -5,10 +5,13 @@
 class Debug_GeometryPass : public Technique
 {
 public:
-	Debug_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Debug/Debug")
+	Debug_GeometryPass(RenderDevice* _RenderDevice) : 
+		Technique(_RenderDevice, "shaders/Debug/Debug")
     {
         gColor = getLocation("gColor");
     }
+
+	//
 
 	inline void SetColor4(cvec4 _color)
 	{

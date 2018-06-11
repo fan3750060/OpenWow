@@ -31,6 +31,26 @@ struct ADT_MCNK_Header
 		uint32 : 15;
 	} flags;
 
+	DBC_LIQUIDTYPE_Type getLiquidType()
+	{
+		if (flags.lq_river)
+		{
+			return DBC_LIQUIDTYPE_Type::lq_river;
+		}
+		else if (flags.lq_ocean)
+		{
+			return  DBC_LIQUIDTYPE_Type::lq_ocean;
+		}
+		else if (flags.lq_magma)
+		{
+			return DBC_LIQUIDTYPE_Type::lq_magma;
+		}
+		else if (flags.lq_slime)
+		{
+			return DBC_LIQUIDTYPE_Type::lq_slime;
+		}
+	}
+
 	uint32 indexX;
 	uint32 indexY;
 

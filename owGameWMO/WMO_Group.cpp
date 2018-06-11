@@ -148,21 +148,11 @@ void WMO_Group::Load()
 		{
 			m_F->ReadBytes(&m_LiquidHeader, sizeof(WMO_Group_MLIQDef));
 
-			enum liquid_basic_types
-			{
-				liquid_basic_types_water = 0,
-				liquid_basic_types_ocean = 1,
-				liquid_basic_types_magma = 2,
-				liquid_basic_types_slime = 3,
-
-				liquid_basic_types_MASK = 3,
-			};
-
 			if (m_Header.liquidType > 0)
 			{
-				//Log::Green("WMO[%s]: Contain liquid! [%s]", m_ParentWMO->m_FileName.c_str(), DBC_LiquidType[m_Header.liquidType & 3]->Get_Name());
-				//Log::Green("WMO[%s]: LiquidType CHUNK = [%d], WMO = [%d]", m_ParentWMO->m_FileName.c_str(), m_LiquidHeader.type, m_Header.liquidType);
+				Log::Green("WMO[%s]: LiquidType CHUNK = [%d]", m_ParentWMO->m_FileName.c_str(), m_LiquidHeader.type);
 
+				assert1(m_Header.liquidType == 15);
 				m_WMOLiqiud = new CWMO_Liquid(m_LiquidHeader.A, m_LiquidHeader.B);
 				m_WMOLiqiud->CreateFromWMO(m_F, m_ParentWMO->m_Materials[m_LiquidHeader.type], DBC_LiquidType[m_Header.liquidType & 3], m_Header.flags.FLAG_IS_INDOOR);
 			}
@@ -232,7 +222,7 @@ void WMO_Group::Load()
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 8 * sizeof(float), 0);
 
 	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices, false);
 	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 
 	// Finish
@@ -240,10 +230,7 @@ void WMO_Group::Load()
 
 	//
 
-	if (m_Header.flags.FLAG_HAS_VERTEX_COLORS)
-	{
-		delete[] vertexColors;
-	}
+	delete[] vertexColors;
 }
 
 void WMO_Group::initLighting()

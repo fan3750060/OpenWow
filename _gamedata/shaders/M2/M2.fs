@@ -1,15 +1,13 @@
 #version 330
 #include "../lib/fragDeferredWrite.glsl"
 
-struct VSOutput
+// Input
+in struct VSOutput
 {
 	vec3 position;
 	vec3 normal;
 	vec2 tc;
-};
-
-// Input
-in VSOutput VSout;
+} VSout;
 
 // Colors
 uniform vec4 gColor;

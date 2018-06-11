@@ -2,9 +2,10 @@
 
 #include "technique.h"
 
-class MapChunk_GeometryPass : public Technique {
+class MCNK_Pass : public Technique 
+{
 public:
-	MapChunk_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/MapChunk.vs", "shaders/MapChunk.fs")
+	MCNK_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Map/MapChunk.vs", "shaders/Map/MapChunk.fs")
     {
         for (uint8 i = 0; i < 4; i++)
         {
@@ -19,7 +20,7 @@ public:
         gShadowColor = getLocation("gShadowColor");
     }
 
-	// ---------------------------------------------------
+	//--
 
 	void SetLayersCount(int _layersCount)
 	{
@@ -30,27 +31,21 @@ public:
 	{
 		setTexture(gColorMap[_number], TextureUnit);
 	}
-
     void SetSpecularTextureUnit(int _number, int TextureUnit)
     {
         setTexture(gSpecularMap[_number], TextureUnit);
     }
-
-	// ----------------------------------------------------
 
 	void SetBlendBuffer(int TextureUnit)
 	{
 		setTexture(gBlend, TextureUnit);
 	}
 
-	// ----------------------------------------------------
-
 
 	void SetShadowMapExists(bool _exists)
 	{
 		setInt(gShadowMapExists, _exists);
 	}
-
 	void SetShadowColor(vec3 _shadowColor)
 	{
 		setVec3(gShadowColor, _shadowColor);

@@ -72,10 +72,29 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 		uint16 m2SkinIndex = it.m2SkinIndex;
 
+
+		
+
 		batch->m2SkinIndex = m2SkinIndex;
 
 		// Geometry data
 		batch->m_SkinSection = skins[m2SkinIndex];
+
+
+		const CM2_Part_Bone& bone = m_MDX->getBone(batch->m_SkinSection.bonesStartIndex + batch->m_SkinSection.centerBoneIndex);
+		batch->m_IsBilldoard = bone.IsBillboard();
+
+		/*for (uint32 i = 0; i < batch->m_SkinSection.boneCount; i++)
+		{
+			const CM2_Part_Bone& bone = m_MDX->getBone(batch->m_SkinSection.bonesStartIndex + i);
+			if (bone.IsBillboard())
+			{
+				Log::Warn("Bone [%s] [%d] is billbord!!!", m_MDX->GetFileName().c_str(), batch->m_SkinSection.bonesStartIndex + i, bone.IsBillboard());
+				batch->m_IsBilldoard = true;
+				break;
+			}
+		}*/
+
 
 		// Get classes
 		SM2_Material& rf = m_MDX->m_Materials[it.materialIndex];

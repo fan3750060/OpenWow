@@ -3,8 +3,6 @@
 #include "Camera.h"
 #include "RenderDevice.h"
 
-class GLFWBackend;
-
 class TexturesManager;
 class FontsManager;
 class TechniquesManager;
@@ -33,9 +31,8 @@ struct RenderTarget
 	}
 };
 
-class RenderGL
+class RenderGL : public IRender
 {
-	friend GLFWBackend;
 	CLASS_INSTANCE(RenderGL);
 public:
 	RenderGL();
@@ -48,29 +45,54 @@ public:
 	inline FontsManager* FontsMgr() { return m_FontsManager; }
 	inline TechniquesManager* TechniquesMgr() { return m_TechniquesManager; }
 	
-	void Set3D();
-	void Set2D();
+	//------------------
+	// Main part
+	//------------------
 
-	void RenderImage(vec2 _pos, Image* _image);
-	void RenderImage(vec2 _pos, Image* _image, vec2 _size);
+	void Set2D() override;
+	void Set3D() override;
+	
+	//------------------
+	// 3D Part
+	//------------------
 
-    void RenderTexture(vec2 _pos, R_Texture* _texture);
-    void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size);
+	void BindRBs() override;
+	void UnbindRBs() override;
+	void PostprocessSimple() override;
 
-	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN);
-	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN);
+	//------------------
+	// GUI Part
+	//------------------
+
+	void RenderImage(vec2 _pos, Image* _image) override;
+	void RenderImage(vec2 _pos, Image* _image, vec2 _size) override;
+
+    void RenderTexture(vec2 _pos, R_Texture* _texture) override;
+    void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size) override;
+
+	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
+	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
 
 	void RenderText(vec2 _pos, cstring _string, const Color& _color = COLOR_WHITE) const;
 	void RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color = COLOR_WHITE) const;
 	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color = COLOR_WHITE) const;
 	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color = COLOR_WHITE) const;
 
+
 	void RenderQuad();
     void RenderQuadVT();
 
+	void DrawCube(vec3 _pos);
     void DrawBoundingBox(BoundingBox& _box);
 
 	void DrawPerfomance(vec2 _startPoint);
+
+	//------------------
+	// Getters
+	//------------------
+	cmat4 getOrthoMatrix() const { return m_OrhoMatrix; }
+
+
 
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);

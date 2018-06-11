@@ -2,10 +2,10 @@
 
 #include "Technique.h"
 
-class PostProcess_Common : public Technique
+class PostprocessBase : public Technique
 {
 public:
-    PostProcess_Common(RenderDevice* _RenderDevice, cstring _fsName) : Technique(_RenderDevice, "shaders/Common_SimpleVertex.vs", _fsName)
+    PostprocessBase(RenderDevice* _RenderDevice, cstring _fsName) : Technique(_RenderDevice, "shaders/Postprocess/Postprocess_VS.vs", _fsName)
     { 
         gScreenSize     = getLocation("gScreenSize");
         gCameraPosition = getLocation("gCameraPosition");

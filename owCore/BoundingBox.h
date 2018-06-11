@@ -5,9 +5,11 @@
 
 struct BoundingBox
 {
+	BoundingBox();
+
 	void set(cvec3 _min, cvec3 _max, bool _needConvert = false);
 	void calculate(const vec3* _verts, uint32 _count, bool _needConvert = false);
-	void calculateInternal();
+	void calculateCenter();
 	void clear();
 
 	//

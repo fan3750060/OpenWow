@@ -11,23 +11,7 @@ void CADT_Liquid::CreateFromMCLQ(IFile* f, ADT_MCNK_Header header)
 {
 	ydir = 1.0f;
 
-	initGeometry(f);
-
-	if (header.flags.lq_river)
-	{
-		InitTextures(DBC_LIQUIDTYPE_Type::lq_river);
-	}
-	else if (header.flags.lq_ocean)
-	{
-		InitTextures(DBC_LIQUIDTYPE_Type::lq_ocean);
-	}
-	else if (header.flags.lq_magma)
-	{
-		InitTextures(DBC_LIQUIDTYPE_Type::lq_magma);
-	}
-	else if (header.flags.lq_slime)
-	{
-		InitTextures(DBC_LIQUIDTYPE_Type::lq_slime);
-	}
+	initGeometry(header.getLiquidType(), f);
+	InitTextures(header.getLiquidType());
 
 }

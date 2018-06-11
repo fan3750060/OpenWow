@@ -49,7 +49,7 @@ bool ADT_MCNK::Load()
 		// Bounds
 		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
 		m_Bounds.Max = vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize);
-		m_Bounds.calculateInternal();
+		m_Bounds.calculateCenter();
 		// CalculateMatrix(); DO NOT CALCULATE MATRIX!!!!
 	}
 
@@ -103,7 +103,7 @@ bool ADT_MCNK::Load()
 				m_Bounds.Max.y = maxf(v.y, m_Bounds.Max.y);
 			}
 
-			m_Bounds.calculateInternal();
+			m_Bounds.calculateCenter();
 		}
 	}
 
@@ -213,11 +213,11 @@ bool ADT_MCNK::Load()
 	// Index Buffer DefaultResolution
 	vector<uint16>& mapArrayDefault = Map_Shared::GenarateDefaultMapArray(header.holes);
 	m_IndexesCountDefault = mapArrayDefault.size();
-	__ibDefault = _Render->r.createIndexBuffer(m_IndexesCountDefault * sizeof(uint16), mapArrayDefault.data());
+	__ibDefault = _Render->r.createIndexBuffer(m_IndexesCountDefault * sizeof(uint16), mapArrayDefault.data(), false);
 
 	vector<uint16>& mapArrayLowResolution = Map_Shared::GenarateLowResMapArray(header.holes);
 	m_IndexesCountLowResolution = mapArrayLowResolution.size();
-	__ibLowResolution = _Render->r.createIndexBuffer(m_IndexesCountLowResolution * sizeof(uint16), mapArrayLowResolution.data());
+	__ibLowResolution = _Render->r.createIndexBuffer(m_IndexesCountLowResolution * sizeof(uint16), mapArrayLowResolution.data(), false);
 
 	// Geom
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
@@ -286,6 +286,10 @@ void ADT_MCNK::Render3D()
 	{
 		_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 		//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+		_Render->r.setDepthTest(true);
+		_Render->r.setDepthMask(true);
+		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+
 		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
 		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
 		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);

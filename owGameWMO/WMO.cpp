@@ -336,10 +336,11 @@ bool WMO::drawSkybox()
 
 //
 
+/*
 void WMO::DEBUG_DrawLightPlaceHolders()
 {
 	//glDisable(GL_CULL_FACE);
-	/*glColor4f(1, 1, 1, 1);
+	glColor4f(1, 1, 1, 1);
 
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < m_Lights.size(); i++)
@@ -350,7 +351,7 @@ void WMO::DEBUG_DrawLightPlaceHolders()
 		glVertex3fv(m_Lights[i]->lightDef.pos + vec3(-0.5f, 1, 0));
 		glVertex3fv(m_Lights[i]->lightDef.pos + vec3(0.5f, 1, 0));
 	}
-	glEnd();*/
+	glEnd();
 
 	//glEnable(GL_CULL_FACE);
 }
@@ -359,7 +360,7 @@ void WMO::DEBUG_DrawFogPositions()
 {
 	//glDisable(GL_TEXTURE_2D);
 
-	/*glColor4f(1, 1, 1, 1);
+	glColor4f(1, 1, 1, 1);
 
 	for (uint32_t i = 0; i < m_Fogs.size(); i++)
 	{
@@ -374,45 +375,9 @@ void WMO::DEBUG_DrawFogPositions()
 		glEnd();
 	}
 
-	glColor4f(1, 1, 1, 1);*/
+	glColor4f(1, 1, 1, 1);
 
 	//glEnable(GL_TEXTURE_2D);
-}
-
-void WMO::DEBUG_DrawMainBoundingBox()
-{
-	/*_Render->r.setGeometry(_Render->Storage()->_cubeGeo);
-
-	_Pipeline->Push(); // Save world matrix
-	{
-		_Pipeline->Translate(m_Bounds.Min);
-		_Pipeline->Scale(m_Bounds.Max - m_Bounds.Min);
-
-		_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	}
-	_Pipeline->Pop();
-
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
-
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);*/
-}
-
-void WMO::DEBUG_DrawMainBoundingSphere()
-{
-	/*_Render->r.setGeometry(_Render->Storage()->_sphereGeo);
-
-	_Pipeline->Push(); // Save world matrix
-	{
-		//_Pipeline->Translate(m_Bounds.Center);
-		_Pipeline->Scale(m_Bounds.Radius);
-
-		_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	}
-	_Pipeline->Pop();
-
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 1.0f, 0.7f));
-
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);*/
 }
 
 void WMO::DEBUG_DrawBoundingBoxes()
@@ -445,7 +410,7 @@ void WMO::DEBUG_DrawPortalsRelations()
 {
 	for (uint32_t i = 0; i < m_Header.nPortals; i++)
 	{
-		/*WMO_PortalDef* portalInformation = m_PortalInformation[i];
+		WMO_PortalDef* portalInformation = m_PortalInformation[i];
 		WMO_PortalReferencesDef* portalReference = m_PortalReferences[i];
 		vec3 pv = m_PortalVertices[portalReference->portalIndex];
 
@@ -487,7 +452,7 @@ void WMO::DEBUG_DrawPortalsRelations()
 		glDisableVertexAttribArray(0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glDeleteBuffers(1, &buffer);*/
+		glDeleteBuffers(1, &buffer);
 	}
 }
 
@@ -497,7 +462,7 @@ void WMO::DEBUG_DrawPortals()
 
 	for (uint32 i = 0; i < m_Header.nPortals; i++)
 	{
-		/*WMO_PortalDef* portalInformation = m_PortalInformation[i];
+		WMO_PortalDef* portalInformation = m_PortalInformation[i];
 
 		vector<vec3> verts;
 		for (uint32 j = portalInformation->startVertex; j < portalInformation->count; j++)
@@ -518,6 +483,7 @@ void WMO::DEBUG_DrawPortals()
 		glDisableVertexAttribArray(0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glDeleteBuffers(1, &buffer);*/
+		glDeleteBuffers(1, &buffer);
 	}
 }
+*/

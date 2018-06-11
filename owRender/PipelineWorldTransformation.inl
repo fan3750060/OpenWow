@@ -13,18 +13,6 @@ inline void PipelineWorldTransformation::Translate(cvec3 _translate)
 
 // Set Rotation
 
-inline void PipelineWorldTransformation::RotateX(float _yaw)
-{
-	worldTransformation.rotate(_yaw, 0.0f, 0.0f);
-}
-inline void PipelineWorldTransformation::RotateY(float _pitch)
-{
-	worldTransformation.rotate(0.0f, _pitch, 0.0f);
-}
-inline void PipelineWorldTransformation::RotateZ(float _roll)
-{
-	worldTransformation.rotate(0.0f, 0.0f, _roll);
-}
 inline void PipelineWorldTransformation::Rotate(float _yaw, float _pitch, float _roll)
 {
 	worldTransformation.rotate(_yaw, _pitch, _roll);

@@ -10,12 +10,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineWorldTransformation.cpp">
-      <Filter>Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGL.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Render.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -70,6 +64,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGL.cpp">
+      <Filter>RenderCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Font.h">
@@ -83,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="PipelineWorldTransformation.h">
       <Filter>Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGL.h">
-      <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Render</Filter>
@@ -126,22 +120,7 @@
     <ClInclude Include="UI_Texture.h">
       <Filter>Techniques\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Debug_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug_Normals.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="MapChunk_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="MapTileLowRes_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="Sky_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Water_Pass.h">
       <Filter>Techniques\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="WMO_GeomertyPass.h">
@@ -150,26 +129,11 @@
     <ClInclude Include="lights_common.h">
       <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
-    <ClInclude Include="POST_DirectionalLight.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="POST_Fog.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="POST_Simple.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="PostProcess_Common.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
     <ClInclude Include="FontsManager.h">
       <Filter>Fonts</Filter>
     </ClInclude>
     <ClInclude Include="TexturesManager.h">
       <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="Model_Shader.h">
-      <Filter>Techniques\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="R_Texture.h">
       <Filter>RenderCore\Types</Filter>
@@ -189,9 +153,6 @@
     <ClInclude Include="R_TextureBuffer.h">
       <Filter>RenderCore\Types</Filter>
     </ClInclude>
-    <ClInclude Include="RibbonEmitters.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="RenderEnums.h">
       <Filter>RenderCore</Filter>
     </ClInclude>
@@ -203,6 +164,45 @@
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
+      <Filter>RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="PostprocessBase.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="Postprocess_Fog.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="Postprocess_Simple.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="Postprocess_Light_Direction.h">
+      <Filter>Techniques\Postprocess</Filter>
+    </ClInclude>
+    <ClInclude Include="Water_Pass.h">
+      <Filter>Techniques\Liquids</Filter>
+    </ClInclude>
+    <ClInclude Include="Magma_Pass.h">
+      <Filter>Techniques\Liquids</Filter>
+    </ClInclude>
+    <ClInclude Include="MCNK_Pass.h">
+      <Filter>Techniques\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_LowRes_Pass.h">
+      <Filter>Techniques\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Pass.h">
+      <Filter>Techniques\M2</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_RibbonEmitters_Pass.h">
+      <Filter>Techniques\M2</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug_GeometryPass.h">
+      <Filter>Techniques\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug_Normals.h">
+      <Filter>Techniques\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +238,18 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{98fc8d94-3730-4821-bb53-d891aea80641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Liquids">
+      <UniqueIdentifier>{98406a52-e89c-4acd-97cb-580954c282d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Map">
+      <UniqueIdentifier>{add435f6-64e8-488f-b0d7-e5bafb68b5f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\M2">
+      <UniqueIdentifier>{5a8eed42-bef1-4e78-b38e-6f88dcce51d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Debug">
+      <UniqueIdentifier>{48b15e8a-0515-4677-822b-6d93de4e6cc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

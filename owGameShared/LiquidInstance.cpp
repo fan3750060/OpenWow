@@ -16,11 +16,11 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 		//
 		m_Bounds.Min = -vec3(25, 25, 25); // Don't use from WMO model!!!
 		m_Bounds.Max = vec3(25, 25, 25);
-		m_Bounds.calculateInternal();
+		m_Bounds.calculateCenter();
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	SetDrawOrder(20);
+	SetDrawOrder(23);
 }
 
 void Liquid_Instance::PreRender3D()

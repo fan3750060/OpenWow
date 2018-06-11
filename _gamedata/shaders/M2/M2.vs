@@ -1,12 +1,5 @@
 #version 330
 
-struct VSOutput
-{
-	vec3 position;
-	vec3 normal;
-	vec2 tc;
-};
-
 // Vertex attrib
 layout(location = 0) in vec3 position;
 layout(location = 1) in uint blendWeight;
@@ -32,7 +25,12 @@ uniform int gTextureAnimEnable;
 uniform mat4 gTextureAnimMatrix;
 
 // Out
-out VSOutput VSout;
+out struct VSOutput
+{
+	vec3 position;
+	vec3 normal;
+	vec2 tc;
+} VSout;
 
 void main(void)
 {
@@ -65,31 +63,39 @@ void main(void)
 		newVertex = vec4(position, 1.0f);
 	}
 		
-	/*if (gBillboard)
+	if (gBillboard)
 	{
 		mat4 VW = gView * gWorld;
 			
 		// Column 0:
-	    VW[0][0] = 1;
+	    VW[0][0] = 0;
 		VW[0][1] = 0;
-		VW[0][2] = 0;
+		VW[0][2] = 1;
 
-		// Column 1:
+		// Column 1: Y
 		VW[1][0] = 0;
-	    VW[1][1] = 1;
+		VW[1][1] = 1;
 		VW[1][2] = 0;
 
 		// Column 2:
-		VW[2][0] = 0;
+		VW[2][0] = 1;
 		VW[2][1] = 0;
-	    VW[2][2] = 1;
+	    VW[2][2] = 0;
 		
-		gl_Position = gProjection * VW * vec4(position, 1.0);
+		/*mat4 bbView = mat4
+		(
+        vec4(-1.0,0.0,0.0,0.0),
+        vec4(0.0,1.0,0.0,0.0),
+        vec4(0.0,0.0,1.0,0.0),
+        gView[3] 
+		);*/
+		
+		gl_Position = gProjection * VW * newVertex;
 	}
-	else*/
-	//{
+	else
+	{
 		gl_Position = gProjection * gView * gWorld * newVertex;
-	//}
+	}
 	
 	VSout.position = (gWorld * vec4(newVertex.xyz, 1.0f)).xyz;
 	VSout.normal = (gWorld * vec4(normal, 0.0)).xyz;

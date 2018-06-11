@@ -306,7 +306,7 @@ public:
 	// ----------------------------
 	// Vector-mat4 multiplication
 	// ----------------------------
-	Vec3f operator*(const Vec3f &v) const
+	Vec3f operator*(cvec3 v) const
 	{
 		return Vec3f(v.x * c[0][0] + v.y * c[1][0] + v.z * c[2][0] + c[3][0],
 			v.x * c[0][1] + v.y * c[1][1] + v.z * c[2][1] + c[3][1],
@@ -321,7 +321,7 @@ public:
 			v.x * c[0][3] + v.y * c[1][3] + v.z * c[2][3] + v.w * c[3][3]);
 	}
 
-	Vec3f mult33Vec(const Vec3f &v) const
+	Vec3f mult33Vec(cvec3 v) const
 	{
 		return Vec3f(v.x * c[0][0] + v.y * c[1][0] + v.z * c[2][0],
 			v.x * c[0][1] + v.y * c[1][1] + v.z * c[2][1],

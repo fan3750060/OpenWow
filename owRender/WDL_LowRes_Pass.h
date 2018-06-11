@@ -2,13 +2,15 @@
 
 #include "technique.h"
 
-class MapTileLowRes_GeometryPass : public Technique
+class WDL_LowRes_Pass : public Technique
 {
 public:
-	MapTileLowRes_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/MapTileLowRes")
+	WDL_LowRes_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Map/MapTileLowRes")
     {
         gColor = getLocation("gColor");
     }
+
+	//--
 
 	void SetShadowColor(vec3 _Color)
 	{

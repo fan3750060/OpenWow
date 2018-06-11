@@ -20,5 +20,8 @@ public:
 
 private:
 	SceneNode* m_RootNode;
+	SceneNode* m_IntersectedNode;
+
+	vector<SceneNode*> m_RenderQueue;
 
 };

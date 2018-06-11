@@ -160,8 +160,8 @@ struct R_RasterState
 		uint32  hash;
 		struct
 		{
-			uint32  fillMode : 1;  // R_FillMode
-			uint32  cullMode : 2;  // R_CullMode
+			uint32  fillMode : 1;				// R_FillMode
+			uint32  cullMode : 2;				// R_CullMode
 			uint32  scissorEnable : 1;
 			uint32  multisampleEnable : 1;
 			uint32  renderTargetWriteMask : 1;

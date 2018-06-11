@@ -50,7 +50,21 @@ void M2::drawModel()
 	_Render->TechniquesMgr()->m_Model->Bind();
 	_Render->TechniquesMgr()->m_Model->SetPVW();
 
-	for (auto it : m_Skins)
+	_Render->TechniquesMgr()->m_Model->SetAnimated(m_HasBones && m_IsAnimated);
+	if (m_HasBones && m_IsAnimated)
+	{
+		//_Render->TechniquesMgr()->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
+		//_Render->TechniquesMgr()->m_Model->SetBoneMaxCount(p->boneInfluences);
+
+		vector<mat4> bones;
+		for (uint32 i = 0; i < m_Header.bones.size; i++)
+		{
+			bones.push_back(m_Bones[i].getTransformMatrix());
+		}
+		_Render->TechniquesMgr()->m_Model->SetBones(bones);
+	}
+
+	for (auto& it : m_Skins)
 	{
 		it->Draw();
 	}
@@ -157,15 +171,12 @@ void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
 		}
 	}
 
-	if (m_HasMisc)
+	for (auto& it : m_TextureWeights)
 	{
-		for (uint32 i = 0; i < m_Header.textureWeights.size; i++)
-		{
-			m_TextureWeights[i].calc(_animationIndex, _time, globalTime);
-		}
+		it.calc(_animationIndex, _time, globalTime);
 	}
 
-	for (auto it : m_Colors)
+	for (auto& it : m_Colors)
 	{
 		it.calc(_animationIndex, _time, globalTime);
 	}

@@ -3,7 +3,9 @@
 // General
 #include "SceneManager.h"
 
-CSceneManager::CSceneManager()
+CSceneManager::CSceneManager() :
+	m_RootNode(nullptr),
+	m_IntersectedNode(nullptr)
 {
 	_Bindings->RegisterRenderable3DObject(this, 15);
 }
@@ -26,7 +28,7 @@ void CSceneManager::RenderRecursy(SceneNode* _node)
 	{
 		return;
 	}
-	_node->Render3D();
+	m_RenderQueue.push_back(_node);
 
 	// Some checks
 	if (_node->getChilds().empty())
@@ -49,9 +51,17 @@ void CSceneManager::PreRender3D()
 
 void CSceneManager::Render3D()
 {
+	m_RenderQueue.clear();
+
 	if (m_RootNode != nullptr)
 	{
 		RenderRecursy(m_RootNode);
+	}
+
+	std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), Renderable3DObjectCompare());
+	for (auto& it : m_RenderQueue)
+	{
+		it->Render3D();
 	}
 }
 

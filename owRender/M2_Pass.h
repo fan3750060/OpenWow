@@ -2,7 +2,7 @@
 
 #include "technique.h"
 
-class Model_Shader : public Technique
+class M2_Pass : public Technique
 {
     int32 gBones;
     int32  gColor;
@@ -16,7 +16,7 @@ class Model_Shader : public Technique
     int32  gTextureAnimMatrix;
 
 public:
-	Model_Shader(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Models/Model")
+	M2_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/M2/M2")
     {
         gBones = getLocation("gBones");
         gColor = getLocation("gColor");

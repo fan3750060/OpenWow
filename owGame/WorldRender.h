@@ -16,10 +16,9 @@ public:
 	void Render3D() override;
 	void PostRender3D() override;
 
-	void RenderGeom();
 	void RenderPostprocess();
+
 	void DSDirectionalLightPass(DirectionalLight& _light);
-	void DSSimpleRenderPass();
 	void DSFogRenderPass();
 	void DSResultQuad();
 

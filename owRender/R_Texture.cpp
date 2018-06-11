@@ -90,14 +90,14 @@ R_Texture* R_Texture::createTexture(R_TextureTypes::List type, int width, int he
 	m_RenderDevice->applySamplerState(this);
 
 	glBindTexture(this->type, 0);
-	if (m_RenderDevice->_texSlots[15].texObj)
-		glBindTexture(m_RenderDevice->_texSlots[15].texObj->type, m_RenderDevice->_texSlots[15].texObj->glObj);
+	if (m_RenderDevice->m_TextureSlot[15].texObj)
+		glBindTexture(m_RenderDevice->m_TextureSlot[15].texObj->type, m_RenderDevice->m_TextureSlot[15].texObj->glObj);
 
 	// Calculate memory requirements
 	this->memSize = calcTextureSize(format, width, height, depth);
 	if (hasMips || genMips) this->memSize += ftoi_r(this->memSize * 1.0f / 3.0f);
 	if (type == R_TextureTypes::TexCube) this->memSize *= 6;
-	m_RenderDevice->_textureMem += this->memSize;
+	m_RenderDevice->m_TextureMem += this->memSize;
 
 	return this;
 }
@@ -159,9 +159,9 @@ void R_Texture::uploadTextureData(int slice, int mipLevel, const void *pixels)
 	}
 
 	glBindTexture(this->type, 0);
-	if (m_RenderDevice->_texSlots[15].texObj)
+	if (m_RenderDevice->m_TextureSlot[15].texObj)
 	{
-		glBindTexture(m_RenderDevice->_texSlots[15].texObj->type, m_RenderDevice->_texSlots[15].texObj->glObj);
+		glBindTexture(m_RenderDevice->m_TextureSlot[15].texObj->type, m_RenderDevice->m_TextureSlot[15].texObj->glObj);
 	}
 }
 
@@ -172,7 +172,7 @@ void R_Texture::destroyTexture()
 		glDeleteTextures(1, &glObj);
 	}
 
-	m_RenderDevice->_textureMem -= memSize;
+	m_RenderDevice->m_TextureMem -= memSize;
 }
 
 bool R_Texture::getTextureData(int slice, int mipLevel, void *buffer)
@@ -214,9 +214,9 @@ bool R_Texture::getTextureData(int slice, int mipLevel, void *buffer)
 	}
 
 	glBindTexture(type, 0);
-	if (m_RenderDevice->_texSlots[15].texObj)
+	if (m_RenderDevice->m_TextureSlot[15].texObj)
 	{
-		glBindTexture(m_RenderDevice->_texSlots[15].texObj->type, m_RenderDevice->_texSlots[15].texObj->glObj);
+		glBindTexture(m_RenderDevice->m_TextureSlot[15].texObj->type, m_RenderDevice->m_TextureSlot[15].texObj->glObj);
 	}
 
 	return true;
@@ -235,9 +235,9 @@ void R_Texture::bindImageToTexture(void *eglImage)
 		glEGLImageTargetTexture2DOES(type, eglImage);
 		m_RenderDevice->checkError();
 		glBindTexture(type, 0);
-		if (m_RenderDevice->_texSlots[15].texObj)
+		if (m_RenderDevice->m_TextureSlot[15].texObj)
 		{
-			glBindTexture(m_RenderDevice->_texSlots[15].texObj->type, m_RenderDevice->_texSlots[15].texObj->glObj);
+			glBindTexture(m_RenderDevice->m_TextureSlot[15].texObj->type, m_RenderDevice->m_TextureSlot[15].texObj->glObj);
 		}
 	}
 }

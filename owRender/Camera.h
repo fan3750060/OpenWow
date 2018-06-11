@@ -1,6 +1,6 @@
 #pragma once
 
-enum Camera_Movement
+typedef enum Camera_Movement
 {
 	FORWARD,
 	BACKWARD,

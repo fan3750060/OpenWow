@@ -20,8 +20,12 @@ Font::~Font()
 	Log::Info("Fonts deleted!!!");
 }
 
-void Font::Render(cstring _string, vec2 _offset) const
+void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 {
+	_Render->TechniquesMgr()->m_UI_Font->Bind();
+	_Render->TechniquesMgr()->m_UI_Font->SetProjectionMatrix(_Render->getOrthoMatrix());
+	_Render->TechniquesMgr()->m_UI_Font->SetFontColor(vec3(_color.red, _color.green, _color.blue));
+
 	_Render->r.setTexture(10, m_Texture, SS_FILTER_BILINEAR | SS_ADDR_CLAMP, 0);
 	_Render->r.setGeometry(m_Geometry);
 	
@@ -38,6 +42,8 @@ void Font::Render(cstring _string, vec2 _offset) const
 
 		_Render->r.draw(PRIM_TRILIST, (ch - SPACE) * 6, 6);
 	}
+
+	_Render->TechniquesMgr()->m_UI_Font->Unbind();
 }
 
 uint32 Font::GetStringWidth(cstring _string) const
@@ -55,9 +61,4 @@ uint32 Font::GetStringWidth(cstring _string) const
 	}
 
 	return width;
-}
-
-uint32 Font::GetHeight() const
-{
-	return m_Height;
 }

@@ -3,6 +3,13 @@
 // General
 #include "BoundingBox.h"
 
+BoundingBox::BoundingBox() :
+	Min(vec3(-1.0f, -1.0f, -1.0f)),
+	Max(vec3(1.0f, 1.0f, 1.0f))
+{
+	calculateCenter();
+}
+
 void BoundingBox::set(cvec3 _min, cvec3 _max, bool _needConvert)
 {
 	Min = _min;
@@ -18,7 +25,7 @@ void BoundingBox::set(cvec3 _min, cvec3 _max, bool _needConvert)
 
 	//assert1(min.x < max.x && min.y < max.y && min.z < max.z);
 
-	calculateInternal();
+	calculateCenter();
 }
 
 void BoundingBox::calculate(const vec3* _verts, uint32 _count, bool _needConvert)
@@ -35,10 +42,10 @@ void BoundingBox::calculate(const vec3* _verts, uint32 _count, bool _needConvert
 		if (v.z > Max.z) Max.z = v.z;
 	}
 
-	calculateInternal();
+	calculateCenter();
 }
 
-void BoundingBox::calculateInternal()
+void BoundingBox::calculateCenter()
 {
 	Center = (Min + Max) * 0.5f;
 	Radius = (Max - Center).length();
@@ -130,7 +137,7 @@ bool BoundingBox::makeUnion(const BoundingBox& b)
 		if (b.Max.z > Max.z) { changed = true; Max.z = b.Max.z; }
 	}
 
-	calculateInternal();
+	calculateCenter();
 
 	return changed;
 }

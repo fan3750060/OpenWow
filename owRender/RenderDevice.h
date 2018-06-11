@@ -34,15 +34,15 @@ public:
 	R_Buffer* createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
 	R_Buffer* createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
 	R_TextureBuffer* createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
-	uint32 getBufferMem() const { return _bufferMem; }
+	uint32 getBufferMem() const { return m_BufferMem; }
 
 	// Textures
 	R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
-	uint32 getTextureMem() const { return _textureMem; }
+	uint32 getTextureMem() const { return m_TextureMem; }
 
 	// Shaders
 	R_Shader* createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
-	string getShaderLog() const { return _shaderLog; }
+	string getShaderLog() const { return m_ShaderLog; }
 
 	// Renderbuffers
 	R_RenderBuffer* createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
@@ -57,9 +57,7 @@ public:
 	// Render Device dependent GPU Timer
 	GPUTimer* createGPUTimer() { return new GPUTimer(); }
 
-	// -----------------------------------------------------------------------------
-	// Commands
-	// -----------------------------------------------------------------------------
+#pragma region Commands
 	void setViewport(int x, int y, int width, int height)
 	{
 		m_ViewportX = x;
@@ -84,7 +82,7 @@ public:
 	void setTexture(uint32 slot, R_Texture* texObj, uint16 samplerState, uint16 usage)
 	{
 		assert1(slot < 16);
-		_texSlots[slot] = R_TexSlot(texObj, samplerState, usage);
+		m_TextureSlot[slot] = R_TexSlot(texObj, samplerState, usage);
 		_pendingMask |= PM_TEXTURES;
 	}
 	void setMemoryBarrier(R_DrawBarriers barrier)
@@ -105,52 +103,52 @@ public:
 	// Render states
 	void setColorWriteMask(bool enabled)
 	{
-		_newRasterState.renderTargetWriteMask = enabled;
+		m_NewRasterState.renderTargetWriteMask = enabled;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getColorWriteMask(bool &enabled) const
 	{
-		enabled = _newRasterState.renderTargetWriteMask;
+		enabled = m_NewRasterState.renderTargetWriteMask;
 	}
 
 	void setFillMode(R_FillMode fillMode)
 	{
-		_newRasterState.fillMode = fillMode;
+		m_NewRasterState.fillMode = fillMode;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getFillMode(R_FillMode &fillMode) const
 	{
-		fillMode = (R_FillMode)_newRasterState.fillMode;
+		fillMode = (R_FillMode)m_NewRasterState.fillMode;
 	}
 
 	void setCullMode(R_CullMode cullMode)
 	{
-		_newRasterState.cullMode = cullMode;
+		m_NewRasterState.cullMode = cullMode;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getCullMode(R_CullMode &cullMode) const
 	{
-		cullMode = (R_CullMode)_newRasterState.cullMode;
+		cullMode = (R_CullMode)m_NewRasterState.cullMode;
 	}
 
 	void setScissorTest(bool enabled)
 	{
-		_newRasterState.scissorEnable = enabled;
+		m_NewRasterState.scissorEnable = enabled;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getScissorTest(bool &enabled) const
 	{
-		enabled = _newRasterState.scissorEnable;
+		enabled = m_NewRasterState.scissorEnable;
 	}
 
 	void setMulisampling(bool enabled)
 	{
-		_newRasterState.multisampleEnable = enabled;
+		m_NewRasterState.multisampleEnable = enabled;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getMulisampling(bool &enabled) const
 	{
-		enabled = _newRasterState.multisampleEnable;
+		enabled = m_NewRasterState.multisampleEnable;
 	}
 
 	void setAlphaToCoverage(bool enabled)
@@ -227,8 +225,9 @@ public:
 		_tessPatchVerts = verts;
 		_pendingMask |= PM_RENDERSTATES;
 	}
+#pragma endregion
 
-protected:
+private:
 	bool commitStates(uint32 filter = 0xFFFFFFFF);
 	void resetStates();
 
@@ -237,17 +236,19 @@ public: // Draw calls and clears
 	void draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts);
 	void drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, bool _softReset = true);
 
-protected:
+private:
 	void checkError();
 	bool applyVertexLayout(R_GeometryInfo &geo);
 	void applySamplerState(R_Texture* tex);
 	void applyRenderStates();
 
-protected:
-	R_VertexLayout				_vertexLayouts[MaxNumVertexLayouts];
-	vector< R_ShaderStorage >	_storageBufs;
-	R_TexSlot					_texSlots[16];
-	R_RasterState				_curRasterState, _newRasterState;
+private:
+	R_VertexLayout				m_VertexLayouts[MaxNumVertexLayouts];
+
+
+	vector<R_ShaderStorage>		_storageBufs;
+	R_TexSlot					m_TextureSlot[16];
+	R_RasterState				m_CurRasterState, m_NewRasterState;
 	R_BlendState				_curBlendState, _newBlendState;
 	R_DepthStencilState			_curDepthStencilState, _newDepthStencilState;
 	R_DrawBarriers				_memBarriers;
@@ -264,14 +265,14 @@ protected:
 
 	// 8 ssbo
 
-	string					    _shaderLog;
+	string					    m_ShaderLog;
 	uint32						m_DepthFormat;
 	int							m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight;
 	int							_scX, _scY, _scWidth, _scHeight;
 	int							_fbWidth, _fbHeight;
 	R_RenderBuffer*				_curRendBuf;
 	int							_outputBufferIndex;  // Left and right eye for stereo rendering
-	uint32						_textureMem, _bufferMem;
+	uint32						m_TextureMem, m_BufferMem;
 
 	uint32                      _numVertexLayouts;
 

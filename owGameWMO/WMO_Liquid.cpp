@@ -11,7 +11,7 @@ void CWMO_Liquid::CreateFromWMO(IFile* f, WMO_Part_Material* _material, const DB
 {
 	ydir = -1.0f; // Magic for WMO
 
-	initGeometry(f);
+	initGeometry(DBC_LIQUIDTYPE_Type::lq_river, f);
 	//InitTextures((DBC_LIQUIDTYPE_Type)_liquidType->Get_Type());
 	InitTextures(DBC_LIQUIDTYPE_Type::lq_river);
 

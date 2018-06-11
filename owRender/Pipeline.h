@@ -32,14 +32,6 @@ class Pipeline
 	{
 		return GetProjection() * GetView() * GetWorld();
 	}
-	inline mat4 GetVW()
-	{
-		return GetView() * GetWorld();
-	}
-	inline mat4 GetPV()
-	{
-		return GetProjection()  * GetView();
-	}
 
 	//
 

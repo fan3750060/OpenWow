@@ -1,5 +1,5 @@
 #version 330
-#include "lib/fragDeferredRead.glsl"
+#include "../lib/fragDeferredRead.glsl"
 
 uniform mat4 gProjection;
 uniform mat4 gView;

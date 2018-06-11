@@ -1,12 +1,9 @@
 #version 330
-#include "lib/fragDeferredRead.glsl"
+#include "../lib/fragDeferredRead.glsl"
 
 // Uniform
 uniform vec2 gScreenSize;
 uniform vec3 gCameraPosition;
-
-uniform vec3 gAmbientColor;
-uniform float gAmbientIntensitive;
 
 float cameraDistance;
 int materialID;

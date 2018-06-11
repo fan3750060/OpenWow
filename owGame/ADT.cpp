@@ -53,7 +53,7 @@ ADT::ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile
 		// Bounds
 		m_Bounds.Min = vec3(m_Translate.x, -2000.0f, m_Translate.z);
 		m_Bounds.Max = vec3(m_Translate.x + C_TileSize, 2000.0f, m_Translate.z + C_TileSize);
-		m_Bounds.calculateInternal();
+		m_Bounds.calculateCenter();
 		
 	}
 
@@ -250,12 +250,12 @@ bool ADT::Load()
 	
 	//-- MDXs -------------------------------------------------------------------------
 
-	for (auto& it : m_MDXsPlacementInfo)
+	/*for (auto& it : m_MDXsPlacementInfo)
 	{
 		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		ADT_MDX_Instance* inst = new ADT_MDX_Instance(this, mdx, it);
 		m_MDXsInstances.push_back(inst);
-	}
+	}*/
 
 	//---------------------------------------------------------------------------------
 

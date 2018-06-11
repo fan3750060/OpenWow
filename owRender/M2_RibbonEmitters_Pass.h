@@ -2,10 +2,10 @@
 
 #include "technique.h"
 
-class RibbonEmitters_Pass : public Technique
+class M2_RibbonEmitters_Pass : public Technique
 {
 public:
-	RibbonEmitters_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/RibbonEmitters")
+	M2_RibbonEmitters_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/M2/M2_RibbonEmitters")
 	{
 		gColorMap = getLocation("gColorMap");
 	}

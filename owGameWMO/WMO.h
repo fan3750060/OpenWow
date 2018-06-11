@@ -14,20 +14,7 @@ public:
 	WMO(cstring _fileName);
 	~WMO();
 
-	bool useAmbColor() const { return !(m_Header.flags.FLAG_skip_base_color); }
-	vec4 getAmbColor() const 
-	{
-		return vec4
-		(
-			static_cast<float>(m_Header.ambColor.r) / 255.0f,
-			static_cast<float>(m_Header.ambColor.g) / 255.0f,
-			static_cast<float>(m_Header.ambColor.b) / 255.0f,
-			static_cast<float>(m_Header.ambColor.a) / 255.0f
-		);
-	}
-
 	void CreateInsances(SceneNode* _parent);
-
 	bool Load();
 
 	// IUpdatable
@@ -38,15 +25,20 @@ public:
 
 	bool drawSkybox();
 
-//#ifdef _DEBUG
-	void DEBUG_DrawLightPlaceHolders();
-	void DEBUG_DrawFogPositions();
-	void DEBUG_DrawMainBoundingBox();
-    void DEBUG_DrawMainBoundingSphere();
-	void DEBUG_DrawBoundingBoxes();
-	void DEBUG_DrawPortalsRelations();
-	void DEBUG_DrawPortals();
-//#endif
+#pragma region Getters
+public: // Getters
+	bool useAmbColor() const { return !(m_Header.flags.FLAG_skip_base_color); }
+	vec4 getAmbColor() const
+	{
+		return vec4
+		(
+			static_cast<float>(m_Header.ambColor.r) / 255.0f,
+			static_cast<float>(m_Header.ambColor.g) / 255.0f,
+			static_cast<float>(m_Header.ambColor.b) / 255.0f,
+			static_cast<float>(m_Header.ambColor.a) / 255.0f
+		);
+	}
+#pragma endregion
 
 public:
 	const string							m_FileName;

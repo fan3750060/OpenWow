@@ -41,9 +41,9 @@ R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List for
 	glTexBuffer(GL_TEXTURE_BUFFER, this->glFmt, this->bufObj->glObj);
 
 	glBindTexture(GL_TEXTURE_BUFFER, 0);
-	if (m_RenderDevice->_texSlots[15].texObj)
+	if (m_RenderDevice->m_TextureSlot[15].texObj)
 	{
-		glBindTexture(m_RenderDevice->_texSlots[15].texObj->type, m_RenderDevice->_texSlots[15].texObj->glObj);
+		glBindTexture(m_RenderDevice->m_TextureSlot[15].texObj->type, m_RenderDevice->m_TextureSlot[15].texObj->glObj);
 	}
 
 	return this;
@@ -54,7 +54,7 @@ void R_TextureBuffer::destroyTextureBuffer()
 	if (this->bufObj->geometryRefCount < 1)
 	{
 		glDeleteBuffers(1, &this->bufObj->glObj);
-		m_RenderDevice->_bufferMem -= this->bufObj->size;
+		m_RenderDevice->m_BufferMem -= this->bufObj->size;
 	}
 
 	glDeleteTextures(1, &this->glTexID);

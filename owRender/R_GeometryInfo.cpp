@@ -20,7 +20,7 @@ void R_GeometryInfo::finishCreatingGeometry()
 	}
 
 	uint32 newVertexAttribMask = 0;
-	R_VertexLayout vl = m_RenderDevice->_vertexLayouts[this->layout - 1];
+	R_VertexLayout vl = m_RenderDevice->m_VertexLayouts[this->layout - 1];
 
 	// Set vertex attrib pointers
 	for (uint32 i = 0; i < vl.numAttribs; ++i)

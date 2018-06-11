@@ -1,5 +1,5 @@
 #version 330
-#include "lib/fragDeferredWrite.glsl"
+#include "../lib/fragDeferredWrite.glsl"
 
 struct VSOutput
 {

@@ -54,7 +54,7 @@ bool GameState_M2Viewer::Init()
 	}
 	else
 	{
-		backgroundModel = GetManager<IM2Manager>()->Add("Creature\\Ragnaros\\Ragnaros.m2");
+		backgroundModel = GetManager<IM2Manager>()->Add("World\\Generic\\PassiveDoodads\\Lights\\Torch.m2"/*"Creature\\Ragnaros\\Ragnaros.m2"*/);
 	}
 
 	//sceneManager->SetRootNode(backgroundModel);;
@@ -134,8 +134,7 @@ void GameState_M2Viewer::PreRender3D()
 
 void GameState_M2Viewer::Render3D()
 {
-	_Render->rb->setRenderBuffer();
-	_Render->r.clear();
+	_Render->BindRBs();
 
 	// Camera
 	_Pipeline->Clear();
@@ -191,28 +190,9 @@ void GameState_M2Viewer::Render3D()
 
 void GameState_M2Viewer::PostRender3D()
 {
-	if (backgroundModel == nullptr) return;
+	_Render->UnbindRBs();
 
-	// Postprocess pass
-	_Render->rb->resetRenderBuffer();
-	for (uint32 i = 0; i < 4; i++)
-	{
-		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
-	}
-	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
-
-	_Render->TechniquesMgr()->m_POST_Simple->Bind();
-	_Render->TechniquesMgr()->m_POST_Simple->SetCameraPos(_Camera->Position);
-
-	_Render->r.setDepthTest(false);
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-	_Render->RenderQuad();
-
-	_Render->r.setBlendMode(false);
-	_Render->r.setDepthTest(true);
-
-	_Render->TechniquesMgr()->m_POST_Simple->Unbind();
+	_Render->PostprocessSimple();
 }
 
 void GameState_M2Viewer::RenderUI()

@@ -25,7 +25,7 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		//
 		m_Bounds.Min = _placementInfo.boundingBox.min; // Don't use from WMO model!!!
 		m_Bounds.Max = _placementInfo.boundingBox.max;
-		m_Bounds.calculateInternal();
+		m_Bounds.calculateCenter();
 	}
 
 	_wmoObject->CreateInsances(this);

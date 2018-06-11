@@ -17,8 +17,6 @@ static const uint32 primitiveTypes[5] = {GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_LIN
 
 static const uint32 memoryBarrierType[3] = {GL_BUFFER_UPDATE_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT, GL_ELEMENT_ARRAY_BARRIER_BIT, GL_SHADER_IMAGE_ACCESS_BARRIER_BIT};
 
-
-
 static const uint32 oglBlendFuncs[10] = {
 	GL_ZERO, 
 	GL_ONE, 
@@ -36,7 +34,10 @@ static const uint32 oglBlendFuncs[10] = {
 
 void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+	//if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+
+	if (id == 131185) return;
+
 
 	Log::Error("---------------");
 	Log::Error("OpenGL Debug message (%d): [%s]", id, message);
@@ -94,8 +95,8 @@ RenderDevice::RenderDevice() :
 
 	_curShaderId = 0;
 	_curRendBuf = 0; _outputBufferIndex = 0;
-	_textureMem = 0; _bufferMem = 0;
-	_curRasterState.hash = _newRasterState.hash = 0;
+	m_TextureMem = 0; m_BufferMem = 0;
+	m_CurRasterState.hash = m_NewRasterState.hash = 0;
 	_curBlendState.hash = _newBlendState.hash = 0;
 	_curDepthStencilState.hash = _newDepthStencilState.hash = 0;
 	m_DefaultFBO = 0;
@@ -240,11 +241,11 @@ uint32 RenderDevice::registerVertexLayout(uint32 numAttribs, R_VertexLayoutAttri
 		return 0;
 	}
 
-	_vertexLayouts[_numVertexLayouts].numAttribs = numAttribs;
+	m_VertexLayouts[_numVertexLayouts].numAttribs = numAttribs;
 
 	for (uint32 i = 0; i < numAttribs; ++i)
 	{
-		_vertexLayouts[_numVertexLayouts].attribs[i] = attribs[i];
+		m_VertexLayouts[_numVertexLayouts].attribs[i] = attribs[i];
 	}
 
 	return ++_numVertexLayouts;
@@ -414,30 +415,30 @@ bool RenderDevice::commitStates(uint32 filter)
 			{
 				glActiveTexture(GL_TEXTURE0 + i);
 
-				if (_texSlots[i].usage != R_TextureUsage::Texture && _texSlots[i].texObj != nullptr)
+				if (m_TextureSlot[i].usage != R_TextureUsage::Texture && m_TextureSlot[i].texObj != nullptr)
 				{
 					if (i >= MaxComputeImages)
 					{
 						continue;
 					}
 
-					R_Texture*& tex = _texSlots[i].texObj;
+					R_Texture*& tex = m_TextureSlot[i].texObj;
 					uint32 access[3] = {GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE};
 
-					glBindImageTexture(i, tex->glObj, 0, false, 0, access[_texSlots[i].usage - 1], tex->glFmt);
+					glBindImageTexture(i, tex->glObj, 0, false, 0, access[m_TextureSlot[i].usage - 1], tex->glFmt);
 					glBindTexture(GL_TEXTURE_CUBE_MAP, 0); // as image units are different from texture units - clear binded texture units
 					glBindTexture(GL_TEXTURE_3D, 0);
 					glBindTexture(GL_TEXTURE_2D, 0);
 				}
-				else if (_texSlots[i].texObj != nullptr)
+				else if (m_TextureSlot[i].texObj != nullptr)
 				{
-					R_Texture*& tex = _texSlots[i].texObj;
+					R_Texture*& tex = m_TextureSlot[i].texObj;
 					glBindTexture(tex->type, tex->glObj);
 
 					// Apply sampler state
-					if (tex->samplerState != _texSlots[i].samplerState)
+					if (tex->samplerState != m_TextureSlot[i].samplerState)
 					{
-						tex->samplerState = _texSlots[i].samplerState;
+						tex->samplerState = m_TextureSlot[i].samplerState;
 						applySamplerState(tex);
 					}
 				}
@@ -498,7 +499,7 @@ void RenderDevice::resetStates()
 	CHECK_GL_ERROR
 
 	_curGeometryIndex = _defGeometry;
-	_curRasterState.hash = 0xFFFFFFFF; _newRasterState.hash = 0;
+	m_CurRasterState.hash = 0xFFFFFFFF; m_NewRasterState.hash = 0;
 	_curBlendState.hash = 0xFFFFFFFF; _newBlendState.hash = 0;
 	_curDepthStencilState.hash = 0xFFFFFFFF; _newDepthStencilState.hash = 0;
 
@@ -646,7 +647,7 @@ bool RenderDevice::applyVertexLayout(R_GeometryInfo& geo)
 		return false;
 	}
 
-	R_VertexLayout &vl = _vertexLayouts[geo.layout - 1];
+	R_VertexLayout &vl = m_VertexLayouts[geo.layout - 1];
 	R_InputLayout &inputLayout = _curShaderId->inputLayouts[geo.layout - 1];
 
 	if (!inputLayout.valid)
@@ -730,10 +731,10 @@ void RenderDevice::applySamplerState(R_Texture* tex)
 void RenderDevice::applyRenderStates()
 {
 	// Rasterizer state
-	if (_newRasterState.hash != _curRasterState.hash)
+	if (m_NewRasterState.hash != m_CurRasterState.hash)
 	{
 		// FILL MODE
-		if (_newRasterState.fillMode == RS_FILL_SOLID)
+		if (m_NewRasterState.fillMode == RS_FILL_SOLID)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
@@ -743,12 +744,12 @@ void RenderDevice::applyRenderStates()
 		}
 
 		// CULLING
-		if (_newRasterState.cullMode == RS_CULL_BACK)
+		if (m_NewRasterState.cullMode == RS_CULL_BACK)
 		{
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 		}
-		else if (_newRasterState.cullMode == RS_CULL_FRONT)
+		else if (m_NewRasterState.cullMode == RS_CULL_FRONT)
 		{
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_FRONT);
@@ -759,7 +760,7 @@ void RenderDevice::applyRenderStates()
 		}
 
 		// SCISSOR
-		if (!_newRasterState.scissorEnable)
+		if (!m_NewRasterState.scissorEnable)
 		{
 			glDisable(GL_SCISSOR_TEST);
 		}
@@ -769,7 +770,7 @@ void RenderDevice::applyRenderStates()
 		}
 
 		// MASK
-		if (_newRasterState.renderTargetWriteMask)
+		if (m_NewRasterState.renderTargetWriteMask)
 		{
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		}
@@ -778,7 +779,7 @@ void RenderDevice::applyRenderStates()
 			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		}
 
-		_curRasterState.hash = _newRasterState.hash;
+		m_CurRasterState.hash = m_NewRasterState.hash;
 	}
 
 	// Blend state

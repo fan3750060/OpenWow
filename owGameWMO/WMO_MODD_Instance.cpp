@@ -41,7 +41,7 @@ void WMO_MODD_Instance::PreRender3D()
 
 void WMO_MODD_Instance::Render3D()
 {
-	//_Render->DrawBoundingBox(m_Bounds);
+	_Render->DrawBoundingBox(m_Bounds);
 
 	_Pipeline->Clear();
 	{
@@ -49,7 +49,6 @@ void WMO_MODD_Instance::Render3D()
 		m_Object->Render();
 		PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
 	}
-	_Pipeline->Clear();
 }
 
 

@@ -19,7 +19,7 @@ R_Buffer* R_Buffer::createBuffer(uint32 bufType, uint32 size, const void *data, 
 	glBufferData(this->type, size, data, _isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBindBuffer(this->type, 0);
 
-	m_RenderDevice->_bufferMem += size;
+	m_RenderDevice->m_BufferMem += size;
 	return this;
 }
 
@@ -94,7 +94,7 @@ void R_Buffer::destroyBuffer()
 	if (this->geometryRefCount < 1)
 	{
 		glDeleteBuffers(1, &this->glObj);
-		m_RenderDevice->_bufferMem -= this->size;
+		m_RenderDevice->m_BufferMem -= this->size;
 	}
 }
 

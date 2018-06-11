@@ -161,7 +161,7 @@ void CM2_Builder::Step4Vertices()
 			m_Vertexes[i].normal = m_Vertexes[i].normal.toXZmY();
 		}
 
-		m_MDX->m_VBuffer = _Render->r.createVertexBuffer(m_Header->vertices.size * 12 * sizeof(float), m_Vertexes.data());
+		m_MDX->m_VBuffer = _Render->r.createVertexBuffer(m_Header->vertices.size * 12 * sizeof(float), m_Vertexes.data(), false);
 		m_MDX->m_ContainGeom = true;
 	}
 }

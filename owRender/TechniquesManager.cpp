@@ -19,7 +19,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	//----------------------------------------------------------------//
 
-	m_MapChunk_GeometryPass = new MapChunk_GeometryPass(m_RenderDevice);
+	m_MapChunk_GeometryPass = new MCNK_Pass(m_RenderDevice);
 	m_MapChunk_GeometryPass->Bind();
 	for (uint8 i = 0; i < 4; i++)
 	{
@@ -31,7 +31,14 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	//----------------------------------------------------------------//
 
-	m_MapTileLowRes_GeometryPass = new MapTileLowRes_GeometryPass(m_RenderDevice);
+	m_MapTileLowRes_GeometryPass = new WDL_LowRes_Pass(m_RenderDevice);
+
+	//
+
+	m_Magma = new Magma_Pass(m_RenderDevice);
+	m_Magma->Bind();
+	m_Magma->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
+	m_Magma->Unbind();
 
 	//
 
@@ -43,7 +50,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	//----------------------------------------------------------------//
 
-	m_Ribbons = new RibbonEmitters_Pass(m_RenderDevice);
+	m_Ribbons = new M2_RibbonEmitters_Pass(m_RenderDevice);
 	m_Ribbons->Bind();
 	m_Ribbons->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	m_Ribbons->Unbind();
@@ -58,7 +65,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	//----------------------------------------------------------------//
 
-	m_Model = new Model_Shader(m_RenderDevice);
+	m_Model = new M2_Pass(m_RenderDevice);
 	m_Model->Bind();
 	m_Model->SetDiffuseTexture(Material::C_DiffuseTextureIndex);
 	m_Model->SetSpecularTexture(Material::C_SpecularTextureIndex);

@@ -38,9 +38,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 }
 
 Camera::~Camera()
-{
-	fail1();
-}
+{}
 
 void Camera::Update(double _time, double _dTime)
 {

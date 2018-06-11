@@ -1,5 +1,5 @@
 #version 330
-#include "lib/fragDeferredRead.glsl"
+#include "../lib/fragDeferredRead.glsl"
 
 struct BaseLight
 {

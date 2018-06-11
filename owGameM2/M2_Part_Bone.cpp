@@ -56,6 +56,11 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time
 
 		if (IsBillboard())
 		{
+			m.rotate(0.0f, Math::Pi, 0.0f);
+		}
+
+		/*if (IsBillboard())
+		{
 			if (parent != -1)
 			{
 				if (allbones[parent].IsBillboard())
@@ -71,20 +76,16 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time
 			float scaleY = vec3(worldPrevMatrix.x[4], worldPrevMatrix.x[5], worldPrevMatrix.x[6]).length();
 			float scaleZ = vec3(worldPrevMatrix.x[8], worldPrevMatrix.x[9], worldPrevMatrix.x[10]).length();
 
-			mat4 matrix = _PipelineGlobal->GetView();
-			if (!shitMatrix)
-			{
-				matrix *= worldPrevMatrix;
-			}
+			mat4 view = _PipelineGlobal->GetView() * worldPrevMatrix;
 
 			// Set vectors
 			vec3 vUp;
-			vec3 vRight = (vec3(matrix.c[0][0], matrix.c[1][0], matrix.c[2][0]) / scaleX) * -1.0f;
+			vec3 vRight = (vec3(view.c[0][0], view.c[1][0], view.c[2][0]) / scaleX) * -1.0f;
 
 			// Calc billboard type
 			if (m_Flags.spherical_billboard)
 			{
-				vUp = vec3(matrix.c[0][1], matrix.c[1][1], matrix.c[2][1]) / scaleY;
+				vUp = vec3(view.c[0][1], view.c[1][1], view.c[2][1]) / scaleY;
 			}
 			else if (m_Flags.cylindrical_billboard_lock_x)
 			{
@@ -99,7 +100,7 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time
 				vUp = vec3(0, 1, 0);
 			}
 
-			//vec3 vForward = vec3(matrix.c[0][2], matrix.c[1][2], matrix.c[2][2]) / scaleZ;
+			//vec3 vForward = vec3(view.c[0][2], view.c[1][2], view.c[2][2]) / scaleZ;
 			//m.c[0][0] = vForward.x;
 			//m.c[0][1] = vForward.y;
 			//m.c[0][2] = vForward.z;
@@ -111,8 +112,8 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time
 			m.c[2][0] = vRight.x;
 			m.c[2][1] = vRight.y;
 			m.c[2][2] = vRight.z;
-		}
-xxx:
+		}*/
+
 		m.translate(pivot * -1.0f);
 	}
 

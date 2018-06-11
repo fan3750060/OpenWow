@@ -12,7 +12,7 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 	oglProgramObj = createShaderProgram(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
 	if (oglProgramObj == 0)
 	{
-		fail1();
+		fail2(m_RenderDevice->getShaderLog().c_str());
 	}
 
 	if (!linkShaderProgram())
@@ -25,7 +25,7 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 
 	for (uint32 i = 0; i < m_RenderDevice->_numVertexLayouts; ++i)
 	{
-		R_VertexLayout &vl = m_RenderDevice->_vertexLayouts[i];
+		R_VertexLayout &vl = m_RenderDevice->m_VertexLayouts[i];
 		bool allAttribsFound = true;
 
 		for (uint32 j = 0; j < 16; ++j)
@@ -173,7 +173,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 	char* infoLog = 0x0;
 	int status;
 
-	m_RenderDevice->_shaderLog = "";
+	m_RenderDevice->m_ShaderLog = "";
 
 	uint32 vs, fs, gs, tsC, tsE, cs;
 	vs = fs = gs = tsC = tsE = cs = 0;
@@ -193,7 +193,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 			{
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(vs, infologLength, &charsWritten, infoLog);
-				m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Vertex Shader]\n" + infoLog;
+				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Vertex Shader]\n" + infoLog;
 				delete[] infoLog; infoLog = 0x0;
 			}
 
@@ -216,7 +216,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 			{
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(fs, infologLength, &charsWritten, infoLog);
-				m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Fragment Shader]\n" + infoLog;
+				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Fragment Shader]\n" + infoLog;
 				delete[] infoLog; infoLog = 0x0;
 			}
 
@@ -240,7 +240,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 			{
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(gs, infologLength, &charsWritten, infoLog);
-				m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Geometry Shader]\n" + infoLog;
+				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Geometry Shader]\n" + infoLog;
 				delete[] infoLog; infoLog = 0x0;
 			}
 
@@ -265,7 +265,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 			{
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(tsC, infologLength, &charsWritten, infoLog);
-				m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Tesselation Control Shader]\n" + infoLog;
+				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Tesselation Control Shader]\n" + infoLog;
 				delete[] infoLog; infoLog = 0x0;
 			}
 
@@ -291,7 +291,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 			{
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(tsE, infologLength, &charsWritten, infoLog);
-				m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Tesselation Evaluation Shader]\n" + infoLog;
+				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Tesselation Evaluation Shader]\n" + infoLog;
 				delete[] infoLog; infoLog = 0x0;
 			}
 
@@ -318,7 +318,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 			{
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(cs, infologLength, &charsWritten, infoLog);
-				m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Compute Shader]\n" + infoLog;
+				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Compute Shader]\n" + infoLog;
 				delete[] infoLog; infoLog = 0x0;
 			}
 
@@ -375,7 +375,7 @@ bool R_Shader::linkShaderProgram()
 	char *infoLog = 0x0;
 	int status;
 
-	m_RenderDevice->_shaderLog = "";
+	m_RenderDevice->m_ShaderLog = "";
 
 	glLinkProgram(oglProgramObj);
 	glGetProgramiv(oglProgramObj, GL_INFO_LOG_LENGTH, &infologLength);
@@ -383,7 +383,7 @@ bool R_Shader::linkShaderProgram()
 	{
 		infoLog = new char[infologLength];
 		glGetProgramInfoLog(oglProgramObj, infologLength, &charsWritten, infoLog);
-		m_RenderDevice->_shaderLog = m_RenderDevice->_shaderLog + "[Linking]\n" + infoLog;
+		m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Linking]\n" + infoLog;
 		delete[] infoLog; infoLog = 0x0;
 	}
 

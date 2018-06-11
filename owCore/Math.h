@@ -10,13 +10,15 @@
 // Intersection
 // -------------------------------------------------------------------------------------------------
 
-inline bool rayTriangleIntersection(
-	const Vec3f &rayOrig, 
-	const Vec3f &rayDir,
-	const Vec3f &vert0, 
-	const Vec3f &vert1, 
-	const Vec3f &vert2,
-	Vec3f &intsPoint)
+inline bool rayTriangleIntersection
+(
+	cvec3 rayOrig, 
+	cvec3 rayDir,
+	cvec3 vert0, 
+	cvec3 vert1, 
+	cvec3 vert2,
+	Vec3f &intsPoint
+)
 {
 	// Idea: Tomas Moeller and Ben Trumbore
 	// in Fast, Minimum Storage Ray/Triangle Intersection 
@@ -84,8 +86,13 @@ inline bool rayTriangleIntersection(
 }
 
 
-inline bool rayAABBIntersection(const Vec3f &rayOrig, const Vec3f &rayDir,
-								const Vec3f &mins, const Vec3f &maxs)
+inline bool rayAABBIntersection
+(
+	cvec3 rayOrig, 
+	cvec3 rayDir,				
+	cvec3 mins, 
+	cvec3 maxs
+)
 {
 	// SLAB based optimized ray/AABB intersection routine
 	// Idea taken from http://ompf.org/ray/
@@ -117,11 +124,18 @@ inline bool rayAABBIntersection(const Vec3f &rayOrig, const Vec3f &rayDir,
 			(rayMins.z < maxs.z) && (rayMaxs.z > mins.z);
 	}
 	else
+	{
 		return false;
+	}
 }
 
 
-inline float nearestDistToAABB(const Vec3f &pos, const Vec3f &mins, const Vec3f &maxs)
+inline float nearestDistToAABB
+(
+	cvec3 pos, 
+	cvec3 mins, 
+	cvec3 maxs
+)
 {
 	const Vec3f center = (mins + maxs) * 0.5f;
 	const Vec3f extent = (maxs - mins) * 0.5f;

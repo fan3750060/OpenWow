@@ -35,22 +35,14 @@ void WorldRender::PreRender3D()
 
 void WorldRender::Render3D()
 {
-	_Render->rb->setRenderBuffer();
-	_Render->r.clear();
-	RenderGeom();
+	_Render->BindRBs();
 }
 
 void WorldRender::PostRender3D()
 {
-	//--------------------------------------------------
-	// Postprocess pass
-	//--------------------------------------------------
-	_Render->rb->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
-	for (uint32 i = 0; i < 4; i++)
-	{
-		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
-	}
-	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
+	_Render->UnbindRBs();
+
+	// Postprocess
 	RenderPostprocess();
 
 	// Result pass
@@ -84,56 +76,9 @@ void WorldRender::PostRender3D()
 	m_TestRenderBuffer->resetRenderBuffer();*/
 }
 
-//***************************************
-
-void WorldRender::RenderGeom()
-{
-	//------------------------------------------------------------------------------
-	// Draw sky from WMO
-	//------------------------------------------------------------------------------
-	//_Render->r.setDepthTest(false);
-	//if (_Config.draw_map_mdx)
-	//{
-	//m_WorldContoller->Map()->RenderSky();
-	//}
-
-	//------------------------------------------------------------------------------
-	// Draw sky from GLOBAL WMO
-	//------------------------------------------------------------------------------
-	/*_Render->r.setDepthTest(true);
-	if (m_WorldContoller->Map()->m_WDT->MapHasGlobalWMO() && !_World->EnvM()->m_HasSky)
-	{
-		m_WorldContoller->Map()->SetOutOfBounds(false);
-		m_WorldContoller->Map()->m_WDT->GetGlobalWMOInstance()->GetWMO()->drawSkybox();
-	}*/
-
-	//
-
-	//=== DEBUG
-	//_EnvironmentManager->m_SkyManager->DEBUG_Render();
-	//_World->EnvM()->dayNightPhase.Render_DEBUG(_Camera->Position);
-	//=== DEBUG
-
-	//
-
-	//------------------------------------------------------------------------------
-	// Map chunks DEBUG
-	//------------------------------------------------------------------------------
-	/*if (_Config.draw_map_chunk)
-	{
-		_Render->TechniquesMgr()->m_Debug_Normals->Bind();
-		_Pipeline->Clear();
-		_Render->TechniquesMgr()->m_Debug_Normals->SetPVW();
-
-		m_WorldContoller->Map()->Render_DEBUG();
-
-		_Render->TechniquesMgr()->m_Debug_Normals->Unbind();
-	}*/
-}
-
 void WorldRender::RenderPostprocess()
 {
-	DSSimpleRenderPass();
+	_Render->PostprocessSimple();
 
 	/*DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
@@ -164,22 +109,6 @@ void WorldRender::DSDirectionalLightPass(DirectionalLight& _light)
 	_Render->r.setDepthTest(true);
 
 	_Render->TechniquesMgr()->m_POST_DirectionalLight->Unbind();
-}
-
-void WorldRender::DSSimpleRenderPass()
-{
-	_Render->TechniquesMgr()->m_POST_Simple->Bind();
-	_Render->TechniquesMgr()->m_POST_Simple->SetCameraPos(_Camera->Position);
-
-	_Render->r.setDepthTest(false);
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-	_Render->RenderQuad();
-
-	_Render->r.setBlendMode(false);
-	_Render->r.setDepthTest(true);
-
-	_Render->TechniquesMgr()->m_POST_Simple->Unbind();
 }
 
 void WorldRender::DSFogRenderPass()

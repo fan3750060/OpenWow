@@ -1,12 +1,11 @@
 #pragma once
 
-#include "PostProcess_Common.h"
-#include "lights_common.h"
+#include "PostprocessBase.h"
 
-class POST_Simple : public PostProcess_Common
+class POST_Simple : public PostprocessBase
 {
 public:
-    POST_Simple(RenderDevice* _RenderDevice) : PostProcess_Common(_RenderDevice, "shaders/POST_Simple.fs") {}
+    POST_Simple(RenderDevice* _RenderDevice) : PostprocessBase(_RenderDevice, "shaders/Postprocess/Postprocess_Simple.fs") {}
 
 
     void SetAmbientColor(cvec3 _ambientColor)

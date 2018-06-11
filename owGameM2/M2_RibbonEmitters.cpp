@@ -191,11 +191,16 @@ void CM2_RibbonEmitters::draw()
 	glDepthMask(GL_TRUE);*/
 
 
+	for (auto& it : vertices)
+	{
+		_Render->DrawCube(it.pos);
+	}
+
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
+	/*SmartBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
-	R_GeometryInfo* __geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PT);
+	SmartGeomPtr __geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(RibbonVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(RibbonVertex));
 	__geom->finishCreatingGeometry();
@@ -218,6 +223,5 @@ void CM2_RibbonEmitters::draw()
 	_Render->r.setDepthMask(true);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-	__geom->destroyGeometry(true);
+	*/
 }

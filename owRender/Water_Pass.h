@@ -5,7 +5,7 @@
 class Water_Pass : public Technique
 {
 public:
-    Water_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Water")
+    Water_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Liquid/Water")
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");
@@ -15,6 +15,8 @@ public:
         gShallowAlpha = getLocation("gShallowAlpha");
         gDeepAlpha = getLocation("gDeepAlpha");
     }
+
+	//--
 
     inline void SetColorTextureUnit(int TextureUnit)
     {
@@ -47,10 +49,10 @@ public:
     }
 
 private:
-    int8 gColorMap;
-    int8 gSpecularMap;
-    int8 gColorLight;
-    int8 gColorDark;
-    int8 gShallowAlpha;
-    int8 gDeepAlpha;
+    int32 gColorMap;
+	int32 gSpecularMap;
+	int32 gColorLight;
+	int32 gColorDark;
+	int32 gShallowAlpha;
+	int32 gDeepAlpha;
 };

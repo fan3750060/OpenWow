@@ -3,9 +3,6 @@
 #include __PACK_BEGIN
 struct Liquid_Layer
 {
-	float MinHeightLevel;
-	float MaxHeightLevel;
-
 	uint8 x;
 	uint8 y;
 	uint8 Width;
@@ -33,23 +30,25 @@ public:
 	void Render();
 
 protected:
-	void initGeometry(IFile* f);
+	void initGeometry(DBC_LIQUIDTYPE_Type _type, IFile* f);
 	void createBuffer();
 	void InitTextures(DBC_LIQUIDTYPE_Type _liquidType);
 
 protected:
+	DBC_LIQUIDTYPE_Type			m_Type;
 	uint32						m_TilesX, m_TilesY;
 	uint32						m_TilesCount;
 
 	SmartGeomPtr				__geom;
 	uint32						m_VerticesCnt;
-	uint32						m_IndCnt;
+	uint32						m_IndicesCnt;
 
-	vector<SmartTexturePtr>		textures;
+	vector<SmartTexturePtr>		m_Textures;
 
-	vector<Liquid_Layer>		m_WaterLayers;
+	Liquid_Layer layer;
 
 	float						ydir;
+	uint8						flag;
 
 private:
 	ISkyManager*				m_SkyManager;
