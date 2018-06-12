@@ -72,7 +72,7 @@ struct WMO_PortalReferencesDef
 	uint16 portalIndex;  // into MOPR
 	uint16 groupIndex;   // the other one
 	int16 side;          // positive or negative.
-	uint16 filler;
+	uint16 unk0;
 };
 
 struct WMO_VisibleBlockListDef

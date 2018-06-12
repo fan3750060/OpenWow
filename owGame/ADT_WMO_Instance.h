@@ -22,6 +22,9 @@ public:
 	void AddDoodad(WMO_MODD_Instance* _doodadInstance) { m_Doodads.push_back(_doodadInstance); }
 	void AddLiquid(Liquid_Instance* _liquidInstance) { m_Liquids.push_back(_liquidInstance); }
 
+	// ISceneNode
+	string getObjectInfo() override { return m_Object->getFilename(); }
+
 	// IUpdatable
 	void Update(double _time, double _dTime) override;
 

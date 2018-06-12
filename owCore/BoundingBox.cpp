@@ -115,7 +115,7 @@ void BoundingBox::transform(const Matrix4f& m)
 	Center = m * Center;
 }
 
-bool BoundingBox::makeUnion(const BoundingBox& b)
+bool BoundingBox::makeUnion(cbbox b)
 {
 	bool changed = false;
 

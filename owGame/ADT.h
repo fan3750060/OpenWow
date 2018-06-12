@@ -17,6 +17,9 @@ public:
 		return m_Chunks[x * C_ChunksInTile + z];
 	}
 
+	// ISceneNode
+	string getObjectInfo() override { return m_Name; }
+
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;

@@ -24,4 +24,6 @@ struct BoundingBox
 	float Radius;
 };
 
+typedef const BoundingBox& cbbox;
+
 

@@ -26,7 +26,7 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 
 	m_BlendRBGShadowATexture = 0;
 
-	SetDrawOrder(20);
+	setDrawOrder(21);
 }
 
 //
@@ -53,8 +53,9 @@ bool ADT_MCNK::Load()
 		// CalculateMatrix(); DO NOT CALCULATE MATRIX!!!!
 	}
 
-	vec3 tempVertexes[C_MapBufferSize];
-	vec3 tempNormals[C_MapBufferSize];
+	R_Buffer* verticesBuffer = nullptr;
+	R_Buffer* normalsBuffer = nullptr;
+
 
 	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
@@ -62,7 +63,7 @@ bool ADT_MCNK::Load()
 	// Normals
 	f->Seek(startPos + header.ofsNormal);
 	{
-		// Normal vectors for each corresponding vector above. Its followed by some weird unknown data which is not included in the chunk itself and might be some edge flag bitmaps.
+		vec3 tempNormals[C_MapBufferSize];
 		vec3* ttn = tempNormals;
 		for (int j = 0; j < 17; j++)
 		{
@@ -74,14 +75,14 @@ bool ADT_MCNK::Load()
 				*ttn++ = vec3(-(float)nor[1] / 127.0f, (float)nor[2] / 127.0f, -(float)nor[0] / 127.0f);
 			}
 		}
+		normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
 	}
 
 	// Heights
 	f->Seek(startPos + header.ofsHeight);
 	{
+		vec3 tempVertexes[C_MapBufferSize];
 		vec3* ttv = tempVertexes;
-
-		// vertices
 		for (uint32 j = 0; j < 17; j++)
 		{
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
@@ -105,6 +106,8 @@ bool ADT_MCNK::Load()
 
 			m_Bounds.calculateCenter();
 		}
+
+		verticesBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempVertexes, false);
 	}
 
 	// Textures
@@ -199,18 +202,7 @@ bool ADT_MCNK::Load()
 	}
 
 	////////////////////////////
-
-	uint32 t = C_MapBufferSize * sizeof(float);
-
-	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(10 * t, nullptr);
-	__vb->updateBufferData(0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
-	__vb->updateBufferData(3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
-	__vb->updateBufferData(6 * t, C_MapBufferSize * sizeof(vec2), &_Map_Shared->GetTextureCoordDetail());
-	__vb->updateBufferData(8 * t, C_MapBufferSize * sizeof(vec2), &_Map_Shared->GetTextureCoordAlpha());
-
-
-	// Index Buffer DefaultResolution
+	// Index
 	vector<uint16>& mapArrayDefault = Map_Shared::GenarateDefaultMapArray(header.holes);
 	m_IndexesCountDefault = mapArrayDefault.size();
 	__ibDefault = _Render->r.createIndexBuffer(m_IndexesCountDefault * sizeof(uint16), mapArrayDefault.data(), false);
@@ -219,26 +211,21 @@ bool ADT_MCNK::Load()
 	m_IndexesCountLowResolution = mapArrayLowResolution.size();
 	__ibLowResolution = _Render->r.createIndexBuffer(m_IndexesCountLowResolution * sizeof(uint16), mapArrayLowResolution.data(), false);
 
+	////////////////////////////
 	// Geom
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * t, 0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 6 * t, 0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 8 * t, 0);
+	__geom->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(_Map_Shared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(_Map_Shared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
 	__geom->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
 	__geom->finishCreatingGeometry();
 
-
-	//***************** DEBUG NORMALS
-
-	// Vertex buffer
-	R_Buffer* __vb2 = _Render->r.createVertexBuffer(6 * t, nullptr);
-	__vb2->updateBufferData(0 * t, C_MapBufferSize * sizeof(vec3), tempVertexes);
-	__vb2->updateBufferData(3 * t, C_MapBufferSize * sizeof(vec3), tempNormals);
-
+	////////////////////////////
+	// Debug geom
 	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PN);
-	__geomDebugNormals->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * t, 0);
-	__geomDebugNormals->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * t, 0);
+	__geomDebugNormals->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geomDebugNormals->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
 	__geomDebugNormals->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
 	__geomDebugNormals->finishCreatingGeometry();
 
@@ -257,7 +244,7 @@ bool ADT_MCNK::Delete()
 
 void ADT_MCNK::PreRender3D()
 {
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 	
 	// Draw chunk before fog
 	/*float mydist = (_Camera->Position - vcenter).length() - r;

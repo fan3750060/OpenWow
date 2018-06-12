@@ -21,7 +21,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		lqueue.pop();
 
 		objectToLoad->Load();
-		objectToLoad->SetLoaded();
+		objectToLoad->setLoaded();
 
 		ResetEvent(loader->getEventID());
 	}
@@ -68,7 +68,7 @@ void CLoader::LoadAll()
 		ILoadable* obj = m_QueueLoad.front();
 
 		obj->Load();
-		obj->SetLoaded();
+		obj->setLoaded();
 
 		m_QueueLoad.pop();
 	}

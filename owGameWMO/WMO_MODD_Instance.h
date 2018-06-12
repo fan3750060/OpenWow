@@ -8,6 +8,9 @@ public:
 	WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const WMO_MODD_PlacementInfo& _placement);
 	~WMO_MODD_Instance();
 
+	// ISceneNode
+	string getObjectInfo() override { return m_Object->getFilename(); }
+
 	// IUpdatable
 	virtual void Update(double _time, double _dTime) override;
 

@@ -6,7 +6,7 @@ struct Renderable3DObjectCompare
 {
 	bool operator() (const IRenderable3D* left, const IRenderable3D* right) const
 	{
-		return left->GetDrawOrder() < right->GetDrawOrder();
+		return left->getDrawOrder() < right->getDrawOrder();
 	}
 };
 

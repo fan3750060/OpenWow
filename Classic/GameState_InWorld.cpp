@@ -15,8 +15,13 @@ bool GameState_InWorld::Init()
 
 	m_WorldRender = new WorldRender(_World);
 
-	CSceneManager* sceneManager = new CSceneManager();
-	sceneManager->SetRootNode(_World->Map());
+	sceneManager = new CSceneManager(_World->Map());
+	sceneManager->setCamera(_Camera);
+	sceneManager->setFrustrumCamera(_CameraFrustum);
+
+	_Bindings->RegisterRenderable3DObject(this, 25);
+	setVisible(true);
+
 
     return true;
 }
@@ -52,6 +57,15 @@ void GameState_InWorld::Input(double _time, double _dTime)
 void GameState_InWorld::Update(double _time, double _dTime)
 {
 
+}
+
+void GameState_InWorld::Render3D()
+{
+	SceneNode* intNode = GetManager<ISceneManager>()->getIntersectedNode();
+	if (intNode != nullptr)
+	{
+		_Render->DrawBoundingBox(intNode->getBounds(), vec4(1.0f, 0.2f, 0.2f, 0.8f));
+	}
 }
 
 void GameState_InWorld::RenderUI()
@@ -139,6 +153,10 @@ void GameState_InWorld::RenderUI()
 
     _Render->DrawPerfomance(vec2(5, 100));
 
+	if (sceneManager->getIntersectedNode() != nullptr)
+	{
+		_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 110), sceneManager->getIntersectedNodeInfo());
+	}
     _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 66), "REAL CamPos: [" + to_string(_Render->mainCamera->Position.x) + "], [" + to_string(_Render->mainCamera->Position.y) + "], [" + to_string(_Render->mainCamera->Position.z) + "]");
     _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 44), "CamPos: [" + to_string(-(_Render->mainCamera->Position.x - C_ZeroPoint)) + "], [" + to_string(-(_Render->mainCamera->Position.z - C_ZeroPoint)) + "], [" + to_string(_Render->mainCamera->Position.y) + "]");
     _Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 22), "CamRot: [" + to_string(_Render->mainCamera->Direction.x) + "], [" + to_string(_Render->mainCamera->Direction.y) + "], [" + to_string(_Render->mainCamera->Direction.z) + "]");
@@ -217,19 +235,12 @@ void GameState_InWorld::RenderUI()
         _Render->RenderText(     vec2(xPos + 20, yPos + i * 16), names[i]);
     }
 
-    RenderUIDebug();
+	sprintf(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
+	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
+
+	sprintf(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
+	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 }
-
-void GameState_InWorld::RenderUIDebug()
-{
-    char buff[256];
-    sprintf(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
-    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
-
-    sprintf(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
-    _Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
-}
-
 
 void GameState_InWorld::OnMouseMoved(cvec2 _mousePos)
 {

@@ -7,9 +7,6 @@
     <ClCompile Include="Pipeline.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="Render.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -73,9 +70,6 @@
       <Filter>Fonts</Filter>
     </ClInclude>
     <ClInclude Include="Pipeline.h">
-      <Filter>Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="PipelineWorldTransformation.h">

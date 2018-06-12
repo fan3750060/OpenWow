@@ -27,11 +27,11 @@ public:
 
 	// IInputListener
 	void OnMouseMoved(cvec2 _mousePos) override {}
-	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override { return false; }
-	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override { return false; }
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override { return m_IsOpened; }
+	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override { return m_IsOpened; }
 	bool OnMouseWheel(int _yoffset) override;
 	bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
-	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override { return false; }
+	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override { return m_IsOpened; }
 	bool OnCharInput(uint32 _char) override;
 
 protected:

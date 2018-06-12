@@ -47,6 +47,8 @@ void M2::drawModel()
 		return;
 	}
 
+	//RenderCollision();
+
 	_Render->TechniquesMgr()->m_Model->Bind();
 	_Render->TechniquesMgr()->m_Model->SetPVW();
 
@@ -122,6 +124,29 @@ void M2::Render()
 	}
 
 	drawModel();
+}
+
+void M2::RenderCollision()
+{
+	if (m_CollisionGeom == nullptr)
+	{
+		return;
+	}
+
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
+
+	_Render->r.setGeometry(m_CollisionGeom);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_Header.collisionTriangles.size, 0, m_Header.collisionVertices.size);
+
+	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
 void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)

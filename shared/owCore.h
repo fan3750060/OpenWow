@@ -26,6 +26,6 @@
 #include "../owCore/Loader.h"
 #include "../owCore/BaseManager.h"
 #include "../owCore/BindingController.h"
-#include "../owCore/SceneManager.h"
+#include "../owCore/Camera.h"
 #include "../owCore/Settings.h"
 #include "../owCore/Perfomance.h"

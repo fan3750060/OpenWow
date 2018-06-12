@@ -1,6 +1,6 @@
 #pragma once
 
-class GameState_InWorld : public CGameState
+class GameState_InWorld : public CGameState, CRenderable3DObject
 {
 public:
     bool Init() override;
@@ -10,9 +10,13 @@ public:
     void Input(double _time, double _dTime) override;
     void Update(double _time, double _dTime) override;
 
+	// IRenderable
+	void PreRender3D() override { }
+	void Render3D() override;
+	void PostRender3D() override {}
+
 	// IRenderableUI
 	void RenderUI() override;
-    void RenderUIDebug();
 
     // IInputListener
     void OnMouseMoved(cvec2 _mousePos) override;
@@ -34,4 +38,5 @@ private:
 
 private:
 	WorldRender* m_WorldRender;
+	CSceneManager* sceneManager;
 };

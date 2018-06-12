@@ -20,12 +20,12 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	SetDrawOrder(23);
+	setDrawOrder(29);
 }
 
 void Liquid_Instance::PreRender3D()
 {
-	SetVisible(true);
+	setVisible(true);
 }
 
 void Liquid_Instance::Render3D()

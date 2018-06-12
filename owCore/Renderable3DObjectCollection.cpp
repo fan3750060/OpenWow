@@ -13,9 +13,9 @@
 
 bool CRenderable3DObjectCollection::RegisterObject(IRenderable3D* _uiObject, uint32 _DrawOrder)
 {
-	if (_uiObject->GetDrawOrder() < _DrawOrder || _DrawOrder != 0)
+	if (_uiObject->getDrawOrder() < _DrawOrder || _DrawOrder != 0)
 	{
-		_uiObject->SetDrawOrder(_DrawOrder);
+		_uiObject->setDrawOrder(_DrawOrder);
 	}
 
 	m_Objects.push_back(_uiObject);
@@ -54,7 +54,7 @@ void CRenderable3DObjectCollection::Render3D()
 	GetBaseManager()->SetPhase(Phase_3D);
 	for (auto& it : m_Objects)
 	{
-		if (it->IsVisible())
+		if (it->isVisible())
 		{
 			it->Render3D();
 		}
@@ -67,7 +67,7 @@ void CRenderable3DObjectCollection::Render3D()
 	GetBaseManager()->SetPhase(Phase_Post3D);
 	for (auto& it : m_Objects)
 	{
-		if (it->IsVisible())
+		if (it->isVisible())
 		{
 			it->PostRender3D();
 		}

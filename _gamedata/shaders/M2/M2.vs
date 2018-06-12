@@ -21,7 +21,7 @@ uniform mat4 gBones[251];
 uniform bool gBillboard;
 
 // Texture animating
-uniform int gTextureAnimEnable;
+uniform bool gTextureAnimEnable;
 uniform mat4 gTextureAnimMatrix;
 
 // Out
@@ -36,7 +36,7 @@ void main(void)
 {
 	vec4 newVertex = vec4(0.0f);
 
-	if(gIsAnimated)
+	if (gIsAnimated)
 	{
 		uint blendWeights[4];
 		blendWeights[0] = (blendWeight & 0xFF000000u >> 24) & 0x000000FFu;
@@ -100,7 +100,7 @@ void main(void)
 	VSout.position = (gWorld * vec4(newVertex.xyz, 1.0f)).xyz;
 	VSout.normal = (gWorld * vec4(normal, 0.0)).xyz;
 	
-	if (gTextureAnimEnable > 0)
+	if (gTextureAnimEnable)
 	{
 		VSout.tc = (gTextureAnimMatrix * vec4(tc0, 1.0, 1.0)).xy;
 	}

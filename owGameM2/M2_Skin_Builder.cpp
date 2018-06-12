@@ -81,7 +81,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 		batch->m_SkinSection = skins[m2SkinIndex];
 
 
-		const CM2_Part_Bone& bone = m_MDX->getBone(batch->m_SkinSection.bonesStartIndex + batch->m_SkinSection.centerBoneIndex);
+		const CM2_Part_Bone& bone = m_MDX->m_Bones[batch->m_SkinSection.bonesStartIndex + batch->m_SkinSection.centerBoneIndex];
 		batch->m_IsBilldoard = bone.IsBillboard();
 
 		/*for (uint32 i = 0; i < batch->m_SkinSection.boneCount; i++)
@@ -89,7 +89,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 			const CM2_Part_Bone& bone = m_MDX->getBone(batch->m_SkinSection.bonesStartIndex + i);
 			if (bone.IsBillboard())
 			{
-				Log::Warn("Bone [%s] [%d] is billbord!!!", m_MDX->GetFileName().c_str(), batch->m_SkinSection.bonesStartIndex + i, bone.IsBillboard());
+				Log::Warn("Bone [%s] [%d] is billbord!!!", m_MDX->getFilename().c_str(), batch->m_SkinSection.bonesStartIndex + i, bone.IsBillboard());
 				batch->m_IsBilldoard = true;
 				break;
 			}
@@ -185,22 +185,17 @@ void CM2_Skin_Builder::StepBuildGeometry()
 		indices.push_back(verticesIndexes[indexesIndexes[i]]);
 	}
 
+	// Index bufer
+	R_Buffer* __ib = _Render->r.createIndexBuffer(indexesIndexes.size() * sizeof(uint16), indices.data(), false);
 
 	// Begin geometry
 	m_Skin->__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PBNT2);
-
-	// Vertex params
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex)); // pos 0-2
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(SM2_Vertex)); // blend 3
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(SM2_Vertex)); // index 4
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex)); // normal 5-7
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(SM2_Vertex)); // tc0 8-9
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(SM2_Vertex)); // tc1 10-11
-
-	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(indexesIndexes.size() * sizeof(uint16), indices.data());
 	m_Skin->__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-
-	// Finish
 	m_Skin->__geom->finishCreatingGeometry();
 }

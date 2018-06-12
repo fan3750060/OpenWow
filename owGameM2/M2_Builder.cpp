@@ -17,10 +17,10 @@ CM2_Builder::CM2_Builder(M2* _model) :
 	m_TexturesWeight(nullptr),
 	m_TexturesTransform(nullptr)
 {
-	m_F = GetManager<IFilesManager>()->Open(m_MDX->GetFileName());
+	m_F = GetManager<IFilesManager>()->Open(m_MDX->getFilename());
 	if (m_F == nullptr)
 	{
-		Log::Info("CM2_Builder[%s]: Unable to open file.", m_MDX->GetFileName().c_str());
+		Log::Info("CM2_Builder[%s]: Unable to open file.", m_MDX->getFilename().c_str());
 	}
 }
 
@@ -45,6 +45,7 @@ void CM2_Builder::Load()
 	Step7Particles();
 
 	Step8Skins();
+	Step9Collision();
 
 	SetAnimated();
 
@@ -360,7 +361,7 @@ void CM2_Builder::Step8Skins()
 {
 	if (!(m_MDX->m_ContainGeom))
 	{
-		Log::Warn("M2[%s] don't contain geometry", m_MDX->GetFileName().c_str());
+		Log::Warn("M2[%s] don't contain geometry", m_MDX->getFilename().c_str());
 		return;
 	}
 
@@ -388,6 +389,53 @@ void CM2_Builder::Step8Skins()
 	);
 	builder.Load();
 	m_MDX->m_Skins.push_back(skin);
+}
+
+void CM2_Builder::Step9Collision()
+{
+	R_Buffer* collisonVB = nullptr;
+	R_Buffer* collisonIB = nullptr;
+
+	if (m_Header->collisionVertices.size > 0)
+	{
+		vector<vec3> collisionVertices;
+		vec3* CollisionVertices = (vec3*)(m_F->GetData() + m_Header->collisionVertices.offset);
+		for (uint32 i = 0; i < m_Header->collisionVertices.size; i++)
+		{
+			collisionVertices.push_back(CollisionVertices[i]);
+		}
+
+		for (uint32 i = 0; i < m_Header->collisionVertices.size; i++)
+		{
+			collisionVertices[i] = collisionVertices[i].toXZmY();
+		}
+
+		collisonVB = _Render->r.createVertexBuffer(collisionVertices.size() * sizeof(vec3), collisionVertices.data(), false);
+	}
+
+	if (m_Header->collisionTriangles.size > 0)
+	{
+		vector<uint16> collisionTriangles;
+		uint16* CollisionTriangles = (uint16*)(m_F->GetData() + m_Header->collisionTriangles.offset);
+		for (uint32 i = 0; i < m_Header->collisionTriangles.size; i++)
+		{
+			collisionTriangles.push_back(CollisionTriangles[i]);
+		}
+
+		collisonIB = _Render->r.createIndexBuffer(collisionTriangles.size() * sizeof(uint16), collisionTriangles.data(), false);
+	}
+
+	if (collisonVB != nullptr && collisonIB != nullptr)
+	{
+		m_MDX->m_CollisionGeom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+		m_MDX->m_CollisionGeom->setGeomVertexParams(collisonVB, R_DataType::T_FLOAT, 0, sizeof(vec3)); // pos 0-2
+		m_MDX->m_CollisionGeom->setGeomIndexParams(collisonIB, R_IndexFormat::IDXFMT_16);
+		m_MDX->m_CollisionGeom->finishCreatingGeometry();
+	}
+	else
+	{
+		m_MDX->m_CollisionGeom = nullptr;
+	}
 }
 
 #pragma endregion

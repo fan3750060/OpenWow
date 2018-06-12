@@ -78,20 +78,16 @@ void WDL::CreateInsances(SceneNode * _parent)
 				}
 
 				// Vertex buffer
-				R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
+				R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data(), false);
+
+				// Index bufer
+				//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
 
 				//
 
 				R_GeometryInfo* __geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
-
-				// Vertex params
 				__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-
-				// Index bufer
-				//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
-				//_Render->r.setGeomIndexParams(lowrestiles[j][i], __ib, R_IndexFormat::IDXFMT_16);
-
-				// Finish
+				//__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 				__geom->finishCreatingGeometry();
 
 

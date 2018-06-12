@@ -7,13 +7,13 @@ struct RenderableUIObjectCompare
 {
 	bool operator() (const CRenderableUIObject* left, const CRenderableUIObject* right) const
 	{
-		return left->GetDrawOrder() < right->GetDrawOrder();
+		return left->getDrawOrder() < right->getDrawOrder();
 	}
 };
 
 bool CRenderableUIObjectCollection::RegisterObject(CRenderableUIObject* _uiObject, uint32 _DrawOrder)
 {
-	_uiObject->SetDrawOrder(_DrawOrder);
+	_uiObject->setDrawOrder(_DrawOrder);
 	m_Objects.push_back(_uiObject);
 	m_ObjectsNeedSort = true;
 

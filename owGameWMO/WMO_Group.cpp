@@ -10,29 +10,9 @@ WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _gr
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
 	m_F(_groupFile),
+	m_IsMOCVExists(false),
 	m_Quality(GetSettingsGroup<CGroupQuality>())
 {
-	m_MaterialsInfoCount = 0;
-	m_MaterialsInfo = nullptr;
-
-	m_Indices = nullptr;
-
-	m_VertexesCount = 0;
-	m_Vertexes = nullptr;
-
-	m_Normals = nullptr;
-	m_TextureCoords = nullptr;
-
-
-	m_WMOLightsIndexesCount = 0;
-	m_WMOLightsIndexes = nullptr;
-
-
-	//m_DoodadsIndexesCount = 0;
-	//m_DoodadsIndexes = nullptr;
-
-	m_VertexColors = nullptr;
-
 	m_WMOLiqiud = nullptr;
 }
 
@@ -53,6 +33,14 @@ void WMO_Group::CreateInsances(SceneNode* _parent)
 
 void WMO_Group::Load()
 {
+	// Buffer
+	R_Buffer*	indexBuffer = nullptr;
+	R_Buffer*	VB_Vertexes = nullptr;
+	R_Buffer*	VB_TextureCoords = nullptr;
+	R_Buffer*	VB_Normals = nullptr;
+	R_Buffer*	VB_Colors = nullptr;
+
+	// Read file
 	char fourcc[5];
 	uint32 size = 0;
 	while (!m_F->IsEof())
@@ -83,26 +71,50 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOPY") == 0) // Material info for triangles
 		{
-			m_MaterialsInfoCount = size / sizeof(WMO_Group_MaterialDef);
-			m_MaterialsInfo = (WMO_Group_MaterialDef*)m_F->GetDataFromCurrent();
+			uint32 materialsInfoCount = size / sizeof(WMO_Group_MaterialDef);
+			WMO_Group_MaterialDef* materialsInfo = (WMO_Group_MaterialDef*)m_F->GetDataFromCurrent();
+			for (uint32 i = 0; i < materialsInfoCount; i++)
+			{
+				m_MaterialsInfo.push_back(materialsInfo[i]);
+			}
 		}
-		else if (strcmp(fourcc, "MOVI") == 0) // Vertex indices for triangles
+		else if (strcmp(fourcc, "MOVI") == 0) // Indices
 		{
-			m_IndicesCount = size / sizeof(uint16);
-			m_Indices = (uint16*)m_F->GetDataFromCurrent();
+			uint32 indicesCount = size / sizeof(uint16);
+			uint16* indices = (uint16*)m_F->GetDataFromCurrent();
+			// Buffer
+			indexBuffer = _Render->r.createIndexBuffer(indicesCount * sizeof(uint16), indices, false);
 		}
 		else if (strcmp(fourcc, "MOVT") == 0) // Vertices chunk.
 		{
-			m_VertexesCount = size / sizeof(vec3);
-			m_Vertexes = (vec3*)m_F->GetDataFromCurrent();
+			uint32 vertexesCount = size / sizeof(vec3);
+			vec3* vertexes = (vec3*)m_F->GetDataFromCurrent();
+			// Convert
+			for (uint32 i = 0; i < vertexesCount; i++)
+			{
+				vertexes[i] = vertexes[i].toXZmY();
+			}
+			// Buffer
+			VB_Vertexes = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec3), vertexes, false);
+			VB_Colors = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec4), nullptr, false);
 		}
 		else if (strcmp(fourcc, "MONR") == 0) // Normals
 		{
-			m_Normals = (vec3*)m_F->GetDataFromCurrent();
+			uint32 normalsCount = size / sizeof(vec3);
+			vec3* normals = (vec3*)m_F->GetDataFromCurrent();
+			// Convert
+			for (uint32 i = 0; i < normalsCount; i++)
+			{
+				normals[i] = normals[i].toXZmY();
+			}
+			// Buffer
+			VB_Normals = _Render->r.createVertexBuffer(normalsCount * sizeof(vec3), normals, false);
 		}
 		else if (strcmp(fourcc, "MOTV") == 0) // R_Texture coordinates
 		{
-			m_TextureCoords = (vec2*)m_F->GetDataFromCurrent();
+			uint32 textureCoordsCount = size / sizeof(vec2);
+			vec2* textureCoords = (vec2*)m_F->GetDataFromCurrent();
+			VB_TextureCoords = _Render->r.createVertexBuffer(textureCoordsCount * sizeof(vec2), textureCoords, false);
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // WMO_Group_Batch
 		{
@@ -118,15 +130,22 @@ void WMO_Group::Load()
 		else if (strcmp(fourcc, "MOLR") == 0) // Light references
 		{
 			assert1(m_Header.flags.FLAG_HAS_LIGHTS);
-			m_WMOLightsIndexesCount = size / sizeof(uint16);
-			m_WMOLightsIndexes = (uint16*)m_F->GetDataFromCurrent();
+			uint32 lightsIndexesCount = size / sizeof(uint16);
+			uint16* lightsIndexes = (uint16*)m_F->GetDataFromCurrent();
+			for (uint32 i = 0; i < lightsIndexesCount; i++)
+			{
+				m_WMOLightsIndexes.push_back(lightsIndexes[i]);
+			}
 		}
 		else if (strcmp(fourcc, "MODR") == 0) // Doodad references
 		{
 			assert1(m_Header.flags.FLAG_HAS_DOODADS);
-			//m_DoodadsIndexesCount = size / sizeof(uint16);
-			//m_DoodadsIndexes = new uint16[size / sizeof(uint16)];
-			//m_F->ReadBytes(m_DoodadsIndexes, size);
+			uint32 doodadsIndexesCount = size / sizeof(uint16);
+			uint16* doodadsIndexes = (uint16*)m_F->GetDataFromCurrent();
+			for (uint32 i = 0; i < doodadsIndexesCount; i++)
+			{
+				m_DoodadsIndexes.push_back(doodadsIndexes[i]);
+			}
 		}
 		else if (strcmp(fourcc, "MOBN") == 0)
 		{
@@ -139,10 +158,23 @@ void WMO_Group::Load()
 		else if (strcmp(fourcc, "MOCV") == 0) // Vertex colors
 		{
 			assert1(m_Header.flags.FLAG_HAS_VERTEX_COLORS);
-			assert1(size / sizeof(CBgra) == m_VertexesCount);
-
-			m_VertexColors = (CBgra*)m_F->GetDataFromCurrent();
-
+			uint32 vertexColorsCount = size / sizeof(CBgra);
+			CBgra* vertexColors = (CBgra*)m_F->GetDataFromCurrent();
+			// Convert
+			vector<vec4> vertexColorsConverted;
+			for (uint32 i = 0; i < vertexColorsCount; i++)
+			{
+				vertexColorsConverted.push_back(vec4
+				(
+					static_cast<float>(vertexColors[i].r) / 255.0f,
+					static_cast<float>(vertexColors[i].g) / 255.0f,
+					static_cast<float>(vertexColors[i].b) / 255.0f,
+					static_cast<float>(vertexColors[i].a) / 255.0f
+				));
+			}
+			// Buffer
+			VB_Colors = _Render->r.createVertexBuffer(vertexColorsConverted.size() * sizeof(vec4), vertexColorsConverted.data(), false);
+			m_IsMOCVExists = vertexColorsCount > 0;
 		}
 		else if (strcmp(fourcc, "MLIQ") == 0) // Liquid
 		{
@@ -174,63 +206,18 @@ void WMO_Group::Load()
 
 	//
 
-	vec4* vertexColors = new vec4[m_VertexesCount];
-	for (uint32 i = 0; i < m_VertexesCount; i++)
-	{
-		vertexColors[i] = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	}
-
-	if (m_Header.flags.FLAG_HAS_VERTEX_COLORS)
-	{
-		for (uint32 i = 0; i < m_VertexesCount; i++)
-		{
-			vertexColors[i] = vec4
-			(
-				static_cast<float>(m_VertexColors[i].r) / 255.0f,
-				static_cast<float>(m_VertexColors[i].g) / 255.0f,
-				static_cast<float>(m_VertexColors[i].b) / 255.0f,
-				static_cast<float>(m_VertexColors[i].a) / 255.0f
-			);
-		}
-	}
-
-	// Converts
-	for (uint32 i = 0; i < m_VertexesCount; i++)
-	{
-		m_Vertexes[i] = m_Vertexes[i].toXZmY();
-		m_Normals[i] = m_Normals[i].toXZmY();
-	}
 
 	initLighting();
-
-
-	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(m_VertexesCount * 12 * sizeof(float), nullptr);
-	__vb->updateBufferData(m_VertexesCount * 0 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Vertexes);
-	__vb->updateBufferData(m_VertexesCount * 3 * sizeof(float), m_VertexesCount * sizeof(vec2), m_TextureCoords);
-	__vb->updateBufferData(m_VertexesCount * 5 * sizeof(float), m_VertexesCount * sizeof(vec3), m_Normals);
-	__vb->updateBufferData(m_VertexesCount * 8 * sizeof(float), m_VertexesCount * sizeof(vec4), vertexColors);
 
 	//
 
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWMO_VC);
-
-	// Vertex params
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 0 * sizeof(float), 0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 3 * sizeof(float), 0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 5 * sizeof(float), 0);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, m_VertexesCount * 8 * sizeof(float), 0);
-
-	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndicesCount * sizeof(uint16), m_Indices, false);
-	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-
-	// Finish
+	__geom->setGeomVertexParams(VB_Vertexes, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(VB_TextureCoords, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(VB_Normals, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomVertexParams(VB_Colors, R_DataType::T_FLOAT, 0, 0);
+	__geom->setGeomIndexParams(indexBuffer, R_IndexFormat::IDXFMT_16);
 	__geom->finishCreatingGeometry();
-
-	//
-
-	delete[] vertexColors;
 }
 
 void WMO_Group::initLighting()
@@ -279,7 +266,7 @@ void WMO_Group::Render()
 	_Render->r.setGeometry(__geom);
 
 	// Ambient color
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(m_Quality.WMO_MOCV);
+	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
 
 	// Ambient color
 	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetUseAmbColor(m_Quality.WMO_AmbColor);

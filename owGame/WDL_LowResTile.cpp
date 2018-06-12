@@ -12,12 +12,12 @@ CWDL_LowResTile::CWDL_LowResTile(SceneNode* _parent, uint32 _indexX, uint32 _ind
 	m_IndexZ(_indexZ),
 	m_Geom(_geom)
 {
-	SetDrawOrder(19);
+	setDrawOrder(19);
 }
 
 void CWDL_LowResTile::PreRender3D()
 {
-	SetVisible(true);
+	setVisible(true);
 }
 
 void CWDL_LowResTile::Render3D()

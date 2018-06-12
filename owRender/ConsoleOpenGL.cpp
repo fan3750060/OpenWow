@@ -175,7 +175,7 @@ bool CConsoleOpenGL::OnKeyboardPressed(int _key, int _scancode, int _mods)
 		return true;
 	}
 
-	return false;
+	return m_IsOpened;
 }
 
 bool CConsoleOpenGL::OnCharInput(uint32 _char)

@@ -53,14 +53,12 @@ struct SM2_Header
     CAaBox							bounding_box;					// min/max( [1].z, 2.0277779f ) - 0.16f seems to be the maximum camera height
     float							bounding_sphere_radius;			// detail doodad draw dist = clamp (bounding_sphere_radius * detailDoodadDensityFade * detailDoodadDist, …)
 
+	// Collision stuff
     CAaBox							collision_box;
     float							collision_sphere_radius;
-
-
-    // Collision stuff
-    M2Array<uint16>					m_CollisionTriangles;
-    M2Array<vec3>					m_CollisionVertices;
-    M2Array<vec3>					m_CollisionNormals;
+    M2Array<uint16>					collisionTriangles;
+    M2Array<vec3>					collisionVertices;
+    M2Array<vec3>					collisionNormals;
 
 
     // Attachments

@@ -19,6 +19,7 @@ public:
 	void Step6Misc();
 	void Step7Particles();
 	void Step8Skins();
+	void Step9Collision();
 
 	//
 
@@ -26,7 +27,7 @@ public:
 	bool IsAnimated() const { return m_MDX->m_IsAnimated; }
 
 private:
-	M2*					m_MDX;
+	M2*						m_MDX;
 	IFile*					m_F;
 	SM2_Header*				m_Header;
 

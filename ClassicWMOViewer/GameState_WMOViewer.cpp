@@ -40,7 +40,7 @@ bool GameState_WMOViewer::Init()
 	CreateDebugGeom();
 
 	SceneNode* root = new SceneNode();
-	root->SetVisible(true);
+	root->setVisible(true);
 
 	if (m_Engine->GetArgumentsCount() > 1)
 	{
@@ -61,8 +61,7 @@ bool GameState_WMOViewer::Init()
 		//new Single_WMO_Instance(root, wmo);
 	}
 
-	CSceneManager* sceneManager = new CSceneManager();
-	sceneManager->SetRootNode(root);
+	CSceneManager* sceneManager = new CSceneManager(root);
 
 	_PipelineGlobal->GetCamera()->Position = vec3(50, 50, 50);
 	_PipelineGlobal->GetCamera()->SetNeedUpdate();
@@ -133,7 +132,7 @@ void GameState_WMOViewer::PreRender3D()
 	_PipelineGlobal->SetCamera(_Render->mainCamera);
 	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
 
-	SetVisible(true);
+	setVisible(true);
 }
 
 void GameState_WMOViewer::Render3D()

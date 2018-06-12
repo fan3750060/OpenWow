@@ -26,7 +26,7 @@ public:
 
     void SetMatSpecularPower(float Power)
     {
-        setFloat("gSpecularPower", Power);
+        setFloat(gSpecularPower, Power);
     }
 
 private:

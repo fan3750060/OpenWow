@@ -119,10 +119,10 @@ void UIMgr::RenderUI()
     m_RootElement->RenderUI();
 
     // Render debug
-    if (m_FocusedElement != nullptr)
+    /*if (m_FocusedElement != nullptr)
     {
         _Render->RenderRectangleOutline(m_FocusedElement->GetPosition(), m_FocusedElement->GetSize(), COLOR_BLUE);
-    }
+    }*/
 }
 
 //

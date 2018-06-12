@@ -42,7 +42,10 @@ void WMO::CreateInsances(SceneNode* _parent)
 	for (auto& it : m_M2PlacementInfos)
 	{
 		SmartPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_M2Filenames + it.flags.nameIndex);
-		new WMO_MODD_Instance(_parent, mdx, it);
+		if (mdx)
+		{
+			new WMO_MODD_Instance(_parent, mdx, it);
+		}
 	}
 }
 
@@ -148,6 +151,8 @@ bool WMO::Load()
 				f->ReadBytes(&portalVertex, sizeof(vec3));
 				m_PortalVertices.push_back(portalVertex.toXZmY());
 			}
+
+			m_PortalVB = _Render->r.createVertexBuffer(m_PortalVertices.size() * sizeof(vec3), m_PortalVertices.data(), false);
 		}
 		else if (strcmp(fourcc, "MOPT") == 0)
 		{
@@ -158,6 +163,9 @@ bool WMO::Load()
 				WMO_PortalDef portalInformation;
 				f->ReadBytes(&portalInformation, sizeof(WMO_PortalDef));
 				m_PortalInformation.push_back(portalInformation);
+
+				CWMO_Part_Portal portal(this, portalInformation);
+				m_Portals.push_back(portal);
 			}
 		}
 		else if (strcmp(fourcc, "MOPR") == 0)
@@ -252,13 +260,21 @@ bool WMO::Load()
 		f->Seek(nextpos);
 	}
 
+
+	// Portals
+	
+
 	// Init m_Groups
 	for (auto it = m_Groups.begin(); it != m_Groups.end(); ++it)
 	{
 		(*it)->Load();
 	}
 
+
+
 	m_Loaded = true;
+
+
 
 	return true;
 }
@@ -282,31 +298,17 @@ bool WMO::Render(uint32 _doodadSet)
 		return false;
 	}
 
-	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
-	for (auto it = m_Groups.begin(); it != m_Groups.end(); ++it)
+	for (auto& it : m_Portals)
 	{
-		(*it)->Render();
+		it.Render();
+	}
+
+	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
+	for (auto& it : m_Groups)
+	{
+		it->Render();
 	}
 	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
-
-	// Debug geometry
-	/*{
-		_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-		_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-
-		#ifdef _DEBUG
-		DEBUG_DrawLightPlaceHolders();
-		DEBUG_DrawFogPositions();
-		DEBUG_DrawMainBoundingBox();
-		DEBUG_DrawMainBoundingSphere();
-		DEBUG_DrawBoundingBoxes();
-		DEBUG_DrawPortalsRelations();
-		DEBUG_DrawPortals();
-		#endif
-
-		_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
-		_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	}*/
 
 	return true;
 }

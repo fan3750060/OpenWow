@@ -97,7 +97,7 @@ ConsoleCommands CConsole::GetConsoleCommandHelp(string _input)
 	}
 
 	ConsoleCommands commands;
-	for (auto it : m_ConsoleCommands)
+	for (auto& it : m_ConsoleCommands)
 	{
 		auto consoleCommandName = it->GetName();
 

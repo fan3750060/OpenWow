@@ -45,18 +45,20 @@ void main()
 	vec3 resultColor = layersColor;
 	vec4 resultSpecular = layersSpecular;
 	
-	/* CATACLYSM
-	float alphaSumma = 0.0;
-	for(int i = 1; i < gLayersCount; i++)
-	{
-		float alphaCurrent = texture(gBlend, VSInput.TexCoordAlpha)[i - 1];
-		alphaSumma += alphaCurrent;
-		layersColor += texture(gColorMap[i], VSInput.TexCoordDetail).rgb * alphaCurrent;
-		layersSpecular += texture(gSpecularMap[i], VSInput.TexCoordDetail) * alphaCurrent;
-	}
-	vec3 resultColor = texture(gColorMap[0], VSInput.TexCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
-	vec4 resultSpecular = texture(gSpecularMap[0], VSInput.TexCoordDetail) * (1.0 - alphaSumma) + layersSpecular;
-	CATACLYSM */
+	/* 
+		CATACLYSM
+		float alphaSumma = 0.0;
+		for(int i = 1; i < gLayersCount; i++)
+		{
+			float alphaCurrent = texture(gBlend, VSInput.TexCoordAlpha)[i - 1];
+			alphaSumma += alphaCurrent;
+			layersColor += texture(gColorMap[i], VSInput.TexCoordDetail).rgb * alphaCurrent;
+			layersSpecular += texture(gSpecularMap[i], VSInput.TexCoordDetail) * alphaCurrent;
+		}
+		vec3 resultColor = texture(gColorMap[0], VSInput.TexCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
+		vec4 resultSpecular = texture(gSpecularMap[0], VSInput.TexCoordDetail) * (1.0 - alphaSumma) + layersSpecular;
+		CATACLYSM 
+	*/
 	
 	if (gShadowMapExists)
 	{
@@ -69,5 +71,5 @@ void main()
 	setPos(VSInput.WorldSpacePos);
 	setNormal(VSInput.Normal);
 	setAlbedo(resultColor.rgb);
-	setSpecParams(resultSpecular.rgb, 16.0);
+	setSpecParams(resultSpecular.rgb, 1.0);
 };

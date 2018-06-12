@@ -70,9 +70,6 @@ public:
 	bool                _manualProjMat; // Projection matrix manually set?
 
 public:
-	SmartGeomPtr __geom;
-
-public:
 	bool m_NeedUpdate;
 	bool m_UseDir;
 };

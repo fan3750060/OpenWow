@@ -4,12 +4,14 @@
 
 #include "WMO_Group.h"
 #include "WMO_MODD_Instance.h"
-#include "WMO_Part_Material.h"
-#include "WMO_Part_Light.h"
 #include "WMO_Part_Fog.h"
+#include "WMO_Part_Light.h"
+#include "WMO_Part_Material.h"
+#include "WMO_Part_Portal.h"
 
 class WMO : public CRefItem, public IUpdatable
 {
+	friend CWMO_Part_Portal;
 public:
 	WMO(cstring _fileName);
 	~WMO();
@@ -26,7 +28,9 @@ public:
 	bool drawSkybox();
 
 #pragma region Getters
-public: // Getters
+public:
+	string getFilename() const { return m_FileName; }
+
 	bool useAmbColor() const { return !(m_Header.flags.FLAG_skip_base_color); }
 	vec4 getAmbColor() const
 	{
@@ -51,22 +55,20 @@ public:
 	char*									m_TexturesNames;		// MOTX chunk
 	vector<SmartPtr<WMO_Part_Material>>		m_Materials;			// MOMT chunk
 
-
 	//-- Groups --//
 	char*									m_GroupsNames;			// MOGN chunk
 	vector<WMO_Group*>						m_Groups;				// MOGI chunk
-
 
 	//-- Skybox --//
 	char*									m_Skybox_Filename;		// MOSB chunk
 	SmartM2Ptr								m_Skybox;
 
-
 	//-- Portals --//
 	vector<vec3>							m_PortalVertices;		// MOPV chunk
+	SmartBufferPtr							m_PortalVB;
 	vector<WMO_PortalDef>					m_PortalInformation;	// MOPT chunk
 	vector<WMO_PortalReferencesDef>			m_PortalReferences;		// MOPR chunk
-
+	vector<CWMO_Part_Portal>				m_Portals;
 
 	//-- Visible block
 	vector<vec3>							m_VisibleBlockVertices;	// MOVV chunk
@@ -88,8 +90,8 @@ public:
 
 
 	//-- Volumes plane --//
-
 	// MCVP chunk (optional)	
+
 };
 
 struct WMODeleter

@@ -35,7 +35,7 @@ void main(void)
 	{
 		finalColor *= gAmbColor;
 	}
-	
+		
 	setMatID(1.0);
 	setPos(VSout.WorldSpacePos);
 	setNormal(normalize(VSout.Normal));

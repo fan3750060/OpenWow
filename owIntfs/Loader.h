@@ -9,8 +9,8 @@ __interface ILoadable
 	bool Load();
 	bool Delete();
 
-	bool IsLoaded() const;
-	void SetLoaded();
+	void setLoaded();
+	bool isLoaded() const;
 };
 
 __interface

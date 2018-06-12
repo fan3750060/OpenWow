@@ -147,3 +147,27 @@ inline float nearestDistToAABB
 
 	return nearestVec.length();
 }
+
+inline vec3 screenToWord
+(
+	cvec2 _mousePos, 
+	cvec2 windowSize, 
+	cmat4 projection_matrix, 
+	cmat4 view_matrix
+)
+{
+	float x = (2.0f * _mousePos.x) / windowSize.x - 1.0f;
+	float y = 1.0f - (2.0f * _mousePos.y) / windowSize.y;
+
+	vec2 ray_nds = vec2(x, y);
+
+	vec4 ray_clip = vec4(ray_nds.x, ray_nds.y, -1.0, 1.0);
+
+	vec4 ray_eye = projection_matrix.inverted() * ray_clip;
+	ray_eye = vec4(ray_eye.x, ray_eye.y, -1.0, 0.0);
+
+	vec3 ray_wor = view_matrix.inverted() * ray_eye;
+	ray_wor = ray_wor.normalized();
+
+	return ray_wor;
+}

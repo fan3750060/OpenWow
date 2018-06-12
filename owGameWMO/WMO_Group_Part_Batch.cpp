@@ -6,9 +6,6 @@
 // General
 #include "WMO_Group_Part_Batch.h"
 
-// Additional
-
-
 WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Group_BatchDef& _proto) :
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),

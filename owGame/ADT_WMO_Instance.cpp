@@ -30,7 +30,8 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 
 	_wmoObject->CreateInsances(this);
 
-	SetDrawOrder(20);
+	setDrawOrder(21);
+	setSelectable();
 	_Bindings->RegisterUpdatableObject(this);
 }
 
@@ -48,12 +49,12 @@ void ADT_WMO_Instance::PreRender3D()
 {
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		SetVisible(false);
+		setVisible(false);
 		return;
 	}
 	m_AlreadyDraw.insert(m_UniqueId);
 
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void ADT_WMO_Instance::Render3D()
@@ -66,7 +67,6 @@ void ADT_WMO_Instance::Render3D()
 		m_Object->Render(m_DoodadSetIndex);
 		PERF_INC(PERF_MAP_MODELS_WMOs);
 	}
-	_Pipeline->Clear();
 }
 
 //

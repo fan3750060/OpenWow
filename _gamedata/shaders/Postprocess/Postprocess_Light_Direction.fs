@@ -71,11 +71,11 @@ void main(void)
 	WorldPos = getPos(pixelXY);
 	Normal = getNormal(pixelXY);
 	Color = getAlbedo4(pixelXY);
-	Color.a = 1.0;
+	//Color.a = 1.0f;
 	
 	if(getMatID(pixelXY) >= 0)
 	{
-		FragColor = Color * vec4(CalcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction), 1.0);
+		FragColor =  Color * vec4(CalcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction), 1.0f);
 	}
 	else
 	{

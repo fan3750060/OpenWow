@@ -51,13 +51,13 @@ ADT::ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile
 		m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
 
 		// Bounds
-		m_Bounds.Min = vec3(m_Translate.x, -2000.0f, m_Translate.z);
-		m_Bounds.Max = vec3(m_Translate.x + C_TileSize, 2000.0f, m_Translate.z + C_TileSize);
+		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
+		m_Bounds.Max = vec3(m_Translate.x + C_TileSize, Math::MinFloat, m_Translate.z + C_TileSize);
 		m_Bounds.calculateCenter();
 		
 	}
 
-	SetDrawOrder(20);
+	setDrawOrder(20);
 }
 
 bool ADT::Load()
@@ -237,6 +237,8 @@ bool ADT::Load()
 		SmartPtr<ADT_MCNK> chunk = new ADT_MCNK(this, f);
 		chunk->Load();
 		m_Chunks.push_back(chunk);
+
+		m_Bounds.makeUnion(chunk->getBounds());
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
@@ -244,18 +246,21 @@ bool ADT::Load()
 	for (auto& it : m_WMOsPlacementInfo)
 	{
 		WMO* wmo = (WMO*)GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]); // GET
-		ADT_WMO_Instance* inst = new ADT_WMO_Instance(this, wmo, it);
+		ADT_WMO_Instance* inst = new ADT_WMO_Instance(getParent(), wmo, it);
 		m_WMOsInstances.push_back(inst);
 	}
 	
 	//-- MDXs -------------------------------------------------------------------------
 
-	/*for (auto& it : m_MDXsPlacementInfo)
+	for (auto& it : m_MDXsPlacementInfo)
 	{
 		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
-		ADT_MDX_Instance* inst = new ADT_MDX_Instance(this, mdx, it);
-		m_MDXsInstances.push_back(inst);
-	}*/
+		if (mdx)
+		{
+			ADT_MDX_Instance* inst = new ADT_MDX_Instance(getParent(), mdx, it);
+			m_MDXsInstances.push_back(inst);
+		}
+	}
 
 	//---------------------------------------------------------------------------------
 
@@ -271,7 +276,7 @@ bool ADT::Delete()
 
 void ADT::PreRender3D()
 {
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void ADT::Render3D()

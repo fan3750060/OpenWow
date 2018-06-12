@@ -40,39 +40,22 @@ public:
 
 public:
 	//-- Triangles --//
-	uint32									m_MaterialsInfoCount;
-	WMO_Group_MaterialDef*					m_MaterialsInfo; // MOPY chunk
+	vector<WMO_Group_MaterialDef>			m_MaterialsInfo;
 
-	uint32									m_IndicesCount;
-	uint16*									m_Indices;                  // MOVI chunk
-
-	uint32									m_VertexesCount;
-	vec3*									m_Vertexes;                   // MOVT chunk
-
-	vec3*									m_Normals;                    // MONR chunk
-	vec2*									m_TextureCoords;                  // MOTV chunk
-
+	bool									m_IsMOCVExists;
 
 	//-- Render bathes --//
-	vector<SmartPtr<WMO_Group_Part_Batch>>	m_WMOBatchIndexes;      // MOBA chunk
-
+	vector<SmartPtr<WMO_Group_Part_Batch>>	m_WMOBatchIndexes;
 
 	//-- Lights --//
-	uint32									m_WMOLightsIndexesCount;
-	uint16*									m_WMOLightsIndexes;     // MOLR chunk
+	vector<uint16>							m_WMOLightsIndexes;
 
-
-	//-- Doodads references --// Break my engine logic
-	//uint32 m_DoodadsIndexesCount;
-	//uint16* m_DoodadsIndexes;       // MODR chunk
-
+	//-- Doodads references --// 
+	vector<uint16>							m_DoodadsIndexes;
 
 	//-- Collision --//
 	// MOBN chunk
 	// MOBR chunk
-
-	//-- Vertex colors --//
-	CBgra*							m_VertexColors;         // MOCV chunk
 
 	//-- Liquid --//
 	WMO_Group_MLIQDef				m_LiquidHeader;

@@ -26,16 +26,16 @@ __interface IRenderable3D : public IObject
 	void Render3D();
 	void PostRender3D();
 
-	bool IsVisible() const;
-	void SetVisible(bool _value);
-	void SetDrawOrder(uint32 _order);
-	uint32 GetDrawOrder() const;
+	void setVisible(bool _value);
+	bool isVisible() const;
+	void setDrawOrder(uint32 _order);
+	uint32 getDrawOrder() const;
 };
 
 __interface IRenderableUI : public IObject
 {
 	void RenderUI();
 
-	void SetDrawOrder(uint32 _order);
-	uint32 GetDrawOrder() const;
+	void setDrawOrder(uint32 _order);
+	uint32 getDrawOrder() const;
 };

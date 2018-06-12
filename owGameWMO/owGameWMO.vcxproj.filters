@@ -10,6 +10,9 @@
     <Filter Include="Parts">
       <UniqueIdentifier>{b0f56994-9fa8-494f-a732-b6f401df22f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Builder">
+      <UniqueIdentifier>{0cf512f7-ca02-4421-9ea7-17b0a54e3b36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,6 +35,12 @@
       <Filter>Instances</Filter>
     </ClCompile>
     <ClCompile Include="WMO_Group_Part_Batch.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Builder.cpp">
+      <Filter>Builder</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Part_Portal.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,6 +72,12 @@
       <Filter>Parts</Filter>
     </ClInclude>
     <ClInclude Include="WMO_Part_Fog.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Builder.h">
+      <Filter>Builder</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Part_Portal.h">
       <Filter>Parts</Filter>
     </ClInclude>
   </ItemGroup>

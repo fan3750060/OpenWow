@@ -1,8 +1,5 @@
 #pragma once
 
-#include "RefItem.h"
-#include "SmartPtr.h"
-
 class SceneNode : 
 	public CRefItem,
 	public ILoadable, 
@@ -39,16 +36,21 @@ public:
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
 	cvec3 getScale() const { return m_Scale; }
-
+	cbbox getBounds() { return m_Bounds; }
 	cmat4 getRelTrans() const { return m_RelTransform; }
 	cmat4 getAbsTrans() const { return m_AbsTransform; }
+
+	// ISceneNode::Selectable
+	void setSelectable() { m_Selectable = true; }
+	bool getSelectable() { return m_Selectable; }
+	virtual string getObjectInfo() { return ""; }
 
 	// ILoadable
 	virtual bool Load() override;
 	virtual bool Delete() override;
-	bool IsLoaded() const override { return m_IsLoaded; }
-	void SetLoaded() override { m_IsLoaded = true; }
-
+	void setLoaded() override { m_IsLoaded = true; }
+	bool isLoaded() const override { return m_IsLoaded; }
+	
 	// IUpdatable
 	virtual void Input(double _time, double _dTime) override {};
 	virtual void Update(double _time, double _dTime) override {};
@@ -56,11 +58,11 @@ public:
 	// IRenderable
 	virtual void PreRender3D() override {};
 	virtual void Render3D() override {}
-	void PostRender3D() override {}
-	bool IsVisible() const { return m_IsVisible; }
-	void SetVisible(bool _value) override { m_IsVisible = _value; }
-	inline void SetDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
-	inline uint32 GetDrawOrder() const override { return m_DrawOrder; }
+	void PostRender3D() override { /*Don't use it*/ }
+	void setVisible(bool _value) override { m_IsVisible = _value; }
+	bool isVisible() const { return m_IsVisible; }
+	inline void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
+	inline uint32 getDrawOrder() const override { return m_DrawOrder; }
 
 protected:
 	void CalculateMatrix(bool _isRotationQuat = false);
@@ -73,13 +75,12 @@ protected:
 	vec3				m_Rotate;
 	quat				m_RotateQuat;
 	vec3                m_Scale;
+	BoundingBox         m_Bounds;
 
 private:
 	mat4				m_RelTransform;
 	mat4				m_AbsTransform;
-
-protected:
-	BoundingBox         m_Bounds;
+	bool				m_Selectable;
 
 private: // ILoadable
 	bool				m_IsLoaded;

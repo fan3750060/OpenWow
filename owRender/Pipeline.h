@@ -1,37 +1,25 @@
 #pragma once
 
 // Include 
-#include "Camera.h"
 #include "PipelineWorldTransformation.h"
 
 class Pipeline
 {
 	CLASS_INSTANCE(Pipeline);
-
-	Pipeline() : camera(nullptr) {}
+public:
+	Pipeline() : 
+		camera(nullptr) 
+	{}
 
 	void SetCamera(Camera* _camera);
 	void SetCameraFrustum(Camera* _camera);
-	
+
 	//
 
-	inline const mat4& GetProjection() 
-	{ 
-		return camera->getProjMat();
-	}
-	inline const mat4& GetView()
-	{
-		return camera->getViewMat(); 
-	}
-	inline const mat4& GetWorld()
-	{ 
-		return worldTransformation.GetWorld();
-	}
-
-	inline mat4 GetPVM()
-	{
-		return GetProjection() * GetView() * GetWorld();
-	}
+	inline const mat4& GetProjection() { return camera->getProjMat(); }
+	inline const mat4& GetView() { return camera->getViewMat(); }
+	inline const mat4& GetWorld() { return worldTransformation.GetWorld(); }
+	inline const mat4 GetPVM() { return GetProjection() * GetView() * GetWorld(); }
 
 	//
 

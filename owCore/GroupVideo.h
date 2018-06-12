@@ -23,7 +23,7 @@ public:
 		}
 	}
 
-	inline vec2 GetWindowSize() { return vec2(windowSizeX, windowSizeY); }
+	inline vec2 GetWindowSize() const { return vec2(windowSizeX, windowSizeY); }
 
 	// Render settings
 	float windowSizeX;

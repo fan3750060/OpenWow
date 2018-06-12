@@ -3,10 +3,6 @@
 // General
 #include "Camera.h"
 
-// Additiona
-#include "Render.h"
-#include "RenderStorage.h"
-
 Camera::Camera(vec3 position, vec3 up, float roll, float pitch) :
 	Direction(vec3(0.0f, 0.0f, -1.0f)),
 	MovementSpeed(SPEED),
@@ -183,7 +179,7 @@ void Camera::onPostUpdate()
 
 void Camera::CreateRenderable()
 {
-	float nh = _frustNear * tan;
+	/*float nh = _frustNear * tan;
 	float nw = nh * asp;
 
 	float fh = _frustFar * tan;
@@ -243,5 +239,5 @@ void Camera::CreateRenderable()
 	R_Buffer* __vb = _Render->r.createVertexBuffer(verts.size() * sizeof(vec3), verts.data());
 	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-	__geom->finishCreatingGeometry();
+	__geom->finishCreatingGeometry();*/
 }

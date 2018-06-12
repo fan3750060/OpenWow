@@ -249,7 +249,7 @@ uint32 MapController::GetAreaID()
 	int32 indexY = tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2);
 
 	ADT* curTile = m_Current[indexX][indexY];
-	if (curTile == nullptr || !curTile->IsLoaded())
+	if (curTile == nullptr || !curTile->isLoaded())
 	{
 		return UINT32_MAX;
 	}
@@ -265,7 +265,7 @@ uint32 MapController::GetAreaID()
 
 void MapController::PreRender3D()
 {
-	SetVisible(true);
+	setVisible(true);
 }
 
 bool MapController::IsTileInCurrent(ADT* _mapTile)

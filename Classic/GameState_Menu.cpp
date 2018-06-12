@@ -157,7 +157,7 @@ void GameState_Menu::PreRender3D()
 {
 	if (backgroundModel == nullptr) return;
 
-	SetVisible(true);
+	setVisible(true);
 }
 
 void GameState_Menu::Render3D()

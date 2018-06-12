@@ -50,6 +50,7 @@ public:
 	void Update(double _time, double _dTime) override;
 
 	void Render();
+	void RenderCollision();
 	void updateEmitters(float dt);
 
 	void drawModel();
@@ -61,15 +62,15 @@ public:
 
 #pragma region Getters
 public:
-	bool IsLoaded() const 
+	bool isLoaded() const 
 	{ 
 		return m_Loaded; 
 	}
-	string GetFileName() const 
+	string getFilename() const 
 	{ 
 		return m_FileName; 
 	}
-	const BoundingBox& GetBounds() const 
+	cbbox getBounds() const 
 	{ 
 		return m_Bounds; 
 	}
@@ -179,17 +180,16 @@ public:
 	// Particles
 	vector<CM2_RibbonEmitters>			m_RibbonEmitters;
 #ifdef MDX_PARTICLES_ENABLE
-	ParticleSystem*				particleSystems;
+	ParticleSystem*						particleSystems;
 #endif
-	bool						m_HasMisc;
+	bool								m_HasMisc;
 #pragma endregion
 
 
 private:
 	// Buffers and geom
-	SmartBufferPtr				m_VBuffer;
-	
-
+	SmartBufferPtr						m_VBuffer;
+	SmartGeomPtr						m_CollisionGeom;
 public:
 	bool animcalc;
 	CM2_Animator* m_Animator;

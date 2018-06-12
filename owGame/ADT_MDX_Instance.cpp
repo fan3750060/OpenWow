@@ -27,11 +27,12 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 		//
 		CalculateMatrix();
 		//
-		m_Bounds = m_Object->GetBounds();
+		m_Bounds = m_Object->getBounds();
 		m_Bounds.transform(getAbsTrans());
 	}
 	
-	SetDrawOrder(20);
+	setDrawOrder(21);
+	setSelectable();
 	_Bindings->RegisterUpdatableObject(this);
 }
 
@@ -49,11 +50,11 @@ void ADT_MDX_Instance::PreRender3D()
 {
 	/*if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		SetVisible(false);
+		setVisible(false);
 		return;
 	}
 	m_AlreadyDraw.insert(m_UniqueId);*/
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void ADT_MDX_Instance::Render3D()
@@ -61,7 +62,9 @@ void ADT_MDX_Instance::Render3D()
 	_Pipeline->Clear();
 	{
 		_Pipeline->SetWorld(getAbsTrans());
+		
 		m_Object->Render();
+		
 		PERF_INC(PERF_MAP_MODELS_MDXs);
 	}
 	_Pipeline->Clear();

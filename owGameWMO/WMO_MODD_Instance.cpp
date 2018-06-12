@@ -16,11 +16,12 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 		//
 		CalculateMatrix(true);
 		//
-		m_Bounds = m_Object->GetBounds();
+		m_Bounds = m_Object->getBounds();
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	SetDrawOrder(20);
+	setDrawOrder(23);
+	setSelectable();
 	_Bindings->RegisterUpdatableObject(this);
 }
 
@@ -36,12 +37,12 @@ void WMO_MODD_Instance::Update(double _time, double _dTime)
 
 void WMO_MODD_Instance::PreRender3D()
 {
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void WMO_MODD_Instance::Render3D()
 {
-	_Render->DrawBoundingBox(m_Bounds);
+	//_Render->DrawBoundingBox(m_Bounds);
 
 	_Pipeline->Clear();
 	{

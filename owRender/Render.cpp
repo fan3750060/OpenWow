@@ -85,7 +85,7 @@ void RenderGL::UnbindRBs()
 	{
 		r.setTexture(i, rb->getRenderBufferTex(i), 0, 0);
 	}
-	r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
+	r.clear();
 }
 
 void RenderGL::PostprocessSimple()
@@ -102,6 +102,52 @@ void RenderGL::PostprocessSimple()
 	r.setDepthTest(true);
 
 	m_TechniquesManager->m_POST_Simple->Unbind();
+}
+
+void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
+{
+	mat4 world;
+	world.translate(_pos);
+	world.scale(0.2f);
+
+	r.setCullMode(R_CullMode::RS_CULL_BACK);
+	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+
+	m_TechniquesManager->m_Debug_GeometryPass->Bind();
+	m_TechniquesManager->m_Debug_GeometryPass->SetPV();
+	m_TechniquesManager->m_Debug_GeometryPass->SetWorldMatrix(world);
+	m_TechniquesManager->m_Debug_GeometryPass->SetColor4(vec4(1, 1, 1, 1));
+
+	r.setGeometry(m_RenderStorage->_cubeGeo);
+	r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+
+	m_TechniquesManager->m_Debug_GeometryPass->Unbind();
+
+	r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	r.setCullMode(R_CullMode::RS_CULL_NONE);
+}
+
+void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
+{
+	mat4 world;
+	world.translate(_box.Min);
+	world.scale(_box.Max - _box.Min);
+
+	r.setCullMode(R_CullMode::RS_CULL_NONE);
+	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+
+	m_TechniquesManager->m_Debug_GeometryPass->Bind();
+	m_TechniquesManager->m_Debug_GeometryPass->SetPV();
+	m_TechniquesManager->m_Debug_GeometryPass->SetWorldMatrix(world);
+	m_TechniquesManager->m_Debug_GeometryPass->SetColor4(_color);
+
+	r.setGeometry(m_RenderStorage->_cubeGeo);
+	r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+
+	m_TechniquesManager->m_Debug_GeometryPass->Unbind();
+
+	r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
 #pragma region GUI Part
@@ -255,10 +301,6 @@ void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAl
 	_font->Render(_string, _pos + offset, _color);
 }
 
-#pragma endregion
-
-//
-
 void RenderGL::RenderQuad()
 {
 	r.setGeometry(m_RenderStorage->__Quad);
@@ -271,52 +313,9 @@ void RenderGL::RenderQuadVT()
 	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
 }
 
+#pragma endregion
+
 //
-
-void RenderGL::DrawCube(vec3 _pos)
-{
-	mat4 world;
-	world.translate(_pos);
-	world.scale(0.2f);
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	m_TechniquesManager->m_Debug_GeometryPass->Bind();
-	m_TechniquesManager->m_Debug_GeometryPass->SetPV();
-	m_TechniquesManager->m_Debug_GeometryPass->SetWorldMatrix(world);
-	m_TechniquesManager->m_Debug_GeometryPass->SetColor4(vec4(1, 1, 1, 1));
-
-	_Render->r.setGeometry(m_RenderStorage->_cubeGeo);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
-
-	m_TechniquesManager->m_Debug_GeometryPass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-}
-
-void RenderGL::DrawBoundingBox(BoundingBox& _box)
-{
-	_Pipeline->Clear();
-	_Pipeline->Translate(_box.Min);
-	_Pipeline->Scale(_box.Max - _box.Min);
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	m_TechniquesManager->m_Debug_GeometryPass->Bind();
-	m_TechniquesManager->m_Debug_GeometryPass->SetPVW();
-	m_TechniquesManager->m_Debug_GeometryPass->SetColor4(vec4(1, 1, 1, 1));
-
-	_Render->r.setGeometry(m_RenderStorage->_cubeGeo);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
-
-	m_TechniquesManager->m_Debug_GeometryPass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-}
 
 void RenderGL::DrawPerfomance(vec2 _startPoint)
 {
@@ -327,13 +326,25 @@ void RenderGL::DrawPerfomance(vec2 _startPoint)
 	{
 		if (PerfomanceMessages[i].what != PERF_DELIM)
 		{
-			_Render->RenderText(point, PerfomanceMessages[i].descr + string(": t[") + _Perfomance->GetTimer(PerfomanceMessages[i].what) + (PerfomanceMessages[i].showInc ? "], c[" + _Perfomance->GetInc(PerfomanceMessages[i].what) + "]" : "]"));
+			RenderText(
+				point,
+				PerfomanceMessages[i].descr +
+				string(": t[")
+				+
+				_Perfomance->GetTimer(PerfomanceMessages[i].what)
+				+
+				(
+					PerfomanceMessages[i].showInc ? "], c["
+					+
+					_Perfomance->GetInc(PerfomanceMessages[i].what) + "]" : "]"
+					)
+			);
 		}
 
 		point.y += diff;
 	}
 
-	_Render->RenderText(point, "SUMMA: " + _Perfomance->Sum());
+	RenderText(point, "SUMMA: " + _Perfomance->Sum());
 }
 
 //

@@ -222,7 +222,7 @@ R_Texture* TexturesManager::CreateAction(cstring _name)
 
 	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f->Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
 
-	return DefaultTexture();
+	return _texture;
 }
 
 bool TexturesManager::DeleteAction(cstring name)

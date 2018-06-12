@@ -307,12 +307,12 @@ void Liquid::createBuffer()
 	}
 
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(SLiquidVertexData), mh2oVertices.data());
+	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
 	m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
 	assert1(m_VerticesCnt > 0);
 
 	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data());
+	R_Buffer* __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
 	m_IndicesCnt = static_cast<uint32>(m_Indices.size());
 	assert1(m_IndicesCnt > 0);
 

@@ -7,6 +7,8 @@ SceneNode::SceneNode() :
 	m_Parent(nullptr),
 	m_Rotate(vec3(0.0f, 0.0f, 0.0f)),
 	m_Scale(vec3(1.0f, 1.0f, 1.0f)),
+	m_IsLoaded(false),
+	m_Selectable(false),
 	m_IsVisible(false),
 	m_DrawOrder(0)
 {
@@ -17,6 +19,8 @@ SceneNode::SceneNode(SceneNode* _parent) :
 	m_Parent(_parent),
 	m_Rotate(vec3(0.0f, 0.0f, 0.0f)),
 	m_Scale(vec3(1.0f, 1.0f, 1.0f)),
+	m_IsLoaded(false),
+	m_Selectable(false),
 	m_IsVisible(false),
 	m_DrawOrder(0)
 {

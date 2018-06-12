@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Camera.h"
 #include "RenderDevice.h"
 
 class TexturesManager;
@@ -52,6 +51,8 @@ public:
 	void Set2D() override;
 	void Set3D() override;
 	
+
+
 	//------------------
 	// 3D Part
 	//------------------
@@ -59,6 +60,11 @@ public:
 	void BindRBs() override;
 	void UnbindRBs() override;
 	void PostprocessSimple() override;
+
+	// Primitives
+	void DrawCube(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	void DrawBoundingBox(cbbox _box, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
 
 	//------------------
 	// GUI Part
@@ -78,12 +84,8 @@ public:
 	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color = COLOR_WHITE) const;
 	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color = COLOR_WHITE) const;
 
-
 	void RenderQuad();
     void RenderQuadVT();
-
-	void DrawCube(vec3 _pos);
-    void DrawBoundingBox(BoundingBox& _box);
 
 	void DrawPerfomance(vec2 _startPoint);
 

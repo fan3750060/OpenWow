@@ -16,7 +16,7 @@ WorldRender::WorldRender(WorldController * _WorldContoller)	:
 	m_TestCamera->setupViewParams(Math::Pi / 4.0f, groupVideo.aspectRatio, 2.0f, 15000.0f);
 
 	_Bindings->RegisterRenderable3DObject(this, 6);
-	SetVisible(true);
+	setVisible(true);
 }
 
 WorldRender::~WorldRender()
@@ -80,12 +80,12 @@ void WorldRender::RenderPostprocess()
 {
 	_Render->PostprocessSimple();
 
-	/*DirectionalLight light;
+	DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.ambient = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);*/
+	DSDirectionalLightPass(light);
 
 	if (groupQuality.drawfog)
 	{

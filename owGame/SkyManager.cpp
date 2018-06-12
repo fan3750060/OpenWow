@@ -137,7 +137,7 @@ void SkyManager::Calculate(uint32 _time)
 
 void SkyManager::PreRender3D()
 {
-	SetVisible(!skies.empty());
+	setVisible(!skies.empty());
 }
 
 void SkyManager::Render3D()

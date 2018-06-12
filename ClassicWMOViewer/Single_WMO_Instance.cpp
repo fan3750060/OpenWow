@@ -24,7 +24,7 @@ Single_WMO_Instance::Single_WMO_Instance(SceneNode* _parent, WMO* _wmoObject) :
 
 	_wmoObject->CreateInsances(this);
 
-	//SetDrawOrder(20);
+	//setDrawOrder(21);
 	//_Bindings->RegisterUpdatableObject(this);
 }
 
@@ -42,11 +42,11 @@ void Single_WMO_Instance::PreRender3D()
 {
 	/*if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-	SetVisible(false);
+	setVisible(false);
 	return;
 	}
 	m_AlreadyDraw.insert(m_UniqueId);*/
-	SetVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void Single_WMO_Instance::Render3D()

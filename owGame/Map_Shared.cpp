@@ -17,7 +17,8 @@ void Map_Shared::Init()
 	m_LowResMapStrip = GenarateLowResMapArray();
 
 	// init texture coordinates for detail map:
-	vec2* detailTextureCoord = m_TCDetailMap;
+	vec2 detailTextureCoord[C_MapBufferSize];
+	vec2* dtc = detailTextureCoord;
 	const float detail_half = 0.5f * C_DetailSize / 8.0f;
 	for (int j = 0; j < 17; j++)
 	{
@@ -29,12 +30,14 @@ void Map_Shared::Init()
 			{
 				tx += detail_half;
 			}
-			*detailTextureCoord++ = vec2(tx, ty);
+			*dtc++ = vec2(tx, ty);
 		}
 	}
+	BufferTextureCoordDetail = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec2), detailTextureCoord, false);
 
 	// init texture coordinates for alpha map:
-	vec2* alphaTextureCoord = m_TCAlphaMap;
+	vec2 alphaTextureCoord[C_MapBufferSize];
+	vec2* atc = alphaTextureCoord;
 	const float alpha_half = 0.5f * 1.0f / 8.0f;
 	for (int j = 0; j < 17; j++)
 	{
@@ -46,9 +49,10 @@ void Map_Shared::Init()
 			{
 				tx += alpha_half;
 			}
-			*alphaTextureCoord++ = vec2(tx, ty);
+			*atc++ = vec2(tx, ty);
 		}
 	}
+	BufferTextureCoordAlpha = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec2), alphaTextureCoord, false);
 }
 
 vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
@@ -98,7 +102,6 @@ vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
 
     return myIndexes;
 }
-
 
 vector<uint16> Map_Shared::GenarateLowResMapArray(uint16 _holes)
 {

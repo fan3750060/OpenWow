@@ -38,6 +38,13 @@ void CM2_Manager::Update(double _Time, double _deltaTime)
 
 M2* CM2_Manager::CreateAction(cstring name)
 {
+	string newName = Utils::ToLower(name);
+	if (newName.find("orgrimmarsmokeemitter.mdx") != -1 ||
+		newName.find("orgrimmarfloatingembers.mdx") != -1)
+	{
+		return nullptr;
+	}
+
 	M2* model = new M2(name);
 
 	CM2_Builder builder(model);

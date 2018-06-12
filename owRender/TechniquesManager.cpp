@@ -77,7 +77,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	m_POST_DirectionalLight->Bind();
 	m_POST_DirectionalLight->BindToPostprocess();
 	m_POST_DirectionalLight->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
-	m_POST_DirectionalLight->SetMatSpecularPower(32);
+	m_POST_DirectionalLight->SetMatSpecularPower(16);
 	m_POST_DirectionalLight->Unbind();
 
 	//----------------------------------------------------------------//

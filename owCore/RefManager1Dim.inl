@@ -30,7 +30,10 @@ T* CRefManager1Dim<T>::Add(cstring name)
 	}
 
 	item = CreateAction(name);
-	objects[name] = item;
+	if (item != nullptr)
+	{
+		objects[name] = item;
+	}
 
 	return item;
 }

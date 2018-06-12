@@ -11,6 +11,12 @@ class ADT_MCNK : public SceneNode
 public:
 	ADT_MCNK(ADT* _parentTile, IFile* _file);
 
+	// ISceneNode
+	string getObjectInfo() override 
+	{ 
+		return getParent()->getObjectInfo() + " - " + "[" + to_string(header.indexX) + ":" + to_string(header.indexY) + "]"; 
+	}
+
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
@@ -37,14 +43,13 @@ public:
 
 
 	SmartGeomPtr __geom;
+	SmartGeomPtr __geomDebugNormals;
 
 	R_Buffer* __ibDefault;
 	uint16  m_IndexesCountDefault;
 
 	R_Buffer* __ibLowResolution;
 	uint16  m_IndexesCountLowResolution;
-
-	SmartGeomPtr __geomDebugNormals;
 
 	CGroupQuality& m_QualitySettings;
 };

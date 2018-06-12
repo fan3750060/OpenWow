@@ -21,7 +21,8 @@ public:
 	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo);
 	~ADT_MDX_Instance();
 
-    M2* GetMDX() { return m_Object; }
+	// ISceneNode
+	string getObjectInfo() override { return m_Object->getFilename(); }
 
 	// IUpdateble
 	void Update(double _time, double _dTime) override;
