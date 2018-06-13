@@ -31,6 +31,8 @@ void WorldRender::PreRender3D()
 
 	_PipelineGlobal->SetCamera(_Render->mainCamera);
 	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
+
+	_Render->TechniquesMgr()->PreRender3D();
 }
 
 void WorldRender::Render3D()
@@ -80,12 +82,12 @@ void WorldRender::RenderPostprocess()
 {
 	_Render->PostprocessSimple();
 
-	DirectionalLight light;
+	/*DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.ambient = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);
+	DSDirectionalLightPass(light);*/
 
 	if (groupQuality.drawfog)
 	{
@@ -95,10 +97,10 @@ void WorldRender::RenderPostprocess()
 
 void WorldRender::DSDirectionalLightPass(DirectionalLight& _light)
 {
-	_Render->TechniquesMgr()->m_POST_DirectionalLight->Bind();
-	_Render->TechniquesMgr()->m_POST_DirectionalLight->SetCameraPos(_Camera->Position);
+	_Render->TechniquesMgr()->Postprocess_Light_Direction->Bind();
+	_Render->TechniquesMgr()->Postprocess_Light_Direction->SetCameraPos(_Camera->Position);
 
-	_Render->TechniquesMgr()->m_POST_DirectionalLight->SetDirectionalLight(_light);
+	_Render->TechniquesMgr()->Postprocess_Light_Direction->SetDirectionalLight(_light);
 
 	_Render->r.setDepthTest(false);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -108,17 +110,17 @@ void WorldRender::DSDirectionalLightPass(DirectionalLight& _light)
 	_Render->r.setBlendMode(false);
 	_Render->r.setDepthTest(true);
 
-	_Render->TechniquesMgr()->m_POST_DirectionalLight->Unbind();
+	_Render->TechniquesMgr()->Postprocess_Light_Direction->Unbind();
 }
 
 void WorldRender::DSFogRenderPass()
 {
-	_Render->TechniquesMgr()->m_POST_Fog->Bind();
-	_Render->TechniquesMgr()->m_POST_Fog->SetCameraPos(_Camera->Position);
+	_Render->TechniquesMgr()->Postprocess_Fog->Bind();
+	_Render->TechniquesMgr()->Postprocess_Fog->SetCameraPos(_Camera->Position);
 
-	_Render->TechniquesMgr()->m_POST_Fog->SetFogDistance(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE));
-	_Render->TechniquesMgr()->m_POST_Fog->SetFogModifier(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_MULTIPLIER));
-	_Render->TechniquesMgr()->m_POST_Fog->SetFogColor(m_WorldContoller->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_FOG));
+	_Render->TechniquesMgr()->Postprocess_Fog->SetFogDistance(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE));
+	_Render->TechniquesMgr()->Postprocess_Fog->SetFogModifier(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_MULTIPLIER));
+	_Render->TechniquesMgr()->Postprocess_Fog->SetFogColor(m_WorldContoller->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_FOG));
 
 	_Render->r.setDepthTest(false);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -128,12 +130,12 @@ void WorldRender::DSFogRenderPass()
 	_Render->r.setBlendMode(false);
 	_Render->r.setDepthTest(true);
 
-	_Render->TechniquesMgr()->m_POST_Fog->Unbind();
+	_Render->TechniquesMgr()->Postprocess_Fog->Unbind();
 }
 
 void WorldRender::DSResultQuad()
 {
-	_Render->TechniquesMgr()->m_UI_Texture->Bind();
+	_Render->TechniquesMgr()->UI_Texture->Bind();
 
 	_Render->r.setDepthTest(false);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -143,5 +145,5 @@ void WorldRender::DSResultQuad()
 	_Render->r.setBlendMode(false);
 	_Render->r.setDepthTest(true);
 
-	_Render->TechniquesMgr()->m_UI_Texture->Unbind();
+	_Render->TechniquesMgr()->UI_Texture->Unbind();
 }

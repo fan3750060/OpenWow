@@ -36,7 +36,8 @@ void glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 {
 	//if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
-	if (id == 131185) return;
+	//  Dynamic buff	pixel sync
+	if (id == 131185 || id == 131154) return;
 
 
 	Log::Error("---------------");

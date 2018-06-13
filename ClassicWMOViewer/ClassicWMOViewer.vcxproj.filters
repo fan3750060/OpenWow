@@ -5,7 +5,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="GameState_WMOViewer.h" />
-    <ClInclude Include="Single_WMO_Instance.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -13,7 +12,6 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="GameState_WMOViewer.cpp" />
-    <ClCompile Include="Single_WMO_Instance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

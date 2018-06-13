@@ -44,7 +44,7 @@ private:
 
 	Commands cmd;
 
-	SmartM2Ptr backgroundModel;
+	Single_M2_Instance* m_BackgroudModel;
 	float mt;
 
 	void randBackground();

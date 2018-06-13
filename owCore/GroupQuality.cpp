@@ -46,17 +46,18 @@ CGroupQuality::~CGroupQuality()
 
 void CGroupQuality::InitDefault()
 {
-	Terrain_LowDetail = false;
 	Texture_Sampler = R_SamplerState2::SS_ANISO16;
 
 	WMO_MOCV = true;
 	WMO_AmbColor = false;
 
-	draw_map_chunk = true;
+	draw_mcnk = true;
+	draw_mcnk_low = false;
 	draw_map_wmo = true;
-	draw_map_wmo_doodads = true;
-	draw_map_mdx = true;
+	draw_wmo_doodads = true;
+	draw_map_m2 = true;
 	draw_water = true;
+	draw_wmo_water = true;
 
 	drawfog = false;
 	timeEnable = false;
@@ -66,7 +67,7 @@ bool CGroupQuality::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
 	if (_key == OW_KEY_KP_1)
 	{
-		SwitchBool(draw_map_chunk);
+		SwitchBool(draw_mcnk);
 		return true;
 	}
 	if (_key == OW_KEY_KP_2)
@@ -76,13 +77,25 @@ bool CGroupQuality::OnKeyboardPressed(int _key, int _scancode, int _mods)
 	}
 	if (_key == OW_KEY_KP_3)
 	{
-		SwitchBool(draw_map_wmo_doodads);
+		SwitchBool(draw_wmo_doodads);
 		return true;
 	}
 
 	if (_key == OW_KEY_KP_4)
 	{
-		SwitchBool(draw_map_mdx);
+		SwitchBool(draw_map_m2);
+		return true;
+	}
+
+	if (_key == OW_KEY_KP_5)
+	{
+		SwitchBool(draw_water);
+		return true;
+	}
+
+	if (_key == OW_KEY_KP_9)
+	{
+		SwitchBool(draw_mcnk_low);
 		return true;
 	}
 

@@ -14,8 +14,6 @@ public:
 	inline EnvironmentManager* EnvM() { return m_EnvironmentManager; }
 
 	void EnterMap(int32 x, int32 z);
-	M2* LoadMDX(cstring name);
-	WMO* LoadWMO(cstring name);
 
 private:
 	MapController*       m_MapController;

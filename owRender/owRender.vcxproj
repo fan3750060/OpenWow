@@ -201,17 +201,18 @@
     <ClInclude Include="ConsoleOpenGL.h" />
     <ClInclude Include="Debug_GeometryPass.h" />
     <ClInclude Include="Debug_Normals.h" />
+    <ClInclude Include="GeometryBase.h" />
     <ClInclude Include="GPUTimer.h" />
     <ClInclude Include="lights_common.h" />
     <ClInclude Include="Magma_Pass.h" />
     <ClInclude Include="MCNK_Pass.h" />
+    <ClInclude Include="UIBase.h" />
     <ClInclude Include="WDL_LowRes_Pass.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="M2_Pass.h" />
     <ClInclude Include="OpenGL.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="PipelineWorldTransformation.h" />
     <ClInclude Include="PostprocessBase.h" />
     <ClInclude Include="Postprocess_Light_Direction.h" />
     <ClInclude Include="Postprocess_Fog.h" />
@@ -246,7 +247,6 @@
     <ClInclude Include="WMO_GeomertyPass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PipelineWorldTransformation.inl" />
     <None Include="Technique.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

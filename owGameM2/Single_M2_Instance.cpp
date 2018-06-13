@@ -1,15 +1,14 @@
 #include "stdafx.h"
 
 // General
-#include "WMO_MODD_Instance.h"
+#include "Single_M2_Instance.h"
 
-WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const WMO_MODD_PlacementInfo& _placement) :
+Single_M2_Instance::Single_M2_Instance(SceneNode* _parent, M2* _m2Object) :
 	SceneNode(_parent),
-	m_Object(_mdxObject),
-	m_NeedRecalcAnimation(true),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_Object(_m2Object),
+	m_Animator(nullptr)
 {
-	assert1(m_Object != nullptr);
+	assert1(m_Object);
 
 	// Create animator
 	if (m_Object->isAnimated())
@@ -19,19 +18,18 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 
 	// Scene node params
 	{
-		// Convert
-		m_Translate = _placement.position.toXZmY();
-		m_RotateQuat = Quaternion(-_placement.orientation.z, _placement.orientation.x, _placement.orientation.y, _placement.orientation.w);;
-		m_Scale = vec3(_placement.scale, -_placement.scale, -_placement.scale);
+		// Translate
+		//m_Translate = vec3(100, 0, 100);
+		// Rotate
+		//m_Rotate = vec3(Math::TwoPi, Math::TwoPi, Math::PiHalf);
 		//
-		CalculateMatrix(true);
+		CalculateMatrix();
 		//
-		m_Bounds = m_Object->getBounds();
+		m_Bounds = m_Object->m_Bounds;
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	setDrawOrder(23);
-	setSelectable();
+	setDrawOrder(21);
 
 	if (m_Object->isAnimated())
 	{
@@ -39,7 +37,7 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 	}
 }
 
-WMO_MODD_Instance::~WMO_MODD_Instance()
+Single_M2_Instance::~Single_M2_Instance()
 {
 	if (m_Object->isAnimated())
 	{
@@ -48,7 +46,7 @@ WMO_MODD_Instance::~WMO_MODD_Instance()
 	}
 }
 
-void WMO_MODD_Instance::Update(double _time, double _dTime)
+void Single_M2_Instance::Update(double _time, double _dTime)
 {
 	if (m_Object->isAnimated())
 	{
@@ -69,22 +67,15 @@ void WMO_MODD_Instance::Update(double _time, double _dTime)
 	m_Object->updateEmitters(_dTime);
 }
 
-void WMO_MODD_Instance::PreRender3D()
+void Single_M2_Instance::PreRender3D()
 {
 	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
-void WMO_MODD_Instance::Render3D()
+void Single_M2_Instance::Render3D()
 {
-	if (!m_QualitySettings.draw_wmo_doodads)
-	{
-		return;
-	}
-
 	//_Render->DrawBoundingBox(m_Bounds);
 
 	m_Object->Render(getAbsTrans());
-	PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
+	PERF_INC(PERF_MAP_MODELS_WMOs);
 }
-
-

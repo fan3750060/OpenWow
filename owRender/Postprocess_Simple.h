@@ -2,10 +2,12 @@
 
 #include "PostprocessBase.h"
 
-class POST_Simple : public PostprocessBase
+class CPOST_Simple : public PostprocessBase
 {
 public:
-    POST_Simple(RenderDevice* _RenderDevice) : PostprocessBase(_RenderDevice, "shaders/Postprocess/Postprocess_Simple.fs") {}
+    CPOST_Simple(RenderDevice* _RenderDevice) : 
+		PostprocessBase(_RenderDevice, "shaders/Postprocess/Postprocess_Simple.fs") 
+	{}
 
 
     void SetAmbientColor(cvec3 _ambientColor)

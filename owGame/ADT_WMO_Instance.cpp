@@ -5,7 +5,8 @@
 
 ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo) :
 	SceneNode(_parent),
-    m_Object(_wmoObject)
+    m_Object(_wmoObject),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
     assert1(m_Object);
 	m_UniqueId = _placementInfo.uniqueId;
@@ -32,17 +33,17 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 
 	setDrawOrder(21);
 	setSelectable();
-	_Bindings->RegisterUpdatableObject(this);
+	//_Bindings->RegisterUpdatableObject(this);
 }
 
 ADT_WMO_Instance::~ADT_WMO_Instance()
 {
-	_Bindings->UnregisterUpdatableObject(this);
+	//_Bindings->UnregisterUpdatableObject(this);
 }
 
 void ADT_WMO_Instance::Update(double _time, double _dTime)
 {
-	m_Object->Update(_time, _dTime);
+
 }
 
 void ADT_WMO_Instance::PreRender3D()
@@ -59,14 +60,15 @@ void ADT_WMO_Instance::PreRender3D()
 
 void ADT_WMO_Instance::Render3D()
 {
+	if (!m_QualitySettings.draw_map_wmo)
+	{
+		return;
+	}
+
 	//_Render->DrawBoundingBox(m_Bounds);
 
-	_Pipeline->Clear();
-	{
-		_Pipeline->SetWorld(getAbsTrans());
-		m_Object->Render(m_DoodadSetIndex);
-		PERF_INC(PERF_MAP_MODELS_WMOs);
-	}
+	m_Object->Render(getAbsTrans(), m_DoodadSetIndex);
+	PERF_INC(PERF_MAP_MODELS_WMOs);
 }
 
 //
@@ -75,5 +77,4 @@ void ADT_WMO_Instance::reset()
 {
 	m_AlreadyDraw.clear();
 }
-
 set<uint32> ADT_WMO_Instance::m_AlreadyDraw;

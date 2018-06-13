@@ -1,11 +1,11 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class Debug_Normals : public Technique
+class CDebug_Normals : public GeometryBase
 {
 public:
-    Debug_Normals(RenderDevice* _RenderDevice) : 
-		Technique(_RenderDevice, "shaders/Debug/Debug_Normal.vs", "shaders/Debug/Debug_Normal.fs", "shaders/Debug/Debug_Normal.gs") 
+    CDebug_Normals(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Debug/Debug_Normal.vs", "shaders/Debug/Debug_Normal.fs", "shaders/Debug/Debug_Normal.gs")
 	{}
 };

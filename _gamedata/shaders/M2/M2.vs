@@ -35,7 +35,8 @@ out struct VSOutput
 void main(void)
 {
 	vec4 newVertex = vec4(0.0f);
-
+	vec4 newNormal = vec4(0.0f);
+	
 	if (gIsAnimated)
 	{
 		uint blendWeights[4];
@@ -55,12 +56,14 @@ void main(void)
 			if(blendWeights[i] > 0u)
 			{
 				newVertex += gBones[blendIndicess[i]] * vec4(position, 1.0f) * (float(blendWeights[i]) / 255.0f);
+				newNormal += gBones[blendIndicess[i]] * vec4(normal, 1.0f) * (float(blendWeights[i]) / 255.0f);
 			}
 		}
 	}
 	else
 	{
 		newVertex = vec4(position, 1.0f);
+		newNormal = vec4(normal, 1.0f);
 	}
 		
 	if (gBillboard)
@@ -98,7 +101,7 @@ void main(void)
 	}
 	
 	VSout.position = (gWorld * vec4(newVertex.xyz, 1.0f)).xyz;
-	VSout.normal = (gWorld * vec4(normal, 0.0)).xyz;
+	VSout.normal = (gWorld * vec4(newNormal.xyz, 0.0)).xyz;
 	
 	if (gTextureAnimEnable)
 	{

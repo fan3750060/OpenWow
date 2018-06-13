@@ -8,14 +8,16 @@ public:
 	CGroupQuality();
 	~CGroupQuality();
 
-	bool Terrain_LowDetail;
 	uint16 Texture_Sampler;
 
-	bool draw_map_chunk;
+	// Drawing
+	bool draw_mcnk;
+	bool draw_mcnk_low;
 	bool draw_map_wmo;
-	bool draw_map_wmo_doodads;
-	bool draw_map_mdx;
+	bool draw_wmo_doodads;
+	bool draw_map_m2;
 	bool draw_water;
+	bool draw_wmo_water;
 
 	bool WMO_MOCV;
 	bool WMO_AmbColor;

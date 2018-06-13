@@ -4,23 +4,20 @@
 #include "M2.h"
 
 M2::M2(cstring name) :
-	m_Loaded(false),
 	m_FileName(name),
 	m_UniqueName(""),
 	// Loops and sequences
 	m_IsAnimated(false),
 	// Bones
 	m_HasBones(nullptr),
-	m_AnimBones(false),
+	m_IsAnimBones(false),
 	m_IsBillboard(false),
 	// Vertices
-	m_ContainGeom(false),
+	m_IsContainGeom(false),
 	// Colors and textures
 	m_AnimTextures(false),
 	// Misc
-	m_HasMisc(false),
-	// My types
-	m_Animator(nullptr)
+	m_HasMisc(false)
 {
 	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 
@@ -40,30 +37,29 @@ M2::~M2()
 
 //
 
-void M2::drawModel()
+void M2::drawModel(cmat4 _worldMatrix)
 {
-	if (!m_ContainGeom)
+	if (!m_IsContainGeom)
 	{
 		return;
 	}
 
 	//RenderCollision();
 
-	_Render->TechniquesMgr()->m_Model->Bind();
-	_Render->TechniquesMgr()->m_Model->SetPVW();
-
-	_Render->TechniquesMgr()->m_Model->SetAnimated(m_HasBones && m_IsAnimated);
+	_Render->TechniquesMgr()->M2_Pass->Bind();
+	_Render->TechniquesMgr()->M2_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->TechniquesMgr()->M2_Pass->SetAnimated(m_HasBones && m_IsAnimated);
 	if (m_HasBones && m_IsAnimated)
 	{
-		//_Render->TechniquesMgr()->m_Model->SetBoneStartIndex(p->bonesStartIndex); FIXME
-		//_Render->TechniquesMgr()->m_Model->SetBoneMaxCount(p->boneInfluences);
+		//_Render->TechniquesMgr()->M2_Pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
+		//_Render->TechniquesMgr()->M2_Pass->SetBoneMaxCount(p->boneInfluences);
 
 		vector<mat4> bones;
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
 			bones.push_back(m_Bones[i].getTransformMatrix());
 		}
-		_Render->TechniquesMgr()->m_Model->SetBones(bones);
+		_Render->TechniquesMgr()->M2_Pass->SetBones(bones);
 	}
 
 	for (auto& it : m_Skins)
@@ -71,41 +67,17 @@ void M2::drawModel()
 		it->Draw();
 	}
 
-	_Render->TechniquesMgr()->m_Model->Unbind();
+	_Render->TechniquesMgr()->M2_Pass->Unbind();
+
+
+	/*for (auto& it : m_Skins)
+	{
+		it->RenderNormals();
+	}*/
 }
 
-void M2::Update(double _time, double _dTime)
+void M2::Render(cmat4 _worldMatrix)
 {
-	if (!m_Loaded)
-	{
-		return;
-	}
-
-
-	if (m_IsAnimated)
-	{
-		if (m_IsBillboard)
-		{
-			animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-		}
-		else
-		{
-			if (!animcalc)
-			{
-				animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-				animcalc = true;
-			}
-		}
-	}
-}
-
-void M2::Render()
-{
-	if (!m_Loaded)
-	{
-		return;
-	}
-
 	if (m_IsAnimated)
 	{
 		// draw ribbons
@@ -123,10 +95,10 @@ void M2::Render()
 #endif
 	}
 
-	drawModel();
+	drawModel(_worldMatrix);
 }
 
-void M2::RenderCollision()
+void M2::RenderCollision(cmat4 _worldMatrix)
 {
 	if (m_CollisionGeom == nullptr)
 	{
@@ -136,14 +108,14 @@ void M2::RenderCollision()
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
+	_Render->TechniquesMgr()->Debug_Pass->Bind();
+	_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
 
 	_Render->r.setGeometry(m_CollisionGeom);
 	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_Header.collisionTriangles.size, 0, m_Header.collisionVertices.size);
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
@@ -238,11 +210,6 @@ void M2::lightsOff(uint32 lbase)
 
 void M2::updateEmitters(float dt)
 {
-	if (!m_Loaded)
-	{
-		return;
-	}
-
 #ifdef MDX_PARTICLES_ENABLE
 	for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 	{

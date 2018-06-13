@@ -19,5 +19,9 @@ public:
 	virtual void Render3D() override;
 
 private:
-	const SmartM2Ptr	m_Object;
+	SmartM2Ptr			m_Object;
+	CM2_Animator*		m_Animator;
+	bool				m_NeedRecalcAnimation;
+
+	CGroupQuality&		m_QualitySettings;
 };

@@ -1,16 +1,15 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class WDL_LowRes_Pass : public Technique
+class CWDL_LowRes_Pass : public GeometryBase
 {
 public:
-	WDL_LowRes_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Map/MapTileLowRes")
+	CWDL_LowRes_Pass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Map/MapTileLowRes")
     {
         gColor = getLocation("gColor");
     }
-
-	//--
 
 	void SetShadowColor(vec3 _Color)
 	{

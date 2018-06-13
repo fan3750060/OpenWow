@@ -35,6 +35,11 @@ public:
 	const SmartM2Ptr	m_Object;
 	uint32				m_UniqueId;
 
+	CM2_Animator*		m_Animator;
+	bool				m_NeedRecalcAnimation;
+
+	CGroupQuality&		m_QualitySettings;
+
 public:	// Static
 	static void reset();
 private:

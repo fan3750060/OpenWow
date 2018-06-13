@@ -19,9 +19,6 @@ public:
 	ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo);
 	~ADT_WMO_Instance();
 
-	void AddDoodad(WMO_MODD_Instance* _doodadInstance) { m_Doodads.push_back(_doodadInstance); }
-	void AddLiquid(Liquid_Instance* _liquidInstance) { m_Liquids.push_back(_liquidInstance); }
-
 	// ISceneNode
 	string getObjectInfo() override { return m_Object->getFilename(); }
 
@@ -37,8 +34,7 @@ private:
 	uint32				m_UniqueId;
 	uint16				m_DoodadSetIndex;
 
-	vector<SmartPtr<WMO_MODD_Instance>> m_Doodads;
-	vector<SmartPtr<Liquid_Instance>> m_Liquids;
+	CGroupQuality&		m_QualitySettings;
 
 public:	// Static
 	static void reset();

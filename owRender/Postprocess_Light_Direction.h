@@ -3,10 +3,10 @@
 #include "PostprocessBase.h"
 #include "lights_common.h"
 
-class POST_DirectionalLight : public PostprocessBase
+class CPOST_DirectionalLight : public PostprocessBase
 {
 public:
-    POST_DirectionalLight(RenderDevice* _RenderDevice) : PostprocessBase(_RenderDevice, "shaders/Postprocess/Postprocess_Light_Direction.fs")
+    CPOST_DirectionalLight(RenderDevice* _RenderDevice) : PostprocessBase(_RenderDevice, "shaders/Postprocess/Postprocess_Light_Direction.fs")
     {
         gDirectionalLight_Base_ambient = getLocation("gDirectionalLight.Base.ambient");
         gDirectionalLight_Base_diffuse = getLocation("gDirectionalLight.Base.diffuse");

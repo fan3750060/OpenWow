@@ -6,7 +6,6 @@
 
 inline void Technique::Bind()
 {
-	assert1(m_RenderDevice != nullptr);
 	m_Shader->bindShader();
 }
 
@@ -94,46 +93,4 @@ inline void Technique::setMat4(const char* name, cmat4 mat) const
 inline void Technique::setMat4(int32 _loc, cmat4 mat) const
 {
 	m_Shader->setShaderConst(_loc, CONST_FLOAT44, &mat.x[0]);
-}
-
-//
-
-inline void Technique::SetPVW()
-{
-	m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &(_PipelineGlobal->GetProjection()).x[0]);
-	m_Shader->setShaderConst(gView,       CONST_FLOAT44, &(_PipelineGlobal->GetView()).x[0]);
-	m_Shader->setShaderConst(gWorld,      CONST_FLOAT44, &(_PipelineGlobal->GetWorld()).x[0]);
-}
-
-inline void Technique::SetPV()
-{
-	m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &(_PipelineGlobal->GetProjection()).x[0]);
-	m_Shader->setShaderConst(gView,       CONST_FLOAT44, &(_PipelineGlobal->GetView()).x[0]);
-}
-
-//--
-
-inline void Technique::SetWorldMatrix(cmat4 WorldInverse)
-{
-	m_Shader->setShaderConst(gWorld, CONST_FLOAT44, &WorldInverse.x[0]);
-}
-
-inline void Technique::SetViewMatrix(cmat4 WorldInverse)
-{
-	m_Shader->setShaderConst(gView, CONST_FLOAT44, &WorldInverse.x[0]);
-}
-
-inline void Technique::SetProjectionMatrix(cmat4 WorldInverse)
-{
-	m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &WorldInverse.x[0]);
-}
-
-//--
-
-inline void Technique::BindToPostprocess()
-{
-	setTexture("gbuf0", 0);
-	setTexture("gbuf1", 1);
-	setTexture("gbuf2", 2);
-	setTexture("gbuf3", 3);
 }

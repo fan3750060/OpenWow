@@ -99,41 +99,40 @@ void SkyManager::Calculate(uint32 _time)
 
 
 
-/*bool SkyManager::DEBUG_Render()
+bool SkyManager::DEBUG_Render()
 {
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
+	_Render->TechniquesMgr()->Debug_Pass->Bind();
 
 	_Render->r.setGeometry(_Render->Storage()->_sphereGeo);
 
-	for (auto it : m_SkyManager)
+	for (auto it : skies)
 	{
 		//_Pipeline->Clear();
 		//_Pipeline->Translate(it->position);
 		//_Pipeline->Scale(it->radiusInner);
 
-		//_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-		//_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
+		//_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
 
 		//_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
 
 		//---------------------------------------------------------------------------------
 
-		_Pipeline->Clear();
-		_Pipeline->Translate(it->m_Position);
-		_Pipeline->Scale(it->m_Range.max);
+		mat4 worldMatrix;
+		worldMatrix.translate(it->m_Position);
+		worldMatrix.scale(it->m_Range.max);
 
-		_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-		_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
+		_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
+		_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
 
 		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
 	}
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 
 	return false;
-}*/
+}
 
 void SkyManager::PreRender3D()
 {
@@ -145,15 +144,16 @@ void SkyManager::Render3D()
 	_Render->r.setDepthTest(false);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
-	_Render->TechniquesMgr()->m_Sky_GeometryPass->Bind();
-	_Pipeline->Clear();
-	_Pipeline->Translate(_Camera->Position);
-	_Render->TechniquesMgr()->m_Sky_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->Sky_Pass->Bind();
+	
+	mat4 worldMatrix;
+	worldMatrix.translate(_Camera->Position);
+	_Render->TechniquesMgr()->Sky_Pass->SetWorldMatrix(worldMatrix);
 
 	_Render->r.setGeometry(__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, __vertsSize);
 
-	_Render->TechniquesMgr()->m_Sky_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Sky_Pass->Unbind();
 
 	_Render->r.setDepthTest(true);
 }

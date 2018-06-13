@@ -13,5 +13,7 @@ public:
 	void Render3D() override;
 
 private:
-	SmartPtr<Liquid> m_Object;
+	SmartPtr<Liquid>	m_Object;
+
+	CGroupQuality&		m_QualitySettings;
 };

@@ -258,10 +258,10 @@ void WMO_Group::initLighting()
 
 //
 
-void WMO_Group::Render()
+void WMO_Group::Render(cmat4 _worldMatrix)
 {
 	_Render->TechniquesMgr()->m_WMO_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetPVW();
+	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetWorldMatrix(_worldMatrix);
 
 	_Render->r.setGeometry(__geom);
 

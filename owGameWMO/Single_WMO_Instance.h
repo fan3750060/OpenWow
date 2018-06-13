@@ -1,17 +1,6 @@
 #pragma once
 
-struct ADT_MODF
-{
-	uint32 nameIndex;
-	uint32 uniqueId;
-	vec3 position;
-	vec3 rotation;
-	CAaBox boundingBox;
-	uint16 flags;
-	uint16 doodadSetIndex;
-	uint16 nameSet;
-	uint16 unk0;
-};
+#include "WMO.h"
 
 class Single_WMO_Instance : public SceneNode
 {

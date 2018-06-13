@@ -15,19 +15,19 @@ CWMO_Part_Portal::CWMO_Part_Portal(const WMO* _parentWMO, const WMO_PortalDef& _
 	m_Geom->finishCreatingGeometry();
 }
 
-void CWMO_Part_Portal::Render()
+void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
 {
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.0f, 0.0f, 1.0f, 0.5f));
+	_Render->TechniquesMgr()->Debug_Pass->Bind();
+	_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 0.0f, 1.0f, 0.5f));
 
 	_Render->r.setGeometry(m_Geom);
 	_Render->r.draw(PRIM_TRISTRIP, m_Proto.startVertex, m_Proto.count);
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);

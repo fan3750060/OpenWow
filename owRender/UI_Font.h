@@ -1,11 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "UIBase.h"
 
-class UI_Font : public Technique
+class CUI_Font : public UIBase
 {
 public:
-	UI_Font(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/UI/UI_Font")
+	CUI_Font(RenderDevice* _RenderDevice) : 
+		UIBase(_RenderDevice, "shaders/UI/UI_Font")
     {
         gFontTexture = getLocation("gFontTexture");
         gFontColor = getLocation("gFontColor");

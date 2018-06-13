@@ -14,7 +14,7 @@ Liquid::Liquid(uint32 x, uint32 y) :
 
 //--
 
-void Liquid::Render()
+void Liquid::Render(cmat4 _worldMatrix)
 {
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
@@ -26,12 +26,12 @@ void Liquid::Render()
 	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
 	{
 		_Render->TechniquesMgr()->m_Water->Bind();
-		_Render->TechniquesMgr()->m_Water->SetPVW();
+		_Render->TechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
 	}
 	else
 	{
 		_Render->TechniquesMgr()->m_Magma->Bind();
-		_Render->TechniquesMgr()->m_Magma->SetPVW();
+		_Render->TechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
 	}
 
 	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % m_Textures.size();

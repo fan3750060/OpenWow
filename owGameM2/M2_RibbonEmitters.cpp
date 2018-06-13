@@ -210,15 +210,15 @@ void CM2_RibbonEmitters::draw()
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setDepthMask(false);
 
-	_Render->TechniquesMgr()->m_Ribbons->Bind();
-	_Render->TechniquesMgr()->m_Ribbons->SetPVW();
+	_Render->TechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
+	_Render->TechniquesMgr()->M2_RibbonEmitters_Pass->SetPVW();
 
 	_Render->r.setTexture(10, m_Texture, 0, 0);
 
 	_Render->r.setGeometry(__geom);
 	_Render->r.draw(PRIM_LINES, 0, vertices.size());
 
-	_Render->TechniquesMgr()->m_Ribbons->Unbind();
+	_Render->TechniquesMgr()->M2_RibbonEmitters_Pass->Unbind();
 
 	_Render->r.setDepthMask(true);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);

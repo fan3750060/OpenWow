@@ -9,7 +9,7 @@
 #include "WMO_Part_Material.h"
 #include "WMO_Part_Portal.h"
 
-class WMO : public CRefItem, public IUpdatable
+class WMO : public CRefItem
 {
 	friend CWMO_Part_Portal;
 public:
@@ -19,11 +19,7 @@ public:
 	void CreateInsances(SceneNode* _parent);
 	bool Load();
 
-	// IUpdatable
-	void Input(double _time, double _dTime) override {};
-	void Update(double _time, double _dTime) override;
-
-	bool Render(uint32 _doodadSet);
+	bool Render(cmat4 _worldMatrix, uint32 _doodadSet);
 
 	bool drawSkybox();
 
@@ -42,11 +38,12 @@ public:
 			static_cast<float>(m_Header.ambColor.a) / 255.0f
 		);
 	}
+
+	M2* getSkybox() { return m_Skybox; }
 #pragma endregion
 
 public:
 	const string							m_FileName;
-	bool									m_Loaded;
 	WMO_HeaderDef							m_Header;				// MOHD chunk
 	BoundingBox								m_Bounds;
 

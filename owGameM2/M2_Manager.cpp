@@ -12,16 +12,13 @@ CM2_Manager::CM2_Manager()
 	ADDCONSOLECOMMAND_CLASS("models_info", CM2_Manager, PrintAllInfo);
 
 	AddManager<IM2Manager>(this);
-
-	_Bindings->RegisterUpdatableObject(this);
 }
 
 CM2_Manager::~CM2_Manager()
 {
-	_Bindings->UnregisterUpdatableObject(this);
 }
 
-void CM2_Manager::Update(double _Time, double _deltaTime)
+/*void CM2_Manager::Update(double _Time, double _deltaTime)
 {
 	ResetAnim();
 
@@ -32,7 +29,7 @@ void CM2_Manager::Update(double _Time, double _deltaTime)
 	}
 
 	updateEmitters(_deltaTime);
-}
+}*/
 
 //
 
@@ -55,14 +52,6 @@ M2* CM2_Manager::CreateAction(cstring name)
 bool CM2_Manager::DeleteAction(cstring name)
 {
 	return true;
-}
-
-void CM2_Manager::ResetAnim()
-{
-	for (auto it : objects)
-	{
-		(it.second)->animcalc = false;
-	}
 }
 
 void CM2_Manager::updateEmitters(float dt)

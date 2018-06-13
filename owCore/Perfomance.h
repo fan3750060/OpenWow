@@ -34,9 +34,12 @@ enum PerfomanceTimer : uint8
 	PERF_PHASE_3D = 54,
 	PERF_PHASE_POST3D = 55,
 
+	// Perfomance
+	PERF_CULLING = 60,
+
 	//
 
-	PERF_FRUSTRUM = 60
+	PERF_FRUSTRUM = 100
 };
 
 struct PerfomanceDebugOutput
@@ -78,11 +81,16 @@ const PerfomanceDebugOutput PerfomanceMessages[] =
 	{ PERF_DELIM, "", false },
 
 	// Phases
-	{ PERF_PHASE_INPUT,		"Input",	true },
-	{ PERF_PHASE_UPDATE,	"Up",	true },
-	{ PERF_PHASE_PRE3D,		"MPRE3D",	true },
-	{ PERF_PHASE_3D,		"M3D",		true },
-	{ PERF_PHASE_POST3D,	"MPOST3D",	true }
+	{ PERF_PHASE_INPUT,		"Input",		true },
+	{ PERF_PHASE_UPDATE,	"Update",		true },
+	{ PERF_PHASE_PRE3D,		"PreRender",	true },
+	{ PERF_PHASE_3D,		"Render",		true },
+	{ PERF_PHASE_POST3D,	"PostRender",	true },
+
+	{ PERF_DELIM, "", false },
+
+	// Perfomance
+	{ PERF_CULLING,			"Culling",		true },
 };
 
 

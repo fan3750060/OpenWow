@@ -5,7 +5,8 @@
 
 Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3 _position) :
 	SceneNode(_parent),
-	m_Object(_liquidObject)
+	m_Object(_liquidObject),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	// Scene node params
 	{
@@ -30,12 +31,12 @@ void Liquid_Instance::PreRender3D()
 
 void Liquid_Instance::Render3D()
 {
+	if (!m_QualitySettings.draw_water)
+	{
+		return;
+	}
+
 	//_Render->DrawBoundingBox(m_Bounds);
 
-	_Pipeline->Clear();
-	{
-		_Pipeline->SetWorld(getAbsTrans());
-		m_Object->Render();
-	}
-	_Pipeline->Clear();
+	m_Object->Render(getAbsTrans());
 }

@@ -38,6 +38,7 @@
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="M2_RibbonEmitters.cpp" />
+    <ClCompile Include="Single_M2_Instance.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -74,6 +75,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="M2_RibbonEmitters.h" />
+    <ClInclude Include="Single_M2_Instance.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

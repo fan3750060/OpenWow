@@ -7,114 +7,120 @@
 #include "Material.h"
 
 TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
-	: m_RenderDevice(_RenderDevice)
+	: m_RenderDevice(_RenderDevice), 
+	groupVideo(GetSettingsGroup<CGroupVideo>())
 {
-	CGroupVideo& groupVideo = GetSettingsGroup<CGroupVideo>();
+	// Debug
 
-	m_Debug_GeometryPass = new Debug_GeometryPass(m_RenderDevice);
+	Debug_Pass = new CDebug_GeometryPass(m_RenderDevice);
+	m_GeomTechniques.push_back(Debug_Pass);
 
-	m_Debug_Normals = new Debug_Normals(m_RenderDevice);
+	DebugNormal_Pass = new CDebug_Normals(m_RenderDevice);
+	m_GeomTechniques.push_back(DebugNormal_Pass);
 
-	m_Sky_GeometryPass = new Sky_GeometryPass(m_RenderDevice);
+	// Map
 
-	//----------------------------------------------------------------//
-
-	m_MapChunk_GeometryPass = new MCNK_Pass(m_RenderDevice);
-	m_MapChunk_GeometryPass->Bind();
+	MCNK_Pass = new CMCNK_Pass(m_RenderDevice);
+	MCNK_Pass->Bind();
 	for (uint8 i = 0; i < 4; i++)
 	{
-		m_MapChunk_GeometryPass->SetColorTextureUnit(i, i);
-		m_MapChunk_GeometryPass->SetSpecularTextureUnit(i, 5 + i);
+		MCNK_Pass->SetColorTextureUnit(i, i);
+		MCNK_Pass->SetSpecularTextureUnit(i, 5 + i);
 	}
-	m_MapChunk_GeometryPass->SetBlendBuffer(4);
-	m_MapChunk_GeometryPass->Unbind();
+	MCNK_Pass->SetBlendBuffer(4);
+	MCNK_Pass->Unbind();
+	m_GeomTechniques.push_back(MCNK_Pass);
 
-	//----------------------------------------------------------------//
+	WDL_LowRes_Pass = new CWDL_LowRes_Pass(m_RenderDevice);
+	m_GeomTechniques.push_back(WDL_LowRes_Pass);
 
-	m_MapTileLowRes_GeometryPass = new WDL_LowRes_Pass(m_RenderDevice);
+	// M2
 
-	//
+	M2_Pass = new CM2_Pass(m_RenderDevice);
+	M2_Pass->Bind();
+	M2_Pass->SetDiffuseTexture(Material::C_DiffuseTextureIndex);
+	M2_Pass->SetSpecularTexture(Material::C_SpecularTextureIndex);
+	M2_Pass->Unbind();
+	m_GeomTechniques.push_back(M2_Pass);
 
-	m_Magma = new Magma_Pass(m_RenderDevice);
+	M2_RibbonEmitters_Pass = new CM2_RibbonEmitters_Pass(m_RenderDevice);
+	M2_RibbonEmitters_Pass->Bind();
+	M2_RibbonEmitters_Pass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
+	M2_RibbonEmitters_Pass->Unbind();
+	m_GeomTechniques.push_back(M2_RibbonEmitters_Pass);
+
+	// Liquids
+
+	m_Magma = new CMagma_Pass(m_RenderDevice);
 	m_Magma->Bind();
 	m_Magma->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	m_Magma->Unbind();
+	m_GeomTechniques.push_back(m_Magma);
 
-	//
-
-	m_Water = new Water_Pass(m_RenderDevice);
+	m_Water = new CWater_Pass(m_RenderDevice);
 	m_Water->Bind();
 	m_Water->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	m_Water->SetSpecularTextureUnit(Material::C_SpecularTextureIndex);
 	m_Water->Unbind();
+	m_GeomTechniques.push_back(m_Water);
 
-	//----------------------------------------------------------------//
+	// Other
 
-	m_Ribbons = new M2_RibbonEmitters_Pass(m_RenderDevice);
-	m_Ribbons->Bind();
-	m_Ribbons->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
-	m_Ribbons->Unbind();
+	Sky_Pass = new CSky_GeometryPass(m_RenderDevice);
+	m_GeomTechniques.push_back(Sky_Pass);
 
-	//----------------------------------------------------------------//
-
-	m_WMO_GeometryPass = new WMO_GeomertyPass(m_RenderDevice);
+	m_WMO_GeometryPass = new CWMO_GeomertyPass(m_RenderDevice);
 	m_WMO_GeometryPass->Bind();
 	m_WMO_GeometryPass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	m_WMO_GeometryPass->SetSpecularTextureUnit(Material::C_SpecularTextureIndex);
 	m_WMO_GeometryPass->Unbind();
+	m_GeomTechniques.push_back(m_WMO_GeometryPass);
 
-	//----------------------------------------------------------------//
+	// Postprocess
 
-	m_Model = new M2_Pass(m_RenderDevice);
-	m_Model->Bind();
-	m_Model->SetDiffuseTexture(Material::C_DiffuseTextureIndex);
-	m_Model->SetSpecularTexture(Material::C_SpecularTextureIndex);
-	m_Model->Unbind();
+	Postprocess_Light_Direction = new CPOST_DirectionalLight(m_RenderDevice);
+	Postprocess_Light_Direction->Bind();
+	Postprocess_Light_Direction->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
+	Postprocess_Light_Direction->SetMatSpecularPower(16);
+	Postprocess_Light_Direction->Unbind();
 
-	//----------------------------------------------------------------//
+	Postprocess_Fog = new CPOST_Fog(m_RenderDevice);
+	Postprocess_Fog->Bind();
+	Postprocess_Fog->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
+	Postprocess_Fog->Unbind();
 
-	m_POST_DirectionalLight = new POST_DirectionalLight(m_RenderDevice);
-	m_POST_DirectionalLight->Bind();
-	m_POST_DirectionalLight->BindToPostprocess();
-	m_POST_DirectionalLight->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
-	m_POST_DirectionalLight->SetMatSpecularPower(16);
-	m_POST_DirectionalLight->Unbind();
+	Postprocess_Simple = new CPOST_Simple(m_RenderDevice);
+	Postprocess_Simple->Bind();
+	Postprocess_Simple->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
+	Postprocess_Simple->Unbind();
 
-	//----------------------------------------------------------------//
+	// UI
 
-	m_POST_Fog = new POST_Fog(m_RenderDevice);
-	m_POST_Fog->Bind();
-	m_POST_Fog->BindToPostprocess();
-	m_POST_Fog->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
-	m_POST_Fog->Unbind();
-	//----------------------------------------------------------------//
+	UI_Color = new CUI_Color(m_RenderDevice);
 
-	m_POST_Simple = new POST_Simple(m_RenderDevice);
-	m_POST_Simple->Bind();
-	m_POST_Simple->BindToPostprocess();
-	m_POST_Simple->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
-	m_POST_Simple->Unbind();
+	UI_Font = new CUI_Font(m_RenderDevice);
+	UI_Font->Bind();
+	UI_Font->SetFontTexture(Material::C_DiffuseTextureIndex);
+	UI_Font->Unbind();
 
-	//
-
-	m_UI_Color = new UI_Color(m_RenderDevice);
-
-	//
-
-	m_UI_Font = new UI_Font(m_RenderDevice);
-	m_UI_Font->Bind();
-	m_UI_Font->SetFontTexture(Material::C_DiffuseTextureIndex);
-	m_UI_Font->Unbind();
-
-	//
-
-	m_UI_Texture = new UI_Texture(m_RenderDevice);
-	m_UI_Texture->Bind();
-	m_UI_Texture->SetTexture(Material::C_DiffuseTextureIndex);
-	m_UI_Texture->Unbind();
+	UI_Texture = new CUI_Texture(m_RenderDevice);
+	UI_Texture->Bind();
+	UI_Texture->SetTexture(Material::C_DiffuseTextureIndex);
+	UI_Texture->Unbind();
 }
 
 TechniquesManager::~TechniquesManager()
 {
 
+}
+
+void TechniquesManager::PreRender3D()
+{
+	for (auto& it : m_GeomTechniques)
+	{
+		it->Bind();
+		it->SetProjectionMatrix(_PipelineGlobal->GetProjection());
+		it->SetViewMatrix(_PipelineGlobal->GetView());
+		it->Unbind();
+	}
 }

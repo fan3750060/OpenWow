@@ -25,6 +25,7 @@ public:
 	void PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override {};
+	bool DEBUG_Render();
 
 private:
 	void InitBuffer();

@@ -7,7 +7,7 @@ class CWMO_Part_Portal
 public:
 	CWMO_Part_Portal(const WMO* _parentWMO, const WMO_PortalDef& _proto);
 
-	void Render();
+	void Render(cmat4 _worldMatrix);
 
 private:
 	const WMO*				m_ParentWMO;

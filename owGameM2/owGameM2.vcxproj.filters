@@ -86,6 +86,7 @@
     </ClCompile>
     <ClCompile Include="M2.cpp" />
     <ClCompile Include="M2_Manager.cpp" />
+    <ClCompile Include="Single_M2_Instance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="M2_SkinTypes.h">
@@ -168,7 +169,8 @@
     </ClInclude>
     <ClInclude Include="M2.h" />
     <ClInclude Include="M2_Manager.h" />
-    <ClInclude Include="..\shared\owWoWM2Models.h">
+    <ClInclude Include="Single_M2_Instance.h" />
+    <ClInclude Include="..\shared\owGameM2.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

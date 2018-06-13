@@ -1,11 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "UIBase.h"
 
-class UI_Texture : public Technique
+class CUI_Texture : public UIBase
 {
 public:
-	UI_Texture(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/UI/UI_Texture") 
+	CUI_Texture(RenderDevice* _RenderDevice) : 
+		UIBase(_RenderDevice, "shaders/UI/UI_Texture")
 	{
 		gTexture = getLocation("gTexture");
 	}

@@ -26,8 +26,7 @@ public:
 
 	uint32 getVerticesCnt() const { return m_VerticesCnt; }
 
-
-	void Render();
+	void Render(cmat4 _worldMatrix);
 
 protected:
 	void initGeometry(DBC_LIQUIDTYPE_Type _type, IFile* f);

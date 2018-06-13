@@ -56,8 +56,6 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 	string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".fs"));
 
     Process(_fileName, shVS.c_str(), shFS.c_str(), nullptr);
-
-    InitBaseUniforms();
 }
 
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS)
@@ -67,8 +65,6 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 	string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
-
-    InitBaseUniforms();
 }
 
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
@@ -76,16 +72,22 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 {
     string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
     string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
-    string shGS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameGS));
+	if (!_fileNameGS.empty())
+	{
+		string shGS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameGS));
+		Process(_fileNameVS, shVS.c_str(), shFS.c_str(), shGS.c_str());
+		return;
+	}
+	
 
-    Process(_fileNameVS, shVS.c_str(), shFS.c_str(), shGS.c_str());
-
-    InitBaseUniforms();
+    Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 }
 
 Technique::~Technique()
 {
-
+	m_Shader->destroyShader();
+	delete m_Shader;
+	m_Shader = nullptr;
 }
 
 void Technique::Process(cstring fileName, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
@@ -100,11 +102,4 @@ void Technique::Process(cstring fileName, const char* vertexShaderSrc, const cha
         Log::Error("Shader[%s]: Error.", fileName.c_str());
         Log::Error(m_RenderDevice->getShaderLog().c_str());
     }
-}
-
-void Technique::InitBaseUniforms()
-{
-	gProjection = getLocation("gProjection");
-	gView = getLocation("gView");
-	gWorld = getLocation("gWorld");
 }

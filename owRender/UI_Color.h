@@ -1,16 +1,15 @@
 #pragma once
 
-#include "technique.h"
+#include "UIBase.h"
 
-class UI_Color : public Technique
+class CUI_Color : public UIBase
 {
 public:
-	UI_Color(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/UI/UI_Color")
+	CUI_Color(RenderDevice* _RenderDevice) : 
+		UIBase(_RenderDevice, "shaders/UI/UI_Color")
     {
         gColor = getLocation("gColor");
     }
-
-	//
 
 	inline void SetColor(Color color)
 	{

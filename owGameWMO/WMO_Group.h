@@ -20,7 +20,7 @@ public:
 	void Load();
 	void initLighting();
 
-	void Render();
+	void Render(cmat4 _worldMatrix);
 
 	void setupFog();
 

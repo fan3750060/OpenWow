@@ -1,8 +1,8 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class M2_Pass : public Technique
+class CM2_Pass : public GeometryBase
 {
     int32 gBones;
     int32  gColor;
@@ -16,7 +16,8 @@ class M2_Pass : public Technique
     int32  gTextureAnimMatrix;
 
 public:
-	M2_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/M2/M2")
+	CM2_Pass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/M2/M2")
     {
         gBones = getLocation("gBones");
         gColor = getLocation("gColor");

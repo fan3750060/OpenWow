@@ -38,7 +38,7 @@ class CM2_Builder;
 class CM2_Skin_Builder;
 // FORWARD END
 
-class M2 : public CRefItem, public IUpdatable
+class M2 : public CRefItem
 {
 	friend class CM2_Builder;
 	friend class CM2_Skin_Builder;
@@ -46,14 +46,12 @@ public:
 	M2(cstring name);
 	~M2();
 
-	void Input(double _time, double _dTime) override {};
-	void Update(double _time, double _dTime) override;
-
-	void Render();
-	void RenderCollision();
 	void updateEmitters(float dt);
 
-	void drawModel();
+
+	void Render(cmat4 _worldMatrix);
+	void RenderCollision(cmat4 _worldMatrix);
+	void drawModel(cmat4 _worldMatrix);
 
 	void animate(uint16 _animationIndex, uint32 _time, uint32 globalTime);
 
@@ -62,13 +60,13 @@ public:
 
 #pragma region Getters
 public:
-	bool isLoaded() const 
-	{ 
-		return m_Loaded; 
-	}
 	string getFilename() const 
 	{ 
 		return m_FileName; 
+	}
+	string getUniqueName() const
+	{
+		return m_UniqueName;
 	}
 	cbbox getBounds() const 
 	{ 
@@ -83,6 +81,7 @@ public:
 		assert1(newIndex < m_Header.sequences.size);
 		return m_Sequences[newIndex];
 	}
+	const bool isAnimated() const { return m_IsAnimated; }
 	const CM2_Part_Bone& getBone(uint32 _index) const
 	{ 
 		assert1(_index < m_Header.bone_lookup_table.size);
@@ -90,6 +89,9 @@ public:
 		assert1(newIndex < m_Header.bones.size);
 		return m_Bones[newIndex];
 	}
+	const bool hasBones() const { return m_HasBones; }
+	const bool isAnimBones() const { return m_IsAnimBones; }
+	const bool isBillboard() const { return m_IsBillboard; }
 	const CM2_Skin* GetSkin(uint32 _index) const
 	{ 
 		assert1(_index < m_Header.skin_profiles.size);
@@ -137,7 +139,6 @@ public:
 
 #pragma region Header
 public:
-	bool								m_Loaded;
 	string								m_FileName;
 	SM2_Header							m_Header;
 	string								m_UniqueName;
@@ -153,11 +154,11 @@ public:
 	vector<CM2_Part_Bone>				m_Bones;
 	vector<int16>						m_BonesLookup;
 	bool								m_HasBones;
-	bool								m_AnimBones;
+	bool								m_IsAnimBones;
 	bool								m_IsBillboard;
 
 	// Vertices
-	bool								m_ContainGeom;
+	bool								m_IsContainGeom;
 	// Skins
 	vector<CM2_Skin*>					m_Skins;
 
@@ -190,13 +191,10 @@ private:
 	// Buffers and geom
 	SmartBufferPtr						m_VBuffer;
 	SmartGeomPtr						m_CollisionGeom;
-public:
-	bool animcalc;
-	CM2_Animator* m_Animator;
 
 private: // Static and Consts
-	const uint8 C_TexturesMaxCount = 128;
-	const uint8 C_BonesInfluences = 4;
+	const uint8							C_TexturesMaxCount = 128;
+	const uint8							C_BonesInfluences = 4;
 };
 
 

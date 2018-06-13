@@ -17,6 +17,8 @@ public:
 		return getParent()->getObjectInfo() + " - " + "[" + to_string(header.indexX) + ":" + to_string(header.indexY) + "]"; 
 	}
 
+	void RenderNormals();
+
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
@@ -24,7 +26,6 @@ public:
 	// IRenderable3D
 	void PreRender3D() override;
 	void Render3D() override;
-	void PostRender3D() override;
 
 public:
 	const SmartPtr<IFile> m_File;
@@ -42,7 +43,8 @@ public:
 	SmartTexturePtr m_BlendRBGShadowATexture;
 
 
-	SmartGeomPtr __geom;
+	SmartGeomPtr __geomDefault;
+	SmartGeomPtr __geomLow;
 	SmartGeomPtr __geomDebugNormals;
 
 	R_Buffer* __ibDefault;

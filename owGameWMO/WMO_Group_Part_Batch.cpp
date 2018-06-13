@@ -9,9 +9,10 @@
 WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Group_BatchDef& _proto) :
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),
-	m_WMOMaterial(m_ParentWMO->m_Materials[m_Proto.material_id]),
 	m_Quality(GetSettingsGroup<CGroupQuality>())
 {
+	m_WMOMaterial = m_ParentWMO->m_Materials[m_Proto.material_id];
+
 	__material.SetDiffuseTexture(m_WMOMaterial->texture);
 	__material.SetBlendState(m_WMOMaterial->GetBlendMode());
 	__material.SetRenderState(m_WMOMaterial->IsTwoSided());

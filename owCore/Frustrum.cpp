@@ -5,6 +5,7 @@
 
 // Additional
 #include "Plane.h"
+#include "Perfomance.h"
 
 void Frustum::buildViewFrustum(const Matrix4f &transMat, float fov, float aspect, float nearPlane, float farPlane)
 {
@@ -138,6 +139,8 @@ bool Frustum::cullSphere(Vec3f pos, float rad) const
 
 bool Frustum::cullBox(BoundingBox& b) const
 {
+	PERF_START(PERF_CULLING);
+
 	// Idea for optimized AABB testing from www.lighthouse3d.com
 	for (uint32 i = 0; i < 6; ++i)
 	{
@@ -148,9 +151,14 @@ bool Frustum::cullBox(BoundingBox& b) const
 		if (n.y <= 0) positive.y = b.Max.y;
 		if (n.z <= 0) positive.z = b.Max.z;
 
-		if (_planes[i].distToPoint(positive) > 0) return true;
+		if (_planes[i].distToPoint(positive) > 0)
+		{
+			PERF_STOP(PERF_CULLING);
+			return true;
+		}
 	}
 
+	PERF_STOP(PERF_CULLING);
 	return false;
 }
 

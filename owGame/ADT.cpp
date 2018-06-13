@@ -58,6 +58,7 @@ ADT::ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile
 	}
 
 	setDrawOrder(20);
+	setSelectable();
 }
 
 bool ADT::Load()
@@ -245,9 +246,13 @@ bool ADT::Load()
 
 	for (auto& it : m_WMOsPlacementInfo)
 	{
-		WMO* wmo = (WMO*)GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]); // GET
-		ADT_WMO_Instance* inst = new ADT_WMO_Instance(getParent(), wmo, it);
-		m_WMOsInstances.push_back(inst);
+		WMO* wmo = (WMO*)GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
+		if (wmo)
+		{
+			ADT_WMO_Instance* inst = new ADT_WMO_Instance(this, wmo, it);
+			m_WMOsInstances.push_back(inst);
+			m_Bounds.makeUnion(inst->getBounds());
+		}
 	}
 	
 	//-- MDXs -------------------------------------------------------------------------
@@ -257,8 +262,9 @@ bool ADT::Load()
 		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
-			ADT_MDX_Instance* inst = new ADT_MDX_Instance(getParent(), mdx, it);
+			ADT_MDX_Instance* inst = new ADT_MDX_Instance(this, mdx, it);
 			m_MDXsInstances.push_back(inst);
+			m_Bounds.makeUnion(inst->getBounds());
 		}
 	}
 

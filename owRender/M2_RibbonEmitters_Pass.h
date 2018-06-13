@@ -1,11 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class M2_RibbonEmitters_Pass : public Technique
+class CM2_RibbonEmitters_Pass : public GeometryBase
 {
 public:
-	M2_RibbonEmitters_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/M2/M2_RibbonEmitters")
+	CM2_RibbonEmitters_Pass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/M2/M2_RibbonEmitters")
 	{
 		gColorMap = getLocation("gColorMap");
 	}

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class MCNK_Pass : public Technique 
+class CMCNK_Pass : public GeometryBase
 {
 public:
-	MCNK_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Map/MapChunk.vs", "shaders/Map/MapChunk.fs")
+	CMCNK_Pass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Map/MapChunk.vs", "shaders/Map/MapChunk.fs")
     {
         for (uint8 i = 0; i < 4; i++)
         {

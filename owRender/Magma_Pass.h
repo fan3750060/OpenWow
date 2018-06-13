@@ -1,11 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class Magma_Pass : public Technique
+class CMagma_Pass : public GeometryBase
 {
 public:
-	Magma_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Liquid/Magma")
+	CMagma_Pass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Liquid/Magma")
 	{
 		gColorMap = getLocation("gColorMap");
 	}

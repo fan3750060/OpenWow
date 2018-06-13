@@ -72,9 +72,6 @@
     <ClInclude Include="Pipeline.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineWorldTransformation.h">
-      <Filter>Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -162,9 +159,6 @@
     <ClInclude Include="OpenGL.h">
       <Filter>RenderCore</Filter>
     </ClInclude>
-    <ClInclude Include="PostprocessBase.h">
-      <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
     <ClInclude Include="Postprocess_Fog.h">
       <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
@@ -197,6 +191,15 @@
     </ClInclude>
     <ClInclude Include="Debug_Normals.h">
       <Filter>Techniques\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="PostprocessBase.h">
+      <Filter>Techniques\_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryBase.h">
+      <Filter>Techniques\_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBase.h">
+      <Filter>Techniques\_Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,11 +248,11 @@
     <Filter Include="Techniques\Debug">
       <UniqueIdentifier>{48b15e8a-0515-4677-822b-6d93de4e6cc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Techniques\_Base">
+      <UniqueIdentifier>{1fa03493-3df8-48ef-85b4-ac66054b829b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PipelineWorldTransformation.inl">
-      <Filter>Pipeline</Filter>
-    </None>
     <None Include="Technique.inl">
       <Filter>Techniques</Filter>
     </None>

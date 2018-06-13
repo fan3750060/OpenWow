@@ -17,7 +17,7 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 
 	if (!linkShaderProgram())
 	{
-		fail1();
+		fail2(m_RenderDevice->getShaderLog().c_str());
 	}
 
 	int attribCount;

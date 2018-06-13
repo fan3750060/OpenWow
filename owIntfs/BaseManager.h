@@ -41,9 +41,7 @@ __interface
 __interface 
 	__declspec(uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))
 	IM2Manager : public IRefManager<M2>
-{
-	void ResetAnim();
-};
+{};
 
 //--
 

@@ -28,8 +28,8 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
 	}
 
-	_PipelineGlobal->GetCamera()->Position = _pos;
-	_PipelineGlobal->GetCamera()->SetNeedUpdate();
+	_Camera->Position = _pos;
+	_Camera->SetNeedUpdate();
 
 	_Bindings->UnregisterRenderable3DObject(this);
 
@@ -52,7 +52,6 @@ bool GameState_Menu::Init()
 	m_MinimapUI->Hide();
 
 	cmd = CMD_NONE;
-	backgroundModel = 0;
 	randBackground();
 
 	//_Map->PreLoad(DBC_Map[1]);
@@ -130,48 +129,43 @@ void GameState_Menu::Input(double _time, double _dTime)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(FORWARD, speed);
+		_Camera->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(BACKWARD, speed);
+		_Camera->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(LEFT, speed);
+		_Camera->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(RIGHT, speed);
+		_Camera->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_Menu::Update(double _time, double _dTime)
 {
-	if (backgroundModel)
+	/*if (backgroundModel)
 	{
 		backgroundModel->m_Cameras[0].setup(_time, _time);
 
 		backgroundModel->updateEmitters(_dTime);
-		backgroundModel->Update(_time, _dTime);
-	}
+	}*/
 }
 
 void GameState_Menu::PreRender3D()
 {
-	if (backgroundModel == nullptr) return;
+	//if (backgroundModel == nullptr) return;
 
 	setVisible(true);
 }
 
 void GameState_Menu::Render3D()
 {
-	if (backgroundModel == nullptr) return;
+	//if (backgroundModel == nullptr) return;
 
 	_Render->rb->setRenderBuffer();
 	_Render->r.clear();
 
-	// Camera
-	_Pipeline->Clear();
-	
-
-	Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
+	//Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
 	//_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
 	//_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
 
@@ -180,27 +174,25 @@ void GameState_Menu::Render3D()
 
 
 	// Geom
-	backgroundModel->Render();
+	//backgroundModel->Render(mat4());
 
-
-	/*_Pipeline->Clear();
-
+	/*
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
+	_Render->TechniquesMgr()->Debug_Pass->Bind();
+	_Render->TechniquesMgr()->Debug_Pass->SetPVW();
+	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
 	_Render->r.setGeometry(tt->__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 }
 
 void GameState_Menu::PostRender3D()
 {
-	if (backgroundModel == nullptr) return;
+	//if (backgroundModel == nullptr) return;
 
 	// Postprocess pass
 	_Render->rb->resetRenderBuffer();
@@ -208,8 +200,8 @@ void GameState_Menu::PostRender3D()
 		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
 	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
 
-	_Render->TechniquesMgr()->m_POST_Simple->Bind();
-	_Render->TechniquesMgr()->m_POST_Simple->SetCameraPos(_Camera->Position);
+	_Render->TechniquesMgr()->Postprocess_Simple->Bind();
+	_Render->TechniquesMgr()->Postprocess_Simple->SetCameraPos(_Camera->Position);
 
 	_Render->r.setDepthTest(false);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -219,7 +211,7 @@ void GameState_Menu::PostRender3D()
 	_Render->r.setBlendMode(false);
 	_Render->r.setDepthTest(true);
 
-	_Render->TechniquesMgr()->m_POST_Simple->Unbind();
+	_Render->TechniquesMgr()->Postprocess_Simple->Unbind();
 }
 
 void GameState_Menu::RenderUI()
@@ -256,7 +248,7 @@ void GameState_Menu::OnMouseMoved(cvec2 _mousePos)
 	{
 		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_PipelineGlobal->GetCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Camera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}
@@ -272,11 +264,11 @@ bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePo
 
 		vec3 pointInWorld = vec3(selectedPointX / 12.0f, 0.1f, selectedPointZ / 12.0f) * C_TileSize;
 
-		if (backgroundModel != nullptr)
-		{
+		//if (backgroundModel != nullptr)
+		//{
 			//delete backgroundModel;
 			//backgroundModel = nullptr;
-		}
+		//}
 
 		LoadWorld(pointInWorld);
 
@@ -345,6 +337,8 @@ void GameState_Menu::randBackground()
 	char* randui = ui[Random::GenerateMax(7)];
 	char path[256];
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
+
+	//m_BackgroudModel = new Single_M2_Instance()
 
 	//backgroundModel = GetManager<IM2Manager>()->Add(path);
 }

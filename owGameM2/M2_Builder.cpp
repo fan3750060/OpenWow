@@ -48,8 +48,6 @@ void CM2_Builder::Load()
 	Step9Collision();
 
 	SetAnimated();
-
-	m_MDX->m_Loaded = true;
 }
 
 #pragma region Loader
@@ -112,9 +110,6 @@ void CM2_Builder::Step2GlobalLoops()
 			m_MDX->m_SequencesLookup.push_back(SequencesLookup[i]);
 		}
 	}
-
-	m_MDX->m_Animator = new CM2_Animator(m_MDX);
-	//assert1(m_Header->sequences.size == m_Header->sequencesLookup.size);
 }
 
 void CM2_Builder::Step3Bones()
@@ -163,7 +158,7 @@ void CM2_Builder::Step4Vertices()
 		}
 
 		m_MDX->m_VBuffer = _Render->r.createVertexBuffer(m_Header->vertices.size * 12 * sizeof(float), m_Vertexes.data(), false);
-		m_MDX->m_ContainGeom = true;
+		m_MDX->m_IsContainGeom = true;
 	}
 }
 
@@ -359,7 +354,7 @@ void CM2_Builder::Step7Particles()
 
 void CM2_Builder::Step8Skins()
 {
-	if (!(m_MDX->m_ContainGeom))
+	if (!(m_MDX->m_IsContainGeom))
 	{
 		Log::Warn("M2[%s] don't contain geometry", m_MDX->getFilename().c_str());
 		return;
@@ -442,7 +437,7 @@ void CM2_Builder::Step9Collision()
 
 void CM2_Builder::SetAnimated()
 {
-	for (uint32 i = 0; i < m_Header->vertices.size && !(m_MDX->m_AnimBones); i++)
+	for (uint32 i = 0; i < m_Header->vertices.size && !(m_MDX->m_IsAnimBones); i++)
 	{
 		for (uint32 b = 0; b < m_MDX->C_BonesInfluences; b++)
 		{
@@ -468,7 +463,7 @@ void CM2_Builder::SetAnimated()
 						m_MDX->m_IsBillboard = true;
 					}
 
-					m_MDX->m_AnimBones = true;
+					m_MDX->m_IsAnimBones = true;
 
 					break;
 				}
@@ -476,5 +471,5 @@ void CM2_Builder::SetAnimated()
 		}
 	}
 
-	m_MDX->m_IsAnimated = m_MDX->m_AnimBones || m_MDX->m_IsBillboard || m_MDX->m_AnimTextures || m_MDX->m_HasMisc;
+	m_MDX->m_IsAnimated = m_MDX->m_IsAnimBones || m_MDX->m_IsBillboard || m_MDX->m_AnimTextures || m_MDX->m_HasMisc;
 }

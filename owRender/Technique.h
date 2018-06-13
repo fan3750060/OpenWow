@@ -22,7 +22,6 @@ public:
 	inline void Unbind();
 
 protected:
-	void InitBaseUniforms();
 	inline int32 getLocation(const char* name) const;
 
 	inline void setTexture(const char* name, uint32 value) const;
@@ -41,21 +40,6 @@ protected:
 
 	inline void setMat4(const char* name, cmat4 mat) const;
     inline void setMat4(int32 _loc, cmat4 mat) const;
-
-public:
-	inline void SetPVW();
-    inline void SetPV();
-
-	inline void SetWorldMatrix(cmat4 WorldInverse);
-	inline void SetViewMatrix(cmat4 WorldInverse);
-	inline void SetProjectionMatrix(cmat4 WorldInverse);
-
-	inline void BindToPostprocess();
-
-protected: // Base uniforms
-    int32 gProjection;
-    int32 gView;
-    int32 gWorld;
 
 protected:
 	R_Shader*      m_Shader;

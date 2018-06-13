@@ -1,11 +1,11 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class WMO_GeomertyPass : public Technique
+class CWMO_GeomertyPass : public GeometryBase
 {
 public:
-    WMO_GeomertyPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/WMO")
+    CWMO_GeomertyPass(RenderDevice* _RenderDevice) : GeometryBase(_RenderDevice, "shaders/WMO")
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");

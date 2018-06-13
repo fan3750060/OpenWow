@@ -1,12 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class Debug_GeometryPass : public Technique
+class CDebug_GeometryPass : public GeometryBase
 {
 public:
-	Debug_GeometryPass(RenderDevice* _RenderDevice) : 
-		Technique(_RenderDevice, "shaders/Debug/Debug")
+	CDebug_GeometryPass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Debug/Debug")
     {
         gColor = getLocation("gColor");
     }

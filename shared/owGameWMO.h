@@ -9,5 +9,6 @@
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
 
-// M2
+// WMO
+#include "../owGameWMO/Single_WMO_Instance.h"
 #include "../owGameWMO/WMOsManager.h"

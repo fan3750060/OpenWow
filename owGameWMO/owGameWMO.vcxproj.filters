@@ -43,6 +43,7 @@
     <ClCompile Include="WMO_Part_Portal.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
+    <ClCompile Include="Single_WMO_Instance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -80,5 +81,6 @@
     <ClInclude Include="WMO_Part_Portal.h">
       <Filter>Parts</Filter>
     </ClInclude>
+    <ClInclude Include="Single_WMO_Instance.h" />
   </ItemGroup>
 </Project>

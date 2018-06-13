@@ -2,10 +2,10 @@
 
 #include "PostprocessBase.h"
 
-class POST_Fog : public PostprocessBase
+class CPOST_Fog : public PostprocessBase
 {
 public:
-    POST_Fog(RenderDevice* _RenderDevice) : 
+    CPOST_Fog(RenderDevice* _RenderDevice) : 
 		PostprocessBase(_RenderDevice, "shaders/Postprocess/Postprocess_Fog.fs") 
 	{
 		gFogDistance = getLocation("gFogDistance");

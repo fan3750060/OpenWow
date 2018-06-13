@@ -2,7 +2,7 @@
 
 #include "M2.h"
 
-class CM2_Manager : public IM2Manager, public CRefManager1Dim<M2>, public IUpdatable
+class CM2_Manager : public IM2Manager, public CRefManager1Dim<M2>
 {
 public:
 	CM2_Manager();
@@ -17,13 +17,7 @@ public:
 	void Delete(cstring name) { CRefManager1Dim::Delete(name); }
 	void Delete(M2* item) { CRefManager1Dim::Delete(item); }
 
-	void ResetAnim() override;
-
 	// CRefManager1Dim
 	M2* CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
-
-	// IUpdatable
-	void Input(double _time, double _dTime) override {}
-	void Update(double _Time, double _deltaTime);
 };

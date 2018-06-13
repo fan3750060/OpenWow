@@ -94,8 +94,6 @@ public:
 	//------------------
 	cmat4 getOrthoMatrix() const { return m_OrhoMatrix; }
 
-
-
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);
 

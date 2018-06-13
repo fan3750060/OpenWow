@@ -1,11 +1,12 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class Water_Pass : public Technique
+class CWater_Pass : public GeometryBase
 {
 public:
-    Water_Pass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Liquid/Water")
+    CWater_Pass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Liquid/Water")
     {
         gColorMap = getLocation("gColorMap");
         gSpecularMap = getLocation("gSpecularMap");

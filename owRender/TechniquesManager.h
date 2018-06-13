@@ -1,12 +1,8 @@
 #pragma once
 
+// Debug
 #include "Debug_GeometryPass.h"
 #include "Debug_Normals.h"
-
-#include "Sky_GeometryPass.h"
-#include "WMO_GeomertyPass.h"
-
-
 
 // Map
 #include "MCNK_Pass.h"
@@ -19,6 +15,10 @@
 // Liquids
 #include "Magma_Pass.h"
 #include "Water_Pass.h"
+
+// Others
+#include "Sky_GeometryPass.h"
+#include "WMO_GeomertyPass.h"
 
 // Postprocess
 #include "Postprocess_Fog.h"
@@ -36,30 +36,41 @@ public:
 	TechniquesManager(RenderDevice* _RenderDevice);
 	~TechniquesManager();
 
-public:
-	Debug_GeometryPass* m_Debug_GeometryPass;
-    Debug_Normals* m_Debug_Normals;
+	void PreRender3D();
 
-	Sky_GeometryPass* m_Sky_GeometryPass;
-	MCNK_Pass* m_MapChunk_GeometryPass;
-	WDL_LowRes_Pass* m_MapTileLowRes_GeometryPass;
-	WMO_GeomertyPass* m_WMO_GeometryPass;
-	Magma_Pass* m_Magma;
-	Water_Pass* m_Water;
-	M2_Pass* m_Model;
-	M2_RibbonEmitters_Pass* m_Ribbons;
+	// Debug
+	CDebug_GeometryPass* Debug_Pass;
+	CDebug_Normals* DebugNormal_Pass;
 
-	// Lights
+	// Map
+	CMCNK_Pass* MCNK_Pass;
+	CWDL_LowRes_Pass* WDL_LowRes_Pass;
 
-	POST_DirectionalLight* m_POST_DirectionalLight;
-    POST_Fog* m_POST_Fog;
-	POST_Simple* m_POST_Simple;
+	// M2
+	CM2_Pass* M2_Pass;
+	CM2_RibbonEmitters_Pass* M2_RibbonEmitters_Pass;
+
+	// Liquids
+	CMagma_Pass* m_Magma;
+	CWater_Pass* m_Water;
+
+	// Others
+	CSky_GeometryPass* Sky_Pass;
+	CWMO_GeomertyPass* m_WMO_GeometryPass;
+
+	// Postprocess
+	CPOST_Fog* Postprocess_Fog;
+	CPOST_DirectionalLight* Postprocess_Light_Direction;
+	CPOST_Simple* Postprocess_Simple;
 
 	// UI
-	UI_Color* m_UI_Color;
-	UI_Font* m_UI_Font;
-	UI_Texture* m_UI_Texture;
+	CUI_Color* UI_Color;
+	CUI_Font* UI_Font;
+	CUI_Texture* UI_Texture;
 
 private:
-	RenderDevice* m_RenderDevice;
+	RenderDevice*				m_RenderDevice;
+	vector<GeometryBase*>		m_GeomTechniques;
+
+	const CGroupVideo&			groupVideo;
 };

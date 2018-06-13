@@ -198,4 +198,12 @@ void CM2_Skin_Builder::StepBuildGeometry()
 	m_Skin->__geom->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(SM2_Vertex)); // tc1 10-11
 	m_Skin->__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 	m_Skin->__geom->finishCreatingGeometry();
+
+	////////////////////////////
+	// Debug geom
+	m_Skin->__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PN);
+	m_Skin->__geomDebugNormals->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex));
+	m_Skin->__geomDebugNormals->setGeomVertexParams(m_MDX->m_VBuffer, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex));
+	m_Skin->__geomDebugNormals->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
+	m_Skin->__geomDebugNormals->finishCreatingGeometry();
 }

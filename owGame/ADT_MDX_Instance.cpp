@@ -8,10 +8,18 @@
 
 ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo) :
 	SceneNode(_parent),
-    m_Object(_mdxObject)
+    m_Object(_mdxObject),
+	m_NeedRecalcAnimation(true),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
     assert1(_mdxObject);
 	m_UniqueId = _placementInfo.uniqueId;
+
+	// Create animator
+	if (m_Object->isAnimated())
+	{
+		m_Animator = new CM2_Animator(m_Object);
+	}
 
 	// Scene node params
 	{
@@ -33,41 +41,65 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 	
 	setDrawOrder(21);
 	setSelectable();
-	_Bindings->RegisterUpdatableObject(this);
+
+	if (m_Object->isAnimated())
+	{
+		_Bindings->RegisterUpdatableObject(this);
+	}
 }
 
 ADT_MDX_Instance::~ADT_MDX_Instance()
 {
-	_Bindings->UnregisterUpdatableObject(this);
+	if (m_Object->isAnimated())
+	{
+		delete m_Animator;
+		_Bindings->UnregisterUpdatableObject(this);
+	}
 }
 
 void ADT_MDX_Instance::Update(double _time, double _dTime)
 {
-	m_Object->Update(_time, _dTime);
+	if (m_Object->isAnimated())
+	{
+		if (m_Object->isBillboard())
+		{
+			m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
+		}
+		else
+		{
+			if (!m_NeedRecalcAnimation)
+			{
+				m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
+				m_NeedRecalcAnimation = true;
+			}
+		}
+	}
+
+	m_Object->updateEmitters(_dTime);
 }
 
 void ADT_MDX_Instance::PreRender3D()
 {
-	/*if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
 		setVisible(false);
 		return;
 	}
-	m_AlreadyDraw.insert(m_UniqueId);*/
+	m_AlreadyDraw.insert(m_UniqueId);
 	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
 }
 
 void ADT_MDX_Instance::Render3D()
 {
-	_Pipeline->Clear();
+	if (!m_QualitySettings.draw_map_m2)
 	{
-		_Pipeline->SetWorld(getAbsTrans());
-		
-		m_Object->Render();
-		
-		PERF_INC(PERF_MAP_MODELS_MDXs);
+		return;
 	}
-	_Pipeline->Clear();
+
+	//_Render->DrawBoundingBox(m_Bounds);
+
+	m_Object->Render(getAbsTrans());
+	PERF_INC(PERF_MAP_MODELS_MDXs);
 }
 
 //

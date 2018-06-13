@@ -63,8 +63,8 @@ bool GameState_WMOViewer::Init()
 
 	CSceneManager* sceneManager = new CSceneManager(root);
 
-	_PipelineGlobal->GetCamera()->Position = vec3(50, 50, 50);
-	_PipelineGlobal->GetCamera()->SetNeedUpdate();
+	_Camera->Position = vec3(50, 50, 50);
+	_Camera->SetNeedUpdate();
 
 	//
 	enableFreeCamera = false;
@@ -107,16 +107,16 @@ void GameState_WMOViewer::Input(double _time, double _dTime)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(FORWARD, speed);
+		_Camera->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(BACKWARD, speed);
+		_Camera->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(LEFT, speed);
+		_Camera->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(RIGHT, speed);
+		_Camera->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_WMOViewer::Update(double _time, double _dTime)
@@ -131,6 +131,8 @@ void GameState_WMOViewer::PreRender3D()
 
 	_PipelineGlobal->SetCamera(_Render->mainCamera);
 	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
+
+	_Render->TechniquesMgr()->PreRender3D();
 
 	setVisible(true);
 }
@@ -175,7 +177,7 @@ void GameState_WMOViewer::OnMouseMoved(cvec2 _mousePos)
 	{
 		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_PipelineGlobal->GetCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Camera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}

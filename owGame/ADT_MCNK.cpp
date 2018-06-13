@@ -50,7 +50,6 @@ bool ADT_MCNK::Load()
 		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
 		m_Bounds.Max = vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize);
 		m_Bounds.calculateCenter();
-		// CalculateMatrix(); DO NOT CALCULATE MATRIX!!!!
 	}
 
 	R_Buffer* verticesBuffer = nullptr;
@@ -157,7 +156,7 @@ bool ADT_MCNK::Load()
 			const uint8* abuf = f->GetDataFromCurrent() + mcly[i].offsetInMCAL;
 			uint8* p;
 			p = amap;
-			for (uint8 j = 0; j < 64; j++) 
+			for (uint8 j = 0; j < 64; j++)
 			{
 				for (uint8 i = 0; i < 32; i++)
 				{
@@ -212,14 +211,24 @@ bool ADT_MCNK::Load()
 	__ibLowResolution = _Render->r.createIndexBuffer(m_IndexesCountLowResolution * sizeof(uint16), mapArrayLowResolution.data(), false);
 
 	////////////////////////////
-	// Geom
-	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
-	__geom->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geom->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geom->setGeomVertexParams(_Map_Shared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-	__geom->setGeomVertexParams(_Map_Shared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
-	__geom->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
-	__geom->finishCreatingGeometry();
+	// Geom Default
+	__geomDefault = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
+	__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geomDefault->setGeomVertexParams(_Map_Shared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+	__geomDefault->setGeomVertexParams(_Map_Shared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
+	__geomDefault->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
+	__geomDefault->finishCreatingGeometry();
+
+	////////////////////////////
+	// Geom Low
+	__geomLow = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
+	__geomLow->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geomLow->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+	__geomLow->setGeomVertexParams(_Map_Shared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+	__geomLow->setGeomVertexParams(_Map_Shared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
+	__geomLow->setGeomIndexParams(__ibLowResolution, R_IndexFormat::IDXFMT_16);
+	__geomLow->finishCreatingGeometry();
 
 	////////////////////////////
 	// Debug geom
@@ -245,7 +254,7 @@ bool ADT_MCNK::Delete()
 void ADT_MCNK::PreRender3D()
 {
 	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
-	
+
 	// Draw chunk before fog
 	/*float mydist = (_Camera->Position - vcenter).length() - r;
 	if (mydist > _Config.culldistance)
@@ -260,59 +269,60 @@ void ADT_MCNK::PreRender3D()
 
 void ADT_MCNK::Render3D()
 {
-	if (!m_QualitySettings.draw_map_chunk)
+	if (!m_QualitySettings.draw_mcnk)
 	{
 		return;
 	}
 
+	//RenderNormals();
 
 	PERF_START(PERF_MAP);
-	//------------------
 
-	_Pipeline->Clear();
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	_Render->r.setDepthTest(true);
+	_Render->r.setDepthMask(true);
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+
+	_Render->TechniquesMgr()->MCNK_Pass->Bind();
+	_Render->TechniquesMgr()->MCNK_Pass->SetLayersCount(header.nLayers);
+
+	// Bind m_DiffuseTextures
+	for (uint32 i = 0; i < header.nLayers; i++)
 	{
-		_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-		//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-		_Render->r.setDepthTest(true);
-		_Render->r.setDepthMask(true);
-		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Bind();
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetPV();
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetLayersCount(header.nLayers);
-
-		// Bind m_DiffuseTextures
-		for (uint32 i = 0; i < header.nLayers; i++)
-		{
-			_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-			_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-		}
-
-		// Bind blend
-		if (header.nLayers > 0)
-			_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
-
-		// Bind shadow
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowMapExists(header.flags.has_mcsh);
-		if (header.flags.has_mcsh)
-			_Render->TechniquesMgr()->m_MapChunk_GeometryPass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
-
-		_Render->r.setGeometry(__geom);
-		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
-
-		_Render->TechniquesMgr()->m_MapChunk_GeometryPass->Unbind();
-
-		//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-		_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+		_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
-	_Pipeline->Clear();
 
-	//---------------
+	// Bind blend
+	if (header.nLayers > 0)
+	{
+		_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+	}
+
+	// Bind shadow
+	_Render->TechniquesMgr()->MCNK_Pass->SetShadowMapExists(header.flags.has_mcsh);
+	if (header.flags.has_mcsh)
+	{
+		_Render->TechniquesMgr()->MCNK_Pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
+	}
+
+	if (m_QualitySettings.draw_mcnk_low)
+	{
+		_Render->r.setGeometry(__geomLow);
+		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountLowResolution, 0, C_MapBufferSize, true);
+	}
+	else
+	{
+		_Render->r.setGeometry(__geomDefault);
+		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
+	}
+
+	_Render->TechniquesMgr()->MCNK_Pass->Unbind();
+
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	PERF_STOP(PERF_MAP);
-}
-
-void ADT_MCNK::PostRender3D()
-{
 }
 
 //
@@ -348,14 +358,13 @@ void ADT_MCNK::PostRender3D()
 }*/
 
 
-/*void ADT_MCNK::Render_DEBUG()
+void ADT_MCNK::RenderNormals()
 {
-	if (_CameraFrustum->_frustum.cullBox(m_Bounds))
-	{
-		return;
-	}
+	_Render->TechniquesMgr()->DebugNormal_Pass->Bind();
 
 	_Render->r.setGeometry(__geomDebugNormals);
 	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize);
-}*/
+
+	_Render->TechniquesMgr()->DebugNormal_Pass->Unbind();
+}
 

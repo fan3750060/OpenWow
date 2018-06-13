@@ -54,8 +54,8 @@ bool GameState_M2Viewer::Init()
 		backgroundModel = GetManager<IM2Manager>()->Add("World\\Generic\\PassiveDoodads\\Lights\\Torch.m2"/*"Creature\\Ragnaros\\Ragnaros.m2"*/);
 	}
 
-	_PipelineGlobal->GetCamera()->Position = vec3(50, 50, 50);
-	_PipelineGlobal->GetCamera()->SetNeedUpdate();
+	_Camera->Position = vec3(50, 50, 50);
+	_Camera->SetNeedUpdate();
 
 	//
 	enableFreeCamera = false;
@@ -101,16 +101,16 @@ void GameState_M2Viewer::Input(double _time, double _dTime)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(FORWARD, speed);
+		_Camera->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(BACKWARD, speed);
+		_Camera->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(LEFT, speed);
+		_Camera->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_PipelineGlobal->GetCamera()->ProcessKeyboard(RIGHT, speed);
+		_Camera->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_M2Viewer::Update(double _time, double _dTime)
@@ -118,12 +118,14 @@ void GameState_M2Viewer::Update(double _time, double _dTime)
 	if (backgroundModel)
 	{
 		backgroundModel->updateEmitters(_dTime);
-		backgroundModel->Update(_time, _dTime);
+		//backgroundModel->Update(_time, _dTime);
 	}
 }
 
 void GameState_M2Viewer::PreRender3D()
 {
+	_Render->TechniquesMgr()->PreRender3D();
+
 	setVisible(backgroundModel != nullptr);
 }
 
@@ -131,17 +133,14 @@ void GameState_M2Viewer::Render3D()
 {
 	_Render->BindRBs();
 
-	// Camera
-	_Pipeline->Clear();
-
 	// Debug
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
+	_Render->TechniquesMgr()->Debug_Pass->Bind();
+	_Render->TechniquesMgr()->Debug_Pass->SetPV();
+	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
 	_Render->r.setGeometry(m_DebugGeom);
 	_Render->r.draw(PRIM_TRILIST, 0, 6);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
 	Camera* tt = nullptr;
@@ -162,23 +161,22 @@ void GameState_M2Viewer::Render3D()
 
 
 	// Geom
-	_Pipeline->Clear();
-	_Pipeline->Scale(5);
-	backgroundModel->Render();
+	mat4 worldMatrix;
+	worldMatrix.scale(5);
+	backgroundModel->Render(worldMatrix);
 	
 
 
-	/*_Pipeline->Clear();
-
+	/*
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetPVW();
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
+	_Render->TechniquesMgr()->Debug_Pass->Bind();
+	_Render->TechniquesMgr()->Debug_Pass->SetPVW();
+	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
 	_Render->r.setGeometry(tt->__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->TechniquesMgr()->m_Debug_GeometryPass->Unbind();
+	_Render->TechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 }
@@ -219,7 +217,7 @@ void GameState_M2Viewer::OnMouseMoved(cvec2 _mousePos)
 	{
 		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_PipelineGlobal->GetCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Camera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}

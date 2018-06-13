@@ -1,9 +1,11 @@
 #pragma once
 
-#include "technique.h"
+#include "GeometryBase.h"
 
-class Sky_GeometryPass : public Technique
+class CSky_GeometryPass : public GeometryBase
 {
 public:
-	Sky_GeometryPass(RenderDevice* _RenderDevice) : Technique(_RenderDevice, "shaders/Sky") {}
+	CSky_GeometryPass(RenderDevice* _RenderDevice) : 
+		GeometryBase(_RenderDevice, "shaders/Sky") 
+	{}
 };
