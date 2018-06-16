@@ -13,7 +13,6 @@ protected:
 	Technique(RenderDevice* _RenderDevice, cstring _fileName);
 	Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS);
     Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _filenameGS);
-	~Technique();
 
     void Process(cstring fileName, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc);
 
@@ -42,8 +41,8 @@ protected:
     inline void setMat4(int32 _loc, cmat4 mat) const;
 
 protected:
-	R_Shader*      m_Shader;
-	RenderDevice*  m_RenderDevice;
+	SmartPtr<R_Shader>  m_Shader;
+	RenderDevice*		m_RenderDevice;
 };
 
 #include "Technique.inl"

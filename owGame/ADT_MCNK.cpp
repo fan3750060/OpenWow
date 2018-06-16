@@ -18,13 +18,12 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	m_ParentTextures(&_parentTile->m_Textures),
 	m_File(_file),
 	m_BlendRBGShadowATexture(0),
-	m_IndexesCountDefault(0),
+	m_IndexesCountHigh(0),
 	m_LiquidInstance(nullptr),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
+	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
 {
 	memset(mcly, 0x00, 16 * 4);
-
-	m_BlendRBGShadowATexture = 0;
 
 	setDrawOrder(21);
 }
@@ -39,6 +38,7 @@ bool ADT_MCNK::Load()
 	// Read header
 	f->ReadBytes(&header, sizeof(ADT_MCNK_Header));
 
+
 	// Scene node params
 	{
 		// Set translate
@@ -47,8 +47,8 @@ bool ADT_MCNK::Load()
 		m_Translate.z = header.zpos * (-1.0f) + C_ZeroPoint;
 
 		// Bounds
-		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
-		m_Bounds.Max = vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize);
+		m_Bounds.setMin(vec3(m_Translate.x, Math::MaxFloat, m_Translate.z));
+		m_Bounds.setMax(vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize));
 		m_Bounds.calculateCenter();
 	}
 
@@ -99,12 +99,12 @@ bool ADT_MCNK::Load()
 				vec3 v = m_Translate + vec3(xpos, h, zpos);
 				*ttv++ = v;
 
-				m_Bounds.Min.y = minf(v.y, m_Bounds.Min.y);
-				m_Bounds.Max.y = maxf(v.y, m_Bounds.Max.y);
+				m_Bounds.setMinY(minf(v.y, m_Bounds.getMin().y));
+				m_Bounds.setMaxY(maxf(v.y, m_Bounds.getMax().y));
 			}
-
-			m_Bounds.calculateCenter();
 		}
+
+		m_Bounds.calculateCenter();
 
 		verticesBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempVertexes, false);
 	}
@@ -200,39 +200,37 @@ bool ADT_MCNK::Load()
 		}
 	}
 
-	////////////////////////////
-	// Index
-	vector<uint16>& mapArrayDefault = Map_Shared::GenarateDefaultMapArray(header.holes);
-	m_IndexesCountDefault = mapArrayDefault.size();
-	__ibDefault = _Render->r.createIndexBuffer(m_IndexesCountDefault * sizeof(uint16), mapArrayDefault.data(), false);
+	{ // Geom High
+		vector<uint16>& mapArrayHigh = Map_Shared::GenarateHighMapArray(header.holes);
+		m_IndexesCountHigh = mapArrayHigh.size();
+		__ibHigh = _Render->r.createIndexBuffer(mapArrayHigh.size() * sizeof(uint16), mapArrayHigh.data(), false);
 
-	vector<uint16>& mapArrayLowResolution = Map_Shared::GenarateLowResMapArray(header.holes);
-	m_IndexesCountLowResolution = mapArrayLowResolution.size();
-	__ibLowResolution = _Render->r.createIndexBuffer(m_IndexesCountLowResolution * sizeof(uint16), mapArrayLowResolution.data(), false);
+		__geomHigh = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNT2);
+		__geomHigh->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
+		__geomHigh->finishCreatingGeometry();
+	}
 
-	////////////////////////////
-	// Geom Default
-	__geomDefault = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
-	__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomDefault->setGeomVertexParams(_Map_Shared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-	__geomDefault->setGeomVertexParams(_Map_Shared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
-	__geomDefault->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
-	__geomDefault->finishCreatingGeometry();
+	{ // Geom Default
+		vector<uint16>& mapArrayDefault = Map_Shared::GenarateDefaultMapArray(header.holes);
+		m_IndexesCountDefault = mapArrayDefault.size();
+		__ibDefault = _Render->r.createIndexBuffer(mapArrayDefault.size() * sizeof(uint16), mapArrayDefault.data(), false);
 
-	////////////////////////////
-	// Geom Low
-	__geomLow = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PNT2);
-	__geomLow->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomLow->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomLow->setGeomVertexParams(_Map_Shared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-	__geomLow->setGeomVertexParams(_Map_Shared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
-	__geomLow->setGeomIndexParams(__ibLowResolution, R_IndexFormat::IDXFMT_16);
-	__geomLow->finishCreatingGeometry();
+		__geomDefault = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNT2);
+		__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
+		__geomDefault->finishCreatingGeometry();
+	}
 
 	////////////////////////////
 	// Debug geom
-	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PN);
+	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PN);
 	__geomDebugNormals->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 	__geomDebugNormals->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
 	__geomDebugNormals->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
@@ -243,28 +241,32 @@ bool ADT_MCNK::Load()
 	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
 
-	return SceneNode::Load();
+	return true;
 }
 
 bool ADT_MCNK::Delete()
 {
-	return SceneNode::Delete();
+	return true;
 }
 
 void ADT_MCNK::PreRender3D()
 {
-	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(false);
 
-	// Draw chunk before fog
-	/*float mydist = (_Camera->Position - vcenter).length() - r;
-	if (mydist > _Config.culldistance)
+	// Check distance to camera
+	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - m_Bounds.getCenter().toX0Z()).length();
+	if (distToCamera2D > m_DistancesSettings.ADT_MCNK_Distance)
 	{
-	if (_Config.uselowlod)
-	{
-	this->drawNoDetail();
-	return;
+		return;
 	}
-	}*/
+
+	// Check frustrum
+	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	{
+		return;
+	}
+
+	setVisible(true);
 }
 
 void ADT_MCNK::Render3D()
@@ -277,51 +279,56 @@ void ADT_MCNK::Render3D()
 	//RenderNormals();
 
 	PERF_START(PERF_MAP);
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	_Render->r.setDepthTest(true);
-	_Render->r.setDepthMask(true);
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-	_Render->TechniquesMgr()->MCNK_Pass->Bind();
-	_Render->TechniquesMgr()->MCNK_Pass->SetLayersCount(header.nLayers);
-
-	// Bind m_DiffuseTextures
-	for (uint32 i = 0; i < header.nLayers; i++)
 	{
-		_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-		_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-	}
+		_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+		//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+		_Render->r.setDepthTest(true);
+		_Render->r.setDepthMask(true);
+		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
-	// Bind blend
-	if (header.nLayers > 0)
-	{
-		_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
-	}
+		_Render->getTechniquesMgr()->MCNK_Pass->Bind();
+		{
+			_Render->getTechniquesMgr()->MCNK_Pass->SetLayersCount(header.nLayers);
 
-	// Bind shadow
-	_Render->TechniquesMgr()->MCNK_Pass->SetShadowMapExists(header.flags.has_mcsh);
-	if (header.flags.has_mcsh)
-	{
-		_Render->TechniquesMgr()->MCNK_Pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
-	}
+			// Bind m_DiffuseTextures
+			for (uint32 i = 0; i < header.nLayers; i++)
+			{
+				_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+				_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+			}
 
-	if (m_QualitySettings.draw_mcnk_low)
-	{
-		_Render->r.setGeometry(__geomLow);
-		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountLowResolution, 0, C_MapBufferSize, true);
-	}
-	else
-	{
-		_Render->r.setGeometry(__geomDefault);
-		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
-	}
+			// Bind blend
+			if (header.nLayers > 0)
+			{
+				_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+			}
 
-	_Render->TechniquesMgr()->MCNK_Pass->Unbind();
+			// Bind shadow
+			_Render->getTechniquesMgr()->MCNK_Pass->SetShadowMapExists(header.flags.has_mcsh);
+			if (header.flags.has_mcsh)
+			{
+				_Render->getTechniquesMgr()->MCNK_Pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
+			}
 
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+			float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length();
+			if (distToCamera3D > m_DistancesSettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low)
+			{
+				_Render->getTechniquesMgr()->MCNK_Pass->SetIsLowRes(1);
+				_Render->r.setGeometry(__geomDefault);
+				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
+			}
+			else
+			{
+				_Render->getTechniquesMgr()->MCNK_Pass->SetIsLowRes(0);
+				_Render->r.setGeometry(__geomHigh);
+				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize, true);
+			}
+		}
+		_Render->getTechniquesMgr()->MCNK_Pass->Unbind();
+
+		//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+		_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	}
 	PERF_STOP(PERF_MAP);
 }
 
@@ -360,11 +367,11 @@ void ADT_MCNK::Render3D()
 
 void ADT_MCNK::RenderNormals()
 {
-	_Render->TechniquesMgr()->DebugNormal_Pass->Bind();
+	_Render->getTechniquesMgr()->DebugNormal_Pass->Bind();
 
 	_Render->r.setGeometry(__geomDebugNormals);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize);
 
-	_Render->TechniquesMgr()->DebugNormal_Pass->Unbind();
+	_Render->getTechniquesMgr()->DebugNormal_Pass->Unbind();
 }
 

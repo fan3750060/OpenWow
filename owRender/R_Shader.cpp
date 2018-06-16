@@ -6,11 +6,21 @@
 // Additional
 #include "OpenGL.h"
 
+R_Shader::R_Shader(RenderDevice* _RenderDevice) :
+	m_ProgramGLObj(0),
+	m_RenderDevice(_RenderDevice)
+{}
+
+R_Shader::~R_Shader()
+{
+	glDeleteProgram(m_ProgramGLObj);
+}
+
 void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc)
 {
 	// Compile and link shader
-	oglProgramObj = createShaderProgram(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
-	if (oglProgramObj == 0)
+	m_ProgramGLObj = createShaderProgram(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
+	if (m_ProgramGLObj == 0)
 	{
 		fail2(m_RenderDevice->getShaderLog().c_str());
 	}
@@ -21,30 +31,30 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 	}
 
 	int attribCount;
-	glGetProgramiv(oglProgramObj, GL_ACTIVE_ATTRIBUTES, &attribCount);
+	glGetProgramiv(m_ProgramGLObj, GL_ACTIVE_ATTRIBUTES, &attribCount);
 
 	for (uint32 i = 0; i < m_RenderDevice->_numVertexLayouts; ++i)
 	{
-		R_VertexLayout &vl = m_RenderDevice->m_VertexLayouts[i];
+		R_VertexLayout& vl = m_RenderDevice->m_VertexLayouts[i];
 		bool allAttribsFound = true;
 
 		for (uint32 j = 0; j < 16; ++j)
 		{
-			this->inputLayouts[i].attribIndices[j] = -1;
+			m_InputLayouts[i].attribIndices[j] = -1;
 		}
 
 		for (int j = 0; j < attribCount; ++j)
 		{
 			char name[32];
 			uint32 size, type;
-			glGetActiveAttrib(oglProgramObj, j, 32, 0x0, (int *)&size, &type, name);
+			glGetActiveAttrib(m_ProgramGLObj, j, 32, nullptr, (int *)&size, &type, name);
 
 			bool attribFound = false;
 			for (uint32 k = 0; k < vl.numAttribs; ++k)
 			{
 				if (vl.attribs[k].semanticName.compare(name) == 0)
 				{
-					this->inputLayouts[i].attribIndices[k] = glGetAttribLocation(oglProgramObj, name);
+					m_InputLayouts[i].attribIndices[k] = glGetAttribLocation(m_ProgramGLObj, name);
 					attribFound = true;
 				}
 			}
@@ -56,18 +66,13 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 			}
 		}
 
-		this->inputLayouts[i].valid = allAttribsFound;
+		m_InputLayouts[i].valid = allAttribsFound;
 	}
-}
-
-void R_Shader::destroyShader()
-{
-	glDeleteProgram(oglProgramObj);
 }
 
 void R_Shader::bindShader()
 {
-	glUseProgram(oglProgramObj);
+	glUseProgram(m_ProgramGLObj);
 
 	m_RenderDevice->_curShaderId = this;
 	m_RenderDevice->_pendingMask |= PM_GEOMETRY;
@@ -83,23 +88,23 @@ void R_Shader::unbindShader()
 
 int R_Shader::getShaderConstLoc(const char *name)
 {
-	return glGetUniformLocation(oglProgramObj, name);
+	return glGetUniformLocation(m_ProgramGLObj, name);
 }
 
 int R_Shader::getShaderSamplerLoc(const char *name)
 {
-	return glGetUniformLocation(oglProgramObj, name);
+	return glGetUniformLocation(m_ProgramGLObj, name);
 }
 
 int R_Shader::getShaderBufferLoc(const char *name)
 {
 	if (GetSettingsGroup<CGroupRenderCaps>().computeShaders)
 	{
-		int idx = glGetProgramResourceIndex(oglProgramObj, GL_SHADER_STORAGE_BLOCK, name);
+		int idx = glGetProgramResourceIndex(m_ProgramGLObj, GL_SHADER_STORAGE_BLOCK, name);
 		if (idx != -1)
 		{
 			const GLenum bufBindingPoint[1] = { GL_BUFFER_BINDING };
-			glGetProgramResourceiv(oglProgramObj, GL_SHADER_STORAGE_BLOCK, idx, 1, bufBindingPoint, 1, 0, &idx);
+			glGetProgramResourceiv(m_ProgramGLObj, GL_SHADER_STORAGE_BLOCK, idx, 1, bufBindingPoint, 1, 0, &idx);
 		}
 		return idx;
 	}
@@ -170,7 +175,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 {
 	int infologLength = 0;
 	int charsWritten = 0;
-	char* infoLog = 0x0;
+	char* infoLog = nullptr;
 	int status;
 
 	m_RenderDevice->m_ShaderLog = "";
@@ -182,7 +187,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 	if (vertexShaderSrc)
 	{
 		vs = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vs, 1, &vertexShaderSrc, 0x0);
+		glShaderSource(vs, 1, &vertexShaderSrc, nullptr);
 		glCompileShader(vs);
 		glGetShaderiv(vs, GL_COMPILE_STATUS, &status);
 		if (!status)
@@ -194,7 +199,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(vs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Vertex Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = 0x0;
+				delete[] infoLog; infoLog = nullptr;
 			}
 
 			glDeleteShader(vs);
@@ -206,7 +211,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 	if (fragmentShaderSrc)
 	{
 		fs = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fs, 1, &fragmentShaderSrc, 0x0);
+		glShaderSource(fs, 1, &fragmentShaderSrc, nullptr);
 		glCompileShader(fs);
 		glGetShaderiv(fs, GL_COMPILE_STATUS, &status);
 		if (!status)
@@ -217,7 +222,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(fs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Fragment Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = 0x0;
+				delete[] infoLog; infoLog = nullptr;
 			}
 
 			glDeleteShader(vs);
@@ -230,7 +235,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 	if (geometryShaderSrc)
 	{
 		gs = glCreateShader(GL_GEOMETRY_SHADER);
-		glShaderSource(gs, 1, &geometryShaderSrc, 0x0);
+		glShaderSource(gs, 1, &geometryShaderSrc, nullptr);
 		glCompileShader(gs);
 		glGetShaderiv(gs, GL_COMPILE_STATUS, &status);
 		if (!status)
@@ -241,7 +246,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(gs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Geometry Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = 0x0;
+				delete[] infoLog; infoLog = nullptr;
 			}
 
 			glDeleteShader(vs);
@@ -255,7 +260,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 	if (tessControlShaderSrc)
 	{
 		tsC = glCreateShader(GL_TESS_CONTROL_SHADER);
-		glShaderSource(tsC, 1, &tessControlShaderSrc, 0x0);
+		glShaderSource(tsC, 1, &tessControlShaderSrc, nullptr);
 		glCompileShader(tsC);
 		glGetShaderiv(tsC, GL_COMPILE_STATUS, &status);
 		if (!status)
@@ -266,7 +271,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(tsC, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Tesselation Control Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = 0x0;
+				delete[] infoLog; infoLog = nullptr;
 			}
 
 			glDeleteShader(vs);
@@ -281,7 +286,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 	if (tessEvalShaderSrc)
 	{
 		tsE = glCreateShader(GL_TESS_EVALUATION_SHADER);
-		glShaderSource(tsE, 1, &tessEvalShaderSrc, 0x0);
+		glShaderSource(tsE, 1, &tessEvalShaderSrc, nullptr);
 		glCompileShader(tsE);
 		glGetShaderiv(tsE, GL_COMPILE_STATUS, &status);
 		if (!status)
@@ -292,7 +297,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(tsE, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Tesselation Evaluation Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = 0x0;
+				delete[] infoLog; infoLog = nullptr;
 			}
 
 			glDeleteShader(vs);
@@ -304,11 +309,11 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 		}
 	}
 
-	// Tesselation evaluation shader
+	// Comput evaluation shader
 	if (computeShaderSrc)
 	{
 		cs = glCreateShader(GL_COMPUTE_SHADER);
-		glShaderSource(cs, 1, &computeShaderSrc, 0x0);
+		glShaderSource(cs, 1, &computeShaderSrc, nullptr);
 		glCompileShader(cs);
 		glGetShaderiv(cs, GL_COMPILE_STATUS, &status);
 		if (!status)
@@ -319,7 +324,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(cs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Compute Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = 0x0;
+				delete[] infoLog; infoLog = nullptr;
 			}
 
 			// other shader types should not be present in compute context, but better check
@@ -372,22 +377,23 @@ bool R_Shader::linkShaderProgram()
 {
 	int infologLength = 0;
 	int charsWritten = 0;
-	char *infoLog = 0x0;
+	char *infoLog = nullptr;
 	int status;
 
 	m_RenderDevice->m_ShaderLog = "";
 
-	glLinkProgram(oglProgramObj);
-	glGetProgramiv(oglProgramObj, GL_INFO_LOG_LENGTH, &infologLength);
+	glLinkProgram(m_ProgramGLObj);
+
+	glGetProgramiv(m_ProgramGLObj, GL_INFO_LOG_LENGTH, &infologLength);
 	if (infologLength > 1)
 	{
 		infoLog = new char[infologLength];
-		glGetProgramInfoLog(oglProgramObj, infologLength, &charsWritten, infoLog);
+		glGetProgramInfoLog(m_ProgramGLObj, infologLength, &charsWritten, infoLog);
 		m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Linking]\n" + infoLog;
-		delete[] infoLog; infoLog = 0x0;
+		delete[] infoLog; infoLog = nullptr;
 	}
 
-	glGetProgramiv(oglProgramObj, GL_LINK_STATUS, &status);
+	glGetProgramiv(m_ProgramGLObj, GL_LINK_STATUS, &status);
 	if (!status) return false;
 
 	return true;

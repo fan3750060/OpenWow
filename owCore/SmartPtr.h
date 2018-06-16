@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T>
-struct DefaultDelete
+struct DefaultDeleter
 {
 	void operator()(T* _Ptr) const
 	{
@@ -10,7 +10,7 @@ struct DefaultDelete
 	}
 };
 
-template<class T, class DEL = DefaultDelete<T>>
+template<class T, class D = DefaultDeleter<T>>
 class SmartPtr
 {
 public:
@@ -69,8 +69,8 @@ private:
 			assert1(m_Ptr->GetRefsCount() >= 0);
 			if (m_Ptr->GetRefsCount() == 0)
 			{
-				DEL deleter;
-				deleter.operator()(m_Ptr);
+				D m_Deleter;
+				(m_Deleter).operator()(m_Ptr);
 			}
 		}
 	}

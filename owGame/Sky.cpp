@@ -40,7 +40,7 @@ void Sky::LoadParams(LightParamsNames _param)
         m_FloatBand_Fogs[i].clear();
     }
 
-    uint32 paramSet = m_LightRecord->Get_Params(_param);
+    uint32 paramSet = m_LightRecord->Get_LightParamsID()->Get_ID();
 
     //-----------------------------------------------
     //-- Color params
@@ -93,8 +93,7 @@ void Sky::LoadParams(LightParamsNames _param)
     DBC_LightParamsRecord* lightParamRecord = DBC_LightParams[paramSet];
     if (lightParamRecord != nullptr)
     {
-        m_highlightSky = lightParamRecord->Get_m_highlightSky();
-        m_cloudTypeID = lightParamRecord->Get_CloudTypeID();
+        m_highlightSky = lightParamRecord->Get_HighlightSky();
         m_glow = lightParamRecord->Get_Glow();
         m_waterShallowAlpha = lightParamRecord->Get_WaterShallowAlpha();
         m_waterDeepAlpha = lightParamRecord->Get_WaterDeepAlpha();

@@ -25,13 +25,13 @@ void Liquid::Render(cmat4 _worldMatrix)
 
 	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
 	{
-		_Render->TechniquesMgr()->m_Water->Bind();
-		_Render->TechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->m_Water->Bind();
+		_Render->getTechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
 	}
 	else
 	{
-		_Render->TechniquesMgr()->m_Magma->Bind();
-		_Render->TechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->m_Magma->Bind();
+		_Render->getTechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
 	}
 
 	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % m_Textures.size();
@@ -41,17 +41,17 @@ void Liquid::Render(cmat4 _worldMatrix)
 	{
 		if (m_SkyManager != nullptr)
 		{
-			_Render->TechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_LIGHT));
-			_Render->TechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_DARK));
-			_Render->TechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
-			_Render->TechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
+			_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_LIGHT));
+			_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_DARK));
+			_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
+			_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
 		}
 		else
 		{
-			_Render->TechniquesMgr()->m_Water->SetWaterColorLight(vec3(0.0f, 0.0f, 1.0f));
-			_Render->TechniquesMgr()->m_Water->SetWaterColorDark(vec3(0.0f, 0.0f, 1.0f));
-			_Render->TechniquesMgr()->m_Water->SetShallowAlpha(1.0f);
-			_Render->TechniquesMgr()->m_Water->SetDeepAlpha(1.0f);
+			_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(vec3(0.0f, 0.0f, 1.0f));
+			_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(vec3(0.0f, 0.0f, 1.0f));
+			_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(1.0f);
+			_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(1.0f);
 		}
 	}
 
@@ -61,11 +61,11 @@ void Liquid::Render(cmat4 _worldMatrix)
 
 	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
 	{
-		_Render->TechniquesMgr()->m_Water->Unbind();
+		_Render->getTechniquesMgr()->m_Water->Unbind();
 	}
 	else
 	{
-		_Render->TechniquesMgr()->m_Magma->Unbind();
+		_Render->getTechniquesMgr()->m_Magma->Unbind();
 	}
 
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
@@ -317,7 +317,7 @@ void Liquid::createBuffer()
 	assert1(m_IndicesCnt > 0);
 
 	// Geometry
-	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWater);
+	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layoutWater);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(SLiquidVertexData));

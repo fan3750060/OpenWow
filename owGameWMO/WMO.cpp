@@ -286,7 +286,7 @@ bool WMO::drawSkybox()
 	}
 
 	mat4 worldMatrix;
-	worldMatrix.translate(_Camera->Position);
+	worldMatrix.translate(_Render->getCamera()->Position);
 	worldMatrix.scale(2.0f);
 
 	m_Skybox->Render(worldMatrix);

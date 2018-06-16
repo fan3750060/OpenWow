@@ -11,26 +11,24 @@ public:
 	void Input(double _time, double _dTime) override {};
 	void Update(double _time, double _dTime) override
 	{
-		highresdistance2 = highresdistance * highresdistance;
-		mapdrawdistance2 = mapdrawdistance * mapdrawdistance;
-		modeldrawdistance2 = modeldrawdistance * modeldrawdistance;
-		doodaddrawdistance2 = doodaddrawdistance * doodaddrawdistance;
-		culldistance2 = culldistance * culldistance;
 	}
 
-	float mapdrawdistance;
-	float modeldrawdistance;
-	float doodaddrawdistance;
-	float highresdistance;
+	float ADT_MCNK_Distance;
+	float ADT_MDX_Distance;
+	float ADT_WMO_Distance;
+	float WMO_MODD_Distance;
+	float ADT_MCNK_HighRes_Distance;
+
 	float culldistance;
 	float fogdistance;
 
-	float mapdrawdistance2;
-	float modeldrawdistance2;
-	float doodaddrawdistance2;
-	float highresdistance2;
-	float culldistance2;
-
 	// ISettingGroup
 	void InitDefault() override;
+
+private:
+	const float C_ADT_MCNK_Distance = 998.0f;
+	const float C_ADT_MCNK_HighRes_Distance = 384.0f;
+	const float C_ADT_MDX_Distance = 384.0f;
+	const float C_ADT_WMO_Distance = ADT_MDX_Distance * 1.5f;
+	const float C_WMO_MODD_Distance = 64.0f;
 };

@@ -6,14 +6,22 @@
 
 #include "Map_Headers.h"
 
+// FORWARD BEGIN
+class MapController;
+// FORWARD END
+
 class ADT : public SceneNode
 {
 public:
-	ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file);
+	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file);
 
 	ADT_MCNK* getChunk(int32 x, int32 z)
 	{
-		assert1(x < C_ChunksInTile && z < C_ChunksInTile);
+		if (x < 0 || x >= C_ChunksInTile || z < 0 || z >= C_ChunksInTile)
+		{
+			return nullptr;
+		}
+
 		return m_Chunks[x * C_ChunksInTile + z];
 	}
 
@@ -29,6 +37,7 @@ public:
 	void Render3D() override;
 
 public:
+	const MapController*				m_MapController;
 	const string						m_Name;
 	const SmartPtr<IFile>				m_File;
 	const int							m_IndexX, m_IndexZ;
@@ -41,5 +50,5 @@ public:
 	vector<SmartPtr<ADT_MCNK>>			m_Chunks;
 
 	//
-	CGroupQuality& m_QualitySettings;
+	CGroupQuality&						m_QualitySettings;
 };

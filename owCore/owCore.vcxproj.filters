@@ -76,6 +76,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{52e0479f-a650-434b-9e68-09e99972ff67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RefManager\1 Dim Assync">
+      <UniqueIdentifier>{d1c95b6f-a767-47df-bed7-b177d7d1e2eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -183,14 +186,14 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Loader.cpp">
-      <Filter>Objects bindings</Filter>
-    </ClCompile>
     <ClCompile Include="Perfomance.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="RefManager1DimAssync.cpp">
+      <Filter>RefManager\1 Dim Assync</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -362,14 +365,17 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Loader.h">
-      <Filter>Objects bindings</Filter>
-    </ClInclude>
     <ClInclude Include="Perfomance.h">
       <Filter>Settings</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="RefManager1DimAssync.h">
+      <Filter>RefManager\1 Dim Assync</Filter>
+    </ClInclude>
+    <ClInclude Include="MapAssync.h">
+      <Filter>RefManager\1 Dim Assync</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -378,6 +384,9 @@
     </None>
     <None Include="RefManager1Dim.inl">
       <Filter>RefManager\1 Dim</Filter>
+    </None>
+    <None Include="RefManager1DimAssync.inl">
+      <Filter>RefManager\1 Dim Assync</Filter>
     </None>
   </ItemGroup>
 </Project>

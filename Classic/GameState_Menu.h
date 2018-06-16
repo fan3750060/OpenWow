@@ -41,6 +41,7 @@ public:
 
 private:
     UIElement* m_MinimapUI;
+	UIElement* m_LoadingScreenUI;
 
 	Commands cmd;
 

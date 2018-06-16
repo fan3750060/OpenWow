@@ -16,7 +16,7 @@ MapController::MapController() :
     memset(m_Current, 0, sizeof(m_Current));
     m_IsOnInvalidTile = false;
 
-	_Map_Shared->Init();
+	Map_Shared::Init();
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
@@ -100,14 +100,14 @@ void MapController::Update()
     if (m_Current[midTile][midTile] != nullptr || m_IsOnInvalidTile)
     {
         if (m_IsOnInvalidTile ||
-            (_Camera->Position.x < m_Current[midTile][midTile]->getTranslate().x) ||
-            (_Camera->Position.x > (m_Current[midTile][midTile]->getTranslate().x + C_TileSize)) ||
-            (_Camera->Position.z < m_Current[midTile][midTile]->getTranslate().z) ||
-            (_Camera->Position.z > (m_Current[midTile][midTile]->getTranslate().z + C_TileSize)))
+            (_Render->getCamera()->Position.x < m_Current[midTile][midTile]->getTranslate().x) ||
+            (_Render->getCamera()->Position.x > (m_Current[midTile][midTile]->getTranslate().x + C_TileSize)) ||
+            (_Render->getCamera()->Position.z < m_Current[midTile][midTile]->getTranslate().z) ||
+            (_Render->getCamera()->Position.z > (m_Current[midTile][midTile]->getTranslate().z + C_TileSize)))
         {
 
-            enteredTileX = static_cast<int>(_Camera->Position.x / C_TileSize);
-            enteredTileZ = static_cast<int>(_Camera->Position.z / C_TileSize);
+            enteredTileX = static_cast<int>(_Render->getCamera()->Position.x / C_TileSize);
+            enteredTileZ = static_cast<int>(_Render->getCamera()->Position.z / C_TileSize);
 
             loading = true;
         }
@@ -229,11 +229,11 @@ uint32 MapController::GetAreaID()
 	}
 
     int tileX, tileZ, chunkX, chunkZ;
-    tileX = (int)(_Camera->Position.x / C_TileSize);
-    tileZ = (int)(_Camera->Position.z / C_TileSize);
+    tileX = (int)(_Render->getCamera()->Position.x / C_TileSize);
+    tileZ = (int)(_Render->getCamera()->Position.z / C_TileSize);
 
-    chunkX = (int)(fmod(_Camera->Position.x, C_TileSize) / C_ChunkSize);
-    chunkZ = (int)(fmod(_Camera->Position.z, C_TileSize) / C_ChunkSize);
+    chunkX = (int)(fmod(_Render->getCamera()->Position.x, C_TileSize) / C_ChunkSize);
+    chunkZ = (int)(fmod(_Render->getCamera()->Position.z, C_TileSize) / C_ChunkSize);
 
 	if (
 		(tileX < m_CurrentTileX - static_cast<int>(C_RenderedTiles / 2)) || 
@@ -249,7 +249,7 @@ uint32 MapController::GetAreaID()
 	int32 indexY = tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2);
 
 	ADT* curTile = m_Current[indexX][indexY];
-	if (curTile == nullptr || !curTile->isLoaded())
+	if (curTile == nullptr)
 	{
 		return UINT32_MAX;
 	}

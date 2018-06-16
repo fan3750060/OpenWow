@@ -13,7 +13,7 @@ enum DBC_LIQUIDTYPE_Type : uint32_t
 DBC_DEF_BEGIN(DBC_LiquidType)
 
 __DBC_STRING(Name, 2);
-__DBC_TVALUE(DBC_LIQUIDTYPE_Type, Type, 3);			// 0: Water, 1: Ocean, 2: Magma, 3: Slime
-// 4 Spell.dbc irefID
+__DBC_TVALUE(DBC_LIQUIDTYPE_Type, Type, 3);
+//__DBC_REF_ID(DBC_Spell, SpellID, 4);
 
 DBC_DEF_END

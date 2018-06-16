@@ -5,6 +5,7 @@
 
 // Additional
 #include "Material.h"
+#include "Render.h"
 
 TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice), 
@@ -119,8 +120,8 @@ void TechniquesManager::PreRender3D()
 	for (auto& it : m_GeomTechniques)
 	{
 		it->Bind();
-		it->SetProjectionMatrix(_PipelineGlobal->GetProjection());
-		it->SetViewMatrix(_PipelineGlobal->GetView());
+		it->SetProjectionMatrix(_Render->getCamera()->getProjMat());
+		it->SetViewMatrix(_Render->getCamera()->getViewMat());
 		it->Unbind();
 	}
 }

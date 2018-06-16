@@ -57,6 +57,9 @@
     <ClInclude Include="DBC_TerrainType.h">
       <Filter>DBCs</Filter>
     </ClInclude>
+    <ClInclude Include="DBC__Forwards.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

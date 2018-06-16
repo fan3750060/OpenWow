@@ -22,6 +22,8 @@ uniform sampler2D gBlend;
 // Speculars textures
 uniform sampler2D gSpecularMap[4];
 
+uniform int gIsLowRes;
+
 // Shadow Params
 uniform bool gShadowMapExists;
 uniform vec3 gShadowColor;
@@ -64,6 +66,15 @@ void main()
 	{
 		float alphaCurrent = texture(gBlend, VSInput.TexCoordAlpha).a;
 		resultColor = resultColor * (1.0 - alphaCurrent) + gShadowColor * alphaCurrent;
+	}
+
+	if (gIsLowRes == 2) // Low
+	{
+		resultColor *= vec3(1.0f, 0.7f, 0.7f);
+	}
+	else if (gIsLowRes == 1) // Default
+	{
+		resultColor *= vec3(0.8f, 1.0f, 0.8f);
 	}
 
 	//

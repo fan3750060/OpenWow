@@ -128,7 +128,6 @@ public:
     bool             m_IsGlobalSky;
     bool             m_highlightSky;
     __DBC_FOREIGN_KEY_ID(uint32, DBC_LightSkybox, m_lightSkyboxID);
-    uint32_t         m_cloudTypeID; // always 0
 
 private:
     vector<SkyParam<vec3>>    m_IntBand_Colors[LIGHT_COLORS_COUNT];

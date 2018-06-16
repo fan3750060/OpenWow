@@ -35,6 +35,7 @@ private:
 	uint16				m_DoodadSetIndex;
 
 	CGroupQuality&		m_QualitySettings;
+	CGroupDistances&	m_DistancesSettings;
 
 public:	// Static
 	static void reset();

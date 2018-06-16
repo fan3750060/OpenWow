@@ -21,7 +21,7 @@ void GameState_WMOViewer::CreateDebugGeom()
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
-	m_DebugGeom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+	m_DebugGeom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
 	m_DebugGeom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	m_DebugGeom->finishCreatingGeometry();
 }
@@ -63,8 +63,8 @@ bool GameState_WMOViewer::Init()
 
 	CSceneManager* sceneManager = new CSceneManager(root);
 
-	_Camera->Position = vec3(50, 50, 50);
-	_Camera->SetNeedUpdate();
+	_Render->getCamera()->Position = vec3(50, 50, 50);
+	_Render->getCamera()->SetNeedUpdate();
 
 	//
 	enableFreeCamera = false;
@@ -107,16 +107,16 @@ void GameState_WMOViewer::Input(double _time, double _dTime)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_Camera->ProcessKeyboard(FORWARD, speed);
+		_Render->getCamera()->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_Camera->ProcessKeyboard(BACKWARD, speed);
+		_Render->getCamera()->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_Camera->ProcessKeyboard(LEFT, speed);
+		_Render->getCamera()->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_Camera->ProcessKeyboard(RIGHT, speed);
+		_Render->getCamera()->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_WMOViewer::Update(double _time, double _dTime)
@@ -129,10 +129,7 @@ void GameState_WMOViewer::PreRender3D()
 {
 	_Render->BindRBs();
 
-	_PipelineGlobal->SetCamera(_Render->mainCamera);
-	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
-
-	_Render->TechniquesMgr()->PreRender3D();
+	_Render->getTechniquesMgr()->PreRender3D();
 
 	setVisible(true);
 }
@@ -177,7 +174,7 @@ void GameState_WMOViewer::OnMouseMoved(cvec2 _mousePos)
 	{
 		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_Camera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Render->getCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}

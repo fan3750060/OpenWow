@@ -3,6 +3,14 @@
 // General
 #include "OpenGLAdapterGLFW.h"
 
+// Additional
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
+#define GLFW_EXPOSE_NATIVE_WGL
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
 // Error callback
 void GLFWErrorCallback(int error, const char* description)
 {
@@ -16,6 +24,10 @@ void GLFWFramebufferCallback(GLFWwindow* _window, int _width, int _height)
 }
 
 Input* _input = nullptr;
+GLFWmonitor* primaryMonitor;
+GLFWwindow* m_Window;
+GLFWwindow* m_ThreadWindow;
+Input* m_Input;
 
 // Input callbacks
 void GLFWMousePositionCallback(GLFWwindow* window, double xpos, double ypos) { _input->MousePositionCallback(vec2(static_cast<int>(xpos), static_cast<int>(ypos))); }
@@ -41,11 +53,11 @@ OpenGLAdapter_GLFW::OpenGLAdapter_GLFW()
 
 	// Set window options
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, false);
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	//glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
 	// Monitor
 
@@ -65,7 +77,11 @@ OpenGLAdapter_GLFW::OpenGLAdapter_GLFW()
 
 	// Create GLFW window
 
-	m_Window = glfwCreateWindow(groupVideo.windowSizeX, groupVideo.windowSizeY, "Default m_Window title.", nullptr, nullptr);
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+	m_ThreadWindow = glfwCreateWindow(1, 1, "Thread Window", NULL, NULL);
+
+	glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+	m_Window = glfwCreateWindow(groupVideo.windowSizeX, groupVideo.windowSizeY, "Default m_Window title.", nullptr, m_ThreadWindow);
 
 	// Move window to center
 	uint32 windowPositionX = (primaryMonitorMode->width / 2) - (groupVideo.windowSizeX / 2);
@@ -73,7 +89,6 @@ OpenGLAdapter_GLFW::OpenGLAdapter_GLFW()
 	glfwSetWindowPos(m_Window, windowPositionX, windowPositionY);
 	Log::Print("GLFW[]: Window position [%d, %d]", windowPositionX, windowPositionY);
 
-	//nativeWindow = glfwGetWin32Window(window);
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapInterval(1);
 
@@ -117,11 +132,25 @@ Input* OpenGLAdapter_GLFW::GetInput()
 	return m_Input;
 }
 
-HGLRC OpenGLAdapter_GLFW::GetWGLContext()
+HGLRC OpenGLAdapter_GLFW::GetMainCont()
 {
 	return glfwGetWGLContext(m_Window);
 }
 
+HGLRC OpenGLAdapter_GLFW::GetThreadCont()
+{
+	return glfwGetWGLContext(m_ThreadWindow);
+}
+
+void OpenGLAdapter_GLFW::MakeContextMainThread()
+{
+	glfwMakeContextCurrent(m_Window);
+}
+
+void OpenGLAdapter_GLFW::MakeCurrent()
+{
+	glfwMakeContextCurrent(m_ThreadWindow);
+}
 //
 
 void OpenGLAdapter_GLFW::SetWindowSize(int32 _width, int32 _height)

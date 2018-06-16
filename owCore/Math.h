@@ -21,7 +21,7 @@ inline bool rayTriangleIntersection
 )
 {
 	// Idea: Tomas Moeller and Ben Trumbore
-	// in Fast, Minimum Storage Ray/Triangle Intersection 
+	// in Fast, Minimum getRenderStorage Ray/Triangle Intersection 
 
 	// Find vectors for two edges sharing vert0
 	Vec3f edge1 = vert1 - vert0;

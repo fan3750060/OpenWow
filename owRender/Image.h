@@ -22,7 +22,7 @@ public:
 	Image(R_Texture* _texture) :
 		m_Texture(_texture),
 		m_Start(vec2()),
-		m_Size(vec2(_texture->width, _texture->height))
+		m_Size(_texture->GetSize())
 	{
 		assert1((m_Texture != nullptr) && (m_Size != vec2()));
 		CalculateCoords();

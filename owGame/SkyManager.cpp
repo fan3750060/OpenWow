@@ -61,7 +61,7 @@ void SkyManager::Calculate(uint32 _time)
 		return;
 	}
 
-	CalculateSkiesWeights(_Camera->Position);
+	CalculateSkiesWeights(_Render->getCamera()->Position);
 
 	m_Interpolated.Clear();
 
@@ -102,9 +102,9 @@ void SkyManager::Calculate(uint32 _time)
 bool SkyManager::DEBUG_Render()
 {
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	_Render->TechniquesMgr()->Debug_Pass->Bind();
+	_Render->getTechniquesMgr()->Debug_Pass->Bind();
 
-	_Render->r.setGeometry(_Render->Storage()->_sphereGeo);
+	_Render->r.setGeometry(_Render->getRenderStorage()->_sphereGeo);
 
 	for (auto it : skies)
 	{
@@ -112,7 +112,7 @@ bool SkyManager::DEBUG_Render()
 		//_Pipeline->Translate(it->position);
 		//_Pipeline->Scale(it->radiusInner);
 
-		//_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
+		//_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0f, 0.0f, 1.0f, 0.3f));
 
 		//_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
 
@@ -122,13 +122,13 @@ bool SkyManager::DEBUG_Render()
 		worldMatrix.translate(it->m_Position);
 		worldMatrix.scale(it->m_Range.max);
 
-		_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
-		_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
+		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
 
 		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
 	}
 
-	_Render->TechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 
 	return false;
@@ -144,16 +144,16 @@ void SkyManager::Render3D()
 	_Render->r.setDepthTest(false);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
-	_Render->TechniquesMgr()->Sky_Pass->Bind();
+	_Render->getTechniquesMgr()->Sky_Pass->Bind();
 	
 	mat4 worldMatrix;
-	worldMatrix.translate(_Camera->Position);
-	_Render->TechniquesMgr()->Sky_Pass->SetWorldMatrix(worldMatrix);
+	worldMatrix.translate(_Render->getCamera()->Position);
+	_Render->getTechniquesMgr()->Sky_Pass->SetWorldMatrix(worldMatrix);
 
 	_Render->r.setGeometry(__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, __vertsSize);
 
-	_Render->TechniquesMgr()->Sky_Pass->Unbind();
+	_Render->getTechniquesMgr()->Sky_Pass->Unbind();
 
 	_Render->r.setDepthTest(true);
 }
@@ -194,7 +194,7 @@ void SkyManager::InitBuffer()
 	__vb->updateBufferData(0, __vertsSize * sizeof(vec3), vertices.data());
 
 	// Geometry
-	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutSky);
+	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layoutSky);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, __vertsSize * sizeof(vec3), 0);
 	__geom->finishCreatingGeometry();

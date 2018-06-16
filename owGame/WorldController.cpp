@@ -7,7 +7,7 @@ WorldController::WorldController()
 {
 	m_MapController = new MapController();
 	m_MDXsManager = new CM2_Manager();
-	m_WMOsManager = new WMOsManager();
+	m_WMOsManager = new WMOsManager(GetManager<IEngine>()->GetAdapter());
 	m_EnvironmentManager = new EnvironmentManager();
 }
 

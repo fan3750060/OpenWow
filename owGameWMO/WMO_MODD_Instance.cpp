@@ -7,7 +7,8 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 	SceneNode(_parent),
 	m_Object(_mdxObject),
 	m_NeedRecalcAnimation(true),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
+	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
 {
 	assert1(m_Object != nullptr);
 
@@ -30,7 +31,7 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	setDrawOrder(23);
+	setDrawOrder(21);
 	setSelectable();
 
 	if (m_Object->isAnimated())
@@ -71,7 +72,22 @@ void WMO_MODD_Instance::Update(double _time, double _dTime)
 
 void WMO_MODD_Instance::PreRender3D()
 {
-	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(false);
+
+	// Check distance to camera
+	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length();
+	if (distToCamera > m_DistancesSettings.WMO_MODD_Distance)
+	{
+		return;
+	}
+
+	// Frustrum culling
+	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	{
+		return;
+	}
+
+	setVisible(true);
 }
 
 void WMO_MODD_Instance::Render3D()

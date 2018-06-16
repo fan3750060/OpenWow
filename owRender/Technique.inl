@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Pipeline.h"
-#include "Render.h"
 #include "Technique.h"
 
 inline void Technique::Bind()
@@ -20,7 +18,7 @@ inline int32 Technique::getLocation(const char* name) const
     int32 location = m_Shader->getShaderConstLoc(name);
 	if (location < 0)
 	{
-		Log::Error("Attrib [%s] not found in shader [%d]", name, m_Shader->oglProgramObj);
+		Log::Error("Attrib [%s] not found in shader [%d]", name, m_Shader->m_ProgramGLObj);
 	}
 	return location;
 }

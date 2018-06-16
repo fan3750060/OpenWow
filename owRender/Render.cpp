@@ -14,42 +14,38 @@
 RenderGL::RenderGL() :
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
+	
+}
 
+RenderGL::~RenderGL()
+{
+	delete mainCamera;
+}
 
-	hdc = wglGetCurrentDC();
-	glrc1 = wglCreateContext(hdc);
-	glrc2 = wglCreateContext(hdc);
-	assert1(wglShareLists(glrc1, glrc2));
-	wglMakeCurrent(hdc, glrc1);
+void RenderGL::Init(IOpenGLAdapter* _adapter, HGLRC _context)
+{
+	//HDC hdc = wglGetCurrentDC();
+	//HGLRC glrc1 = wglCreateContext(hdc);
+	//HGLRC glrc2 = wglCreateContext(hdc);
+	//assert1(wglShareLists(glrc1, glrc2));
+	//wglMakeCurrent(hdc, _context);
 
 	r.init();
 	r.setViewport(0, 0, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 
 	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 
-	rb		= r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 8);
+	rb = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
 	rbFinal = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, false, 1, 0);
 
 	// Main game camera
 	mainCamera = new Camera;
-	mainCamera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 10000.0f);
+	mainCamera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 1.0f, 5000.0f);
 
-	_PipelineGlobal->SetCamera(mainCamera);
-	_PipelineGlobal->SetCameraFrustum(mainCamera);
-}
-
-RenderGL::~RenderGL()
-{
-}
-
-void RenderGL::Init()
-{
-	// Managers
 	m_RenderStorage = new RenderStorage(&r);
-	m_TexturesManager = new TexturesManager(&r);
+	m_TexturesManager = new TexturesManager(_adapter, &r);
 	m_FontsManager = new FontsManager(&r);
 	m_TechniquesManager = new TechniquesManager(&r);
-
 }
 
 void RenderGL::Set2D()
@@ -91,7 +87,7 @@ void RenderGL::UnbindRBs()
 void RenderGL::PostprocessSimple()
 {
 	m_TechniquesManager->Postprocess_Simple->Bind();
-	m_TechniquesManager->Postprocess_Simple->SetCameraPos(_Camera->Position);
+	m_TechniquesManager->Postprocess_Simple->SetCameraPos(_Render->getCamera()->Position);
 
 	r.setDepthTest(false);
 	r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -108,7 +104,6 @@ void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 {
 	mat4 world;
 	world.translate(_pos);
-	world.scale(0.2f);
 
 	r.setCullMode(R_CullMode::RS_CULL_BACK);
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
@@ -126,13 +121,55 @@ void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 	r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
+void RenderGL::DrawSphere(cvec3 _pos, vec4 _color)
+{
+	mat4 world;
+	world.translate(_pos);
+
+	r.setCullMode(R_CullMode::RS_CULL_BACK);
+	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+
+	m_TechniquesManager->Debug_Pass->Bind();
+	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
+	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
+
+	r.setGeometry(m_RenderStorage->_sphereGeo);
+	r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);
+
+	m_TechniquesManager->Debug_Pass->Unbind();
+
+	r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	r.setCullMode(R_CullMode::RS_CULL_NONE);
+}
+
+void RenderGL::DrawGeo(cvec3 _pos, vec4 _color)
+{
+	mat4 world;
+	world.translate(_pos);
+
+	r.setCullMode(R_CullMode::RS_CULL_BACK);
+	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+
+	m_TechniquesManager->Debug_Pass->Bind();
+	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
+	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
+
+	r.setGeometry(m_RenderStorage->_coneGeo);
+	r.drawIndexed(PRIM_TRILIST, 0, 66, 0, 13);
+
+	m_TechniquesManager->Debug_Pass->Unbind();
+
+	r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	r.setCullMode(R_CullMode::RS_CULL_NONE);
+}
+
 void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 {
 	mat4 world;
-	world.translate(_box.Min);
-	world.scale(_box.Max - _box.Min);
+	world.translate(_box.getMin());
+	world.scale(_box.getMax() - _box.getMin());
 
-	r.setCullMode(R_CullMode::RS_CULL_NONE);
+	r.setCullMode(R_CullMode::RS_CULL_BACK);
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();

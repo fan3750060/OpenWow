@@ -15,8 +15,8 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 		//
 		CalculateMatrix();
 		//
-		m_Bounds.Min = -vec3(25, 25, 25); // Don't use from WMO model!!!
-		m_Bounds.Max = vec3(25, 25, 25);
+		m_Bounds.setMin(-vec3(25, 25, 25)); // Don't use from WMO model!!!
+		m_Bounds.setMax(vec3(25, 25, 25));
 		m_Bounds.calculateCenter();
 		m_Bounds.transform(getAbsTrans());
 	}

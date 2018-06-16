@@ -39,6 +39,9 @@
     <ClCompile Include="SceneNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Liquid.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="SceneNode.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

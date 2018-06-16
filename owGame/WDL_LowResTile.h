@@ -1,5 +1,9 @@
 #pragma once
 
+// FORWARD BEGIN
+class MapController;
+// FORWARD END
+
 class CWDL_LowResTile : public SceneNode
 {
 public:
@@ -10,6 +14,7 @@ public:
 	void Render3D() override;
 
 private:
-	const int		m_IndexX, m_IndexZ;
-	SmartGeomPtr	m_Geom;
+	const MapController*	m_MapController;
+	const int				m_IndexX, m_IndexZ;
+	SmartGeomPtr			m_Geom;
 };

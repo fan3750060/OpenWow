@@ -3,15 +3,12 @@
 // General
 #include "Loader.h"
 
-// Additional
-#include "BaseManager.h"
-
-DWORD WINAPI ThreadProc(LPVOID lpParam)
+DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
 {
-	//wglMakeCurrent(_Render->hdc, _Render->glrc2);
-
 	CLoader* loader = (CLoader*)lpParam;
 	std::queue<ILoadable*>& lqueue = loader->getQueueLoad();
+
+	loader->getAdapter()->MakeContextMainThread();
 
 	while (true)
 	{
@@ -29,36 +26,36 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 	ExitThread(0);
 }
 
-CLoader::CLoader() :
-	m_Thread_Loader(nullptr)
+CLoader::CLoader(IOpenGLAdapter* _openGLAdapter) :
+	m_Thread_Loader(nullptr),
+	m_OpenGLAdapter(_openGLAdapter)
 {
 	AddManager<ILoader>(this);
 }
 
 CLoader::~CLoader()
 {
-	/*ResetEvent(m_Event_Add);
+	ResetEvent(m_Event_Add);
 	CloseHandle(m_Event_Add);
 
 	TerminateThread(m_Thread_Loader, 1);
-	CloseHandle(m_Thread_Loader);*/
+	CloseHandle(m_Thread_Loader);
 }
 
 void CLoader::AddToLoadQueue(ILoadable* _item)
 {
-	/*if (m_Thread_Loader == nullptr)
+	if (m_Thread_Loader == nullptr)
 	{
 		m_Event_Add = CreateEventW(NULL, TRUE, TRUE, NULL);
-		m_Thread_Loader = CreateThread(NULL, 0, &ThreadProc, this, NULL, NULL);
+		m_Thread_Loader = CreateThread(NULL, 0, &ThreadProcLoader, this, NULL, NULL);
 		//SetThreadPriority(m_TextureLoader, THREAD_PRIORITY_TIME_CRITICAL);
 	}
 
 	m_QueueLoad.push(_item);
-	SetEvent(m_Event_Add);*/
+	SetEvent(m_Event_Add);
 
 	//_item->Load();
-
-	m_QueueLoad.push(_item);
+	//m_QueueLoad.push(_item);
 }
 
 void CLoader::LoadAll()

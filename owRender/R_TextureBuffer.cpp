@@ -6,31 +6,43 @@
 // Additional
 #include "OpenGL.h"
 
-R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic)
+R_TextureBuffer::R_TextureBuffer(RenderDevice* _RenderDevice) :
+	m_Buffer(nullptr),
+	m_GLFmt(0),
+	m_GLTexID(0),
+	m_RenderDevice(_RenderDevice)
+{}
+
+R_TextureBuffer::~R_TextureBuffer()
 {
-	this->bufObj = new R_Buffer(m_RenderDevice);
-	this->bufObj = this->bufObj->createBuffer(GL_TEXTURE_BUFFER, bufSize, data, _isDynamic);
+	glDeleteTextures(1, &m_GLTexID);
+}
 
-	glGenTextures(1, &this->glTexID);
+R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List _format, uint32 _bufSize, const void* _data, bool _isDynamic)
+{
+	m_Buffer = new R_Buffer(m_RenderDevice);
+	m_Buffer = m_Buffer->createBuffer(GL_TEXTURE_BUFFER, _bufSize, _data, _isDynamic);
+
+	glGenTextures(1, &m_GLTexID);
 	glActiveTexture(GL_TEXTURE15);
-	glBindTexture(GL_TEXTURE_BUFFER, this->glTexID);
+	glBindTexture(GL_TEXTURE_BUFFER, m_GLTexID);
 
-	switch (format)
+	switch (_format)
 	{
 	case R_TextureFormats::RGBA8:
-		this->glFmt = GL_RGBA8;
+		m_GLFmt = GL_RGBA8;
 		break;
 	case R_TextureFormats::RGBA16F:
-		this->glFmt = GL_RGBA16F;
+		m_GLFmt = GL_RGBA16F;
 		break;
 	case R_TextureFormats::RGBA32F:
-		this->glFmt = GL_RGBA32F;
+		m_GLFmt = GL_RGBA32F;
 		break;
 	case R_TextureFormats::R32:
-		this->glFmt = GL_R32F;
+		m_GLFmt = GL_R32F;
 		break;
 	case R_TextureFormats::RG32:
-		this->glFmt = GL_RG32F;
+		m_GLFmt = GL_RG32F;
 		break;
 	default:
 		fail1();
@@ -38,24 +50,13 @@ R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List for
 	};
 
 	// bind texture to buffer
-	glTexBuffer(GL_TEXTURE_BUFFER, this->glFmt, this->bufObj->glObj);
+	glTexBuffer(GL_TEXTURE_BUFFER, m_GLFmt, m_Buffer->m_GLObj);
 
 	glBindTexture(GL_TEXTURE_BUFFER, 0);
-	if (m_RenderDevice->m_TextureSlot[15].texObj)
+	if (m_RenderDevice->m_TextureSlot[15].m_Texture)
 	{
-		glBindTexture(m_RenderDevice->m_TextureSlot[15].texObj->type, m_RenderDevice->m_TextureSlot[15].texObj->glObj);
+		glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);
 	}
 
 	return this;
-}
-
-void R_TextureBuffer::destroyTextureBuffer()
-{
-	if (this->bufObj->geometryRefCount < 1)
-	{
-		glDeleteBuffers(1, &this->bufObj->glObj);
-		m_RenderDevice->m_BufferMem -= this->bufObj->size;
-	}
-
-	glDeleteTextures(1, &this->glTexID);
 }

@@ -30,27 +30,27 @@ void CM2_Skin::Draw()
 			// Color
 			if (p->__colorIndex != -1)
 			{
-				_Render->TechniquesMgr()->M2_Pass->SetColor(m_MDX->m_Colors[p->__colorIndex].getValue());
+				_Render->getTechniquesMgr()->M2_Pass->SetColor(m_MDX->m_Colors[p->__colorIndex].getValue());
 			}
 		    else
 			{
-				_Render->TechniquesMgr()->M2_Pass->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
+				_Render->getTechniquesMgr()->M2_Pass->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
 			}
 
 			// Blend & Alpha
-			_Render->TechniquesMgr()->M2_Pass->SetBlendMode(p->__blendMode);
+			_Render->getTechniquesMgr()->M2_Pass->SetBlendMode(p->__blendMode);
 
 			// R_Texture weight
-			_Render->TechniquesMgr()->M2_Pass->SetTextureWeight(m_MDX->m_TextureWeights[p->__textureWeight].getValue());
+			_Render->getTechniquesMgr()->M2_Pass->SetTextureWeight(m_MDX->m_TextureWeights[p->__textureWeight].getValue());
 
 			// Billboard
-			_Render->TechniquesMgr()->M2_Pass->SetBillboard(p->m_IsBilldoard);
+			_Render->getTechniquesMgr()->M2_Pass->SetBillboard(p->m_IsBilldoard);
 
 			// R_Texture anim
-			_Render->TechniquesMgr()->M2_Pass->SetTextureAnimEnable(p->__textureAnims != -1);
+			_Render->getTechniquesMgr()->M2_Pass->SetTextureAnimEnable(p->__textureAnims != -1);
 			if (p->__textureAnims != -1)
 			{
-				_Render->TechniquesMgr()->M2_Pass->SetTextureAnimMatrix(m_MDX->m_TexturesTransform[p->__textureAnims].getValue());
+				_Render->getTechniquesMgr()->M2_Pass->SetTextureAnimMatrix(m_MDX->m_TexturesTransform[p->__textureAnims].getValue());
 			}
 			else
 			{
@@ -73,8 +73,8 @@ void CM2_Skin::Draw()
 
 void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
 {
-	_Render->TechniquesMgr()->DebugNormal_Pass->Bind();
-	_Render->TechniquesMgr()->DebugNormal_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->getTechniquesMgr()->DebugNormal_Pass->Bind();
+	_Render->getTechniquesMgr()->DebugNormal_Pass->SetWorldMatrix(_worldMatrix);
 
 	_Render->r.setGeometry(__geomDebugNormals);
 
@@ -94,5 +94,5 @@ void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
 		}
 	}
 
-	_Render->TechniquesMgr()->DebugNormal_Pass->Unbind();
+	_Render->getTechniquesMgr()->DebugNormal_Pass->Unbind();
 }

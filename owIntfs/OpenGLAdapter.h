@@ -13,7 +13,11 @@ public:
 	double GetTime();
 
 	Input* GetInput();
-	HGLRC GetWGLContext();
+
+	HGLRC GetMainCont();
+	HGLRC GetThreadCont();
+	void MakeContextMainThread();
+	void MakeCurrent();
 
 	void SetWindowSize(int32 _width, int32 _height);
 	void SetWindowTitle(cstring _title);

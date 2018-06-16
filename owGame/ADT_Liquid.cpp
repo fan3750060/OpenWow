@@ -13,5 +13,4 @@ void CADT_Liquid::CreateFromMCLQ(IFile* f, ADT_MCNK_Header header)
 
 	initGeometry(header.getLiquidType(), f);
 	InitTextures(header.getLiquidType());
-
 }

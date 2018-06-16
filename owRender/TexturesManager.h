@@ -1,24 +1,26 @@
 #pragma once
 
-class TexturesManager : public ITexturesManager, public CRefManager1Dim<R_Texture>
+class TexturesManager : public ITexturesManager, public CRefManager1DimAssync<R_Texture>
 {
 public:
-	TexturesManager(RenderDevice* _RenderDevice);
+	TexturesManager(IOpenGLAdapter* _adapter, RenderDevice* _RenderDevice);
 
 	R_Texture* DefaultTexture() { return m_DefaultTexture2DObj; }
 
 	// ITexturesManager
-	R_Texture* Add(cstring name) { return CRefManager1Dim::Add(name); }
-	bool Exists(cstring name) const { return CRefManager1Dim::Exists(name); }
-	void Delete(cstring name) { CRefManager1Dim::Delete(name); }
-	void Delete(R_Texture* item) { CRefManager1Dim::Delete(item); }
+	R_Texture* Add(cstring name) { return CRefManager1DimAssync::Add(name); }
+	bool Exists(cstring name) const { return CRefManager1DimAssync::Exists(name); }
+	void Delete(cstring name) { CRefManager1DimAssync::Delete(name); }
+	void Delete(R_Texture* item) { CRefManager1DimAssync::Delete(item); }
 
 	// CRefManager1Dim
     R_Texture* CreateAction(cstring name) override;
+	void LoadAction(string name, R_Texture*& item) override;
 	bool DeleteAction(cstring name) override;
+	void MakeContext() override;
 
-private:
-	R_Texture* LoadBLPTexture(IFile* _file);
+public:
+	static R_Texture* LoadBLPTexture(IFile* _file, R_Texture* _texture);
 
 private:
 	SmartTexturePtr	m_DefaultTexture2DObj;
@@ -26,6 +28,7 @@ private:
 	SmartTexturePtr	m_DefaultTextureCubeObj;
 
 private:
+	IOpenGLAdapter* m_Adapter;
 	RenderDevice* m_RenderDevice;
 };
 

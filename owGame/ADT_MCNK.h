@@ -11,19 +11,13 @@ class ADT_MCNK : public SceneNode
 public:
 	ADT_MCNK(ADT* _parentTile, IFile* _file);
 
-	// ISceneNode
-	string getObjectInfo() override 
-	{ 
-		return getParent()->getObjectInfo() + " - " + "[" + to_string(header.indexX) + ":" + to_string(header.indexY) + "]"; 
-	}
-
 	void RenderNormals();
 
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
 
-	// IRenderable3D
+	// IRenderable
 	void PreRender3D() override;
 	void Render3D() override;
 
@@ -42,16 +36,19 @@ public:
 
 	SmartTexturePtr m_BlendRBGShadowATexture;
 
-
-	SmartGeomPtr __geomDefault;
-	SmartGeomPtr __geomLow;
+		
 	SmartGeomPtr __geomDebugNormals;
 
-	R_Buffer* __ibDefault;
-	uint16  m_IndexesCountDefault;
 
-	R_Buffer* __ibLowResolution;
-	uint16  m_IndexesCountLowResolution;
+	// Qulity
+	SmartBufferPtr __ibHigh;
+	uint16  m_IndexesCountHigh;
+	SmartGeomPtr __geomHigh;
+
+	SmartBufferPtr __ibDefault;
+	uint16  m_IndexesCountDefault;
+	SmartGeomPtr __geomDefault;
 
 	CGroupQuality& m_QualitySettings;
+	CGroupDistances& m_DistancesSettings;
 };

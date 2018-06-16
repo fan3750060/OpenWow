@@ -122,7 +122,7 @@ void EnvironmentManager::SetFog()
 	else
 	{
 		//glDisable(GL_FOG);
-		m_DistancesSettings.culldistance = m_DistancesSettings.mapdrawdistance;
+		m_DistancesSettings.culldistance = m_DistancesSettings.ADT_MCNK_Distance;
 	}
 }
 

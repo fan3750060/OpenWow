@@ -17,8 +17,11 @@ CEngine::CEngine(IOpenGLAdapter* _OpenGLAdapter) :
 {
 	Log::Green("CEngine[]: Loading.");
 
+
+
 	// Load modules
-	_Render->Init();
+	m_OpenGLAdapter->MakeContextMainThread();
+	_Render->Init(m_OpenGLAdapter, m_OpenGLAdapter->GetMainCont());
 
 	AddManager<IEngine>(this);
 }

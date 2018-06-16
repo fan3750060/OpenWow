@@ -7,6 +7,7 @@
 #include "../owCore/SmartPtr.h"
 #include "../owCore/UniquePtr.h"
 #include "../owCore/RefManager1Dim.h"
+#include "../owCore/RefManager1DimAssync.h"
 
 // Files
 #include "../owCore/MPQArchiveManager.h"
@@ -23,7 +24,6 @@
 #include "../owCore/Input.h"
 
 // Objects bindings
-#include "../owCore/Loader.h"
 #include "../owCore/BaseManager.h"
 #include "../owCore/BindingController.h"
 #include "../owCore/Camera.h"

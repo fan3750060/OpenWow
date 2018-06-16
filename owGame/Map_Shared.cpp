@@ -3,18 +3,24 @@
 // General
 #include "Map_Shared.h"
 
+SmartBufferPtr Map_Shared::BufferTextureCoordDetail;
+SmartBufferPtr Map_Shared::BufferTextureCoordAlpha;
+
+vector<uint16>  Map_Shared::m_HighMapStrip;
+vector<uint16>  Map_Shared::m_DefaultMapStrip;
+
 bool isHole(uint16 holes, uint16 i, uint16 j)
 {
-    const uint16 holetab_h[4] = {0x1111, 0x2222, 0x4444, 0x8888};
-    const uint16 holetab_v[4] = {0x000F, 0x00F0, 0x0F00, 0xF000};
+	const uint16 holetab_h[4] = { 0x1111, 0x2222, 0x4444, 0x8888 };
+	const uint16 holetab_v[4] = { 0x000F, 0x00F0, 0x0F00, 0xF000 };
 
-    return (holes & holetab_h[i] & holetab_v[j]) != 0;
+	return (holes & holetab_h[i] & holetab_v[j]) != 0;
 }
 
 void Map_Shared::Init()
 {
+	m_HighMapStrip = GenarateHighMapArray();
 	m_DefaultMapStrip = GenarateDefaultMapArray();
-	m_LowResMapStrip = GenarateLowResMapArray();
 
 	// init texture coordinates for detail map:
 	vec2 detailTextureCoord[C_MapBufferSize];
@@ -55,85 +61,85 @@ void Map_Shared::Init()
 	BufferTextureCoordAlpha = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec2), alphaTextureCoord, false);
 }
 
-vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
+vector<uint16> Map_Shared::GenarateHighMapArray(uint16 _holes)
 {
-    if (_holes == 0 && !_Map_Shared->m_DefaultMapStrip.empty())
-    {
-        return _Map_Shared->m_DefaultMapStrip;
-    }
+	if (_holes == 0 && !m_HighMapStrip.empty())
+	{
+		return m_HighMapStrip;
+	}
 
-    int16 outerArray[9][9];
-    for (uint16 i = 0; i < 9; i++)
-        for (uint16 j = 0; j < 9; j++)
-            outerArray[i][j] = (i * 17) + j;
+	int16 outerArray[9][9];
+	for (uint16 i = 0; i < 9; i++)
+		for (uint16 j = 0; j < 9; j++)
+			outerArray[i][j] = (i * 17) + j;
 
-    int16 innerArray[8][8];
-    for (uint16 i = 0; i < 8; i++)
-        for (uint16 j = 0; j < 8; j++)
-            innerArray[i][j] = 9 + (i * 17) + j;
+	int16 innerArray[8][8];
+	for (uint16 i = 0; i < 8; i++)
+		for (uint16 j = 0; j < 8; j++)
+			innerArray[i][j] = 9 + (i * 17) + j;
 
-    vector<uint16> myIndexes;
-    for (uint16 i = 0; i < 8; i++)
-    {
-        for (uint16 j = 0; j < 8; j++)
-        {
-            if (isHole(_holes, j / 2, i / 2))
-            {
-                continue;
-            }
+	vector<uint16> myIndexes;
+	for (uint16 i = 0; i < 8; i++)
+	{
+		for (uint16 j = 0; j < 8; j++)
+		{
+			if (isHole(_holes, j / 2, i / 2))
+			{
+				continue;
+			}
 
-            myIndexes.push_back(outerArray[i][j]);
-            myIndexes.push_back(innerArray[i][j]);
-            myIndexes.push_back(outerArray[i][j + 1]);
-            
-            myIndexes.push_back(outerArray[i][j + 1]);
-            myIndexes.push_back(innerArray[i][j]);
-            myIndexes.push_back(outerArray[i + 1][j + 1]);
+			myIndexes.push_back(outerArray[i][j]);
+			myIndexes.push_back(innerArray[i][j]);
+			myIndexes.push_back(outerArray[i][j + 1]);
 
-            myIndexes.push_back(outerArray[i + 1][j + 1]);
-            myIndexes.push_back(innerArray[i][j]);
-            myIndexes.push_back(outerArray[i + 1][j]);
-           
-            myIndexes.push_back(outerArray[i + 1][j]);
-            myIndexes.push_back(innerArray[i][j]);
-            myIndexes.push_back(outerArray[i][j]);
-        }
-    }
+			myIndexes.push_back(outerArray[i][j + 1]);
+			myIndexes.push_back(innerArray[i][j]);
+			myIndexes.push_back(outerArray[i + 1][j + 1]);
 
-    return myIndexes;
+			myIndexes.push_back(outerArray[i + 1][j + 1]);
+			myIndexes.push_back(innerArray[i][j]);
+			myIndexes.push_back(outerArray[i + 1][j]);
+
+			myIndexes.push_back(outerArray[i + 1][j]);
+			myIndexes.push_back(innerArray[i][j]);
+			myIndexes.push_back(outerArray[i][j]);
+		}
+	}
+
+	return myIndexes;
 }
 
-vector<uint16> Map_Shared::GenarateLowResMapArray(uint16 _holes)
+vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
 {
-    if (_holes == 0 && !_Map_Shared->m_LowResMapStrip.empty())
-    {
-        return _Map_Shared->m_LowResMapStrip;
-    }
+	if (_holes == 0 && !m_DefaultMapStrip.empty())
+	{
+		return m_DefaultMapStrip;
+	}
 
-    int16 outerArray[9][9];
-    for (uint16 i = 0; i < 9; i++)
-        for (uint16 j = 0; j < 9; j++)
-            outerArray[i][j] = (i * 17) + j;
+	int16 outerArray[9][9];
+	for (uint16 i = 0; i < 9; i++)
+		for (uint16 j = 0; j < 9; j++)
+			outerArray[i][j] = (i * 17) + j;
 
-    vector<uint16> myIndexes;
-    for (uint16 i = 0; i < 8; i++)
-    {
-        for (uint16 j = 0; j < 8; j++)
-        {
-            if (isHole(_holes, j / 2, i / 2))
-            {
-                continue;
-            }
+	vector<uint16> myIndexes;
+	for (uint16 i = 0; i < 8; i += 1)
+	{
+		for (uint16 j = 0; j < 8; j += 1)
+		{
+			if (isHole(_holes, j / 2, i / 2))
+			{
+				continue;
+			}
 
-            myIndexes.push_back(outerArray[i][j]);
-            myIndexes.push_back(outerArray[i + 1][j]);
-            myIndexes.push_back(outerArray[i][j + 1]);
-            
-            myIndexes.push_back(outerArray[i][j + 1]);
-            myIndexes.push_back(outerArray[i + 1][j]);
-            myIndexes.push_back(outerArray[i + 1][j + 1]);
-        }
-    }
+			myIndexes.push_back(outerArray[i][j]);
+			myIndexes.push_back(outerArray[i + 1][j]);
+			myIndexes.push_back(outerArray[i][j + 1]);
 
-    return myIndexes;
+			myIndexes.push_back(outerArray[i][j + 1]);
+			myIndexes.push_back(outerArray[i + 1][j]);
+			myIndexes.push_back(outerArray[i + 1][j + 1]);
+		}
+	}
+
+	return myIndexes;
 }

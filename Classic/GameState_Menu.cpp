@@ -15,10 +15,22 @@ void GameState_Menu::OnBtn(DBC_MapRecord* _e)
 	cmd = CMD_SELECT;
 
 	m_MinimapUI->AttachTo(m_Window);
+
+	/*DBC_MapRecord* rec = _World->Map()->GetDBCMap();
+	Log::Error("ID = %d", rec->Get_LoadingScreenID());
+
+	R_Texture* loadingScreenTexture = _Render->TexturesMgr()->Add(rec->Get_LoadingScreen()->Get_FileName());
+	m_LoadingScreenUI->SetTexture(loadingScreenTexture);
+	m_LoadingScreenUI->AttachTo(m_Window);
+	m_LoadingScreenUI->Show();*/
 }
 
 bool GameState_Menu::LoadWorld(vec3 _pos)
 {
+
+	
+
+
 	_World->Map()->MapLoad();
 	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
 	_World->Map()->MapPostLoad();
@@ -28,10 +40,13 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
 	}
 
-	_Camera->Position = _pos;
-	_Camera->SetNeedUpdate();
+	_Render->getCamera()->Position = _pos;
+	_Render->getCamera()->SetNeedUpdate();
 
 	_Bindings->UnregisterRenderable3DObject(this);
+
+	m_LoadingScreenUI->Hide();
+	m_LoadingScreenUI->Detach();
 
 	// Change GameState
 	GetManager<IGameStateManager>()->SetGameState(GameStatesNames::GAME_STATE_WORLD);
@@ -50,6 +65,10 @@ bool GameState_Menu::Init()
 	m_MinimapUI = new UIElement(100);
 	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), (R_Texture*)nullptr, COLOR_WHITE);
 	m_MinimapUI->Hide();
+
+	m_LoadingScreenUI = new UIElement(150);
+	m_LoadingScreenUI->Init(m_Window->GetPosition(), m_Window->GetSize(), (R_Texture*)nullptr, COLOR_WHITE);
+	m_LoadingScreenUI->Hide();
 
 	cmd = CMD_NONE;
 	randBackground();
@@ -129,16 +148,16 @@ void GameState_Menu::Input(double _time, double _dTime)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_Camera->ProcessKeyboard(FORWARD, speed);
+		_Render->getCamera()->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_Camera->ProcessKeyboard(BACKWARD, speed);
+		_Render->getCamera()->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_Camera->ProcessKeyboard(LEFT, speed);
+		_Render->getCamera()->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_Camera->ProcessKeyboard(RIGHT, speed);
+		_Render->getCamera()->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_Menu::Update(double _time, double _dTime)
@@ -169,9 +188,6 @@ void GameState_Menu::Render3D()
 	//_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
 	//_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
 
-	_PipelineGlobal->SetCamera(_Render->mainCamera);
-	_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
-
 
 	// Geom
 	//backgroundModel->Render(mat4());
@@ -180,12 +196,12 @@ void GameState_Menu::Render3D()
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->Debug_Pass->Bind();
-	_Render->TechniquesMgr()->Debug_Pass->SetPVW();
-	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
+	_Render->getTechniquesMgr()->Debug_Pass->Bind();
+	_Render->getTechniquesMgr()->Debug_Pass->SetPVW();
+	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
 	_Render->r.setGeometry(tt->__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->TechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 }
@@ -200,8 +216,8 @@ void GameState_Menu::PostRender3D()
 		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
 	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
 
-	_Render->TechniquesMgr()->Postprocess_Simple->Bind();
-	_Render->TechniquesMgr()->Postprocess_Simple->SetCameraPos(_Camera->Position);
+	_Render->getTechniquesMgr()->Postprocess_Simple->Bind();
+	_Render->getTechniquesMgr()->Postprocess_Simple->SetCameraPos(_Render->getCamera()->Position);
 
 	_Render->r.setDepthTest(false);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -211,7 +227,7 @@ void GameState_Menu::PostRender3D()
 	_Render->r.setBlendMode(false);
 	_Render->r.setDepthTest(true);
 
-	_Render->TechniquesMgr()->Postprocess_Simple->Unbind();
+	_Render->getTechniquesMgr()->Postprocess_Simple->Unbind();
 }
 
 void GameState_Menu::RenderUI()
@@ -219,9 +235,9 @@ void GameState_Menu::RenderUI()
 	if (cmd == CMD_SELECT)
 	{
 
-		if (_World->Map()->m_WDL->GetMinimap() != nullptr)
+		if (_World->Map()->m_WDL->getMinimap() != nullptr)
 		{
-			m_MinimapUI->SetTexture(_World->Map()->m_WDL->GetMinimap());
+			m_MinimapUI->SetTexture(_World->Map()->m_WDL->getMinimap());
 			m_MinimapUI->Show();
 		}
 		else
@@ -248,7 +264,7 @@ void GameState_Menu::OnMouseMoved(cvec2 _mousePos)
 	{
 		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_Camera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Render->getCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}

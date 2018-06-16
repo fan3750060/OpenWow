@@ -57,7 +57,6 @@ void CRefManager1Dim<T>::Delete(cstring name)
 		objects.erase(name);
 		item = nullptr;
 	}
-
 }
 
 template <class T>

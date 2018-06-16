@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma region DBC Builder
+
 // Record create
 #define CONCAT_GET(a) Get_##a
 #define CONCAT_CLASS(a) a##Record
@@ -61,9 +63,11 @@ const _dbc##Record* _dispName() \
     return _dbc[static_cast<uint32>(__##_dispName)]; \
 }
 
-
+//------------------------------------------
 // Create class
+//------------------------------------------
 
+// Class begin
 #define DBC_DEF_BEGIN(accessName) \
 class CONCAT_CLASS(accessName) : public Record { \
 public: \
@@ -71,18 +75,24 @@ public: \
 	CONCAT_CLASS(accessName)(DBCFile<CONCAT_CLASS(accessName)>* file, const uint8* offset) : Record(file, offset) { } \
 public:
 
+// Class end
 #define DBC_DEF_END \
 };
 
-// Create accessor
 
+//------------------------------------------
+// Create accessor
+//------------------------------------------
+
+// Placed in *.cpp files
+#define DBC_LOAD(accessName, fileName) DBCFile<CONCAT_CLASS(accessName)> accessName(fileName);
+
+// Placed in *.h files
 #define DBC_DEFINE(accessName) \
 class CONCAT_CLASS(accessName); \
 extern DBCFile<CONCAT_CLASS(accessName)> accessName;
 
-#define DBC_LOAD(accessName, fileName) DBCFile<CONCAT_CLASS(accessName)> accessName(fileName);
-
-
+#pragma endregion
 
 ///////////////////////////////////
 // DBC STATS

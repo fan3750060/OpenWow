@@ -69,7 +69,7 @@ void Single_M2_Instance::Update(double _time, double _dTime)
 
 void Single_M2_Instance::PreRender3D()
 {
-	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(!_Render->getCamera()->_frustum.cullBox(m_Bounds));
 }
 
 void Single_M2_Instance::Render3D()

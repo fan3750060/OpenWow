@@ -6,7 +6,8 @@
 ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo) :
 	SceneNode(_parent),
     m_Object(_wmoObject),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
+	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
 {
     assert1(m_Object);
 	m_UniqueId = _placementInfo.uniqueId;
@@ -24,8 +25,8 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		//
 		CalculateMatrix();
 		//
-		m_Bounds.Min = _placementInfo.boundingBox.min; // Don't use from WMO model!!!
-		m_Bounds.Max = _placementInfo.boundingBox.max;
+		m_Bounds.setMin(_placementInfo.boundingBox.min); // Don't use from WMO model!!!
+		m_Bounds.setMax(_placementInfo.boundingBox.max);
 		m_Bounds.calculateCenter();
 	}
 
@@ -48,14 +49,28 @@ void ADT_WMO_Instance::Update(double _time, double _dTime)
 
 void ADT_WMO_Instance::PreRender3D()
 {
+	setVisible(false);
+
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		setVisible(false);
 		return;
 	}
-	m_AlreadyDraw.insert(m_UniqueId);
 
-	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	// Check distance to camera
+	float distToCamera = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length();
+	if (distToCamera > m_DistancesSettings.ADT_WMO_Distance)
+	{
+		return;
+	}
+
+	// Frustrum culling
+	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	{
+		return;
+	}
+
+	m_AlreadyDraw.insert(m_UniqueId);
+	setVisible(true);
 }
 
 void ADT_WMO_Instance::Render3D()

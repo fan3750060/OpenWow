@@ -203,6 +203,11 @@ public:
 		return Vec3f(degToRad(x), degToRad(y), degToRad(z));
 	}
 
+	Vec3f toX0Z() const
+	{
+		return Vec3f(x, 0, z);
+	}
+
 	Vec3f toXZY() const
 	{
 		return Vec3f(x, z, y);

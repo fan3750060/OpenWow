@@ -23,40 +23,13 @@ struct R_VertexLayout
 
 #include "R_Buffer.h"
 
-struct R_VertexBufferSlot
-{
-	R_VertexBufferSlot() :
-		vbObj(nullptr),
-        type(R_DataType::T_FLOAT),
-		offset(0),
-		stride(0),
-        needNorm(false)
-	{}
-
-	R_VertexBufferSlot(R_Buffer* vbObj, R_DataType type, uint32 offset, uint32 stride, bool needNorm) :
-		vbObj(vbObj),
-        type(type),
-		offset(offset),
-		stride(stride),
-        needNorm(needNorm)
-	{}
-
-	//
-
-	R_Buffer*   vbObj;
-    R_DataType  type;
-	uint32      offset;
-	uint32      stride;
-    bool        needNorm;
-};
-
 #include "R_GeometryInfo.h"
 
 struct R_ShaderStorage
 {
-	R_ShaderStorage(uint8 targetSlot, uint32 glObj) :
-		oglObject(glObj),
-		slot(targetSlot)
+	R_ShaderStorage(uint8 _targetSlot, uint32 _GLObj) :
+		oglObject(_GLObj),
+		slot(_targetSlot)
 	{}
 
 	//
@@ -70,20 +43,20 @@ struct R_ShaderStorage
 struct R_TexSlot
 {
 	R_TexSlot() :
-		texObj(nullptr),
-		samplerState(0),
+		m_Texture(nullptr),
+		m_SamplerState(0),
 		usage(0)
 	{}
-	R_TexSlot(R_Texture* texObj, uint32 samplerState, uint32 usage) :
-		texObj(texObj),
-		samplerState(samplerState),
-		usage(usage)
+	R_TexSlot(R_Texture* _texture, uint32 _samplerState, uint32 _usage) :
+		m_Texture(_texture),
+		m_SamplerState(_samplerState),
+		usage(_usage)
 	{}
 
 	//
 
-    R_Texture*  texObj;
-	uint32      samplerState;
+    R_Texture*  m_Texture;
+	uint32      m_SamplerState;
 	uint32      usage;
 };
 

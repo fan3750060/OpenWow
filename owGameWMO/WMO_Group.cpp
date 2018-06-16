@@ -211,7 +211,7 @@ void WMO_Group::Load()
 
 	//
 
-	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layoutWMO_VC);
+	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layoutWMO_VC);
 	__geom->setGeomVertexParams(VB_Vertexes, R_DataType::T_FLOAT, 0, 0);
 	__geom->setGeomVertexParams(VB_TextureCoords, R_DataType::T_FLOAT, 0, 0);
 	__geom->setGeomVertexParams(VB_Normals, R_DataType::T_FLOAT, 0, 0);
@@ -260,24 +260,24 @@ void WMO_Group::initLighting()
 
 void WMO_Group::Render(cmat4 _worldMatrix)
 {
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->Bind();
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetWorldMatrix(_worldMatrix);
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Bind();
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetWorldMatrix(_worldMatrix);
 
 	_Render->r.setGeometry(__geom);
 
 	// Ambient color
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
 
 	// Ambient color
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetUseAmbColor(m_Quality.WMO_AmbColor);
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->SetAmbColor(m_ParentWMO->getAmbColor());
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetUseAmbColor(m_Quality.WMO_AmbColor);
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetAmbColor(m_ParentWMO->getAmbColor());
 	
 	for (auto it : m_WMOBatchIndexes)
 	{
 		it->Render();
 	}
 
-	_Render->TechniquesMgr()->m_WMO_GeometryPass->Unbind();
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Unbind();
 }
 
 void WMO_Group::setupFog()

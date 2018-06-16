@@ -17,6 +17,8 @@ public:
         gLayersCount = getLocation("gLayersCount");
         gBlend = getLocation("gBlend");
 
+		gIsLowRes = getLocation("gIsLowRes");
+
         gShadowMapExists = getLocation("gShadowMapExists");
         gShadowColor = getLocation("gShadowColor");
     }
@@ -42,6 +44,10 @@ public:
 		setTexture(gBlend, TextureUnit);
 	}
 
+	void SetIsLowRes(int32 _exists)
+	{
+		setInt(gIsLowRes, _exists);
+	}
 
 	void SetShadowMapExists(bool _exists)
 	{
@@ -55,6 +61,8 @@ public:
 private:
 	int32 gColorMap[4];
 	int32 gSpecularMap[4];
+
+	int32 gIsLowRes;
 
 	int32 gShadowMapExists;
 	int32 gShadowColor;

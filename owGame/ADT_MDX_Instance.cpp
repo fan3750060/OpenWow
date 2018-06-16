@@ -10,7 +10,8 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 	SceneNode(_parent),
     m_Object(_mdxObject),
 	m_NeedRecalcAnimation(true),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
+	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
 {
     assert1(_mdxObject);
 	m_UniqueId = _placementInfo.uniqueId;
@@ -67,10 +68,10 @@ void ADT_MDX_Instance::Update(double _time, double _dTime)
 		}
 		else
 		{
-			if (!m_NeedRecalcAnimation)
+			//if (!m_NeedRecalcAnimation)
 			{
 				m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-				m_NeedRecalcAnimation = true;
+			//	m_NeedRecalcAnimation = true;
 			}
 		}
 	}
@@ -80,13 +81,28 @@ void ADT_MDX_Instance::Update(double _time, double _dTime)
 
 void ADT_MDX_Instance::PreRender3D()
 {
+	setVisible(false);
+
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		setVisible(false);
 		return;
 	}
+
+	// Check distance to camera
+	float distToCamera = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length();
+	if (distToCamera > m_DistancesSettings.ADT_MDX_Distance)
+	{
+		return;
+	}
+
+	// Frustrum culling
+	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	{
+		return;
+	}
+
 	m_AlreadyDraw.insert(m_UniqueId);
-	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(true);
 }
 
 void ADT_MDX_Instance::Render3D()

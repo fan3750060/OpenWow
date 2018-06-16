@@ -15,7 +15,7 @@ WDL::~WDL()
 {
 }
 
-void WDL::CreateInsances(SceneNode * _parent)
+void WDL::CreateInsances(SceneNode* _parent)
 {
 	// Low-resolution tiles
 	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
@@ -85,13 +85,13 @@ void WDL::CreateInsances(SceneNode * _parent)
 
 				//
 
-				R_GeometryInfo* __geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+				R_GeometryInfo* __geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
 				__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 				//__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 				__geom->finishCreatingGeometry();
 
 
-				m_LowResilutionTiles.push_back(new CWDL_LowResTile(_parent, j, i, __geom));
+				m_LowResilutionTiles.push_back(new CWDL_LowResTile(_parent, i, j, __geom));
 			}
 		}
 	}

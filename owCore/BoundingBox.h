@@ -3,8 +3,9 @@
 // Include
 #include "Math.h"
 
-struct BoundingBox
+class BoundingBox
 {
+public:
 	BoundingBox();
 
 	void set(cvec3 _min, cvec3 _max, bool _needConvert = false);
@@ -14,14 +15,29 @@ struct BoundingBox
 
 	//
 
-	Vec3f getCorner(uint32 index) const;
+	void setMin(cvec3 _min) { m_Min = _min; m_IsCenterCalc = false; }
+	void setMinY(float value) { m_Min.y = value; m_IsCenterCalc = false; }
+	cvec3 getMin() const { return m_Min; }
+
+	void setMax(cvec3 _max) { m_Max = _max; m_IsCenterCalc = false; }
+	void setMaxY(float value) { m_Max.y = value; m_IsCenterCalc = false; }
+	cvec3 getMax() const { return m_Max; }
+
+	cvec3 getCenter() const { assert1(m_IsCenterCalc); return m_Center; }
+	float getRadius() const { assert1(m_IsCenterCalc); return m_Radius; }
+
+	//
+
+	vec3 getCorner(uint32 index) const;
 	void transform(const Matrix4f& m);
 	bool makeUnion(const BoundingBox& b);
 
-	Vec3f Min;
-	Vec3f Max;
-	Vec3f Center;
-	float Radius;
+private:
+	vec3 m_Min;
+	vec3 m_Max;
+	vec3 m_Center;
+	float m_Radius;
+	bool m_IsCenterCalc;
 };
 
 typedef const BoundingBox& cbbox;

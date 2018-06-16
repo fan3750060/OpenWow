@@ -130,10 +130,10 @@ DayNightPhase::DayNightPhase(DayNightPhase* a, DayNightPhase* b, float r)
 
 void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 {
-    _Render->TechniquesMgr()->Debug_Pass->Bind();
+    _Render->getTechniquesMgr()->Debug_Pass->Bind();
 	_Render->r.setDepthTest(false);
 
-	_Render->r.setGeometry(_Render->Storage()->_sphereGeo);
+	_Render->r.setGeometry(_Render->getRenderStorage()->_sphereGeo);
 
     // Sun
 	{
@@ -141,8 +141,8 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 		worldMatrix.translate(_playerPos + (-dayDir) * 300.0f);
 		worldMatrix.scale(20);
 
-		_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
-		_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(dayColor, 1.0f));
+		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(dayColor, 1.0f));
 
 		
 		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
@@ -154,12 +154,12 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 		worldMatrix.translate(_playerPos + (-nightDir) * 300.0f);
 		worldMatrix.scale(20);
 
-		_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
-		_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(nightColor, 1.0f));
+		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(nightColor, 1.0f));
 
 		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);
 	}
 	
 	_Render->r.setDepthTest(true);
-	_Render->TechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 }

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+// Include
+#include "MapController.h"
+
 // General
 #include "ADT.h"
 
@@ -34,8 +37,9 @@ struct ADT_MCIN
 
 #include __PACK_END
 
-ADT::ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file) :
-	SceneNode(_parent),
+ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file) :
+	SceneNode(_mapController),
+	m_MapController(_mapController),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
 	m_Name(_name),
@@ -51,8 +55,8 @@ ADT::ADT(SceneNode* _parent, uint32 _intexX, uint32 _intexZ, string _name, IFile
 		m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
 
 		// Bounds
-		m_Bounds.Min = vec3(m_Translate.x, Math::MaxFloat, m_Translate.z);
-		m_Bounds.Max = vec3(m_Translate.x + C_TileSize, Math::MinFloat, m_Translate.z + C_TileSize);
+		m_Bounds.setMin(vec3(m_Translate.x, Math::MaxFloat, m_Translate.z));
+		m_Bounds.setMax(vec3(m_Translate.x + C_TileSize, Math::MinFloat, m_Translate.z + C_TileSize));
 		m_Bounds.calculateCenter();
 		
 	}
@@ -111,6 +115,8 @@ bool ADT::Load()
 		textureInfo->textureName = _string;
 
 		m_Textures.push_back(textureInfo);
+
+		//Log::Info("ADT[]: Texture [%s] added", textureInfo->textureName.c_str());
 
 		WOWCHUNK_READ_STRINGS_END
 	}
@@ -282,7 +288,20 @@ bool ADT::Delete()
 
 void ADT::PreRender3D()
 {
-	setVisible(!_CameraFrustum->_frustum.cullBox(m_Bounds));
+	setVisible(false);
+
+	if (!m_MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	{
+		return;
+	}
+
+	// Check frustrum
+	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	{
+		return;
+	}
+
+	setVisible(true);
 }
 
 void ADT::Render3D()

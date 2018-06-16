@@ -33,11 +33,35 @@ public: // Getters
 	string GetFolder() { return m_MapFolder; }
 	DBC_MapRecord* GetDBCMap() { return m_DBC_Map; }
 
-	int GetCurrentX() { return m_CurrentTileX; }
-	int GetCurrentZ() { return m_CurrentTileZ; }
+	int GetCurrentX() const { return m_CurrentTileX; }
+	int GetCurrentZ() const { return m_CurrentTileZ; }
 
 	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
 	void SetOutOfBounds(bool _value) { m_IsOnInvalidTile = _value; }
+
+
+
+	bool getTileIsCurrent(int x, int z) const
+	{
+		int midTile = static_cast<uint32>(C_RenderedTiles / 2);
+		ADT* currentTile = m_Current[midTile][midTile];
+		if (currentTile == nullptr)
+		{
+			return false;
+		}
+	
+		int32 currentX = currentTile->m_IndexX;
+		int32 currentZ = currentTile->m_IndexZ;
+
+		return (
+				x >= (currentX - (C_RenderedTiles / 2)) &&
+				z >= (currentZ - (C_RenderedTiles / 2)) &&
+				x <= (currentX + (C_RenderedTiles / 2)) &&
+				z <= (currentZ + (C_RenderedTiles / 2))
+				);
+	}
+
+
 
 private:
 	bool IsTileInCurrent(ADT* _mapTile);
@@ -48,14 +72,14 @@ private:
 
 
 private:
-	ADT*	m_ADTCache[C_TilesCacheSize];
+	ADT * m_ADTCache[C_TilesCacheSize];
 	ADT*	m_Current[C_RenderedTiles][C_RenderedTiles];
-	
+
 	int32	m_CurrentTileX, m_CurrentTileZ;
 	bool	m_IsOnInvalidTile;
 
 public:
-	WDT*    m_WDT;
+	WDT * m_WDT;
 	WDL*    m_WDL;
 };
 

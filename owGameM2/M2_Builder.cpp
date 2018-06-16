@@ -422,7 +422,7 @@ void CM2_Builder::Step9Collision()
 
 	if (collisonVB != nullptr && collisonIB != nullptr)
 	{
-		m_MDX->m_CollisionGeom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+		m_MDX->m_CollisionGeom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
 		m_MDX->m_CollisionGeom->setGeomVertexParams(collisonVB, R_DataType::T_FLOAT, 0, sizeof(vec3)); // pos 0-2
 		m_MDX->m_CollisionGeom->setGeomIndexParams(collisonIB, R_IndexFormat::IDXFMT_16);
 		m_MDX->m_CollisionGeom->finishCreatingGeometry();

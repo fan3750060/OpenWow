@@ -24,4 +24,5 @@ private:
 	bool				m_NeedRecalcAnimation;
 
 	CGroupQuality&		m_QualitySettings;
+	CGroupDistances&	m_DistancesSettings;
 };

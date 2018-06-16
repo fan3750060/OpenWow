@@ -4,7 +4,7 @@
 #   error gl.h included before OpenGL.h
 #endif
 
-#define GL_VERSION_NUM 100
+#define GL_VERSION_NUM 43
 
 #   define WIN32_LEAN_AND_MEAN 1
 #   ifndef NOMINMAX

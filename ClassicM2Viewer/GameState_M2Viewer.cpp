@@ -19,14 +19,14 @@ void GameState_M2Viewer::CreateDebugGeom()
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
-	m_DebugGeom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+	m_DebugGeom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
 	m_DebugGeom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	m_DebugGeom->finishCreatingGeometry();
 }
 
 void GameState_M2Viewer::PlayAnim(uint16 _anim)
 {
-	backgroundModel->m_Animator->PlayAnimation(_anim);
+	//backgroundModel->m_Animator->PlayAnimation(_anim);
 }
 
 bool GameState_M2Viewer::Init()
@@ -54,8 +54,8 @@ bool GameState_M2Viewer::Init()
 		backgroundModel = GetManager<IM2Manager>()->Add("World\\Generic\\PassiveDoodads\\Lights\\Torch.m2"/*"Creature\\Ragnaros\\Ragnaros.m2"*/);
 	}
 
-	_Camera->Position = vec3(50, 50, 50);
-	_Camera->SetNeedUpdate();
+	_Render->getCamera()->Position = vec3(50, 50, 50);
+	_Render->getCamera()->SetNeedUpdate();
 
 	//
 	enableFreeCamera = false;
@@ -101,16 +101,16 @@ void GameState_M2Viewer::Input(double _time, double _dTime)
 		speed *= 3.0f;
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_Camera->ProcessKeyboard(FORWARD, speed);
+		_Render->getCamera()->ProcessKeyboard(FORWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_Camera->ProcessKeyboard(BACKWARD, speed);
+		_Render->getCamera()->ProcessKeyboard(BACKWARD, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_Camera->ProcessKeyboard(LEFT, speed);
+		_Render->getCamera()->ProcessKeyboard(LEFT, speed);
 
 	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_Camera->ProcessKeyboard(RIGHT, speed);
+		_Render->getCamera()->ProcessKeyboard(RIGHT, speed);
 }
 
 void GameState_M2Viewer::Update(double _time, double _dTime)
@@ -124,7 +124,7 @@ void GameState_M2Viewer::Update(double _time, double _dTime)
 
 void GameState_M2Viewer::PreRender3D()
 {
-	_Render->TechniquesMgr()->PreRender3D();
+	_Render->getTechniquesMgr()->PreRender3D();
 
 	setVisible(backgroundModel != nullptr);
 }
@@ -135,12 +135,11 @@ void GameState_M2Viewer::Render3D()
 
 	// Debug
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->TechniquesMgr()->Debug_Pass->Bind();
-	_Render->TechniquesMgr()->Debug_Pass->SetPV();
-	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
+	_Render->getTechniquesMgr()->Debug_Pass->Bind();
+	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
 	_Render->r.setGeometry(m_DebugGeom);
 	_Render->r.draw(PRIM_TRILIST, 0, 6);
-	_Render->TechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
 	Camera* tt = nullptr;
@@ -155,8 +154,6 @@ void GameState_M2Viewer::Render3D()
 	else*/
 	{
 		tt = _Render->mainCamera;
-		_PipelineGlobal->SetCamera(_Render->mainCamera);
-		_PipelineGlobal->SetCameraFrustum(_Render->mainCamera);
 	}
 
 
@@ -171,12 +168,12 @@ void GameState_M2Viewer::Render3D()
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->Debug_Pass->Bind();
-	_Render->TechniquesMgr()->Debug_Pass->SetPVW();
-	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
+	_Render->getTechniquesMgr()->Debug_Pass->Bind();
+	_Render->getTechniquesMgr()->Debug_Pass->SetPVW();
+	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
 	_Render->r.setGeometry(tt->__geom);
 	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->TechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 }
@@ -217,7 +214,7 @@ void GameState_M2Viewer::OnMouseMoved(cvec2 _mousePos)
 	{
 		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
 
-		_Camera->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Render->getCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
 
 		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
 	}

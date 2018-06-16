@@ -200,7 +200,7 @@ void CM2_RibbonEmitters::draw()
 	/*SmartBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
-	SmartGeomPtr __geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_PT);
+	SmartGeomPtr __geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(RibbonVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(RibbonVertex));
 	__geom->finishCreatingGeometry();
@@ -210,15 +210,15 @@ void CM2_RibbonEmitters::draw()
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setDepthMask(false);
 
-	_Render->TechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
-	_Render->TechniquesMgr()->M2_RibbonEmitters_Pass->SetPVW();
+	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
+	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetPVW();
 
 	_Render->r.setTexture(10, m_Texture, 0, 0);
 
 	_Render->r.setGeometry(__geom);
 	_Render->r.draw(PRIM_LINES, 0, vertices.size());
 
-	_Render->TechniquesMgr()->M2_RibbonEmitters_Pass->Unbind();
+	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Unbind();
 
 	_Render->r.setDepthMask(true);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);

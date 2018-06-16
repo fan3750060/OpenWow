@@ -6,6 +6,7 @@
 #include "../owGameShared/common.h"
 #include "../owGameShared/Engine.h"
 #include "../owGameShared/GameStateManager.h"
+#include "../owGameShared/Loader.h"
 #include "../owGameShared/SceneManager.h"
 
 //---------------------------------------------------------//

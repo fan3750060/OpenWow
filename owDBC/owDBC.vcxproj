@@ -44,6 +44,7 @@
     <ClInclude Include="DBC_TerrainType.h" />
     <ClInclude Include="DBC_WMOAreaTable.h" />
     <ClInclude Include="DBC__File.h" />
+    <ClInclude Include="DBC__Forwards.h" />
     <ClInclude Include="DBC__Storage.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

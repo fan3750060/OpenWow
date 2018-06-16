@@ -83,19 +83,12 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 }
 
-Technique::~Technique()
-{
-	m_Shader->destroyShader();
-	delete m_Shader;
-	m_Shader = nullptr;
-}
-
 void Technique::Process(cstring fileName, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
 {
     m_Shader = m_RenderDevice->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
     if (m_RenderDevice->getShaderLog().empty())
     {
-        Log::Green("Shader[%s]: Successfull. Id [%d].", fileName.c_str(), m_Shader->oglProgramObj);
+        Log::Green("Shader[%s]: Successfull. Id [%d].", fileName.c_str(), m_Shader->m_ProgramGLObj);
     }
     else
     {

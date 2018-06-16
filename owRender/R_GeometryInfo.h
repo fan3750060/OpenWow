@@ -2,42 +2,54 @@
 
 class RenderDevice;
 
-struct R_GeometryInfo : public CRefItem
+struct R_VertexBufferSlot
 {
-	R_GeometryInfo(RenderDevice* _RenderDevice) :
-		vao(0),
-		indexBuf(nullptr),
-		layout(0),
-		indexBuf32Bit(false),
-		atrribsBinded(false),
-		m_RenderDevice(_RenderDevice)
+	R_VertexBufferSlot() :
+		m_VertexBuffer(nullptr),
+		m_VertexBufferDataType(R_DataType::T_FLOAT),
+		m_Offset(0),
+		m_Stride(0),
+		m_NeedNorm(false)
+	{}
+
+	R_VertexBufferSlot(R_Buffer* _vbObj, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm) :
+		m_VertexBuffer(_vbObj),
+		m_VertexBufferDataType(_type),
+		m_Offset(_offset),
+		m_Stride(_stride),
+		m_NeedNorm(_needNorm)
 	{}
 
 	//
 
+	R_Buffer*   m_VertexBuffer;
+	R_DataType  m_VertexBufferDataType;
+	uint32      m_Offset;
+	uint32      m_Stride;
+	bool        m_NeedNorm;
+};
+
+struct R_GeometryInfo : public CRefItem
+{
+	R_GeometryInfo(RenderDevice* _RenderDevice);
+	~R_GeometryInfo();
+
+	//
+
+	void setGeomVertexParams(R_Buffer* _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm = false);
+	void setGeomIndexParams(R_Buffer* _indBuf, R_IndexFormat _format);
 	void finishCreatingGeometry();
-	void setGeomVertexParams(R_Buffer* vbo, R_DataType type, uint32 offset, uint32 stride, bool needNorm = false);
-	void setGeomIndexParams(R_Buffer* indBuf, R_IndexFormat format);
-	void destroyGeometry(bool destroyBindedBuffers);
 
 public:
-	vector<R_VertexBufferSlot> vertexBufInfo;
-	uint32 vao;
-	R_Buffer* indexBuf;
-	uint32 layout;
-	bool indexBuf32Bit;
-	bool atrribsBinded;
+	vector<R_VertexBufferSlot>	m_VertexBufInfo;
+	uint32						m_VAOGLObj;
+	SmartBufferPtr				m_IndexBuffer;
+	uint32						m_Layout;
+	R_IndexFormat				m_IndexBufferFormat;
+	bool						m_AtrribsBinded;
 
 protected:
-	RenderDevice* m_RenderDevice;
+	RenderDevice*				m_RenderDevice;
 };
 
-struct R_GeomDeleter
-{
-	void operator()(R_GeometryInfo* p)
-	{
-		p->destroyGeometry(true);
-		delete p;
-	}
-};
-typedef SmartPtr<R_GeometryInfo, R_GeomDeleter> SmartGeomPtr;
+typedef SmartPtr<R_GeometryInfo> SmartGeomPtr;

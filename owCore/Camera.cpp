@@ -237,7 +237,7 @@ void Camera::CreateRenderable()
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(verts.size() * sizeof(vec3), verts.data());
-	__geom = _Render->r.beginCreatingGeometry(_Render->Storage()->__layout_GxVBF_P);
+	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	__geom->finishCreatingGeometry();*/
 }

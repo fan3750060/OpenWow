@@ -16,8 +16,8 @@ bool GameState_InWorld::Init()
 	m_WorldRender = new WorldRender(_World);
 
 	sceneManager = new CSceneManager(_World->Map());
-	sceneManager->setCamera(_Camera);
-	sceneManager->setFrustrumCamera(_CameraFrustum);
+	sceneManager->setCamera(_Render->getCamera());
+	sceneManager->setFrustrumCamera(_Render->getCamera());
 
 	_Bindings->RegisterRenderable3DObject(this, 25);
 	setVisible(true);
@@ -80,11 +80,11 @@ void GameState_InWorld::RenderUI()
         int basex = 200;
         int basey = 0;
 
-        if (_World->Map()->m_WDL->GetMinimap() != 0)
+        if (_World->Map()->m_WDL->getMinimap() != 0)
         {
             const int len = 768;
 
-            _Render->RenderTexture(vec2(basex, basey), _World->Map()->m_WDL->GetMinimap(), vec2(len, len));
+            _Render->RenderTexture(vec2(basex, basey), _World->Map()->m_WDL->getMinimap(), vec2(len, len));
 
             // Player position
             /*glBegin(GL_LINES);
@@ -118,7 +118,7 @@ void GameState_InWorld::RenderUI()
     areaRecord = DBÑ_AreaTable[_World->Map()->GetAreaID()];
     if (areaRecord != nullptr)
     {
-        areaName = areaRecord->Get_Name();
+        areaName = areaRecord->Get_AreaName();
     }
 
     // Region
@@ -130,7 +130,7 @@ void GameState_InWorld::RenderUI()
         regionRecord = areaRecord->Get_ParentAreaNum();
         if (regionRecord != nullptr)
         {
-            regionName = regionRecord->Get_Name();
+            regionName = regionRecord->Get_AreaName();
         }
     }
 

@@ -28,8 +28,9 @@ struct __RGBA
     uint8 r, g, b, a;
 };
 
-TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
-	: m_RenderDevice(_RenderDevice)
+TexturesManager::TexturesManager(IOpenGLAdapter* _adapter, RenderDevice* _RenderDevice)	: 
+	m_Adapter(_adapter),
+	m_RenderDevice(_RenderDevice)
 {
     ADDCONSOLECOMMAND_CLASS("tm_info", TexturesManager, PrintAllInfo);
 
@@ -71,10 +72,8 @@ TexturesManager::TexturesManager(RenderDevice* _RenderDevice)
 
 //
 
-R_Texture* TexturesManager::LoadBLPTexture(IFile* f)
+R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
 {
-	R_Texture* _texture = nullptr;
-
     // Read data
     BLPHeader header;
     f->ReadBytes(&header, 148);
@@ -105,7 +104,7 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f)
             fail1();
         }
 
-        _texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
+        _texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
 
         uint8* buf = new uint8[header.mipSizes[0]];
         for (uint8 i = 0; i < mipmax; i++)
@@ -139,7 +138,7 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f)
 
         bool hasalpha = (header.alpha_depth != 0);
 
-        _texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
+        _texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
 
         for (int i = 0; i < mipmax; i++)
         {
@@ -208,24 +207,32 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f)
 
 R_Texture* TexturesManager::CreateAction(cstring _name)
 {
-	R_Texture* _texture = new R_Texture(m_RenderDevice);
-	//wglMakeCurrent(_Render->dc, _Render->glrc2);
+	R_Texture* _texture = new R_Texture(_name, m_RenderDevice);
+	_texture->FillDataBy(DefaultTexture());
 
-	UniquePtr<IFile> f(GetManager<IFilesManager>()->Open(_name));
-	if (f == nullptr)
-	{
-		Log::Error("TexturesManager[%s]: Error while open texture.", _name.c_str());
-		return DefaultTexture();
-	}
-
-	_texture = LoadBLPTexture(f);
-
-	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", f->Path_Name().c_str(), _texture->GetSize().x, _texture->GetSize().y);
+	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", _name.c_str(), _texture->GetSize().x, _texture->GetSize().y);
 
 	return _texture;
+}
+
+void TexturesManager::LoadAction(string name, R_Texture*& item)
+{
+	UniquePtr<IFile> f(GetManager<IFilesManager>()->Open(name));
+	if (f == nullptr)
+	{
+		Log::Error("TexturesManager[%s]: Error while open texture.", name.c_str());
+		return;
+	}
+
+	LoadBLPTexture(f, item);
 }
 
 bool TexturesManager::DeleteAction(cstring name)
 {
     return true;
+}
+
+void TexturesManager::MakeContext()
+{
+	m_Adapter->MakeCurrent();
 }

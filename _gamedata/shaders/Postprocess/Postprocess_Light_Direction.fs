@@ -71,7 +71,7 @@ void main(void)
 	WorldPos = getPos(pixelXY);
 	Normal = getNormal(pixelXY);
 	Color = getAlbedo4(pixelXY);
-	//Color.a = 1.0f;
+	Color.a = 1.0f;
 	
 	if(getMatID(pixelXY) >= 0)
 	{

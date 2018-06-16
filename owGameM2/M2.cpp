@@ -46,20 +46,20 @@ void M2::drawModel(cmat4 _worldMatrix)
 
 	//RenderCollision();
 
-	_Render->TechniquesMgr()->M2_Pass->Bind();
-	_Render->TechniquesMgr()->M2_Pass->SetWorldMatrix(_worldMatrix);
-	_Render->TechniquesMgr()->M2_Pass->SetAnimated(m_HasBones && m_IsAnimated);
+	_Render->getTechniquesMgr()->M2_Pass->Bind();
+	_Render->getTechniquesMgr()->M2_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->getTechniquesMgr()->M2_Pass->SetAnimated(m_HasBones && m_IsAnimated);
 	if (m_HasBones && m_IsAnimated)
 	{
-		//_Render->TechniquesMgr()->M2_Pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
-		//_Render->TechniquesMgr()->M2_Pass->SetBoneMaxCount(p->boneInfluences);
+		//_Render->getTechniquesMgr()->M2_Pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
+		//_Render->getTechniquesMgr()->M2_Pass->SetBoneMaxCount(p->boneInfluences);
 
 		vector<mat4> bones;
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
 			bones.push_back(m_Bones[i].getTransformMatrix());
 		}
-		_Render->TechniquesMgr()->M2_Pass->SetBones(bones);
+		_Render->getTechniquesMgr()->M2_Pass->SetBones(bones);
 	}
 
 	for (auto& it : m_Skins)
@@ -67,7 +67,7 @@ void M2::drawModel(cmat4 _worldMatrix)
 		it->Draw();
 	}
 
-	_Render->TechniquesMgr()->M2_Pass->Unbind();
+	_Render->getTechniquesMgr()->M2_Pass->Unbind();
 
 
 	/*for (auto& it : m_Skins)
@@ -108,14 +108,14 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	_Render->TechniquesMgr()->Debug_Pass->Bind();
-	_Render->TechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
-	_Render->TechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
+	_Render->getTechniquesMgr()->Debug_Pass->Bind();
+	_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
 
 	_Render->r.setGeometry(m_CollisionGeom);
 	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_Header.collisionTriangles.size, 0, m_Header.collisionVertices.size);
 
-	_Render->TechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);

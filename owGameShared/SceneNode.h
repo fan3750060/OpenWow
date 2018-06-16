@@ -36,7 +36,7 @@ public:
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
 	cvec3 getScale() const { return m_Scale; }
-	cbbox getBounds() { return m_Bounds; }
+	cbbox getBounds() const { return m_Bounds; }
 	cmat4 getRelTrans() const { return m_RelTransform; }
 	cmat4 getAbsTrans() const { return m_AbsTransform; }
 
@@ -88,4 +88,33 @@ private: // ILoadable
 private: // IRenderable
 	bool				m_IsVisible;
 	uint32				m_DrawOrder;
+};
+
+class SceneNodeCompare
+{
+public:
+	SceneNodeCompare(Camera* _camera) :
+		m_Camera(_camera)
+	{}
+
+	bool operator() (const SceneNode* left, const SceneNode* right) const
+	{
+		if (left->getDrawOrder() < right->getDrawOrder())
+		{
+			return true;
+		}
+		else if (left->getDrawOrder() > right->getDrawOrder())
+		{
+			return false;
+		}
+		else
+		{
+			float distToCameraLeft = (m_Camera->Position - left->getBounds().getCenter()).length();
+			float distToCameraRight = (m_Camera->Position - right->getBounds().getCenter()).length();
+			return distToCameraLeft > distToCameraRight;
+		}
+	}
+
+private:
+	Camera* m_Camera;
 };

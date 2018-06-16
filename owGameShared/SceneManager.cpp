@@ -63,11 +63,11 @@ void CSceneManager::Intersection(SceneNode * _node)
 	(
 		m_Engine->GetAdapter()->GetInput()->GetMouse(),
 		m_Video.GetWindowSize(),
-		_PipelineGlobal->GetProjection(),
-		_PipelineGlobal->GetView()
+		_Render->getCamera()->getProjMat(),
+		_Render->getCamera()->getViewMat()
 	);
 
-	bool result = rayAABBIntersection(getCamera()->Position, dir * 100000.0f, _node->getBounds().Min, _node->getBounds().Max);
+	bool result = rayAABBIntersection(getCamera()->Position, dir * 100000.0f, _node->getBounds().getMin(), _node->getBounds().getMax());
 	if (result)
 	{
 		// First node
@@ -82,8 +82,8 @@ void CSceneManager::Intersection(SceneNode * _node)
 		}
 		else if (m_IntersectedNode->getDrawOrder() == _node->getDrawOrder())
 		{
-			float distToOld = (getCamera()->Position - m_IntersectedNode->getBounds().Center).length2();
-			float distToNew = (getCamera()->Position - _node->getBounds().Center).length2();
+			float distToOld = (getCamera()->Position - m_IntersectedNode->getBounds().getCenter()).length2();
+			float distToNew = (getCamera()->Position - _node->getBounds().getCenter()).length2();
 			//float old = nearestDistToAABB(getCamera()->Position, m_IntersectedNode->getBounds().Min, m_IntersectedNode->getBounds().Max);
 			//float neww = nearestDistToAABB(getCamera()->Position, _node->getBounds().Min, _node->getBounds().Max);
 			if (distToOld > distToNew)
@@ -113,7 +113,14 @@ void CSceneManager::Render3D()
 		RenderRecursy(m_RootNode);
 	}
 
-	std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), Renderable3DObjectCompare());
+	if (m_RenderQueue.empty())
+	{
+		return;
+	}
+
+	//std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), Renderable3DObjectCompare());
+	std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), SceneNodeCompare(getCamera()));
+
 	for (auto& it : m_RenderQueue)
 	{
 		it->Render3D();

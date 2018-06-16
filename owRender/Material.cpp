@@ -30,7 +30,7 @@ void Material::Set()
 	//_Render->r.setAlphaToCoverage(true);
 	if (m_BlendEGxBlendIndex != -1)
 	{
-		_Render->Storage()->SetEGxBlend(m_BlendEGxBlendIndex);
+		_Render->getRenderStorage()->SetEGxBlend(m_BlendEGxBlendIndex);
 	}
 	else
 	{

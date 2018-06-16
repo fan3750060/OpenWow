@@ -27,7 +27,7 @@ public:
 	void beginRendering();
 
 	// Geometry
-	R_GeometryInfo* beginCreatingGeometry(uint32 vlObj);
+	R_GeometryInfo* beginCreatingGeometry(uint32 _vertexLayout);
 
 	// Buffers
 	R_Buffer* createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
@@ -76,7 +76,7 @@ public:
 	}
 	void setGeometry(R_GeometryInfo* geoIndex)
 	{
-		_curGeometryIndex = geoIndex;
+		m_CurrentGeometry = geoIndex;
 		_pendingMask |= PM_GEOMETRY;
 	}
 	void setTexture(uint32 slot, R_Texture* texObj, uint16 samplerState, uint16 usage)
@@ -92,10 +92,10 @@ public:
 	}
 	void setStorageBuffer(uint8 slot, R_Buffer* bufObj)
 	{
-		assert1(slot < _maxComputeBufferAttachments && _storageBufs.size() < _maxComputeBufferAttachments);
+		assert1(slot < _maxComputeBufferAttachments && m_StorageBufs.size() < _maxComputeBufferAttachments);
 
 		R_Buffer* buf = bufObj;
-		_storageBufs.push_back(R_ShaderStorage(slot, buf->glObj));
+		m_StorageBufs.push_back(R_ShaderStorage(slot, buf->m_GLObj));
 
 		_pendingMask |= PM_COMPUTE;
 	}
@@ -153,71 +153,71 @@ public:
 
 	void setAlphaToCoverage(bool enabled)
 	{
-		_newBlendState.alphaToCoverageEnable = enabled;
+		m_NewBlendState.alphaToCoverageEnable = enabled;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getAlphaToCoverage(bool &enabled) const
 	{
-		enabled = _newBlendState.alphaToCoverageEnable;
+		enabled = m_NewBlendState.alphaToCoverageEnable;
 	}
 
 	void setBlendMode(bool enabled, R_BlendFunc srcRGBBlendFunc = BS_BLEND_ZERO, R_BlendFunc destRGBBlendFunc = BS_BLEND_ZERO)
 	{
-		_newBlendState.blendEnable = enabled;
+		m_NewBlendState.blendEnable = enabled;
 
-		_newBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
-		_newBlendState.destRGBBlendFunc = destRGBBlendFunc;
-		_newBlendState.srcABlendFunc = srcRGBBlendFunc;
-		_newBlendState.destABlendFunc = destRGBBlendFunc;
+		m_NewBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
+		m_NewBlendState.destRGBBlendFunc = destRGBBlendFunc;
+		m_NewBlendState.srcABlendFunc = srcRGBBlendFunc;
+		m_NewBlendState.destABlendFunc = destRGBBlendFunc;
 
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void setBlendModeEx(bool enabled, R_BlendFunc srcRGBBlendFunc = BS_BLEND_ZERO, R_BlendFunc destRGBBlendFunc = BS_BLEND_ZERO, R_BlendFunc srcABlendFunc = BS_BLEND_ZERO, R_BlendFunc destABlendFunc = BS_BLEND_ZERO)
 	{
-		_newBlendState.blendEnable = enabled;
+		m_NewBlendState.blendEnable = enabled;
 
-		_newBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
-		_newBlendState.destRGBBlendFunc = destRGBBlendFunc;
-		_newBlendState.srcABlendFunc = srcABlendFunc;
-		_newBlendState.destABlendFunc = destABlendFunc;
+		m_NewBlendState.srcRGBBlendFunc = srcRGBBlendFunc;
+		m_NewBlendState.destRGBBlendFunc = destRGBBlendFunc;
+		m_NewBlendState.srcABlendFunc = srcABlendFunc;
+		m_NewBlendState.destABlendFunc = destABlendFunc;
 
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getBlendMode(bool &enabled, R_BlendFunc &srcRGBBlendFunc, R_BlendFunc &destRGBBlendFunc) const
 	{
-		enabled = _newBlendState.blendEnable;
-		srcRGBBlendFunc = (R_BlendFunc)_newBlendState.srcRGBBlendFunc;
-		destRGBBlendFunc = (R_BlendFunc)_newBlendState.destRGBBlendFunc;
+		enabled = m_NewBlendState.blendEnable;
+		srcRGBBlendFunc = (R_BlendFunc)m_NewBlendState.srcRGBBlendFunc;
+		destRGBBlendFunc = (R_BlendFunc)m_NewBlendState.destRGBBlendFunc;
 	}
 
 	void setDepthMask(bool enabled)
 	{
-		_newDepthStencilState.depthWriteMask = enabled;
+		m_NewDepthStencilState.depthWriteMask = enabled;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getDepthMask(bool &enabled) const
 	{
-		enabled = _newDepthStencilState.depthWriteMask;
+		enabled = m_NewDepthStencilState.depthWriteMask;
 	}
 
 	void setDepthTest(bool enabled)
 	{
-		_newDepthStencilState.depthEnable = enabled;
+		m_NewDepthStencilState.depthEnable = enabled;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getDepthTest(bool &enabled) const
 	{
-		enabled = _newDepthStencilState.depthEnable;
+		enabled = m_NewDepthStencilState.depthEnable;
 	}
 
 	void setDepthFunc(R_DepthFunc depthFunc)
 	{
-		_newDepthStencilState.depthFunc = depthFunc;
+		m_NewDepthStencilState.depthFunc = depthFunc;
 		_pendingMask |= PM_RENDERSTATES;
 	}
 	void getDepthFunc(R_DepthFunc &depthFunc) const
 	{
-		depthFunc = (R_DepthFunc)_newDepthStencilState.depthFunc;
+		depthFunc = (R_DepthFunc)m_NewDepthStencilState.depthFunc;
 	}
 
 	void setTessPatchVertices(uint16 verts)
@@ -246,14 +246,14 @@ private:
 	R_VertexLayout				m_VertexLayouts[MaxNumVertexLayouts];
 
 
-	vector<R_ShaderStorage>		_storageBufs;
+	vector<R_ShaderStorage>		m_StorageBufs;
 	R_TexSlot					m_TextureSlot[16];
 	R_RasterState				m_CurRasterState, m_NewRasterState;
-	R_BlendState				_curBlendState, _newBlendState;
-	R_DepthStencilState			_curDepthStencilState, _newDepthStencilState;
+	R_BlendState				m_CurBlendState, m_NewBlendState;
+	R_DepthStencilState			m_CurDepthStencilState, m_NewDepthStencilState;
 	R_DrawBarriers				_memBarriers;
 
-	bool						m_IsIndexFormat32;
+	R_IndexFormat				m_IndexBufferFormat;
 	uint32						_activeVertexAttribsMask;
 
 	uint16						_lastTessPatchVertsValue;
@@ -270,7 +270,7 @@ private:
 	int							m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight;
 	int							_scX, _scY, _scWidth, _scHeight;
 	int							_fbWidth, _fbHeight;
-	R_RenderBuffer*				_curRendBuf;
+	SmartPtr<R_RenderBuffer>	_curRendBuf;
 	int							_outputBufferIndex;  // Left and right eye for stereo rendering
 	uint32						m_TextureMem, m_BufferMem;
 
@@ -278,14 +278,14 @@ private:
 
 	R_Shader*					_curShaderId;
 	uint32						_pendingMask;
-	R_GeometryInfo*				_defGeometry;
-	R_GeometryInfo*				_curGeometryIndex;
+	R_GeometryInfo*				m_DefaultGeometry;
+	R_GeometryInfo*				m_CurrentGeometry;
 	uint32						_maxTexSlots; // specified in inherited render devices
 
 	uint32						_tessPatchVerts; // number of vertices in patch. Used for tesselation.
 
 	int							m_DefaultFBO;
-	bool                        M_DefaultFBOMultisampled;
+	bool                        m_IsDefaultFBOMultisampled;
 
 	CGroupRenderCaps&			m_DeviceCapsSettings;
 	CGroupOpenGL&				m_OpenGLSettings;

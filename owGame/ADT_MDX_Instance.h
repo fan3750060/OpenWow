@@ -39,6 +39,7 @@ public:
 	bool				m_NeedRecalcAnimation;
 
 	CGroupQuality&		m_QualitySettings;
+	CGroupDistances&	m_DistancesSettings;
 
 public:	// Static
 	static void reset();

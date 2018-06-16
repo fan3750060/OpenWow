@@ -13,7 +13,7 @@ public:
 
 	void Load();
 
-	R_Texture* GetMinimap() { return m_Minimap; }
+	R_Texture* getMinimap() { return m_Minimap; }
 
 private:
 	const string 						m_FileName;

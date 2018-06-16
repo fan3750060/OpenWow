@@ -2,20 +2,19 @@
 
 class RenderDevice;
 
-struct R_Shader
+class R_Shader : public CRefItem
 {
-	R_Shader(RenderDevice* _RenderDevice) :
-		oglProgramObj(0),
-		m_RenderDevice(_RenderDevice)
-	{}
+public:
+	R_Shader(RenderDevice* _RenderDevice);
+	~R_Shader();
 	
 	void createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
-	void destroyShader();
+
 	void bindShader();
 	void unbindShader();
-	int getShaderConstLoc(const char *name);
-	int getShaderSamplerLoc(const char *name);
-	int getShaderBufferLoc(const char *name);
+	int getShaderConstLoc(const char* name);
+	int getShaderSamplerLoc(const char* name);
+	int getShaderBufferLoc(const char* name);
 	void setShaderConst(int loc, R_ShaderConstType type, const void *values, uint32 count = 1);
 	void setShaderSampler(int loc, uint32 texUnit);
 	void runComputeShader(uint32 xDim, uint32 yDim, uint32 zDim);
@@ -25,9 +24,9 @@ private:
 	bool linkShaderProgram();
 
 public:
-	uint32			oglProgramObj;
-	R_InputLayout	inputLayouts[MaxNumVertexLayouts];
+	uint32				m_ProgramGLObj;
+	R_InputLayout		m_InputLayouts[MaxNumVertexLayouts];
 
 private:
-	RenderDevice* m_RenderDevice;
+	RenderDevice*		m_RenderDevice;
 };

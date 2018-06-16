@@ -37,12 +37,7 @@ public:
 	RenderGL();
 	~RenderGL();
 
-	void Init();
-
-	inline RenderStorage* Storage() { return m_RenderStorage; }
-	inline TexturesManager* TexturesMgr() { return m_TexturesManager; }
-	inline FontsManager* FontsMgr() { return m_FontsManager; }
-	inline TechniquesManager* TechniquesMgr() { return m_TechniquesManager; }
+	void Init(IOpenGLAdapter* _adapter, HGLRC _context);
 	
 	//------------------
 	// Main part
@@ -63,6 +58,8 @@ public:
 
 	// Primitives
 	void DrawCube(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	void DrawSphere(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	void DrawGeo(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	void DrawBoundingBox(cbbox _box, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 
@@ -93,6 +90,13 @@ public:
 	// Getters
 	//------------------
 	cmat4 getOrthoMatrix() const { return m_OrhoMatrix; }
+	Camera* getCamera() { return mainCamera; }
+
+public: // Getters
+	inline RenderStorage* getRenderStorage() { return m_RenderStorage; }
+	inline TexturesManager* TexturesMgr() { return m_TexturesManager; }
+	inline FontsManager* FontsMgr() { return m_FontsManager; }
+	inline TechniquesManager* getTechniquesMgr() { return m_TechniquesManager; }
 
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);
@@ -102,13 +106,10 @@ private:
 
 public:
 	RenderDevice r;
-    R_RenderBuffer* rb;
-    R_RenderBuffer* rbFinal;
-    Camera* mainCamera;
+    SmartPtr<R_RenderBuffer> rb;
+    SmartPtr<R_RenderBuffer> rbFinal;
 
-	HGLRC glrc1;
-	HGLRC glrc2;
-	HDC hdc;
+    Camera* mainCamera;
 
 private:
 	RenderStorage*			m_RenderStorage;

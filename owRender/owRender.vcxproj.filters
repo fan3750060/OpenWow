@@ -4,9 +4,6 @@
     <ClCompile Include="Font.cpp">
       <Filter>Fonts</Filter>
     </ClCompile>
-    <ClCompile Include="Pipeline.cpp">
-      <Filter>Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="Render.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -68,9 +65,6 @@
   <ItemGroup>
     <ClInclude Include="Font.h">
       <Filter>Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="Pipeline.h">
-      <Filter>Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Render</Filter>
@@ -209,9 +203,6 @@
     <Filter Include="Fonts">
       <UniqueIdentifier>{5bcbfcfc-c3c6-4a8e-a1b9-750f8d3379f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pipeline">
-      <UniqueIdentifier>{2ca38755-1636-43a8-8b22-bd21ac736ca3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Techniques">
       <UniqueIdentifier>{3b62bcfc-0d63-440b-a018-58f0bb73c48f}</UniqueIdentifier>
     </Filter>
@@ -255,6 +246,21 @@
   <ItemGroup>
     <None Include="Technique.inl">
       <Filter>Techniques</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.fs">
+      <Filter>Techniques\Map</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.gs">
+      <Filter>Techniques\Map</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.vs">
+      <Filter>Techniques\Map</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapTileLowRes.fs">
+      <Filter>Techniques\Map</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapTileLowRes.vs">
+      <Filter>Techniques\Map</Filter>
     </None>
   </ItemGroup>
 </Project>
