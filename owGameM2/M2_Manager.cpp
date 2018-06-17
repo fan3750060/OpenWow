@@ -45,7 +45,11 @@ M2* CM2_Manager::CreateAction(cstring name)
 	M2* model = new M2(name);
 
 	CM2_Builder builder(model);
-	builder.Load();
+	if (!builder.Load())
+	{
+		delete model;
+		return nullptr;
+	}
 
 	return model;
 }

@@ -124,6 +124,8 @@ void GameState_M2Viewer::Update(double _time, double _dTime)
 
 void GameState_M2Viewer::PreRender3D()
 {
+	_Render->BindRBs();
+
 	_Render->getTechniquesMgr()->PreRender3D();
 
 	setVisible(backgroundModel != nullptr);
@@ -131,31 +133,17 @@ void GameState_M2Viewer::PreRender3D()
 
 void GameState_M2Viewer::Render3D()
 {
-	_Render->BindRBs();
-
 	// Debug
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
-	_Render->r.setGeometry(m_DebugGeom);
-	_Render->r.draw(PRIM_TRILIST, 0, 6);
+	{
+		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 0.2));
+
+		_Render->r.setGeometry(m_DebugGeom);
+		_Render->r.draw(PRIM_TRILIST, 0, 6);
+	}
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-
-	Camera* tt = nullptr;
-
-	/*if (backgroundModel->m_Cameras.size() > 0)
-	{
-		backgroundModel->m_Cameras[0].setup(animtime, globalTime);
-		tt = backgroundModel->m_Cameras[0].GetCamera();
-		_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
-		_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
-	}
-	else*/
-	{
-		tt = _Render->mainCamera;
-	}
-
 
 	// Geom
 	mat4 worldMatrix;
@@ -191,7 +179,7 @@ void GameState_M2Viewer::RenderUI()
 	(
 		vec2(5, m_VideoSettings.windowSizeY - 44),
 		"CamPos: [" + 
-		to_string(-(_Render->mainCamera->Position.x - C_ZeroPoint)) + "], [" +
+		to_string(-(_Render->getCamera()->Position.x - C_ZeroPoint)) + "], [" +
 		to_string(-(_Render->mainCamera->Position.z - C_ZeroPoint)) + "], [" + 
 		to_string(_Render->mainCamera->Position.y) + "]"
 	);

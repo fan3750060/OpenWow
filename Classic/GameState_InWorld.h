@@ -3,6 +3,8 @@
 class GameState_InWorld : public CGameState, CRenderable3DObject
 {
 public:
+	GameState_InWorld();
+
     bool Init() override;
     void Destroy() override;
 
@@ -13,7 +15,7 @@ public:
 	// IRenderable
 	void PreRender3D() override { }
 	void Render3D() override;
-	void PostRender3D() override {}
+	void PostRender3D() override;
 
 	// IRenderableUI
 	void RenderUI() override;
@@ -37,6 +39,13 @@ private:
     bool minimapActive;
 
 private:
+	CSceneManager*			sceneManager;
+	Camera*					m_TestCamera;
+	R_RenderBuffer*			m_TestRenderBuffer;
+	R_RenderBuffer*			m_TestRenderBufferFinal;
+
 	WorldRender* m_WorldRender;
-	CSceneManager* sceneManager;
+
+	const CGroupVideo&		groupVideo;
+	const CGroupQuality&		groupQuality;
 };

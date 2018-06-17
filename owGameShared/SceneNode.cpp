@@ -10,7 +10,8 @@ SceneNode::SceneNode() :
 	m_IsLoaded(false),
 	m_Selectable(false),
 	m_IsVisible(false),
-	m_DrawOrder(0)
+	m_DrawOrder(0),
+	m_DebugColor(vec4(0.5f, 0.5f, 0.5f, 0.5f))
 {
 	//CalculateMatrix();
 }
@@ -22,7 +23,8 @@ SceneNode::SceneNode(SceneNode* _parent) :
 	m_IsLoaded(false),
 	m_Selectable(false),
 	m_IsVisible(false),
-	m_DrawOrder(0)
+	m_DrawOrder(0),
+	m_DebugColor(vec4(0.5f, 0.5f, 0.5f, 0.5f))
 {
 	//CalculateMatrix();
 

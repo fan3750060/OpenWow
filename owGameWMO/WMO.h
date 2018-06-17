@@ -8,6 +8,11 @@
 #include "WMO_Part_Light.h"
 #include "WMO_Part_Material.h"
 #include "WMO_Part_Portal.h"
+#include "WMO_Part_PortalsController.h"
+
+// FORWARD BEGIN
+class CWMO_LocalPortalContainer;
+// FORWARD END
 
 class WMO : public CRefItem
 {
@@ -19,7 +24,7 @@ public:
 	void CreateInsances(SceneNode* _parent);
 	bool Load();
 
-	bool Render(cmat4 _worldMatrix, uint32 _doodadSet);
+	void Render(CWMO_LocalPortalContainer* _localContr, uint32 _doodadSet);
 
 	bool drawSkybox();
 
@@ -63,9 +68,9 @@ public:
 	//-- Portals --//
 	vector<vec3>							m_PortalVertices;		// MOPV chunk
 	SmartBufferPtr							m_PortalVB;
-	vector<WMO_PortalDef>					m_PortalInformation;	// MOPT chunk
+	vector<CWMO_Part_Portal*>				m_Portals;
 	vector<WMO_PortalReferencesDef>			m_PortalReferences;		// MOPR chunk
-	vector<CWMO_Part_Portal>				m_Portals;
+	CWMO_Part_PortalsController*			m_PortalController;
 
 	//-- Visible block
 	vector<vec3>							m_VisibleBlockVertices;	// MOVV chunk
@@ -88,7 +93,6 @@ public:
 
 	//-- Volumes plane --//
 	// MCVP chunk (optional)	
-
 };
 
 struct WMODeleter

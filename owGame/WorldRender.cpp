@@ -10,11 +10,6 @@ WorldRender::WorldRender(WorldController * _WorldContoller)	:
 	groupVideo(GetSettingsGroup<CGroupVideo>()),
 	groupQuality(GetSettingsGroup<CGroupQuality>())
 {
-	m_TestRenderBuffer = _Render->r.createRenderBuffer(groupVideo.windowSizeX, groupVideo.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 0);
-
-	m_TestCamera = new Camera;
-	m_TestCamera->setupViewParams(Math::Pi / 4.0f, groupVideo.aspectRatio, 2.0f, 15000.0f);
-
 	_Bindings->RegisterRenderable3DObject(this, 6);
 	setVisible(true);
 }
@@ -29,7 +24,7 @@ void WorldRender::PreRender3D()
 	ADT_WMO_Instance::reset();
 	ADT_MDX_Instance::reset();
 
-	_Render->getTechniquesMgr()->PreRender3D();
+	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
 }
 
 void WorldRender::Render3D()
@@ -41,50 +36,19 @@ void WorldRender::PostRender3D()
 {
 	_Render->UnbindRBs();
 
-	// Postprocess
 	RenderPostprocess();
-
-	// Result pass
-	/*_Render->rb->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
-	_Render->r.setTexture(0, _Render->rbFinal->getRenderBufferTex(0), 0, R_TextureUsage::Texture);
-	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
-	DSResultQuad();*/
-
-	//
-	// SECONDS PASS
-	//
-
-	/*ADT_WMO_Instance::reset();
-	ADT_MDX_Instance::reset();
-
-	// Conf test camera
-	m_TestCamera->Position = _Render->mainCamera->Position + vec3(0, 1, 0) * 1000.0f;
-	m_TestCamera->Roll = _Render->mainCamera->Roll;
-	m_TestCamera->Pitch = -90.0f;
-	m_TestCamera->Update();
-
-	// Test frame
-	_PipelineGlobal->SetCamera(m_TestCamera);
-
-	// Geometry pass
-	m_TestRenderBuffer->setRenderBuffer();
-	_Render->r.clear();
-	RenderGeom();
-	//_PipelineGlobal->RenderCamera(_CameraFrustum);
-
-	m_TestRenderBuffer->resetRenderBuffer();*/
 }
 
 void WorldRender::RenderPostprocess()
 {
-	_Render->PostprocessSimple();
+	//_Render->PostprocessSimple();
 
-	/*DirectionalLight light;
+	DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.ambient = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);*/
+	DSDirectionalLightPass(light);
 
 	if (groupQuality.drawfog)
 	{

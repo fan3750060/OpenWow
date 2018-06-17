@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Single_WMO_Instance.h"
-
 class GameState_WMOViewer : public CGameState, CRenderable3DObject
 {
 public:
@@ -35,14 +33,21 @@ public:
     bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
 	bool OnMouseWheel(int _yoffset) override { return false; }
     bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
-	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override { return false; }
+	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override;
 	bool OnCharInput(uint32 _char) override { return false; }
 
-private:
-	Single_WMO_Instance* backgroundModel;
 
-	float	animtime;
-	uint32	globalTime;
+private:
+	CSceneManager * sceneManager;
+	Camera*					m_TestCamera;
+	R_RenderBuffer*			m_TestRenderBuffer;
+	R_RenderBuffer*			m_TestRenderBufferFinal;
+
+private:
+	Single_WMO_Instance*	backgroundModel;
+
+	float					animtime;
+	uint32					globalTime;
 
 
     // Camera moving
@@ -52,4 +57,7 @@ private:
     vec2 lastMousePos;
 
 	SmartGeomPtr m_DebugGeom;
+
+	const CGroupVideo&		groupVideo;
+	const CGroupQuality&		groupQuality;
 };

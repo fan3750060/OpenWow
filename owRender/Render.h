@@ -1,6 +1,11 @@
 #pragma once
 
+#include "Camera.h"
 #include "RenderDevice.h"
+#include "FontsManager.h"
+#include "TexturesManager.h"
+#include "TechniquesManager.h"
+#include "RenderStorage.h"
 
 class TexturesManager;
 class FontsManager;
@@ -58,7 +63,7 @@ public:
 
 	// Primitives
 	void DrawCube(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	void DrawSphere(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	void DrawSphere(cmat4 _world, cvec3 _pos, float _radius, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	void DrawGeo(cvec3 _pos, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	void DrawBoundingBox(cbbox _box, vec4 _color = vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
@@ -70,8 +75,8 @@ public:
 	void RenderImage(vec2 _pos, Image* _image) override;
 	void RenderImage(vec2 _pos, Image* _image, vec2 _size) override;
 
-    void RenderTexture(vec2 _pos, R_Texture* _texture) override;
-    void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size) override;
+    void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate = false) override;
+    void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate = false) override;
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
@@ -90,7 +95,8 @@ public:
 	// Getters
 	//------------------
 	cmat4 getOrthoMatrix() const { return m_OrhoMatrix; }
-	Camera* getCamera() { return mainCamera; }
+
+	Camera* getCamera() { return m_Camera; }
 
 public: // Getters
 	inline RenderStorage* getRenderStorage() { return m_RenderStorage; }
@@ -101,25 +107,20 @@ public: // Getters
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);
 
-private:
-	mat4 m_OrhoMatrix;
-
 public:
-	RenderDevice r;
-    SmartPtr<R_RenderBuffer> rb;
-    SmartPtr<R_RenderBuffer> rbFinal;
-
-    Camera* mainCamera;
+	RenderDevice				r;
+	SmartPtr<R_RenderBuffer>	m_RenderBuffer;
 
 private:
-	RenderStorage*			m_RenderStorage;
-	TexturesManager*        m_TexturesManager;
-	FontsManager*           m_FontsManager;
-	TechniquesManager*      m_TechniquesManager;
+	mat4						m_OrhoMatrix;
+	Camera*						m_Camera;
+
+	RenderStorage*				m_RenderStorage;
+	TexturesManager*			m_TexturesManager;
+	FontsManager*				m_FontsManager;
+	TechniquesManager*			m_TechniquesManager;
 	
-	CGroupVideo& m_VideoSettings;
+	CGroupVideo&				m_VideoSettings;
 };
 
 #define _Render RenderGL::instance()
-
-#include "TechniquesManager.h"

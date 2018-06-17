@@ -9,8 +9,11 @@
 WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _groupName, IFile* _groupFile) :
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
+	m_GroupIndex(_groupIndex),
 	m_F(_groupFile),
 	m_IsMOCVExists(false),
+	m_PortalsVis(true),
+	m_Calculated(false),
 	m_Quality(GetSettingsGroup<CGroupQuality>())
 {
 	m_WMOLiqiud = nullptr;
@@ -27,7 +30,7 @@ void WMO_Group::CreateInsances(SceneNode* _parent)
 		vec3 realPos = m_LiquidHeader.pos.toXZmY();
 		realPos.y = 0.0f; // why they do this???
 
-		new Liquid_Instance(_parent, m_WMOLiqiud, realPos);
+		//new Liquid_Instance(_parent, m_WMOLiqiud, realPos);
 	}
 }
 
@@ -97,6 +100,7 @@ void WMO_Group::Load()
 			// Buffer
 			VB_Vertexes = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec3), vertexes, false);
 			VB_Colors = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec4), nullptr, false);
+			//m_Bounds.calculate(vertexes, vertexesCount);
 		}
 		else if (strcmp(fourcc, "MONR") == 0) // Normals
 		{
@@ -260,34 +264,46 @@ void WMO_Group::initLighting()
 
 void WMO_Group::Render(cmat4 _worldMatrix)
 {
-	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Bind();
-	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetWorldMatrix(_worldMatrix);
+	if (!m_PortalsVis)
+	{
+		return;
+	}
 
 	_Render->r.setGeometry(__geom);
 
-	// Ambient color
-	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
-
-	// Ambient color
-	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetUseAmbColor(m_Quality.WMO_AmbColor);
-	_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetAmbColor(m_ParentWMO->getAmbColor());
-	
-	for (auto it : m_WMOBatchIndexes)
+	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Bind();
 	{
-		it->Render();
-	}
+		_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetWorldMatrix(_worldMatrix);
 
+		// Ambient color
+		_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
+
+		// Ambient color
+		_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetUseAmbColor(m_Quality.WMO_AmbColor);
+		_Render->getTechniquesMgr()->m_WMO_GeometryPass->SetAmbColor(m_ParentWMO->getAmbColor());
+
+		for (auto it : m_WMOBatchIndexes)
+		{
+			it->Render();
+		}
+	}
 	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Unbind();
 }
 
-void WMO_Group::setupFog()
+bool WMO_Group::isPointInside(cvec3 _point)
 {
-	if (m_EnableOutdoorLights || fog == -1)
+	if (
+		_point.x < m_Bounds.getMin().x ||
+		_point.y < m_Bounds.getMin().y || 
+		_point.z < m_Bounds.getMin().z || 
+
+		_point.x > m_Bounds.getMax().x ||
+		_point.y > m_Bounds.getMax().y || 
+		_point.z > m_Bounds.getMax().z 
+		)
 	{
-		//_World->EnvM()->SetFog();
+		return false;
 	}
-	else
-	{
-		m_ParentWMO->m_Fogs[fog]->setup();
-	}
+
+	return true;
 }

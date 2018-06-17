@@ -67,4 +67,6 @@ void CWDL_LowResTile::Render3D()
 
 	//---------------------------------
 	PERF_STOP(PERF_MAP_LOWRESOLUTION);
+
+	_Render->r.checkError();
 }

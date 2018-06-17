@@ -73,9 +73,6 @@
     <Filter Include="Settings\Groups">
       <UniqueIdentifier>{3067e420-7b54-4018-8d50-d4abb91d379a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{52e0479f-a650-434b-9e68-09e99972ff67}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RefManager\1 Dim Assync">
       <UniqueIdentifier>{d1c95b6f-a767-47df-bed7-b177d7d1e2eb}</UniqueIdentifier>
     </Filter>
@@ -188,9 +185,6 @@
     </ClCompile>
     <ClCompile Include="Perfomance.cpp">
       <Filter>Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="RefManager1DimAssync.cpp">
       <Filter>RefManager\1 Dim Assync</Filter>
@@ -367,9 +361,6 @@
     </ClInclude>
     <ClInclude Include="Perfomance.h">
       <Filter>Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="RefManager1DimAssync.h">
       <Filter>RefManager\1 Dim Assync</Filter>

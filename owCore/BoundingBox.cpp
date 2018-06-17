@@ -4,8 +4,8 @@
 #include "BoundingBox.h"
 
 BoundingBox::BoundingBox() :
-	m_Min(vec3(-1.0f, -1.0f, -1.0f)),
-	m_Max(vec3(1.0f, 1.0f, 1.0f)),
+	m_Min(vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat)),
+	m_Max(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat)),
 	m_IsCenterCalc(false)
 {}
 
@@ -36,6 +36,7 @@ void BoundingBox::calculate(const vec3* _verts, uint32 _count, bool _needConvert
 		if (v.x < m_Min.x) m_Min.x = v.x;
 		if (v.y < m_Min.y) m_Min.y = v.y;
 		if (v.z < m_Min.z) m_Min.z = v.z;
+
 		if (v.x > m_Max.x) m_Max.x = v.x;
 		if (v.y > m_Max.y) m_Max.y = v.y;
 		if (v.z > m_Max.z) m_Max.z = v.z;
@@ -113,6 +114,7 @@ void BoundingBox::transform(const Matrix4f& m)
 	m_Min = vec3(minB[0], minB[1], minB[2]);
 	m_Max = vec3(maxB[0], maxB[1], maxB[2]);
 
+	assert1(m_IsCenterCalc);
 	m_Center = m * m_Center;
 }
 

@@ -26,6 +26,7 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	memset(mcly, 0x00, 16 * 4);
 
 	setDrawOrder(21);
+	setDebugColor(vec4(0.0f, 0.4f, 0.0f, 0.3f));
 }
 
 //
@@ -196,7 +197,7 @@ bool ADT_MCNK::Load()
 			CADT_Liquid* m_Liquid = new CADT_Liquid(8, 8);
 			m_Liquid->CreateFromMCLQ(f, header);
 
-			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
+			//m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
 		}
 	}
 
@@ -330,6 +331,7 @@ void ADT_MCNK::Render3D()
 		_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	}
 	PERF_STOP(PERF_MAP);
+	_Render->r.checkError();
 }
 
 //

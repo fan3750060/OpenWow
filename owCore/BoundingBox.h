@@ -8,6 +8,16 @@ class BoundingBox
 public:
 	BoundingBox();
 
+	BoundingBox& operator=(const BoundingBox& _other)
+	{
+		m_Min = _other.m_Min;
+		m_Max = _other.m_Max;
+		m_Center = _other.m_Center;
+		m_Radius = _other.m_Radius;
+		m_IsCenterCalc = _other.m_IsCenterCalc;
+		return *this;
+	}
+
 	void set(cvec3 _min, cvec3 _max, bool _needConvert = false);
 	void calculate(const vec3* _verts, uint32 _count, bool _needConvert = false);
 	void calculateCenter();

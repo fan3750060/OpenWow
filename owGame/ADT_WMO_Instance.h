@@ -33,6 +33,7 @@ private:
 	const SmartWMOPtr	m_Object;
 	uint32				m_UniqueId;
 	uint16				m_DoodadSetIndex;
+	CWMO_LocalPortalContainer*	m_LocalPortalController;
 
 	CGroupQuality&		m_QualitySettings;
 	CGroupDistances&	m_DistancesSettings;

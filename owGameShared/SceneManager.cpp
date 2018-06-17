@@ -6,6 +6,9 @@
 CSceneManager::CSceneManager(SceneNode* _rootNode) :
 	m_RootNode(_rootNode),
 	m_IntersectedNode(nullptr),
+	m_MainCamera(nullptr),
+	m_FrustrumCamera(nullptr),
+	m_RenderQueueDebug(false),
 	m_Engine(GetManager<IEngine>()),
 	m_Video(GetSettingsGroup<CGroupVideo>())
 {
@@ -118,11 +121,19 @@ void CSceneManager::Render3D()
 		return;
 	}
 
-	//std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), Renderable3DObjectCompare());
-	std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), SceneNodeCompare(getCamera()));
+	if (!m_RenderQueueDebug)
+	{
+		std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), SceneNodeCompare(getCamera()));
+	}
 
 	for (auto& it : m_RenderQueue)
 	{
+		if (m_RenderQueueDebug)
+		{
+			_Render->DrawBoundingBox(it->getBounds(), it->getDebugColor());
+			continue;
+		}
+
 		it->Render3D();
 	}
 }

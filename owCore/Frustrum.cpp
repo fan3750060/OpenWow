@@ -137,7 +137,7 @@ bool Frustum::cullSphere(Vec3f pos, float rad) const
 	return false;
 }
 
-bool Frustum::cullBox(BoundingBox& b) const
+bool Frustum::cullBox(const BoundingBox& b) const
 {
 	PERF_START(PERF_CULLING);
 
@@ -181,6 +181,11 @@ bool Frustum::cullFrustum(const Frustum& frust) const
 	}
 
 	return false;
+}
+
+bool Frustum::cullPoly(const vec3* verts, uint32 nums) const
+{
+	return cullPolyByPlanes(_planes, 6, verts, nums);
 }
 
 //

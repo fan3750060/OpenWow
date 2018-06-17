@@ -172,18 +172,14 @@ void GameState_Menu::Update(double _time, double _dTime)
 
 void GameState_Menu::PreRender3D()
 {
-	//if (backgroundModel == nullptr) return;
+	_Render->BindRBs();
+	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
 
 	setVisible(true);
 }
 
 void GameState_Menu::Render3D()
 {
-	//if (backgroundModel == nullptr) return;
-
-	_Render->rb->setRenderBuffer();
-	_Render->r.clear();
-
 	//Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
 	//_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
 	//_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
@@ -208,26 +204,8 @@ void GameState_Menu::Render3D()
 
 void GameState_Menu::PostRender3D()
 {
-	//if (backgroundModel == nullptr) return;
-
-	// Postprocess pass
-	_Render->rb->resetRenderBuffer();
-	for (uint32 i = 0; i < 4; i++)
-		_Render->r.setTexture(i, _Render->rb->getRenderBufferTex(i), 0, 0);
-	_Render->r.clear(CLR_COLOR_RT0 | CLR_DEPTH);
-
-	_Render->getTechniquesMgr()->Postprocess_Simple->Bind();
-	_Render->getTechniquesMgr()->Postprocess_Simple->SetCameraPos(_Render->getCamera()->Position);
-
-	_Render->r.setDepthTest(false);
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
-	_Render->RenderQuad();
-
-	_Render->r.setBlendMode(false);
-	_Render->r.setDepthTest(true);
-
-	_Render->getTechniquesMgr()->Postprocess_Simple->Unbind();
+	_Render->UnbindRBs();
+	_Render->PostprocessSimple();
 }
 
 void GameState_Menu::RenderUI()

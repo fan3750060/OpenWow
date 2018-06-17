@@ -8,9 +8,6 @@ public:
 	WorldRender(WorldController* _WorldContoller);
 	~WorldRender();
 	
-	inline Camera* GetTestCamera() { return m_TestCamera; }
-	inline R_RenderBuffer* GetTestRB() { return m_TestRenderBuffer; }
-
 	// IRenderable3D
 	void PreRender3D() override;
 	void Render3D() override;
@@ -22,12 +19,10 @@ public:
 	void DSFogRenderPass();
 	void DSResultQuad();
 
-private:
-	Camera*				m_TestCamera;
-	R_RenderBuffer*		m_TestRenderBuffer;
+
 
 private:
 	WorldController*	m_WorldContoller;
-	CGroupVideo&		groupVideo;
-	CGroupQuality&		groupQuality;
+	const CGroupVideo&		groupVideo;
+	const CGroupQuality&		groupQuality;
 };

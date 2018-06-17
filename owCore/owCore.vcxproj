@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GroupDistances.cpp" />
     <ClCompile Include="ConsoleCommand.cpp" />
     <ClCompile Include="File.cpp" />
@@ -67,7 +66,6 @@
     <ClInclude Include="..\shared\owCore.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="BoundingBox.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="MapAssync.h" />
     <ClInclude Include="GroupDistances.h" />
     <ClInclude Include="ConsoleCommand.h" />

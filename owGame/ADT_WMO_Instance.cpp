@@ -30,9 +30,12 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		m_Bounds.calculateCenter();
 	}
 
-	_wmoObject->CreateInsances(this);
+	m_LocalPortalController = new CWMO_LocalPortalContainer(m_Object, getAbsTrans());
+
+	m_Object->CreateInsances(this);
 
 	setDrawOrder(21);
+	setDebugColor(vec4(0.0f, 0.0f, 1.0f, 1.0f));
 	setSelectable();
 	//_Bindings->RegisterUpdatableObject(this);
 }
@@ -82,7 +85,7 @@ void ADT_WMO_Instance::Render3D()
 
 	//_Render->DrawBoundingBox(m_Bounds);
 
-	m_Object->Render(getAbsTrans(), m_DoodadSetIndex);
+	m_Object->Render(m_LocalPortalController, m_DoodadSetIndex);
 	PERF_INC(PERF_MAP_MODELS_WMOs);
 }
 

@@ -24,6 +24,8 @@ public:
 	void Input(double _time, double _dTime) override {};
 	void Update(double _time, double _dTime) override;
 
+	void Render();
+
 	void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 	void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
 
@@ -68,6 +70,7 @@ public:
 
 	bool                _orthographic;  // Perspective or orthographic frustum?
 	bool                _manualProjMat; // Projection matrix manually set?
+	SmartGeomPtr		__geom;
 
 public:
 	bool m_NeedUpdate;

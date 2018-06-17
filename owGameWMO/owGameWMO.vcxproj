@@ -23,6 +23,7 @@
     <ClCompile Include="WMO_Builder.cpp" />
     <ClCompile Include="WMO_Group_Part_Batch.cpp" />
     <ClCompile Include="WMO_Liquid.cpp" />
+    <ClCompile Include="WMO_LocalPortalContainer.cpp" />
     <ClCompile Include="WMO_MODD_Instance.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -37,6 +38,7 @@
     <ClCompile Include="WMOsManager.cpp" />
     <ClCompile Include="WMO_Part_Material.cpp" />
     <ClCompile Include="WMO_Part_Portal.cpp" />
+    <ClCompile Include="WMO_Part_PortalsController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameWMO.h" />
@@ -46,6 +48,7 @@
     <ClInclude Include="WMO_Group_Part_Batch.h" />
     <ClInclude Include="WMO_Headers.h" />
     <ClInclude Include="WMO_Liquid.h" />
+    <ClInclude Include="WMO_LocalPortalContainer.h" />
     <ClInclude Include="WMO_MODD_Instance.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WMO.h" />
@@ -55,6 +58,7 @@
     <ClInclude Include="WMOsManager.h" />
     <ClInclude Include="WMO_Part_Material.h" />
     <ClInclude Include="WMO_Part_Portal.h" />
+    <ClInclude Include="WMO_Part_PortalsController.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DE443032-D503-4633-9552-2E4097C96715}</ProjectGuid>

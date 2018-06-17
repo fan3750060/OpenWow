@@ -44,6 +44,10 @@
       <Filter>Parts</Filter>
     </ClCompile>
     <ClCompile Include="Single_WMO_Instance.cpp" />
+    <ClCompile Include="WMO_Part_PortalsController.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_LocalPortalContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -82,5 +86,9 @@
       <Filter>Parts</Filter>
     </ClInclude>
     <ClInclude Include="Single_WMO_Instance.h" />
+    <ClInclude Include="WMO_Part_PortalsController.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_LocalPortalContainer.h" />
   </ItemGroup>
 </Project>

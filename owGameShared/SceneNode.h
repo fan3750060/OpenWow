@@ -60,9 +60,11 @@ public:
 	virtual void Render3D() override {}
 	void PostRender3D() override { /*Don't use it*/ }
 	void setVisible(bool _value) override { m_IsVisible = _value; }
-	bool isVisible() const { return m_IsVisible; }
-	inline void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
-	inline uint32 getDrawOrder() const override { return m_DrawOrder; }
+	bool isVisible() const override { return m_IsVisible; }
+	void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
+	uint32 getDrawOrder() const override { return m_DrawOrder; }
+	void setDebugColor(vec4 _value) { m_DebugColor = _value; }
+	vec4 getDebugColor() const { return m_DebugColor; }
 
 protected:
 	void CalculateMatrix(bool _isRotationQuat = false);
@@ -88,6 +90,7 @@ private: // ILoadable
 private: // IRenderable
 	bool				m_IsVisible;
 	uint32				m_DrawOrder;
+	vec4				m_DebugColor;
 };
 
 class SceneNodeCompare

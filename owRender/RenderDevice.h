@@ -46,6 +46,7 @@ public:
 
 	// Renderbuffers
 	R_RenderBuffer* createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
+	R_RenderBuffer* createRenderBuffer(vec2 _size, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
 
 	// Queries
 	uint32 createOcclusionQuery();
@@ -235,9 +236,9 @@ public: // Draw calls and clears
 	void clear(uint32 flags = CLR_COLOR_RT0 | CLR_COLOR_RT1 | CLR_COLOR_RT2 | CLR_COLOR_RT3 | CLR_DEPTH, float* colorRGBA = 0x0, float depth = 1.0f);
 	void draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts);
 	void drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, bool _softReset = true);
-
-private:
 	void checkError();
+
+public:
 	bool applyVertexLayout(R_GeometryInfo &geo);
 	void applySamplerState(R_Texture* tex);
 	void applyRenderStates();
@@ -270,7 +271,7 @@ private:
 	int							m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight;
 	int							_scX, _scY, _scWidth, _scHeight;
 	int							_fbWidth, _fbHeight;
-	SmartPtr<R_RenderBuffer>	_curRendBuf;
+	R_RenderBuffer*				_curRendBuf;
 	int							_outputBufferIndex;  // Left and right eye for stereo rendering
 	uint32						m_TextureMem, m_BufferMem;
 

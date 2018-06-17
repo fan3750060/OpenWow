@@ -3,6 +3,9 @@
 // General
 #include "Camera.h"
 
+// Additional
+#include "Render.h"
+
 Camera::Camera(vec3 position, vec3 up, float roll, float pitch) :
 	Direction(vec3(0.0f, 0.0f, -1.0f)),
 	MovementSpeed(SPEED),
@@ -71,6 +74,11 @@ void Camera::Update(double _time, double _dTime)
 	//setTransform(Position, vec3(Pitch, Roll, 0.0), vec3(1.0f, 1.0f, 1.0f));
 
 	onPostUpdate();
+}
+
+void Camera::Render()
+{
+	_Render->DrawSphere(mat4(), Position, 10, vec4(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
@@ -179,14 +187,14 @@ void Camera::onPostUpdate()
 
 void Camera::CreateRenderable()
 {
-	/*float nh = _frustNear * tan;
+	float nh = _frustNear * tan;
 	float nw = nh * asp;
 
 	float fh = _frustFar * tan;
 	float fw = fh * asp;
 
-	vec3 nc = Position + Direction * _frustNear;
-	vec3 fc = Position + Direction * _frustFar;
+	vec3 nc =  _frustNear;
+	vec3 fc = _frustFar;
 
 	// compute the 4 corners of the frustum on the near plane
 	vec3 ntl = nc + CameraUp * nh - CameraRight * nw;
@@ -238,6 +246,6 @@ void Camera::CreateRenderable()
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(verts.size() * sizeof(vec3), verts.data());
 	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-	__geom->finishCreatingGeometry();*/
+	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 12);
+	__geom->finishCreatingGeometry();
 }

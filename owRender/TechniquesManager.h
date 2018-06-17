@@ -36,7 +36,7 @@ public:
 	TechniquesManager(RenderDevice* _RenderDevice);
 	~TechniquesManager();
 
-	void PreRender3D();
+	void PreRender3D(Camera* _camera, R_RenderBuffer* _rb);
 
 	// Debug
 	CDebug_GeometryPass* Debug_Pass;
@@ -69,8 +69,9 @@ public:
 	CUI_Texture* UI_Texture;
 
 private:
-	RenderDevice*				m_RenderDevice;
 	vector<GeometryBase*>		m_GeomTechniques;
+	vector<PostprocessBase*>	m_PostTechniques;
 
+	RenderDevice*				m_RenderDevice;
 	const CGroupVideo&			groupVideo;
 };

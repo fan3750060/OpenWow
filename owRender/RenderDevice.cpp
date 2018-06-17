@@ -30,7 +30,7 @@ static const uint32 oglBlendFuncs[10] = {
 	GL_ONE_MINUS_DST_COLOR
 };
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 void _stdcall glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	//if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
@@ -76,7 +76,7 @@ void _stdcall glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 	//system("pause");
 	//Log::Exit(-1);
 }
-#endif
+//#endif
 
 
 // =================================================================================================
@@ -178,11 +178,11 @@ bool RenderDevice::init()
 	}
 
 	// Debug output
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(glDebugOutput, nullptr);
-#endif
+//#endif
 
 	// Set capabilities
 	m_DeviceCapsSettings.texFloat = true;
@@ -339,9 +339,14 @@ R_Shader* RenderDevice::createShader(const char* vertexShaderSrc, const char* fr
 
 R_RenderBuffer* RenderDevice::createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
 {
-	R_RenderBuffer* rb = new R_RenderBuffer(this);
-	rb->createRenderBuffer(width, height, format, depth, numColBufs, samples);
-	return rb;
+	R_RenderBuffer* m_RenderBuffer = new R_RenderBuffer(this);
+	m_RenderBuffer->createRenderBuffer(width, height, format, depth, numColBufs, samples);
+	return m_RenderBuffer;
+}
+
+R_RenderBuffer* RenderDevice::createRenderBuffer(vec2 _size, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
+{
+	return createRenderBuffer(static_cast<uint32>(_size.x), static_cast<uint32>(_size.y), format, depth, numColBufs, samples);
 }
 
 // Queries

@@ -10,6 +10,7 @@ public:
 
 	void RenderRecursy(SceneNode* _node);
 	void Intersection(SceneNode* _node);
+	void SetRenderQueueDebug(bool _isDebug) { m_RenderQueueDebug = _isDebug; }
 
 	// ISceneManager
 	SceneNode* getIntersectedNode() override { return m_IntersectedNode; }
@@ -33,6 +34,7 @@ private:
 	Camera*					m_MainCamera;
 	Camera*					m_FrustrumCamera;
 	
+	bool					m_RenderQueueDebug;
 	vector<SceneNode*>		m_RenderQueue;
 
 private: // Settings

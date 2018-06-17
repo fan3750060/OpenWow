@@ -29,11 +29,11 @@ CM2_Builder::~CM2_Builder()
 	if (m_F != nullptr)	delete m_F;
 }
 
-void CM2_Builder::Load()
+bool CM2_Builder::Load()
 {
 	if (m_F == nullptr)
 	{
-		return;
+		return false;
 	}
 
 	Step1Header();
@@ -48,6 +48,8 @@ void CM2_Builder::Load()
 	Step9Collision();
 
 	SetAnimated();
+
+	return true;
 }
 
 #pragma region Loader

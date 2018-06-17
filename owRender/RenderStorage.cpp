@@ -71,9 +71,9 @@ void RenderStorage::CreateGeometry()
 	// Unit quad
 	//-----------------------------------------
 
-	R_Buffer* __vbQuad = m_RenderDevice->createVertexBuffer(4 * sizeof(vec3), verticesQuad.data());
+	R_Buffer* __vbQuad = m_RenderDevice->createVertexBuffer(verticesQuad.size() * sizeof(vec3), verticesQuad.data(), false);
 	__Quad = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_P);
-	__Quad->setGeomVertexParams(__vbQuad, R_DataType::T_FLOAT, 0, sizeof(vec3));
+	__Quad->setGeomVertexParams(__vbQuad, R_DataType::T_FLOAT, 0, 0);
 	__Quad->setGeomIndexParams(__ibQuadDefault, R_IndexFormat::IDXFMT_16);
 	__Quad->finishCreatingGeometry();
 
@@ -82,8 +82,8 @@ void RenderStorage::CreateGeometry()
 	//-----------------------------------------
 
 	R_Buffer* __vbQuadVT = m_RenderDevice->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
-	__vbQuadVT->updateBufferData(0, 4 * sizeof(vec3), verticesQuad.data());
-	__vbQuadVT->updateBufferData(4 * sizeof(vec3), 4 * sizeof(vec2), texCoordsQuad.data());
+	__vbQuadVT->updateBufferData(0,					4 * sizeof(vec3), verticesQuad.data());
+	__vbQuadVT->updateBufferData(4 * sizeof(vec3),	4 * sizeof(vec2), texCoordsQuad.data());
 
 	__QuadVT = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_PT);
 	__QuadVT->setGeomVertexParams(__vbQuadVT, R_DataType::T_FLOAT, 0, 0);
@@ -96,8 +96,8 @@ void RenderStorage::CreateGeometry()
 	//-----------------------------------------
 
 	__vbQuadVTDynamic = m_RenderDevice->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
-	__vbQuadVTDynamic->updateBufferData(0, 4 * sizeof(vec3), verticesQuad.data());
-	__vbQuadVTDynamic->updateBufferData(4 * sizeof(vec3), 4 * sizeof(vec2), texCoordsQuad.data());
+	__vbQuadVTDynamic->updateBufferData(0,					4 * sizeof(vec3), verticesQuad.data());
+	__vbQuadVTDynamic->updateBufferData(4 * sizeof(vec3),	4 * sizeof(vec2), texCoordsQuad.data());
 
 	__QuadVTDynamic = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_PT);
 	__QuadVTDynamic->setGeomVertexParams(__vbQuadVTDynamic, R_DataType::T_FLOAT, 0, 0);

@@ -5,6 +5,7 @@
 class Frustum
 {
 public:
+	const Plane* getPlanes() const { return &_planes[0]; }
 	const Vec3f& getOrigin() const { return _origin; }
 	const Vec3f& getCorner(uint32 index) const { return _corners[index]; }
 
@@ -14,10 +15,13 @@ public:
 	void buildBoxFrustum(const Matrix4f &transMat, float left, float right, float bottom, float top, float front, float back);
 
 	bool cullSphere(Vec3f pos, float rad) const;
-	bool cullBox(BoundingBox& b) const;
+	bool cullBox(const BoundingBox& b) const;
 	bool cullFrustum(const Frustum& frust) const;
+	bool cullPoly(const vec3* verts, uint32 nums) const;
 
 	void calcAABB(Vec3f &mins, Vec3f &maxs) const;
+
+
 
 private:
 	Plane  _planes[6];  // Planes of frustum

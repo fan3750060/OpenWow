@@ -62,6 +62,7 @@ ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _
 	}
 
 	setDrawOrder(20);
+	setDebugColor(vec4(0.0f, 0.3f, 0.3f, 0.3f));
 	setSelectable();
 }
 
@@ -263,7 +264,7 @@ bool ADT::Load()
 	
 	//-- MDXs -------------------------------------------------------------------------
 
-	for (auto& it : m_MDXsPlacementInfo)
+	/*for (auto& it : m_MDXsPlacementInfo)
 	{
 		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
@@ -272,7 +273,7 @@ bool ADT::Load()
 			m_MDXsInstances.push_back(inst);
 			m_Bounds.makeUnion(inst->getBounds());
 		}
-	}
+	}*/
 
 	//---------------------------------------------------------------------------------
 

@@ -41,6 +41,7 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 	}
 	
 	setDrawOrder(21);
+	setDebugColor(vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	setSelectable();
 
 	if (m_Object->isAnimated())

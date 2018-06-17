@@ -8,7 +8,7 @@ public:
 	CM2_Builder(M2* _model);
 	~CM2_Builder();
 
-	void Load();
+	bool Load();
 
 	// Loader
 	void Step1Header();

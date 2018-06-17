@@ -61,6 +61,9 @@
     <ClCompile Include="OpenGL.cpp">
       <Filter>RenderCore</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Font.h">
@@ -195,6 +198,9 @@
     <ClInclude Include="UIBase.h">
       <Filter>Techniques\_Base</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">
@@ -261,6 +267,33 @@
     </None>
     <None Include="..\_gamedata\shaders\Map\MapTileLowRes.vs">
       <Filter>Techniques\Map</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug.fs">
+      <Filter>Techniques\Debug</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug.vs">
+      <Filter>Techniques\Debug</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.fs">
+      <Filter>Techniques\Debug</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.gs">
+      <Filter>Techniques\Debug</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.vs">
+      <Filter>Techniques\Debug</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Liquid\Magma.fs">
+      <Filter>Techniques\Liquids</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Liquid\Magma.vs">
+      <Filter>Techniques\Liquids</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Liquid\Water.fs">
+      <Filter>Techniques\Liquids</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Liquid\Water.vs">
+      <Filter>Techniques\Liquids</Filter>
     </None>
   </ItemGroup>
 </Project>

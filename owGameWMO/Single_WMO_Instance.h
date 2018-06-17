@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WMO.h"
+#include "WMO_LocalPortalContainer.h"
 
 class Single_WMO_Instance : public SceneNode
 {
@@ -16,5 +17,6 @@ public:
 	void Render3D() override;
 
 private:
-	const SmartWMOPtr	m_Object;
+	const SmartWMOPtr			m_Object;
+	CWMO_LocalPortalContainer*	m_LocalPortalController;
 };

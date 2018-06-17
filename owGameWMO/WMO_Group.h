@@ -4,6 +4,7 @@
 
 #include "WMO_Group_Part_Batch.h"
 #include "WMO_Liquid.h"
+#include "WMO_Part_Portal.h"
 
 // FORWARD BEGIN
 class WMO;
@@ -22,26 +23,27 @@ public:
 
 	void Render(cmat4 _worldMatrix);
 
-	void setupFog();
-
+	bool isPointInside(cvec3 _point);
 
 public:
 	const WMO*								m_ParentWMO;
 	const string							m_GroupName;
+	const uint32							m_GroupIndex;
 	const SmartPtr<IFile>					m_F;
 	WMO_Group_HeaderDef						m_Header;
 	BoundingBox								m_Bounds;
+	bool									m_PortalsVis;
+	bool									m_Calculated;
+	vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
 	int fog;
 	bool m_EnableOutdoorLights;
-
-	SmartGeomPtr __geom;
+	SmartGeomPtr							__geom;
 
 public:
 	//-- Triangles --//
 	vector<WMO_Group_MaterialDef>			m_MaterialsInfo;
-
 	bool									m_IsMOCVExists;
 
 	//-- Render bathes --//
@@ -58,8 +60,8 @@ public:
 	// MOBR chunk
 
 	//-- Liquid --//
-	WMO_Group_MLIQDef				m_LiquidHeader;
-	SmartPtr<CWMO_Liquid>			m_WMOLiqiud;
+	WMO_Group_MLIQDef						m_LiquidHeader;
+	SmartPtr<CWMO_Liquid>					m_WMOLiqiud;
 
-	const CGroupQuality& m_Quality;
+	const CGroupQuality&					m_Quality;
 };

@@ -32,6 +32,7 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 	}
 
 	setDrawOrder(21);
+	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
 	setSelectable();
 
 	if (m_Object->isAnimated())
@@ -100,6 +101,7 @@ void WMO_MODD_Instance::Render3D()
 	//_Render->DrawBoundingBox(m_Bounds);
 
 	m_Object->Render(getAbsTrans());
+	_Render->r.checkError();
 	PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
 }
 

@@ -16,12 +16,13 @@ public:
 		dist = d * invLen;
 	}
 
-	Plane(cvec3 v0, cvec3 v1, cvec3 v2)
+	Plane(cvec3 c, cvec3 b, cvec3 a)
 	{
-		normal = v1 - v0;
-		normal = normal.cross(v2 - v0);
+		vec3 cb = b - c;
+		vec3 ca = a - c;
+		normal = cb.cross(ca);
 		normal.normalize();
-		dist = -normal.dot(v0);
+		dist = -normal.dot(c);
 	}
 
 	// ----------------
@@ -36,3 +37,24 @@ public:
 	Vec3f normal;
 	float dist;
 };
+
+inline bool cullPolyByPlanes(const Plane* _planes, uint32 _planesCount, const vec3* verts, uint32 vertsCount)
+{
+	for (uint32 i = 0; i < _planesCount; ++i)
+	{
+		bool allOut = true;
+
+		for (uint32 j = 0; j < vertsCount; ++j)
+		{
+			if (_planes[i].distToPoint(verts[j]) < 0)
+			{
+				allOut = false;
+				break;
+			}
+		}
+
+		if (allOut) return true;
+	}
+
+	return false;
+}

@@ -3,14 +3,6 @@
 // General
 #include "Render.h"
 
-// Additional
-#include "RenderStorage.h"
-
-#include "FontsManager.h"
-#include "TexturesManager.h"
-#include "TechniquesManager.h"
-#include "RenderStorage.h"
-
 RenderGL::RenderGL() :
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
@@ -19,33 +11,28 @@ RenderGL::RenderGL() :
 
 RenderGL::~RenderGL()
 {
-	delete mainCamera;
+	delete m_Camera;
 }
 
 void RenderGL::Init(IOpenGLAdapter* _adapter, HGLRC _context)
 {
-	//HDC hdc = wglGetCurrentDC();
-	//HGLRC glrc1 = wglCreateContext(hdc);
-	//HGLRC glrc2 = wglCreateContext(hdc);
-	//assert1(wglShareLists(glrc1, glrc2));
-	//wglMakeCurrent(hdc, _context);
-
 	r.init();
 	r.setViewport(0, 0, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 
+	//m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 
-	rb = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
-	rbFinal = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, false, 1, 0);
-
-	// Main game camera
-	mainCamera = new Camera;
-	mainCamera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 1.0f, 5000.0f);
+	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
 
 	m_RenderStorage = new RenderStorage(&r);
 	m_TexturesManager = new TexturesManager(_adapter, &r);
 	m_FontsManager = new FontsManager(&r);
 	m_TechniquesManager = new TechniquesManager(&r);
+
+	// Main game camera
+	m_Camera = new Camera;
+	m_Camera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 1.0f, 5000.0f);
+	m_Camera->CreateRenderable();
 }
 
 void RenderGL::Set2D()
@@ -70,16 +57,16 @@ void RenderGL::Set3D()
 
 void RenderGL::BindRBs()
 {
-	rb->setRenderBuffer();
+	m_RenderBuffer->setRenderBuffer();
 	r.clear();
 }
 
 void RenderGL::UnbindRBs()
 {
-	rb->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
+	m_RenderBuffer->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
 	for (uint32 i = 0; i < 4; i++)
 	{
-		r.setTexture(i, rb->getRenderBufferTex(i), 0, 0);
+		r.setTexture(i, m_RenderBuffer->getRenderBufferTex(i), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
 	}
 	r.clear();
 }
@@ -121,17 +108,20 @@ void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 	r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
-void RenderGL::DrawSphere(cvec3 _pos, vec4 _color)
+void RenderGL::DrawSphere(cmat4 _world, cvec3 _pos, float _radius, vec4 _color)
 {
 	mat4 world;
 	world.translate(_pos);
+	world.scale(_radius);
+
+	world *= _world;
 
 	r.setCullMode(R_CullMode::RS_CULL_BACK);
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();
 	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
-	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
+	m_TechniquesManager->Debug_Pass->SetColor4(_color);
 
 	r.setGeometry(m_RenderStorage->_sphereGeo);
 	r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);
@@ -169,20 +159,21 @@ void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 	world.translate(_box.getMin());
 	world.scale(_box.getMax() - _box.getMin());
 
-	r.setCullMode(R_CullMode::RS_CULL_BACK);
+	r.setGeometry(m_RenderStorage->_cubeGeo);
+
+	//r.setCullMode(R_CullMode::RS_CULL_BACK);
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();
 	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
 	m_TechniquesManager->Debug_Pass->SetColor4(_color);
 
-	r.setGeometry(m_RenderStorage->_cubeGeo);
 	r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
 
 	m_TechniquesManager->Debug_Pass->Unbind();
 
 	r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	r.setCullMode(R_CullMode::RS_CULL_NONE);
+	//r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
 #pragma region GUI Part
@@ -197,7 +188,7 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 	// Transform
 	mat4 worldTransform;
 	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
+	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
 
 	// Update buffer
 	vector<vec2> texCoordsQuad;
@@ -223,16 +214,20 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 
 //
 
-void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture)
+void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate)
 {
-	RenderTexture(_pos, _texture, _texture->GetSize());
+	RenderTexture(_pos, _texture, _texture->GetSize(), rotate);
 }
 
-void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size)
+void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate)
 {
 	// Transform
 	mat4 worldTransform;
 	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
+	if (rotate)
+	{
+		worldTransform.rotate(vec3(0.0f, Math::Pi, 0.0f)); // FIXME
+	}
 	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
 
 	// Shader
