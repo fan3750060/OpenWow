@@ -3,7 +3,7 @@
 // Include
 #include "WMO.h"
 #include "WMO_Group.h"
-#include "WMO_LocalPortalContainer.h"
+#include "WMO_InstanceController.h"
 
 // General
 #include "WMO_Part_Portal.h"
@@ -74,7 +74,7 @@ void CWMO_Part_Portal::setGroup(WMO_Group * _group, int16 side)
 	}
 }
 
-bool CWMO_Part_Portal::IsVisible(CWMO_LocalPortalContainer* _localContr, const Plane* _planes, uint32 _planesCount) const
+bool CWMO_Part_Portal::IsVisible(CWMO_InstanceController* _localContr, const Plane* _planes, uint32 _planesCount) const
 {
 	if (_planes == nullptr || _planesCount == 0)
 	{

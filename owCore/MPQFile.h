@@ -7,7 +7,7 @@ class CMPQFile : public CFile
 public:
 	CMPQFile(cstring _fullFileName);
 	CMPQFile(cstring _name, cstring _path);
-	~CMPQFile();
+	~CMPQFile() override;
 
 	// IFile
 	bool Open() override;

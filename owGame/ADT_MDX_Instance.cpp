@@ -63,18 +63,20 @@ void ADT_MDX_Instance::Update(double _time, double _dTime)
 {
 	if (m_Object->isAnimated())
 	{
-		if (m_Object->isBillboard())
+		m_Animator->Update(_time, _dTime);
+
+		/*if (m_Object->isBillboard())
 		{
-			m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
+		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
 		}
 		else
-		{
-			//if (!m_NeedRecalcAnimation)
-			{
-				m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-			//	m_NeedRecalcAnimation = true;
-			}
-		}
+		{*/
+		//if (!m_NeedRecalcAnimation)
+		//{
+		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(), static_cast<uint32>(_time));
+		//	m_NeedRecalcAnimation = true;
+		//}
+		//}
 	}
 
 	m_Object->updateEmitters(_dTime);

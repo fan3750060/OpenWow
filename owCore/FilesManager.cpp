@@ -25,11 +25,14 @@ IFile* CFilesManager::Open(cstring _fileName)
 	if (CLocalFile::IsFileExists(_fileName))
 	{
 		file = new CLocalFile(_fileName);
-		file->Open();
 	}
 	else if (CMPQFile::IsFileExists(_fileName))
 	{
 		file = new CMPQFile(_fileName);
+	}
+
+	if (file != nullptr)
+	{
 		file->Open();
 	}
 

@@ -45,12 +45,8 @@ private:
 
 	Commands cmd;
 
-	Single_M2_Instance* m_BackgroudModel;
-	float mt;
-
 	void randBackground();
-
-
+	Single_M2_Instance* m_BackgroudModel;
 
     // Camera moving
     bool enableFreeCamera;

@@ -71,7 +71,7 @@ const _dbc##Record* _dispName() \
 #define DBC_DEF_BEGIN(accessName) \
 class CONCAT_CLASS(accessName) : public Record { \
 public: \
-	CONCAT_CLASS(accessName)(const DBCFile<CONCAT_CLASS(accessName)>::Iterator& _iterator) : Record(_iterator->dbcStats, _iterator->offset) { } \
+	CONCAT_CLASS(accessName)(const DBCFile<CONCAT_CLASS(accessName)>::Iterator& _iterator) : Record(_iterator->m_DBC_Stats, _iterator->m_Offset) { } \
 	CONCAT_CLASS(accessName)(DBCFile<CONCAT_CLASS(accessName)>* file, const uint8* offset) : Record(file, offset) { } \
 public:
 
@@ -127,9 +127,15 @@ class Record
 public:
 	Record() = delete;
 	Record(const Record& _record) = delete;
-	Record(const DBCStats* _dbcStats, const uint8* offset) : dbcStats(_dbcStats), offset(offset) {}
+	Record(Record&& _record) = delete;
+	Record(const DBCStats* _dbcStats, const uint8* offset) : m_DBC_Stats(_dbcStats), m_Offset(offset) {}
 
 	Record& operator=(const Record& r) = delete;
+	Record& operator=(Record&& r) = delete;
+
+	const DBCStats*	getDBCStats() const { return m_DBC_Stats; }
+	void incOffset(uint32 _value) { m_Offset += _value; }
+	const uint8*	getOffset() const { return m_Offset; }
 
 	// All data has ID
 	__DBC_TVALUE(uint32, ID, 1);
@@ -139,30 +145,31 @@ protected:
 	template<typename T>
 	T getValue(uint32 field) const
 	{
-		assert2(field < dbcStats->fieldCount, std::to_string(field).c_str());
-		return *reinterpret_cast<T*>(const_cast<uint8*>(offset) + field * 4);
+		assert2(field < m_DBC_Stats->getFieldCount(), std::to_string(field).c_str());
+		return *reinterpret_cast<T*>(const_cast<uint8*>(m_Offset) + field * 4);
 	}
 
 	// Strings
 	const char* getString(uint32 field) const
 	{
-		assert2(field < dbcStats->fieldCount, std::to_string(field).c_str());
+		assert2(field < m_DBC_Stats->getFieldCount(), std::to_string(field).c_str());
 
 		uint32_t stringOffset = getValue<uint32>(field);
-		if (stringOffset >= dbcStats->stringSize)
+		if (stringOffset >= m_DBC_Stats->getStringSize())
 		{
 			stringOffset = 0;
 		}
 
-		assert2(stringOffset < dbcStats->stringSize, std::to_string(stringOffset).c_str());
-		return reinterpret_cast<char*>(const_cast<uint8*>(dbcStats->stringTable) + stringOffset);
+		assert2(stringOffset < m_DBC_Stats->getStringSize(), std::to_string(stringOffset).c_str());
+		return reinterpret_cast<char*>(const_cast<uint8*>(m_DBC_Stats->stringTable) + stringOffset);
 	}
+
 	const char* getLocalizedString(uint32 field, int8 locale = -1) const
 	{
 		int8 loc = locale;
 		if (locale == -1)
 		{
-			assert2(field < dbcStats->fieldCount - 8, std::to_string(field).c_str());
+			assert2(field < m_DBC_Stats->getFieldCount() - 8, std::to_string(field).c_str());
 			for (loc = 0; loc < 8; loc++)
 			{
 				uint32 stringOffset = getValue<uint32>(field + loc);
@@ -172,16 +179,16 @@ protected:
 				}
 			}
 		}
-		assert2(field + loc < dbcStats->fieldCount, std::to_string(field).c_str());
+		assert2(field + loc < m_DBC_Stats->getFieldCount(), std::to_string(field).c_str());
 		uint32 stringOffset = getValue<uint32>(field + static_cast<uint32>(loc));
 
-		assert2(stringOffset < dbcStats->stringSize, std::to_string(stringOffset).c_str());
-		return reinterpret_cast<char*>(const_cast<uint8*>(dbcStats->stringTable) + stringOffset);
+		assert2(stringOffset < m_DBC_Stats->getStringSize(), std::to_string(stringOffset).c_str());
+		return reinterpret_cast<char*>(const_cast<uint8*>(m_DBC_Stats->stringTable) + stringOffset);
 	}
 
-public:
-	const DBCStats* dbcStats;
-	const uint8* offset;
+protected:
+	const DBCStats*		m_DBC_Stats;
+	const uint8*		m_Offset;
 };
 
 
@@ -196,60 +203,49 @@ class DBCFile : public DBCStats
 	friend RECORD_T;
 public:
 	DBCFile(const char* _fileName);
-	~DBCFile()
-	{
-		for (auto it = records.begin(); it != records.end();)
-		{
-			auto obj = it->second;
-			it = records.erase(it);
-			delete obj;
-		}
-	}
+	~DBCFile();
 
 	bool Open();
 
 	// Get data by id
 	RECORD_T* operator[](uint32 _id);
 
-	///////////////////////////////////
 	// Iterator that iterates over records
-	///////////////////////////////////
 	class Iterator
 	{
 		friend RECORD_T;
 	public:
-		Iterator(DBCFile* file, const uint8* offset) : record(file, offset) {}
-		Iterator(Iterator& _iterator) : record(_iterator.record) {}
+		Iterator(DBCFile* file, const uint8* offset) : m_Record(file, offset) {}
+		Iterator(Iterator& _iterator) : m_Record(_iterator.m_Record) {}
 
 		Iterator& operator++()
 		{
-			record.offset += record.dbcStats->getRecordSize();
+			m_Record.incOffset(m_Record.getDBCStats()->getRecordSize());
 			return *this;
 		}
 
 		const RECORD_T& operator*() const
 		{
-			return record;
+			return m_Record;
 		}
 		const RECORD_T* operator->() const
 		{
-			return &record;
+			return &m_Record;
 		}
 
 		bool operator==(const Iterator &b) const
 		{
-			return record.offset == b.record.offset;
+			return m_Record.getOffset() == b.m_Record.getOffset();
 		}
 		bool operator!=(const Iterator &b) const
 		{
-			return record.offset != b.record.offset;
+			return m_Record.getOffset() != b.m_Record.getOffset();
 		}
 
 	private:
-		RECORD_T record;		
+		RECORD_T m_Record;		
 	};
 
-	// Iterators
 	Iterator begin()
 	{
 		assert1(m_File->GetData() != nullptr);
@@ -262,10 +258,7 @@ public:
 		return Iterator(this, stringTable);
 	}
 
-	const map<uint32, RECORD_T*>& Records() const
-	{
-		return records;
-	}
+	const map<uint32, RECORD_T*>& Records() const;
 
 protected:
 	map<uint32, RECORD_T*> records;

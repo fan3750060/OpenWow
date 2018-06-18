@@ -21,16 +21,36 @@ template<class T>
 inline T interpolateHermite(const float r, const T& v1, const T& v2, const T& in, const T& out)
 {
 	// dummy
-	//return interpolate<T>(r,v1,v2);
+	return interpolate<T>(r, v1, v2);
+
+	float rPow3 = r * r * r;
+	float rPow2 = r * r;
 
 	// basis functions
-	float h1 = 2.0f*r*r*r - 3.0f*r*r + 1.0f;
-	float h2 = -2.0f*r*r*r + 3.0f*r*r;
-	float h3 = r * r*r - 2.0f*r*r + r;
-	float h4 = r * r*r - r * r;
+	float h1 = 2.0f*rPow3 - 3.0f*rPow2 + 1.0f;
+	float h2 = -2.0f*rPow3 + 3.0f*rPow2;
+	float h3 = rPow3 - 2.0f*rPow2 + r;
+	float h4 = rPow3 - rPow2;
 
 	// interpolation
 	return v1 * h1 + v2 * h2 + in * h3 + out * h4;
+}
+
+template<class T>
+inline T interpolateBezier(const float r, const T& v1, const T& v2, const T& in, const T& out)
+{
+	float InverseFactor = (1.0f - r);
+	float FactorTimesTwo = r * r;
+	float InverseFactorTimesTwo = InverseFactor * InverseFactor;
+
+	// basis functions
+	float h1 = InverseFactorTimesTwo * InverseFactor;
+	float h2 = 3.0f * r * InverseFactorTimesTwo;
+	float h3 = 3.0f * FactorTimesTwo * InverseFactor;
+	float h4 = FactorTimesTwo * r;
+
+	// interpolation
+	return static_cast<T>(v1*h1 + v2 * h2 + in * h3 + out * h4);
 }
 
 template<class T>
@@ -57,23 +77,22 @@ public:
 		m_GlobalSecIndex = b.global_sequence;
 		m_GlobalSec = _globalSec;
 
-		// If hasn't index, then use ???
+		// If hasn't index, then use global sec
 		if (m_GlobalSecIndex != -1)
 		{
 			assert1(m_GlobalSec != nullptr);
 		}
 
-		// Fix ranges
-		/*if (b.nRanges <= 0 && m_Type != 0 && m_GSIndex == -1)
-		{
-			ranges.push_back(AnimRange(0, b.nKeys - 1));
-		}*/
+		assert1((b.interpolation_ranges.size > 0) || (m_GlobalSecIndex != -1) || (m_Type == INTERPOLATION_NONE));
 
 		// ranges
-		uint32* ranges = (uint32*)(f->GetData() + b.interpolation_ranges.offset);
-		for (uint32 i = 0; i < b.interpolation_ranges.size; i+=2)
+		if (b.interpolation_ranges.size > 0)
 		{
-			m_Ranges.push_back(make_pair(ranges[i], ranges[i + 1]));
+			uint32* ranges = (uint32*)(f->GetData() + b.interpolation_ranges.offset);
+			for (uint32 i = 0; i < b.interpolation_ranges.size; i += 2)
+			{
+				m_Ranges.push_back(make_pair(ranges[i], ranges[i + 1]));
+			}
 		}
 
 		// times
@@ -119,7 +138,7 @@ public:
 
 		return true;
 	}
-	
+
 	T getValue(uint16 anim, uint32 time, uint32 globalTime) const
 	{
 		assert1(m_Type != INTERPOLATION_NONE);
@@ -140,9 +159,11 @@ public:
 		}
 		else
 		{
+			assert1(time >= m_Times[0] && time < m_Times[m_Times.size() - 1]);
 			range = m_Ranges[anim];
-			time %= m_Times[m_Times.size() - 1];
 		}
+
+
 
 		// If simple frame
 		if (range.first == range.second)
@@ -151,7 +172,7 @@ public:
 		}
 
 		// Get pos by time
-		uint32 pos = 0;
+		uint32 pos = UINT32_MAX;
 		for (uint32 i = range.first; i < range.second; i++)
 		{
 			if (time >= m_Times[i] && time < m_Times[i + 1])
@@ -160,11 +181,12 @@ public:
 				break;
 			}
 		}
+		assert1(pos != UINT32_MAX);
 
 		uint32 t1 = m_Times[pos];
 		uint32 t2 = m_Times[pos + 1];
 		assert1(t2 > t1);
-		assert1(time >= t1);
+		assert1(time >= t1 && time < t2);
 		float r = (float)(time - t1) / (float)(t2 - t1);
 
 		switch (m_Type)
@@ -184,7 +206,7 @@ public:
 private:
 	Interpolations				m_Type;
 	int16						m_GlobalSecIndex;
-	cGlobalLoopSeq		m_GlobalSec;
+	cGlobalLoopSeq				m_GlobalSec;
 
 	vector<pair<uint32, uint32>>m_Ranges;
 	vector<int32>				m_Times;

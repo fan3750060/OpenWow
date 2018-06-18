@@ -70,7 +70,6 @@ void Liquid::Render(cmat4 _worldMatrix)
 
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
-
 //--
 
 #pragma region Types

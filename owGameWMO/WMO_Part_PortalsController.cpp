@@ -2,7 +2,7 @@
 
 // Include
 #include "WMO.h"
-#include "WMO_LocalPortalContainer.h"
+#include "WMO_InstanceController.h"
 
 // General
 #include "WMO_Part_PortalsController.h"
@@ -10,7 +10,7 @@
 // Additional
 #include "WMO_Group.h"
 
-uint32 ClipPlane(vec3* dst, const vec3* src, uint32 num_verts, const Plane plane)
+/*uint32 ClipPlane(vec3* dst, const vec3* src, uint32 num_verts, const Plane plane)
 {
 	uint32 num = 0; // кол-во вершин в dst
 	for (uint32 i = 0; i < num_verts; i++)
@@ -63,10 +63,10 @@ uint32 ClipPolygon(vec3* dst, const vec3* src, uint32 num_verts, const Plane* pl
 	memcpy(dst, &swap, num * sizeof(vec3));
 
 	return num;
-}
+}*/
 
 
-CWMO_Part_PortalsController::CWMO_Part_PortalsController(const WMO * _parentWMO) :
+CWMO_Part_PortalsController::CWMO_Part_PortalsController(const WMO* _parentWMO) :
 	m_ParentWMO(_parentWMO)
 {
 	for (auto& it : m_ParentWMO->m_PortalReferences)
@@ -101,7 +101,7 @@ void CWMO_Part_PortalsController::GetPolyFrustum(const vec3* poly, uint32 num_ve
 	}
 }
 
-void CWMO_Part_PortalsController::Update(CWMO_LocalPortalContainer* _localContr, cvec3 _InvWorldCamera)
+void CWMO_Part_PortalsController::Update(CWMO_InstanceController* _localContr, cvec3 _InvWorldCamera)
 {
 	for (auto& it : m_ParentWMO->m_Groups)
 	{
@@ -123,7 +123,7 @@ void CWMO_Part_PortalsController::Update(CWMO_LocalPortalContainer* _localContr,
 	}
 }
 
-void CWMO_Part_PortalsController::Recur(WMO_Group* _group, CWMO_LocalPortalContainer* _localContr, cvec3 _InvWorldCamera, const Plane* _planes, uint32 _planesCount)
+void CWMO_Part_PortalsController::Recur(WMO_Group* _group, CWMO_InstanceController* _localContr, cvec3 _InvWorldCamera, const Plane* _planes, uint32 _planesCount)
 {
 	if (_group == nullptr || _group->m_Calculated)
 	{
@@ -176,7 +176,7 @@ void CWMO_Part_PortalsController::Recur(WMO_Group* _group, CWMO_LocalPortalConta
 	}
 }
 
-/*bool CWMO_Part_PortalsController::IsVisible(CWMO_Part_Portal* _portal, CWMO_LocalPortalContainer* _localContr, cvec3 _InvWorldCamera, const Plane* _planes, uint32 _planesCount)
+/*bool CWMO_Part_PortalsController::IsVisible(CWMO_Part_Portal* _portal, CWMO_InstanceController* _localContr, cvec3 _InvWorldCamera, const Plane* _planes, uint32 _planesCount)
 {
 	// And we don't see portal from other portal
 	if (!_portal->IsVisible(_localContr, _planes, _planesCount))

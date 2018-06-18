@@ -58,7 +58,8 @@ public:
 	// IRenderable
 	virtual void PreRender3D() override {};
 	virtual void Render3D() override {}
-	void PostRender3D() override { /*Don't use it*/ }
+	virtual void PostRender3D() override { /*Don't use it*/ }
+	virtual void RenderDebug3D() { Render3D(); };
 	void setVisible(bool _value) override { m_IsVisible = _value; }
 	bool isVisible() const override { return m_IsVisible; }
 	void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }

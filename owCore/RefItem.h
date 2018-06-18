@@ -6,6 +6,8 @@ public:
 	CRefItem() :
 		m_RefsCount(0)
 	{}
+	virtual ~CRefItem()
+	{}
 
 	// IRefItem
 	void AddRef() { m_RefsCount += 1; }

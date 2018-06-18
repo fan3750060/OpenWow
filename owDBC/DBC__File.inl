@@ -2,9 +2,21 @@
 #pragma once
 
 template<class RECORD_T>
-inline DBCFile<RECORD_T>::DBCFile(const char* _fileName)
+inline DBCFile<RECORD_T>::DBCFile(const char* _fileName) :
+	m_File(nullptr)
 {
 	m_FileName = string("DBFilesClient\\") + string(_fileName);
+}
+
+template<class RECORD_T>
+inline DBCFile<RECORD_T>::~DBCFile()
+{
+	for (auto it = records.begin(); it != records.end();)
+	{
+		auto obj = it->second;
+		it = records.erase(it);
+		delete obj;
+	}
 }
 
 template<class RECORD_T>
@@ -55,4 +67,10 @@ RECORD_T* DBCFile<RECORD_T>::operator[](uint32 _id)
 	}
 
 	return nullptr;
+}
+
+template <class RECORD_T>
+const map<uint32, RECORD_T*>& DBCFile<RECORD_T>::Records() const
+{
+	return records;
 }

@@ -3,17 +3,20 @@
 #include "RefItem.h"
 #include "ByteBuffer.h"
 
-class CFile : public CRefItem, public IFile
+class CFile : public IFile
 {
 public:
 	 CFile(cstring _fullFileName);
 	 CFile(cstring _name, cstring _path);
-	 ~CFile();
+	 virtual ~CFile();
 
 	 // IRefItem
-	 void AddRef() override { CRefItem::AddRef(); }
+	 /*void AddRef() override { CRefItem::AddRef(); }
 	 void Release() override { CRefItem::Release(); }
-	 uint32 GetRefsCount() const { return CRefItem::GetRefsCount();	 }
+	 uint32 GetRefsCount() const { return CRefItem::GetRefsCount();	 }*/
+	 void AddRef() override { m_RefsCount += 1; }
+	 void Release() override { m_RefsCount -= 1; }
+	 uint32 GetRefsCount() const override { return m_RefsCount; }
 
 	 // IFile
 	 string Name() const override { return m_Name; }
@@ -41,8 +44,11 @@ private:
 protected:
 	ByteBuffer m_ByteBuffer;
 
-private:
+private: // IFile
 	string m_Name;
 	string m_Path;
 	string m_Extension;
+
+private: // IRefItem
+	uint32 m_RefsCount;
 };

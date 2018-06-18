@@ -7,26 +7,26 @@ class CM2_Part_Camera
 public:
 	CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoopSeq global);
 
-	void setup(uint32 time, uint32 globalTime);
-
-	Camera* GetCamera() { return &camera; }
+	void calc(uint32 time, uint32 globalTime);
+	void setup(cvec3 _startPoint, float rotate);
+	void getParams(vec3* _position, vec3* _target, float* _fov, float* _nearPlane, float* _farPlane);
 
 private:
 	float farclip;
 	float nearclip;
 
 	M2_Animated<vec3> tPos;
-	vec3 pos;
+	vec3 m_PositionBase;
+	vec3 pResult;
 
 	M2_Animated<vec3> tTarget;
-	vec3 target;
+	vec3 m_TargetBase;
+	vec3 tResult;
 
 	M2_Animated<float> tRoll;
-	float roll;
+	float rollResult;
 
 	float fov;
-
-	Camera camera;
 
 	CGroupVideo& m_VideoSettings;
 };

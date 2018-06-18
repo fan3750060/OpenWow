@@ -32,6 +32,7 @@ public:
 	void setupViewportSize(float x, float y, float w, float h);
 	void setupViewParams(float fov, float aspect, float nearPlane, float farPlane);
 	void setProjectionMatrix(float* projMat);
+	void setViewMatrix(cmat4 _mat) { _viewMat = _mat; onPostUpdate(); }
 	void onPostUpdate();
 
 	const Frustum& getFrustum() const { return _frustum; }

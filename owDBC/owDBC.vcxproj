@@ -31,6 +31,8 @@
     <ClInclude Include="..\shared\owDBC.h" />
     <ClInclude Include="DBC_AnimationData.h" />
     <ClInclude Include="DBC_AreaTable.h" />
+    <ClInclude Include="DBC_CinematicCamera.h" />
+    <ClInclude Include="DBC_CinematicSequences.h" />
     <ClInclude Include="DBC_GroundEffectDoodad.h" />
     <ClInclude Include="DBC_GroundEffectTexture.h" />
     <ClInclude Include="DBC_Light.h" />

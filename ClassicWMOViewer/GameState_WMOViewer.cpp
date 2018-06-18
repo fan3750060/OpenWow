@@ -69,7 +69,7 @@ bool GameState_WMOViewer::Init()
 	else
 	{
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Dungeon\\AZ_StormwindPrisons\\StormwindJail.wmo");
-	WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Azeroth\\Buildings\\Stormwind\\Stormwind.wmo");
+		WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Azeroth\\Buildings\\Stormwind\\Stormwind.wmo");
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Kalimdor\\Ogrimmar\\Ogrimmar.wmo");
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Kalimdor\\Winterspring\\MD_WinterspringCave01.wmo");
 		new Single_WMO_Instance(root, wmo);
@@ -149,7 +149,8 @@ void GameState_WMOViewer::PreRender3D()
 void GameState_WMOViewer::Render3D()
 {
 	// Debug
-	/*_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	/*	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
 	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 1.0));
 	_Render->r.setGeometry(m_DebugGeom);

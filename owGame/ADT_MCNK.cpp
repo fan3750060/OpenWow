@@ -26,7 +26,7 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	memset(mcly, 0x00, 16 * 4);
 
 	setDrawOrder(21);
-	setDebugColor(vec4(0.0f, 0.4f, 0.0f, 0.3f));
+	setDebugColor(vec4(0.0f, 0.4f, 0.0f, 0.8f));
 }
 
 //
@@ -277,8 +277,6 @@ void ADT_MCNK::Render3D()
 		return;
 	}
 
-	//RenderNormals();
-
 	PERF_START(PERF_MAP);
 	{
 		_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
@@ -326,12 +324,8 @@ void ADT_MCNK::Render3D()
 			}
 		}
 		_Render->getTechniquesMgr()->MCNK_Pass->Unbind();
-
-		//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-		_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	}
 	PERF_STOP(PERF_MAP);
-	_Render->r.checkError();
 }
 
 //

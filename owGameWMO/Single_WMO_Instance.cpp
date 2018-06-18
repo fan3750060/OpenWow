@@ -22,7 +22,7 @@ Single_WMO_Instance::Single_WMO_Instance(SceneNode* _parent, WMO* _wmoObject) :
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	m_LocalPortalController = new CWMO_LocalPortalContainer(m_Object, getAbsTrans());
+	m_LocalPortalController = new CWMO_InstanceController(m_Object, getAbsTrans());
 
 	m_Object->CreateInsances(this);
 
@@ -50,6 +50,7 @@ void Single_WMO_Instance::Render3D()
 {
 	//_Render->DrawBoundingBox(m_Bounds);
 
-	m_Object->Render(m_LocalPortalController, 0);
+	m_Object->PreRender(m_LocalPortalController);
+	m_Object->Render(m_LocalPortalController, WMO_Doodad_SetInfo());
 	PERF_INC(PERF_MAP_MODELS_WMOs);
 }

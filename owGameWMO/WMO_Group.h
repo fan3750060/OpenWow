@@ -8,7 +8,14 @@
 
 // FORWARD BEGIN
 class WMO;
+class WMO_Doodad_Instance;
 // FORWARD END
+
+struct MODD_PlacementInfo
+{
+	const WMO_Doodad_PlacementInfo** infos;
+	uint32 count;
+};
 
 class WMO_Group : public CRefItem
 {
@@ -21,7 +28,7 @@ public:
 	void Load();
 	void initLighting();
 
-	void Render(cmat4 _worldMatrix);
+	void Render(cmat4 _worldMatrix, const WMO_Doodad_SetInfo& _doodadSet);
 
 	bool isPointInside(cvec3 _point);
 
@@ -37,8 +44,6 @@ public:
 	vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
-	int fog;
-	bool m_EnableOutdoorLights;
 	SmartGeomPtr							__geom;
 
 public:
@@ -52,8 +57,8 @@ public:
 	//-- Lights --//
 	vector<uint16>							m_WMOLightsIndexes;
 
-	//-- Doodads references --// 
-	vector<uint16>							m_DoodadsIndexes;
+	//-- Doodads references --//
+	vector<uint16>							m_DoodadsPlacementIndexes;
 
 	//-- Collision --//
 	// MOBN chunk

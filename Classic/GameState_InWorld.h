@@ -7,6 +7,7 @@ public:
 
     bool Init() override;
     void Destroy() override;
+	void SwitchOnEnd() { m_Ended = true; }
 
     // IUpdatable
     void Input(double _time, double _dTime) override;
@@ -43,6 +44,12 @@ private:
 	Camera*					m_TestCamera;
 	R_RenderBuffer*			m_TestRenderBuffer;
 	R_RenderBuffer*			m_TestRenderBufferFinal;
+
+	Single_M2_Instance*		m2_Camera;
+	vec3					m_DefPos;
+	float					m_Rot;
+	bool					m_Ended;
+
 
 	WorldRender* m_WorldRender;
 

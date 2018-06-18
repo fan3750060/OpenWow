@@ -11,10 +11,10 @@ const int32 C_RenderedTiles = 5;
 const int32 C_TilesCacheSize = ((C_RenderedTiles + 2) * (C_RenderedTiles + 2));
 #endif
 
-const float C_TileSize = 533.33333f;
+const float C_TileSize = 533.3333333333f;
 const float C_ChunkSize = C_TileSize / 16.0f;
 const float C_UnitSize = C_ChunkSize / 8.0f;
-const float C_ZeroPoint = 32.0f * C_TileSize;
+const float C_ZeroPoint = 32.0f * C_TileSize; // 17066.66656
 
 // Tile chunk
 const int32 C_ChunksInTile = 16;

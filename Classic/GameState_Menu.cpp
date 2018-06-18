@@ -27,10 +27,6 @@ void GameState_Menu::OnBtn(DBC_MapRecord* _e)
 
 bool GameState_Menu::LoadWorld(vec3 _pos)
 {
-
-	
-
-
 	_World->Map()->MapLoad();
 	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
 	_World->Map()->MapPostLoad();
@@ -41,6 +37,7 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 	}
 
 	_Render->getCamera()->Position = _pos;
+	_Render->getCamera()->m_UseDir = false;
 	_Render->getCamera()->SetNeedUpdate();
 
 	_Bindings->UnregisterRenderable3DObject(this);
@@ -61,6 +58,8 @@ bool GameState_Menu::Init()
 	//
 
 	OpenDBs();
+
+	_World->EnvM()->isVisible();
 
 	m_MinimapUI = new UIElement(100);
 	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), (R_Texture*)nullptr, COLOR_WHITE);
@@ -162,12 +161,10 @@ void GameState_Menu::Input(double _time, double _dTime)
 
 void GameState_Menu::Update(double _time, double _dTime)
 {
-	/*if (backgroundModel)
+	if (m_BackgroudModel)
 	{
-		backgroundModel->m_Cameras[0].setup(_time, _time);
-
-		backgroundModel->updateEmitters(_dTime);
-	}*/
+		m_BackgroudModel->Update(_time, _dTime);
+	}
 }
 
 void GameState_Menu::PreRender3D()
@@ -180,26 +177,11 @@ void GameState_Menu::PreRender3D()
 
 void GameState_Menu::Render3D()
 {
-	//Camera* tt = backgroundModel->m_Cameras[0].GetCamera();
-	//_PipelineGlobal->SetCamera(backgroundModel->m_Cameras[0].GetCamera());
-	//_PipelineGlobal->SetCameraFrustum(backgroundModel->m_Cameras[0].GetCamera());
-
-
-	// Geom
-	//backgroundModel->Render(mat4());
-
-	/*
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->SetPVW();
-	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
-	_Render->r.setGeometry(tt->__geom);
-	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
+	if (m_BackgroudModel)
+	{
+		m_BackgroudModel->PreRender3D();
+		m_BackgroudModel->Render3D();
+	}
 }
 
 void GameState_Menu::PostRender3D()
@@ -212,7 +194,6 @@ void GameState_Menu::RenderUI()
 {
 	if (cmd == CMD_SELECT)
 	{
-
 		if (_World->Map()->m_WDL->getMinimap() != nullptr)
 		{
 			m_MinimapUI->SetTexture(_World->Map()->m_WDL->getMinimap());
@@ -258,12 +239,6 @@ bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePo
 
 		vec3 pointInWorld = vec3(selectedPointX / 12.0f, 0.1f, selectedPointZ / 12.0f) * C_TileSize;
 
-		//if (backgroundModel != nullptr)
-		//{
-			//delete backgroundModel;
-			//backgroundModel = nullptr;
-		//}
-
 		LoadWorld(pointInWorld);
 
 		return true;
@@ -278,8 +253,6 @@ bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePo
 	}
 
 	return false;
-
-	return false;
 }
 
 bool GameState_Menu::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
@@ -287,6 +260,7 @@ bool GameState_Menu::OnMouseButtonReleased(int _button, int _mods, cvec2 _mouseP
 	enableFreeCamera = false;
 	lastMousePos = vec2();
 	m_Engine->GetAdapter()->ShowCursor();
+
 	return true;
 }
 
@@ -328,11 +302,12 @@ void GameState_Menu::randBackground()
 {
 	char* ui[] = { "MainMenu", "NightElf", "Human", "Dwarf", "Orc", "Tauren", "Scourge" };
 
-	char* randui = ui[Random::GenerateMax(7)];
+	char* randui = ui[1/*Random::GenerateMax(7)*/];
 	char path[256];
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
 
-	//m_BackgroudModel = new Single_M2_Instance()
+	//M2* mdx = GetManager<IM2Manager>()->Add(path);
+	//mdx->m_Cameras[0].setup(0, 0);
 
-	//backgroundModel = GetManager<IM2Manager>()->Add(path);
+	//m_BackgroudModel = new Single_M2_Instance(nullptr, mdx);
 }

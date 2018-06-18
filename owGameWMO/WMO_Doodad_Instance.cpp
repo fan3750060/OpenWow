@@ -1,11 +1,13 @@
 #include "stdafx.h"
 
 // General
-#include "WMO_MODD_Instance.h"
+#include "WMO_Doodad_Instance.h"
 
-WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const WMO_MODD_PlacementInfo& _placement) :
+WMO_Doodad_Instance::WMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, uint32 _index, const WMO_Doodad_PlacementInfo& _placement, const WMO_Group* _group) :
 	SceneNode(_parent),
 	m_Object(_mdxObject),
+	m_Index(_index),
+	m_Group(_group),
 	m_NeedRecalcAnimation(true),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
 	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
@@ -41,7 +43,7 @@ WMO_MODD_Instance::WMO_MODD_Instance(SceneNode* _parent, M2* _mdxObject, const W
 	}
 }
 
-WMO_MODD_Instance::~WMO_MODD_Instance()
+WMO_Doodad_Instance::~WMO_Doodad_Instance()
 {
 	if (m_Object->isAnimated())
 	{
@@ -50,30 +52,37 @@ WMO_MODD_Instance::~WMO_MODD_Instance()
 	}
 }
 
-void WMO_MODD_Instance::Update(double _time, double _dTime)
+void WMO_Doodad_Instance::Update(double _time, double _dTime)
 {
 	if (m_Object->isAnimated())
 	{
-		if (m_Object->isBillboard())
+		m_Animator->Update(_time, _dTime);
+
+		/*if (m_Object->isBillboard())
 		{
-			m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
+		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
 		}
 		else
-		{
-			if (!m_NeedRecalcAnimation)
-			{
-				m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-				m_NeedRecalcAnimation = true;
-			}
-		}
+		{*/
+		//if (!m_NeedRecalcAnimation)
+		//{
+		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(), static_cast<uint32>(_time));
+		//	m_NeedRecalcAnimation = true;
+		//}
+		//}
 	}
 
 	m_Object->updateEmitters(_dTime);
 }
 
-void WMO_MODD_Instance::PreRender3D()
+void WMO_Doodad_Instance::PreRender3D()
 {
 	setVisible(false);
+
+	if (!m_Group->m_PortalsVis)
+	{
+		return;
+	}
 
 	// Check distance to camera
 	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length();
@@ -91,7 +100,7 @@ void WMO_MODD_Instance::PreRender3D()
 	setVisible(true);
 }
 
-void WMO_MODD_Instance::Render3D()
+void WMO_Doodad_Instance::Render3D()
 {
 	if (!m_QualitySettings.draw_wmo_doodads)
 	{
@@ -103,6 +112,11 @@ void WMO_MODD_Instance::Render3D()
 	m_Object->Render(getAbsTrans());
 	_Render->r.checkError();
 	PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
+}
+
+void WMO_Doodad_Instance::RenderDebug3D()
+{
+	return;
 }
 
 

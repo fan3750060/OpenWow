@@ -15,7 +15,9 @@ CLocalFile::CLocalFile(cstring _name, cstring _path) :
 {}
 
 CLocalFile::~CLocalFile()
-{}
+{
+	CFile::~CFile();
+}
 
 bool CLocalFile::Open()
 {
@@ -65,6 +67,8 @@ bool CLocalFile::Open()
 	// Close stream
 	stream.close();
 	stream.clear();
+
+	//Log::Info("File[%s] opened. [local]", Path_Name().c_str());
 
 	return true;
 }

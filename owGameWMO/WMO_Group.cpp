@@ -6,6 +6,10 @@
 // General
 #include "WMO_Group.h"
 
+// Include 
+#include "WMO_Doodad_Instance.h"
+#include "WMO_Liquid_Instance.h"
+
 WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _groupName, IFile* _groupFile) :
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
@@ -30,7 +34,18 @@ void WMO_Group::CreateInsances(SceneNode* _parent)
 		vec3 realPos = m_LiquidHeader.pos.toXZmY();
 		realPos.y = 0.0f; // why they do this???
 
-		//new Liquid_Instance(_parent, m_WMOLiqiud, realPos);
+		new CWMO_Liquid_Instance(_parent, m_WMOLiqiud, realPos, this);
+	}
+
+	for (auto& index : m_DoodadsPlacementIndexes)
+	{
+		const WMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
+
+		SmartPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
+		if (mdx)
+		{
+			WMO_Doodad_Instance* instance = new WMO_Doodad_Instance(_parent, mdx, index, placement, this);
+		}
 	}
 }
 
@@ -65,7 +80,8 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOGP") == 0)
 		{
-			nextpos = m_F->GetPos() + sizeof(WMO_Group_HeaderDef); // The MOGP chunk size will be way more than the header variables!
+			// The MOGP chunk size will be way more than the header variables!
+			nextpos = m_F->GetPos() + sizeof(WMO_Group_HeaderDef); 
 
 			m_F->ReadBytes(&m_Header, sizeof(WMO_Group_HeaderDef));
 
@@ -148,7 +164,8 @@ void WMO_Group::Load()
 			uint16* doodadsIndexes = (uint16*)m_F->GetDataFromCurrent();
 			for (uint32 i = 0; i < doodadsIndexesCount; i++)
 			{
-				m_DoodadsIndexes.push_back(doodadsIndexes[i]);
+				uint16 index = doodadsIndexes[i];
+				m_DoodadsPlacementIndexes.push_back(index);
 			}
 		}
 		else if (strcmp(fourcc, "MOBN") == 0)
@@ -202,16 +219,11 @@ void WMO_Group::Load()
 
 	//
 
-	WMO_Part_Fog* wf = m_ParentWMO->m_Fogs[m_Header.m_Fogs[0]];
+	/*WMO_Part_Fog* wf = m_ParentWMO->m_Fogs[m_Header.m_Fogs[0]];
 	if (wf->fogDef.largerRadius <= 0)
 		fog = -1; // default outdoor fog..?
 	else
-		fog = m_Header.m_Fogs[0];
-
-	//
-
-
-	initLighting();
+		fog = m_Header.m_Fogs[0];*/
 
 	//
 
@@ -226,16 +238,16 @@ void WMO_Group::Load()
 
 void WMO_Group::initLighting()
 {
-	if (m_Header.flags.FLAG_IS_INDOOR && m_Header.flags.FLAG_HAS_VERTEX_COLORS)
+	/*if (m_Header.flags.FLAG_IS_INDOOR && m_Header.flags.FLAG_HAS_VERTEX_COLORS)
 	{
 		vec3 dirmin(1, 1, 1);
 		float lenmin;
-		/*int lmin;
+		int lmin;
 		for (uint32 i = 0; i < m_DoodadsIndexesCount; i++)
 		{
 			lenmin = 999999.0f * 999999.0f;
 			lmin = 0;
-			DoodadInstance* mi = m_ParentWMO->m_M2Instances[m_DoodadsIndexes[i]];
+			DoodadInstance* mi = m_ParentWMO->m_M2Instances[m_PlacementInfoIndexes[i]];
 			for (uint32 j = 0; j < m_ParentWMO->m_Header.nLights; j++)
 			{
 				WMO_Part_Light* l = m_ParentWMO->m_Lights[j];
@@ -251,25 +263,27 @@ void WMO_Group::initLighting()
 			mi->light = lmin;
 			mi->ldir = dirmin;
 		}
-		*/
 		m_EnableOutdoorLights = false;
 	}
 	else
 	{
 		m_EnableOutdoorLights = true;
-	}
+	}*/
 }
 
 //
 
-void WMO_Group::Render(cmat4 _worldMatrix)
+void WMO_Group::Render(cmat4 _worldMatrix, const WMO_Doodad_SetInfo& _doodadSet)
 {
 	if (!m_PortalsVis)
 	{
 		return;
 	}
 
+	// GROUPS
 	_Render->r.setGeometry(__geom);
+
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Bind();
 	{
@@ -288,6 +302,8 @@ void WMO_Group::Render(cmat4 _worldMatrix)
 		}
 	}
 	_Render->getTechniquesMgr()->m_WMO_GeometryPass->Unbind();
+
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 }
 
 bool WMO_Group::isPointInside(cvec3 _point)

@@ -142,7 +142,7 @@ bool Frustum::cullBox(const BoundingBox& b) const
 	PERF_START(PERF_CULLING);
 
 	// Idea for optimized AABB testing from www.lighthouse3d.com
-	for (uint32 i = 0; i < 6; ++i)
+	for (uint32 i = 0; i < 5; ++i)
 	{
 		cvec3 n = _planes[i].normal;
 

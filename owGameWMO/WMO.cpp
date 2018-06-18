@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // Include
-#include "WMO_LocalPortalContainer.h"
+#include "WMO_InstanceController.h"
 
 // General
 #include "WMO.h"
@@ -20,7 +20,7 @@ WMO::WMO(cstring name) :
 	m_GroupsNames(nullptr),
 	m_Skybox_Filename(nullptr),
 	m_PortalController(nullptr),
-	m_M2Filenames(nullptr)
+	m_DoodadsFilenames(nullptr)
 
 {}
 
@@ -40,15 +40,6 @@ void WMO::CreateInsances(SceneNode* _parent)
 	for (auto& it : m_Groups)
 	{
 		it->CreateInsances(_parent);
-	}
-
-	for (auto& group : m_M2PlacementInfos)
-	{
-		SmartPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_M2Filenames + group.flags.nameIndex);
-		if (mdx)
-		{
-			new WMO_MODD_Instance(_parent, mdx, group);
-		}
 	}
 }
 
@@ -205,25 +196,25 @@ bool WMO::Load()
 		}
 		else if (strcmp(fourcc, "MODS") == 0)
 		{
-			uint32 doodadsSetsCount = size / sizeof(WMO_MODD_SetInfo);
-			WMO_MODD_SetInfo* doodadsSets = (WMO_MODD_SetInfo*)f->GetDataFromCurrent();
+			uint32 doodadsSetsCount = size / sizeof(WMO_Doodad_SetInfo);
+			WMO_Doodad_SetInfo* doodadsSets = (WMO_Doodad_SetInfo*)f->GetDataFromCurrent();
 			assert1(doodadsSetsCount == m_Header.nDoodadSets);
 			for (uint32 i = 0; i < doodadsSetsCount; i++)
 			{
-				m_M2SetInfos.push_back(doodadsSets[i]);
+				m_DoodadsSetInfos.push_back(doodadsSets[i]);
 			}
 		}
 		else if (strcmp(fourcc, "MODN") == 0) // List of filenames for M2 (mdx) models that appear in this WMO.
 		{
-			m_M2Filenames = (char*)f->GetDataFromCurrent();
+			m_DoodadsFilenames = (char*)f->GetDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MODD") == 0) // Information for doodad instances. 40 bytes per doodad instance, nDoodads entries.
 		{
-			uint32 doodadsPlacementsCount = size / sizeof(WMO_MODD_PlacementInfo);
-			WMO_MODD_PlacementInfo* doodadsPlacements = (WMO_MODD_PlacementInfo*)f->GetDataFromCurrent();
+			uint32 doodadsPlacementsCount = size / sizeof(WMO_Doodad_PlacementInfo);
+			WMO_Doodad_PlacementInfo* doodadsPlacements = (WMO_Doodad_PlacementInfo*)f->GetDataFromCurrent();
 			for (uint32 i = 0; i < doodadsPlacementsCount; i++)
 			{
-				m_M2PlacementInfos.push_back(doodadsPlacements[i]);
+				m_DoodadsPlacementInfos.push_back(doodadsPlacements[i]);
 			}
 
 			m_Header.nDoodadDefs = doodadsPlacementsCount; // HACK! INCORRECT SIZE
@@ -251,6 +242,7 @@ bool WMO::Load()
 		f->Seek(nextpos);
 	}
 
+	// Create portal controller
 	if (m_Portals.size() > 0)
 	{
 		m_PortalController = new CWMO_Part_PortalsController(this);
@@ -271,23 +263,25 @@ bool WMO::Load()
 	return true;
 }
 
-void WMO::Render(CWMO_LocalPortalContainer* _localContr, uint32 _doodadSet)
+void WMO::PreRender(CWMO_InstanceController * _localContr)
 {
-	/*for (auto& it : m_Portals)
-	{
-		it->Render(_localContr->getWorld());
-	}*/
-
 	if (m_PortalController != nullptr)
 	{
 		m_PortalController->Update(_localContr, _localContr->getInvWorld() * (_Render->getCamera()->Position));
+	}
+}
+
+void WMO::Render(CWMO_InstanceController* _localContr, const WMO_Doodad_SetInfo& _doodadSet)
+{
+	for (auto& it : m_Portals)
+	{
+		it->Render(_localContr->getWorld());
 	}
 
 	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
 	for (auto& it : m_Groups)
 	{
-		it->Render(_localContr->getWorld());
-		_Render->r.checkError();
+		it->Render(_localContr->getWorld(), _doodadSet);
 	}
 	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
 }

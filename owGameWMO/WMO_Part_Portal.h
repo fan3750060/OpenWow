@@ -4,7 +4,7 @@
 
 // FORWARD BEGIN
 class WMO_Group;
-class CWMO_LocalPortalContainer;
+class CWMO_InstanceController;
 // FORWARD END
 
 class CWMO_Part_Portal
@@ -22,7 +22,7 @@ public:
 	WMO_Group* getGrInner() { return m_GrInner; }
 	WMO_Group* getGrOuter() { return m_GrOuter; }
 
-	bool IsVisible(CWMO_LocalPortalContainer* _localContr, const Plane* _planes, uint32 _planesCount) const;
+	bool IsVisible(CWMO_InstanceController* _localContr, const Plane* _planes, uint32 _planesCount) const;
 	bool IsPositive(cvec3 _InvWorldCamera) const;
 
 private:

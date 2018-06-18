@@ -8,6 +8,7 @@ public:
 
 	void CreateDebugGeom();
 	void PlayAnim(uint16 _anim);
+	void InfoAnim();
 
 	// IGameState
 	bool Init() override;
@@ -37,7 +38,7 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-	SmartM2Ptr backgroundModel;
+	Single_M2_Instance* m2_Model;
 
     // Camera moving
     bool enableFreeCamera;

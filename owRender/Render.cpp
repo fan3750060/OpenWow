@@ -38,6 +38,7 @@ void RenderGL::Init(IOpenGLAdapter* _adapter, HGLRC _context)
 void RenderGL::Set2D()
 {
 	r.setCullMode(R_CullMode::RS_CULL_NONE);
+	r.setFillMode(R_FillMode::RS_FILL_SOLID);
 
 	r.setDepthMask(false);
 	r.setDepthTest(false);

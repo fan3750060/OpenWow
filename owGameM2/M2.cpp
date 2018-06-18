@@ -177,6 +177,11 @@ void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
 	{
 		it.calc(_animationIndex, _time, globalTime);
 	}
+
+	for (auto& it : m_Cameras)
+	{
+		it.calc(_time, globalTime);
+	}
 }
 
 //

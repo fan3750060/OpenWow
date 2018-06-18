@@ -12,7 +12,11 @@ public:
 	{}
 	~UniquePtr()
 	{
-		delete m_Ptr;
+		if (m_Ptr != nullptr)
+		{
+			delete m_Ptr;
+			m_Ptr = nullptr;
+		}
 	}
 
 	T& operator*() const { return *m_Ptr; }
@@ -36,7 +40,11 @@ public:
 	}
 	UniquePtr& operator=(T* ptr)
 	{
-		delete m_Ptr;
+		if (m_Ptr != nullptr)
+		{
+			delete m_Ptr;
+			m_Ptr = nullptr;
+		}
 		m_Ptr = ptr;
 		return *this;
 	}

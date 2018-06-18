@@ -8,6 +8,9 @@ public:
 	Single_M2_Instance(SceneNode* _parent, M2* _m2Object);
 	~Single_M2_Instance();
 
+	M2* getObject() { return m_Object; }
+	CM2_Animator* getAnimator() { return m_Animator; }
+
 	// IUpdatable
 	void Update(double _time, double _dTime) override;
 
@@ -16,7 +19,8 @@ public:
 	void Render3D() override;
 
 private:
-	const SmartM2Ptr	m_Object;
+	SmartM2Ptr			m_Object;
 	CM2_Animator*		m_Animator;
+	uint32				m_CurrentAnimation;
 	bool				m_NeedRecalcAnimation;
 };

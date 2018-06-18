@@ -26,7 +26,12 @@ void GameState_M2Viewer::CreateDebugGeom()
 
 void GameState_M2Viewer::PlayAnim(uint16 _anim)
 {
-	//backgroundModel->m_Animator->PlayAnimation(_anim);
+	m2_Model->getAnimator()->PlayAnimation(_anim);
+}
+
+void GameState_M2Viewer::InfoAnim()
+{
+	m2_Model->getAnimator()->PrintList();
 }
 
 bool GameState_M2Viewer::Init()
@@ -47,14 +52,17 @@ bool GameState_M2Viewer::Init()
 		int pos = path.find("ExData");
 		assert1(pos != -1);
 		path = path.substr(pos + 7);
-		backgroundModel = GetManager<IM2Manager>()->Add(path);
+		M2* model = GetManager<IM2Manager>()->Add(path);
+		m2_Model = new Single_M2_Instance(nullptr, model);
 	}
 	else
 	{
-		backgroundModel = GetManager<IM2Manager>()->Add("World\\Generic\\PassiveDoodads\\Lights\\Torch.m2"/*"Creature\\Ragnaros\\Ragnaros.m2"*/);
+		M2* model = GetManager<IM2Manager>()->Add("Creature\\Ragnaros\\Ragnaros.m2");
+		m2_Model = new Single_M2_Instance(nullptr, model);
 	}
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
+	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
 	_Render->getCamera()->SetNeedUpdate();
 
 	//
@@ -62,7 +70,8 @@ bool GameState_M2Viewer::Init()
 	cameraSprint = false;
 
 
-	ADDCONSOLECOMMAND_CLASS_WITHARGS("play", GameState_M2Viewer, PlayAnim, uint16);
+	ADDCONSOLECOMMAND_CLASS_WITHARGS("a_play", GameState_M2Viewer, PlayAnim, uint16);
+	ADDCONSOLECOMMAND_CLASS("a_info", GameState_M2Viewer, InfoAnim);
 
 	return true;
 }
@@ -115,29 +124,32 @@ void GameState_M2Viewer::Input(double _time, double _dTime)
 
 void GameState_M2Viewer::Update(double _time, double _dTime)
 {
-	if (backgroundModel)
+	if (m2_Model)
 	{
-		backgroundModel->updateEmitters(_dTime);
-		//backgroundModel->Update(_time, _dTime);
+		m2_Model->Update(_time, _dTime);
 	}
+
+	_Render->getCamera()->Update(_time, _dTime);
 }
 
 void GameState_M2Viewer::PreRender3D()
 {
 	_Render->BindRBs();
+	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
 
-	_Render->getTechniquesMgr()->PreRender3D();
-
-	setVisible(backgroundModel != nullptr);
+	setVisible(true);
 }
 
 void GameState_M2Viewer::Render3D()
 {
 	// Debug
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
+	_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(mat4());
 	{
-		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 0.2));
+		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 0.5));
 
 		_Render->r.setGeometry(m_DebugGeom);
 		_Render->r.draw(PRIM_TRILIST, 0, 6);
@@ -146,30 +158,13 @@ void GameState_M2Viewer::Render3D()
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
 	// Geom
-	mat4 worldMatrix;
-	worldMatrix.scale(5);
-	backgroundModel->Render(worldMatrix);
-	
-
-
-	/*
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->SetPVW();
-	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(1.0, 1.0, 1.0, 1.0));
-	_Render->r.setGeometry(tt->__geom);
-	_Render->r.draw(PRIM_TRILIST, 0, 24);
-	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
+	m2_Model->PreRender3D();
+	m2_Model->Render3D();
 }
 
 void GameState_M2Viewer::PostRender3D()
 {
 	_Render->UnbindRBs();
-
 	_Render->PostprocessSimple();
 }
 
@@ -179,18 +174,18 @@ void GameState_M2Viewer::RenderUI()
 	(
 		vec2(5, m_VideoSettings.windowSizeY - 44),
 		"CamPos: [" + 
-		to_string(-(_Render->getCamera()->Position.x - C_ZeroPoint)) + "], [" +
-		to_string(-(_Render->mainCamera->Position.z - C_ZeroPoint)) + "], [" + 
-		to_string(_Render->mainCamera->Position.y) + "]"
+		to_string(_Render->getCamera()->Position.x) + "], [" +
+		to_string(_Render->getCamera()->Position.y) + "], [" +
+		to_string(_Render->getCamera()->Position.z) + "]"
 	);
 	
 	_Render->RenderText
 	(
 		vec2(5, m_VideoSettings.windowSizeY - 22), 
 		"CamRot: [" + 
-		to_string(_Render->mainCamera->Direction.x) + "], [" + 
-		to_string(_Render->mainCamera->Direction.y) + "], [" + 
-		to_string(_Render->mainCamera->Direction.z) + "]"
+		to_string(_Render->getCamera()->Direction.x) + "], [" +
+		to_string(_Render->getCamera()->Direction.y) + "], [" +
+		to_string(_Render->getCamera()->Direction.z) + "]"
 	);
 }
 

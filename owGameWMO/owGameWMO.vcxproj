@@ -23,8 +23,9 @@
     <ClCompile Include="WMO_Builder.cpp" />
     <ClCompile Include="WMO_Group_Part_Batch.cpp" />
     <ClCompile Include="WMO_Liquid.cpp" />
-    <ClCompile Include="WMO_LocalPortalContainer.cpp" />
-    <ClCompile Include="WMO_MODD_Instance.cpp" />
+    <ClCompile Include="WMO_InstanceController.cpp" />
+    <ClCompile Include="WMO_Liquid_Instance.cpp" />
+    <ClCompile Include="WMO_Doodad_Instance.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -48,8 +49,9 @@
     <ClInclude Include="WMO_Group_Part_Batch.h" />
     <ClInclude Include="WMO_Headers.h" />
     <ClInclude Include="WMO_Liquid.h" />
-    <ClInclude Include="WMO_LocalPortalContainer.h" />
-    <ClInclude Include="WMO_MODD_Instance.h" />
+    <ClInclude Include="WMO_InstanceController.h" />
+    <ClInclude Include="WMO_Liquid_Instance.h" />
+    <ClInclude Include="WMO_Doodad_Instance.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WMO.h" />
     <ClInclude Include="WMO_Part_Fog.h" />

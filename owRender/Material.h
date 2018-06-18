@@ -5,6 +5,7 @@ class Material
 public:
 	Material();
 	void Set();
+	void Restore();
 
 public:
 	

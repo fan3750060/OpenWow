@@ -28,9 +28,9 @@ void CGroupDistances::InitDefault()
 	WMO_MODD_Distance = 64.0f ;
 
 	// DEBUG
-	ADT_MCNK_Distance *= 3;
+	ADT_MCNK_Distance *= 2;
 	ADT_MCNK_HighRes_Distance *= 0.75f;
-	ADT_MDX_Distance *= 3;
+	ADT_MDX_Distance *= 2;
 	ADT_WMO_Distance *= 3;
-	WMO_MODD_Distance *= 3;
+	WMO_MODD_Distance *= 5;
 }

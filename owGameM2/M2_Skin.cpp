@@ -67,6 +67,8 @@ void CM2_Skin::Draw()
 				false
 			);
 		}
+
+		p->__material.Restore();
 	}
 }
 

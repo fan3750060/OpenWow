@@ -11,7 +11,8 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 {
     assert1(m_Object);
 	m_UniqueId = _placementInfo.uniqueId;
-	m_DoodadSetIndex = _placementInfo.doodadSetIndex;
+	uint16 doodadSetIndex = _placementInfo.doodadSetIndex;
+	m_DoodadSetInfo = _wmoObject->m_DoodadsSetInfos[doodadSetIndex];
 
 	// Scene node params
 	{
@@ -30,7 +31,7 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		m_Bounds.calculateCenter();
 	}
 
-	m_LocalPortalController = new CWMO_LocalPortalContainer(m_Object, getAbsTrans());
+	m_InstanceController = new CWMO_InstanceController(m_Object, getAbsTrans());
 
 	m_Object->CreateInsances(this);
 
@@ -60,19 +61,20 @@ void ADT_WMO_Instance::PreRender3D()
 	}
 
 	// Check distance to camera
-	float distToCamera = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length();
-	if (distToCamera > m_DistancesSettings.ADT_WMO_Distance)
+	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
+	if (distToCamera2D > m_DistancesSettings.ADT_WMO_Distance)
 	{
 		return;
 	}
 
 	// Frustrum culling
-	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	if (_Render->getCamera()->_frustum.cullBox(getBounds()))
 	{
 		return;
 	}
 
 	m_AlreadyDraw.insert(m_UniqueId);
+
 	setVisible(true);
 }
 
@@ -85,7 +87,8 @@ void ADT_WMO_Instance::Render3D()
 
 	//_Render->DrawBoundingBox(m_Bounds);
 
-	m_Object->Render(m_LocalPortalController, m_DoodadSetIndex);
+	m_Object->PreRender(m_InstanceController);
+	m_Object->Render(m_InstanceController, m_DoodadSetInfo);
 	PERF_INC(PERF_MAP_MODELS_WMOs);
 }
 

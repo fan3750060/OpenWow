@@ -48,3 +48,11 @@ void Material::Set()
 	}
 
 }
+
+void Material::Restore()
+{
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	_Render->r.setDepthTest(true);
+	_Render->r.setDepthMask(true);
+}

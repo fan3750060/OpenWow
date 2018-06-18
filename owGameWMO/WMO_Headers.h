@@ -96,20 +96,26 @@ struct WMO_LightDef
 
 // Doodads
 
-struct WMO_MODD_SetInfo
+struct WMO_Doodad_SetInfo
 {
-	char name[20];  // Set name
-	uint32 start;   // index of first doodad instance in this set
-	uint32 size;    // number of doodad instances in this set
-	uint32 unk0;     // always 0
+	WMO_Doodad_SetInfo() :
+		name("none"),
+		start(UINT32_MAX),
+		size(UINT32_MAX)
+	{}
 
-	bool InSet(uint32 _index)
+	char name[20];		// Set name
+	uint32 start;		// index of first doodad instance in this set
+	uint32 size;		// number of doodad instances in this set
+	uint32 unk0;		// always 0
+
+	bool InSet(uint32 _index) const
 	{
 		return ((_index >= start) && (_index < (start + size)));
 	}
 };
 
-struct WMO_MODD_PlacementInfo
+struct WMO_Doodad_PlacementInfo
 {
 	struct Flags
 	{

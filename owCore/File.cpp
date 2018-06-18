@@ -5,20 +5,23 @@
 
 CFile::CFile(cstring _fullFileName) :
 	m_Name(_fullFileName),
-	m_Path("")
+	m_Path(""),
+	m_RefsCount(0)
 {
 	ParsePathAndExtension();
 }
 
 CFile::CFile(cstring _name, cstring _path) :
 	m_Name(_name),
-	m_Path(_path)
+	m_Path(_path),
+	m_RefsCount(0)
 {
 	ParsePathAndExtension();
 }
 
 CFile::~CFile()
 {
+	Log::Info("File[%s] closed.", Path_Name().c_str());
 }
 
 void CFile::FixFilePath(string& _string)

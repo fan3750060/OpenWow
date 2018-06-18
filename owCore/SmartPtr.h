@@ -7,6 +7,7 @@ struct DefaultDeleter
 	{
 		static_assert(0 < sizeof(T), "can't delete an incomplete type");
 		delete _Ptr;
+		_Ptr = nullptr;
 	}
 };
 

@@ -3,7 +3,6 @@
 #include "WMO_Headers.h"
 
 #include "WMO_Group.h"
-#include "WMO_MODD_Instance.h"
 #include "WMO_Part_Fog.h"
 #include "WMO_Part_Light.h"
 #include "WMO_Part_Material.h"
@@ -11,7 +10,7 @@
 #include "WMO_Part_PortalsController.h"
 
 // FORWARD BEGIN
-class CWMO_LocalPortalContainer;
+class CWMO_InstanceController;
 // FORWARD END
 
 class WMO : public CRefItem
@@ -24,7 +23,8 @@ public:
 	void CreateInsances(SceneNode* _parent);
 	bool Load();
 
-	void Render(CWMO_LocalPortalContainer* _localContr, uint32 _doodadSet);
+	void PreRender(CWMO_InstanceController* _localContr);
+	void Render(CWMO_InstanceController* _localContr, const WMO_Doodad_SetInfo& _doodadSet);
 
 	bool drawSkybox();
 
@@ -82,9 +82,9 @@ public:
 
 
 	//-- Doodads --//
-	vector<WMO_MODD_SetInfo>				m_M2SetInfos;				// MODS chunk
-	char*									m_M2Filenames;         // MODN chunk        
-	vector<WMO_MODD_PlacementInfo>			m_M2PlacementInfos;
+	vector<WMO_Doodad_SetInfo>				m_DoodadsSetInfos;			// MODS chunk
+	char*									m_DoodadsFilenames;			// MODN chunk        
+	vector<WMO_Doodad_PlacementInfo>		m_DoodadsPlacementInfos;
 
 
 	//-- Fog --//

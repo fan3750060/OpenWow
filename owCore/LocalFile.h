@@ -7,7 +7,7 @@ class CLocalFile : public CFile
 public:
 	CLocalFile(cstring _fullFileName);
 	CLocalFile(cstring _name, cstring _path);
-	~CLocalFile();
+	~CLocalFile() override;
 
 	// IFile
 	bool Open() override;

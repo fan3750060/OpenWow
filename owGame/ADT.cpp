@@ -264,7 +264,7 @@ bool ADT::Load()
 	
 	//-- MDXs -------------------------------------------------------------------------
 
-	/*for (auto& it : m_MDXsPlacementInfo)
+	for (auto& it : m_MDXsPlacementInfo)
 	{
 		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
@@ -273,7 +273,7 @@ bool ADT::Load()
 			m_MDXsInstances.push_back(inst);
 			m_Bounds.makeUnion(inst->getBounds());
 		}
-	}*/
+	}
 
 	//---------------------------------------------------------------------------------
 

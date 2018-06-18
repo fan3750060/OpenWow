@@ -130,7 +130,8 @@ void CSceneManager::Render3D()
 	{
 		if (m_RenderQueueDebug)
 		{
-			_Render->DrawBoundingBox(it->getBounds(), it->getDebugColor());
+			//_Render->DrawBoundingBox(it->getBounds(), it->getDebugColor());
+			it->RenderDebug3D();
 			continue;
 		}
 

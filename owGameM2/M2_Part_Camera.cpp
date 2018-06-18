@@ -9,45 +9,53 @@ CM2_Part_Camera::CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoop
 	nearclip = _proto.near_clip;
 	farclip = _proto.far_clip;
 
-	pos = _proto.position_base.toXZmY();
-	target = _proto.target_position_base.toXZmY();
+	m_PositionBase = _proto.position_base.toXZmY();
+	m_TargetBase = _proto.target_position_base.toXZmY();
 
 	tPos.init(_proto.positions, f, global, Fix_XZmY);
 	tTarget.init(_proto.target_position, f, global, Fix_XZmY);
 
 	tRoll.init(_proto.roll, f, global);
-	fov = _proto.fov;
-
-
-	camera.m_UseDir = true;
+	fov = _proto.fov / sqrtf(1.0f + powf(m_VideoSettings.aspectRatio, 2.0f));;
 }
 
-void CM2_Part_Camera::setup(uint32 time, uint32 globalTime)
+void CM2_Part_Camera::calc(uint32 time, uint32 globalTime)
 {
-	vec3 p;
-	vec3 t;
 	if (tPos.uses(0))
 	{
-		p = pos + tPos.getValue(0, time, globalTime);
+		pResult = tPos.getValue(0, time, globalTime);
 	}
+
 	if (tTarget.uses(0))
 	{
-		t = target + tTarget.getValue(0, time, globalTime);
+		tResult = tTarget.getValue(0, time, globalTime);
 	}
-	vec3 u(0, 1, 0);
 
 	if (tRoll.uses(0))
 	{
-		roll = tRoll.getValue(0, time, globalTime) / Math::Pi * 180.0f;
+		rollResult = tRoll.getValue(0, time, globalTime) / (Math::Pi * 180.0f);
 	}
+}
 
-	camera.setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
 
-	camera.Position = p;
-	camera.Direction = t - p;
-	camera.CameraUp = u;
 
-	camera.SetNeedUpdate();
-	camera.Update(0,0);
-	//camera.CreateRenderable();
+void CM2_Part_Camera::setup(cvec3 _startPoint, float rotate)
+{
+	vec3 u(0, 1, 0);
+
+	vec3 pp = m_PositionBase + pResult;
+	vec3 tt = m_TargetBase + tResult;
+
+	_Render->getCamera()->setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
+	_Render->getCamera()->Position = pp;
+	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(pp, tt, u));
+}
+
+void CM2_Part_Camera::getParams(vec3* _position, vec3* _target, float* _fov, float* _nearPlane, float* _farPlane)
+{
+	*_position = m_PositionBase + pResult;
+	*_target = m_TargetBase + tResult;
+	*_fov = fov;
+	*_nearPlane = nearclip;
+	*_farPlane = farclip;
 }

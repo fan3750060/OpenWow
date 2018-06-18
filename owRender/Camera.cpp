@@ -18,7 +18,7 @@ Camera::Camera(vec3 position, vec3 up, float roll, float pitch) :
 	Roll = roll;
 	Pitch = pitch;
 
-	_Bindings->RegisterUpdatableObject(this);
+	//_Bindings->RegisterUpdatableObject(this);
 }
 
 Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float roll, float pitch) :
@@ -33,7 +33,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	Roll = roll;
 	Pitch = pitch;
 
-	_Bindings->RegisterUpdatableObject(this);
+	//_Bindings->RegisterUpdatableObject(this);
 }
 
 Camera::~Camera()
