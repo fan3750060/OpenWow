@@ -6,17 +6,17 @@
 
 #define GL_VERSION_NUM 43
 
-#   define WIN32_LEAN_AND_MEAN 1
-#   ifndef NOMINMAX
-#       define NOMINMAX
-#   endif
-#   include <windows.h>
-#   include <stddef.h>
-#   define GLAPI __declspec( dllimport )
-#   define GLAPIENTRY _stdcall
-#   define GLAPIENTRYP _stdcall *
+#define WIN32_LEAN_AND_MEAN 1
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#include <stddef.h>
+#define GLAPI __declspec(dllimport)
+#define GLAPIENTRY _stdcall
+#define GLAPIENTRYP _stdcall*
 
-bool initOpenGLExtensions();
+bool initOpenGLExtensions(IOpenGLAdapter* _adapter);
 
 // =================================================================================================
 // OpenGL 2.1 functionality that has not been deprecated by GL3
@@ -331,8 +331,6 @@ extern "C"
 	GLAPI void GLAPIENTRY glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 }  // extern "C"
 
-#endif 
-
 typedef void (GLAPIENTRYP PFNGLGETTEXIMAGEPROC) (GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels);
 typedef void (GLAPIENTRYP PFNGLPOLYGONMODEPROC)(GLenum face, GLenum mode);
 typedef void (GLAPIENTRYP PFNGLCLEARDEPTH) (GLclampd depth);
@@ -342,6 +340,9 @@ extern PFNGLGETTEXIMAGEPROC glGetTexImage;
 extern PFNGLPOLYGONMODEPROC glPolygonMode;
 extern PFNGLCLEARDEPTH glClearDepth;
 extern PFNGLDRAWBUFFERPROC glDrawBuffer;
+
+#endif 
+
 
 #if (GL_VERSION_NUM >= 12)
 

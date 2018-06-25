@@ -23,9 +23,6 @@
       <Filter>Controls</Filter>
     </ClCompile>
     <ClCompile Include="UIMgr.cpp" />
-    <ClCompile Include="UIWoWMinimapSelector.cpp">
-      <Filter>WoW</Filter>
-    </ClCompile>
     <ClCompile Include="UIWoWWindow.cpp">
       <Filter>WoW</Filter>
     </ClCompile>
@@ -60,9 +57,6 @@
       <Filter>Controls</Filter>
     </ClInclude>
     <ClInclude Include="UIMgr.h" />
-    <ClInclude Include="UIWoWMinimapSelector.h">
-      <Filter>WoW</Filter>
-    </ClInclude>
     <ClInclude Include="UIWoWWindow.h">
       <Filter>WoW</Filter>
     </ClInclude>

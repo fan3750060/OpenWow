@@ -29,13 +29,13 @@ out struct VSOutput
 {
 	vec3 position;
 	vec3 normal;
-	vec2 tc;
+	vec2 tc0;
+	vec2 tc1;
 } VSout;
 
 void main(void)
 {
 	vec4 newVertex = vec4(0.0f);
-	vec4 newNormal = vec4(0.0f);
 	
 	if (gIsAnimated)
 	{
@@ -51,22 +51,20 @@ void main(void)
 		blendIndicess[2] = (blendIndices & 0x0000FF00u >>  8) & 0x000000FFu;
 		blendIndicess[3] = (blendIndices & 0x000000FFu      ) & 0x000000FFu;
 
-		for(int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++)
 		{
-			if(blendWeights[i] > 0u)
+			if (blendWeights[i] > 0u)
 			{
 				newVertex += gBones[blendIndicess[i]] * vec4(position, 1.0f) * (float(blendWeights[i]) / 255.0f);
-				newNormal += gBones[blendIndicess[i]] * vec4(normal, 1.0f) * (float(blendWeights[i]) / 255.0f);
 			}
 		}
 	}
 	else
 	{
 		newVertex = vec4(position, 1.0f);
-		newNormal = vec4(normal, 1.0f);
 	}
 		
-	if (gBillboard)
+	/*if (gBillboard)
 	{
 		mat4 VW = gView * gWorld;
 			
@@ -85,30 +83,32 @@ void main(void)
 		VW[2][1] = 0;
 	    VW[2][2] = 0;
 		
-		/*mat4 bbView = mat4
-		(
-        vec4(-1.0,0.0,0.0,0.0),
-        vec4(0.0,1.0,0.0,0.0),
-        vec4(0.0,0.0,1.0,0.0),
-        gView[3] 
-		);*/
+		mat4 bbView = mat4
+		//(
+        //vec4(-1.0,0.0,0.0,0.0),
+        //vec4(0.0,1.0,0.0,0.0),
+        //vec4(0.0,0.0,1.0,0.0),
+        //gView[3] 
+		//);
 		
 		gl_Position = gProjection * VW * newVertex;
 	}
-	else
+	else*/
 	{
 		gl_Position = gProjection * gView * gWorld * newVertex;
 	}
 	
 	VSout.position = (gWorld * vec4(newVertex.xyz, 1.0f)).xyz;
-	VSout.normal = (gWorld * vec4(newNormal.xyz, 0.0)).xyz;
+	VSout.normal = (gWorld * vec4(normal.xyz, 0.0)).xyz;
 	
 	if (gTextureAnimEnable)
 	{
-		VSout.tc = (gTextureAnimMatrix * vec4(tc0, 1.0, 1.0)).xy;
+		VSout.tc0 = (gTextureAnimMatrix * vec4(tc0, 1.0, 1.0)).xy;
+		VSout.tc1 = (gTextureAnimMatrix * vec4(tc1, 1.0, 1.0)).xy;
 	}
 	else
 	{
-		VSout.tc = tc0;
+		VSout.tc0 = tc0;
+		VSout.tc1 = tc1;
 	}
 };

@@ -24,38 +24,48 @@ struct SM2_SkinSection
 								// In 2.x this is the amount of of bones up the parent-chain affecting the submesh --NaK
 	uint16 centerBoneIndex;
 	vec3   centerPosition;      // Average position of all the vertices in the sub mesh.
+
+#if VERSION >= VERSION_BC
+	vec3 sortCenterPosition;	// The center of the box when an axis aligned box is built around the vertices in the submesh.
+	float sortRadius;           // Distance of the vertex farthest from CenterBoundingBox.
+#endif
 };
 
 struct SM2_SkinBatch
 {
 	struct Flags
 	{
-		uint8 Flag_InvertSomething : 1;
-		uint8 Flag_Transform : 1;
-		uint8 Flag_Projected : 1;
+		uint8 InvertSomething : 1;
+		uint8 Transform : 1;
+		uint8 Projected : 1;
 		uint8 unk0 : 1;
-		uint8 Flag_TextureStatic : 1;
+		uint8 TextureStatic : 1;
 		uint8 : 3;
 	} flags;
+
 	int8 priorityPlane;
 
-	uint16 shader_id;
-	uint16 m2SkinIndex;                // A duplicate entry of a submesh from the list above.
+	int16 shader_id;
+	uint16 skinSectionIndex;		// A duplicate entry of a submesh from the list above.
+
 	uint16 geosetIndex;
 
-	int16 colorIndex;                 // A Color out of the Colors-Block or -1 if none.
-	uint16 materialIndex;              // The renderflags used on this texture-unit.
-	uint16 materialLayer;              // Capped at 7 (see CM2Scene::BeginDraw)
-	uint16 textureCount;               // 1 to 4. Also seems to be the number of m_DiffuseTextures to load, starting at the texture lookup in the next field (0x10).
-
-	uint16 texture_Index;				// Index into Texture lookup table
-	uint16 texture_CoordIndex;			// Index into the texture unit lookup table.
-	uint16 texture_WeightIndex;			// Index into transparency lookup table.
-	uint16 texture_TransformIndex;		// Index into uvanimation lookup table. 
+	uint16 colorIndex;				// A Color out of the Colors-Block or -1 if none.
+	uint16 materialIndex;			// The renderflags used on this texture-unit.
+	uint16 materialLayer;			// Capped at 7 (see CM2Scene::BeginDraw)
+	uint16 textureCount;			// 1 to 4. Also seems to be the number of m_DiffuseTextures to load, starting at the texture lookup in the next field (0x10).
+	uint16 texture_Index;			// Index into Texture lookup table
+	uint16 texture_CoordIndex;		// Index into the texture unit lookup table.
+	uint16 texture_WeightIndex;		// Index into transparency lookup table.
+	uint16 texture_TransformIndex;	// Index into uvanimation lookup table. 
 };
 
 struct SM2_SkinProfile
 {
+#if (VERSION >= VERSION_WotLK)
+	uint32_t magic;                         // 'SKIN'
+#endif
+
 	M2Array<uint16>				vertices;
 	M2Array<uint16>				indices;
 	M2Array<SM2_SkinBones>		bones;

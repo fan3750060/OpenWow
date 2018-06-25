@@ -18,10 +18,11 @@ public:
 	void RenderNormals(cmat4 _worldMatrix);
 
 private:
-	M2*						m_MDX;
-	vector<MDX_Skin_Batch*>		m_Batches;
+	M2*						m_ParentM2;
+	vector<M2_Skin_Batch*>		m_Batches;
 
 	SmartGeomPtr				__geom;
 	SmartGeomPtr				__geomDebugNormals;
-	vector<bool>				m_VisibleSubmeshes;
+
+	CGroupQuality& m_QualitySettings;
 };

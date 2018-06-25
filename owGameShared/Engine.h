@@ -3,14 +3,14 @@
 class CEngine : public IEngine
 {
 public:
-	CEngine(IOpenGLAdapter* _OpenGLAdapter);
+	CEngine();
 	~CEngine();
 
+	void Init(IOpenGLAdapter* _OpenGLAdapter);
 	void SetArguments(int argumentCount, char* arguments[]);
 
 	// IEngine
 	bool Tick();
-	IOpenGLAdapter* GetAdapter() override { return m_OpenGLAdapter; }
 	uint8 GetArgumentsCount() const override { return m_Arguments.size(); };
 	string GetArgument(uint8 index) const override { return m_Arguments[index]; }
 	uint32 GetFPS() const override { return m_FPS; }
@@ -28,6 +28,4 @@ private:
 	uint32 t;
 	uint32 last_t;
 	uint32 _time;
-
-	IOpenGLAdapter* m_OpenGLAdapter;
 };

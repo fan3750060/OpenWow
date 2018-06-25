@@ -1,20 +1,36 @@
 #pragma once
 
-struct MDX_Skin_Batch
+#include "M2_Part_Material.h"
+
+// FORWARD BEGIN
+class CM2_Skin_Builder;
+// FORWARD END
+
+class M2_Skin_Batch
 {
-	MDX_Skin_Batch() :
-		m_IsBilldoard(false)
-	{}
+	friend CM2_Skin_Builder;
+public:
+	M2_Skin_Batch(const M2* _parentM2);
 
-    uint16 m2SkinIndex;
+	void Render();
 
-	int16    __colorIndex;
-	uint16    __textureWeight;
-	int16     __textureAnims;
-	int       __blendMode;
-	Material  __material;
+private:
+	const M2*							m_ParentM2;
 
-	bool m_IsBilldoard;
+	uint32								m_SkinIndex;
+	SM2_SkinSection						m_SkinSection;
 
-	SM2_SkinSection m_SkinSection;
+	const CM2_Part_Color*				color; 
+	const CM2_Part_Material*			material;
+	vector<const CM2_Part_Texture*>		m_Textures;
+	int16								texture_Unit;
+	const CM2_Part_TextureWeight*		texture_WeightIndex;
+	const CM2_Part_TextureTransform*	texture_Transform;
+
+	bool								m_IsBilldoard;
+
+	int32 newShader;
+
+
+	CGroupQuality& m_QualitySettings;
 };

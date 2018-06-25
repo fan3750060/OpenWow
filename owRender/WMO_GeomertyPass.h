@@ -7,9 +7,12 @@ class CWMO_GeomertyPass : public GeometryBase
 public:
     CWMO_GeomertyPass(RenderDevice* _RenderDevice) : GeometryBase(_RenderDevice, "shaders/WMO")
     {
-        gColorMap = getLocation("gColorMap");
+        gColorMap[0] = getLocation("gColorMap0");
+		gColorMap[1] = getLocation("gColorMap1");
+		gColorMap[2] = getLocation("gColorMap2");
         gSpecularMap = getLocation("gSpecularMap");
 
+		gBlendMode = getLocation("gBlendMode");
 
         gHasMOCV = getLocation("gHasMOCV");
 
@@ -17,9 +20,9 @@ public:
         gAmbColor = getLocation("gAmbColor");
     }
 
-    inline void SetColorTextureUnit(int TextureUnit)
+    inline void SetColorTextureUnit(int index, int TextureUnit)
     {
-        setTexture(gColorMap, TextureUnit);
+        setTexture(gColorMap[index], TextureUnit);
     }
 
     inline void SetSpecularTextureUnit(int TextureUnit)
@@ -28,6 +31,11 @@ public:
     }
 
     //
+
+	void SetBlendMode(int _blendMode)
+	{
+		setInt(gBlendMode, _blendMode);
+	}
 
     void SetHasMOCV(bool hasMOCV)
     {
@@ -44,8 +52,11 @@ public:
     }
 
 private:
-    int32 gColorMap;
+    int32 gColorMap[3];
     int32 gSpecularMap;
+
+	int32 gBlendMode;
+
     int32 gHasMOCV;
 	int32 gUseAmbColor;
     int32 gAmbColor;

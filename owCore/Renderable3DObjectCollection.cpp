@@ -5,11 +5,6 @@
 
 // Additional
 #include "BaseManager.h"
-#include "Perfomance.h"
-
-
-
-
 
 bool CRenderable3DObjectCollection::RegisterObject(IRenderable3D* _uiObject, uint32 _DrawOrder)
 {
@@ -32,7 +27,7 @@ void CRenderable3DObjectCollection::UnregisterObject(IRenderable3D* _uiObject)
 	assert1(GetBaseManager()->GetPhase() != Phase_Pre3D && GetBaseManager()->GetPhase() != Phase_3D && GetBaseManager()->GetPhase() != Phase_Post3D);
 }
 
-void CRenderable3DObjectCollection::Render3D()
+void CRenderable3DObjectCollection::Render3D(IPerfomance* _perfomance)
 {
 	if (m_ObjectsNeedSort)
 	{
@@ -40,39 +35,48 @@ void CRenderable3DObjectCollection::Render3D()
 		m_ObjectsNeedSort = false;
 	}
 
-	PERF_START(PERF_PHASE_PRE3D);
-	GetBaseManager()->SetPhase(Phase_Pre3D);
-	for (auto& it : m_Objects)
+	_perfomance->Start(PERF_PHASE_PRE3D);
 	{
-		it->PreRender3D();
+		GetBaseManager()->SetPhase(Phase_Pre3D);
+		for (auto& it : m_Objects)
+		{
+			it->setVisible(it->PreRender3D());
+			_perfomance->Inc(PERF_PHASE_PRE3D);
+		}
 	}
-	PERF_STOP(PERF_PHASE_PRE3D);
+	_perfomance->Stop(PERF_PHASE_PRE3D);
 
 	//--
 
-	PERF_START(PERF_PHASE_3D);
-	GetBaseManager()->SetPhase(Phase_3D);
-	for (auto& it : m_Objects)
+	_perfomance->Start(PERF_PHASE_3D);
 	{
-		if (it->isVisible())
+		GetBaseManager()->SetPhase(Phase_3D);
+		for (auto& it : m_Objects)
 		{
-			it->Render3D();
+			if (it->isVisible())
+			{
+				it->Render3D();
+				_perfomance->Inc(PERF_PHASE_3D);
+			}
 		}
 	}
-	PERF_STOP(PERF_PHASE_3D);
+	_perfomance->Stop(PERF_PHASE_3D);
 
 	//--
 
-	PERF_START(PERF_PHASE_POST3D);
-	GetBaseManager()->SetPhase(Phase_Post3D);
-	for (auto& it : m_Objects)
+	_perfomance->Start(PERF_PHASE_POST3D);
 	{
-		if (it->isVisible())
+		GetBaseManager()->SetPhase(Phase_Post3D);
+		for (auto& it : m_Objects)
 		{
-			it->PostRender3D();
+			if (it->isVisible())
+			{
+				it->PostRender3D();
+				_perfomance->Inc(PERF_PHASE_POST3D);
+			}
 		}
 	}
-	PERF_STOP(PERF_PHASE_POST3D);
+	_perfomance->Stop(PERF_PHASE_POST3D);
 
 	GetBaseManager()->SetPhase(Phase_NONE);
 }

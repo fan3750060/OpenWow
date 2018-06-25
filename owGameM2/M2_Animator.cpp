@@ -19,18 +19,18 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 	{
 		DBÑ_AnimationDataRecord* record = (i->second);
 
-		if (record->Get_ID() >= m_M2->m_SequencesLookup.size())
+		if (record->Get_ID() >= m_M2->m_Sequences.size())
 		{
 			break;
 		}
 
-		int16 indexIntoSequences = m_M2->m_SequencesLookup[record->Get_ID()];
+		/*int16 indexIntoSequences = m_M2->m_Sequences[record->Get_ID()];
 		if (indexIntoSequences == -1)
 		{
 			continue;
-		}
+		}*/
 
-		CM2_Animation* animation = new CM2_Animation(m_M2, m_M2->m_Sequences[indexIntoSequences], indexIntoSequences, record->Get_Name());
+		CM2_Animation* animation = new CM2_Animation(m_M2, m_M2->m_Sequences[record->Get_ID()], record->Get_ID(), record->Get_Name());
 		m_Animations.insert(make_pair(record->Get_ID(), animation));
 	}
 
@@ -82,7 +82,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 		return;
 	}
 
-	animtime += (_dTime * 3.0);
+	animtime += (_dTime * 1.0);
 	m_CurrentTime = static_cast<uint32>(m_CurrentAnimation->getStart() + animtime);
 
 	// Animation don't ended

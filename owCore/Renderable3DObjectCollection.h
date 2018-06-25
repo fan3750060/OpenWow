@@ -16,7 +16,7 @@ public:
 	bool RegisterObject(IRenderable3D* _uiObject, uint32 _DrawOrder = 0);
 	void UnregisterObject(IRenderable3D* _uiObject);
 
-	void Render3D();
+	void Render3D(IPerfomance* _perfomance);
 
 	void SetNeedSort() { m_ObjectsNeedSort = true; }
 

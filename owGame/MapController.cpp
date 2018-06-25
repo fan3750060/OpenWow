@@ -7,6 +7,7 @@
 #include "WorldController.h"
 #include "Map_Shared.h"
 
+
 MapController::MapController() :
 	m_WDT(nullptr),
 	m_WDL(nullptr)
@@ -21,6 +22,16 @@ MapController::MapController() :
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
 	AddManager<IMapManager>(this);
+
+
+	mProvider = nullptr;
+	dir = nullptr;
+
+	/*mProvider = new CMinimapProvider;
+	mProvider->Init();
+
+	dir = mProvider->getMinimap("Kalimdor");
+	dir->Load();*/
 }
 
 MapController::~MapController()
@@ -263,9 +274,9 @@ uint32 MapController::GetAreaID()
     return curChunk->header.areaid;
 }
 
-void MapController::PreRender3D()
+bool MapController::PreRender3D()
 {
-	setVisible(true);
+	return true;
 }
 
 bool MapController::IsTileInCurrent(ADT* _mapTile)

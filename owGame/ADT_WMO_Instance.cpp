@@ -4,12 +4,8 @@
 #include "ADT_WMO_Instance.h"
 
 ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo) :
-	SceneNode(_parent),
-    m_Object(_wmoObject),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
-	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
+	CWMO_Base_Instance(_parent, _wmoObject)
 {
-    assert1(m_Object);
 	m_UniqueId = _placementInfo.uniqueId;
 	uint16 doodadSetIndex = _placementInfo.doodadSetIndex;
 	m_DoodadSetInfo = _wmoObject->m_DoodadsSetInfos[doodadSetIndex];
@@ -23,72 +19,42 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
 		m_Rotate = vec3(rotate.z, rotate.y, rotate.x);
-		//
+		// Matrix
 		CalculateMatrix();
-		//
+		// Bounds
 		m_Bounds.setMin(_placementInfo.boundingBox.min); // Don't use from WMO model!!!
 		m_Bounds.setMax(_placementInfo.boundingBox.max);
 		m_Bounds.calculateCenter();
 	}
 
-	m_InstanceController = new CWMO_InstanceController(m_Object, getAbsTrans());
-
-	m_Object->CreateInsances(this);
-
-	setDrawOrder(21);
-	setDebugColor(vec4(0.0f, 0.0f, 1.0f, 1.0f));
-	setSelectable();
-	//_Bindings->RegisterUpdatableObject(this);
+	InitTransform();
 }
 
 ADT_WMO_Instance::~ADT_WMO_Instance()
 {
-	//_Bindings->UnregisterUpdatableObject(this);
+	//Log::Info("ADT_WMO Deleted");
 }
 
-void ADT_WMO_Instance::Update(double _time, double _dTime)
+bool ADT_WMO_Instance::PreRender3D()
 {
-
-}
-
-void ADT_WMO_Instance::PreRender3D()
-{
-	setVisible(false);
-
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		return;
+		return false;
 	}
 
-	// Check distance to camera
-	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
-	if (distToCamera2D > m_DistancesSettings.ADT_WMO_Distance)
+	if (!CWMO_Base_Instance::PreRender3D())
 	{
-		return;
-	}
-
-	// Frustrum culling
-	if (_Render->getCamera()->_frustum.cullBox(getBounds()))
-	{
-		return;
+		return false;
 	}
 
 	m_AlreadyDraw.insert(m_UniqueId);
 
-	setVisible(true);
+	return true;
 }
 
 void ADT_WMO_Instance::Render3D()
 {
-	if (!m_QualitySettings.draw_map_wmo)
-	{
-		return;
-	}
-
-	//_Render->DrawBoundingBox(m_Bounds);
-
-	m_Object->PreRender(m_InstanceController);
-	m_Object->Render(m_InstanceController, m_DoodadSetInfo);
+	CWMO_Base_Instance::Render3D();
 	PERF_INC(PERF_MAP_MODELS_WMOs);
 }
 

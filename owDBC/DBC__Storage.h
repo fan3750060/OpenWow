@@ -17,7 +17,13 @@
 #include "DBC_LightSkyBox.h"
 #include "DBC_LiquidType.h"
 #include "DBC_LoadingScreen.h"
+
+#if (VERSION == VERSION_Vanila)
 #include "DBC_Map.h"
+#elif (VERSION == VERSION_WotLK)
+#include "DBC_Map_WotLK.h"
+#endif
+
 #include "DBC_TerrainType.h"
 #include "DBC_WMOAreaTable.h"
 

@@ -13,6 +13,13 @@ in VSOutput VSout;
 
 // Uniforms
 uniform sampler2D gColorMap;
+uniform sampler2D gSpecularMap;
+
+uniform float gShallowAlpha;
+uniform float gDeepAlpha;
+uniform vec3 gColorLight;
+uniform vec3 gColorDark;
+
 
 void main(void)
 {

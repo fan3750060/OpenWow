@@ -134,9 +134,14 @@ bool SkyManager::DEBUG_Render()
 	return false;
 }
 
-void SkyManager::PreRender3D()
+bool SkyManager::PreRender3D()
 {
-	setVisible(!skies.empty());
+	if (skies.empty())
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void SkyManager::Render3D()

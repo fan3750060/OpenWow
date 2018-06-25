@@ -70,6 +70,12 @@
     <ClInclude Include="RenderDevice.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Perfomance.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -89,6 +95,9 @@
     </Filter>
     <Filter Include="Game\Wow">
       <UniqueIdentifier>{21602bdc-920c-4d59-bd62-644ceb5f4589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{51517ace-553a-4b85-ab37-c941b62ce843}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,13 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UIWindow.h"
 
-// Additional
-#include "UIMgr.h"
-
-UIWindow::UIWindow() : base()
+UIWindow::UIWindow(IUIMgr* _uimgr) :
+	UIElement(_uimgr)
 {
 	//color = COLOR_RED.Alpha(0.2);
 }

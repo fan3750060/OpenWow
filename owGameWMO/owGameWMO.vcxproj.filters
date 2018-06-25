@@ -40,7 +40,6 @@
     <ClCompile Include="WMO_Part_Portal.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
-    <ClCompile Include="Single_WMO_Instance.cpp" />
     <ClCompile Include="WMO_Part_PortalsController.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
@@ -49,6 +48,9 @@
       <Filter>Instances</Filter>
     </ClCompile>
     <ClCompile Include="WMO_Doodad_Instance.cpp">
+      <Filter>Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Base_Instance.cpp">
       <Filter>Instances</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,7 +87,6 @@
     <ClInclude Include="WMO_Part_Portal.h">
       <Filter>Parts</Filter>
     </ClInclude>
-    <ClInclude Include="Single_WMO_Instance.h" />
     <ClInclude Include="WMO_Part_PortalsController.h">
       <Filter>Parts</Filter>
     </ClInclude>
@@ -94,6 +95,9 @@
       <Filter>Instances</Filter>
     </ClInclude>
     <ClInclude Include="WMO_Doodad_Instance.h">
+      <Filter>Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Base_Instance.h">
       <Filter>Instances</Filter>
     </ClInclude>
   </ItemGroup>

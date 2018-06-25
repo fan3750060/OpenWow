@@ -15,9 +15,9 @@ string ProcessInclude(IFile* f)
 
 	string data = "";
 
-	while (!f->IsEof())
+	while (!f->isEof())
 	{
-		string line = f->ReadLine();
+		string line = f->readLine();
 
 		// Skip empty lines
 		if (line.length() == 0)

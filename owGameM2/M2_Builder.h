@@ -21,13 +21,13 @@ public:
 	void Step8Skins();
 	void Step9Collision();
 
-	//
+	// Parts loader
 
 	void SetAnimated();
-	bool IsAnimated() const { return m_MDX->m_IsAnimated; }
+	bool IsAnimated() const { return m_ParentM2->m_IsAnimated; }
 
 private:
-	M2*						m_MDX;
+	M2*						m_ParentM2;
 	IFile*					m_F;
 	SM2_Header*				m_Header;
 
@@ -35,6 +35,7 @@ private:
 
 	// Global loop, animation and bones
 	cGlobalLoopSeq			m_GlobalLoops;
+	IFile**					animfiles;
 
 	// Bones
 	SM2_Bone*				m_M2Bones;

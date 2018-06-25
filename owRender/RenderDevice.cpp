@@ -123,7 +123,7 @@ RenderDevice::RenderDevice() :
 RenderDevice::~RenderDevice()
 {}
 
-bool RenderDevice::init()
+bool RenderDevice::init(IOpenGLAdapter* _adapter)
 {
 	bool failed = false;
 
@@ -141,7 +141,7 @@ bool RenderDevice::init()
 	Log::Info("OpenGL driver[%s] by[%s] on[%s]", version, vendor, renderer);
 
 	// Init extensions
-	if (!initOpenGLExtensions())
+	if (!initOpenGLExtensions(_adapter))
 	{
 		Log::Error("Could not find all required OpenGL function entry points");
 		failed = true;
@@ -191,9 +191,6 @@ bool RenderDevice::init()
 	m_DeviceCapsSettings.geometryShaders = true;
 	m_DeviceCapsSettings.tesselation = m_OpenGLSettings.majorVersion >= 4 && m_OpenGLSettings.minorVersion >= 1;
 	m_DeviceCapsSettings.computeShaders = m_OpenGLSettings.majorVersion >= 4 && m_OpenGLSettings.minorVersion >= 3;
-	m_DeviceCapsSettings.instancing = true;
-	m_DeviceCapsSettings.maxJointCount = 75; // currently, will be changed soon
-	m_DeviceCapsSettings.maxTexUnitCount = 96; // for most modern hardware it is 192 (GeForce 400+, Radeon 7000+, Intel 4000+). Although 96 should probably be enough.
 
 	// Find maximum number of storage buffers in compute shader
 	glGetIntegerv(GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS, (GLint *)&_maxComputeBufferAttachments);
@@ -217,10 +214,12 @@ bool RenderDevice::init()
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
 	{
 		m_DepthFormat = GL_DEPTH_COMPONENT32;
+		Log::Error("Render target depth precision limited to 32 bit");
 		SmartPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 		if (testBuf32 == nullptr)
 		{
 			m_DepthFormat = GL_DEPTH_COMPONENT24;
+			Log::Error("Render target depth precision limited to 24 bit");
 			SmartPtr<R_RenderBuffer> testBuf24 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 			if (testBuf24 == nullptr)
 			{
@@ -314,6 +313,7 @@ R_TextureBuffer* RenderDevice::createTextureBuffer(R_TextureFormats::List format
 {
 	R_TextureBuffer* buf = new R_TextureBuffer(this);
 	buf->createTextureBuffer(format, bufSize, data, _isDynamic);
+	checkError();
 	return buf;
 }
 
@@ -323,6 +323,7 @@ R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int
 {
 	R_Texture* tex = new R_Texture("<empty>", this);
 	tex->createTexture(type, width, height, depth, format, hasMips, genMips, compress, sRGB);
+	checkError();
 	return tex;
 }
 
@@ -332,6 +333,7 @@ R_Shader* RenderDevice::createShader(const char* vertexShaderSrc, const char* fr
 {
 	R_Shader* shader = new R_Shader(this);
 	shader->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
+	checkError();
 	return shader;
 }
 
@@ -341,6 +343,7 @@ R_RenderBuffer* RenderDevice::createRenderBuffer(uint32 width, uint32 height, R_
 {
 	R_RenderBuffer* m_RenderBuffer = new R_RenderBuffer(this);
 	m_RenderBuffer->createRenderBuffer(width, height, format, depth, numColBufs, samples);
+	checkError();
 	return m_RenderBuffer;
 }
 

@@ -18,7 +18,6 @@ CSettings::~CSettings()
 
 void CSettings::AddDefaults()
 {
-	AddSettingsGroup<CGroupDistances>(new CGroupDistances);
 	AddSettingsGroup<CGroupOpenGL>(new CGroupOpenGL);
 	AddSettingsGroup<CGroupQuality>(new CGroupQuality);
 	AddSettingsGroup<CGroupRenderCaps>(new CGroupRenderCaps);

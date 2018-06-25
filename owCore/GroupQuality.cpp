@@ -3,7 +3,7 @@
 // General
 #include "GroupQuality.h"
 
-enum R_SamplerState2 // DELETE ME!!!
+enum R_SamplerState2 // TODO DELETE ME!!!
 {
 	SS_FILTER_BILINEAR = 0x0000,
 	SS_FILTER_TRILINEAR = 0x0001,
@@ -46,11 +46,21 @@ CGroupQuality::~CGroupQuality()
 
 void CGroupQuality::InitDefault()
 {
+	// Distances
+	ADT_MCNK_Distance = C_ADT_MCNK_Distance;
+	ADT_MCNK_HighRes_Distance = C_ADT_MCNK_HighRes_Distance;
+	ADT_MDX_Distance = C_ADT_MDX_Distance;
+	ADT_WMO_Distance = C_ADT_WMO_Distance;
+	WMO_MODD_Distance = C_WMO_MODD_Distance;
+
+	// Textures
 	Texture_Sampler = R_SamplerState2::SS_ANISO16;
 
+	// Drawing
 	WMO_MOCV = true;
 	WMO_AmbColor = false;
 
+	// Disables
 	draw_mcnk = true;
 	draw_mcnk_low = false;
 	draw_map_wmo = true;
@@ -61,6 +71,25 @@ void CGroupQuality::InitDefault()
 
 	drawfog = false;
 	timeEnable = false;
+}
+
+void CGroupQuality::UpdateByFog(float _fogDist)
+{
+	ADT_MCNK_Distance = (_fogDist < C_ADT_MCNK_Distance) ? _fogDist : /*C_ADT_MCNK_Distance*/ _fogDist;
+	ADT_MCNK_HighRes_Distance = (_fogDist < C_ADT_MCNK_HighRes_Distance) ? _fogDist : C_ADT_MCNK_HighRes_Distance;
+	ADT_MDX_Distance = (_fogDist < C_ADT_MDX_Distance) ? _fogDist : C_ADT_MDX_Distance;
+	ADT_WMO_Distance = (_fogDist < C_ADT_WMO_Distance) ? _fogDist : C_ADT_WMO_Distance;
+	WMO_MODD_Distance = (_fogDist < C_WMO_MODD_Distance) ? _fogDist : C_WMO_MODD_Distance;
+
+	if (ADT_MDX_Distance > ADT_MCNK_Distance)
+	{
+		ADT_MDX_Distance = ADT_MCNK_Distance;
+	}
+
+	if (ADT_WMO_Distance > ADT_MCNK_Distance)
+	{
+		ADT_WMO_Distance = ADT_MCNK_Distance;
+	}
 }
 
 bool CGroupQuality::OnKeyboardPressed(int _key, int _scancode, int _mods)

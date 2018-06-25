@@ -32,14 +32,15 @@ void CSceneManager::RenderRecursy(SceneNode* _node)
 	}
 
 	// CurrentNode
-	_node->PreRender3D();
-	if (!(_node->isVisible()))
+	bool isNodeVisible = _node->PreRender3D();
+	_node->setVisible(isNodeVisible);
+	if (!isNodeVisible)
 	{
 		return;
 	}
 	m_RenderQueue.push_back(_node);
 
-	//Intersection(_node);
+//	Intersection(_node);
 
 	// Some checks
 	if (_node->getChilds().empty())
@@ -64,7 +65,7 @@ void CSceneManager::Intersection(SceneNode * _node)
 
 	vec3 dir = screenToWord
 	(
-		m_Engine->GetAdapter()->GetInput()->GetMouse(),
+		_Render->getAdapter()->GetInput()->GetMouse(),
 		m_Video.GetWindowSize(),
 		_Render->getCamera()->getProjMat(),
 		_Render->getCamera()->getViewMat()
@@ -101,9 +102,9 @@ void CSceneManager::Intersection(SceneNode * _node)
 	}
 }
 
-void CSceneManager::PreRender3D()
+bool CSceneManager::PreRender3D()
 {
-	setVisible(true);
+	return true;
 }
 
 void CSceneManager::Render3D()

@@ -5,7 +5,7 @@
 
 // Additional
 #include "BaseManager.h"
-#include "Perfomance.h"
+
 bool CUpdatableObjectCollection::RegisterObject(IUpdatable* _uiObject)
 {
 	assert1(GetBaseManager()->GetPhase() != Phase_Input && GetBaseManager()->GetPhase() != Phase_Update);
@@ -20,25 +20,27 @@ void CUpdatableObjectCollection::UnregisterObject(IUpdatable * _uiObject)
 	m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 }
 
-void CUpdatableObjectCollection::Update(double _time, double _dTime)
+void CUpdatableObjectCollection::Update(IPerfomance* _perfomance, CInput* _input, double _time, double _dTime)
 {
-	PERF_START(PERF_PHASE_INPUT);
+	_perfomance->Start(PERF_PHASE_INPUT);
 	GetBaseManager()->SetPhase(Phase_Input);
 	for (auto& it : m_Objects)
 	{
-		it->Input(_time, _dTime);
+		it->Input(_input, _time, _dTime);
+		_perfomance->Inc(PERF_PHASE_INPUT);
 	}
-	PERF_STOP(PERF_PHASE_INPUT);
+	_perfomance->Stop(PERF_PHASE_INPUT);
 
 	//--
 
-	PERF_START(PERF_PHASE_UPDATE);
+	_perfomance->Start(PERF_PHASE_UPDATE);
 	GetBaseManager()->SetPhase(Phase_Update);
 	for (auto& it : m_Objects)
 	{
 		it->Update(_time, _dTime);
+		_perfomance->Inc(PERF_PHASE_UPDATE);
 	}
-	PERF_STOP(PERF_PHASE_UPDATE);
+	_perfomance->Stop(PERF_PHASE_UPDATE);
 
 	GetBaseManager()->SetPhase(Phase_NONE);
 }

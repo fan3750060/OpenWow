@@ -17,24 +17,24 @@ public:
 	inline uint8* GetAccessToData() { return m_Data; }
 
 	// IByteBuffer
-	inline uint64_t GetSize() const override { return m_BufferSize; }
-	inline uint64_t GetPos() const override { return m_CurrentPosition; }
-	inline const uint8* GetData() const override { return m_Data; }
-	inline const uint8* GetDataFromCurrent() const override { return m_Data + m_CurrentPosition; }
-	inline bool IsEof() const override { return m_IsEOF; }
+	uint64_t getSize() const override { return m_BufferSize; }
+	uint64_t getPos() const override { return m_CurrentPosition; }
+	const uint8* getData() const override { return m_Data; }
+	const uint8* getDataFromCurrent() const override { return m_Data + m_CurrentPosition; }
+	bool isEof() const override { return m_IsEOF; }
 	
-	void Seek(uint64_t _bufferOffsetAbsolute) override;
-	void SeekRelative(uint64_t _bufferOffsetRelative) override;
-	string ReadLine() override;
-	void ReadBytes(void* _destination, uint64_t _size) override;
+	void seek(uint64_t _bufferOffsetAbsolute) override;
+	void seekRelative(uint64_t _bufferOffsetRelative) override;
+	string readLine() override;
+	void readBytes(void* _destination, uint64_t _size = 1) override;
 
 private:
 	bool m_IsFilled;
 	bool m_IsOnlyPointer;
 
-	bool m_IsEOF;
-	bool m_IsAllocated;
-	uint8* m_Data;
-	uint64_t m_CurrentPosition;
-	uint64_t m_BufferSize;
+	bool		m_IsEOF;
+	bool		m_IsAllocated;
+	uint8*		m_Data;
+	uint64_t	m_CurrentPosition;
+	uint64_t	m_BufferSize;
 };

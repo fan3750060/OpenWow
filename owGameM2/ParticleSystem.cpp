@@ -16,7 +16,7 @@ ParticleSystem::ParticleSystem() : emitter(0), mid(0), rem(0)
 	rows = 0;
 	cols = 0;
 
-	m_MDX = 0;
+	m_ParentM2 = 0;
 	parent = 0;
 	texture = 0;
 
@@ -47,26 +47,26 @@ void ParticleSystem::init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals)
 	enabled.init(mta.enabledIn /*FIXME ???*/, f, globals);
 
 	vec3 colors2[3];
-	memcpy(colors2, f->GetData() + mta.colorTrack.values.offset, sizeof(vec3) * 3);
+	memcpy(colors2, f->getData() + mta.colorTrack.values.offset, sizeof(vec3) * 3);
 	for (uint32 i = 0; i < 3; i++)
 	{
-		float opacity = *(short*)(f->GetData() + mta.alphaTrack.values.offset + i * 2);
+		float opacity = *(short*)(f->getData() + mta.alphaTrack.values.offset + i * 2);
 		colors[i] = vec4(colors2[i].x / 255.0f, colors2[i].y / 255.0f, colors2[i].z / 255.0f, opacity / 32767.0f);
-		sizes[i] = (*(float*)(f->GetData() + mta.scaleTrack.values.offset + i * 4)) * mta.scales[i];
+		sizes[i] = (*(float*)(f->getData() + mta.scaleTrack.values.offset + i * 4)) * mta.scales[i];
 	}
 
 	mid = 0.5;
 	slowdown = mta.slowdown; // FIXME
 	rotation = mta.rotation; // FIXME
 	pos = mta.Position.toXZmY();
-	texture = m_MDX->m_Textures[mta.texture].getTexture();
+	texture = m_ParentM2->m_Textures[mta.texture].getTexture();
 	blend = mta.blendingType;
 	rows = mta.textureDimensions_rows;
 	cols = mta.textureDimensions_columns;
 	type = mta.particleColorIndex;
 	//order = mta.s2;
 	order = mta.particleColorIndex > 0 ? -1 : 0;
-	parent = m_MDX->m_Bones.data() + mta.bone;
+	parent = m_ParentM2->m_Bones.data() + mta.bone;
 
 	switch (mta.emitterType)
 	{

@@ -151,7 +151,7 @@ void XMLFile::Print(XMLNode* _startNode, int _level) const
 	line += spaces + '<' + _startNode->GetName() + '>';
 	////Log::Print(line);
 
-	//for (auto it : _startNode->GetData())
+	//for (auto it : _startNode->getData())
 	//	//Log::Print(spaces + "[" + it.first + "=\"" + it.second + "\"]");
 
 	//Log::Print("");

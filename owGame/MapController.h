@@ -3,6 +3,7 @@
 #include "ADT.h"
 #include "WDT.h"
 #include "WDL.h"
+#include "MinimapProvider.h"
 
 class MapController : public SceneNode, public IMapManager
 {
@@ -23,8 +24,11 @@ public:
 	void ClearCache();
 	uint32 GetAreaID();
 
+	// ISceneNode
+	string getObjectInfo() override { return "@MapController@"; }
+
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 
 	// IMapManager
 	void Update() override;
@@ -75,12 +79,17 @@ private:
 	ADT * m_ADTCache[C_TilesCacheSize];
 	ADT*	m_Current[C_RenderedTiles][C_RenderedTiles];
 
+
+
 	int32	m_CurrentTileX, m_CurrentTileZ;
 	bool	m_IsOnInvalidTile;
 
 public:
 	WDT * m_WDT;
 	WDL*    m_WDL;
+
+	CMinimapProvider* mProvider;
+	MinimapDir* dir;
 };
 
 inline static bool IsBadTileIndex(int i, int j)

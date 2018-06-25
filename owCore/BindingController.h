@@ -12,14 +12,14 @@ public:
 	CBindingController();
 	~CBindingController();
 
-	void RegisterInputListener(IInputListener* _object);
+	void RegisterInputListener(IInputListener* _object, uint8 _priority = 0);
 	void RegisterRenderable3DObject(IRenderable3D* _object, uint32 m_DrawOrder = 0);
-	void RegisterRenderableUIObject(CRenderableUIObject* _object, uint32 m_DrawOrder = 0);
+	void RegisterRenderableUIObject(IRenderableUI* _object, uint32 m_DrawOrder = 0);
 	void RegisterUpdatableObject(IUpdatable* _object);
 
 	void UnregisterInputListener(IInputListener* _object);
 	void UnregisterRenderable3DObject(IRenderable3D* _object);
-	void UnregisterRenderableUIObject(CRenderableUIObject* _object);
+	void UnregisterRenderableUIObject(IRenderableUI* _object);
 	void UnregisterUpdatableObject(IUpdatable* _object);
 
 public:

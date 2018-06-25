@@ -3,37 +3,28 @@
 // General
 #include "RenderableUIObjectCollection.h"
 
-struct RenderableUIObjectCompare
+bool CRenderableUIObjectCollection::RegisterObject(IRenderableUI* _uiObject, uint32 _DrawOrder)
 {
-	bool operator() (const CRenderableUIObject* left, const CRenderableUIObject* right) const
-	{
-		return left->getDrawOrder() < right->getDrawOrder();
-	}
-};
-
-bool CRenderableUIObjectCollection::RegisterObject(CRenderableUIObject* _uiObject, uint32 _DrawOrder)
-{
-	_uiObject->setDrawOrder(_DrawOrder);
-	m_Objects.push_back(_uiObject);
-	m_ObjectsNeedSort = true;
+	m_Objects.push_back(new CRenderableUIObject(_uiObject, _DrawOrder));
+	std::sort(m_Objects.begin(), m_Objects.end(), CRenderableUIObjectCompare());
 
 	return true;
 }
 
-void CRenderableUIObjectCollection::UnregisterObject(CRenderableUIObject * _uiObject)
+void CRenderableUIObjectCollection::UnregisterObject(IRenderableUI * _Object)
 {
-    m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
-	m_ObjectsNeedSort = true;
+	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	{
+		if ((*it)->getInputListener() == _Object)
+		{
+			m_Objects.erase(it);
+			break;
+		}
+	}
 }
 
 void CRenderableUIObjectCollection::RenderUI()
 {
-	if (m_ObjectsNeedSort)
-	{
-		std::sort(m_Objects.begin(), m_Objects.end(), RenderableUIObjectCompare());
-		m_ObjectsNeedSort = false;
-	}
-
 	for (auto& it : m_Objects)
 	{
 		it->RenderUI();

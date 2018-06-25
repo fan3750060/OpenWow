@@ -2,14 +2,19 @@
 
 #include "Technique.h"
 
+
 inline void Technique::Bind()
 {
 	m_Shader->bindShader();
+
+
 }
 
 inline void Technique::Unbind()
 {
 	m_Shader->unbindShader();
+
+
 }
 
 

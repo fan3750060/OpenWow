@@ -7,7 +7,7 @@ class WMO_Group;
 class CWMO_InstanceController;
 // FORWARD END
 
-class CWMO_Part_Portal
+class CWMO_Part_Portal : public CRefItem
 {
 public:
 	CWMO_Part_Portal(const WMO* _parentWMO, const WMO_PortalDef& _proto);

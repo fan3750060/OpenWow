@@ -14,7 +14,7 @@ struct ConsoleMessage
 
 //
 
-class CConsoleOpenGL : public CRenderableUIObject, public IInputListener, public CDebugOutput
+class CConsoleOpenGL : public IRenderableUI, public IInputListener, public CDebugOutput
 {
 	typedef vector<ConsoleMessage*> ConsoleMessages;
 public:

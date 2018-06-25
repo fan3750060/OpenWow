@@ -1,16 +1,39 @@
 #pragma once
 
-#include "RenderableUIObject.h"
+class CRenderableUIObject : public IRenderableUI
+{
+public:
+	CRenderableUIObject(IRenderableUI* _object, uint8 _priority) :
+		m_Object(_object),
+		m_DrawOrder(_priority)
+	{}
+
+	void RenderUI() { m_Object->RenderUI(); }
+
+	IRenderableUI* getInputListener() { return m_Object; }
+	uint32 getDrawOrder() const { return m_DrawOrder; }
+
+private:
+	IRenderableUI*	m_Object;
+	uint32			m_DrawOrder;
+};
+
+struct CRenderableUIObjectCompare
+{
+	bool operator() (const CRenderableUIObject* left, const CRenderableUIObject* right) const
+	{
+		return left->getDrawOrder() < right->getDrawOrder();
+	}
+};
 
 class CRenderableUIObjectCollection
 {
 public:
-	bool RegisterObject(CRenderableUIObject* _uiObject, uint32 _DrawOrder = 0);
-	void UnregisterObject(CRenderableUIObject* _uiObject);
+	bool RegisterObject(IRenderableUI* _uiObject, uint32 _DrawOrder = 0);
+	void UnregisterObject(IRenderableUI* _uiObject);
 
 	void RenderUI();
 
 private:
 	vector<CRenderableUIObject*>   m_Objects;
-	bool                          m_ObjectsNeedSort;
 };

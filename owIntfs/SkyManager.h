@@ -1,6 +1,6 @@
 #pragma once
 
-typedef enum LightColors : uint8
+enum LightColors : uint8
 {
 	LIGHT_COLOR_GLOBAL_DIFFUSE = 0,
 	LIGHT_COLOR_GLOBAL_AMBIENT,
@@ -29,7 +29,7 @@ typedef enum LightColors : uint8
 	LIGHT_COLORS_COUNT
 };
 
-typedef enum LightFogs : uint8
+enum LightFogs : uint8
 {
 	LIGHT_FOG_DISTANCE = 0,    // Fog distance multiplied by 36 - distance at which everything will be hidden by the fog
 	LIGHT_FOG_MULTIPLIER,      // Fog multiplier - fog distance * fog multiplier = fog start distance. 0 - 0, 999...

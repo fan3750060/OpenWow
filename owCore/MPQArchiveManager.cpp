@@ -6,13 +6,21 @@
 // Additional
 #include "BaseManager.h"
 
+#if (VERSION == VERSION_Vanila)
 const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
+#elif (VERSION == VERSION_WotLK)
+const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
+#endif
+
+//
+
 
 CMPQArchiveManager::CMPQArchiveManager()
 {
 	AddManager<IMPQArchiveManager>(this);
 
-	// Files
+	// Files 1.12
+#if (VERSION == VERSION_Vanila)
 	AddArchive(string("backup.MPQ"));
 	AddArchive(string("base.MPQ"));
 	AddArchive(string("dbc.MPQ"));
@@ -32,6 +40,26 @@ CMPQArchiveManager::CMPQArchiveManager()
 	//AddArchive(string("ruRU/patch-1.MPQ"));
 	//AddArchive(string("ruRU/patch-2.MPQ"));
 	//AddArchive(string("ruRU/patch-3.MPQ"));
+
+#elif (VERSION == VERSION_WotLK)
+	AddArchive(string("common.MPQ"));
+	AddArchive(string("common-2.MPQ"));
+	AddArchive(string("expansion.MPQ"));
+	AddArchive(string("lichking.MPQ"));
+	AddArchive(string("patch.MPQ"));
+	AddArchive(string("patch-2.MPQ"));
+	AddArchive(string("patch-3.MPQ"));
+
+	AddArchive(string("ruRU/locale-ruRU.MPQ"));
+	AddArchive(string("ruRU/expansion-locale-ruRU.MPQ"));
+	AddArchive(string("ruRU/lichking-locale-ruRU.MPQ"));
+	AddArchive(string("ruRU/patch-ruRU.MPQ"));
+	AddArchive(string("ruRU/patch-ruRU-2.MPQ"));
+	AddArchive(string("ruRU/patch-ruRU-3.MPQ"));
+#endif
+
+
+
 }
 
 CMPQArchiveManager::~CMPQArchiveManager()
@@ -51,27 +79,27 @@ void CMPQArchiveManager::AddArchive(string filename)
 	{
 		switch (result)
 		{
-			case LIBMPQ_ERROR_OPEN:
-            Log::Error("Error opening archive [%s]: Does file really exist?", filename.c_str());
+		case LIBMPQ_ERROR_OPEN:
+			Log::Error("Error opening archive [%s]: Does file really exist?", filename.c_str());
 			break;
 
-			case LIBMPQ_ERROR_FORMAT:            /* bad file format */
+		case LIBMPQ_ERROR_FORMAT:            /* bad file format */
 			Log::Error("Error opening archive [%s]: Bad file format", filename.c_str());
 			break;
 
-			case LIBMPQ_ERROR_SEEK:         /* seeking in file failed */
+		case LIBMPQ_ERROR_SEEK:         /* seeking in file failed */
 			Log::Error("Error opening archive [%s]: Seeking in file failed", filename.c_str());
 			break;
 
-			case LIBMPQ_ERROR_READ:              /* Read error in archive */
+		case LIBMPQ_ERROR_READ:              /* Read error in archive */
 			Log::Error("Error opening archive [%s]: Read error in archive", filename.c_str());
 			break;
 
-			case LIBMPQ_ERROR_MALLOC:               /* maybe not enough memory? :) */
+		case LIBMPQ_ERROR_MALLOC:               /* maybe not enough memory? :) */
 			Log::Error("Error opening archive [%s]: Maybe not enough memory", filename.c_str());
 			break;
 
-			default:
+		default:
 			Log::Error("Error opening archive [%s]: Unknown error\n", filename.c_str());
 			break;
 		}

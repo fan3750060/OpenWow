@@ -6,6 +6,8 @@
 M2::M2(cstring name) :
 	m_FileName(name),
 	m_UniqueName(""),
+	// WMO_Doodad
+	m_DoodadColorExists(false),
 	// Loops and sequences
 	m_IsAnimated(false),
 	// Bones
@@ -28,11 +30,13 @@ M2::M2(cstring name) :
 		m_FileName[m_FileName.length() - 1] = '\0';
 		m_FileName.resize(m_FileName.length() - 1);
 	}
+
+	m_FileNameWithoutExt = m_FileName.substr(0, m_FileName.length() - 3);
 }
 
 M2::~M2()
 {
-	Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
+	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
 
 //

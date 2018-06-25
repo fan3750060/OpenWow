@@ -248,13 +248,13 @@ public:
 
 	Iterator begin()
 	{
-		assert1(m_File->GetData() != nullptr);
-		return Iterator(this, m_File->GetData() + m_File->GetPos());
+		assert1(m_File->getData() != nullptr);
+		return Iterator(this, m_File->getData() + m_File->getPos());
 	}
 
 	Iterator end()
 	{
-		assert1(m_File->GetData() != nullptr);
+		assert1(m_File->getData() != nullptr);
 		return Iterator(this, stringTable);
 	}
 

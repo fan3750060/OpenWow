@@ -5,9 +5,9 @@
 
 // Additional
 #include "GameStateManager.h"
+#include "Perfomance.h"
 
-CEngine::CEngine(IOpenGLAdapter* _OpenGLAdapter) : 
-	m_OpenGLAdapter(_OpenGLAdapter),
+CEngine::CEngine() : 
 	m_IsNeedExit(false),
 	framesCounter(0),
 	m_FPS(0),
@@ -17,10 +17,6 @@ CEngine::CEngine(IOpenGLAdapter* _OpenGLAdapter) :
 {
 	Log::Green("CEngine[]: Loading.");
 
-	// Load modules
-	m_OpenGLAdapter->MakeContextMainThread();
-	_Render->Init(m_OpenGLAdapter, m_OpenGLAdapter->GetMainCont());
-
 	AddManager<IEngine>(this);
 }
 
@@ -29,6 +25,12 @@ CEngine::~CEngine()
 	Log::Green("CEngine[]: Destroy engine.");
 
 	DelManager<IEngine>();
+}
+
+void CEngine::Init(IOpenGLAdapter* _OpenGLAdapter)
+{
+	_Render->Init(_OpenGLAdapter);
+	_Render->getAdapter()->MakeMainContext();
 }
 
 void CEngine::SetArguments(int argumentCount, char* arguments[])
@@ -42,7 +44,7 @@ void CEngine::SetArguments(int argumentCount, char* arguments[])
 bool CEngine::Tick()
 {
 	last_t = t;
-	t = static_cast<uint32>(m_OpenGLAdapter->GetTime() * 1000.0);
+	t = static_cast<uint32>(_Render->getAdapter()->GetTime() * 1000.0);
 	uint32 dt = t - last_t;
 	_time += dt;
 
@@ -63,7 +65,7 @@ bool CEngine::Tick()
     //------------------------------------------------
 	//-- Update
     //------------------------------------------------
-	_Bindings->m_UpdatableObjectCollection->Update(dTime, dDtTime);
+	_Bindings->m_UpdatableObjectCollection->Update(_Perfomance, _Render->getAdapter()->GetInput(), dTime, dDtTime);
 
 	_Render->r.beginRendering();
 	_Render->r.clear();
@@ -72,7 +74,7 @@ bool CEngine::Tick()
     //-- Render3D
     //------------------------------------------------
 	_Render->Set3D();
-	_Bindings->m_Renderable3DObjectCollection->Render3D();
+	_Bindings->m_Renderable3DObjectCollection->Render3D(_Perfomance);
 
     //------------------------------------------------
     //-- RenderUI
@@ -80,17 +82,21 @@ bool CEngine::Tick()
 	_Render->Set2D();
 	_Bindings->m_RenderableUIObjectCollection->RenderUI();
 
+	// Perfomance render
+	_Perfomance->FrameEnd();
+	_Perfomance->Render(vec2(5, 100));
+
 	//
 
 	// Swap buffers
-	if (!m_OpenGLAdapter->SwapWindowBuffers() || m_IsNeedExit)
+	if (!_Render->getAdapter()->SwapWindowBuffers() || m_IsNeedExit)
 	{
 		Log::Green("CEngine[]: Need exit.");
 		return false;
 	}
 
 	// Caclulate FPS
-	double currentTime = m_OpenGLAdapter->GetTime();
+	double currentTime = _Render->getAdapter()->GetTime();
 	double delta = currentTime - framesTimer;
 	framesCounter++;
 	if (delta > 1.0)
@@ -99,7 +105,7 @@ bool CEngine::Tick()
 		framesTimer = currentTime;
 		framesCounter = 0;
 
-		m_OpenGLAdapter->SetWindowTitle("FPS: " + to_string(m_FPS));
+		_Render->getAdapter()->SetWindowTitle("FPS: " + to_string(m_FPS));
 	}
 
 	return true;

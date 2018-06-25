@@ -109,17 +109,38 @@ void CWMO_Part_PortalsController::Update(CWMO_InstanceController* _localContr, c
 		it->m_Calculated = false;
 	}
 
-	const Plane* _viewPlanes = _Render->getCamera()->getFrustum().getPlanes();
-	uint32 _viewPlanesCnt = 4;
+	bool insideOneAtLeast = false;
+	const Plane* viewPlanes = _Render->getCamera()->getFrustum().getPlanes();
+	uint32 viewPlanesCnt = 5;
 
-	for (auto& group : m_ParentWMO->m_Groups)
+	if (m_ParentWMO->getBounds().isPointInside(_InvWorldCamera))
 	{
-		if (!(group->isPointInside(_InvWorldCamera)))
+		for (auto& group : m_ParentWMO->m_Groups)
 		{
-			continue;
-		}
+			if (!(group->m_Bounds.isPointInside(_InvWorldCamera)))
+			{
+				continue;
+			}
 
-		Recur(group, _localContr, _InvWorldCamera, _viewPlanes, _viewPlanesCnt);
+			if (!group->m_Header.flags.HAS_COLLISION)
+			{
+				continue;
+			}
+
+			Recur(group, _localContr, _InvWorldCamera, viewPlanes, viewPlanesCnt);
+			insideOneAtLeast = true;
+		}
+	}
+
+	assert1(insideOneAtLeast || !(m_ParentWMO->m_OutdoorGroups.empty()));
+
+	// If we outside WMO, then get outdorr group
+	if (!insideOneAtLeast)
+	{
+		for (auto& ogr : m_ParentWMO->m_OutdoorGroups)
+		{
+			Recur(ogr, _localContr, _InvWorldCamera, viewPlanes, viewPlanesCnt);
+		}
 	}
 }
 
@@ -134,7 +155,7 @@ void CWMO_Part_PortalsController::Recur(WMO_Group* _group, CWMO_InstanceControll
 	_group->m_Calculated = true;
 
 	/*
-		TODO: Check visible for MODD
+		//TODO: Check visible for MODD
 	*/
 
 	for (auto& p : _group->m_Portals)

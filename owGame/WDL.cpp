@@ -36,13 +36,13 @@ void WDL::CreateInsances(SceneNode* _parent)
 			if (m_MAREOffsets[j][i])
 			{
 				// Read data             
-				f->Seek(m_MAREOffsets[j][i] + 4 + 4);
+				f->seek(m_MAREOffsets[j][i] + 4 + 4);
 
 				int16 tilebuf[17 * 17];
-				f->ReadBytes(tilebuf, 17 * 17 * 2);
+				f->readBytes(tilebuf, 17 * 17 * 2);
 
 				int16 tilebuf2[16 * 16];
-				f->ReadBytes(tilebuf2, 16 * 16 * 2);
+				f->readBytes(tilebuf2, 16 * 16 * 2);
 
 				for (int y = 0; y < 17; y++)
 					for (int x = 0; x < 17; x++)
@@ -122,21 +122,21 @@ void WDL::Load()
 	char fourcc[5];
 	uint32 size;
 
-	while (!f->IsEof())
+	while (!f->isEof())
 	{
 		memset(fourcc, 0, 4);
 		size = 0;
-		f->ReadBytes(fourcc, 4);
-		f->ReadBytes(&size, 4);
+		f->readBytes(fourcc, 4);
+		f->readBytes(&size, 4);
 		flipcc(fourcc);
 		fourcc[4] = 0;
 		if (size == 0) continue;
-		uint32_t nextpos = f->GetPos() + size;
+		uint32_t nextpos = f->getPos() + size;
 
 		if (strcmp(fourcc, "MVER") == 0)
 		{
 			uint32 version;
-			f->ReadBytes(&version, 4);
+			f->readBytes(&version, 4);
 			assert3(version == 18, "Version mismatch != 18", std::to_string(version).c_str());
 		}
 		else if (strncmp(fourcc, "MWMO", 4) == 0) // Filenames for WMO that appear in the low resolution map. Zero terminated strings.
@@ -154,13 +154,13 @@ void WDL::Load()
 			for (uint32 i = 0; i < size / sizeof(ADT_MODF); i++)
 			{
 				ADT_MODF placement;
-				f->ReadBytes(&placement, sizeof(ADT_MODF));
+				f->readBytes(&placement, sizeof(ADT_MODF));
 				m_LowResolutionWMOsPlacementInfo.push_back(placement);
 			}
 		}
 		else if (strncmp(fourcc, "MAOF", 4) == 0) // Contains 64*64 = 4096 unsigned 32-bit integers, these are absolute offsets in the file to each map tile's MapAreaLow-array-entry. For unused tiles the value is 0.
 		{
-			f->ReadBytes(m_MAREOffsets, C_TilesInMap * C_TilesInMap * sizeof(uint32));
+			f->readBytes(m_MAREOffsets, C_TilesInMap * C_TilesInMap * sizeof(uint32));
 		}
 		else if (strncmp(fourcc, "MARE", 4) == 0) // Heightmap for one map tile.
 		{
@@ -174,7 +174,7 @@ void WDL::Load()
 		{
 			Log::Info("Map[%s]: WDL: Chunks [%s], Size [%d] not implemented.", m_FileName.c_str(), fourcc, size);
 		}
-		f->Seek(nextpos);
+		f->seek(nextpos);
 	}
 
 	// Minimap
@@ -191,10 +191,10 @@ void WDL::Load()
 			if (m_MAREOffsets[j][i])
 			{
 				// Read data             
-				f->Seek(m_MAREOffsets[j][i] + 4 + 4);
+				f->seek(m_MAREOffsets[j][i] + 4 + 4);
 
 				int16 tilebuf[17 * 17];
-				f->ReadBytes(tilebuf, 17 * 17 * 2);
+				f->readBytes(tilebuf, 17 * 17 * 2);
 
 				// make minimap
 				// for a 512x512 minimap texture, and 64x64 tiles, one tile is 8x8 pixels

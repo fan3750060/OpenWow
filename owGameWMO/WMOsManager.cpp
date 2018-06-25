@@ -33,5 +33,5 @@ bool WMOsManager::DeleteAction(cstring name)
 
 void WMOsManager::MakeContext()
 {
-	m_Adapter->MakeCurrent();
+	m_Adapter->MakeThreadContext();
 }

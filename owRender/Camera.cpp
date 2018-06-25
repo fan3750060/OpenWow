@@ -10,7 +10,10 @@ Camera::Camera(vec3 position, vec3 up, float roll, float pitch) :
 	Direction(vec3(0.0f, 0.0f, -1.0f)),
 	MovementSpeed(SPEED),
 	MouseSensitivity(SENSITIVTY),
-	m_UseDir(false)
+	m_UseDir(false),
+	m_DisableUpdate(false),
+	m_Engine(GetManager<IEngine>()),
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 
 	Position = position;
@@ -18,14 +21,22 @@ Camera::Camera(vec3 position, vec3 up, float roll, float pitch) :
 	Roll = roll;
 	Pitch = pitch;
 
-	//_Bindings->RegisterUpdatableObject(this);
+	enableFreeCamera = false;
+	cameraSprint = false;
+	cameraSlow = false;
+
+	_Bindings->RegisterUpdatableObject(this);
+	_Bindings->RegisterInputListener(this, 100);
 }
 
 Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float roll, float pitch) :
 	Direction(vec3(0.0f, 0.0f, -1.0f)),
 	MovementSpeed(SPEED),
 	MouseSensitivity(SENSITIVTY),
-	m_UseDir(false)
+	m_UseDir(false),
+	m_DisableUpdate(false),
+	m_Engine(GetManager<IEngine>()),
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 
 	Position = vec3(posX, posY, posZ);
@@ -33,15 +44,36 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	Roll = roll;
 	Pitch = pitch;
 
-	//_Bindings->RegisterUpdatableObject(this);
+	enableFreeCamera = false;
+	cameraSprint = false;
+	cameraSlow = false;
+
+	_Bindings->RegisterUpdatableObject(this);
+	_Bindings->RegisterInputListener(this, 100);
 }
 
 Camera::~Camera()
-{}
+{
+	_Bindings->UnregisterInputListener(this);
+	_Bindings->UnregisterUpdatableObject(this);
+}
+
+void Camera::Input(CInput* _input, double _time, double _dTime)
+{
+	float speed = 5.0f;
+
+	if (cameraSlow)		speed *= 0.1f;
+	if (cameraSprint)	speed *= 2.0f;
+
+	if (_input->IsKeyPressed(OW_KEY_W))	ProcessKeyboard(FORWARD, speed);
+	if (_input->IsKeyPressed(OW_KEY_S))	ProcessKeyboard(BACKWARD, speed);
+	if (_input->IsKeyPressed(OW_KEY_A))	ProcessKeyboard(LEFT, speed);
+	if (_input->IsKeyPressed(OW_KEY_D))	ProcessKeyboard(RIGHT, speed);
+}
 
 void Camera::Update(double _time, double _dTime)
 {
-	if (!m_NeedUpdate)
+	if (!m_NeedUpdate || m_DisableUpdate)
 	{
 		return;
 	}
@@ -75,6 +107,72 @@ void Camera::Update(double _time, double _dTime)
 
 	onPostUpdate();
 }
+
+void Camera::OnMouseMoved(cvec2 _mousePos)
+{
+	if (enableFreeCamera)
+	{
+		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
+		ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
+		_Render->getAdapter()->setMousePosition(lastMousePos);
+	}
+}
+
+bool Camera::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
+{
+	if (_button == OW_MOUSE_BUTTON_LEFT)
+	{
+		enableFreeCamera = true;
+		lastMousePos = _mousePos;
+		_Render->getAdapter()->HideCursor();
+		return true;
+	}
+
+	return false;
+}
+
+bool Camera::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
+{
+	enableFreeCamera = false;
+	lastMousePos = vec2();
+	_Render->getAdapter()->ShowCursor();
+	return true;
+}
+
+bool Camera::OnKeyboardPressed(int _key, int _scancode, int _mods)
+{
+	if (_key == OW_KEY_X)
+	{
+		cameraSprint = true;
+		return true;
+	}
+
+	if (_key == OW_KEY_Z)
+	{
+		cameraSlow = true;
+		return true;
+	}
+
+	return false;
+}
+
+bool Camera::OnKeyboardReleased(int _key, int _scancode, int _mods)
+{
+	if (_key == OW_KEY_X)
+	{
+		cameraSprint = false;
+		return true;
+	}
+
+	if (_key == OW_KEY_Z)
+	{
+		cameraSlow = false;
+		return true;
+	}
+
+	return false;
+}
+
 
 void Camera::Render()
 {
@@ -193,7 +291,7 @@ void Camera::CreateRenderable()
 	float fh = _frustFar * tan;
 	float fw = fh * asp;
 
-	vec3 nc =  _frustNear;
+	vec3 nc = _frustNear;
 	vec3 fc = _frustFar;
 
 	// compute the 4 corners of the frustum on the near plane
@@ -232,7 +330,7 @@ void Camera::CreateRenderable()
 	verts.push_back(nbr);
 	verts.push_back(ftr);
 	verts.push_back(fbr);
-      
+
 
 	// Near
 	verts.push_back(ftl);

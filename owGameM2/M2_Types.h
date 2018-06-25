@@ -15,8 +15,13 @@ struct SM2_Sequence
 {
 	__DBC_FOREIGN_KEY_ID(uint16, DBÑ_AnimationData, id); // Animation id in AnimationData.dbc	
 	uint16		variationIndex;			// Sub-animation id: Which number in a row of animations this one is.
-	uint32		start_timestamp;
-	uint32		end_timestamp;
+
+#if (VERSION == VERSION_Vanila)
+	uint32_t start_timestamp;
+	uint32_t end_timestamp;
+#else
+	uint32_t duration;             // The length of this animation sequence in milliseconds.
+#endif
 
 	float		movespeed;				// This is the speed the character moves with in this animation.
 
@@ -55,9 +60,24 @@ struct SM2_Bone
 
 	int16			parent_bone;            // Parent bone ID or -1 if there is none.
 	uint16			submesh_id;				// Mesh part ID OR uDistToParent?
+#if (VERSION == VERSION_WotLK)
+	union 
+	{  
+		struct 
+		{
+			uint16_t uDistToFurthDesc;
+			uint16_t uZRatioOfChain;
+		} CompressData;               // No model has ever had this part of the union used.
+		uint32_t boneNameCRC;         // these are for debugging only. their bone names match those in key bone lookup.
+	};
+#endif
 
 	M2Track<vec3>	translation;
+#if (VERSION == VERSION_Vanila)
 	M2Track<quat>	rotation;				// compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
+#else
+	M2Track<M2CompQuat>	rotation;				// compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
+#endif
 	M2Track<vec3>	scale;
 
 	vec3			pivot;					// The pivot point of that bone.
@@ -110,6 +130,17 @@ struct SM2_TextureTransform
 
 struct SM2_Material
 {
+	enum BlendModes : uint16
+	{
+		M2BLEND_OPAQUE = 0,
+		M2BLEND_ALPHA_KEY,
+		M2BLEND_ALPHA,
+		M2BLEND_NO_ALPHA_ADD,
+		M2BLEND_ADD,
+		M2BLEND_MOD,
+		M2BLEND_MOD2X
+	};
+
 	struct Flags
 	{
 		uint16 UNLIT : 1;
@@ -119,7 +150,7 @@ struct SM2_Material
 		uint16 DEPTHWRITE : 1;
 		uint16 : 11;
 	} flags;
-	uint16 blending_mode;
+	BlendModes blending_mode;
 };
 
 struct M2Attachment
@@ -178,6 +209,10 @@ struct SM2_Camera // TODO Spline keys
 
 #include __PACK_END
 
+#if (VERSION == VERSION_Vanila)
 #include "M2_Animated.h"
+#elif (VERSION == VERSION_WotLK)
+#include "M2_Animated_WotLK.h"
+#endif
 
 #include "M2_ParticlesTypes.h"

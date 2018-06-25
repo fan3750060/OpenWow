@@ -13,6 +13,7 @@ public:
 	void SetRenderQueueDebug(bool _isDebug) { m_RenderQueueDebug = _isDebug; }
 
 	// ISceneManager
+	SceneNode* getRootNode() const { return m_RootNode; }
 	SceneNode* getIntersectedNode() override { return m_IntersectedNode; }
 	string getIntersectedNodeInfo() { return m_IntersectedNode->getObjectInfo(); }
 
@@ -22,7 +23,7 @@ public:
 	Camera* getFrustrumCamera() override { return m_FrustrumCamera; }
 
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override;
 

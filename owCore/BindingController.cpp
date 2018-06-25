@@ -16,9 +16,9 @@ CBindingController::~CBindingController()
 	OutputDebugString(L"CBindingController destroyed.\n");
 }
 
-void CBindingController::RegisterInputListener(IInputListener* _object)
+void CBindingController::RegisterInputListener(IInputListener* _object, uint8 _priority)
 {
-	m_InputListenerObjectCollection->RegisterObject(_object);
+	m_InputListenerObjectCollection->RegisterObject(_object, _priority);
 }
 
 void CBindingController::RegisterRenderable3DObject(IRenderable3D* _object, uint32 _DrawOrder)
@@ -26,7 +26,7 @@ void CBindingController::RegisterRenderable3DObject(IRenderable3D* _object, uint
 	m_Renderable3DObjectCollection->RegisterObject(_object, _DrawOrder);
 }
 
-void CBindingController::RegisterRenderableUIObject(CRenderableUIObject* _object, uint32 _DrawOrder)
+void CBindingController::RegisterRenderableUIObject(IRenderableUI* _object, uint32 _DrawOrder)
 {
 	m_RenderableUIObjectCollection->RegisterObject(_object, _DrawOrder);
 }
@@ -46,7 +46,7 @@ void CBindingController::UnregisterRenderable3DObject(IRenderable3D* _object)
 	m_Renderable3DObjectCollection->UnregisterObject(_object);
 }
 
-void CBindingController::UnregisterRenderableUIObject(CRenderableUIObject * _object)
+void CBindingController::UnregisterRenderableUIObject(IRenderableUI* _object)
 {
 	m_RenderableUIObjectCollection->UnregisterObject(_object);
 }

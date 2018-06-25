@@ -20,6 +20,7 @@ uniform float gDeepAlpha;
 uniform vec3 gColorLight;
 uniform vec3 gColorDark;
 
+
 void main(void)
 {
 	float alpha = texture(gColorMap, VSout.TexCoord.xy).a;

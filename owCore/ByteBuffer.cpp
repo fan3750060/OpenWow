@@ -160,7 +160,7 @@ void ByteBuffer::Clear()
 
 //
 
-void ByteBuffer::Seek(uint64_t _bufferOffsetAbsolute)
+void ByteBuffer::seek(uint64_t _bufferOffsetAbsolute)
 {
 	if (_bufferOffsetAbsolute >= m_BufferSize)
 	{
@@ -174,7 +174,7 @@ void ByteBuffer::Seek(uint64_t _bufferOffsetAbsolute)
 	}
 }
 
-void ByteBuffer::SeekRelative(uint64_t _bufferOffsetRelative)
+void ByteBuffer::seekRelative(uint64_t _bufferOffsetRelative)
 {
 	if (m_CurrentPosition + _bufferOffsetRelative >= m_BufferSize)
 	{
@@ -188,7 +188,7 @@ void ByteBuffer::SeekRelative(uint64_t _bufferOffsetRelative)
 	}
 }
 
-string ByteBuffer::ReadLine()
+string ByteBuffer::readLine()
 {
 	if (m_IsEOF)
 	{
@@ -207,10 +207,10 @@ string ByteBuffer::ReadLine()
 
 	char* _string = new char[charsCount + 1];
 	_string[charsCount] = '\0';
-	ReadBytes(&_string[0], charsCount);
+	readBytes(&_string[0], charsCount);
 
 	// Skip \r and \n
-	SeekRelative(nextLineBeginPos - lineEndPos);
+	seekRelative(nextLineBeginPos - lineEndPos);
 
 	string line(_string);
 
@@ -219,7 +219,7 @@ string ByteBuffer::ReadLine()
 	return Utils::Trim(line);
 }
 
-void ByteBuffer::ReadBytes(void* _destination, uint64_t _size)
+void ByteBuffer::readBytes(void* _destination, uint64_t _size)
 {
 	if (m_IsEOF)
 	{

@@ -11,7 +11,6 @@ WorldRender::WorldRender(WorldController * _WorldContoller)	:
 	groupQuality(GetSettingsGroup<CGroupQuality>())
 {
 	_Bindings->RegisterRenderable3DObject(this, 6);
-	setVisible(true);
 }
 
 WorldRender::~WorldRender()
@@ -19,12 +18,14 @@ WorldRender::~WorldRender()
 	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-void WorldRender::PreRender3D()
+bool WorldRender::PreRender3D()
 {
 	ADT_WMO_Instance::reset();
 	ADT_MDX_Instance::reset();
 
 	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
+
+	return true;
 }
 
 void WorldRender::Render3D()
@@ -41,18 +42,25 @@ void WorldRender::PostRender3D()
 
 void WorldRender::RenderPostprocess()
 {
-	//_Render->PostprocessSimple();
+	_Render->PostprocessSimple();
 
-	DirectionalLight light;
+	/*DirectionalLight light;
 	light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.ambient = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);
+	DSDirectionalLightPass(light);*/
 
 	if (groupQuality.drawfog)
 	{
+		float fogDist = m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE);
+		groupQuality.UpdateByFog(fogDist);
+
 		DSFogRenderPass();
+	}
+	else
+	{
+		groupQuality.InitDefault();
 	}
 }
 

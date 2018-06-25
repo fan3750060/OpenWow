@@ -20,7 +20,7 @@ public:
 	void draw();
 
 private:
-	const M2*									m_MDX;
+	const M2*									m_ParentM2;
 
 	uint32										m_ID;
 	const CM2_Part_Bone*						m_Bone;
@@ -28,7 +28,7 @@ private:
 	vec3										posValue;
 
 	SmartTexturePtr								m_Texture;
-	const SM2_Material*							m_Material;
+	const CM2_Part_Material*							m_Material;
 
 	M2_Animated<vec3>							m_Color;
 	M2_Animated<float, short, ShortToFloat>		m_Alpha;

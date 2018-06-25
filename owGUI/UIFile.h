@@ -1,19 +1,25 @@
 #pragma once
 
-class UIFile 
+// FORWARD BEGIN
+class UIMgr;
+// FORWARD END
+
+class UIFile
 {
 public:
-	 bool Load(cstring _filename);
-	 void Destroy();
+	UIFile(IUIMgr* _uimgr);
 
-	 UIWindow* GetRootWindow() const { return rootElement; }
+	bool Load(cstring _filename);
+	void Destroy();
 
-	 bool IsElementExists(cstring _name) const;
-	 UIElement* operator[](cstring _name);
+	UIWindow* GetRootWindow() const { return rootElement; }
 
-	 void SetParent(UIWindow* _parent);
-	 void Show() const;
-	 void Hide() const;
+	bool IsElementExists(cstring _name) const;
+	UIElement* operator[](cstring _name);
+
+	void SetParent(UIWindow* _parent);
+	void Show() const;
+	void Hide() const;
 
 private:
 	bool ProcessXMLNode(XMLNode* _node, UIElement* _parent);
@@ -30,4 +36,5 @@ private:
 	UIWindow* rootElement;
 
 	map<string, UIElement*> elements;
+	IUIMgr*		mUIMgr;
 };

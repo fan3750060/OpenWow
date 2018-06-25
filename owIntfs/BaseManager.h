@@ -45,7 +45,7 @@ __interface
 
 //--
 
-typedef enum SBaseManagerPhases : uint8
+enum SBaseManagerPhases : uint8
 {
 	Phase_Input = 0,
 	Phase_Update,

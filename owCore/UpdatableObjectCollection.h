@@ -6,8 +6,9 @@ public:
 	bool RegisterObject(IUpdatable* _uiObject);
 	void UnregisterObject(IUpdatable* _uiObject);
 
-	void Update(double _time, double _dTime);
+	void Update(IPerfomance* _perfomance, CInput* _input, double _time, double _dTime);
 
 private:
 	vector<IUpdatable*> m_Objects;
+	IBaseManager* m_BaseManager;
 };

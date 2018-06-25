@@ -10,7 +10,7 @@
 #include "ADT_Liquid.h"
 #include "MapController.h"
 #include "Map_Shared.h"
-
+#include "WorldController.h" // TODO
 //
 
 ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
@@ -20,8 +20,7 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	m_BlendRBGShadowATexture(0),
 	m_IndexesCountHigh(0),
 	m_LiquidInstance(nullptr),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
-	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	memset(mcly, 0x00, 16 * 4);
 
@@ -29,15 +28,20 @@ ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	setDebugColor(vec4(0.0f, 0.4f, 0.0f, 0.8f));
 }
 
+ADT_MCNK::~ADT_MCNK()
+{
+	//Log::Info("ADT_MCNK Deleted");
+}
+
 //
 
 bool ADT_MCNK::Load()
 {
 	SmartPtr<IFile> f = m_File;
-	uint32_t startPos = f->GetPos();
+	uint32_t startPos = f->getPos();
 
 	// Read header
-	f->ReadBytes(&header, sizeof(ADT_MCNK_Header));
+	f->readBytes(&header, sizeof(ADT_MCNK_Header));
 
 
 	// Scene node params
@@ -61,7 +65,7 @@ bool ADT_MCNK::Load()
 	memset(blendbuf, 0, 64 * 64 * 4);
 
 	// Normals
-	f->Seek(startPos + header.ofsNormal);
+	f->seek(startPos + header.ofsNormal);
 	{
 		vec3 tempNormals[C_MapBufferSize];
 		vec3* ttn = tempNormals;
@@ -70,7 +74,7 @@ bool ADT_MCNK::Load()
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				int8 nor[3];
-				f->ReadBytes(nor, 3);
+				f->readBytes(nor, 3);
 
 				*ttn++ = vec3(-(float)nor[1] / 127.0f, (float)nor[2] / 127.0f, -(float)nor[0] / 127.0f);
 			}
@@ -79,7 +83,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Heights
-	f->Seek(startPos + header.ofsHeight);
+	f->seek(startPos + header.ofsHeight);
 	{
 		vec3 tempVertexes[C_MapBufferSize];
 		vec3* ttv = tempVertexes;
@@ -88,7 +92,7 @@ bool ADT_MCNK::Load()
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				float h;
-				f->ReadBytes(&h, sizeof(float));
+				f->readBytes(&h, sizeof(float));
 
 				float xpos = i * C_UnitSize;
 				float zpos = j * 0.5f * C_UnitSize;
@@ -111,11 +115,11 @@ bool ADT_MCNK::Load()
 	}
 
 	// Textures
-	f->Seek(startPos + header.ofsLayer);
+	f->seek(startPos + header.ofsLayer);
 	{
 		for (uint32 i = 0; i < header.nLayers; i++)
 		{
-			f->ReadBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
+			f->readBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
 			m_DiffuseTextures[i] = m_ParentTextures->at(mcly[i].textureIndex)->diffuseTexture;
 			m_SpecularTextures[i] = m_ParentTextures->at(mcly[i].textureIndex)->specularTexture;
@@ -123,7 +127,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Shadows
-	f->Seek(startPos + header.ofsShadow);
+	f->seek(startPos + header.ofsShadow);
 	{
 		uint8 sbuf[64 * 64];
 		uint8* p;
@@ -131,7 +135,7 @@ bool ADT_MCNK::Load()
 		p = sbuf;
 		for (int j = 0; j < 64; j++)
 		{
-			f->ReadBytes(c, 8);
+			f->readBytes(c, 8);
 			for (int i = 0; i < 8; i++)
 			{
 				for (int b = 0x01; b != 0x100; b <<= 1)
@@ -148,24 +152,57 @@ bool ADT_MCNK::Load()
 	}
 
 	// Alpha
-	f->Seek(startPos + header.ofsAlpha);
+	f->seek(startPos + header.ofsAlpha);
 	{
 		for (uint32 i = 1; i < header.nLayers; i++)
 		{
 			uint8 amap[64 * 64];
 			memset(amap, 0x00, 64 * 64);
-			const uint8* abuf = f->GetDataFromCurrent() + mcly[i].offsetInMCAL;
-			uint8* p;
-			p = amap;
-			for (uint8 j = 0; j < 64; j++)
-			{
-				for (uint8 i = 0; i < 32; i++)
-				{
-					uint8 c = *abuf++;
-					*p++ = (c & 0x0f) << 4;
-					*p++ = (c & 0xf0);
-				}
+			const uint8* abuf = f->getDataFromCurrent() + mcly[i].offsetInMCAL;
 
+			if (mcly[i].flags.alpha_map_compressed) // Compressed: MPHD is only about bit depth!
+			{
+				// compressed
+				const uint8* input = abuf;
+
+				for (uint16 offset_output = 0; offset_output < 4096;)
+				{
+					const bool fill = *input & 0x80;
+					const uint16  n = *input & 0x7F;
+					++input;
+
+					if (fill)
+					{
+						memset(&amap[offset_output], *input, n);
+						++input;
+					}
+					else
+					{
+						memcpy(&amap[offset_output], input, n);
+						input += n;
+					}
+
+					offset_output += n;
+				}
+			}
+			else if (_World->Map()->m_WDT->isUncompressedAlpha()) // Uncomressed (4096)
+			{
+				memcpy(amap, abuf, 64 * 64);
+			}
+			else
+			{
+				uint8* p;
+				p = amap;
+				for (uint8 j = 0; j < 64; j++)
+				{
+					for (uint8 i = 0; i < 32; i++)
+					{
+						uint8 c = *abuf++;
+						*p++ = (c & 0x0f) << 4;
+						*p++ = (c & 0xf0);
+					}
+
+				}
 			}
 
 			if (!header.flags.do_not_fix_alpha_map)
@@ -187,17 +224,17 @@ bool ADT_MCNK::Load()
 	}
 
 	// Liquids
-	f->Seek(startPos + header.ofsLiquid);
+	f->seek(startPos + header.ofsLiquid);
 	{
 		if (header.sizeLiquid > 8)
 		{
 			CRange height;
-			f->ReadBytes(&height, 8);
+			f->readBytes(&height, 8);
 
 			CADT_Liquid* m_Liquid = new CADT_Liquid(8, 8);
 			m_Liquid->CreateFromMCLQ(f, header);
 
-			//m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
+			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
 		}
 	}
 
@@ -250,29 +287,33 @@ bool ADT_MCNK::Delete()
 	return true;
 }
 
-void ADT_MCNK::PreRender3D()
+bool ADT_MCNK::PreRender3D()
 {
-	setVisible(false);
-
 	// Check distance to camera
-	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - m_Bounds.getCenter().toX0Z()).length();
-	if (distToCamera2D > m_DistancesSettings.ADT_MCNK_Distance)
+	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - m_Bounds.getCenter().toX0Z()).length() - getBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	{
-		return;
+		return false;
 	}
 
 	// Check frustrum
 	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
 	{
-		return;
+		return false;
 	}
 
-	setVisible(true);
+	return true;
 }
 
 void ADT_MCNK::Render3D()
 {
 	if (!m_QualitySettings.draw_mcnk)
+	{
+		return;
+	}
+
+	int8 layersCnt = header.nLayers - 1;
+	if (layersCnt < 0)
 	{
 		return;
 	}
@@ -285,45 +326,40 @@ void ADT_MCNK::Render3D()
 		_Render->r.setDepthMask(true);
 		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
-		_Render->getTechniquesMgr()->MCNK_Pass->Bind();
-		{
-			_Render->getTechniquesMgr()->MCNK_Pass->SetLayersCount(header.nLayers);
+		CMCNK_Divided_Pass* pass = _Render->getTechniquesMgr()->MCNK_Divided_Pass[layersCnt];
 
+		pass->Bind();
+		{
 			// Bind m_DiffuseTextures
 			for (uint32 i = 0; i < header.nLayers; i++)
 			{
-				_Render->r.setTexture(i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-				_Render->r.setTexture(5 + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+				_Render->r.setTexture(CMCNK_Divided_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+				_Render->r.setTexture(CMCNK_Divided_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 			}
 
 			// Bind blend
-			if (header.nLayers > 0)
-			{
-				_Render->r.setTexture(4, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
-			}
+			_Render->r.setTexture(CMCNK_Divided_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
 
 			// Bind shadow
-			_Render->getTechniquesMgr()->MCNK_Pass->SetShadowMapExists(header.flags.has_mcsh);
+			pass->SetShadowMapExists(header.flags.has_mcsh);
 			if (header.flags.has_mcsh)
 			{
-				_Render->getTechniquesMgr()->MCNK_Pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
+				pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
 			}
 
-			float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length();
-			if (distToCamera3D > m_DistancesSettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low)
+			float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length() - getBounds().getRadius();
+			if (distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low)
 			{
-				_Render->getTechniquesMgr()->MCNK_Pass->SetIsLowRes(1);
 				_Render->r.setGeometry(__geomDefault);
 				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
 			}
 			else
 			{
-				_Render->getTechniquesMgr()->MCNK_Pass->SetIsLowRes(0);
 				_Render->r.setGeometry(__geomHigh);
 				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize, true);
 			}
 		}
-		_Render->getTechniquesMgr()->MCNK_Pass->Unbind();
+		pass->Unbind();
 	}
 	PERF_STOP(PERF_MAP);
 }

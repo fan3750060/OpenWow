@@ -21,7 +21,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	// Map
 
-	MCNK_Pass = new CMCNK_Pass(m_RenderDevice);
+	/*MCNK_Pass = new CMCNK_Pass(m_RenderDevice);
 	MCNK_Pass->Bind();
 	for (uint8 i = 0; i < 4; i++)
 	{
@@ -30,7 +30,22 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	}
 	MCNK_Pass->SetBlendBuffer(4);
 	MCNK_Pass->Unbind();
-	m_GeomTechniques.push_back(MCNK_Pass);
+	m_GeomTechniques.push_back(MCNK_Pass);*/
+
+
+	for (uint8 i = 0; i < 4; i ++)
+	{
+		MCNK_Divided_Pass[i] = new CMCNK_Divided_Pass(m_RenderDevice, i);
+		MCNK_Divided_Pass[i]->Bind();
+		for (uint8 j = 0; j < i + 1; j++)
+		{
+			MCNK_Divided_Pass[i]->SetColorTextureUnit(j);
+			MCNK_Divided_Pass[i]->SetSpecularTextureUnit(j);
+		}
+		MCNK_Divided_Pass[i]->SetBlendBuffer(CMCNK_Divided_Pass::C_Blend);
+		MCNK_Divided_Pass[i]->Unbind();
+		m_GeomTechniques.push_back(MCNK_Divided_Pass[i]);
+	}
 
 	WDL_LowRes_Pass = new CWDL_LowRes_Pass(m_RenderDevice);
 	m_GeomTechniques.push_back(WDL_LowRes_Pass);
@@ -39,7 +54,10 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	M2_Pass = new CM2_Pass(m_RenderDevice);
 	M2_Pass->Bind();
-	M2_Pass->SetDiffuseTexture(Material::C_DiffuseTextureIndex);
+	M2_Pass->SetDiffuseTexture(0, Material::C_DiffuseTextureIndex + 0);
+	M2_Pass->SetDiffuseTexture(1, Material::C_DiffuseTextureIndex + 1);
+	M2_Pass->SetDiffuseTexture(2, Material::C_DiffuseTextureIndex + 2);
+	M2_Pass->SetDiffuseTexture(3, Material::C_DiffuseTextureIndex + 3);
 	M2_Pass->SetSpecularTexture(Material::C_SpecularTextureIndex);
 	M2_Pass->Unbind();
 	m_GeomTechniques.push_back(M2_Pass);
@@ -72,7 +90,9 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	m_WMO_GeometryPass = new CWMO_GeomertyPass(m_RenderDevice);
 	m_WMO_GeometryPass->Bind();
-	m_WMO_GeometryPass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
+	m_WMO_GeometryPass->SetColorTextureUnit(0, Material::C_DiffuseTextureIndex + 0);
+	m_WMO_GeometryPass->SetColorTextureUnit(1, Material::C_DiffuseTextureIndex + 1);
+	m_WMO_GeometryPass->SetColorTextureUnit(2, Material::C_DiffuseTextureIndex + 2);
 	m_WMO_GeometryPass->SetSpecularTextureUnit(Material::C_SpecularTextureIndex);
 	m_WMO_GeometryPass->Unbind();
 	m_GeomTechniques.push_back(m_WMO_GeometryPass);

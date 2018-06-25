@@ -41,6 +41,11 @@ public:
 	vec3 getCorner(uint32 index) const;
 	void transform(const Matrix4f& m);
 	bool makeUnion(const BoundingBox& b);
+	bool isPointInside(cvec3 _point) const;
+
+	// 
+
+	static BoundingBox CreateBBoxInfinity();
 
 private:
 	vec3 m_Min;

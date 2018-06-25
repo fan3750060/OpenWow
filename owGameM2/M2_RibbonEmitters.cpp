@@ -7,9 +7,9 @@
 #include "M2_RibbonEmitters.h"
 
 CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
-	m_MDX(_model)
+	m_ParentM2(_model)
 {
-	m_Bone = &(m_MDX->m_Bones[_proto.boneIndex]);
+	m_Bone = &(m_ParentM2->m_Bones[_proto.boneIndex]);
 	posValue = pos = _proto.position.toXZmY();
 
 	m_Color.init(_proto.colorTrack, f, globals);
@@ -18,14 +18,14 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	m_HeightBelow.init(_proto.heightBelowTrack, f, globals);
 
 	{
-		uint16_t* TexturesList = (uint16_t*)(f->GetData() + _proto.textureIndices.offset);
+		uint16_t* TexturesList = (uint16_t*)(f->getData() + _proto.textureIndices.offset);
 		// just use the first texture for now; most models I've checked only had one
 		assert1(_proto.textureIndices.size > 0);
-		m_Texture = m_MDX->m_Textures[TexturesList[0]].getTexture();
+		m_Texture = m_ParentM2->m_Textures[TexturesList[0]].getTexture();
 
-		uint16_t* MaterialsList = (uint16_t*)(f->GetData() + _proto.materialIndices.offset);
+		uint16_t* MaterialsList = (uint16_t*)(f->getData() + _proto.materialIndices.offset);
 		assert1(_proto.materialIndices.size > 0);
-		m_Material = &(m_MDX->m_Materials[MaterialsList[0]]);
+		m_Material = &(m_ParentM2->m_Materials[MaterialsList[0]]);
 	}
 
 	// TODO: figure out actual correct way to calculate length
@@ -213,7 +213,7 @@ void CM2_RibbonEmitters::draw()
 	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
 	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetPVW();
 
-	_Render->r.setTexture(10, m_Texture, 0, 0);
+	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, 0, 0);
 
 	_Render->r.setGeometry(__geom);
 	_Render->r.draw(PRIM_LINES, 0, vertices.size());

@@ -3,16 +3,24 @@
 // General
 #include "InputListenerCollection.h"
 
-bool CInputListenerObjectCollection::RegisterObject(IInputListener* _Object)
+bool CInputListenerObjectCollection::RegisterObject(IInputListener* _Object, uint8 _priority)
 {
-    m_Objects.push_back(_Object);
+    m_Objects.push_back(new CInputListener(_Object, _priority));
+	std::sort(m_Objects.begin(), m_Objects.end(), CInputListenerObjectCompare());
 
     return true;
 }
 
 void CInputListenerObjectCollection::UnregisterObject(IInputListener* _Object)
 {
-    m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _Object), m_Objects.end());
+	for (auto it  = m_Objects.begin(); it != m_Objects.end(); ++it)
+	{
+		if ((*it)->getInputListener() == _Object)
+		{
+			m_Objects.erase(it);
+			break;
+		}
+	}
 }
 
 //
@@ -47,6 +55,8 @@ bool CInputListenerObjectCollection::OnMouseButtonReleased(int _button, int _mod
             return true;
         }
     }
+
+	return false;
 }
 
 bool CInputListenerObjectCollection::OnMouseWheel(int _yoffset)

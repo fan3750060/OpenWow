@@ -6,14 +6,18 @@
 #define On_Mouse_Leaved(c)       void c::OnMouseLeaved()
 #define On_Mouse_Leaved_V        virtual void OnMouseLeaved() override;
 
-class Font;
+// FORWARD BEGIN
 class UIMgr;
+class UIMgrEx;
 class UIWindow;
+// FORWARD END
 
 class UIElement
 {
+	friend UIMgr;
+	friend UIMgrEx;
 public:
-	UIElement(uint32 _DeepAdding = 0);
+	UIElement(IUIMgr* _uimgr, uint32 _DeepAdding = 0);
 	virtual ~UIElement();
 
 	//
@@ -119,6 +123,7 @@ private:
     bool        m_InputDisabled;
 	bool        m_IsSelected;
 
+
 protected:
 	bool        m_IsTextEnable;
 	string      m_Text;
@@ -126,8 +131,5 @@ protected:
 	vec2        m_TextOffset;
 	TextAlignW  m_TextAlignW;
 	TextAlignH  m_TextAlignH;
-
-    //
-
-    friend UIMgr;
+	IUIMgr*		mUIMgr;
 };

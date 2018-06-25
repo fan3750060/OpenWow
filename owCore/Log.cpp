@@ -8,12 +8,16 @@
 
 // Additional
 #include "BaseManager.h"
+#include "DebugOutputConsole.h"
+#include "DebugOutputLog.h"
 
 CLog::CLog()
 {
 	InitializeCriticalSection(&debugCS);
 
 	AddManager<ILog>(this);
+
+	AddDebugOutput(new DebugOutput_ConsoleWindows);
 }
 
 CLog::~CLog()

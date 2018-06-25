@@ -6,7 +6,7 @@
 class CM2_Skin_Builder
 {
 public:
-	CM2_Skin_Builder(M2* _model, const SM2_SkinProfile& _skinProto, CM2_Skin* _skin, IFile* _file);
+	CM2_Skin_Builder(M2* _model, CM2_Skin* _skin, IFile* _file);
 	~CM2_Skin_Builder();
 
 	void Load();
@@ -18,16 +18,16 @@ public:
 	void StepBuildGeometry();
 
 private:
-	M2*					m_MDX;
-	const SM2_SkinProfile&	m_SkinProto;
+	M2*						m_ParentM2;
+	SM2_SkinProfile			m_SkinProto;
 	CM2_Skin*				m_Skin;
-	IFile*					m_F;				// Don't delete this!
+	SmartPtr<IFile>			m_F;
 
 	//
 
-	vector<uint16>			verticesIndexes;
-	vector<uint16>			indexesIndexes;
-	vector<SM2_SkinBones>	bonesIndexes;
-	vector<SM2_SkinSection> skins;
-	vector<SM2_SkinBatch>	batches;
+	vector<uint16>			m_VerticesIndexes;
+	vector<uint16>			m_IndexesIndexes;
+	vector<SM2_SkinBones>	m_SkinBones;
+	vector<SM2_SkinSection> m_SkinSections;
+	vector<SM2_SkinBatch>	m_SkinBatches;
 };

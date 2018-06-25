@@ -7,20 +7,9 @@
 #include "WorldController.h"
 
 ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo) :
-	SceneNode(_parent),
-    m_Object(_mdxObject),
-	m_NeedRecalcAnimation(true),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
-	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
+	CM2_Base_Instance(_parent, _mdxObject)
 {
-    assert1(_mdxObject);
 	m_UniqueId = _placementInfo.uniqueId;
-
-	// Create animator
-	if (m_Object->isAnimated())
-	{
-		m_Animator = new CM2_Animator(m_Object);
-	}
 
 	// Scene node params
 	{
@@ -39,73 +28,40 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 		m_Bounds = m_Object->getBounds();
 		m_Bounds.transform(getAbsTrans());
 	}
+
+	InitLocal();
 	
-	setDrawOrder(21);
 	setDebugColor(vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	setSelectable();
-
-	if (m_Object->isAnimated())
-	{
-		_Bindings->RegisterUpdatableObject(this);
-	}
 }
 
 ADT_MDX_Instance::~ADT_MDX_Instance()
 {
-	if (m_Object->isAnimated())
-	{
-		delete m_Animator;
-		_Bindings->UnregisterUpdatableObject(this);
-	}
+	//Log::Info("ADT_MDX Deleted");
 }
 
-void ADT_MDX_Instance::Update(double _time, double _dTime)
+bool ADT_MDX_Instance::PreRender3D()
 {
-	if (m_Object->isAnimated())
-	{
-		m_Animator->Update(_time, _dTime);
-
-		/*if (m_Object->isBillboard())
-		{
-		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-		}
-		else
-		{*/
-		//if (!m_NeedRecalcAnimation)
-		//{
-		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(), static_cast<uint32>(_time));
-		//	m_NeedRecalcAnimation = true;
-		//}
-		//}
-	}
-
-	m_Object->updateEmitters(_dTime);
-}
-
-void ADT_MDX_Instance::PreRender3D()
-{
-	setVisible(false);
-
 	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	{
-		return;
+		return false;
 	}
 
 	// Check distance to camera
-	float distToCamera = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length();
-	if (distToCamera > m_DistancesSettings.ADT_MDX_Distance)
+	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MDX_Distance)
 	{
-		return;
+		return false;
 	}
 
-	// Frustrum culling
-	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	if (!CM2_Base_Instance::PreRender3D())
 	{
-		return;
+		return false;
 	}
 
 	m_AlreadyDraw.insert(m_UniqueId);
-	setVisible(true);
+
+	return true;
 }
 
 void ADT_MDX_Instance::Render3D()
@@ -115,9 +71,8 @@ void ADT_MDX_Instance::Render3D()
 		return;
 	}
 
-	//_Render->DrawBoundingBox(m_Bounds);
+	CM2_Base_Instance::Render3D();
 
-	m_Object->Render(getAbsTrans());
 	PERF_INC(PERF_MAP_MODELS_MDXs);
 }
 

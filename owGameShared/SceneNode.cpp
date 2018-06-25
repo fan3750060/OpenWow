@@ -36,11 +36,14 @@ SceneNode::SceneNode(SceneNode* _parent) :
 
 SceneNode::~SceneNode()
 {
-	for (auto it : m_Childs)
+	/*for (auto it = m_Childs.begin(); it != m_Childs.end(); )
 	{
-		it->setParent(nullptr);
-		//fail1();
-	}
+		SceneNode* item = (*it);
+		item->setParent(nullptr);
+		delete item;
+		it = m_Childs.erase(it);
+		item = nullptr;
+	}*/
 
 	if (m_Parent != nullptr)
 	{

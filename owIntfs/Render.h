@@ -26,6 +26,7 @@ __interface
 
 	void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate);
 	void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate);
+	void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, float rotate);
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color);
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color);

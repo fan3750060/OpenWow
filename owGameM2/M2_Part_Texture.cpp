@@ -9,7 +9,10 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_TextureReplaced(nullptr),
 	m_TexturesUseSpecialTexture(false)
 {
-	string textureFileName = (const char*)(f->GetData() + _proto.filename.offset);
+	m_WrapX = _proto.flags.WRAPX;
+	m_WrapY = _proto.flags.WRAPY;
+
+	string textureFileName = (const char*)(f->getData() + _proto.filename.offset);
 
 	if (_proto.type == 0) // Common texture
 	{

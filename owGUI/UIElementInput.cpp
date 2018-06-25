@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UIElement.h"
-
-// Additional
-#include "UIMgr.h"
 
 On_Mouse_Entered(UIElement)
 {

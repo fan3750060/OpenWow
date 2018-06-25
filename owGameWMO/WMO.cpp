@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 // Include
+#include "WMO_Base_Instance.h"
 #include "WMO_InstanceController.h"
 
 // General
@@ -8,17 +9,14 @@
 
 struct WMO_GroupInfoDef
 {
-	WMOGroupFlags flags;
-	CAaBox bounding_box;
-	int32 nameoffset;                                   // name in MOGN chunk (-1 for no name)
+	WMOGroupFlags	flags;
+	CAaBox			bounding_box;
+	int32			nameoffset;		// name in MOGN chunk (-1 for no name)
 };
 
 WMO::WMO(cstring name) :
 	m_FileName(name),
-
 	m_TexturesNames(nullptr),
-	m_GroupsNames(nullptr),
-	m_Skybox_Filename(nullptr),
 	m_PortalController(nullptr),
 	m_DoodadsFilenames(nullptr)
 
@@ -31,11 +29,9 @@ WMO::~WMO()
 	//
 
 	if (m_TexturesNames) delete[] m_TexturesNames;
-	if (m_GroupsNames) delete[] m_GroupsNames;
-	if (m_Skybox_Filename) delete[] m_Skybox_Filename;
 }
 
-void WMO::CreateInsances(SceneNode* _parent)
+void WMO::CreateInsances(CWMO_Base_Instance* _parent)
 {
 	for (auto& it : m_Groups)
 	{
@@ -51,41 +47,44 @@ bool WMO::Load()
 		return false;
 	}
 
+	char* groupsNames;
+	char* skyboxFilename;
+
 	char fourcc[5];
 	uint32 size;
-	while (!f->IsEof())
+	while (!f->isEof())
 	{
 		memset(fourcc, 0, 4);
-		f->ReadBytes(fourcc, 4);
+		f->readBytes(fourcc, 4);
 		flipcc(fourcc);
 		fourcc[4] = 0;
 		size = 0;
-		f->ReadBytes(&size, 4);
+		f->readBytes(&size, 4);
 		if (size == 0) continue;
-		uint32_t nextpos = f->GetPos() + size;
+		uint32_t nextpos = f->getPos() + size;
 
 		if (strcmp(fourcc, "MVER") == 0)                    // Version
 		{
 			uint32 version;
-			f->ReadBytes(&version, 4);
+			f->readBytes(&version, 4);
 			assert1(version == 17);
 		}
 		else if (strcmp(fourcc, "MOHD") == 0)               // Header
 		{
-			f->ReadBytes(&m_Header, sizeof(WMO_HeaderDef));
+			f->readBytes(&m_Header, sizeof(WMO_HeaderDef));
 
 			m_Bounds.set(m_Header.bounding_box.min, m_Header.bounding_box.max, true);
 		}
 		else if (strcmp(fourcc, "MOTX") == 0)               // List of m_DiffuseTextures (BLP Files) used in this map object.
 		{
 			m_TexturesNames = new char[size + 1];
-			f->ReadBytes(m_TexturesNames, size);
+			f->readBytes(m_TexturesNames, size);
 			m_TexturesNames[size] = 0x00;
 		}
 		else if (strcmp(fourcc, "MOMT") == 0)               // Materials used in this map object, 64 bytes per texture (BLP file), nMaterials entries.
 		{
 			uint32 materialsCount = size / sizeof(WMO_MaterialDef);
-			WMO_MaterialDef* materials = (WMO_MaterialDef*)f->GetDataFromCurrent();
+			WMO_MaterialDef* materials = (WMO_MaterialDef*)f->getDataFromCurrent();
 			assert1(materialsCount == m_Header.nTextures);
 			for (uint32 i = 0; i < materialsCount; i++)
 			{
@@ -95,14 +94,14 @@ bool WMO::Load()
 		}
 		else if (strcmp(fourcc, "MOGN") == 0)              // List of group names for the m_Groups in this map object.
 		{
-			m_GroupsNames = new char[size + 1];
-			f->ReadBytes(m_GroupsNames, size);
-			m_GroupsNames[size] = 0x00;
+			groupsNames = new char[size + 1];
+			f->readBytes(groupsNames, size);
+			groupsNames[size] = 0x00;
 		}
 		else if (strcmp(fourcc, "MOGI") == 0)
 		{
 			uint32 groupInfosCount = size / sizeof(WMO_GroupInfoDef);
-			WMO_GroupInfoDef* groupInfos = (WMO_GroupInfoDef*)f->GetDataFromCurrent();
+			WMO_GroupInfoDef* groupInfos = (WMO_GroupInfoDef*)f->getDataFromCurrent();
 			assert1(groupInfosCount == m_Header.nGroups);
 			for (uint32 i = 0; i < groupInfosCount; i++)
 			{
@@ -117,7 +116,7 @@ bool WMO::Load()
 				string groupName = groupFile->Name();
 				if (groupInfos[i].nameoffset > 0)
 				{
-					groupName = string(m_GroupsNames + groupInfos[i].nameoffset);
+					groupName = string(groupsNames + groupInfos[i].nameoffset);
 				}
 
 				WMO_Group* group = new WMO_Group(this, i, groupName, groupFile);
@@ -128,17 +127,17 @@ bool WMO::Load()
 		{
 			if (size > 4)
 			{
-				m_Skybox_Filename = new char[size + 1];
-				f->ReadBytes(m_Skybox_Filename, size);
-				m_Skybox_Filename[size] = 0x00;
-				Log::Error("WMO[%s]: Skybox [%s]", m_FileName.c_str(), m_Skybox_Filename);
-				//m_Skybox = _World->LoadMDX(m_Skybox_Filename);
+				skyboxFilename = new char[size + 1];
+				f->readBytes(skyboxFilename, size);
+				skyboxFilename[size] = 0x00;
+				Log::Error("WMO[%s]: Skybox [%s]", m_FileName.c_str(), skyboxFilename);
+				//m_Skybox = _World->LoadMDX(skyboxFilename);
 			}
 		}
 		else if (strcmp(fourcc, "MOPV") == 0)
 		{
 			uint32 portalVertexesCount = size / sizeof(vec3);
-			vec3* portalVertexes = (vec3*)f->GetDataFromCurrent();
+			vec3* portalVertexes = (vec3*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < portalVertexesCount; i++)
 			{
 				m_PortalVertices.push_back(portalVertexes[i].toXZmY());
@@ -148,7 +147,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MOPT") == 0)
 		{
 			uint32 portalDefsCount = size / sizeof(WMO_PortalDef);
-			WMO_PortalDef* portalDefs = (WMO_PortalDef*)f->GetDataFromCurrent();
+			WMO_PortalDef* portalDefs = (WMO_PortalDef*)f->getDataFromCurrent();
 			assert1(portalDefsCount == m_Header.nPortals);
 			for (uint32 i = 0; i < portalDefsCount; i++)
 			{
@@ -159,7 +158,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MOPR") == 0)
 		{
 			uint32 portalReferencesCount = size / sizeof(WMO_PortalReferencesDef);
-			WMO_PortalReferencesDef* portalReferences = (WMO_PortalReferencesDef*)f->GetDataFromCurrent();
+			WMO_PortalReferencesDef* portalReferences = (WMO_PortalReferencesDef*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < portalReferencesCount; i++)
 			{
 				m_PortalReferences.push_back(portalReferences[i]);
@@ -168,7 +167,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MOVV") == 0)
 		{
 			uint32 visibleVertexesCount = size / sizeof(vec3);
-			vec3* visibleVertexes = (vec3*)f->GetDataFromCurrent();
+			vec3* visibleVertexes = (vec3*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < visibleVertexesCount; i++)
 			{
 				m_VisibleBlockVertices.push_back(visibleVertexes[i].toXZmY());
@@ -177,7 +176,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MOVB") == 0)
 		{
 			uint32 visibleBlockListsCount = size / sizeof(WMO_VisibleBlockListDef);
-			WMO_VisibleBlockListDef* visibleBlockLists = (WMO_VisibleBlockListDef*)f->GetDataFromCurrent();
+			WMO_VisibleBlockListDef* visibleBlockLists = (WMO_VisibleBlockListDef*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < visibleBlockListsCount; i++)
 			{
 				m_VisibleBlockList.push_back(visibleBlockLists[i]);
@@ -186,7 +185,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MOLT") == 0)
 		{
 			uint32 lightsCount = size / sizeof(WMO_LightDef);
-			WMO_LightDef* lights = (WMO_LightDef*)f->GetDataFromCurrent();
+			WMO_LightDef* lights = (WMO_LightDef*)f->getDataFromCurrent();
 			assert1(lightsCount == m_Header.nLights);
 			for (uint32 i = 0; i < lightsCount; i++)
 			{
@@ -197,7 +196,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MODS") == 0)
 		{
 			uint32 doodadsSetsCount = size / sizeof(WMO_Doodad_SetInfo);
-			WMO_Doodad_SetInfo* doodadsSets = (WMO_Doodad_SetInfo*)f->GetDataFromCurrent();
+			WMO_Doodad_SetInfo* doodadsSets = (WMO_Doodad_SetInfo*)f->getDataFromCurrent();
 			assert1(doodadsSetsCount == m_Header.nDoodadSets);
 			for (uint32 i = 0; i < doodadsSetsCount; i++)
 			{
@@ -206,12 +205,12 @@ bool WMO::Load()
 		}
 		else if (strcmp(fourcc, "MODN") == 0) // List of filenames for M2 (mdx) models that appear in this WMO.
 		{
-			m_DoodadsFilenames = (char*)f->GetDataFromCurrent();
+			m_DoodadsFilenames = (char*)f->getDataFromCurrent();
 		}
 		else if (strcmp(fourcc, "MODD") == 0) // Information for doodad instances. 40 bytes per doodad instance, nDoodads entries.
 		{
 			uint32 doodadsPlacementsCount = size / sizeof(WMO_Doodad_PlacementInfo);
-			WMO_Doodad_PlacementInfo* doodadsPlacements = (WMO_Doodad_PlacementInfo*)f->GetDataFromCurrent();
+			WMO_Doodad_PlacementInfo* doodadsPlacements = (WMO_Doodad_PlacementInfo*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < doodadsPlacementsCount; i++)
 			{
 				m_DoodadsPlacementInfos.push_back(doodadsPlacements[i]);
@@ -222,7 +221,7 @@ bool WMO::Load()
 		else if (strcmp(fourcc, "MFOG") == 0)
 		{
 			uint32 fogsCount = size / sizeof(WMO_FogDef);
-			WMO_FogDef* fogs = (WMO_FogDef*)f->GetDataFromCurrent();
+			WMO_FogDef* fogs = (WMO_FogDef*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < fogsCount; i++)
 			{
 				SmartPtr<WMO_Part_Fog> fog = new WMO_Part_Fog(fogs[i]);
@@ -239,7 +238,7 @@ bool WMO::Load()
 			Log::Fatal("WMO[%s]: No implement wmo chunk [%s] [%d].", m_FileName.c_str(), fourcc, size);
 		}
 
-		f->Seek(nextpos);
+		f->seek(nextpos);
 	}
 
 	// Create portal controller
@@ -258,31 +257,53 @@ bool WMO::Load()
 	for (auto& it : m_Groups)
 	{
 		it->Load();
+
+		// Add outdoor group
+		if (it->m_Header.flags.IS_OUTDOOR)
+		{
+			m_OutdoorGroups.push_back(it);
+		}
 	}
 
 	return true;
 }
 
+#define WMO_DISABLE_PORTALS
+
 void WMO::PreRender(CWMO_InstanceController * _localContr)
 {
+#ifndef WMO_DISABLE_PORTALS
 	if (m_PortalController != nullptr)
 	{
 		m_PortalController->Update(_localContr, _localContr->getInvWorld() * (_Render->getCamera()->Position));
 	}
+#endif
 }
 
 void WMO::Render(CWMO_InstanceController* _localContr, const WMO_Doodad_SetInfo& _doodadSet)
 {
+#ifdef _DEBUG
 	for (auto& it : m_Portals)
 	{
 		it->Render(_localContr->getWorld());
 	}
+#endif
+
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	_Render->r.setDepthMask(true);
+	_Render->r.setDepthTest(true);
 
 	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
-	for (auto& it : m_Groups)
+	CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->m_WMO_GeometryPass;
+	pass->Bind();
 	{
-		it->Render(_localContr->getWorld(), _doodadSet);
+		pass->SetWorldMatrix(_localContr->getWorld());
+		for (auto& it : m_Groups)
+		{
+			it->Render(_localContr->getWorld(), _doodadSet);
+		}
 	}
+	pass->Unbind();
 	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
 }
 

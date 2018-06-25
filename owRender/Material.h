@@ -4,7 +4,8 @@ class Material
 {
 public:
 	Material();
-	void Set();
+
+	void Set() const;
 	void Restore();
 
 public:
@@ -62,6 +63,6 @@ private:
 	CGroupQuality& m_QualitySettings;
 
 public:
-	static const uint32 C_DiffuseTextureIndex = 10;
-	static const uint32 C_SpecularTextureIndex = 11;
+	static const uint32 C_DiffuseTextureIndex = 6;
+	static const uint32 C_SpecularTextureIndex = 10;
 };

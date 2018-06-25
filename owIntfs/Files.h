@@ -4,16 +4,16 @@
 
 __interface IByteBuffer
 {
-	uint64 GetSize() const;
-	uint64 GetPos() const;
-	const uint8* GetData() const;
-	const uint8* GetDataFromCurrent() const;
-	bool IsEof() const;
+	uint64 getSize() const;
+	uint64 getPos() const;
+	const uint8* getData() const;
+	const uint8* getDataFromCurrent() const;
+	bool isEof() const;
 
-	void Seek(uint64 _bufferOffsetAbsolute);
-	void SeekRelative(uint64 _bufferOffsetRelative);
-	string ReadLine();
-	void ReadBytes(void* _destination, uint64 _size);
+	void seek(uint64 _bufferOffsetAbsolute);
+	void seekRelative(uint64 _bufferOffsetRelative);
+	string readLine();
+	void readBytes(void* _destination, uint64 _size);
 };
 
 __interface IFile : public IByteBuffer, public IRefItem
@@ -31,6 +31,10 @@ __interface
 	IFilesManager : public IManager
 {
 	IFile* Open(cstring _fileName);
+
+	void Lock();
+	void Unlock();
+	void Guard();
 };
 
 // FORWARD BEGIN

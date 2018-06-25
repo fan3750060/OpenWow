@@ -1,9 +1,14 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UICheckBox.h"
 
-UICheckBox::UICheckBox() : base() {
+UICheckBox::UICheckBox(IUIMgr* _uimgr) :
+	UIElement(_uimgr)
+{
 	isChecked = false;
 }
 

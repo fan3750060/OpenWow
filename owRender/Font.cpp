@@ -4,6 +4,7 @@
 #include "Font.h"
 
 // Additional
+#include "Material.h"
 #include "Render.h"
 #include "TechniquesManager.h"
 
@@ -26,7 +27,7 @@ void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 	_Render->getTechniquesMgr()->UI_Font->SetProjectionMatrix(_Render->getOrthoMatrix());
 	_Render->getTechniquesMgr()->UI_Font->SetFontColor(vec3(_color.red, _color.green, _color.blue));
 
-	_Render->r.setTexture(10, m_Texture, SS_FILTER_BILINEAR | SS_ADDR_CLAMP, 0);
+	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, SS_FILTER_BILINEAR | SS_ADDR_CLAMP, 0);
 	_Render->r.setGeometry(m_Geometry);
 	
 	for (uint32 i = 0; i < _string.length(); i++)

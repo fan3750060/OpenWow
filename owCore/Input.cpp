@@ -3,7 +3,8 @@
 // General
 #include "Input.h"
 
-Input::Input()
+CInput::CInput() : 
+	m_OnFileDropped(nullptr)
 {
 	for (int i = 0; i < OW_KEYSCOUNT; i++) m_KeyState[i] = false;
 	for (int i = 0; i < OW_MOUSEBUTTONSCOUNT; i++) m_MouseButtonState[i] = false;
@@ -11,13 +12,24 @@ Input::Input()
 
 //
 
-void Input::MousePositionCallback(cvec2 _mousePos)
+void CInput::setOnFileDropperCallback(Function_WA<const char*>* _onDrop)
+{
+	if (m_OnFileDropped != nullptr)
+	{
+		delete m_OnFileDropped;
+	}
+
+	assert1(_onDrop);
+	m_OnFileDropped = _onDrop;
+}
+
+void CInput::MousePositionCallback(cvec2 _mousePos)
 {
 	m_MousePos = _mousePos;
 	_Bindings->m_InputListenerObjectCollection->OnMouseMoved(m_MousePos);
 }
 
-void Input::MouseCallback(int button, int action, int mods)
+void CInput::MouseCallback(int button, int action, int mods)
 {
 	if (action == OW_PRESS)
 	{
@@ -31,12 +43,12 @@ void Input::MouseCallback(int button, int action, int mods)
 	}
 }
 
-void Input::MouseScrollCallback(int yoffset)
+void CInput::MouseScrollCallback(int yoffset)
 {
 	_Bindings->m_InputListenerObjectCollection->OnMouseWheel(yoffset);
 }
 
-void Input::KeyboardCallback(int key, int scancode, int action, int mods)
+void CInput::KeyboardCallback(int key, int scancode, int action, int mods)
 {
 	if (action == OW_PRESS || action == OW_REPEAT)
 	{
@@ -50,7 +62,13 @@ void Input::KeyboardCallback(int key, int scancode, int action, int mods)
 	}
 }
 
-void Input::CharCallback(uint32 _char)
+void CInput::CharCallback(uint32 _char)
 {
 	_Bindings->m_InputListenerObjectCollection->OnCharInput(_char);
+}
+
+void CInput::DropFilesCallback(int _count, const char** _fnames)
+{
+	assert1(_count > 0);
+	m_OnFileDropped->operator()(_fnames[0]);
 }

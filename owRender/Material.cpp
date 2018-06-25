@@ -25,7 +25,7 @@ Material::Material() :
 	m_SpecularTexture = 0;
 }
 
-void Material::Set()
+void Material::Set() const
 {
 	//_Render->r.setAlphaToCoverage(true);
 	if (m_BlendEGxBlendIndex != -1)

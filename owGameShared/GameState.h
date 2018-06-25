@@ -3,7 +3,7 @@
 class GameStateManager;
 class UIWindow;
 
-class CGameState : public IGameState, public IUpdatable, public CRenderableUIObject, public IInputListener
+class CGameState : public IGameState, public IUpdatable, public IRenderableUI, public IInputListener
 {
 	friend GameStateManager;
 public:
@@ -22,11 +22,10 @@ public:
 protected:
     UIWindow*			m_Window;
 	IEngine*			m_Engine;
-	CGroupDistances&	m_DistancesSettings;
 	CGroupQuality&		m_QualitySettings;
 	CGroupVideo&		m_VideoSettings;
 
 private:
-	bool      m_IsInited;
-	bool      m_IsCurrent;
+	bool				m_IsInited;
+	bool				m_IsCurrent;
 };

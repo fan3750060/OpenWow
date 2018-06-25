@@ -6,9 +6,13 @@
 // General
 #include "M2_Skin.h"
 
+// Additional
+#include "M2_Part_Material.h"
+
 CM2_Skin::CM2_Skin(M2* _model) :
-	m_MDX(_model),
-	__geom(nullptr)
+	m_ParentM2(_model),
+	__geom(nullptr),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
 
 CM2_Skin::~CM2_Skin()
@@ -20,60 +24,16 @@ void CM2_Skin::Draw()
 {
 	_Render->r.setGeometry(__geom);
 
-	for (auto p : m_Batches)
+	for (auto& p : m_Batches)
 	{
-		if (m_VisibleSubmeshes[p->m2SkinIndex])
-		{
-			p->__material.Set();
 
-		
-			// Color
-			if (p->__colorIndex != -1)
-			{
-				_Render->getTechniquesMgr()->M2_Pass->SetColor(m_MDX->m_Colors[p->__colorIndex].getValue());
-			}
-		    else
-			{
-				_Render->getTechniquesMgr()->M2_Pass->SetColor(vec4(0.5f, 0.5f, 0.5f, 1.0f));
-			}
-
-			// Blend & Alpha
-			_Render->getTechniquesMgr()->M2_Pass->SetBlendMode(p->__blendMode);
-
-			// R_Texture weight
-			_Render->getTechniquesMgr()->M2_Pass->SetTextureWeight(m_MDX->m_TextureWeights[p->__textureWeight].getValue());
-
-			// Billboard
-			_Render->getTechniquesMgr()->M2_Pass->SetBillboard(p->m_IsBilldoard);
-
-			// R_Texture anim
-			_Render->getTechniquesMgr()->M2_Pass->SetTextureAnimEnable(p->__textureAnims != -1);
-			if (p->__textureAnims != -1)
-			{
-				_Render->getTechniquesMgr()->M2_Pass->SetTextureAnimMatrix(m_MDX->m_TexturesTransform[p->__textureAnims].getValue());
-			}
-			else
-			{
-				//continue;
-			}
-
-			_Render->r.drawIndexed
-			(
-				PRIM_TRILIST,
-				p->m_SkinSection.indexStart,
-				p->m_SkinSection.indexCount,
-				p->m_SkinSection.vertexStart,
-				p->m_SkinSection.vertexCount,
-				false
-			);
-		}
-
-		p->__material.Restore();
+			p->Render();
+		//p->__material.Restore();
 	}
 }
 
 
-void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
+/*void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
 {
 	_Render->getTechniquesMgr()->DebugNormal_Pass->Bind();
 	_Render->getTechniquesMgr()->DebugNormal_Pass->SetWorldMatrix(_worldMatrix);
@@ -97,4 +57,4 @@ void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
 	}
 
 	_Render->getTechniquesMgr()->DebugNormal_Pass->Unbind();
-}
+}*/

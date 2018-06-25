@@ -5,7 +5,7 @@
 class CM2_Part_Bone
 {
 public:
-	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global);
+	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, IFile** animfiles);
 
 	void calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time, uint32 globalTime);
 
@@ -49,7 +49,12 @@ private:
 	bool m_IsCalculated;
 
 	M2_Animated<vec3> trans;
+#if (VERSION == VERSION_Vanila)
 	M2_Animated<quat> roll;
+#else
+	M2_Animated<Quaternion, M2CompQuat, Quat16ToQuat32> roll;
+#endif
+	
 	M2_Animated<vec3> scale;
 };
 

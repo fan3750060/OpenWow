@@ -17,6 +17,11 @@ CM2_Animation::CM2_Animation(const M2* _m2, const SM2_Sequence& _sequence, uint1
 		m_Next = new CM2_Animation(_m2, _m2->m_Sequences[_sequence.variationNext], _sequence.variationNext, "???");
 	}
 
+#if (VERSION == VERSION_Vanila)
 	m_StartTimeStamp = _sequence.start_timestamp;
 	m_EndTimeStamp = _sequence.end_timestamp;
+#else
+	m_StartTimeStamp = 0;
+	m_EndTimeStamp = _sequence.duration;
+#endif
 }

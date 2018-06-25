@@ -10,75 +10,75 @@ DayNightPhase::DayNightPhase(IFile* f)
 {
     float h, m;
 
-    f->SeekRelative(4); // Always 0x46
-    f->ReadBytes(&h, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&m, 4);
+    f->seekRelative(4); // Always 0x46
+    f->readBytes(&h, 4);
+    f->seekRelative(4);
+    f->readBytes(&m, 4);
 
-    f->SeekRelative(4);
-    f->ReadBytes(&dayIntensity, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayIntensity, 4);
     //
-    f->SeekRelative(4);
-    f->ReadBytes(&dayColor.x, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&dayColor.y, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&dayColor.z, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayColor.x, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayColor.y, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayColor.z, 4);
     //
-    f->SeekRelative(4);
-    f->ReadBytes(&dayDir.x, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&dayDir.y, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&dayDir.z, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayDir.x, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayDir.y, 4);
+    f->seekRelative(4);
+    f->readBytes(&dayDir.z, 4);
 	dayDir = dayDir.toXZmY();
     
 
     //
 
-    f->SeekRelative(4);
-    f->ReadBytes(&nightIntensity, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightIntensity, 4);
     //
-    f->SeekRelative(4);
-    f->ReadBytes(&nightColor.x, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&nightColor.y, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&nightColor.z, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightColor.x, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightColor.y, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightColor.z, 4);
     //
-    f->SeekRelative(4);
-    f->ReadBytes(&nightDir.x, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&nightDir.y, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&nightDir.z, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightDir.x, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightDir.y, 4);
+    f->seekRelative(4);
+    f->readBytes(&nightDir.z, 4);
 	nightDir = nightDir.toXZmY();
 
     //
 
-    f->SeekRelative(4);
-    f->ReadBytes(&ambientIntensity, 4);
+    f->seekRelative(4);
+    f->readBytes(&ambientIntensity, 4);
     //
-    f->SeekRelative(4);
-    f->ReadBytes(&ambientColor.x, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&ambientColor.y, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&ambientColor.z, 4);
+    f->seekRelative(4);
+    f->readBytes(&ambientColor.x, 4);
+    f->seekRelative(4);
+    f->readBytes(&ambientColor.y, 4);
+    f->seekRelative(4);
+    f->readBytes(&ambientColor.z, 4);
 
     //
 
-    f->SeekRelative(4);
-    f->ReadBytes(&fogDepth, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&fogIntensity, 4);
+    f->seekRelative(4);
+    f->readBytes(&fogDepth, 4);
+    f->seekRelative(4);
+    f->readBytes(&fogIntensity, 4);
     //
-    f->SeekRelative(4);
-    f->ReadBytes(&fogColor.x, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&fogColor.y, 4);
-    f->SeekRelative(4);
-    f->ReadBytes(&fogColor.z, 4);
+    f->seekRelative(4);
+    f->readBytes(&fogColor.x, 4);
+    f->seekRelative(4);
+    f->readBytes(&fogColor.y, 4);
+    f->seekRelative(4);
+    f->readBytes(&fogColor.z, 4);
 
     uint32 time = (uint32)h * 60 * 2 + (uint32)m * 2;
 }

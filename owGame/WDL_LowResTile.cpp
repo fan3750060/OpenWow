@@ -21,24 +21,22 @@ CWDL_LowResTile::CWDL_LowResTile(SceneNode* _parent, uint32 _indexX, uint32 _ind
 	setDrawOrder(19);
 }
 
-void CWDL_LowResTile::PreRender3D()
+bool CWDL_LowResTile::PreRender3D()
 {
-	setVisible(false);
-
 	int32 currentX = m_MapController->GetCurrentX();
 	int32 currentZ = m_MapController->GetCurrentZ();
 
-	if (m_MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	/*if (m_MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
 	{
 		return;
-	}
+	}*/
 
-	if (abs(m_IndexX - currentX) > 5 || abs(m_IndexZ - currentZ) > 5)
+	if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
 	{
-		return;
+		return false;
 	}
 
-	setVisible(true);
+	return true;
 }
 
 void CWDL_LowResTile::Render3D()

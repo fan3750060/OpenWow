@@ -33,13 +33,14 @@ void RenderStorage::CreateLayouts()
 	};
 	__layoutWMO = m_RenderDevice->registerVertexLayout(3, attribsWMO);
 
-	R_VertexLayoutAttrib attribsWMO_VC[4] = {
+	R_VertexLayoutAttrib attribsWMO_VC[5] = {
 		{"VertexPosition",      0, 3, 0},
-		{"textureCoords",  1, 2, 0},
-		{"normal",         2, 3, 0},
-		{"color",          3, 4, 0}
+		{"textureCoords0",		1, 2, 0},
+		{"textureCoords1",		2, 2, 0},
+		{"normal",				3, 3, 0},
+		{"color",				4, 4, 0}
 	};
-	__layoutWMO_VC = m_RenderDevice->registerVertexLayout(4, attribsWMO_VC);
+	__layoutWMO_VC = m_RenderDevice->registerVertexLayout(5, attribsWMO_VC);
 	//--------------------------------------------------------------------------------------------
 	R_VertexLayoutAttrib attribsWater[3] = {
 		{"VertexPosition", 0, 3, 0},
@@ -330,7 +331,7 @@ void RenderStorage::SetEGxBlend(uint8 _index)
 		break;
 
 	case 2: // Alpha
-		m_RenderDevice->setBlendModeEx(false, BS_BLEND_SRC_ALPHA, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA);
+		m_RenderDevice->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA);
 		break;
 
 	case 3: // Add
@@ -366,8 +367,8 @@ void RenderStorage::SetEGxBlend(uint8 _index)
 		break;
 
 	case 11: // ConstantAlpha
-	//GLSetBlend(true, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-		fail1("Not implemented!!!");
+		//GLSetBlend(true, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+		fail1();
 		break;
 
 	case 12: // Screen

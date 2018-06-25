@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GroupDistances.h"
 #include "GroupOpenGL.h"
 #include "GroupQuality.h"
 #include "GroupRenderCaps.h"

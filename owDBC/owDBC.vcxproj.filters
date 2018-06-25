@@ -72,6 +72,9 @@
     <ClInclude Include="DBC_CinematicCamera.h">
       <Filter>DBCs</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_Map_WotLK.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

@@ -3,6 +3,9 @@
 // General
 #include "TexturesManager.h"
 
+// Additional
+#include "Render.h"
+
 #include __PACK_BEGIN
 struct BLPHeader
 {
@@ -76,7 +79,17 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
 {
     // Read data
     BLPHeader header;
-    f->ReadBytes(&header, 148);
+    f->readBytes(&header, 148);
+
+	if (header.width & (header.width - 1)) // TODO
+	{
+		return nullptr;
+	}
+
+	if (header.height & (header.height - 1))
+	{
+		return nullptr;
+	}
 
     assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
     assert1(header.type == 1);
@@ -113,8 +126,8 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
             {
                 assert1(header.mipSizes[i] > 0);
 
-                f->Seek(header.mipOffsets[i]);
-                f->ReadBytes(buf, header.mipSizes[i]);
+                f->seek(header.mipOffsets[i]);
+                f->readBytes(buf, header.mipSizes[i]);
 
 				_texture->uploadTextureData(0, i, buf);
             }
@@ -129,7 +142,7 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
     else if (header.compression == 1)
     {
         unsigned int pal[256];
-        f->ReadBytes(pal, 1024);
+        f->readBytes(pal, 1024);
 
         unsigned char* buf = new unsigned char[header.mipSizes[0]];
         unsigned int* buf2 = new unsigned int[header.width * header.height];
@@ -144,8 +157,8 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
         {
             if (header.mipOffsets[i] && header.mipSizes[i])
             {
-                f->Seek(header.mipOffsets[i]);
-                f->ReadBytes(buf, header.mipSizes[i]);
+                f->seek(header.mipOffsets[i]);
+                f->readBytes(buf, header.mipSizes[i]);
 
                 int cnt = 0;
                 p = buf2;
@@ -200,6 +213,8 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
         //fail1();
     }
 
+	_Render->r.checkError();
+
     return _texture;
 }
 
@@ -217,14 +232,16 @@ R_Texture* TexturesManager::CreateAction(cstring _name)
 
 void TexturesManager::LoadAction(string name, R_Texture*& item)
 {
-	UniquePtr<IFile> f(GetManager<IFilesManager>()->Open(name));
+	IFile* f = GetManager<IFilesManager>()->Open(name);
 	if (f == nullptr)
 	{
 		Log::Error("TexturesManager[%s]: Error while open texture.", name.c_str());
 		return;
 	}
 
+	//R_Texture* texture = new R_Texture(name, m_RenderDevice);
 	LoadBLPTexture(f, item);
+	//item = texture;
 }
 
 bool TexturesManager::DeleteAction(cstring name)
@@ -234,5 +251,5 @@ bool TexturesManager::DeleteAction(cstring name)
 
 void TexturesManager::MakeContext()
 {
-	m_Adapter->MakeCurrent();
+	m_Adapter->MakeThreadContext();
 }

@@ -9,7 +9,7 @@ public:
 	~WorldRender();
 	
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override;
 
@@ -23,6 +23,6 @@ public:
 
 private:
 	WorldController*	m_WorldContoller;
-	const CGroupVideo&		groupVideo;
-	const CGroupQuality&		groupQuality;
+	CGroupVideo&		groupVideo;
+	CGroupQuality&		groupQuality;
 };

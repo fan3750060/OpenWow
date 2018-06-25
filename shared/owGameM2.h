@@ -10,5 +10,5 @@
 //---------------------------------------------------------//
 
 // M2
-#include "../owGameM2/Single_M2_Instance.h"
+#include "../owGameM2/M2_Base_Instance.h"
 #include "../owGameM2/M2_Manager.h"

@@ -32,6 +32,3 @@
 
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
-
-#include <owGamePlatformWindows.h>
-#pragma comment(lib, "owGamePlatformWindows.lib")

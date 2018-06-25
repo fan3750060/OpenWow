@@ -7,7 +7,6 @@
 #include <ctime>
 
 EnvironmentManager::EnvironmentManager() :
-	m_DistancesSettings(GetSettingsGroup<CGroupDistances>()),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
     /*time_t t = time(0);   // get time now
@@ -38,7 +37,7 @@ void EnvironmentManager::Update(double _Time, double _deltaTime)
 {
 }
 
-void EnvironmentManager::PreRender3D()
+bool EnvironmentManager::PreRender3D()
 {
 	if (m_QualitySettings.timeEnable)
 	{
@@ -53,6 +52,8 @@ void EnvironmentManager::PreRender3D()
 	{
 		m_SkyManager->Calculate(m_GameTime.GetTime());
 	}
+
+	return true;
 }
 
 void EnvironmentManager::InitSkies(DBC_MapRecord* _mapRecord)
@@ -108,10 +109,10 @@ void EnvironmentManager::SetFog()
 {
 	if (m_QualitySettings.drawfog)
 	{
-		float fogdist = m_DistancesSettings.fogdistance;
+		float fogdist = m_QualitySettings.fogdistance;
 		float fogstart = 0.5f;
 
-		m_DistancesSettings.culldistance = fogdist;
+		m_QualitySettings.culldistance = fogdist;
 
 		vec4 fogcolor(m_SkyManager->GetColor(LIGHT_COLOR_FOG), 1);
 		//glFogfv(GL_FOG_COLOR, fogcolor); // TODO: retreive fogstart and fogend from lights.lit somehow
@@ -122,7 +123,7 @@ void EnvironmentManager::SetFog()
 	else
 	{
 		//glDisable(GL_FOG);
-		m_DistancesSettings.culldistance = m_DistancesSettings.ADT_MCNK_Distance;
+		m_QualitySettings.culldistance = m_QualitySettings.ADT_MCNK_Distance;
 	}
 }
 

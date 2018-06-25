@@ -18,7 +18,7 @@ public:
 	RenderDevice();
 	~RenderDevice();
 
-	bool init();
+	bool init(IOpenGLAdapter* _adapter);
 
 	// Vertex layouts
 	uint32 registerVertexLayout(uint32 numAttribs, R_VertexLayoutAttrib *attribs);

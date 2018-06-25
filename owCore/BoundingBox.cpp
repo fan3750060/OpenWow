@@ -144,3 +144,23 @@ bool BoundingBox::makeUnion(const BoundingBox& b)
 
 	return changed;
 }
+
+bool BoundingBox::isPointInside(cvec3 _point) const
+{
+	if (_point.x < m_Min.x || _point.y < m_Min.y ||	_point.z < m_Min.z ||
+		_point.x > m_Max.x || _point.y > m_Max.y ||	_point.z > m_Max.z)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+BoundingBox BoundingBox::CreateBBoxInfinity()
+{
+	BoundingBox bbInf;
+	bbInf.setMin(vec3(-100000.0f, -100000.0f, -100000.0f));
+	bbInf.setMax(vec3(100000.0f, 100000.0f, 100000.0f));
+	bbInf.calculateCenter();
+	return bbInf;
+}

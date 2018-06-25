@@ -3,6 +3,9 @@
 // General
 #include "liquid.h"
 
+// Additional
+#include "Perfomance.h"
+
 Liquid::Liquid(uint32 x, uint32 y) :
 	m_TilesX(x),
 	m_TilesY(y),
@@ -31,11 +34,11 @@ void Liquid::Render(cmat4 _worldMatrix)
 	else
 	{
 		_Render->getTechniquesMgr()->m_Magma->Bind();
-		_Render->getTechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->m_Magma->SetWorldMatrix(_worldMatrix);
 	}
 
 	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % m_Textures.size();
-	_Render->r.setTexture(10, m_Textures[texidx], 0, 0);
+	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Textures[texidx], 0, 0);
 
 	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
 	{
@@ -117,8 +120,8 @@ void Liquid::initGeometry(DBC_LIQUIDTYPE_Type _type, IFile* f)
 {
 	m_Type = _type;
 
-	SLiquidVertex* map = (SLiquidVertex*)(f->GetDataFromCurrent());
-	SLiquidFlag* flags = (SLiquidFlag*)(f->GetDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
+	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
+	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
 
 	layer.x = 0;
 	layer.y = 0;

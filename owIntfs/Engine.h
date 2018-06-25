@@ -9,10 +9,12 @@ __interface
 	IEngine : public IManager
 {
 	bool Tick();
-	IOpenGLAdapter* GetAdapter();
+
 	uint8 GetArgumentsCount() const;
 	string GetArgument(uint8 index) const;
+
 	uint32 GetFPS() const;
+
 	void SetNeedExit();
 	bool IsNeedExit() const;
 };

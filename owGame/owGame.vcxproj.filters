@@ -19,8 +19,8 @@
     <Filter Include="Environment\Skies">
       <UniqueIdentifier>{179d7822-1b17-4d5c-9dcf-34999c82a998}</UniqueIdentifier>
     </Filter>
-    <Filter Include="WorldController">
-      <UniqueIdentifier>{86cc816c-079e-4fc1-8454-67b7ce64a75c}</UniqueIdentifier>
+    <Filter Include="Minimap">
+      <UniqueIdentifier>{7d9e72bb-61cb-4a47-8d81-10fca7c4523f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,14 +39,8 @@
     <ClCompile Include="Map_Shared.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="WorldController.cpp">
-      <Filter>WorldController</Filter>
-    </ClCompile>
     <ClCompile Include="MapController.cpp">
       <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldRender.cpp">
-      <Filter>WorldController</Filter>
     </ClCompile>
     <ClCompile Include="ADT_WMO_Instance.cpp">
       <Filter>Map\Instances</Filter>
@@ -78,6 +72,13 @@
     <ClCompile Include="WDL_LowResTile.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="WorldRender.cpp" />
+    <ClCompile Include="MinimapProvider.cpp">
+      <Filter>Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldController.cpp">
+      <Filter>Minimap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sky.h">
@@ -98,14 +99,8 @@
     <ClInclude Include="Map_Shared.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="WorldController.h">
-      <Filter>WorldController</Filter>
-    </ClInclude>
     <ClInclude Include="MapController.h">
       <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldRender.h">
-      <Filter>WorldController</Filter>
     </ClInclude>
     <ClInclude Include="ADT_WMO_Instance.h">
       <Filter>Map\Instances</Filter>
@@ -142,6 +137,11 @@
     </ClInclude>
     <ClInclude Include="WDL_LowResTile.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldController.h" />
+    <ClInclude Include="WorldRender.h" />
+    <ClInclude Include="MinimapProvider.h">
+      <Filter>Minimap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,14 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UIButton3t.h"
 
-UIButton3t::UIButton3t() : base() {}
+UIButton3t::UIButton3t(IUIMgr* _uimgr) :
+	UIButton(_uimgr)
+{}
 
 UIButton3t::~UIButton3t()
 {

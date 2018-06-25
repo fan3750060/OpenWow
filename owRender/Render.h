@@ -42,7 +42,7 @@ public:
 	RenderGL();
 	~RenderGL();
 
-	void Init(IOpenGLAdapter* _adapter, HGLRC _context);
+	void Init(IOpenGLAdapter* _adapter);
 	
 	//------------------
 	// Main part
@@ -77,6 +77,7 @@ public:
 
     void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate = false) override;
     void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate = false) override;
+	void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, float rotate) override;
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
@@ -89,8 +90,6 @@ public:
 	void RenderQuad();
     void RenderQuadVT();
 
-	void DrawPerfomance(vec2 _startPoint);
-
 	//------------------
 	// Getters
 	//------------------
@@ -99,10 +98,11 @@ public:
 	Camera* getCamera() { return m_Camera; }
 
 public: // Getters
-	inline RenderStorage* getRenderStorage() { return m_RenderStorage; }
-	inline TexturesManager* TexturesMgr() { return m_TexturesManager; }
-	inline FontsManager* FontsMgr() { return m_FontsManager; }
-	inline TechniquesManager* getTechniquesMgr() { return m_TechniquesManager; }
+	IOpenGLAdapter* getAdapter() { return m_OpenGLAdapter; }
+	RenderStorage* getRenderStorage() { return m_RenderStorage; }
+	TexturesManager* TexturesMgr() { return m_TexturesManager; }
+	FontsManager* FontsMgr() { return m_FontsManager; }
+	TechniquesManager* getTechniquesMgr() { return m_TechniquesManager; }
 
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);
@@ -115,6 +115,7 @@ private:
 	mat4						m_OrhoMatrix;
 	Camera*						m_Camera;
 
+	IOpenGLAdapter*				m_OpenGLAdapter;
 	RenderStorage*				m_RenderStorage;
 	TexturesManager*			m_TexturesManager;
 	FontsManager*				m_FontsManager;

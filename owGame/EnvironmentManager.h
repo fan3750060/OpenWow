@@ -17,11 +17,11 @@ public:
 	void SetFog();
 
 	// IUpdatable
-	void Input(double _time, double _dTime) override {}
+	void Input(CInput* _input, double _time, double _dTime) override {}
 	void Update(double _Time, double _deltaTime) override;
 
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override {}
 	void PostRender3D() override {}
 
@@ -42,6 +42,5 @@ public:
 	SmartPtr<DayNightCycle> dayNightCycle;
 	DayNightPhase dayNightPhase;
 
-	CGroupDistances& m_DistancesSettings;
 	CGroupQuality& m_QualitySettings;
 };

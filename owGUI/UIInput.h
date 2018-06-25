@@ -2,11 +2,12 @@
 
 #include "UIElement.h"
 
+//
+
 class UIInput : public UIElement
 {
-    typedef UIElement base;
 public:
-    UIInput();
+    UIInput(IUIMgr* _uimgr);
 
     void Init(cvec2 _position, cvec2 _size, InputMode _inputMode = MODE_ANY);
 
@@ -29,6 +30,5 @@ public:
 
 private:
     int inputStringMaxLenght;
-
     InputMode inputMode;
 };

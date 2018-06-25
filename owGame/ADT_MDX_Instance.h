@@ -15,31 +15,21 @@ struct ADT_MDDF
     } flags;
 };
 
-class ADT_MDX_Instance : public SceneNode
+class ADT_MDX_Instance : public CM2_Base_Instance
 {
 public:
 	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo);
 	~ADT_MDX_Instance();
 
 	// ISceneNode
-	string getObjectInfo() override { return m_Object->getFilename(); }
-
-	// IUpdateble
-	void Update(double _time, double _dTime) override;
+	string getObjectInfo() override { return "@ADT_MDX@" + m_Object->getFilename(); }
 
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D()override;
 
 public: 
-	const SmartM2Ptr	m_Object;
 	uint32				m_UniqueId;
-
-	CM2_Animator*		m_Animator;
-	bool				m_NeedRecalcAnimation;
-
-	CGroupQuality&		m_QualitySettings;
-	CGroupDistances&	m_DistancesSettings;
 
 public:	// Static
 	static void reset();

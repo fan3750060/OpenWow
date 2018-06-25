@@ -13,7 +13,7 @@
 FontsManager::FontsManager(RenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice)
 {
-	mainFont = Add("Fonts\\Consolas.TTF", 12);
+	mainFont = Add("Fonts\\FRIZQT__.TTF", 12);
 
 	AddManager<IFontsManager>(this);
 }
@@ -54,7 +54,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	FT_Init_FreeType(&ftLibrary);
 
 	FT_Face face;
-	if (FT_New_Memory_Face(ftLibrary, f->GetData(), f->GetSize(), 0, &face) != 0)
+	if (FT_New_Memory_Face(ftLibrary, f->getData(), f->getSize(), 0, &face) != 0)
 	{
 		Log::Error("FontsManager[%s]: Error while loading font. Could not load font file.", f->Path_Name().c_str());
 

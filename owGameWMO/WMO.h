@@ -10,6 +10,7 @@
 #include "WMO_Part_PortalsController.h"
 
 // FORWARD BEGIN
+class CWMO_Base_Instance;
 class CWMO_InstanceController;
 // FORWARD END
 
@@ -20,7 +21,7 @@ public:
 	WMO(cstring _fileName);
 	~WMO();
 
-	void CreateInsances(SceneNode* _parent);
+	void CreateInsances(CWMO_Base_Instance* _parent);
 	bool Load();
 
 	void PreRender(CWMO_InstanceController* _localContr);
@@ -31,18 +32,9 @@ public:
 #pragma region Getters
 public:
 	string getFilename() const { return m_FileName; }
+	BoundingBox	getBounds() const { return m_Bounds; }
 
 	bool useAmbColor() const { return !(m_Header.flags.FLAG_skip_base_color); }
-	vec4 getAmbColor() const
-	{
-		return vec4
-		(
-			static_cast<float>(m_Header.ambColor.r) / 255.0f,
-			static_cast<float>(m_Header.ambColor.g) / 255.0f,
-			static_cast<float>(m_Header.ambColor.b) / 255.0f,
-			static_cast<float>(m_Header.ambColor.a) / 255.0f
-		);
-	}
 
 	M2* getSkybox() { return m_Skybox; }
 #pragma endregion
@@ -58,11 +50,11 @@ public:
 	vector<SmartPtr<WMO_Part_Material>>		m_Materials;			// MOMT chunk
 
 	//-- Groups --//
-	char*									m_GroupsNames;			// MOGN chunk
-	vector<WMO_Group*>						m_Groups;				// MOGI chunk
+
+	vector<SmartPtr<WMO_Group>>				m_Groups;				// MOGI chunk
+	vector<WMO_Group*>						m_OutdoorGroups;
 
 	//-- Skybox --//
-	char*									m_Skybox_Filename;		// MOSB chunk
 	SmartM2Ptr								m_Skybox;
 
 	//-- Portals --//

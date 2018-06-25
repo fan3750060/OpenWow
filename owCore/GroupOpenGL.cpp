@@ -11,6 +11,6 @@ void CGroupOpenGL::InitDefault()
 
 	OES_EGL_image = false;
 
-	majorVersion = 1;
-	minorVersion = 0;
+	majorVersion = 4;
+	minorVersion = 3;
 }

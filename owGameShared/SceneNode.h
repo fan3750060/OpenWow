@@ -9,7 +9,7 @@ class SceneNode :
 public:
 	SceneNode();
 	SceneNode(SceneNode* _parent);
-	~SceneNode();
+	virtual ~SceneNode();
 
 	vector<SceneNode*>& getChilds() { return m_Childs; }
 
@@ -36,6 +36,7 @@ public:
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
 	cvec3 getScale() const { return m_Scale; }
+	void setBounds(BoundingBox _bbox) { m_Bounds = _bbox; }
 	cbbox getBounds() const { return m_Bounds; }
 	cmat4 getRelTrans() const { return m_RelTransform; }
 	cmat4 getAbsTrans() const { return m_AbsTransform; }
@@ -43,7 +44,7 @@ public:
 	// ISceneNode::Selectable
 	void setSelectable() { m_Selectable = true; }
 	bool getSelectable() { return m_Selectable; }
-	virtual string getObjectInfo() { return ""; }
+	virtual string getObjectInfo() { return "emp"; };
 
 	// ILoadable
 	virtual bool Load() override;
@@ -52,13 +53,13 @@ public:
 	bool isLoaded() const override { return m_IsLoaded; }
 	
 	// IUpdatable
-	virtual void Input(double _time, double _dTime) override {};
+	virtual void Input(CInput* _input, double _time, double _dTime) override {};
 	virtual void Update(double _time, double _dTime) override {};
 
 	// IRenderable
-	virtual void PreRender3D() override {};
-	virtual void Render3D() override {}
-	virtual void PostRender3D() override { /*Don't use it*/ }
+	virtual bool PreRender3D() override { return true; };
+	virtual void Render3D() override { /*override me*/ }
+	virtual void PostRender3D() override { /* override me*/ }
 	virtual void RenderDebug3D() { Render3D(); };
 	void setVisible(bool _value) override { m_IsVisible = _value; }
 	bool isVisible() const override { return m_IsVisible; }

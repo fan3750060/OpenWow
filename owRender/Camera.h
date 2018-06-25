@@ -13,16 +13,28 @@ const float PITCH = 0.0f;
 const float SPEED = 1.0f;
 const float SENSITIVTY = 20.1f;
 
-class Camera : public IUpdatable
+class Camera : public IUpdatable, public IInputListener
 {
 public:
 	Camera(vec3 position = vec3(0.0f, 0.0f, 0.0f), vec3 up = vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 	~Camera();
 
+	void EnableUpdate() { m_DisableUpdate = false; }
+	void DisableUpdate() { m_DisableUpdate = true; }
+
 	// IUpdatable
-	void Input(double _time, double _dTime) override {};
+	void Input(CInput* _input, double _time, double _dTime) override;
 	void Update(double _time, double _dTime) override;
+
+	// IInputListener
+	void OnMouseMoved(cvec2 _mousePos) override;
+	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
+	bool OnMouseWheel(int _yoffset) override { return false; }
+	bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
+	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override;
+	bool OnCharInput(uint32 _char) override { return false; }
 
 	void Render();
 
@@ -36,8 +48,8 @@ public:
 	void onPostUpdate();
 
 	const Frustum& getFrustum() const { return _frustum; }
-	const Matrix4f& getViewMat() const { return _viewMat; }
-	const Matrix4f& getProjMat() const { return _projMat; }
+	cmat4 getViewMat() const { return _viewMat; }
+	cmat4 getProjMat() const { return _projMat; }
 
 	void SetNeedUpdate() { m_NeedUpdate = true; }
 
@@ -55,9 +67,21 @@ public:
 	float Roll;
 	float Pitch;
 
+	// Sets
+	bool m_NeedUpdate;
+	bool m_UseDir;
+
 	// Camera options
 	float MovementSpeed;
 	float MouseSensitivity;
+	bool enableFreeCamera;
+	bool cameraSprint;
+	bool cameraSlow;
+	vec2 lastMousePos;
+	bool m_DisableUpdate;
+
+	IEngine*		m_Engine;
+	CGroupVideo&	m_VideoSettings;
 
 public:
 	float				tan;
@@ -72,8 +96,4 @@ public:
 	bool                _orthographic;  // Perspective or orthographic frustum?
 	bool                _manualProjMat; // Projection matrix manually set?
 	SmartGeomPtr		__geom;
-
-public:
-	bool m_NeedUpdate;
-	bool m_UseDir;
 };

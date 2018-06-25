@@ -28,7 +28,7 @@ void GameState_Menu::OnBtn(DBC_MapRecord* _e)
 bool GameState_Menu::LoadWorld(vec3 _pos)
 {
 	_World->Map()->MapLoad();
-	_World->Map()->EnterMap(_pos.x / C_TileSize, _pos.z / C_TileSize);
+	_World->EnterMap(_pos);
 	_World->Map()->MapPostLoad();
 
 	if (_World->Map()->m_WDT->MapHasGlobalWMO())
@@ -55,17 +55,13 @@ bool GameState_Menu::Init()
 {
 	CGameState::Init();
 
-	//
-
-	OpenDBs();
-
 	_World->EnvM()->isVisible();
 
-	m_MinimapUI = new UIElement(100);
+	m_MinimapUI = new UIElement(GetManager<IUIMgr>(), 100);
 	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), (R_Texture*)nullptr, COLOR_WHITE);
 	m_MinimapUI->Hide();
 
-	m_LoadingScreenUI = new UIElement(150);
+	m_LoadingScreenUI = new UIElement(GetManager<IUIMgr>(), 150);
 	m_LoadingScreenUI->Init(m_Window->GetPosition(), m_Window->GetSize(), (R_Texture*)nullptr, COLOR_WHITE);
 	m_LoadingScreenUI->Hide();
 
@@ -86,9 +82,15 @@ bool GameState_Menu::Init()
 	{
 		auto record = (i->second);
 		
+#if (VERSION == VERSION_WotLK)
+		if (record->Get_Expansion() < 2)
+		{
+			continue;
+		}
+#endif
 
 		// Add btn
-		auto btn = new UIButton();
+		auto btn = new UIButton(GetManager<IUIMgr>());
 
 
 		btn->Init(vec2(100 + 200, mapsYStart), image);
@@ -96,15 +98,14 @@ bool GameState_Menu::Init()
 
 		btn->AttachTo(m_Window);
 		btn->ShowText();
-		btn->SetText(record->Get_Name());
+		btn->SetText(record->Get_Directory());
 		SETBUTTONACTION_ARG(btn, GameState_Menu, this, OnBtn, DBC_MapRecord*, record);
 
 		mapsYStart += mapsYdelta;
 	}
 
 	//
-	enableFreeCamera = false;
-	cameraSprint = false;
+
 	//
 
 
@@ -136,29 +137,6 @@ void GameState_Menu::Unset()
 
 //
 
-void GameState_Menu::Input(double _time, double _dTime)
-{
-	float speed = 4.5f;
-
-	if (cameraSlow)
-		speed *= 0.2f;
-
-	if (cameraSprint)
-		speed *= 3.0f;
-
-	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_W))
-		_Render->getCamera()->ProcessKeyboard(FORWARD, speed);
-
-	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_S))
-		_Render->getCamera()->ProcessKeyboard(BACKWARD, speed);
-
-	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_A))
-		_Render->getCamera()->ProcessKeyboard(LEFT, speed);
-
-	if (m_Engine->GetAdapter()->GetInput()->IsKeyPressed(OW_KEY_D))
-		_Render->getCamera()->ProcessKeyboard(RIGHT, speed);
-}
-
 void GameState_Menu::Update(double _time, double _dTime)
 {
 	if (m_BackgroudModel)
@@ -167,12 +145,12 @@ void GameState_Menu::Update(double _time, double _dTime)
 	}
 }
 
-void GameState_Menu::PreRender3D()
+bool GameState_Menu::PreRender3D()
 {
 	_Render->BindRBs();
 	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
 
-	setVisible(true);
+	return true;
 }
 
 void GameState_Menu::Render3D()
@@ -217,18 +195,6 @@ void GameState_Menu::RenderUI()
 
 //
 
-void GameState_Menu::OnMouseMoved(cvec2 _mousePos)
-{
-	if (enableFreeCamera)
-	{
-		vec2 mouseDelta = (_mousePos - lastMousePos) / m_VideoSettings.GetWindowSize();
-
-		_Render->getCamera()->ProcessMouseMovement(mouseDelta.x, -mouseDelta.y);
-
-		m_Engine->GetAdapter()->SetMousePosition(lastMousePos);
-	}
-}
-
 bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
 	// Select point
@@ -244,25 +210,9 @@ bool GameState_Menu::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePo
 		return true;
 	}
 
-	if (_button == OW_MOUSE_BUTTON_LEFT)
-	{
-		enableFreeCamera = true;
-		lastMousePos = _mousePos;
-		m_Engine->GetAdapter()->HideCursor();
-		return true;
-	}
-
 	return false;
 }
 
-bool GameState_Menu::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
-{
-	enableFreeCamera = false;
-	lastMousePos = vec2();
-	m_Engine->GetAdapter()->ShowCursor();
-
-	return true;
-}
 
 bool GameState_Menu::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
@@ -281,18 +231,6 @@ bool GameState_Menu::OnKeyboardPressed(int _key, int _scancode, int _mods)
 		}
 	}
 
-	if (_key == OW_KEY_X)
-	{
-		cameraSprint = true;
-		return true;
-	}
-
-	if (_key == OW_KEY_Z)
-	{
-		cameraSlow = true;
-		return true;
-	}
-
 	return false;
 }
 
@@ -309,5 +247,5 @@ void GameState_Menu::randBackground()
 	//M2* mdx = GetManager<IM2Manager>()->Add(path);
 	//mdx->m_Cameras[0].setup(0, 0);
 
-	//m_BackgroudModel = new Single_M2_Instance(nullptr, mdx);
+	//m_BackgroudModel = new CM2_Base_Instance(nullptr, mdx);
 }

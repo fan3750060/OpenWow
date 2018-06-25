@@ -3,31 +3,40 @@
 // General
 #include "Render.h"
 
+// Additional
+#include "Material.h"
+
 RenderGL::RenderGL() :
+	m_OpenGLAdapter(nullptr),
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
-{
-	
-}
+{}
 
 RenderGL::~RenderGL()
 {
 	delete m_Camera;
 }
 
-void RenderGL::Init(IOpenGLAdapter* _adapter, HGLRC _context)
+void RenderGL::Init(IOpenGLAdapter* _adapter)
 {
-	r.init();
+	assert1(_adapter != nullptr);
+	m_OpenGLAdapter = _adapter;
+
+	//--
+
+	r.init(m_OpenGLAdapter);
 	r.setViewport(0, 0, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 
-	//m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-
-	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
+	//--
 
 	m_RenderStorage = new RenderStorage(&r);
-	m_TexturesManager = new TexturesManager(_adapter, &r);
+	m_TexturesManager = new TexturesManager(m_OpenGLAdapter, &r);
 	m_FontsManager = new FontsManager(&r);
 	m_TechniquesManager = new TechniquesManager(&r);
+
+	//--
+
+	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
+	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 4);
 
 	// Main game camera
 	m_Camera = new Camera;
@@ -67,7 +76,7 @@ void RenderGL::UnbindRBs()
 	m_RenderBuffer->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
 	for (uint32 i = 0; i < 4; i++)
 	{
-		r.setTexture(i, m_RenderBuffer->getRenderBufferTex(i), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+		r.setTexture(i, m_RenderBuffer->getRenderBufferTex(i), SS_FILTER_POINT | SS_ADDR_CLAMP, 0);
 	}
 	r.clear();
 }
@@ -204,7 +213,7 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 	m_TechniquesManager->UI_Texture->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
 
 	// State
-	r.setTexture(10, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+	r.setTexture(Material::C_DiffuseTextureIndex, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
 	r.setGeometry(m_RenderStorage->__QuadVTDynamic);
 
 	// Draw call
@@ -229,14 +238,36 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool ro
 	{
 		worldTransform.rotate(vec3(0.0f, Math::Pi, 0.0f)); // FIXME
 	}
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
+	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();
 	m_TechniquesManager->UI_Texture->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
 
 	// State
-	r.setTexture(10, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+	r.setTexture(Material::C_DiffuseTextureIndex, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
+	r.setGeometry(m_RenderStorage->__QuadVT);
+
+	// Draw call
+	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+
+	m_TechniquesManager->UI_Texture->Unbind();
+}
+
+void RenderGL::RenderTexture(vec2 _pos, R_Texture * _texture, vec2 _size, float rotate)
+{
+	// Transform
+	mat4 worldTransform;
+	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
+	worldTransform.rotate(vec3(0.0f, 0.0f, rotate));
+	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
+
+	// Shader
+	m_TechniquesManager->UI_Texture->Bind();
+	m_TechniquesManager->UI_Texture->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
+
+	// State
+	r.setTexture(Material::C_DiffuseTextureIndex, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
 	r.setGeometry(m_RenderStorage->__QuadVT);
 
 	// Draw call
@@ -347,37 +378,6 @@ void RenderGL::RenderQuadVT()
 #pragma endregion
 
 //
-
-void RenderGL::DrawPerfomance(vec2 _startPoint)
-{
-	vec2 point = _startPoint;
-	float diff = 15.0f;
-
-	for (uint8 i = 0; i < OW_COUNT_ELEMENTS(PerfomanceMessages); i++)
-	{
-		if (PerfomanceMessages[i].what != PERF_DELIM)
-		{
-			RenderText(
-				point,
-				PerfomanceMessages[i].descr +
-				string(": t[")
-				+
-				_Perfomance->GetTimer(PerfomanceMessages[i].what)
-				+
-				(
-					PerfomanceMessages[i].showInc ? "], c["
-					+
-					_Perfomance->GetInc(PerfomanceMessages[i].what) + "]" : "]"
-					)
-			);
-		}
-
-		point.y += diff;
-	}
-
-	RenderText(point, "SUMMA: " + _Perfomance->Sum());
-}
-
 //
 
 void RenderGL::OnWindowResized(uint32 _width, uint32 _height)

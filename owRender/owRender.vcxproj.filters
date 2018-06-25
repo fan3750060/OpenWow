@@ -111,9 +111,6 @@
     <ClInclude Include="Sky_GeometryPass.h">
       <Filter>Techniques\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="WMO_GeomertyPass.h">
-      <Filter>Techniques\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="lights_common.h">
       <Filter>Techniques\Postprocess</Filter>
     </ClInclude>
@@ -171,9 +168,6 @@
     <ClInclude Include="Magma_Pass.h">
       <Filter>Techniques\Liquids</Filter>
     </ClInclude>
-    <ClInclude Include="MCNK_Pass.h">
-      <Filter>Techniques\Map</Filter>
-    </ClInclude>
     <ClInclude Include="WDL_LowRes_Pass.h">
       <Filter>Techniques\Map</Filter>
     </ClInclude>
@@ -200,6 +194,15 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MCNK_Divided_Pass.h">
+      <Filter>Techniques\Map\Divided</Filter>
+    </ClInclude>
+    <ClInclude Include="MCNK_Pass.h">
+      <Filter>Techniques\Map\Merged</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_GeomertyPass.h">
+      <Filter>Techniques\WMO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,19 +251,22 @@
     <Filter Include="Techniques\_Base">
       <UniqueIdentifier>{1fa03493-3df8-48ef-85b4-ac66054b829b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Techniques\Map\Divided">
+      <UniqueIdentifier>{58b2a1d1-6532-4c4f-88c7-4399ada10ee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Map\Shared">
+      <UniqueIdentifier>{c7c2db2c-db2a-4d02-a215-8e5a697baa67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Map\Merged">
+      <UniqueIdentifier>{9c705bd8-4812-4a82-a5d5-3f1eaa373d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\WMO">
+      <UniqueIdentifier>{73aa6f44-6821-4e55-890c-e2cfe737006c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Technique.inl">
       <Filter>Techniques</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk.fs">
-      <Filter>Techniques\Map</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk.gs">
-      <Filter>Techniques\Map</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk.vs">
-      <Filter>Techniques\Map</Filter>
     </None>
     <None Include="..\_gamedata\shaders\Map\MapTileLowRes.fs">
       <Filter>Techniques\Map</Filter>
@@ -294,6 +300,57 @@
     </None>
     <None Include="..\_gamedata\shaders\Liquid\Water.vs">
       <Filter>Techniques\Liquids</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.gs">
+      <Filter>Techniques\Map\Shared</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.vs">
+      <Filter>Techniques\Map\Shared</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.fs">
+      <Filter>Techniques\Map\Merged</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_0.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_1.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_2.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_3.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\M2\M2.fs">
+      <Filter>Techniques\M2</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\M2\M2.vs">
+      <Filter>Techniques\M2</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\M2\M2_RibbonEmitters.fs">
+      <Filter>Techniques\M2</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\M2\M2_RibbonEmitters.vs">
+      <Filter>Techniques\M2</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\WMO.fs">
+      <Filter>Techniques\WMO</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\WMO.vs">
+      <Filter>Techniques\WMO</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0 .fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_1.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_2.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_3.fs">
+      <Filter>Techniques\Map\Divided</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -7,10 +7,15 @@ class CM2_Pass : public GeometryBase
     int32 gBones;
     int32  gColor;
     int32  gIsAnimated;
-    int32  gDiffuseTexture;
+
+	int32 gShader;
+
+    int32  gDiffuseTexture[4];
     int32  gSpecularTexture;
+
     int32  gBlendMode;
     int32  gTextureWeight;
+
     int32  gBillboard;
     int32  gTextureAnimEnable;
     int32  gTextureAnimMatrix;
@@ -22,11 +27,21 @@ public:
         gBones = getLocation("gBones");
         gColor = getLocation("gColor");
         gIsAnimated = getLocation("gIsAnimated");
-        gDiffuseTexture = getLocation("gDiffuseTexture");
+
+		gShader = getLocation("gShader");
+
+        gDiffuseTexture[0] = getLocation("gDiffuseTexture0");
+		gDiffuseTexture[1] = getLocation("gDiffuseTexture1");
+		gDiffuseTexture[2] = getLocation("gDiffuseTexture2");
+		gDiffuseTexture[3] = getLocation("gDiffuseTexture3");
+
         gSpecularTexture = getLocation("gSpecularTexture");
+
         gBlendMode = getLocation("gBlendMode");
         gTextureWeight = getLocation("gTextureWeight");
+
         gBillboard = getLocation("gBillboard");
+
         gTextureAnimEnable = getLocation("gTextureAnimEnable");
         gTextureAnimMatrix = getLocation("gTextureAnimMatrix");
     }
@@ -53,11 +68,18 @@ public:
         m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), _bones.size());
     }
 
+	// Shader
+
+	inline void SetShader(int _blendMode)
+	{
+		setInt(gShader, _blendMode);
+	}
+
 	// Textures
  
-	inline void SetDiffuseTexture(int TextureUnit)
+	inline void SetDiffuseTexture(int index, int TextureUnit)
 	{
-		setTexture(gDiffuseTexture, TextureUnit);
+		setTexture(gDiffuseTexture[index], TextureUnit);
 	}
 
 	inline void SetSpecularTexture(int TextureUnit)

@@ -17,30 +17,21 @@ struct ADT_MODF
 	uint16 scale;			// Legion+
 };
 
-class ADT_WMO_Instance : public SceneNode
+class ADT_WMO_Instance : public CWMO_Base_Instance
 {
 public:
 	ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo);
 	~ADT_WMO_Instance();
 
 	// ISceneNode
-	string getObjectInfo() override { return m_Object->getFilename(); }
-
-	// IUpdatable
-	void Update(double _time, double _dTime) override;
+	string getObjectInfo() override { return "@ADT_WMO@" + m_Object->getFilename(); }
 
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override;
 
 private:
-	const SmartWMOPtr						m_Object;
 	uint32									m_UniqueId;
-	WMO_Doodad_SetInfo						m_DoodadSetInfo;
-	SmartPtr<CWMO_InstanceController>		m_InstanceController;
-
-	const CGroupQuality&					m_QualitySettings;
-	const CGroupDistances&					m_DistancesSettings;
 
 public:	// Static
 	static void reset();

@@ -3,23 +3,12 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
-WMO_Doodad_Instance::WMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, uint32 _index, const WMO_Doodad_PlacementInfo& _placement, const WMO_Group* _group) :
-	SceneNode(_parent),
-	m_Object(_mdxObject),
+CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, uint32 _index, const WMO_Doodad_PlacementInfo& _placement, const WMO_Group* _group) :
+	CM2_Base_Instance(_parent, _mdxObject),
 	m_Index(_index),
-	m_Group(_group),
-	m_NeedRecalcAnimation(true),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
-	m_DistancesSettings(GetSettingsGroup<CGroupDistances>())
+	m_Group(_group)
 {
-	assert1(m_Object != nullptr);
-
-	// Create animator
-	if (m_Object->isAnimated())
-	{
-		m_Animator = new CM2_Animator(m_Object);
-	}
-
+	m_Object->setDoodadColor(_placement.getColor());
 	// Scene node params
 	{
 		// Convert
@@ -33,90 +22,50 @@ WMO_Doodad_Instance::WMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, uin
 		m_Bounds.transform(getAbsTrans());
 	}
 
-	setDrawOrder(21);
+	InitLocal();
+
 	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
 	setSelectable();
-
-	if (m_Object->isAnimated())
-	{
-		_Bindings->RegisterUpdatableObject(this);
-	}
 }
 
-WMO_Doodad_Instance::~WMO_Doodad_Instance()
+CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
 {
-	if (m_Object->isAnimated())
-	{
-		delete m_Animator;
-		_Bindings->UnregisterUpdatableObject(this);
-	}
+	//Log::Info("ADT_MDX Deleted");
 }
 
-void WMO_Doodad_Instance::Update(double _time, double _dTime)
+bool CWMO_Doodad_Instance::PreRender3D()
 {
-	if (m_Object->isAnimated())
-	{
-		m_Animator->Update(_time, _dTime);
-
-		/*if (m_Object->isBillboard())
-		{
-		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(_time), _time);
-		}
-		else
-		{*/
-		//if (!m_NeedRecalcAnimation)
-		//{
-		m_Object->animate(m_Animator->getSId(), m_Animator->getCurrentTime(), static_cast<uint32>(_time));
-		//	m_NeedRecalcAnimation = true;
-		//}
-		//}
-	}
-
-	m_Object->updateEmitters(_dTime);
-}
-
-void WMO_Doodad_Instance::PreRender3D()
-{
-	setVisible(false);
-
 	if (!m_Group->m_PortalsVis)
 	{
-		return;
+		return false;
 	}
 
 	// Check distance to camera
-	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length();
-	if (distToCamera > m_DistancesSettings.WMO_MODD_Distance)
+	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length() - getBounds().getRadius();
+	if (distToCamera > m_QualitySettings.WMO_MODD_Distance)
 	{
-		return;
+		return false;
 	}
 
 	// Frustrum culling
-	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	if (!CM2_Base_Instance::PreRender3D())
 	{
-		return;
+		return false;
 	}
 
-	setVisible(true);
+	return true;
 }
 
-void WMO_Doodad_Instance::Render3D()
+void CWMO_Doodad_Instance::Render3D()
 {
 	if (!m_QualitySettings.draw_wmo_doodads)
 	{
 		return;
 	}
 
-	//_Render->DrawBoundingBox(m_Bounds);
+	CM2_Base_Instance::Render3D();
 
-	m_Object->Render(getAbsTrans());
-	_Render->r.checkError();
 	PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
-}
-
-void WMO_Doodad_Instance::RenderDebug3D()
-{
-	return;
 }
 
 

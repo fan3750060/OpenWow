@@ -24,9 +24,9 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 	setDrawOrder(29);
 }
 
-void Liquid_Instance::PreRender3D()
+bool Liquid_Instance::PreRender3D()
 {
-	setVisible(true);
+	return true;
 }
 
 void Liquid_Instance::Render3D()

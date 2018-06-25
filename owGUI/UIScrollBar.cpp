@@ -1,9 +1,13 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UIScrollBar.h"
 
-UIScrollBar::UIScrollBar() : base() 
+UIScrollBar::UIScrollBar(IUIMgr* _uimgr) :
+	UIElement(_uimgr)
 {
 	value = 0.5;
 

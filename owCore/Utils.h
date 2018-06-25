@@ -34,8 +34,8 @@ public:
     static   string TrimLeft(string& _string, cstring delimiters = " \f\n\r\t\v");
     static   string TrimRight(string& _string, cstring delimiters = " \f\n\r\t\v");
 
-    static   void ToLower(string& _string);
     static   string ToLower(cstring _string);
+	static   string ToUpper(cstring _string);
 
     static   int popFirstInt(string& _string, char separator = 0);
     static   double popFirstDouble(string& _string, char separator = 0);
@@ -115,4 +115,18 @@ inline vec4 fromABGR(uint32 color)
 static inline void SwitchBool(bool& _value)
 {
 	_value = !_value;
+}
+
+
+static vec3 rotateV(cvec3 v, float theta)
+{
+	float cs = cosf(theta);
+	float sn = sinf(theta);
+
+	float X = v.x * cs - v.z * sn;
+	float Z = v.x * sn + v.z * cs;
+
+	vec3 neW = vec3(X, v.y, Z);
+
+	return neW;
 }

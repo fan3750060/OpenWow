@@ -1,32 +1,33 @@
 #pragma once
 
-class UIElement;
+#include "UIElement.h"
 
-class UIMgr : public IUpdatable, public CRenderableUIObject, public IInputListener
+class UIMgr : public IUIMgr, public IUIMgrEx, public IUpdatable, public IRenderableUI, public IInputListener
 {
-	CLASS_INSTANCE(UIMgr);
 public:
 	UIMgr();
 	~UIMgr();
-	//
 
-	void AttachToRoot(UIElement* _element);
-    void DetachFromRoot(UIElement* _element, bool _checkChilds = false);
+	// IUIMgr
+	void AttachToRoot(UIElement* _element) override;
+    void DetachFromRoot(UIElement* _element, bool _checkChilds = false) override;
+    void AttachElementToParent(UIElement* _element, UIElement* _parent) override;
 
-    void AttachElementToParent(UIElement* _element, UIElement* _parent);
+    UIElement* GetRootElement() const override { return m_RootElement; }
+    void SetRootElement(UIElement* _element) override { m_RootElement = _element; }
 
-    // Root element
+	UIElement* GetFocus() const override { return m_FocusedElement; }
+    void SetFocus(UIElement* _element) override;
 
-    UIElement* GetRootElement() const { return m_RootElement; }
-    void SetRootElement(UIElement* _element) { m_RootElement = _element; }
-
-	// Focus
-
-	UIElement* GetFocus() const { return m_FocusedElement; }
-    void SetFocus(UIElement* _element);
+	// IUIMgrEx
+	string GetNewName();
+	void SetForDetach(UIElement* _element) override;
+	void SetForDelete(UIElement* _element) override;
+	void DetachFromParent(UIElement* _element) override;
+	void DeleteUIElement(UIElement* _element) override;
 
 	// IUpdatable
-	void Input(double _time, double _dTime) override {}
+	void Input(CInput* _input, double _time, double _dTime) override {}
 	void Update(double _time, double _dTime) override;
 
 	// IRenderableUI
@@ -41,24 +42,11 @@ public:
 	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override;
 	bool OnCharInput(uint32 _char) override;
 
-private:
-	string GetNewName();
-	void SetForDetach(UIElement* _element);
-	void SetForDelete(UIElement* _element);
-	void DetachFromParent(UIElement* _element);
-	void DeleteUIElement(UIElement* _element);
-
-private:
+protected:
 	uint32              m_IDCounter;
     UIElement*          m_RootElement;
     UIElement*          m_FocusedElement;
 
 	vector<UIElement*>  m_ObjectsToDetach;
 	vector<UIElement*>  m_ObjectsToDelete;
-	
-    //
-
-    friend UIElement;
 };
-
-#define _UIMgr UIMgr::instance()

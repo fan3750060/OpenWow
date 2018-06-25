@@ -1,9 +1,13 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UIButton.h"
 
-UIButton::UIButton()
+UIButton::UIButton(IUIMgr* _uimgr) :
+	UIElement(_uimgr)
 {
 	m_IsTextEnable = false;
 

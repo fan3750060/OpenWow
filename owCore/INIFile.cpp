@@ -10,7 +10,7 @@
 
 	while (!ByteBuffer::IsEof())
 	{
-		string line = ByteBuffer::ReadLine();
+		string line = ByteBuffer::readLine();
 
         if (line.length() == 0)
         {

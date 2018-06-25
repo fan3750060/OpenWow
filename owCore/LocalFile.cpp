@@ -28,8 +28,16 @@ bool CLocalFile::Open()
 	// Check stream
 	if (!stream.is_open())
 	{
-		//Log::Error("File1[%s]: Can not open file!", Path_Name().c_str());
-		return false;
+		stream.clear();
+		stream.close();
+
+		stream.open(string(Path_Name()), ios::binary);
+
+		if (!stream.is_open())
+		{
+			//Log::Error("File1[%s]: Can not open file!", Path_Name().c_str());
+			return false;
+		}
 	}
 
 	// Filesize
@@ -105,7 +113,15 @@ bool CLocalFile::IsFileExists(cstring _name)
 	// Check stream
 	if (!stream.is_open())
 	{
-		return false;
+		stream.clear();
+		stream.close();
+
+		stream.open(_name, ios::binary);
+
+		if (!stream.is_open())
+		{
+			return false;
+		}
 	}
 
 	stream.clear();

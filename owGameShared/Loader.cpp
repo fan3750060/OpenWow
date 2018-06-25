@@ -8,7 +8,7 @@ DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
 	CLoader* loader = (CLoader*)lpParam;
 	std::queue<ILoadable*>& lqueue = loader->getQueueLoad();
 
-	loader->getAdapter()->MakeContextMainThread();
+	loader->getAdapter()->MakeMainContext();
 
 	while (true)
 	{

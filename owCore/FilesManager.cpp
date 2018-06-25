@@ -33,8 +33,25 @@ IFile* CFilesManager::Open(cstring _fileName)
 
 	if (file != nullptr)
 	{
+		Lock();
 		file->Open();
+		Unlock();
 	}
 
 	return file;
+}
+
+void CFilesManager::Lock()
+{
+	m_Lock.lock();
+}
+
+void CFilesManager::Unlock()
+{
+	m_Lock.unlock();
+}
+
+void CFilesManager::Guard()
+{
+	std::lock_guard<std::mutex> lock(m_Lock);
 }

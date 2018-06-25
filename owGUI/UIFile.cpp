@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
-// Includes
+// Include
 #include "UIWindow.h"
+#include "UIMgr.h"
 
 // General
 #include "UIFile.h"
@@ -13,7 +14,10 @@
 #include "UIButton3t.h"
 #include "UICheckBox.h"
 #include "UIScrollBar.h"
-#include "UIMgr.h"
+
+UIFile::UIFile(IUIMgr* _uimgr) :
+	mUIMgr(_uimgr)
+{}
 
 bool UIFile::Load(cstring _filename)
 {
@@ -82,7 +86,7 @@ void UIFile::Show() const
 	if (parent != nullptr)
 		rootElement->AttachTo(parent);
 	else
-		_UIMgr->AttachToRoot(rootElement);
+		mUIMgr->AttachToRoot(rootElement);
 }
 
 void UIFile::Hide() const
@@ -168,22 +172,22 @@ bool UIFile::CreateUIElementByXMLNode(UIElement*& _element, XMLNode* _node)
 	string elementName = _node->GetKeyValue("name");
 
 	if (elementClassName == "uielement")
-		_element = new UIElement();
+		_element = new UIElement(mUIMgr);
 
 	else if (elementClassName == "uiwindow")
-		_element = new UIWindow();
+		_element = new UIWindow(mUIMgr);
 
 	else if (elementClassName == "uiinput")
-		_element = new UIInput();
+		_element = new UIInput(mUIMgr);
 
 	else if (elementClassName == "uibutton3t")
-		_element = new UIButton3t();
+		_element = new UIButton3t(mUIMgr);
 
 	else if (elementClassName == "uibutton")
-		_element = new UIButton();
+		_element = new UIButton(mUIMgr);
 
 	else if (elementClassName == "uiscrollbar")
-		_element = new UIScrollBar();
+		_element = new UIScrollBar(mUIMgr);
 
 	//
 	if (_element == nullptr)

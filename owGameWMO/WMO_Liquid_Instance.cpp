@@ -9,14 +9,17 @@ CWMO_Liquid_Instance::CWMO_Liquid_Instance(SceneNode* _parent, Liquid* _liquidOb
 {
 }
 
-void CWMO_Liquid_Instance::PreRender3D()
+CWMO_Liquid_Instance::~CWMO_Liquid_Instance()
 {
-	setVisible(false);
+	//Log::Info("CWMO_Liquid_Instance Deleted");
+}
 
+bool CWMO_Liquid_Instance::PreRender3D()
+{
 	if (!m_Group->m_PortalsVis)
 	{
-		return;
+		return false;
 	}
 
-	setVisible(true);
+	return true;
 }

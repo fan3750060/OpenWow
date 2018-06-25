@@ -14,15 +14,19 @@ __interface IInputListener : public IObject
 	bool OnCharInput(uint32 _char);
 };
 
+// FORWARD BEGIN
+class CInput;
+// FORWARD END
+
 __interface IUpdatable : public IObject
 {
-	void Input(double _time, double _dTime);
+	void Input(CInput* _input, double _time, double _dTime);
 	void Update(double _time, double _dTime);
 };
 
 __interface IRenderable3D : public IObject
 {
-	void PreRender3D();
+	bool PreRender3D();
 	void Render3D();
 	void PostRender3D();
 
@@ -35,7 +39,4 @@ __interface IRenderable3D : public IObject
 __interface IRenderableUI : public IObject
 {
 	void RenderUI();
-
-	void setDrawOrder(uint32 _order);
-	uint32 getDrawOrder() const;
 };

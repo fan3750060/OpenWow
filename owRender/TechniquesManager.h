@@ -6,6 +6,7 @@
 
 // Map
 #include "MCNK_Pass.h"
+#include "MCNK_Divided_Pass.h"
 #include "WDL_LowRes_Pass.h"
 
 // M2
@@ -44,6 +45,7 @@ public:
 
 	// Map
 	CMCNK_Pass* MCNK_Pass;
+	CMCNK_Divided_Pass* MCNK_Divided_Pass[4];
 	CWDL_LowRes_Pass* WDL_LowRes_Pass;
 
 	// M2

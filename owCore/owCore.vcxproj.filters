@@ -76,6 +76,9 @@
     <Filter Include="RefManager\1 Dim Assync">
       <UniqueIdentifier>{d1c95b6f-a767-47df-bed7-b177d7d1e2eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Cryptography">
+      <UniqueIdentifier>{69b706e6-dded-4e00-8818-f8bc0b73fffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -86,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="InputListenerCollection.cpp">
       <Filter>Objects bindings\InputListener</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableUIObject.cpp">
-      <Filter>Objects bindings\RenderableUI</Filter>
     </ClCompile>
     <ClCompile Include="RenderableUIObjectCollection.cpp">
       <Filter>Objects bindings\RenderableUI</Filter>
@@ -159,14 +159,8 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Settings</Filter>
     </ClCompile>
-    <ClCompile Include="RenderConfig.cpp">
-      <Filter>Settings</Filter>
-    </ClCompile>
     <ClCompile Include="MPQArchiveManager.cpp">
       <Filter>Files\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="GroupDistances.cpp">
-      <Filter>Settings\Groups</Filter>
     </ClCompile>
     <ClCompile Include="GroupRenderCaps.cpp">
       <Filter>Settings\Groups</Filter>
@@ -183,11 +177,32 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Perfomance.cpp">
-      <Filter>Settings</Filter>
-    </ClCompile>
     <ClCompile Include="RefManager1DimAssync.cpp">
       <Filter>RefManager\1 Dim Assync</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugOutputConsole.cpp">
+      <Filter>Log\DebugOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugOutputLog.cpp">
+      <Filter>Log\DebugOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="ByteBufferOutput.cpp">
+      <Filter>Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ARC4.cpp">
+      <Filter>Common\Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="HMACSHA1.cpp">
+      <Filter>Common\Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenSSLCrypto.cpp">
+      <Filter>Common\Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="SHA1.cpp">
+      <Filter>Common\Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="BigNumber.cpp">
+      <Filter>Common\Cryptography</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,9 +219,6 @@
       <Filter>Objects bindings\InputListener</Filter>
     </ClInclude>
     <ClInclude Include="RenderableUIObjectCollection.h">
-      <Filter>Objects bindings\RenderableUI</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableUIObject.h">
       <Filter>Objects bindings\RenderableUI</Filter>
     </ClInclude>
     <ClInclude Include="UpdatableObjectCollection.h">
@@ -329,14 +341,8 @@
     <ClInclude Include="Settings.h">
       <Filter>Settings</Filter>
     </ClInclude>
-    <ClInclude Include="RenderConfig.h">
-      <Filter>Settings</Filter>
-    </ClInclude>
     <ClInclude Include="MPQArchiveManager.h">
       <Filter>Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="GroupDistances.h">
-      <Filter>Settings\Groups</Filter>
     </ClInclude>
     <ClInclude Include="GroupRenderCaps.h">
       <Filter>Settings\Groups</Filter>
@@ -359,14 +365,38 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Perfomance.h">
-      <Filter>Settings</Filter>
-    </ClInclude>
     <ClInclude Include="RefManager1DimAssync.h">
       <Filter>RefManager\1 Dim Assync</Filter>
     </ClInclude>
     <ClInclude Include="MapAssync.h">
       <Filter>RefManager\1 Dim Assync</Filter>
+    </ClInclude>
+    <ClInclude Include="LockedQueue.h">
+      <Filter>RefManager\1 Dim Assync</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOutputConsole.h">
+      <Filter>Log\DebugOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugOutputLog.h">
+      <Filter>Log\DebugOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteBufferOutput.h">
+      <Filter>Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ARC4.h">
+      <Filter>Common\Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="HMACSHA1.h">
+      <Filter>Common\Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenSSLCrypto.h">
+      <Filter>Common\Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="SHA1.h">
+      <Filter>Common\Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="BigNumber.h">
+      <Filter>Common\Cryptography</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

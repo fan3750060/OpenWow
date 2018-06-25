@@ -8,7 +8,7 @@
 
 // FORWARD BEGIN
 class WMO;
-class WMO_Doodad_Instance;
+class CWMO_Base_Instance;
 // FORWARD END
 
 struct MODD_PlacementInfo
@@ -23,25 +23,24 @@ public:
 	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, string _groupName, IFile* _groupFile);
 	~WMO_Group();
 
-	void CreateInsances(SceneNode* _parent);
+	void CreateInsances(CWMO_Base_Instance* _parent);
 
 	void Load();
 	void initLighting();
 
 	void Render(cmat4 _worldMatrix, const WMO_Doodad_SetInfo& _doodadSet);
 
-	bool isPointInside(cvec3 _point);
-
 public:
 	const WMO*								m_ParentWMO;
 	const string							m_GroupName;
+	const string							m_GroupDescription;
 	const uint32							m_GroupIndex;
 	const SmartPtr<IFile>					m_F;
 	WMO_Group_HeaderDef						m_Header;
 	BoundingBox								m_Bounds;
 	bool									m_PortalsVis;
 	bool									m_Calculated;
-	vector<CWMO_Part_Portal*>				m_Portals;
+	vector<SmartPtr<CWMO_Part_Portal>>		m_Portals;
 
 public:
 	SmartGeomPtr							__geom;

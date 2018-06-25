@@ -6,7 +6,6 @@
 CGameState::CGameState() : 
 	m_IsInited(false), 
 	m_IsCurrent(false),
-	m_DistancesSettings(GetSettingsGroup<CGroupDistances>()),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
@@ -15,7 +14,7 @@ CGameState::CGameState() :
 
 bool CGameState::Init()
 {
-    m_Window = new UIWindow();
+    m_Window = new UIWindow(GetManager<IUIMgr>());
     m_Window->Init(vec2(0.0f, 0.0f), vec2(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY), nullptr);
 
     m_IsInited = true;
@@ -33,7 +32,7 @@ bool CGameState::Set()
 	_Bindings->RegisterRenderableUIObject(this, 100);
 	_Bindings->RegisterInputListener(this);
 
-    _UIMgr->SetRootElement(m_Window);
+    GetManager<IUIMgr>()->SetRootElement(m_Window);
 
     return true;
 }

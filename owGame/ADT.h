@@ -14,6 +14,7 @@ class ADT : public SceneNode
 {
 public:
 	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file);
+	~ADT();
 
 	ADT_MCNK* getChunk(int32 x, int32 z)
 	{
@@ -26,14 +27,14 @@ public:
 	}
 
 	// ISceneNode
-	string getObjectInfo() override { return m_Name; }
+	string getObjectInfo() override { return "@ADT@" + m_Name; }
 
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
 
 	// IRenderable3D
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override;
 
 public:
@@ -44,9 +45,9 @@ public:
 
 	vector<SmartPtr<ADT_TextureInfo>>	m_Textures;
 
+	// Instances
 	vector<SmartPtr<ADT_WMO_Instance>>	m_WMOsInstances;
 	vector<SmartPtr<ADT_MDX_Instance>>	m_MDXsInstances;
-
 	vector<SmartPtr<ADT_MCNK>>			m_Chunks;
 
 	//

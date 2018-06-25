@@ -5,15 +5,12 @@ class
 	CGroupRenderCaps : public ISettingGroup
 {
 public:
-	uint16	maxJointCount;
-	uint16	maxTexUnitCount;
 	bool	texFloat;
 	bool	texNPOT;
 	bool	rtMultisampling;
 	bool	geometryShaders;
 	bool	tesselation;
 	bool	computeShaders;
-	bool	instancing;
 
 	// ISettingGroup
 	void InitDefault() override;

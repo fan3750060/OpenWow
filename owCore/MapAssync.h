@@ -1,78 +1,52 @@
 #pragma once
 
 #include <map>
+#include <mutex>
 
 template <typename T, typename P>
-class MapAssync : public map<T, P>
+class MapAssync
 {
 public:
-	MapAssync()
-	{
-		InitializeCriticalSection(&cs);
-	}
-
-	~MapAssync()
-	{
-		DeleteCriticalSection(&cs);
-	}
-
 	void add(T element, P object)
 	{
-		EnterCriticalSection(&cs); // THREAD
+		std::lock_guard<std::mutex> lock(m_Lock);
 
-		map<T, P>::insert(make_pair(element, object));
-
-		LeaveCriticalSection(&cs); // THREAD
-	}
-
-	bool get(T _index, P * _element)
-	{
-		EnterCriticalSection(&cs); // THREAD
-
-		auto it = map<T, P>::find(_index);
-		bool result = (it != map<T, P>::end());
-
-		if (result)
-		{
-			*_element = *it;
-		}
-
-		LeaveCriticalSection(&cs); // THREAD
-
-		return result;
+		m_Map.insert(make_pair(element, object));
 	}
 
 	bool exists(T _index)
 	{
-		EnterCriticalSection(&cs); // THREAD
+		std::lock_guard<std::mutex> lock(m_Lock);
 
-		bool result = (map<T, P>::find(_index) != map<T, P>::end());
-
-		LeaveCriticalSection(&cs); // THREAD
-
-		return result;
+		return m_Map.find(_index) != m_Map.end();
 	}
 
-	bool pop_front(T * _index, P * _element)
+	uint32 size()
 	{
-		EnterCriticalSection(&cs); // THREAD
+		std::lock_guard<std::mutex> lock(m_Lock);
 
-		auto it = map<T, P>::begin();
-		bool result = (it != map<T, P>::end());
+		return static_cast<uint32>(m_Map.size());
+	}
+
+	bool pop_front(T* _index, P* _element)
+	{
+		std::lock_guard<std::mutex> lock(m_Lock);
+
+		auto it = m_Map.begin();
+		bool result = (it != m_Map.end());
 
 		if (result)
 		{
 			*_index = it->first;
 			*_element = it->second;
 
-			map<T, P>::erase(it);
+			m_Map.erase(it);
 		}
-
-		LeaveCriticalSection(&cs); // THREAD
 
 		return result;
 	}
 
 private:
-	CRITICAL_SECTION cs;
+	std::mutex m_Lock;
+	map<T, P> m_Map;
 };

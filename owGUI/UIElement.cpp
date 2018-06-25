@@ -1,15 +1,16 @@
 #include "stdafx.h"
 
+// Include
+#include "UIMgr.h"
+
 // General
 #include "UIElement.h"
 
-// Additional
-#include "UIMgr.h"
-
-UIElement::UIElement(uint32 _DeepAdding)
+UIElement::UIElement(IUIMgr* _uimgr, uint32 _DeepAdding) :
+	mUIMgr(_uimgr)
 {
     // Internal
-    m_Name = _UIMgr->GetNewName();
+    m_Name = dynamic_cast<IUIMgrEx*>(mUIMgr)->GetNewName();
     m_Parent = nullptr;
     m_Deep = 0;
     m_DeepAdding = _DeepAdding;
@@ -80,17 +81,17 @@ void UIElement::SetName(cstring _newName)
 
 void UIElement::AttachTo(UIElement* _parent)
 {
-    _UIMgr->AttachElementToParent(this, _parent);
+	mUIMgr->AttachElementToParent(this, _parent);
 }
 
 void UIElement::Detach()
 {
-    _UIMgr->SetForDetach(this);
+	dynamic_cast<IUIMgrEx*>(mUIMgr)->SetForDetach(this);
 }
 
 void UIElement::Delete()
 {
-    _UIMgr->SetForDelete(this);
+	dynamic_cast<IUIMgrEx*>(mUIMgr)->SetForDelete(this);
 }
 
 // Show / disable functional
@@ -191,7 +192,7 @@ void UIElement::Update()
     // Recalculate focus
     if (IsSelected())
     {
-        _UIMgr->SetFocus(this);
+		mUIMgr->SetFocus(this);
     }
 
     // Update me
@@ -227,7 +228,7 @@ void UIElement::DeleteChilds()
             child->DeleteChilds();
         }
 
-        _UIMgr->DeleteUIElement(child);
+		dynamic_cast<IUIMgrEx*>(mUIMgr)->DeleteUIElement(child);
 
         chIt = m_Childs.erase(chIt);
     }

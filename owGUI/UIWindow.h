@@ -7,7 +7,7 @@ class UIWindow : public UIElement
 	friend UIMgr;
 	typedef UIElement base;
 public:
-	UIWindow();
+	UIWindow(IUIMgr* _uimgr);
 
 	void Init(cvec2 _position, cvec2 _size, Image* _image, Color _color = COLOR_EMPTY);
 

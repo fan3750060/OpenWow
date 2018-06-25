@@ -1,5 +1,11 @@
 #pragma once
 
+#define VERSION_Vanila  0
+#define VERSION_BC		1
+#define VERSION_WotLK	2
+
+#define VERSION VERSION_WotLK
+
 // General types
 typedef signed char int8;
 typedef unsigned char uint8;
@@ -52,21 +58,21 @@ using namespace std;
 typedef const string& cstring;
 
 // Consts
-typedef enum TextAlignW
+enum TextAlignW
 {
 	TEXT_ALIGNW_LEFT = 0,
 	TEXT_ALIGNW_CENTER,
 	TEXT_ALIGNW_RIGHT
 };
 
-typedef enum TextAlignH
+enum TextAlignH
 {
 	TEXT_ALIGNH_TOP = 0,
 	TEXT_ALIGNH_CENTER,
 	TEXT_ALIGNH_BOTTOM
 };
 
-typedef enum InputMode
+enum InputMode
 {
 	MODE_CHARACTERS = 0,
 	MODE_NUMBERS,

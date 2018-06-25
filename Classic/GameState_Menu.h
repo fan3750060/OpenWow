@@ -19,11 +19,11 @@ public:
     void Unset() override;
 
     // IUpdatable
-    void Input(double _time, double _dTime) override;
+	void Input(CInput* _input, double _time, double _dTime) override {};
 	void Update(double _time, double _dTime) override;
 
 	// IRenderable
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override;
 	void PostRender3D() override;
 
@@ -31,9 +31,9 @@ public:
 	void RenderUI() override;
 
 	// IInputListener
-    void OnMouseMoved(cvec2 _mousePos) override;
+    void OnMouseMoved(cvec2 _mousePos) override { }
     bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) override;
-    bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override;
+    bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) override { return false; }
 	bool OnMouseWheel(int _yoffset) override { return false; }
     bool OnKeyboardPressed(int _key, int _scancode, int _mods) override;
 	bool OnKeyboardReleased(int _key, int _scancode, int _mods) override { return false; }
@@ -46,11 +46,5 @@ private:
 	Commands cmd;
 
 	void randBackground();
-	Single_M2_Instance* m_BackgroudModel;
-
-    // Camera moving
-    bool enableFreeCamera;
-    bool cameraSprint;
-    bool cameraSlow;
-    vec2 lastMousePos;
+	CM2_Base_Instance* m_BackgroudModel;
 };

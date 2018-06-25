@@ -104,12 +104,6 @@ string Utils::TrimRight(string& s, cstring delimiters)
 	return s.erase(s.find_last_not_of(delimiters) + 1);
 }
 
-void Utils::ToLower(string& _string)
-{
-	_string = Trim(_string);
-	transform(_string.begin(), _string.end(), _string.begin(), ::tolower);
-}
-
 string Utils::ToLower(cstring _string)
 {
 	string str = _string;
@@ -118,6 +112,13 @@ string Utils::ToLower(cstring _string)
 	return str;
 }
 
+string Utils::ToUpper(cstring _string)
+{
+	string str = _string;
+	str = Trim(str);
+	transform(str.begin(), str.end(), str.begin(), ::toupper);
+	return str;
+}
 
 int Utils::popFirstInt(string& s, char separator)
 {

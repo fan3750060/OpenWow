@@ -10,15 +10,19 @@ class ADT_MCNK : public SceneNode
 {
 public:
 	ADT_MCNK(ADT* _parentTile, IFile* _file);
+	~ADT_MCNK();
 
 	void RenderNormals();
+
+	// ISceneNode
+	string getObjectInfo() override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
 
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
 
 	// IRenderable
-	void PreRender3D() override;
+	bool PreRender3D() override;
 	void Render3D() override;
 
 public:
@@ -50,5 +54,4 @@ public:
 	SmartGeomPtr __geomDefault;
 
 	CGroupQuality& m_QualitySettings;
-	CGroupDistances& m_DistancesSettings;
 };

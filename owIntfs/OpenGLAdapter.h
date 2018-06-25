@@ -1,7 +1,7 @@
 #pragma once
 
 // Forward BEGIN
-class Input;
+class CInput;
 // Forward END
 
 __interface 
@@ -12,12 +12,10 @@ public:
 	bool SwapWindowBuffers();
 	double GetTime();
 
-	Input* GetInput();
+	CInput* GetInput();
 
-	HGLRC GetMainCont();
-	HGLRC GetThreadCont();
-	void MakeContextMainThread();
-	void MakeCurrent();
+	void MakeMainContext();
+	void MakeThreadContext();
 
 	void SetWindowSize(int32 _width, int32 _height);
 	void SetWindowTitle(cstring _title);
@@ -25,5 +23,8 @@ public:
 	void ShowCursor();
 	void HideCursor();
 
-	void SetMousePosition(cvec2 _mousePosition);
+	void setMousePosition(cvec2 _mousePosition);
+
+	int isExtensionSupported(const char* _extension);
+	void* getProcAddress(const char* _procname);
 };

@@ -36,7 +36,7 @@ public:
 	void draw();
 
 public:
-	M2* m_MDX;
+	M2* m_ParentM2;
 	float tofs;
 
 private:

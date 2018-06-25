@@ -5,7 +5,7 @@
 class UICheckBox : public UIElement {
 	typedef UIElement base;
 public:
-	UICheckBox();
+	UICheckBox(IUIMgr* _uimgr);
 	virtual ~UICheckBox();
 
 	 void Init(cvec2 _position);

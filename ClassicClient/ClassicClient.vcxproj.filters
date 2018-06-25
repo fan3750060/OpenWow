@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="AuthCrypt.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthCodes.cpp" />
+    <ClCompile Include="ServerAuthChallenge.cpp">
+      <Filter>Auth</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthSocket.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerAuthProof.cpp">
+      <Filter>Auth</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{d8c5527d-4092-4dba-af1a-a3b1f7a57e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cryptography">
+      <UniqueIdentifier>{c3253e06-b586-46e4-8368-156d322da815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Auth">
+      <UniqueIdentifier>{6127e0ab-979b-416b-b081-502f7df0d21c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="AuthCrypt.h">
+      <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthCodes.h" />
+    <ClInclude Include="ServerAuthChallenge.h">
+      <Filter>Auth</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthSocket.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerAuthProof.h">
+      <Filter>Auth</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

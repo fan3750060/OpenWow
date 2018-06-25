@@ -10,6 +10,4 @@ __interface
 	IPlatformFactory : public IManager
 {
 	IOpenGLAdapter* CreateOpenGLAdapter();
-	IDebugOutput* CreateDebugOutputLog();
-	IDebugOutput* CreateDebugOutputConsole();
 };

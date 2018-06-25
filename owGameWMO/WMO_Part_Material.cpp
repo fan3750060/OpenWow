@@ -7,86 +7,36 @@
 #include "Wmo_Part_Material.h"
 
 WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const WMO_MaterialDef& _proto) :
-	m_ParentWMO(_parentWMO)
+	m_ParentWMO(_parentWMO),
+	m_Proto(_proto),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	matDef = _proto;
+	m_DiffuseTexture[0] = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + m_Proto.diffuseNameIndex);
 
-	texture = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + matDef.diffuseNameIndex);
-}
-
-WMO_Part_Material::~WMO_Part_Material()
-{
-}
-
-/*switch (matDef.blendMode)
+	if (m_Proto.envNameIndex)
 	{
-		case 0:
-		//GxBlend_Opaque	
-		GLSetBlend(false, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-		break;
+		m_DiffuseTexture[1] = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + m_Proto.envNameIndex);
+	}
 
-		case 1:
-		//GxBlend_AlphaKey	
-		GLSetBlend(false, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-		break;
+	//Log::Warn("Shader = [%d], Blend mode [%d]", m_Proto.shader, m_Proto.blendMode);
+	if (m_Proto.blendMode > 1)
+	{
+		int x = 0;
+	}
 
-		case 2:
-		//GxBlend_Alpha	
-		GLSetBlend(true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		break;
+	vec4 color = fromARGB(m_Proto.diffColor);
+}
 
-		case 3:
-		//GxBlend_Add	
-		GLSetBlend(true, GL_SRC_ALPHA, GL_ONE, GL_ZERO, GL_ONE);
-		break;
+void WMO_Part_Material::set() const
+{
+	uint16 sampler = m_QualitySettings.Texture_Sampler;
+	sampler |= (m_Proto.flags.TextureClampS) ? SS_ADDRU_CLAMP : SS_ADDRU_WRAP;
+	sampler |= (m_Proto.flags.TextureClampT) ? SS_ADDRV_CLAMP : SS_ADDRV_WRAP;
 
-		case 4:
-		//GxBlend_Mod	
-		GLSetBlend(true, GL_DST_COLOR, GL_ZERO, GL_DST_ALPHA, GL_ZERO);
-		break;
+	_Render->r.setTexture(Material::C_DiffuseTextureIndex + 0, m_DiffuseTexture[0], sampler, 0);
+	_Render->r.setTexture(Material::C_DiffuseTextureIndex + 1, m_DiffuseTexture[1], sampler, 0);
 
-		case 5:
-		//GxBlend_Mod2x	
-		GLSetBlend(true, GL_DST_COLOR, GL_SRC_COLOR, GL_DST_ALPHA, GL_SRC_ALPHA);
-		break;
+	_Render->r.setCullMode(m_Proto.flags.IsTwoSided ? RS_CULL_NONE : RS_CULL_BACK);
 
-		case 6:
-		//GxBlend_ModAdd	
-		GLSetBlend(true, GL_DST_COLOR, GL_ONE, GL_DST_ALPHA, GL_ONE);
-		break;
-
-		case 7:
-		//GxBlend_InvSrcAlphaAdd	
-		GLSetBlend(true, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE);
-		break;
-
-		case 8:
-		//GxBlend_InvSrcAlphaOpaque	
-		GLSetBlend(true, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO);
-		break;
-
-		case 9:
-		//GxBlend_SrcAlphaOpaque	
-		GLSetBlend(true, GL_SRC_ALPHA, GL_ZERO, GL_SRC_ALPHA, GL_ZERO);
-		break;
-
-		case 10:
-		//GxBlend_NoAlphaAdd	
-		GLSetBlend(true, GL_ONE, GL_ONE, GL_ZERO, GL_ONE);
-		break;
-
-		case 11:
-		//GxBlend_ConstantAlpha	
-//		GLSetBlend(true, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-		break;
-
-		case 12:
-		//GxBlend_Screen	
-		GLSetBlend(true, GL_ONE_MINUS_DST_COLOR, GL_ONE, GL_ONE, GL_ZERO);
-		break;
-
-		case 13:
-		//GxBlend_BlendAdd	
-		GLSetBlend(true, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		break;
-	}*/
+	_Render->getRenderStorage()->SetEGxBlend(m_Proto.blendMode);
+}

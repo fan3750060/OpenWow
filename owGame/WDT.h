@@ -46,6 +46,8 @@ public:
 	ADT_WMO_Instance* GetGlobalWMOInstance() { return m_GlobalWMO; }
 	ADT_MODF& GetGlobalWMOPlacementInfo() { return m_GlobalWMOPlacementInfo; }
 
+	bool isUncompressedAlpha() const { return m_Flag.Flag_8bitMCAL; }
+
 private:
 	WDT_MPHD_Flags		m_Flag;
 	bool				m_IsTileBased;

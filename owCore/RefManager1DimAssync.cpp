@@ -14,15 +14,16 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 {
 	CRefManager1DimAssync<CRefItem>* manager = (CRefManager1DimAssync<CRefItem>*) lpParam;
 	
-
 	while (true)
 	{
 		manager->MakeContext();
+
 		WaitForSingleObject(m_Event_Add, INFINITE);
 
 		string name;
 		CRefItem* refItem;
-		if (!manager->m_ObjectsToLoad.pop_front(&name, &refItem))
+		bool result = manager->m_ObjectsToLoad.pop_front(&name, &refItem);
+		if (!result)
 		{
 			ResetEvent(m_Event_Add);
 			continue;
@@ -30,7 +31,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 		manager->LoadAction(name, refItem);
 
-		//Sleep(5); // DELETE ME
+		Sleep(20); // DELETE ME
 	}
 
 	ExitThread(0);

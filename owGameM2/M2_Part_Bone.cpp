@@ -3,15 +3,15 @@
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global)
+CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, IFile** animfiles)
 {
 	m_Id = _proto.key_bone_id;
 	m_Flags = _proto.flags;
 	parent = _proto.parent_bone;
 	
-	trans.init(_proto.translation, f, global, Fix_XZmY);
-	roll.init(_proto.rotation, f, global, Fix_XZmYW);
-	scale.init(_proto.scale, f, global, Fix_XZY);
+	trans.init(_proto.translation, f, global, animfiles, Fix_XZmY);
+	roll.init(_proto.rotation, f, global, animfiles, Fix_XZmYW);
+	scale.init(_proto.scale, f, global, animfiles, Fix_XZY);
 
 	pivot = _proto.pivot.toXZmY();
 }

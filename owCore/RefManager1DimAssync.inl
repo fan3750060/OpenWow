@@ -152,7 +152,7 @@ inline T* CRefManager1DimAssync<T>::CreateAction(cstring name)
 }
 
 template<class T>
-inline void CRefManager1DimAssync<T>::LoadAction(string name, T *& item)
+inline void CRefManager1DimAssync<T>::LoadAction(string name, T*& item)
 {
 }
 

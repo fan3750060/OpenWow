@@ -12,9 +12,10 @@ public:
 
 	inline MapController* Map() { return m_MapController; }
 	inline EnvironmentManager* EnvM() { return m_EnvironmentManager; }
-
+	
+	void EnterMap(vec3 _pos);
 	void EnterMap(int32 x, int32 z);
-
+	
 private:
 	MapController*       m_MapController;
 	CM2_Manager*         m_MDXsManager;
