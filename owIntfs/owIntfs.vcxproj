@@ -30,6 +30,7 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MapManager.h" />
+    <ClInclude Include="Networking.h" />
     <ClInclude Include="OpenGLAdapter.h" />
     <ClInclude Include="Perfomance.h" />
     <ClInclude Include="PlatformFactory.h" />

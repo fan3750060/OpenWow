@@ -106,7 +106,25 @@ struct SM2_Color
 
 struct SM2_Texture
 {
-	uint32 type;
+	enum SM2_Texture_Type : uint32
+	{
+		NONE,							//Texture given in filename
+		TEX_COMPONENT_SKIN,				// Skin // Body + clothes
+		TEX_COMPONENT_OBJECT_SKIN,		// Object Skin // Item, Capes("Item\ObjectComponents\Cape\*.blp")
+		TEX_COMPONENT_WEAPON_BLADE,		// Weapon Blade // Used on several models but not used in the client as far as I see.Armor Reflect ?
+		TEX_COMPONENT_WEAPON_HANDLE,	// Weapon Handle
+		TEX_COMPONENT_ENVIRONMENT,		// (OBSOLETE)Environment(Please remove from source art)
+		TEX_COMPONENT_CHAR_HAIR,		// Character Hair
+		TEX_COMPONENT_CHAR_FACIAL_HAIR,	// (OBSOLETE)Character Facial Hair(Please remove from source art)
+		TEX_COMPONENT_SKIN_EXTRA,		// Skin Extra
+		TEX_COMPONENT_UI_SKIN,			// UI Skin // Used on inventory art M2s(1) : inventoryartgeometry.m2 and inventoryartgeometryold.m2
+		TEX_COMPONENT_TAUREN_MANE,		// (OBSOLETE)Tauren Mane(Please remove from source art) //Only used in quillboarpinata.m2.I can't even find something referencing that file. Oo Is it used?
+		TEX_COMPONENT_MONSTER_1,		// Monster Skin 1 //Skin for creatures or gameobjects #1
+		TEX_COMPONENT_MONSTER_2,		// Monster Skin 2 //Skin for creatures or gameobjects #2
+		TEX_COMPONENT_MONSTER_3,		// Monster Skin 3 //Skin for creatures or gameobjects #3
+		TEX_COMPONENT_ITEM_ICON			// Item Icon // Used on inventory art M2s(2) : ui - button.m2 and forcedbackpackitem.m2(CSimpleModel_ReplaceIconTexture("texture"))
+	};
+	SM2_Texture_Type type;
 	struct Flags
 	{
 		uint32 WRAPX : 1;

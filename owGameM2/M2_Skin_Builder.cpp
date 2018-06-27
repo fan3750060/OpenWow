@@ -69,10 +69,9 @@ void CM2_Skin_Builder::Step2InitBatches()
 	{
 		M2_Skin_Batch* batch = new M2_Skin_Batch(m_ParentM2);
 
-		if (it.shader_id < 0)
+		if (it.shader_id != 0)
 		{
-			Log::Error("Shader is [%d]", it.shader_id);
-			fail1();
+			Log::Error("ORIG Shader is [%d]", it.shader_id);
 		}
 
 		// Geometry data
@@ -80,6 +79,11 @@ void CM2_Skin_Builder::Step2InitBatches()
 		batch->m_SkinSection = m_SkinSections[it.skinSectionIndex];
 
 		batch->newShader = GetPixel(&it);
+		if (batch->newShader != 5 && batch->newShader != 27)
+		{
+			Log::Error("NEWShader is [%d]", batch->newShader);
+		}
+
 
 		//const CM2_Part_Bone& bone = m_ParentM2->m_Bones[batch->m_SkinSection.bonesStartIndex + batch->m_SkinSection.centerBoneIndex];
 		//batch->m_IsBilldoard = bone.IsBillboard();
@@ -95,6 +99,19 @@ void CM2_Skin_Builder::Step2InitBatches()
 			}
 		}*/
 
+
+		if (it.textureCount == 1)
+		{
+			assert1(batch->newShader >= 0 && batch->newShader < 6);
+		}
+		else if (it.textureCount == 2)
+		{
+			assert1(batch->newShader >= 6);
+		}
+		else
+		{
+			Log::Error("SUPER M2[%s] fail! texCnt: [%d], shader [%d]", m_ParentM2->m_FileNameWithoutExt.c_str(), it.textureCount, batch->newShader);
+		}
 
 		// Get classes
 		batch->material = &(m_ParentM2->GetMaterial(it.materialIndex));
@@ -118,7 +135,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 		}
 
 		// Texture transfowm
-		if (!(it.flags.TextureStatic))
+		if (it.flags.TextureStatic == false)
 		{
 			if (it.texture_TransformIndex != UINT16_MAX)
 			{

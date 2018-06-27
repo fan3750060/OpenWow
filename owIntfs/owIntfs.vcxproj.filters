@@ -76,6 +76,9 @@
     <ClInclude Include="Perfomance.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Networking.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -98,6 +101,9 @@
     </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{51517ace-553a-4b85-ab37-c941b62ce843}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{eaf559ac-5eba-4217-99fa-ba2e73a8d6a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

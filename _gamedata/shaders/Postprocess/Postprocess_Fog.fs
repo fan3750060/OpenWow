@@ -43,7 +43,7 @@ vec4 applyFog()
 	// Ensure certain blending mode pixels fade out as fog increases.
 	/*if (materialID >= 2 && materialID < 6) 
 	{
-		color.a *= 1.0 - fogFactor;
+		color.a *= (1.0 - fogFactor);
 	}*/
 	
 

@@ -26,19 +26,7 @@ void M2_Skin_Batch::Render()
 	// Bind textures
 	for (uint32 i = 0; i < m_Textures.size(); i++)
 	{
-		uint16 sampler = m_QualitySettings.Texture_Sampler;
-
-		if (m_Textures[i]->isWrapX())
-		{
-			sampler |= SS_ADDRU_WRAP;
-		}
-
-		if (m_Textures[i]->isWrapY())
-		{
-			sampler |= SS_ADDRV_WRAP;
-		}
-
-		_Render->r.setTexture(Material::C_DiffuseTextureIndex + i, m_Textures[i]->getTexture(), sampler, 0);
+		m_Textures[i]->set(Material::C_DiffuseTextureIndex + i);
 	}
 
 	_Render->getTechniquesMgr()->M2_Pass->SetShader(newShader);
@@ -47,16 +35,16 @@ void M2_Skin_Batch::Render()
 	_Render->getTechniquesMgr()->M2_Pass->SetBillboard(m_IsBilldoard);
 
 	// Model color
-	bool isTextureWeightEnable = (texture_WeightIndex != nullptr);
-	_Render->getTechniquesMgr()->M2_Pass->SetTextureAnimEnable(isTextureWeightEnable);
-	if (color != nullptr)
+	bool isColorEnable = (color != nullptr);
+	_Render->getTechniquesMgr()->M2_Pass->SetColorEnable(isColorEnable);
+	if (isColorEnable)
 	{
 		_Render->getTechniquesMgr()->M2_Pass->SetColor(color->getValue());
 	}
 
 	// Texture alpha
 	bool isTextureWeightEnable = (texture_WeightIndex != nullptr);
-	_Render->getTechniquesMgr()->M2_Pass->SetTextureAnimEnable(isTextureWeightEnable);
+	_Render->getTechniquesMgr()->M2_Pass->SetTextureWeightEnable(isTextureWeightEnable);
 	if (isTextureWeightEnable)
 	{
 		_Render->getTechniquesMgr()->M2_Pass->SetTextureWeight(texture_WeightIndex->getValue());

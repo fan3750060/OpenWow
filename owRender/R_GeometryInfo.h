@@ -29,8 +29,9 @@ struct R_VertexBufferSlot
 	bool        m_NeedNorm;
 };
 
-struct R_GeometryInfo : public CRefItem
+class R_GeometryInfo : public CRefItem
 {
+public:
 	R_GeometryInfo(RenderDevice* _RenderDevice);
 	~R_GeometryInfo();
 

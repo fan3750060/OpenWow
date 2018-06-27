@@ -3,11 +3,7 @@
 // Additional
 #include <ctime>
 
-
-
-
-
-#include "AuthSocket.h"
+#include "AuthWorldController.h"
 
 int main(int argumentCount, char* arguments[])
 {
@@ -15,11 +11,14 @@ int main(int argumentCount, char* arguments[])
 
 	CLog log;
 
-	CAuthSocket socket(DEFAULT_HOST, DEFAULT_PORT);
+	CAuthWorldController authWorldController;
+	authWorldController.StartAuth();
 
-	socket.SendLogonChallenge();
-
-	socket.ReceiveLoop();
+	// Routine
+	while (true)
+	{
+		Sleep(16);
+	}
 
 	return 0;
 }

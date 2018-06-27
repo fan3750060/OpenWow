@@ -5,18 +5,25 @@
 class CM2_Pass : public GeometryBase
 {
     int32 gBones;
-    int32  gColor;
+
+	int32 gColorEnable;
+    int32 gColor;
+
+
     int32  gIsAnimated;
 
 	int32 gShader;
 
-    int32  gDiffuseTexture[4];
+    int32  gDiffuseTexture[2];
     int32  gSpecularTexture;
 
     int32  gBlendMode;
+
+	int32  gTextureWeightEnable;
     int32  gTextureWeight;
 
     int32  gBillboard;
+
     int32  gTextureAnimEnable;
     int32  gTextureAnimMatrix;
 
@@ -24,20 +31,30 @@ public:
 	CM2_Pass(RenderDevice* _RenderDevice) : 
 		GeometryBase(_RenderDevice, "shaders/M2/M2")
     {
+		gIsAnimated = getLocation("gIsAnimated");
         gBones = getLocation("gBones");
-        gColor = getLocation("gColor");
-        gIsAnimated = getLocation("gIsAnimated");
+
 
 		gShader = getLocation("gShader");
+		gBlendMode = getLocation("gBlendMode");
+
+
+
+		gColorEnable = getLocation("gColorEnable");
+        gColor = getLocation("gColor");
+
+        
+
+		
 
         gDiffuseTexture[0] = getLocation("gDiffuseTexture0");
 		gDiffuseTexture[1] = getLocation("gDiffuseTexture1");
-		gDiffuseTexture[2] = getLocation("gDiffuseTexture2");
-		gDiffuseTexture[3] = getLocation("gDiffuseTexture3");
 
         gSpecularTexture = getLocation("gSpecularTexture");
 
-        gBlendMode = getLocation("gBlendMode");
+        
+
+		gTextureWeightEnable = getLocation("gTextureWeightEnable");
         gTextureWeight = getLocation("gTextureWeight");
 
         gBillboard = getLocation("gBillboard");
@@ -48,10 +65,18 @@ public:
 
 	// Colors
 
+	inline void SetColorEnable(bool _value)
+	{
+		setInt(gColorEnable, _value);
+	}
 	inline void SetColor(vec4 _color)
 	{
 		setVec4(gColor, _color);
 	}
+
+
+
+
 
     inline void SetAnimated(int32 m_IsAnimated)
     {
@@ -74,6 +99,19 @@ public:
 	{
 		setInt(gShader, _blendMode);
 	}
+	// Blending & Alpha
+
+	inline void SetBlendMode(int _blendMode)
+	{
+		setInt(gBlendMode, _blendMode);
+	}
+	// Billboard
+	inline void SetBillboard(int _flag)
+	{
+		setInt(gBillboard, _flag);
+	}
+
+
 
 	// Textures
  
@@ -87,28 +125,24 @@ public:
 		setTexture(gSpecularTexture, TextureUnit);
 	}
 
-	// Blending & Alpha
 
-	inline void SetBlendMode(int _blendMode)
-	{
-		setInt(gBlendMode, _blendMode);
-	}
+
 
 	// R_Texture Weight
+	inline void SetTextureWeightEnable(bool _value)
+	{
+		setInt(gTextureWeightEnable, _value);
+	}
 	inline void SetTextureWeight(float _weight)
 	{
 		setFloat(gTextureWeight, _weight);
 	}
 
 
-	// Billboard
-	inline void SetBillboard(int _flag)
-	{
-		setInt(gBillboard, _flag);
-	}
+
 
 	// TextureAnim
-	inline void SetTextureAnimEnable(int _flag)
+	inline void SetTextureAnimEnable(bool _flag)
 	{
 		setInt(gTextureAnimEnable, _flag);
 	}

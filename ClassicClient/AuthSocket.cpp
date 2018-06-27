@@ -1,272 +1,102 @@
 #include "stdafx.h"
 
+// Include
+#include "AuthWorldController.h"
+
 // General
 #include "AuthSocket.h"
 
-CAuthSocket::CAuthSocket(const char* _host, const char * _port) :
-	ConnectSocket(INVALID_SOCKET)
+CAuthSocket::CAuthSocket(CAuthWorldController* _world, cstring _host, cstring _port) :
+	m_World(_world),
+	m_Host(_host),
+	m_Port(_port),
+	m_Username("empty"),
+	m_Password("empty")
 {
-	// Initialize Winsock
-	WSADATA wsaData;
-	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (iResult != 0)
-	{
-		Log::Error("WSAStartup failed with error: %d", iResult);
-		fail1();
-	}
-
-	ADDRINFOA hints;
-	ZeroMemory(&hints, sizeof(hints));
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_protocol = IPPROTO_TCP;
-
-	// Resolve the server address and port
-	PADDRINFOA result = NULL;
-	iResult = GetAddrInfoA(_host, _port, &hints, &result);
-	if (iResult != 0)
-	{
-		Log::Error("getaddrinfo failed with error: %d", iResult);
-		WSACleanup();
-		fail1();
-	}
-
-	// Attempt to connect to an address until one succeeds
-	for (PADDRINFOA ptr = result; ptr != NULL; ptr = ptr->ai_next)
-	{
-		// Create a SOCKET for connecting to server
-		ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-		if (ConnectSocket == INVALID_SOCKET)
-		{
-			Log::Error("socket failed with error: %ld", WSAGetLastError());
-			WSACleanup();
-			fail1();
-		}
-
-		// Connect to server.
-		iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-		if (iResult == SOCKET_ERROR)
-		{
-			closesocket(ConnectSocket);
-			ConnectSocket = INVALID_SOCKET;
-			continue;
-		}
-
-		break;
-	}
-
-	FreeAddrInfoA(result);
-
-	if (ConnectSocket == INVALID_SOCKET)
-	{
-		Log::Error("Unable to connect to server!");
-		WSACleanup();
-		fail1();
-	}
+	socketBase = new CSocketBase(m_Host, m_Port);
 }
 
 CAuthSocket::~CAuthSocket()
 {
-	// shutdown the connection since no more data will be sent
-	int iResult = shutdown(ConnectSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR)
-	{
-		Log::Error("shutdown failed with error: %d", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-		fail1();
-	}
-
-	// cleanup
-	closesocket(ConnectSocket);
-	WSACleanup();
+	delete socketBase;
 }
 
 //--
 
+void CAuthSocket::SendData(const IByteBufferOutput& _bb)
+{
+	socketBase->SendData(_bb.getData(), _bb.getSize());
+}
+
+void CAuthSocket::SendData(const IByteBuffer& _bb)
+{
+	socketBase->SendData(_bb.getData(), _bb.getSize());
+}
+
 void CAuthSocket::SendData(const uint8* _data, uint32 _count)
 {
-	int32 sendResult = send(ConnectSocket, (const char*)_data, _count, 0);
-	if (sendResult == SOCKET_ERROR)
-	{
-		Log::Error("SendData failed with error: %d", WSAGetLastError());
-		closesocket(ConnectSocket);
-		WSACleanup();
-		fail1();
-	}
-
-	Log::Warn("CAuthSocket::SendData [%d] bytes sended.", sendResult);
+	socketBase->SendData(_data, _count);
 }
 
-void CAuthSocket::ReceiveLoop()
+void CAuthSocket::InitHandlers()
 {
-	const uint32 C_ReceiveBufferSize = 512;
-	int32 result = 0;
-	do
-	{
-		char receiveBuffer[C_ReceiveBufferSize];
-		int32 receiveBufferSize = C_ReceiveBufferSize;
-		result = recv(ConnectSocket, receiveBuffer, receiveBufferSize, 0);
+	m_Handlers[AUTH_LOGON_CHALLENGE] = &CAuthSocket::S_LoginChallenge;
+	m_Handlers[AUTH_LOGON_PROOF] = &CAuthSocket::S_LoginProof;
+	m_Handlers[REALM_LIST] = &CAuthSocket::S_Realmlist;
 
-		if (result > 0)
-		{
-			Log::Warn("Bytes received: [%d]", result);
-			Log::Warn("First is [%X]", receiveBuffer[0]);
-
-			m_ByteBuffer.Clear();
-			m_ByteBuffer.Init((uint8*)receiveBuffer, result);
-
-			eAuthCmd currHandler;
-			m_ByteBuffer.readBytes(&currHandler);
-
-			ProcessHandler(currHandler);
-		}
-		else if (result == 0)
-		{
-			Log::Error("Connection closed");
-		}
-		else
-		{
-			Log::Error("recv failed with error: [%d]", WSAGetLastError());
-		}
-
-	} while (result > 0);
+	socketBase->setOnReceiveCallback(FUNCTION_CLASS_WA_Builder(CAuthSocket, this, OnDataReceive, ByteBuffer));
 }
 
-#include "ServerAuthChallenge.h"
-#include "ServerAuthProof.h"
-
-void CAuthSocket::SendLogonChallenge()
+void CAuthSocket::OnDataReceive(ByteBuffer _buf)
 {
-	string username = DEFAULT_USERNAME;
+	eAuthCmd currHandler;
+	_buf.readBytes(&currHandler);
+	Log::Info("Handler [0x%X]", currHandler);
 
-	uint8 version[] = { 3, 3, 5 };
-	uint16 build = 12340;
-
-	// ClientAuthChallenge
-	ByteBufferOutput bb;
-	bb.Write((uint8)AUTH_LOGON_CHALLENGE);
-	bb.Write((uint8)6);
-	bb.Write((uint8)(username.size() + 30));
-	bb.Write((uint8)0);
-	bb.Write("WoW", 4);
-	bb.Write(version, 3);
-	bb.Write(build);
-	bb.Write("68x", 4);
-	bb.Write("niW", 4);
-	bb.Write("URur", 4);
-	bb.Write((uint32)180);
-	bb.Write((uint32)getMyInet());
-	bb.Write((uint8)username.size());
-	bb.Write(username);
-
-	SendData(bb.getData(), bb.getSize());
+	ProcessHandler(currHandler, _buf);
 }
 
-void CAuthSocket::ProcessHandler(eAuthCmd handler)
+void CAuthSocket::ProcessHandler(eAuthCmd _handler, ByteBuffer _buffer)
 {
-	switch (handler)
+	std::unordered_map<eAuthCmd, HandlerFunc>::iterator handler = m_Handlers.find(_handler);
+	if (handler != m_Handlers.end())
 	{
-	case AUTH_LOGON_CHALLENGE:
+		(*this.*handler->second)(_buffer);
+	}
+	else
 	{
-		
+		Log::Error("Handler [0x%X] not found!", _handler);
 	}
-	break;
-
-	case AUTH_LOGON_PROOF:
-	{
-		ServerAuthProof proof(m_ByteBuffer);
-
-		switch (proof.proto.error)
-		{
-		case AuthResult::WOW_FAIL_VERSION_UPDATE:
-		{
-			Log::Error("Client update requested");
-		}
-		break;
-
-		case AuthResult::WOW_FAIL_UNKNOWN_ACCOUNT:
-		case AuthResult::WOW_FAIL_INCORRECT_PASSWORD:
-		{
-			Log::Error("Wrong password or invalid account or authentication error");
-		}
-		break;
-
-		case AuthResult::WOW_FAIL_VERSION_INVALID:
-		{
-			Log::Error("Wrong build number");
-
-		}
-		break;
-
-		default:
-		{
-			if (proof.proto.error != AuthResult::WOW_SUCCESS)
-			{
-				Log::Error("Unkown error [%X]", proof.proto.error);
-			}
-		}
-		break;
-
-		}
-
-		if (proof.proto.error != AuthResult::WOW_SUCCESS)
-		{
-			SendLogonChallenge();
-			break;
-		}
-
-		bool result = true;
-		for (uint32 i = 0; i < SHA_DIGEST_LENGTH; i++)
-		{
-			if (proof.proto.M2[i] != MServer.GetDigest()[i])
-			{
-				result = false;
-				break;
-			}
-		}
-
-		if (result)
-		{
-			Log::Green("All ok! Server proof equal client calculated server proof!");
-		}
-		Log::Warn("Successfully logined!!!");
-
-
-		ByteBufferOutput bb2;
-		bb2.Write((uint8)REALM_LIST);
-		bb2.Write((uint8)0);
-		SendData(bb2.getData(), bb2.getSize());
-	}
-	break;
-
-	case REALM_LIST:
-	{
-
-	}
-	break;
-
-	default:
-	{
-		Log::Error("Unknown byte [%d]", handler);
-	}
-	break;
-	}
-
 }
 
-bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
+//-- Client to server
+#include "AuthChallenge_C.h"
+
+void CAuthSocket::C_SendLogonChallenge(string _username, string _password)
 {
-	ServerAuthChallenge challenge(_buff);
+	m_Username = _username;
+	m_Password = _password;
+
+	AuthChallenge_C challenge(m_Username, socketBase->getMyInet());
+	challenge.Send(this);
+}
+
+//-- Server to client
+
+#include "AuthChallenge_S.h"
+#include "AuthProof_C.h"
+
+bool CAuthSocket::S_LoginChallenge(ByteBuffer& _buff)
+{
+	AuthChallenge_S challenge(_buff);
 
 	char buff[256];
-	sprintf(buff, "%s:%s", DEFAULT_USERNAME, DEFAULT_PASS);
+	sprintf(buff, "%s:%s", m_Username.c_str(), m_Password.c_str());
 	string NameAndPass = Utils::ToUpper(buff);
 
-	BigNumber  A, u, x;
+	BigNumber A, u, x;
 	BigNumber k(3);
 
-	BigNumber Key;
 	uint8 m2[512];
 
 #pragma region Receive and initialize
@@ -297,9 +127,9 @@ bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
 	xSHA.Finalize();
 	x.SetBinary(xSHA.GetDigest(), SHA_DIGEST_LENGTH);
 
-	Log::Info("---====== shared password hash ======---");
-	Log::Info("p=%s", PasswordHash.toString().c_str());
-	Log::Info("x=%s", x.AsHexStr().c_str());
+	//Log::Info("---====== shared password hash ======---");
+	//Log::Info("p=%s", PasswordHash.toString().c_str());
+	//Log::Info("x=%s", x.AsHexStr().c_str());
 #pragma endregion
 
 #pragma region Create random key pair
@@ -308,9 +138,9 @@ bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
 
 	A = g.ModExp(a, N);
 
-	Log::Info("---====== Send data to server: ======---");
-	Log::Info("a=%s", a.AsHexStr().c_str());
-	Log::Info("A=%s", A.AsHexStr().c_str());
+	//Log::Info("---====== Send data to server: ======---");
+	//Log::Info("a=%s", a.AsHexStr().c_str());
+	//Log::Info("A=%s", A.AsHexStr().c_str());
 #pragma endregion
 
 #pragma region Compute session key
@@ -349,8 +179,8 @@ bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
 
 	Key.SetBinary(keyData, SHA_DIGEST_LENGTH * 2);
 
-	Log::Info("---====== Compute session key ======---");
-	Log::Info("K=%s", Key.AsHexStr().c_str());
+	//Log::Info("---====== Compute session key ======---");
+	//Log::Info("K=%s", Key.AsHexStr().c_str());
 #pragma endregion
 
 #pragma region Generate crypto proof
@@ -374,7 +204,7 @@ bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
 
 	// H(I)
 	sha.Initialize();
-	sha.UpdateData((const uint8*)DEFAULT_USERNAME, strlen(DEFAULT_USERNAME));
+	sha.UpdateData((const uint8*)m_Username.c_str(), m_Username.size());
 	sha.Finalize();
 
 	// M
@@ -385,24 +215,13 @@ bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
 	MClient.UpdateBigNumbers(&s, &A, &B, &Key, nullptr);
 	MClient.Finalize();
 
-	Log::Info("---====== Send proof to server: ======---");
-	Log::Info("MC=%s", MClient.toString().c_str());
+	//Log::Info("---====== Send proof to server: ======---");
+	//Log::Info("MC=%s", MClient.toString().c_str());
 #pragma endregion
 
 #pragma region Send proof
-	uint8 crc[20];
-
-	ByteBufferOutput bb2;
-	bb2.Write((uint8)AUTH_LOGON_PROOF);
-	bb2.Write(A.AsByteArray(32).get(), A.GetNumBytes());
-	bb2.Write(MClient.GetDigest(), SHA_DIGEST_LENGTH);
-	bb2.Write(crc, 20);
-	bb2.Write((uint8)0);
-	bb2.Write((uint8)0);
-	assert1(bb2.getSize() == sizeof(AUTH_LOGON_PROOF_C));
-
-	SendData(bb2.getData(), bb2.getSize());
-
+	AuthProof_C authProof(A.AsByteArray(32).get(), MClient.GetDigest());
+	authProof.Send(this);
 #pragma endregion
 
 	// expected proof for server
@@ -411,6 +230,106 @@ bool CAuthSocket::H_LoginChallenge(ByteBuffer& _buff)
 	MServer.UpdateData(MClient.GetDigest(), SHA_DIGEST_LENGTH);
 	MServer.UpdateBigNumbers(&Key, nullptr);
 	MServer.Finalize();
+
+	return true;
+}
+
+#include "AuthProof_S.h"
+
+bool CAuthSocket::S_LoginProof(ByteBuffer& _buff)
+{
+	AuthProof_S proof(_buff);
+
+	switch (proof.error)
+	{
+	case AuthResult::WOW_FAIL_VERSION_UPDATE:
+	{
+		Log::Error("Client update requested");
+	}
+	break;
+
+	case AuthResult::WOW_FAIL_UNKNOWN_ACCOUNT:
+	case AuthResult::WOW_FAIL_INCORRECT_PASSWORD:
+	{
+		Log::Error("Wrong password or invalid account or authentication error");
+	}
+	break;
+
+	case AuthResult::WOW_FAIL_VERSION_INVALID:
+	{
+		Log::Error("Wrong build number");
+
+	}
+	break;
+
+	default:
+	{
+		if (proof.error != AuthResult::WOW_SUCCESS)
+		{
+			Log::Error("Unkown error [%X]", proof.error);
+		}
+	}
+	break;
+
+	}
+
+	// Send another logon challenge
+	if (proof.error != AuthResult::WOW_SUCCESS)
+	{
+		Sleep(1000);
+		C_SendLogonChallenge(m_Username, m_Password);
+		return false;
+	}
+
+	// Check server M
+	bool result = true;
+	for (uint32 i = 0; i < SHA_DIGEST_LENGTH; i++)
+	{
+		if (proof.M2[i] != MServer.GetDigest()[i])
+		{
+			result = false;
+			break;
+		}
+	}
+	if (result)
+	{
+		Log::Green("All ok! Server proof equal client calculated server proof!");
+	}
+	else
+	{
+		Log::Error("Server 'M' mismatch!");
+	}
+
+	Log::Warn("Successfully logined!!!");
+
+
+	ByteBufferOutput bb2;
+	bb2.Write((uint8)REALM_LIST);
+	bb2.Write((uint32)0);
+	SendData(bb2.getData(), bb2.getSize());
+
+	return true;
+}
+
+bool CAuthSocket::S_Realmlist(ByteBuffer& _buff)
+{
+	uint16 bufferSize;
+	_buff.readBytes(&bufferSize, 2);
+
+	uint32 realmlistBufferSize;
+	_buff.readBytes(&realmlistBufferSize, 4);
+
+	uint16 count;
+	_buff.readBytes(&count, 2);
+	Log::Info("S_Realmlist: Count [%d]", count);
+
+	for (uint32 i = 0; i < count; i++)
+	{
+		RealmInfo rinfo(_buff);	
+		m_World->AddRealm(rinfo);
+	}
+
+	m_World->OnSuccessConnect(Key);
 
 	return true;
 }

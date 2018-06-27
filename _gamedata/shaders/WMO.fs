@@ -37,7 +37,7 @@ void main(void)
 
 	if (gHasMOCV)
 	{
-		//resultColor *= VSout.Color;
+		resultColor *= VSout.Color;
 		//resultColor.rgb = mix(resultColor.rgb, VSout.Color.rgb, VSout.Color.a);
 		//resultColor.rgb += VSout.Color.rgb;
 	}

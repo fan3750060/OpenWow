@@ -14,6 +14,8 @@ public:
 	bool isWrapX() const { return m_WrapX; }
 	bool isWrapY() const { return m_WrapY; }
 
+	void set(uint32 _slot) const;
+
 	R_Texture* getTexture() const { return m_Texture; }
 	int	getSpecialTexture() const { return m_SpecialTextures; }
 
@@ -25,4 +27,6 @@ private:
 	int				m_SpecialTextures;
 	SmartTexturePtr	m_TextureReplaced;
 	bool			m_TexturesUseSpecialTexture;
+
+	CGroupQuality&	m_QualitySettings;
 };

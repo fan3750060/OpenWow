@@ -227,7 +227,7 @@
     <None Include="..\_gamedata\shaders\Map\MapChunk_1.fs" />
     <None Include="..\_gamedata\shaders\Map\MapChunk_2.fs" />
     <None Include="..\_gamedata\shaders\Map\MapChunk_3.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0 .fs" />
+    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0.fs" />
     <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_1.fs" />
     <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_2.fs" />
     <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_3.fs" />

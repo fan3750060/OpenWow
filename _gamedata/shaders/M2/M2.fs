@@ -10,35 +10,39 @@ in struct VSOutput
 	vec2 tc1;
 } VSout;
 
-uniform int gShader;
 
 // Textures
 uniform sampler2D gDiffuseTexture0;
 uniform sampler2D gDiffuseTexture1;
 uniform sampler2D gSpecularTexture;
 
-uniform int gBlendMode;
+// Alpha & Blend
+uniform int		gShader;
+uniform int		gBlendMode;
 
-// Colors
-uniform bool gColorEnable;
-uniform vec4 gColor;
+uniform bool	gColorEnable;
+uniform vec4	gColor;
 
-// Texture weight (alpha)
-uniform bool gTextureWeightEnable;
-uniform float gTextureWeight;
-
+uniform bool	gTextureWeightEnable;
+uniform float	gTextureWeight;
 
 vec4 Test()
 {
-	vec4 _in = gColor;
 	vec4 tex0 = texture(gDiffuseTexture0, VSout.tc0);
 	vec4 tex1 = texture(gDiffuseTexture1, VSout.tc1);
+
+	vec4 _in = vec4(1.0f, 1.0f, 1.0f, tex0.a);
 	vec4 _out = vec4(0.0f);
 	
+	if (gColorEnable)
+	{
+		_in.rgb = gColor.rgb;
+		_in.a *= gColor.a;
+	}
+
 	if (gTextureWeightEnable)
 	{
-		tex0.a *= gTextureWeight;
-		tex1.a *= gTextureWeight;
+		_in.a *= gTextureWeight;
 	}
 
 	if (gShader == 0)
@@ -213,12 +217,13 @@ vec4 Test()
 void main(void)
 {
 	vec4 resultColor = Test();
-		
-	if (gBlendMode == 0) // GxBlend_Opaque
+
+
+	if (gBlendMode == 0)		// GxBlend_Opaque
 	{
 		resultColor.a = 1.0f;
 	}
-	else if(gBlendMode == 1) // GxBlend_AlphaKey
+	else if (gBlendMode == 1)	// GxBlend_AlphaKey
 	{
 		if (resultColor.a < (224.0f / 255.0f)) discard;
 	}
@@ -227,7 +232,7 @@ void main(void)
 		if (resultColor.a < (1.0f / 255.0f)) discard;
 	}
 	
-	setMatID(1.0);
+	setMatID(1.0f);
 	setPos(VSout.position);
 	setNormal(normalize(VSout.normal));
 	setAlbedo4(resultColor);

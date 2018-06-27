@@ -1,6 +1,6 @@
 #pragma once
 
-class ByteBufferOutput
+class ByteBufferOutput : public IByteBufferOutput
 {
 public:
 	void Write(int8 _data);
@@ -14,15 +14,13 @@ public:
 	void Write(uint64 _data);
 
 	void Write(const uint8* _string, uint32 _size);
-
 	void Write(cstring _string, uint32 _expectedSize = UINT32_MAX);
 
 	void WriteDummy(uint32 _size);
 
-
 public:
-	const uint8* getData() const { return m_Data.data(); }
-	uint32 getSize() const { return static_cast<uint32>(m_Data.size()); }
+	const uint8* getData() const override { return m_Data.data(); }
+	uint32 getSize() const override { return static_cast<uint32>(m_Data.size()); }
 
 private:
 	void Append(const uint8* _data, uint32 size);

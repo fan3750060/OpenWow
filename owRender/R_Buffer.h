@@ -2,8 +2,9 @@
 
 class RenderDevice;
 
-struct R_Buffer : public CRefItem
+class R_Buffer : public CRefItem
 {
+public:
 	R_Buffer(RenderDevice* _RenderDevice);
 	~R_Buffer();
 

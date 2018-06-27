@@ -60,7 +60,7 @@ void WorldRender::RenderPostprocess()
 	}
 	else
 	{
-		groupQuality.InitDefault();
+		//groupQuality.InitDefault();
 	}
 }
 

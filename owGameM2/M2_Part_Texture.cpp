@@ -7,7 +7,8 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_Texture(nullptr),
 	m_SpecialTextures(-1),
 	m_TextureReplaced(nullptr),
-	m_TexturesUseSpecialTexture(false)
+	m_TexturesUseSpecialTexture(false),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	m_WrapX = _proto.flags.WRAPX;
 	m_WrapY = _proto.flags.WRAPY;
@@ -36,4 +37,21 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 			m_TextureReplaced[_proto.type] = _Render->TexturesMgr()->Add("Item\\ObjectComponents\\Weapon\\ArmorReflect4.BLP");
 		}*/
 	}
+}
+
+void CM2_Part_Texture::set(uint32 _slot) const
+{
+	uint16 sampler = m_QualitySettings.Texture_Sampler;
+
+	if (isWrapX())
+	{
+		sampler |= SS_ADDRU_WRAP;
+	}
+
+	if (isWrapY())
+	{
+		sampler |= SS_ADDRV_WRAP;
+	}
+
+	_Render->r.setTexture(_slot, getTexture(), sampler, 0);
 }

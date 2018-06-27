@@ -88,7 +88,7 @@ bool WMO::Load()
 			assert1(materialsCount == m_Header.nTextures);
 			for (uint32 i = 0; i < materialsCount; i++)
 			{
-				SmartPtr<WMO_Part_Material> _mat = new WMO_Part_Material(this, materials[i]);
+				WMO_Part_Material* _mat = new WMO_Part_Material(this, materials[i]);
 				m_Materials.push_back(_mat);
 			}
 		}
@@ -189,7 +189,7 @@ bool WMO::Load()
 			assert1(lightsCount == m_Header.nLights);
 			for (uint32 i = 0; i < lightsCount; i++)
 			{
-				SmartPtr<WMO_Part_Light> _wmoLight = new WMO_Part_Light(lights[i]);
+				WMO_Part_Light* _wmoLight = new WMO_Part_Light(lights[i]);
 				m_Lights.push_back(_wmoLight);
 			}
 		}
@@ -224,7 +224,7 @@ bool WMO::Load()
 			WMO_FogDef* fogs = (WMO_FogDef*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < fogsCount; i++)
 			{
-				SmartPtr<WMO_Part_Fog> fog = new WMO_Part_Fog(fogs[i]);
+				WMO_Part_Fog* fog = new WMO_Part_Fog(fogs[i]);
 				m_Fogs.push_back(fog);
 			}
 		}
@@ -282,12 +282,10 @@ void WMO::PreRender(CWMO_InstanceController * _localContr)
 
 void WMO::Render(CWMO_InstanceController* _localContr, const WMO_Doodad_SetInfo& _doodadSet)
 {
-#ifdef _DEBUG
 	for (auto& it : m_Portals)
 	{
 		it->Render(_localContr->getWorld());
 	}
-#endif
 
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	_Render->r.setDepthMask(true);

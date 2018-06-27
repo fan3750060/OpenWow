@@ -69,7 +69,7 @@ bool GameState_WMOViewer::Init()
 	else
 	{
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Dungeon\\AZ_StormwindPrisons\\StormwindJail.wmo");
-		WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Azeroth\\Buildings\\Stormwind\\Stormwind.wmo");
+		WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Northrend\\Dalaran\\ND_Dalaran.wmo");
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Kalimdor\\Ogrimmar\\Ogrimmar.wmo");
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Kalimdor\\Winterspring\\MD_WinterspringCave01.wmo");
 		backgroundModel = new CWMO_Base_Instance(root, wmo);

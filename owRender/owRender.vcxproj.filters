@@ -340,9 +340,6 @@
     <None Include="..\_gamedata\shaders\WMO.vs">
       <Filter>Techniques\WMO</Filter>
     </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0 .fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
     <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_1.fs">
       <Filter>Techniques\Map\Divided</Filter>
     </None>
@@ -350,6 +347,9 @@
       <Filter>Techniques\Map\Divided</Filter>
     </None>
     <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_3.fs">
+      <Filter>Techniques\Map\Divided</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0.fs">
       <Filter>Techniques\Map\Divided</Filter>
     </None>
   </ItemGroup>

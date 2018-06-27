@@ -290,7 +290,7 @@ uint32 M2GetPixelShaderID(uint32 op_count, uint16 shader_id)
 	{
 		if (op_count == 1)
 		{
-			return shader_id & 0x70 ? PS_Combiners_Mod : PS_Combiners_Opaque;
+			return (shader_id & 0x70) ? PS_Combiners_Mod : PS_Combiners_Opaque;
 		}
 		else
 		{

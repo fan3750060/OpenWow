@@ -16,6 +16,13 @@ __interface IByteBuffer
 	void readBytes(void* _destination, uint64 _size);
 };
 
+
+__interface IByteBufferOutput
+{
+	const uint8* getData() const;
+	uint32 getSize() const;
+};
+
 __interface IFile : public IByteBuffer, public IRefItem
 {
 	bool Open();

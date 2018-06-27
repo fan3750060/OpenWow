@@ -1,42 +1,47 @@
 #pragma once
 
+#include "SocketBase.h"
 #include "AuthCodes.h"
 
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment (lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
+// FORWARD BEGIN
+class CAuthWorldController;
+// FORWARD END
 
-
-
-/*#define DEFAULT_HOST "176.213.201.73"
-#define DEFAULT_PORT "3724"
-#define DEFAULT_USERNAME "bouzi"
-#define DEFAULT_PASS "automat"*/
-
-class CAuthSocket
+class CAuthSocket : public ISocket
 {
+	typedef bool (CAuthSocket::* HandlerFunc)(ByteBuffer&);
 public:
-	CAuthSocket(const char* _host, const char* _port);
+	CAuthSocket(CAuthWorldController* _world, cstring _host, cstring _port);
 	~CAuthSocket();
 
-	void SendData(const uint8* _data, uint32 _count);
-	void ReceiveLoop();
+	void SendData(const IByteBufferOutput& _bb) override;
+	void SendData(const IByteBuffer& _bb) override;
+	void SendData(const uint8* _data, uint32 _count) override;
 
-	void SendLogonChallenge();
-	void ProcessHandler(eAuthCmd handler);
+	// Handlers
+	void InitHandlers();
+	void OnDataReceive(ByteBuffer _buf);
+	void ProcessHandler(eAuthCmd _handler, ByteBuffer _buffer);
 
-	bool H_LoginChallenge(ByteBuffer& _buff);
+	// Client
+	void C_SendLogonChallenge(string _username, string _password);
 
-	//--
-
-	uint32 getMyInet() { return inet_addr("192.168.0.103"); }
+	// Server
+	bool S_LoginChallenge(ByteBuffer& _buff);
+	bool S_LoginProof(ByteBuffer& _buff);
+	bool S_Realmlist(ByteBuffer& _buff);
 
 private:
-	SOCKET ConnectSocket;
-	ByteBuffer m_ByteBuffer;
+	CAuthWorldController* m_World;
+	CSocketBase* socketBase;
 
-	std::unordered_map<eAuthCmd, bool (CAuthSocket::*)(ByteBuffer&)> m_Handlers;
+	std::unordered_map<eAuthCmd, HandlerFunc> m_Handlers;
 
+	string m_Host;
+	string m_Port;
+	string m_Username;
+	string m_Password;
+
+	BigNumber Key;
 	SHA1Hash MServer;
 };

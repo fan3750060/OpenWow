@@ -2,12 +2,10 @@
 
 #include "AuthCodes.h"
 
-struct ServerAuthChallenge
+struct AuthChallenge_S
 {
-public:
-	ServerAuthChallenge(ByteBuffer& reader)
+	AuthChallenge_S(ByteBuffer& reader)
 	{
-		command = eAuthCmd::AUTH_LOGON_CHALLENGE;
 		reader.readBytes(&unk2, 1);
 		reader.readBytes(&error, 1);
 
@@ -18,21 +16,15 @@ public:
 		}
 
 		reader.readBytes(B, 32);
-
 		reader.readBytes(&gLen);
 		reader.readBytes(g);
-
 		reader.readBytes(&nLen);
 		reader.readBytes(N, nLen);
-
 		reader.readBytes(s, 32);
 		reader.readBytes(unk3, 16);
-
 		reader.readBytes(&securityFlags);
 	}
 
-public:
-	eAuthCmd	command;
 	uint8		unk2;
 	AuthResult	error;
 	uint8		B[32];

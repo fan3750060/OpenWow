@@ -16,7 +16,5 @@ private:
 	bool isDEPTHTEST;
 	bool isDEPTHWRITE;
 
-	uint16 blending_mode;
-
-	
+	SM2_Material::BlendModes blending_mode;
 };

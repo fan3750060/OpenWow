@@ -1,4 +1,4 @@
 #include "stdafx.h"
 
 // General
-#include "ServerAuthChallenge.h"
+#include "RealmInfo.h"

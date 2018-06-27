@@ -16,22 +16,16 @@ ByteBuffer::ByteBuffer() :
 ByteBuffer::ByteBuffer(const ByteBuffer& _other) :
 	m_IsFilled(false),
 	m_IsOnlyPointer(false),
-	m_IsEOF(_other.m_BufferSize == 0),
-	m_IsAllocated(_other.m_BufferSize > 0),
+	m_IsEOF(true),
+	m_IsAllocated(false),
 	m_Data(nullptr),
 	m_CurrentPosition(0),
-	m_BufferSize(_other.m_BufferSize)
+	m_BufferSize(0)
 {
+	CopyData(_other.getData(), _other.getSize());
 
-	if (_other.m_BufferSize > 0)
-	{
-		if (_other.m_Data != nullptr)
-		{
-			m_Data = _other.m_Data;
-			m_IsFilled = true;
-			m_IsOnlyPointer = true;
-		}
-	}
+	m_IsEOF = _other.m_IsEOF;
+	m_CurrentPosition = _other.m_CurrentPosition;
 }
 
 ByteBuffer::ByteBuffer(uint64_t _size) :
@@ -64,6 +58,24 @@ ByteBuffer::~ByteBuffer()
 	Clear();
 }
 
+ByteBuffer& ByteBuffer::operator=(const ByteBuffer & _other)
+{
+	m_IsFilled = false;
+	m_IsOnlyPointer = false;
+	m_IsEOF = true;
+	m_IsAllocated = false;
+	m_Data = nullptr;
+	m_CurrentPosition = 0;
+	m_BufferSize = 0;
+
+	CopyData(_other.getData(), _other.getSize());
+
+	m_IsEOF = _other.m_IsEOF;
+	m_CurrentPosition = _other.m_CurrentPosition;
+
+	return *this;
+}
+
 //
 
 void ByteBuffer::Allocate(uint64_t _size)
@@ -75,7 +87,6 @@ void ByteBuffer::Allocate(uint64_t _size)
 		assert1(!m_IsAllocated);
 		m_Data = new uint8[_size];
 		m_IsAllocated = true;
-
 	}
 
 	m_CurrentPosition = 0;
@@ -90,7 +101,7 @@ void ByteBuffer::SetFilled()
 	m_IsOnlyPointer = false;
 }
 
-void ByteBuffer::CopyData(uint8* _data, uint64_t _size)
+void ByteBuffer::CopyData(const uint8* _data, uint64_t _size)
 {
 	if (!m_IsAllocated)
 	{
@@ -107,10 +118,8 @@ void ByteBuffer::CopyData(uint8* _data, uint64_t _size)
 	if (_data != nullptr)
 	{
 		memcpy(m_Data, _data, _size);
-		m_IsFilled = true;
+		SetFilled();
 	}
-
-	m_CurrentPosition = 0;
 }
 
 void ByteBuffer::Init(uint8* _dataPtr, uint64_t _size)
@@ -223,6 +232,7 @@ void ByteBuffer::readBytes(void* _destination, uint64_t _size)
 {
 	if (m_IsEOF)
 	{
+		fail1();
 		return;
 	}
 
@@ -236,4 +246,25 @@ void ByteBuffer::readBytes(void* _destination, uint64_t _size)
 	memcpy(_destination, &(m_Data[m_CurrentPosition]), _size);
 
 	m_CurrentPosition = posAfterRead;
+}
+
+void ByteBuffer::readString(string* _string)
+{
+	assert1(_string != nullptr);
+
+	string str = "";
+	while (true)
+	{
+		uint8 byte;
+		readBytes(&byte);
+
+		if (byte == '\0')
+		{
+			break;
+		}
+
+		str += (char)byte;
+	}
+
+	(*_string) = str;
 }

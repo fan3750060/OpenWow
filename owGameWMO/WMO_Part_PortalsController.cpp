@@ -132,7 +132,7 @@ void CWMO_Part_PortalsController::Update(CWMO_InstanceController* _localContr, c
 		}
 	}
 
-	assert1(insideOneAtLeast || !(m_ParentWMO->m_OutdoorGroups.empty()));
+	//assert1(insideOneAtLeast || !(m_ParentWMO->m_OutdoorGroups.empty()));
 
 	// If we outside WMO, then get outdorr group
 	if (!insideOneAtLeast)

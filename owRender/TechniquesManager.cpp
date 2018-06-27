@@ -56,8 +56,6 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	M2_Pass->Bind();
 	M2_Pass->SetDiffuseTexture(0, Material::C_DiffuseTextureIndex + 0);
 	M2_Pass->SetDiffuseTexture(1, Material::C_DiffuseTextureIndex + 1);
-	M2_Pass->SetDiffuseTexture(2, Material::C_DiffuseTextureIndex + 2);
-	M2_Pass->SetDiffuseTexture(3, Material::C_DiffuseTextureIndex + 3);
 	M2_Pass->SetSpecularTexture(Material::C_SpecularTextureIndex);
 	M2_Pass->Unbind();
 	m_GeomTechniques.push_back(M2_Pass);

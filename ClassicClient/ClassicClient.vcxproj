@@ -11,24 +11,38 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AuthChallenge_C.h" />
     <ClInclude Include="AuthCodes.h" />
     <ClInclude Include="AuthCrypt.h" />
+    <ClInclude Include="AuthProof_C.h" />
     <ClInclude Include="AuthSocket.h" />
-    <ClInclude Include="ServerAuthChallenge.h" />
-    <ClInclude Include="ServerAuthProof.h" />
+    <ClInclude Include="AuthChallenge_S.h" />
+    <ClInclude Include="AuthProof_S.h" />
+    <ClInclude Include="AuthWorldController.h" />
+    <ClInclude Include="InPacket.h" />
+    <ClInclude Include="Opcodes.h" />
+    <ClInclude Include="OutPacket.h" />
+    <ClInclude Include="RealmInfo.h" />
+    <ClInclude Include="SocketBase.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WorldSocket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AuthCodes.cpp" />
     <ClCompile Include="AuthCrypt.cpp" />
     <ClCompile Include="AuthSocket.cpp" />
-    <ClCompile Include="ServerAuthChallenge.cpp" />
-    <ClCompile Include="ServerAuthProof.cpp" />
+    <ClCompile Include="AuthWorldController.cpp" />
+    <ClCompile Include="InPacket.cpp" />
+    <ClCompile Include="Opcodes.cpp" />
+    <ClCompile Include="OutPacket.cpp" />
+    <ClCompile Include="RealmInfo.cpp" />
+    <ClCompile Include="SocketBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WorldSocket.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DBB26466-19FF-414B-8A7C-733BF3120213}</ProjectGuid>

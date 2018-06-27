@@ -40,7 +40,7 @@ void CSceneManager::RenderRecursy(SceneNode* _node)
 	}
 	m_RenderQueue.push_back(_node);
 
-//	Intersection(_node);
+	Intersection(_node);
 
 	// Some checks
 	if (_node->getChilds().empty())

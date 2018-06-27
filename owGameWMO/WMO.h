@@ -47,11 +47,11 @@ public:
 public:
 	//-- Materials --//
 	char*									m_TexturesNames;		// MOTX chunk
-	vector<SmartPtr<WMO_Part_Material>>		m_Materials;			// MOMT chunk
+	vector<WMO_Part_Material*>				m_Materials;			// MOMT chunk
 
 	//-- Groups --//
 
-	vector<SmartPtr<WMO_Group>>				m_Groups;				// MOGI chunk
+	vector<WMO_Group*>						m_Groups;				// MOGI chunk
 	vector<WMO_Group*>						m_OutdoorGroups;
 
 	//-- Skybox --//
@@ -70,7 +70,7 @@ public:
 
 
 	// -- Lights --//
-	vector<SmartPtr<WMO_Part_Light>>		m_Lights;				// MOLT chunk
+	vector<WMO_Part_Light*>					m_Lights;				// MOLT chunk
 
 
 	//-- Doodads --//
@@ -80,7 +80,7 @@ public:
 
 
 	//-- Fog --//
-	vector<SmartPtr<WMO_Part_Fog>>			m_Fogs;					// MFOG chunk
+	vector<WMO_Part_Fog*>					m_Fogs;					// MFOG chunk
 
 
 	//-- Volumes plane --//
