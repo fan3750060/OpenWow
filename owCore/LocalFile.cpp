@@ -57,8 +57,9 @@ bool CLocalFile::Open()
 
 	// Read data
 	m_ByteBuffer.Allocate(fileSize + 1);
-	stream.read((char*)&m_ByteBuffer.GetAccessToData()[0], fileSize);
+	stream.read((char*)&m_ByteBuffer.getDataEx()[0], fileSize);
 	m_ByteBuffer.SetFilled();
+	m_ByteBuffer.getDataEx()[fileSize] = '\0';
 
 	streamsize readedBytes = stream.gcount();
 	if (readedBytes < fileSize)
@@ -70,13 +71,9 @@ bool CLocalFile::Open()
 		fail2(buff);
 	}
 
-	m_ByteBuffer.GetAccessToData()[fileSize] = '\0';
-
 	// Close stream
 	stream.close();
 	stream.clear();
-
-	//Log::Info("File[%s] opened. [local]", Path_Name().c_str());
 
 	return true;
 }

@@ -27,13 +27,11 @@ CConsoleOpenGL::CConsoleOpenGL() :
 
     //
 
-	_Bindings->RegisterRenderableUIObject(this, 1000);
 	_Bindings->RegisterInputListener(this);
 }
 
 CConsoleOpenGL::~CConsoleOpenGL()
 {
-	_Bindings->UnregisterRenderableUIObject(this);
 	_Bindings->UnregisterInputListener(this);
 }
 

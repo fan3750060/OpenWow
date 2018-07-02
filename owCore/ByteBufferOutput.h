@@ -13,6 +13,7 @@ public:
 	void Write(uint32 _data);
 	void Write(uint64 _data);
 
+	void Write(ByteBufferOutput& _other);
 	void Write(const uint8* _string, uint32 _size);
 	void Write(cstring _string, uint32 _expectedSize = UINT32_MAX);
 

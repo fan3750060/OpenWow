@@ -2,7 +2,6 @@
 
 #include "DBC__Forwards.h"
 
-
 // My files
 #include "DBC_AnimationData.h"
 #include "DBC_AreaTable.h"
@@ -17,22 +16,19 @@
 #include "DBC_LightSkyBox.h"
 #include "DBC_LiquidType.h"
 #include "DBC_LoadingScreen.h"
-
-#if (VERSION == VERSION_Vanila)
-#include "DBC_Map.h"
-#elif (VERSION == VERSION_WotLK)
 #include "DBC_Map_WotLK.h"
-#endif
-
 #include "DBC_TerrainType.h"
 #include "DBC_WMOAreaTable.h"
 
+// Character
+#include "DBC_CharacterFacialHairStyles.h"
+#include "DBC_CharHairGeosets.h"
+#include "DBC_CharSections.h"
+#include "DBC_ChrRaces.h"
+
+// DisplayInfo
+#include "DBC_CreatureDisplayInfo.h"
+#include "DBC_CreatureDisplayInfoExtra.h"
+#include "DBC_CreatureModelData.h"
+
  void OpenDBs();
-
-
-class DBC__Storage
-{
-public:
-	bool Init();
-	void Destroy();
-};

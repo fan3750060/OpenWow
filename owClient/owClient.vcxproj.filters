@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{d0033b79-fd0f-4221-80fa-9a9bedd64d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentification">
+      <UniqueIdentifier>{3364f293-36ca-480a-bc97-c5ec3f68631a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{75ade36c-8f7e-47c1-9c10-2417d65282bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{c8ec6c2e-39ff-48cf-91ec-6dd4d91d9bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Authentification\Handlers">
+      <UniqueIdentifier>{d2347f52-2bb8-47c4-8e22-3725e0a2f6e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthCodes.cpp">
+      <Filter>Authentification</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthSocket.cpp">
+      <Filter>Authentification</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketBase.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldSocket.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Opcodes.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthCrypt.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="InPacket.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="OutPacket.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthWorldController.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="RealmInfo.cpp">
+      <Filter>Shared</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthCodes.h">
+      <Filter>Authentification</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthSocket.h">
+      <Filter>Authentification</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketBase.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldSocket.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthProof_C.h">
+      <Filter>Authentification\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthProof_S.h">
+      <Filter>Authentification\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthChallenge_S.h">
+      <Filter>Authentification\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthChallenge_C.h">
+      <Filter>Authentification\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owClient.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Opcodes.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthCrypt.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="OutPacket.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="InPacket.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthWorldController.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="RealmInfo.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

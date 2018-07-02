@@ -49,7 +49,6 @@ ByteBuffer::ByteBuffer(uint8* _data, uint64_t _size) :
 	m_CurrentPosition(0),
 	m_BufferSize(0)
 {
-
 	Init(_data, _size);
 }
 
@@ -232,7 +231,7 @@ void ByteBuffer::readBytes(void* _destination, uint64_t _size)
 {
 	if (m_IsEOF)
 	{
-		fail1();
+		//fail1();
 		return;
 	}
 

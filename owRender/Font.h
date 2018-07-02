@@ -19,7 +19,7 @@ public:
 
 public:
 	static const uint32 SPACE = 32;
-	static const uint32 NUM_CHARS = 192;
+	static const uint32 NUM_CHARS = 256;
 
 private:
 	SmartTexturePtr	m_Texture;

@@ -17,11 +17,23 @@ CM2_Builder::CM2_Builder(M2* _model) :
 	m_TexturesWeight(nullptr),
 	m_TexturesTransform(nullptr)
 {
+	// Fix filename
+	if (m_ParentM2->m_FileName.back() != '2')
+	{
+		m_ParentM2->m_FileName[m_ParentM2->m_FileName.length() - 2] = '2';
+		m_ParentM2->m_FileName[m_ParentM2->m_FileName.length() - 1] = '\0';
+		m_ParentM2->m_FileName.resize(m_ParentM2->m_FileName.length() - 1);
+	}
+
+	// Openfile
 	m_F = GetManager<IFilesManager>()->Open(m_ParentM2->getFilename());
 	if (m_F == nullptr)
 	{
 		Log::Info("CM2_Builder[%s]: Unable to open file.", m_ParentM2->getFilename().c_str());
 	}
+
+	m_ParentM2->m_FilePath = m_F->Path();
+	m_ParentM2->m_FileNameWithoutExt = m_ParentM2->m_FileName.substr(0, m_ParentM2->m_FileName.length() - 3);
 }
 
 CM2_Builder::~CM2_Builder()
@@ -36,6 +48,8 @@ bool CM2_Builder::Load()
 		return false;
 	}
 
+
+
 	Step1Header();
 	Step2GlobalLoops();
 	Step3Bones();
@@ -48,6 +62,7 @@ bool CM2_Builder::Load()
 	Step9Collision();
 
 	SetAnimated();
+	//m_ParentM2->m_IsAnimated = false;
 
 	return true;
 }
@@ -109,7 +124,7 @@ void CM2_Builder::Step2GlobalLoops()
 			m_ParentM2->m_Sequences.push_back(Sequences[i]);
 
 			char buf[256];
-			sprintf_s(buf, "%s%04d-%02d.anim", m_ParentM2->m_FileNameWithoutExt.c_str(), Sequences[i].__id, Sequences[i].variationIndex);
+			sprintf_s(buf, "%s%04d-%02d.anim", m_ParentM2->m_FileNameWithoutExt.c_str(), Sequences[i].__animID, Sequences[i].variationIndex);
 			if (CMPQFile::GetFileSize(buf) > 0)
 			{
 				animfiles[i] = GetManager<IFilesManager>()->Open(buf);
@@ -127,7 +142,7 @@ void CM2_Builder::Step2GlobalLoops()
 	// Sequences Lookup
 	if (m_Header->sequencesLookup.size > 0)
 	{
-		uint16* SequencesLookup = (uint16*)(m_F->getData() + m_Header->sequencesLookup.offset);
+		int16* SequencesLookup = (int16*)(m_F->getData() + m_Header->sequencesLookup.offset);
 		for (uint32 i = 0; i < m_Header->sequencesLookup.size; i++)
 		{
 			m_ParentM2->m_SequencesLookup.push_back(SequencesLookup[i]);
@@ -235,6 +250,26 @@ void CM2_Builder::Step5ColorAndTextures()
 		for (uint32 i = 0; i < m_Header->textureLookup.size; i++)
 		{
 			m_ParentM2->m_TexturesLookup.push_back(TexturesLookup[i]);
+		}
+	}
+
+	// 3.3 Textures unit lookup
+	if (m_Header->textureUnitLookup.size > 0)
+	{
+		uint16* TexturesUnitLookup = (uint16*)(m_F->getData() + m_Header->textureUnitLookup.offset);
+		for (uint32 i = 0; i < m_Header->textureUnitLookup.size; i++)
+		{
+			m_ParentM2->m_TexturesUnitLookup.push_back(TexturesUnitLookup[i]);
+		}
+	}
+
+	// 3.4 Replaceble textures lookup
+	if (m_Header->replacable_texture_lookup.size > 0)
+	{
+		uint16* ReplacebleLookup = (uint16*)(m_F->getData() + m_Header->replacable_texture_lookup.offset);
+		for (uint32 i = 0; i < m_Header->replacable_texture_lookup.size; i++)
+		{
+			m_ParentM2->m_ReplacebleLookup.push_back(ReplacebleLookup[i]);
 		}
 	}
 
@@ -399,7 +434,7 @@ void CM2_Builder::Step8Skins()
 	}
 #elif (VERSION == VERSION_WotLK)
 	assert1(m_Header->num_skin_profiles > 0);
-	for (uint32 i = 0; i < m_ParentM2->m_Header.num_skin_profiles; i++)
+	for (uint32 i = 0; i < 1/*m_ParentM2->m_Header.num_skin_profiles*/; i++)
 	{
 		char buf[256];
 		sprintf_s(buf, "%s%02d.skin", m_ParentM2->m_FileNameWithoutExt.c_str(), i);

@@ -23,7 +23,7 @@ struct SM2_Header
 
     // Sequences
     M2Array<SM2_Sequence>			sequences;						// Information about the animations in the model.
-    M2Array<uint16>					sequencesLookup;				// Mapping of sequence IDs to the entries in the Animation sequences block.
+    M2Array<int16>					sequencesLookup;				// Mapping of sequence IDs to the entries in the Animation sequences block.
 #if VERSION <= VERSION_BC
 	M2Array<uint32>					playable_animation_lookup;		// ???
 #endif

@@ -4,6 +4,7 @@
 
 // Animator
 #include "M2_Animator.h"
+#include "M2_MeshPartID_Provider.h"
 
 // Bones
 #include "M2_Part_Bone.h"
@@ -48,21 +49,19 @@ public:
 	void lightsOn(uint32 lbase);
 	void lightsOff(uint32 lbase);
 
+	void UpdateSpecialTextures();
+
 #pragma region Getters
 public:
 	string getFilename() const { return m_FileName; }
 	string getUniqueName() const { return m_UniqueName; }
 	cbbox getBounds() const { return m_Bounds; }
-
-	bool isDoodadColorExists() const { return m_DoodadColorExists; }
-	void setDoodadColor(cvec4 _value) { m_DoodadColorExists = true; m_DoodadColor = _value; }
-	cvec4 getDoodadColor() const { return m_DoodadColor; }
 	
 	const SM2_Sequence& getSequence(uint32 _index) const
 	{
 		assert1(_index < m_Header.sequencesLookup.size);
-		uint16 newIndex = m_SequencesLookup[_index];
-		assert1(newIndex < m_Header.sequences.size);
+		int16 newIndex = m_SequencesLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Header.sequences.size));
 		return m_Sequences[newIndex];
 	}
 	const bool isAnimated() const { return m_IsAnimated; }
@@ -76,11 +75,6 @@ public:
 	const bool hasBones() const { return m_HasBones; }
 	const bool isAnimBones() const { return m_IsAnimBones; }
 	const bool isBillboard() const { return m_IsBillboard; }
-	/*const CM2_Skin* GetSkin(uint32 _index) const
-	{
-		assert1(_index < m_Header.skin_profiles.size);
-		return m_Skins[_index];
-	}*/
 
 	// Colors and Textures
 
@@ -125,18 +119,16 @@ public:
 public:
 	string								m_FileName;
 	string								m_FileNameWithoutExt;
+	string								m_FilePath;
+
 	SM2_Header							m_Header;
 	string								m_UniqueName;
 	BoundingBox							m_Bounds;
 
-	// WMO_Doodad
-	bool								m_DoodadColorExists;
-	vec4								m_DoodadColor;
-
 	// Loops & Sequences
 	GlobalLoopSeq						m_GlobalLoops;
 	vector<SM2_Sequence>				m_Sequences;
-	vector<uint16>						m_SequencesLookup;
+	vector<int16>						m_SequencesLookup;
 	bool								m_IsAnimated;
 
 	// Bones
@@ -148,14 +140,18 @@ public:
 
 	// Vertices
 	bool								m_IsContainGeom;
+
 	// Skins
 	vector<CM2_Skin*>					m_Skins;
+	CM2_MeshPartID_Provider*			m_MeshProvider;
 
 	// Colors and textures
 	vector<CM2_Part_Color>				m_Colors;
 	vector<CM2_Part_Material>			m_Materials;
 	vector<CM2_Part_Texture>			m_Textures;
 	vector<uint16_t>					m_TexturesLookup;
+	vector<uint16_t>					m_TexturesUnitLookup;
+	vector<uint16_t>					m_ReplacebleLookup;
 	vector<CM2_Part_TextureWeight>		m_TextureWeights;
 	vector<uint16_t>					m_TextureWeightsLookup;
 	vector<CM2_Part_TextureTransform>	m_TexturesTransform;

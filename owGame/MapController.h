@@ -11,7 +11,7 @@ public:
 	MapController();
 	~MapController();
 
-	void MapPreLoad(DBC_MapRecord* _map);
+	void MapPreLoad(DBC_MapRecord _map);
 	void MapLoad();
 	void MapPostLoad();
 
@@ -35,7 +35,7 @@ public:
 
 public: // Getters
 	string GetFolder() { return m_MapFolder; }
-	DBC_MapRecord* GetDBCMap() { return m_DBC_Map; }
+	DBC_MapRecord& GetDBCMap() { return m_DBC_Map; }
 
 	int GetCurrentX() const { return m_CurrentTileX; }
 	int GetCurrentZ() const { return m_CurrentTileZ; }
@@ -72,7 +72,7 @@ private:
 
 private:
 	string			m_MapFolder;
-	DBC_MapRecord*	m_DBC_Map;
+	DBC_MapRecord	m_DBC_Map;
 
 
 private:

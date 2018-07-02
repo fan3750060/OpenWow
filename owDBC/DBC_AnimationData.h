@@ -4,7 +4,7 @@
 
 DBC_DEF_BEGIN(DBÑ_AnimationData)
 
-__DBC_LOCSTR(							Name,				2);
+__DBC_STRING(							Name,				2);
 __DBC_TVALUE(uint32,					WeaponFlags,		3);
 __DBC_TVALUE(uint32,					BodyFlags,			4);
 __DBC_TVALUE(uint32,					Flags,				5);

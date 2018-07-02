@@ -75,6 +75,27 @@
     <ClInclude Include="DBC_Map_WotLK.h">
       <Filter>DBCs</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_CharSections.h">
+      <Filter>DBCs\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CharHairGeosets.h">
+      <Filter>DBCs\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CharacterFacialHairStyles.h">
+      <Filter>DBCs\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_ChrRaces.h">
+      <Filter>DBCs\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CreatureDisplayInfo.h">
+      <Filter>DBCs\DisplayInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CreatureModelData.h">
+      <Filter>DBCs\DisplayInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CreatureDisplayInfoExtra.h">
+      <Filter>DBCs\DisplayInfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -82,6 +103,12 @@
     </Filter>
     <Filter Include="DBCs">
       <UniqueIdentifier>{7fb4b204-ed98-428e-86a3-13ca2ef284e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Characters">
+      <UniqueIdentifier>{a5b5a1a7-27eb-4cbb-9932-24314d81f7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\DisplayInfo">
+      <UniqueIdentifier>{0f606b7a-b2c6-46d6-9591-04181cb4140b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

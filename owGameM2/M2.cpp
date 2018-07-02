@@ -6,8 +6,6 @@
 M2::M2(cstring name) :
 	m_FileName(name),
 	m_UniqueName(""),
-	// WMO_Doodad
-	m_DoodadColorExists(false),
 	// Loops and sequences
 	m_IsAnimated(false),
 	// Bones
@@ -16,6 +14,7 @@ M2::M2(cstring name) :
 	m_IsBillboard(false),
 	// Vertices
 	m_IsContainGeom(false),
+	m_MeshProvider(nullptr),
 	// Colors and textures
 	m_AnimTextures(false),
 	// Misc
@@ -23,23 +22,13 @@ M2::M2(cstring name) :
 {
 	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 
-	// Replace .M2 with .M2
-	if (m_FileName.back() != '2')
-	{
-		m_FileName[m_FileName.length() - 2] = '2';
-		m_FileName[m_FileName.length() - 1] = '\0';
-		m_FileName.resize(m_FileName.length() - 1);
-	}
-
-	m_FileNameWithoutExt = m_FileName.substr(0, m_FileName.length() - 3);
+	m_MeshProvider = new CM2_MeshPartID_Provider();
 }
 
 M2::~M2()
 {
 	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
-
-//
 
 void M2::drawModel(cmat4 _worldMatrix)
 {
@@ -214,6 +203,14 @@ void M2::lightsOff(uint32 lbase)
 	for (uint32 i = 0, l = lbase; i < m_Header.lights.size; i++)
 	{
 		//glDisable(l++);
+	}
+}
+
+void M2::UpdateSpecialTextures()
+{
+	for (auto& it : m_Textures)
+	{
+		it.UpdateReplacedTexture(m_MeshProvider);
 	}
 }
 

@@ -69,52 +69,23 @@ void CM2_Skin_Builder::Step2InitBatches()
 	{
 		M2_Skin_Batch* batch = new M2_Skin_Batch(m_ParentM2);
 
-		if (it.shader_id != 0)
-		{
-			Log::Error("ORIG Shader is [%d]", it.shader_id);
-		}
+		batch->newShader = GetPixel(&it);
 
 		// Geometry data
-		batch->m_SkinIndex = it.skinSectionIndex;
-		batch->m_SkinSection = m_SkinSections[it.skinSectionIndex];
-
-		batch->newShader = GetPixel(&it);
-		if (batch->newShader != 5 && batch->newShader != 27)
-		{
-			Log::Error("NEWShader is [%d]", batch->newShader);
-		}
-
-
-		//const CM2_Part_Bone& bone = m_ParentM2->m_Bones[batch->m_SkinSection.bonesStartIndex + batch->m_SkinSection.centerBoneIndex];
-		//batch->m_IsBilldoard = bone.IsBillboard();
-
-		/*for (uint32 i = 0; i < batch->m_SkinSection.boneCount; i++)
-		{
-			const CM2_Part_Bone& bone = m_ParentM2->getBone(batch->m_SkinSection.bonesStartIndex + i);
-			if (bone.IsBillboard())
-			{
-				Log::Warn("Bone [%s] [%d] is billbord!!!", m_ParentM2->getFilename().c_str(), batch->m_SkinSection.bonesStartIndex + i, bone.IsBillboard());
-				batch->m_IsBilldoard = true;
-				break;
-			}
-		}*/
-
-
-		if (it.textureCount == 1)
-		{
-			assert1(batch->newShader >= 0 && batch->newShader < 6);
-		}
-		else if (it.textureCount == 2)
-		{
-			assert1(batch->newShader >= 6);
-		}
-		else
-		{
-			Log::Error("SUPER M2[%s] fail! texCnt: [%d], shader [%d]", m_ParentM2->m_FileNameWithoutExt.c_str(), it.textureCount, batch->newShader);
-		}
+		batch->m_PriorityPlan = it.priorityPlane;
+		batch->m_SkinProtoIndex = it.skinSectionIndex;
+		batch->m_SkinProtoSection = m_SkinSections[it.skinSectionIndex];
 
 		// Get classes
 		batch->material = &(m_ParentM2->GetMaterial(it.materialIndex));
+
+
+
+		// Color
+		if (it.colorIndex != UINT16_MAX)
+		{
+			batch->color = &(m_ParentM2->GetColor(it.colorIndex));
+		}
 
 		// Textures
 		for (uint32 i = 0; i < it.textureCount; i++)
@@ -122,10 +93,10 @@ void CM2_Skin_Builder::Step2InitBatches()
 			batch->m_Textures.push_back(&(m_ParentM2->GetTexture(it.texture_Index + i)));
 		}
 
-		// Color
-		if (it.colorIndex != UINT16_MAX)
+		// Texture unit
+		if (it.texture_CoordIndex != UINT16_MAX)
 		{
-			batch->color = &(m_ParentM2->GetColor(it.colorIndex));
+			batch->texture_Unit = m_ParentM2->m_TexturesUnitLookup[it.texture_CoordIndex];
 		}
 
 		// Texture weight
@@ -141,12 +112,16 @@ void CM2_Skin_Builder::Step2InitBatches()
 			{
 				uint16 index = m_ParentM2->m_TexturesTransformLookup[it.texture_TransformIndex];
 				if (index != UINT16_MAX)
+				{
 					batch->texture_Transform = &(m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
+				}
 			}
 		}
 
 		m_Skin->m_Batches.push_back(batch);
 	}
+
+	std::sort(m_Skin->m_Batches.begin(), m_Skin->m_Batches.end(), M2_SkinBatch_PriorityPlan_Compare());
 }
 
 void CM2_Skin_Builder::StepBuildGeometry()

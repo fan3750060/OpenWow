@@ -19,19 +19,23 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 	{
 		DBÑ_AnimationDataRecord* record = (i->second);
 
-		if (record->Get_ID() >= m_M2->m_Sequences.size())
+		// Get animation with index (record->Get_ID() and variation index == 0)
+		int16 findedSeqIndex = -1;
+		for (uint16 j = 0; j < m_M2->m_Sequences.size(); j++)
 		{
-			break;
+			if (m_M2->m_Sequences[j].__animID == record->Get_ID() && m_M2->m_Sequences[j].variationIndex == 0)
+			{
+				findedSeqIndex = j;
+				break;
+			}
 		}
 
-		/*int16 indexIntoSequences = m_M2->m_Sequences[record->Get_ID()];
-		if (indexIntoSequences == -1)
-		{
-			continue;
-		}*/
+		if (findedSeqIndex == -1) continue;
 
-		CM2_Animation* animation = new CM2_Animation(m_M2, m_M2->m_Sequences[record->Get_ID()], record->Get_ID(), record->Get_Name());
+
+		CM2_Animation* animation = new CM2_Animation(m_M2, record->Get_ID(), record->Get_Name(), findedSeqIndex, m_M2->m_Sequences[findedSeqIndex]);
 		m_Animations.insert(make_pair(record->Get_ID(), animation));
+		//Log::Warn("Animation [%d] '%s'", record->Get_ID(), record->Get_Name());
 	}
 
 	assert1(m_Animations.size() > 0);
@@ -43,11 +47,15 @@ CM2_Animator::~CM2_Animator()
 
 }
 
-void CM2_Animator::PlayAnimation(uint16 _id, bool _loop)
+void CM2_Animator::PlayAnimation(int16 _id, bool _loop)
 {
 	m_IsLoop = _loop;
 
-	if (_id != UINT16_MAX)
+	if (_id == -1)
+	{
+		m_CurrentAnimation = m_Animations.begin()->second;
+	}
+	else
 	{
 		if ((m_Animations.find(_id) == m_Animations.end()))
 		{
@@ -56,10 +64,6 @@ void CM2_Animator::PlayAnimation(uint16 _id, bool _loop)
 		}
 
 		m_CurrentAnimation = (m_Animations[_id]);
-	}
-	else
-	{
-		m_CurrentAnimation = m_Animations.begin()->second;
 	}
 
 	m_CurrentTime = m_CurrentAnimation->getStart();
@@ -92,7 +96,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 	}
 
 	// Ended!
-	const CM2_Animation* nextAnim = m_CurrentAnimation->getNext();
+	/*const CM2_Animation* nextAnim = m_CurrentAnimation->getNext();
 	if (m_CurrentAnimation->getNext() != nullptr)
 	{
 		m_CurrentAnimation = nextAnim;
@@ -100,7 +104,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 		m_IsPlayed = false;
 		animtime = 0;
 		return;
-	}
+	}*/
 
 	m_CurrentTime = m_CurrentAnimation->getEnd() - 1;
 	m_IsPlayed = true;
@@ -112,7 +116,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 
 	if (m_IsLoop)
 	{
-		PlayAnimation(m_CurrentAnimation->getID());
+		PlayAnimation(m_CurrentAnimation->getAnimID());
 	}
 }
 

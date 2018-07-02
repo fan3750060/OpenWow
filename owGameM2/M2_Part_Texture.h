@@ -3,7 +3,7 @@
 #include "M2_Types.h"
 
 // FORWARD BEGIN
-class CM2_Skin_Builder;
+class CM2_MeshPartID_Provider;
 // FORWARD END
 
 class CM2_Part_Texture
@@ -11,22 +11,32 @@ class CM2_Part_Texture
 public:
 	CM2_Part_Texture(IFile* f, const SM2_Texture& _proto);
 
+	void UpdateReplacedTexture(CM2_MeshPartID_Provider* _provider);
+
 	bool isWrapX() const { return m_WrapX; }
 	bool isWrapY() const { return m_WrapY; }
 
 	void set(uint32 _slot) const;
 
+	// Common texture
 	R_Texture* getTexture() const { return m_Texture; }
-	int	getSpecialTexture() const { return m_SpecialTextures; }
+
+	// Special texture
+	SM2_Texture::SM2_Texture_Type getSpecialTextureType() const { return m_SpecialType; }
+	R_Texture* getReplacedTexture() const { return m_TextureReplaced; }
 
 private:
-	bool			m_WrapX;
-	bool			m_WrapY;
+	bool								m_WrapX;
+	bool								m_WrapY;
 
-	SmartTexturePtr	m_Texture;
-	int				m_SpecialTextures;
-	SmartTexturePtr	m_TextureReplaced;
-	bool			m_TexturesUseSpecialTexture;
+	// Common texture
+	SmartTexturePtr						m_Texture;
 
-	CGroupQuality&	m_QualitySettings;
+	// Replaced texture
+	bool								m_TexturesUseSpecialTexture;
+	SM2_Texture::SM2_Texture_Type		m_SpecialType;
+	SmartTexturePtr						m_TextureReplaced;
+	
+	//--
+	CGroupQuality&						m_QualitySettings;
 };

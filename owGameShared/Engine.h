@@ -28,4 +28,6 @@ private:
 	uint32 t;
 	uint32 last_t;
 	uint32 _time;
+
+	CConsoleOpenGL* openGLConsole;
 };

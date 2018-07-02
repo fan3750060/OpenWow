@@ -31,6 +31,9 @@ void CEngine::Init(IOpenGLAdapter* _OpenGLAdapter)
 {
 	_Render->Init(_OpenGLAdapter);
 	_Render->getAdapter()->MakeMainContext();
+
+	openGLConsole = new CConsoleOpenGL();
+	GetManager<ILog>()->AddDebugOutput(openGLConsole);
 }
 
 void CEngine::SetArguments(int argumentCount, char* arguments[])
@@ -85,6 +88,7 @@ bool CEngine::Tick()
 	// Perfomance render
 	_Perfomance->FrameEnd();
 	_Perfomance->Render(vec2(5, 100));
+	openGLConsole->RenderUI();
 
 	//
 

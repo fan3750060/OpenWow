@@ -49,6 +49,8 @@ CMPQArchiveManager::CMPQArchiveManager()
 	AddArchive(string("patch.MPQ"));
 	AddArchive(string("patch-2.MPQ"));
 	AddArchive(string("patch-3.MPQ"));
+	//AddArchive(string("patch-w.MPQ"));
+	//AddArchive(string("patch-x.MPQ"));
 
 	AddArchive(string("ruRU/locale-ruRU.MPQ"));
 	AddArchive(string("ruRU/expansion-locale-ruRU.MPQ"));
@@ -56,6 +58,8 @@ CMPQArchiveManager::CMPQArchiveManager()
 	AddArchive(string("ruRU/patch-ruRU.MPQ"));
 	AddArchive(string("ruRU/patch-ruRU-2.MPQ"));
 	AddArchive(string("ruRU/patch-ruRU-3.MPQ"));
+	//AddArchive(string("ruRU/patch-ruRU-w.MPQ"));
+	//AddArchive(string("ruRU/patch-ruRU-x.MPQ"));
 #endif
 
 

@@ -7,6 +7,9 @@
 class CM2_Skin_Builder;
 // FORWARD END
 
+
+
+
 class CM2_Skin
 {
 	friend CM2_Skin_Builder;
@@ -18,11 +21,12 @@ public:
 	void RenderNormals(cmat4 _worldMatrix);
 
 private:
-	M2*						m_ParentM2;
 	vector<M2_Skin_Batch*>		m_Batches;
 
 	SmartGeomPtr				__geom;
 	SmartGeomPtr				__geomDebugNormals;
 
+	//--
+	M2* m_ParentM2;
 	CGroupQuality& m_QualitySettings;
 };

@@ -70,7 +70,7 @@ RECORD_T* DBCFile<RECORD_T>::operator[](uint32 _id)
 }
 
 template <class RECORD_T>
-const map<uint32, RECORD_T*>& DBCFile<RECORD_T>::Records() const
+const multimap<uint32, RECORD_T*>& DBCFile<RECORD_T>::Records() const
 {
 	return records;
 }

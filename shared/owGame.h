@@ -19,3 +19,8 @@
 
 #include "../owGame/WorldController.h"
 #include "../owGame/WorldRender.h"
+
+//---------------------------------------------------------//
+//--            World of warcraft Client                 --//
+//---------------------------------------------------------//
+#include "../owGame/Character.h"

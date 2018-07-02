@@ -33,15 +33,15 @@ void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 	for (uint32 i = 0; i < _string.length(); i++)
 	{
 		uint8 ch = _string.c_str()[i];
-		if (static_cast<uint32>(ch) < SPACE || static_cast<uint32>(ch) - 32 > Font::NUM_CHARS)
+		if (static_cast<uint32>(ch) < 0 || static_cast<uint32>(ch) >= Font::NUM_CHARS)
 		{
 			continue;
 		}
 
 		_Render->getTechniquesMgr()->UI_Font->SetCharOffset(_offset);
-		_offset.x += static_cast<float>(m_WidthArray[ch - SPACE]);
+		_offset.x += static_cast<float>(m_WidthArray[ch]);
 
-		_Render->r.draw(PRIM_TRILIST, (ch - SPACE) * 6, 6);
+		_Render->r.draw(PRIM_TRILIST, (ch) * 6, 6);
 	}
 
 	_Render->getTechniquesMgr()->UI_Font->Unbind();
@@ -51,14 +51,14 @@ uint32 Font::GetStringWidth(cstring _string) const
 {
 	uint32 width = 0;
 
-	for (auto it : _string)
+	for (auto& it : _string)
 	{
 		if (it < 32)
 		{
 			continue;
 		}
 
-		width += m_WidthArray[it - SPACE];
+		width += m_WidthArray[it];
 	}
 
 	return width;

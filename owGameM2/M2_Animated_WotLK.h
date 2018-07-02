@@ -5,7 +5,7 @@
 
 //
 
-#define	MAX_ANIMATED (500u)
+#define	MAX_ANIMATED (485u)
 
 /*
 	Generic animated value class:
@@ -20,12 +20,13 @@ class M2_Animated
 public:
 	void init(const M2Track<D>& b, IFile* f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix)
 	{
+		m_Type = b.interpolation_type;
+		m_GlobalSeqIndex = b.global_sequence;
 		m_GlobalSec = _globalSec;
-		interpolation_type = b.interpolation_type;
-		global_sequence = b.global_sequence;
-		if (global_sequence != -1)
+
+		if (m_GlobalSeqIndex != -1)
 		{
-			assert1(_globalSec);
+			assert1(_globalSec != nullptr);
 		}
 
 		assert1(b.timestamps.size == b.values.size);
@@ -52,7 +53,7 @@ public:
 			D* values = (D*)(f->getData() + pHeadKeys->offset);
 			for (uint32 i = 0; i < pHeadKeys->size; i++)
 			{
-				switch (interpolation_type)
+				switch (m_Type)
 				{
 				case INTERPOLATION_LINEAR:
 					data[j].push_back(fixfunc(Conv::conv(values[i])));
@@ -70,10 +71,10 @@ public:
 
 	void init(const M2Track<D>& b, IFile* f, cGlobalLoopSeq _globalSec, IFile** animfiles, T fixfunc(const T&) = NoFix)
 	{
+		m_Type = b.interpolation_type;
+		m_GlobalSeqIndex = b.global_sequence;
 		m_GlobalSec = _globalSec;
-		interpolation_type = b.interpolation_type;
-		global_sequence = b.global_sequence;
-		if (global_sequence != -1)
+		if (m_GlobalSeqIndex != -1)
 		{
 			assert1(_globalSec);
 		}
@@ -111,7 +112,7 @@ public:
 			else
 				keys = (D*)(f->getData() + pHeadKeys->offset);
 
-			switch (interpolation_type)
+			switch (m_Type)
 			{
 			case INTERPOLATION_NONE:
 			case INTERPOLATION_LINEAR:
@@ -133,7 +134,7 @@ public:
 
 	bool uses(uint32 anim) const
 	{
-		if (global_sequence > -1)
+		if (m_GlobalSeqIndex > -1)
 		{
 			anim = 0;
 		}
@@ -143,15 +144,15 @@ public:
 
 	T getValue(uint32 anim, uint32 time, uint32 globalTime)
 	{
-		if (global_sequence > -1)
+		if (m_GlobalSeqIndex != -1)
 		{
-			if (m_GlobalSec->at(global_sequence).timestamp == 0)
+			if (m_GlobalSec->at(m_GlobalSeqIndex).timestamp == 0)
 			{
 				time = 0;
 			}
 			else
 			{
-				time = globalTime % m_GlobalSec->at(global_sequence).timestamp;
+				time = globalTime % m_GlobalSec->at(m_GlobalSeqIndex).timestamp;
 			}
 			anim = 0;
 		}
@@ -177,23 +178,24 @@ public:
 			t2 = times[anim][pos + 1];
 			float r = (time - t1) / (float)(t2 - t1);
 
-			if (interpolation_type == INTERPOLATION_LINEAR)
+
+			switch (m_Type)
 			{
-				return interpolate<T>(r, data[anim][pos], data[anim][pos + 1]);
-			}
-			else if (interpolation_type == INTERPOLATION_NONE)
-			{
+			case INTERPOLATION_NONE:
 				return data[anim][pos];
-			}
-			else
-			{
-				// INTERPOLATION_HERMITE is only used in cameras afaik?
+				break;
+
+			case INTERPOLATION_LINEAR:
+				return interpolate<T>(r, data[anim][pos], data[anim][pos + 1]);
+				break;
+
+			case INTERPOLATION_HERMITE:
 				return interpolateHermite<T>(r, data[anim][pos], data[anim][pos + 1], in[anim][pos], out[anim][pos]);
+				break;
 			}
 		}
 		else
 		{
-			// default value
 			if (data[anim].size() == 0)
 			{
 				return T();
@@ -206,14 +208,14 @@ public:
 	}
 
 private:
-	int32 interpolation_type;
-	int32 global_sequence;
-	cGlobalLoopSeq				m_GlobalSec;
+	Interpolations	m_Type;
+	int32			m_GlobalSeqIndex;
+	cGlobalLoopSeq	m_GlobalSec;
 
-	size_t sizes;
+	size_t			sizes;
 
-	vector<int32> times[MAX_ANIMATED];
-	vector<T> data[MAX_ANIMATED];
-	vector<T> in[MAX_ANIMATED];
-	vector<T> out[MAX_ANIMATED];
+	vector<int32>	times[MAX_ANIMATED];
+	vector<T>		data[MAX_ANIMATED];
+	vector<T>		in[MAX_ANIMATED];
+	vector<T>		out[MAX_ANIMATED];
 };

@@ -26,8 +26,8 @@ struct SM2_SkinSection
 	vec3   centerPosition;      // Average position of all the vertices in the sub mesh.
 
 #if VERSION >= VERSION_BC
-	vec3 sortCenterPosition;	// The center of the box when an axis aligned box is built around the vertices in the submesh.
-	float sortRadius;           // Distance of the vertex farthest from CenterBoundingBox.
+	vec3   sortCenterPosition;	// The center of the box when an axis aligned box is built around the vertices in the submesh.
+	float  sortRadius;          // Distance of the vertex farthest from CenterBoundingBox.
 #endif
 };
 

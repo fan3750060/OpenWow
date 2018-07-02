@@ -5,7 +5,7 @@
 class SkyManager : public ISkyManager, public CRenderable3DObject
 {
 public:
-	SkyManager(DBC_MapRecord* _mapRecord);
+	SkyManager(DBC_MapRecord _mapRecord);
 	~SkyManager();
 
 public:

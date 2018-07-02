@@ -14,13 +14,16 @@ public:
 
 	void Render();
 
+	int32 getPriorityPlan() const { return m_PriorityPlan; }
+	uint32 getSkinProtoIndex() const { return m_SkinProtoIndex; }
+	const SM2_SkinSection& getSkinProto() const { return m_SkinProtoSection; }
+
 private:
-	const M2*							m_ParentM2;
+	int32								m_PriorityPlan;
+	uint32								m_SkinProtoIndex;
+	SM2_SkinSection						m_SkinProtoSection;
 
-	uint32								m_SkinIndex;
-	SM2_SkinSection						m_SkinSection;
-
-	const CM2_Part_Color*				color; 
+	const CM2_Part_Color*				color;
 	const CM2_Part_Material*			material;
 	vector<const CM2_Part_Texture*>		m_Textures;
 	int16								texture_Unit;
@@ -31,6 +34,7 @@ private:
 
 	int32 newShader;
 
-
-	CGroupQuality& m_QualitySettings;
+	//--
+	const M2*							m_ParentM2;
+	CGroupQuality&						m_QualitySettings;
 };

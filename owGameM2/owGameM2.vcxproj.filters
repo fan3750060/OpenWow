@@ -90,8 +90,9 @@
     <ClCompile Include="M2_Part_Material.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
+    <ClCompile Include="M2_MeshPartID_Provider.cpp" />
     <ClCompile Include="ShaderResolver.cpp">
-      <Filter>Skins</Filter>
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,8 +186,9 @@
     <ClInclude Include="M2_Part_Material.h">
       <Filter>Parts</Filter>
     </ClInclude>
+    <ClInclude Include="M2_MeshPartID_Provider.h" />
     <ClInclude Include="ShaderResolver.h">
-      <Filter>Skins</Filter>
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

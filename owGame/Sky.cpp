@@ -3,26 +3,23 @@
 // General
 #include "Sky.h"
 
-Sky::Sky() : 
-	m_LightRecord(nullptr)
+Sky::Sky()
 {}
 
-Sky::Sky(DBC_LightRecord* data) : 
+Sky::Sky(DBC_LightRecord data) :
 	m_LightRecord(data)
 {
-    assert1(m_LightRecord != nullptr);
+    m_Position.x = data.Get_PositionX() / skymul;
+    m_Position.y = data.Get_PositionY() / skymul;
+    m_Position.z = data.Get_PositionZ() / skymul;
 
-    m_Position.x = data->Get_PositionX() / skymul;
-    m_Position.y = data->Get_PositionY() / skymul;
-    m_Position.z = data->Get_PositionZ() / skymul;
-
-    m_Range.min = data->Get_RadiusInner() / skymul;
-    m_Range.max = data->Get_RadiusOuter() / skymul;
+    m_Range.min = data.Get_RadiusInner() / skymul;
+    m_Range.max = data.Get_RadiusOuter() / skymul;
 
     m_IsGlobalSky = (m_Position.x == 0.0f && m_Position.y == 0.0f && m_Position.z == 0.0f);
     if (m_IsGlobalSky)
     {
-        Log::Error("Sky [%d] is GLOBAL!!!!", data->Get_ID());
+        Log::Error("Sky [%d] is GLOBAL!!!!", data.Get_ID());
     }
 
     LoadParams(LightParamsNames::ParamsClear);
@@ -40,7 +37,7 @@ void Sky::LoadParams(LightParamsNames _param)
         m_FloatBand_Fogs[i].clear();
     }
 
-    uint32 paramSet = m_LightRecord->Get_LightParamsID()->Get_ID();
+    uint32 paramSet = m_LightRecord.Get_LightParamsID()->Get_ID();
 
     //-----------------------------------------------
     //-- Color params
@@ -51,7 +48,7 @@ void Sky::LoadParams(LightParamsNames _param)
         DBC_LightIntBandRecord* lightColorsRecord = DBC_LightIntBand[paramSet * LIGHT_COLORS_COUNT - (LIGHT_COLORS_COUNT - 1) + i];
         if (lightColorsRecord == nullptr)
         {
-            Log::Error("Color record for [%d] not fornd. SkyID [%d]", i, m_LightRecord->Get_ID());
+            Log::Error("Color record for [%d] not fornd. SkyID [%d]", i, m_LightRecord.Get_ID());
             continue;
         }
 
@@ -71,7 +68,7 @@ void Sky::LoadParams(LightParamsNames _param)
         DBC_LightFloatBandRecord* lightFogRecord = DBC_LightFloatBand[paramSet * LIGHT_FOGS_COUNT - (LIGHT_FOGS_COUNT - 1) + i];
         if (lightFogRecord == nullptr)
         {
-            Log::Error("Fog record for [%d] not fornd. SkyID [%d]", i, m_LightRecord->Get_ID());
+            Log::Error("Fog record for [%d] not fornd. SkyID [%d]", i, m_LightRecord.Get_ID());
             continue;
         }
 
@@ -107,7 +104,7 @@ void Sky::LoadParams(LightParamsNames _param)
     }
     else
     {
-        Log::Error("LightParams record for LightID [%d] not found!", m_LightRecord->Get_ID());
+        Log::Error("LightParams record for LightID [%d] not found!", m_LightRecord.Get_ID());
     }
 }
 

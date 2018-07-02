@@ -5,22 +5,27 @@
 class CM2_Animation
 {
 public:
-	CM2_Animation(const M2* _m2, const SM2_Sequence& _sequence, uint16 _sid, string _name);
+	CM2_Animation(const M2* _m2, uint16 _animID, string _name, uint16 indexIntoSeq, const SM2_Sequence& _sequence);
 
-	uint16 getID() const { return m_ID; } // In sequence
-	uint16 getSID() const { return m_SID; } // In table
-	string getName() const { return m_Name; }
-	const CM2_Animation* getNext() const { return m_Next; }
+	// Table data
+	uint16					getAnimID()			const { return m_AnimID; }
+	string					getName()			const { return m_Name; }
 
+	// Sequence
+	uint16					getSequenceIndex()	const { return m_SequenceIndex; }
+	const CM2_Animation*	getNext()			const { return m_Next; }
 
-	uint32 getStart() const { return m_StartTimeStamp; }
-	uint32 getEnd() const { return m_EndTimeStamp; }
+	// Times
+	uint32					getStart()			const { return m_StartTimeStamp; }
+	uint32					getEnd()			const { return m_EndTimeStamp; }
 
 private:
-	const uint16			m_ID;
-	const uint16			m_SID;
+	const uint16			m_AnimID;
 	const string			m_Name;
+
+	const uint16			m_SequenceIndex;
 	const CM2_Animation*	m_Next;
+
 	uint32					m_StartTimeStamp;
 	uint32					m_EndTimeStamp;
 };

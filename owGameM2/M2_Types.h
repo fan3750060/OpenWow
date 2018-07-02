@@ -13,7 +13,7 @@ typedef const vector<SM2_Loop>* cGlobalLoopSeq;
 
 struct SM2_Sequence
 {
-	__DBC_FOREIGN_KEY_ID(uint16, DBÑ_AnimationData, id); // Animation id in AnimationData.dbc	
+	__DBC_FOREIGN_KEY_ID(uint16, DBÑ_AnimationData, animID); // Animation id in AnimationData.dbc	
 	uint16		variationIndex;			// Sub-animation id: Which number in a row of animations this one is.
 
 #if (VERSION == VERSION_Vanila)
@@ -108,7 +108,7 @@ struct SM2_Texture
 {
 	enum SM2_Texture_Type : uint32
 	{
-		NONE,							//Texture given in filename
+		NONE = 0,						//Texture given in filename
 		TEX_COMPONENT_SKIN,				// Skin // Body + clothes
 		TEX_COMPONENT_OBJECT_SKIN,		// Object Skin // Item, Capes("Item\ObjectComponents\Cape\*.blp")
 		TEX_COMPONENT_WEAPON_BLADE,		// Weapon Blade // Used on several models but not used in the client as far as I see.Armor Reflect ?
@@ -122,15 +122,19 @@ struct SM2_Texture
 		TEX_COMPONENT_MONSTER_1,		// Monster Skin 1 //Skin for creatures or gameobjects #1
 		TEX_COMPONENT_MONSTER_2,		// Monster Skin 2 //Skin for creatures or gameobjects #2
 		TEX_COMPONENT_MONSTER_3,		// Monster Skin 3 //Skin for creatures or gameobjects #3
-		TEX_COMPONENT_ITEM_ICON			// Item Icon // Used on inventory art M2s(2) : ui - button.m2 and forcedbackpackitem.m2(CSimpleModel_ReplaceIconTexture("texture"))
+		TEX_COMPONENT_ITEM_ICON,		// Item Icon // Used on inventory art M2s(2) : ui - button.m2 and forcedbackpackitem.m2(CSimpleModel_ReplaceIconTexture("texture"))
+		
+		TEX_COMPONENT_COUNT
 	};
 	SM2_Texture_Type type;
+
 	struct Flags
 	{
 		uint32 WRAPX : 1;
 		uint32 WRAPY : 1;
 		uint32 : 30;
 	} flags;
+
 	M2Array<char> filename; // for non-hardcoded textures (type != 0), this still points to a zero-sized string
 };
 

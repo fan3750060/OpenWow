@@ -8,7 +8,7 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, u
 	m_Index(_index),
 	m_Group(_group)
 {
-	m_Object->setDoodadColor(_placement.getColor());
+	//m_Object->setDoodadColor(_placement.getColor());
 	// Scene node params
 	{
 		// Convert

@@ -7,7 +7,11 @@ struct GameStatesNames
 	enum List
 	{
 		GAME_STATE_MENU,
-		GAME_STATE_WORLD
+		GAME_STATE_WORLD,
+
+		GAME_STATE_WMO_VIEW,
+		GAME_STATE_M2_VIEW,
+		GAME_STATE_CHAR_VIEW
 	};
 };
 

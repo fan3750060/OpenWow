@@ -12,13 +12,13 @@ const float C_SkyAngles[] = { 90.0f, 30.0f, 15.0f, 5.0f, 0.0f, -30.0f, -90.0f };
 const uint32 C_Skycolors[] = { LIGHT_COLOR_SKY_0,      LIGHT_COLOR_SKY_1,      LIGHT_COLOR_SKY_2,    LIGHT_COLOR_SKY_3,    LIGHT_COLOR_SKY_4,    LIGHT_COLOR_FOG,     LIGHT_COLOR_FOG };
 const uint32 C_SkycolorsCount = 7;
 
-SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
+SkyManager::SkyManager(DBC_MapRecord _mapRecord)
 {
-	for (auto it = DBC_Light.Records().begin(); it != DBC_Light.Records().end(); ++it)
+	for (auto it = DBC_Light.begin(); it != DBC_Light.end(); ++it)
 	{
-		if (_mapRecord == it->second->Get_MapID())
+		if (_mapRecord.Get_ID() == it->Get_MapID()->Get_ID())
 		{
-			Sky* sky = new Sky(it->second);
+			Sky* sky = new Sky(it.get());
 			skies.push_back(sky);
 
 			//Log::Warn("Sky [%d] position = %f, %f, %f", it->second->Get_Map(), sky->position.x, sky->position.y, sky->position.z);
@@ -37,7 +37,7 @@ SkyManager::SkyManager(DBC_MapRecord* _mapRecord)
 
 	if (skies.size() > 0 && !skies.back()->m_IsGlobalSky)
 	{
-		Log::Error("Sky for maps [%d] size [%d] don't have global sky!!!", _mapRecord->Get_ID(), skies.size());
+		Log::Error("Sky for maps [%d] size [%d] don't have global sky!!!", _mapRecord.Get_ID(), skies.size());
 		skies.back()->m_IsGlobalSky = true;
 	}
 

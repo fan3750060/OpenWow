@@ -34,7 +34,7 @@ bool CMPQFile::Open()
 
 	// Allocate space and set data
 	m_ByteBuffer.Allocate(size);
-	libmpq__file_read(location.archive, location.fileNumber, m_ByteBuffer.GetAccessToData(), m_ByteBuffer.getSize(), &size);
+	libmpq__file_read(location.archive, location.fileNumber, &(m_ByteBuffer.getDataEx())[0], m_ByteBuffer.getSize(), &size);
 	assert1(m_ByteBuffer.getSize() == size);
 	m_ByteBuffer.SetFilled();
 

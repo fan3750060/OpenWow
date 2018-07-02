@@ -112,7 +112,7 @@ class Sky : public CRefItem, public SkyParams
 {
 public:
     Sky();
-    Sky(DBC_LightRecord* data);
+    Sky(DBC_LightRecord data);
     void LoadParams(LightParamsNames _param);
 
     SkyParams& GetByTime(uint32 _time);
@@ -134,7 +134,7 @@ private:
     vector<SkyParam<float>>   m_FloatBand_Fogs[LIGHT_FOGS_COUNT];
 
 private:
-    const DBC_LightRecord* m_LightRecord;
+    DBC_LightRecord m_LightRecord;
     const float skymul = 36.0f;
 };
 

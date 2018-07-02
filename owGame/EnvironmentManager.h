@@ -11,7 +11,7 @@ public:
 	EnvironmentManager();
 	~EnvironmentManager();
 
-	void InitSkies(DBC_MapRecord* _mapRecord);
+	void InitSkies(DBC_MapRecord _mapRecord);
 	void outdoorLighting();
 	void SetAmbientLights(bool on);
 	void SetFog();

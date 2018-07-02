@@ -21,8 +21,15 @@
     <ClInclude Include="..\shared\owDBC.h" />
     <ClInclude Include="DBC_AnimationData.h" />
     <ClInclude Include="DBC_AreaTable.h" />
+    <ClInclude Include="DBC_CharacterFacialHairStyles.h" />
+    <ClInclude Include="DBC_CharHairGeosets.h" />
+    <ClInclude Include="DBC_CharSections.h" />
+    <ClInclude Include="DBC_ChrRaces.h" />
     <ClInclude Include="DBC_CinematicCamera.h" />
     <ClInclude Include="DBC_CinematicSequences.h" />
+    <ClInclude Include="DBC_CreatureDisplayInfo.h" />
+    <ClInclude Include="DBC_CreatureDisplayInfoExtra.h" />
+    <ClInclude Include="DBC_CreatureModelData.h" />
     <ClInclude Include="DBC_GroundEffectDoodad.h" />
     <ClInclude Include="DBC_GroundEffectTexture.h" />
     <ClInclude Include="DBC_Light.h" />
@@ -92,6 +99,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -106,6 +114,7 @@
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

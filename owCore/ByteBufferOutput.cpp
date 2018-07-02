@@ -43,6 +43,11 @@ void ByteBufferOutput::Write(uint64 _data)
 	Append((uint8*)&_data, sizeof(_data));
 }
 
+void ByteBufferOutput::Write(ByteBufferOutput & _other)
+{
+	Append(_other.getData(), _other.getSize());
+}
+
 void ByteBufferOutput::Write(const uint8* _string, uint32 _size)
 {
 	Append(_string, _size);

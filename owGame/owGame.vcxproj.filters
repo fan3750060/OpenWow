@@ -22,6 +22,9 @@
     <Filter Include="Minimap">
       <UniqueIdentifier>{7d9e72bb-61cb-4a47-8d81-10fca7c4523f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{2fd666bf-90dd-47b6-b061-fae8d0d6171a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sky.cpp">
@@ -78,6 +81,15 @@
     </ClCompile>
     <ClCompile Include="WorldController.cpp">
       <Filter>Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CharSectionWrapper.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Character_Instance.cpp">
+      <Filter>Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +154,18 @@
     <ClInclude Include="WorldRender.h" />
     <ClInclude Include="MinimapProvider.h">
       <Filter>Minimap</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterEnums.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CharSectionWrapper.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Character_Instance.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

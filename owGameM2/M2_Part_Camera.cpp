@@ -37,8 +37,6 @@ void CM2_Part_Camera::calc(uint32 time, uint32 globalTime)
 	}
 }
 
-
-
 void CM2_Part_Camera::setup(cvec3 _startPoint, float rotate)
 {
 	vec3 u(0, 1, 0);

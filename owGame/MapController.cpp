@@ -41,13 +41,13 @@ MapController::~MapController()
 
 //
 
-void MapController::MapPreLoad(DBC_MapRecord* _map)
+void MapController::MapPreLoad(DBC_MapRecord _map)
 {
     m_DBC_Map = _map;
 
-    Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
+    Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
-    m_MapFolder = "World\\Maps\\" + string(m_DBC_Map->Get_Directory()) + "\\";
+    m_MapFolder = "World\\Maps\\" + string(m_DBC_Map.Get_Directory()) + "\\";
 
 	// Delete if exists
 	if (m_WDL != nullptr)
@@ -56,7 +56,7 @@ void MapController::MapPreLoad(DBC_MapRecord* _map)
 		m_WDL = nullptr;
 	}
 
-	m_WDL = new WDL(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdl");
+	m_WDL = new WDL(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdl");
 	m_WDL->Load();
 
 	// Delete if exists
@@ -67,22 +67,22 @@ void MapController::MapPreLoad(DBC_MapRecord* _map)
 	}
 
 	m_WDT = new WDT();
-	m_WDT->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
+	m_WDT->Load(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdt");
 }
 
 void MapController::MapLoad()
 {
-	Log::Print("Map[%s]: Id [%d]. Loading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
+	Log::Print("Map[%s]: Id [%d]. Loading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	_World->EnvM()->InitSkies(m_DBC_Map);
 
 	// Load data
-	m_WDT->Load(m_MapFolder + m_DBC_Map->Get_Directory() + ".wdt");
+	m_WDT->Load(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdt");
 }
 
 void MapController::MapPostLoad()
 {
-	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_ID());
+	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	// Create all instances
 	m_WDT->CreateInsances(this);
@@ -212,7 +212,7 @@ ADT* MapController::LoadTile(int32 x, int32 z)
 
     // Create new tile
 	char name[256];
-	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", m_DBC_Map->Get_Directory(), m_DBC_Map->Get_Directory(), x, z);
+	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_Directory(), x, z);
 
     m_ADTCache[firstnull] = new ADT(this, x, z, name, GetManager<IFilesManager>()->Open(name));
 	m_ADTCache[firstnull]->Load();

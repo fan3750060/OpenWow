@@ -14,7 +14,7 @@ struct ConsoleMessage
 
 //
 
-class CConsoleOpenGL : public IRenderableUI, public IInputListener, public CDebugOutput
+class CConsoleOpenGL : public IInputListener, public CDebugOutput
 {
 	typedef vector<ConsoleMessage*> ConsoleMessages;
 public:
@@ -22,8 +22,7 @@ public:
 	CConsoleOpenGL();
 	~CConsoleOpenGL();
 
-	// IRenderableUI
-	void RenderUI() override;
+	void RenderUI();
 
 	// IInputListener
 	void OnMouseMoved(cvec2 _mousePos) override {}

@@ -56,7 +56,7 @@ bool EnvironmentManager::PreRender3D()
 	return true;
 }
 
-void EnvironmentManager::InitSkies(DBC_MapRecord* _mapRecord)
+void EnvironmentManager::InitSkies(DBC_MapRecord _mapRecord)
 {
 	m_SkyManager = new SkyManager(_mapRecord);
 }

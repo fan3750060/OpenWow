@@ -88,7 +88,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	for (uint32 ch = 0; ch < Font::NUM_CHARS; ++ch)
 	{
 		// Look up the character in the font file.
-		charIndex = FT_Get_Char_Index(face, ch + Font::SPACE);
+		charIndex = FT_Get_Char_Index(face, ch);
 
 		// RenderPhase the current glyph.
 		FT_Load_Glyph(face, charIndex, FT_LOAD_RENDER);
@@ -132,7 +132,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	for (uint32 ch = 0; ch < Font::NUM_CHARS; ++ch)
 	{
 		//Log::Warn("Char [%c] %d", char(ch), ch);
-		uint32_t charIndex = FT_Get_Char_Index(face, ch + Font::SPACE);
+		uint32_t charIndex = FT_Get_Char_Index(face, ch);
 
 		FT_Load_Glyph(face, charIndex, FT_LOAD_DEFAULT);
 		FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
