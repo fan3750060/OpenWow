@@ -5,6 +5,7 @@
 
 // Additional
 #include "CharSectionWrapper.h"
+#include "M2_Character_MeshPartID_Provider.h"
 
 void Character::InitDefault()
 {
@@ -62,18 +63,22 @@ void Character::InitDefault()
 
 	M2* model = GetManager<IM2Manager>()->Add(fullModelName);
 
-	m_Model = new CM2_Character_Instance(model);
+	m_Model = new CM2_Character_Instance(model, vec3(), 1.0f);
 
-	m_Model->getObject()->m_MeshProvider->setSpecialTexture(SM2_Texture::SM2_Texture_Type::TEX_COMPONENT_SKIN, CharSectionWrapper::getSkinTexture(this));
-	m_Model->getObject()->m_MeshProvider->setSpecialTexture(SM2_Texture::SM2_Texture_Type::TEX_COMPONENT_CHAR_HAIR, CharSectionWrapper::getHairTexture(this));
+	{
+		M2_Character_MeshPartID_Provider* provider = new M2_Character_MeshPartID_Provider();
 
-	m_Model->getObject()->m_MeshProvider->setHairGeoset(CharSectionWrapper::getHairGeoset(this));
+		provider->setSpecialTexture(SM2_Texture::SM2_Texture_Type::TEX_COMPONENT_SKIN, CharSectionWrapper::getSkinTexture(this));
+		provider->setSpecialTexture(SM2_Texture::SM2_Texture_Type::TEX_COMPONENT_CHAR_HAIR, CharSectionWrapper::getHairTexture(this));
 
-	m_Model->getObject()->m_MeshProvider->setFacial1Geoset(CharSectionWrapper::getFacial1Geoset(this));
-	m_Model->getObject()->m_MeshProvider->setFacial2Geoset(CharSectionWrapper::getFacial2Geoset(this));
-	m_Model->getObject()->m_MeshProvider->setFacial3Geoset(CharSectionWrapper::getFacial3Geoset(this));
+		provider->setHairGeoset(CharSectionWrapper::getHairGeoset(this));
 
-	m_Model->getObject()->UpdateSpecialTextures();
+		provider->setFacial1Geoset(CharSectionWrapper::getFacial1Geoset(this));
+		provider->setFacial2Geoset(CharSectionWrapper::getFacial2Geoset(this));
+		provider->setFacial3Geoset(CharSectionWrapper::getFacial3Geoset(this));
+
+		m_Model->setMeshProvider(provider);
+	}
 }
 
 void Character::Init(ByteBuffer& b)
@@ -124,23 +129,7 @@ void Character::Init(ByteBuffer& b)
 	}
 }
 
-void Character::InitFromDisplayInfo(uint32 _id)
-{
-	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
-	assert1(rec != nullptr);
 
-	DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
-
-	// 1. Load model
-	DBC_CreatureModelDataRecord* model = rec->Get_Model();
-	assert1(rec != nullptr);
-
-	string modelName = model->Get_ModelPath();
-	M2* modelObject = GetManager<IM2Manager>()->Add(modelName);
-	assert1(modelObject != nullptr);
-
-	m_Model = new CM2_Character_Instance(modelObject);
-}
 
 void Character::Print()
 {

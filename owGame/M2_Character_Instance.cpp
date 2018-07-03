@@ -3,12 +3,13 @@
 // General
 #include "M2_Character_Instance.h"
 
-CM2_Character_Instance::CM2_Character_Instance(M2* _object) :
+CM2_Character_Instance::CM2_Character_Instance(M2* _object, vec3 translate, float scale) :
 	CM2_Base_Instance(nullptr, _object)
 {
 	// Scene node params
 	{
-		m_Scale = vec3(10.0f);
+		m_Translate = translate;
+		m_Scale = vec3(scale);
 
 		CalculateMatrix(true);
 		//

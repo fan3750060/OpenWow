@@ -19,11 +19,11 @@ M2_Skin_Batch::M2_Skin_Batch(const M2* _parentM2) :
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
 
-void M2_Skin_Batch::Render()
+void M2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 {
-	if (m_ParentM2->m_MeshProvider != nullptr)
+	if (_provider != nullptr)
 	{
-		if (!m_ParentM2->m_MeshProvider->isMeshEnabled(m_SkinProtoSection.meshPartID))
+		if (!_provider->isMeshEnabled(m_SkinProtoSection.meshPartID))
 		{
 			return;
 		}
@@ -52,7 +52,7 @@ void M2_Skin_Batch::Render()
 		// Bind textures
 		for (uint32 i = 0; i < m_Textures.size(); i++)
 		{
-			m_Textures[i]->set(Material::C_DiffuseTextureIndex + i);
+			m_Textures[i]->set(Material::C_DiffuseTextureIndex + i, _provider);
 		}
 
 		// Texture alpha

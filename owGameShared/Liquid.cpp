@@ -309,12 +309,12 @@ void Liquid::createBuffer()
 	}
 
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(mh2oVertices.size() * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
+	R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
 	m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
 	assert1(m_VerticesCnt > 0);
 
 	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
 	m_IndicesCnt = static_cast<uint32>(m_Indices.size());
 	assert1(m_IndicesCnt > 0);
 
@@ -358,7 +358,7 @@ void Liquid::InitTextures(DBC_LIQUIDTYPE_Type _liquidType)
 	char buf[256];
 	for (int i = 1; i <= 30; i++)
 	{
-		sprintf(buf, "%s.%d.blp", baseName.c_str(), i);
+		sprintf_s(buf, "%s.%d.blp", baseName.c_str(), i);
 		SmartTexturePtr texture = _Render->TexturesMgr()->Add(buf);
 		m_Textures.push_back(texture);
 	}

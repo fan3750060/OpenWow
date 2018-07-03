@@ -26,7 +26,7 @@ CFile::CFile(cstring _name, cstring _path) :
 
 CFile::~CFile()
 {
-	Log::Info("File[%s] closed.", Path_Name().c_str());
+	//Log::Info("File[%s] closed.", Path_Name().c_str());
 }
 
 void CFile::FixFilePath(string& _string)

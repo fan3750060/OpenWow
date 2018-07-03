@@ -389,7 +389,7 @@ uint32 RenderDevice::getQueryResult(uint32 queryObj)
 
 bool RenderDevice::commitStates(uint32 filter)
 {
-	if (_pendingMask & filter == 0)
+	if ((_pendingMask & filter) == 0)
 	{
 		return true;
 	}

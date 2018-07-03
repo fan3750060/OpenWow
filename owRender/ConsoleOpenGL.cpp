@@ -47,7 +47,7 @@ void CConsoleOpenGL::RenderUI()
 
 	// Messages
 	int curLine = 0;
-	for (uint32_t i = messages.size() - 1 - lineOffset; i > 0; i--)
+	for (uint32_t i = static_cast<uint32>(messages.size()) - 1 - lineOffset; i > 0; i--)
 	{
 		auto _message = messages[i];
 		if (curLine == linesInConsole)
@@ -86,7 +86,7 @@ void CConsoleOpenGL::RenderUI()
 
 			// Text
 			string line = commandName;
-			if (command->HasArgs() > 0)
+			if (command->HasArgs())
 			{
 				line += " [args]";
 			}

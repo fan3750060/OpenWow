@@ -106,11 +106,6 @@ void GameState_M2Viewer::Unset()
 
 void GameState_M2Viewer::Update(double _time, double _dTime)
 {
-	if (m2_Model)
-	{
-		m2_Model->Update(_time, _dTime);
-	}
-
 	_Render->getCamera()->Update(_time, _dTime);
 }
 
@@ -131,7 +126,7 @@ void GameState_M2Viewer::Render3D()
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
 	_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(mat4());
 	{
-		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7, 0.7, 0.7, 0.5));
+		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7f, 0.7f, 0.7f, 0.5f));
 
 		_Render->r.setGeometry(m_DebugGeom);
 		_Render->r.draw(PRIM_TRILIST, 0, 6);

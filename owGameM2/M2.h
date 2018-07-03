@@ -39,21 +39,17 @@ public:
 
 	void updateEmitters(float dt);
 
-
-	void Render(cmat4 _worldMatrix);
+	void Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider);
 	void RenderCollision(cmat4 _worldMatrix);
-	void drawModel(cmat4 _worldMatrix);
+	void drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider);
 
 	void animate(uint16 _animationIndex, uint32 _time, uint32 globalTime);
-
-	void lightsOn(uint32 lbase);
-	void lightsOff(uint32 lbase);
-
-	void UpdateSpecialTextures();
 
 #pragma region Getters
 public:
 	string getFilename() const { return m_FileName; }
+	string getFilenameWithoutExt() const { return m_FileNameWithoutExt; }
+	string getFilePath() const { return m_FilePath; }
 	string getUniqueName() const { return m_UniqueName; }
 	cbbox getBounds() const { return m_Bounds; }
 	
@@ -68,9 +64,9 @@ public:
 	const CM2_Part_Bone& getBone(uint32 _index) const
 	{
 		assert1(_index < m_Header.bone_lookup_table.size);
-		uint16 newIndex = m_BonesLookup[_index];
-		assert1(newIndex < m_Header.bones.size);
-		return m_Bones[newIndex];
+		int16 newIndex = m_BonesLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Header.bones.size));
+		return *(m_Bones[newIndex]);
 	}
 	const bool hasBones() const { return m_HasBones; }
 	const bool isAnimBones() const { return m_IsAnimBones; }
@@ -81,33 +77,33 @@ public:
 	const CM2_Part_Color& GetColor(uint32 _index) const
 	{
 		assert1(_index < m_Header.colors.size);
-		return m_Colors[_index];
+		return *(m_Colors[_index]);
 	}
 	const CM2_Part_Material& GetMaterial(uint32 _index) const
 	{
 		assert1(_index < m_Header.materials.size);
-		return m_Materials[_index];
+		return *(m_Materials[_index]);
 	}
 	const CM2_Part_Texture& GetTexture(uint32 _index) const
 	{
 		assert1(_index < m_Header.textureLookup.size);
-		uint16 newIndex = m_TexturesLookup[_index];
-		assert1(newIndex < m_Header.textures.size);
-		return m_Textures[newIndex];
+		int16 newIndex = m_TexturesLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Header.textures.size));
+		return *(m_Textures[newIndex]);
 	}
 	const CM2_Part_TextureWeight& GetTextureWeight(uint32 _index) const
 	{
 		assert1(_index < m_Header.textureWeightsLookup.size);
-		uint16 newIndex = m_TextureWeightsLookup[_index];
-		assert1(newIndex < m_Header.textureWeights.size);
-		return m_TextureWeights[newIndex];
+		int16 newIndex = m_TextureWeightsLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Header.textureWeights.size));
+		return *(m_TextureWeights[newIndex]);
 	}
 	const CM2_Part_TextureTransform& GetTextureTransform(uint32 _index) const
 	{
 		assert1(_index < m_Header.textureTransformsLookup.size);
-		uint16 newIndex = m_TexturesTransformLookup[_index];
-		assert1(newIndex < m_Header.textureTransforms.size);
-		return m_TexturesTransform[newIndex];
+		int16 newIndex = m_TexturesTransformLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Header.textureTransforms.size));
+		return *(m_TexturesTransform[newIndex]);
 	}
 
 	// Attachments
@@ -132,8 +128,8 @@ public:
 	bool								m_IsAnimated;
 
 	// Bones
-	vector<CM2_Part_Bone>				m_Bones;
-	vector<uint16>						m_BonesLookup;
+	vector<CM2_Part_Bone*>				m_Bones;
+	vector<int16>						m_BonesLookup;
 	bool								m_HasBones;
 	bool								m_IsAnimBones;
 	bool								m_IsBillboard;
@@ -143,28 +139,27 @@ public:
 
 	// Skins
 	vector<CM2_Skin*>					m_Skins;
-	CM2_MeshPartID_Provider*			m_MeshProvider;
 
 	// Colors and textures
-	vector<CM2_Part_Color>				m_Colors;
-	vector<CM2_Part_Material>			m_Materials;
-	vector<CM2_Part_Texture>			m_Textures;
-	vector<uint16_t>					m_TexturesLookup;
-	vector<uint16_t>					m_TexturesUnitLookup;
-	vector<uint16_t>					m_ReplacebleLookup;
-	vector<CM2_Part_TextureWeight>		m_TextureWeights;
-	vector<uint16_t>					m_TextureWeightsLookup;
-	vector<CM2_Part_TextureTransform>	m_TexturesTransform;
-	vector<uint16_t>					m_TexturesTransformLookup;
-	bool								m_AnimTextures;
+	vector<CM2_Part_Color*>				m_Colors;
+	vector<CM2_Part_Material*>			m_Materials;
+	vector<CM2_Part_Texture*>			m_Textures;
+	vector<int16_t>						m_TexturesLookup;
+	vector<int16_t>						m_TexturesUnitLookup;
+	vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
+	vector<CM2_Part_TextureWeight*>		m_TextureWeights;
+	vector<int16_t>						m_TextureWeightsLookup;
+	vector<CM2_Part_TextureTransform*>	m_TexturesTransform;
+	vector<int16_t>						m_TexturesTransformLookup;
+	bool								m_IsAnimTextures;
 
 	// Attachments, events, lights and cameras
-	vector<CM2_Part_Light>				m_Lights;
-	vector<CM2_Part_Camera>				m_Cameras;
-	vector<uint16_t>					m_CamerasLookup;
+	vector<CM2_Part_Light*>				m_Lights;
+	vector<CM2_Part_Camera*>			m_Cameras;
+	vector<int16_t>						m_CamerasLookup;
 
 	// Particles
-	vector<CM2_RibbonEmitters>			m_RibbonEmitters;
+	vector<CM2_RibbonEmitters*>			m_RibbonEmitters;
 #ifdef MDX_PARTICLES_ENABLE
 	ParticleSystem*						particleSystems;
 #endif

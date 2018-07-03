@@ -9,28 +9,38 @@ M2::M2(cstring name) :
 	// Loops and sequences
 	m_IsAnimated(false),
 	// Bones
-	m_HasBones(nullptr),
+	m_HasBones(false),
 	m_IsAnimBones(false),
 	m_IsBillboard(false),
 	// Vertices
 	m_IsContainGeom(false),
-	m_MeshProvider(nullptr),
 	// Colors and textures
-	m_AnimTextures(false),
+	m_IsAnimTextures(false),
 	// Misc
 	m_HasMisc(false)
 {
 	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
-
-	m_MeshProvider = new CM2_MeshPartID_Provider();
 }
 
 M2::~M2()
 {
+	ERASE_VECTOR(m_Bones);
+
+	ERASE_VECTOR(m_Colors);
+	ERASE_VECTOR(m_Materials);
+	ERASE_VECTOR(m_Textures);
+	ERASE_VECTOR(m_TextureWeights);
+	ERASE_VECTOR(m_TexturesTransform);
+
+	ERASE_VECTOR(m_Lights);
+	ERASE_VECTOR(m_Cameras);
+
+	ERASE_VECTOR(m_RibbonEmitters);
+
 	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
 
-void M2::drawModel(cmat4 _worldMatrix)
+void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
 {
 	if (!m_IsContainGeom)
 	{
@@ -50,14 +60,14 @@ void M2::drawModel(cmat4 _worldMatrix)
 		vector<mat4> bones;
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			bones.push_back(m_Bones[i].getTransformMatrix());
+			bones.push_back(m_Bones[i]->getTransformMatrix());
 		}
 		_Render->getTechniquesMgr()->M2_Pass->SetBones(bones);
 	}
 
 	for (auto& it : m_Skins)
 	{
-		it->Draw();
+		it->Draw(_provider);
 	}
 
 	_Render->getTechniquesMgr()->M2_Pass->Unbind();
@@ -69,14 +79,14 @@ void M2::drawModel(cmat4 _worldMatrix)
 	}*/
 }
 
-void M2::Render(cmat4 _worldMatrix)
+void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
 {
 	if (m_IsAnimated)
 	{
 		// draw ribbons
 		for (auto it : m_RibbonEmitters)
 		{
-			it.draw();
+			it->draw();
 		}
 
 #ifdef MDX_PARTICLES_ENABLE
@@ -88,7 +98,7 @@ void M2::Render(cmat4 _worldMatrix)
 #endif
 	}
 
-	drawModel(_worldMatrix);
+	drawModel(_worldMatrix, _provider);
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)
@@ -120,12 +130,12 @@ void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
 	{
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			m_Bones[i].SetNeedCalculate();
+			m_Bones[i]->SetNeedCalculate();
 		}
 
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			m_Bones[i].calcMatrix(m_Bones.data(), _animationIndex, _time, globalTime);
+			m_Bones[i]->calcMatrix(m_Bones.data(), _animationIndex, _time, globalTime);
 		}
 	}
 
@@ -141,7 +151,7 @@ void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
 
 	for (auto it : m_RibbonEmitters)
 	{
-		it.setup(_animationIndex, _time, globalTime);
+		it->setup(_animationIndex, _time, globalTime);
 	}
 
 #ifdef MDX_PARTICLES_ENABLE
@@ -153,67 +163,31 @@ void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
 	}
 #endif
 
-	if (m_AnimTextures)
+	if (m_IsAnimTextures)
 	{
 		for (uint32 i = 0; i < m_Header.textureTransforms.size; i++)
 		{
-			m_TexturesTransform[i].calc(_animationIndex, _time, globalTime);
+			m_TexturesTransform[i]->calc(_animationIndex, _time, globalTime);
 		}
 	}
 
 	for (auto& it : m_TextureWeights)
 	{
-		it.calc(_animationIndex, _time, globalTime);
+		it->calc(_animationIndex, _time, globalTime);
 	}
 
 	for (auto& it : m_Colors)
 	{
-		it.calc(_animationIndex, _time, globalTime);
+		it->calc(_animationIndex, _time, globalTime);
 	}
 
 	for (auto& it : m_Cameras)
 	{
-		it.calc(_time, globalTime);
+		it->calc(_time, globalTime);
 	}
 }
 
 //
-
-void M2::lightsOn(uint32 lbase)
-{
-	/*if (!m_Loaded)
-	{
-		return;
-	}
-
-	// setup lights
-	for (uint32 i = 0, l = lbase; i < m_Header.lights.size; i++)
-	{
-		m_Lights[i].setup(_time, l++);
-	}*/
-}
-
-void M2::lightsOff(uint32 lbase)
-{
-	/*if (!m_Loaded)
-	{
-		return;
-	}*/
-
-	for (uint32 i = 0, l = lbase; i < m_Header.lights.size; i++)
-	{
-		//glDisable(l++);
-	}
-}
-
-void M2::UpdateSpecialTextures()
-{
-	for (auto& it : m_Textures)
-	{
-		it.UpdateReplacedTexture(m_MeshProvider);
-	}
-}
-
 void M2::updateEmitters(float dt)
 {
 #ifdef MDX_PARTICLES_ENABLE

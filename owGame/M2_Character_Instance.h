@@ -3,5 +3,5 @@
 class CM2_Character_Instance : public CM2_Base_Instance
 {
 public:
-	CM2_Character_Instance(M2* _object);
+	CM2_Character_Instance(M2* _object, vec3 translate, float scale);
 };

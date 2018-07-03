@@ -14,11 +14,6 @@ CLocalFile::CLocalFile(cstring _name, cstring _path) :
 	CFile(_name, _path)
 {}
 
-CLocalFile::~CLocalFile()
-{
-	CFile::~CFile();
-}
-
 bool CLocalFile::Open()
 {
 	// Open stream
@@ -49,7 +44,7 @@ bool CLocalFile::Open()
 	if (fileSize == 0)
 	{
 		char buff[256];
-		sprintf(buff, "File1[%s]: Is empty!", Path_Name().c_str());
+		sprintf_s(buff, "File1[%s]: Is empty!", Path_Name().c_str());
 		fail2(buff);
 
 		return false;
@@ -67,7 +62,7 @@ bool CLocalFile::Open()
 		//memset(&data[0] + readedBytes, 0, fileSize - static_cast<uint32_t>(readedBytes));
 
 		char buff[256];
-		sprintf(buff, "File1[%s]: Stream reading error. Readed [%d], filesize [%d]", Path_Name().c_str(), readedBytes, fileSize);
+		sprintf_s(buff, "File1[%s]: Stream reading error. Readed [%d], filesize [%d]", Path_Name().c_str(), static_cast<int64>(readedBytes), fileSize);
 		fail2(buff);
 	}
 

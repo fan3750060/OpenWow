@@ -12,6 +12,8 @@ CM2_Manager::CM2_Manager()
 	ADDCONSOLECOMMAND_CLASS("models_info", CM2_Manager, PrintAllInfo);
 
 	AddManager<IM2Manager>(this);
+
+	m_DefaultModel = Add("World\\Scale\\HumanMaleScale.m2");
 }
 
 CM2_Manager::~CM2_Manager()
@@ -48,7 +50,7 @@ M2* CM2_Manager::CreateAction(cstring name)
 	if (!builder.Load())
 	{
 		delete model;
-		return nullptr;
+		return m_DefaultModel;
 	}
 
 	return model;
@@ -56,12 +58,4 @@ M2* CM2_Manager::CreateAction(cstring name)
 bool CM2_Manager::DeleteAction(cstring name)
 {
 	return true;
-}
-
-void CM2_Manager::updateEmitters(float dt)
-{
-	for (auto it : objects)
-	{
-		(it.second)->updateEmitters(dt);
-	}
 }

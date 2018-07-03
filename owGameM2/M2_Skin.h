@@ -17,7 +17,7 @@ public:
 	CM2_Skin(M2* _model);
 	~CM2_Skin();
 
-	void Draw();
+	void Draw(CM2_MeshPartID_Provider* _provider);
 	void RenderNormals(cmat4 _worldMatrix);
 
 private:

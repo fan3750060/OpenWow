@@ -90,7 +90,7 @@ public:
             fail1();
         }
 
-        m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), _bones.size());
+        m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), static_cast<uint32>(_bones.size()));
     }
 
 	// Shader

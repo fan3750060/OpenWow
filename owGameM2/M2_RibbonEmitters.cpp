@@ -9,7 +9,7 @@
 CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_model)
 {
-	m_Bone = &(m_ParentM2->m_Bones[_proto.boneIndex]);
+	m_Bone = (m_ParentM2->m_Bones[_proto.boneIndex]);
 	posValue = pos = _proto.position.toXZmY();
 
 	m_Color.init(_proto.colorTrack, f, globals);
@@ -21,11 +21,11 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 		uint16_t* TexturesList = (uint16_t*)(f->getData() + _proto.textureIndices.offset);
 		// just use the first texture for now; most models I've checked only had one
 		assert1(_proto.textureIndices.size > 0);
-		m_Texture = m_ParentM2->m_Textures[TexturesList[0]].getTexture();
+		m_Texture = m_ParentM2->m_Textures[TexturesList[0]]->getTexture();
 
 		uint16_t* MaterialsList = (uint16_t*)(f->getData() + _proto.materialIndices.offset);
 		assert1(_proto.materialIndices.size > 0);
-		m_Material = &(m_ParentM2->m_Materials[MaterialsList[0]]);
+		m_Material = (m_ParentM2->m_Materials[MaterialsList[0]]);
 	}
 
 	// TODO: figure out actual correct way to calculate length

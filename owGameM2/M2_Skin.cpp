@@ -16,17 +16,19 @@ CM2_Skin::CM2_Skin(M2* _model) :
 {}
 
 CM2_Skin::~CM2_Skin()
-{}
+{
+	ERASE_VECTOR(m_Batches);
+}
 
 //
 
-void CM2_Skin::Draw()
+void CM2_Skin::Draw(CM2_MeshPartID_Provider* _provider)
 {
 	_Render->r.setGeometry(__geom);
 
 	for (auto& p : m_Batches)
 	{
-		p->Render();
+		p->Render(_provider);
 	}
 }
 

@@ -2,6 +2,8 @@
 
 #include "M2.h"
 
+#define M2BUILDER_LOADBONES
+
 class CM2_Builder
 {
 public:
@@ -35,7 +37,7 @@ private:
 
 	// Global loop, animation and bones
 	cGlobalLoopSeq			m_GlobalLoops;
-	IFile**					animfiles;
+	vector<IFile*>			animfiles;
 
 	// Bones
 	SM2_Bone*				m_M2Bones;

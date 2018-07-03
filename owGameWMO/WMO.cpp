@@ -316,7 +316,7 @@ bool WMO::drawSkybox()
 	worldMatrix.translate(_Render->getCamera()->Position);
 	worldMatrix.scale(2.0f);
 
-	m_Skybox->Render(worldMatrix);
+	m_Skybox->Render(worldMatrix, nullptr);
 
 	//_World->EnvM()->m_HasSky = true;
 

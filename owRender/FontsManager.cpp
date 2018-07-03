@@ -28,7 +28,7 @@ Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 
 Font* FontsManager::CreateAction(cstring _nameAndSize)
 {
-	uint32_t _delimIndex = _nameAndSize.find_last_of("__");
+	uint32_t _delimIndex = static_cast<uint32>(_nameAndSize.find_last_of("__"));
 	if (_delimIndex == -1)
 	{
 		Log::Error("FontsManager[%s]: Incorrect font nameAndSize.", _nameAndSize.c_str());
@@ -143,10 +143,10 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 			y += (maxAscent + maxDescent);
 		}
 
-		double texX1 = (double)(x) / imageWidth;
-		double texX2 = (double)(x + charWidth[ch]) / imageWidth;
-		double texY1 = (double)(y - maxAscent) / imageHeight;
-		double texY2 = texY1 + (double)(charHeight) / imageHeight;
+		float texX1 = (float)(x) / imageWidth;
+		float texX2 = (float)(x + charWidth[ch]) / imageWidth;
+		float texY1 = (float)(y - maxAscent) / imageHeight;
+		float texY2 = texY1 + (float)(charHeight) / imageHeight;
 
 		fontVertices.push_back({vec3(0.0f,          0.0f,        1.0f), vec2(texX1, texY1)});
 		fontVertices.push_back({vec3(charWidth[ch], 0.0f,        1.0f), vec2(texX2, texY1)});

@@ -49,6 +49,8 @@ struct ADT_MCNK_Header
 		{
 			return DBC_LIQUIDTYPE_Type::lq_slime;
 		}
+
+		return DBC_LIQUIDTYPE_Type::lq_unknown;
 	}
 
 	uint32 indexX;

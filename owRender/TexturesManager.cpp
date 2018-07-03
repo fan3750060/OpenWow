@@ -232,7 +232,7 @@ R_Texture* TexturesManager::CreateAction(cstring _name)
 
 void TexturesManager::LoadAction(string name, R_Texture*& item)
 {
-	IFile* f = GetManager<IFilesManager>()->Open(name);
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(name);
 	if (f == nullptr)
 	{
 		Log::Error("TexturesManager[%s]: Error while open texture.", name.c_str());

@@ -42,7 +42,6 @@ public:
 	void SetFilled();
 	void CopyData(const uint8* _data, uint64_t _size);
 	void Init(uint8* _dataPtr, uint64_t _size);
-    void Clear();
 
 	// IByteBuffer
 	uint64_t getSize() const override { return m_BufferSize; }
@@ -60,9 +59,6 @@ public:
 	string readLine() override;
 	void readBytes(void* _destination, uint64_t _size = 1) override;
 	void readString(string* _string);
-
-private:
-
 
 private:
 	bool		m_IsFilled;

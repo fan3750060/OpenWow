@@ -134,14 +134,14 @@ void GameState_InWorld::RenderUI()
 
 	// Ambient
 
-	sprintf(buff, "Amb[c=[%0.2f %0.2f %0.2f] i=[%f]]",
+	sprintf_s(buff, "Amb[c=[%0.2f %0.2f %0.2f] i=[%f]]",
 		_World->EnvM()->dayNightPhase.ambientColor.x, _World->EnvM()->dayNightPhase.ambientColor.y, _World->EnvM()->dayNightPhase.ambientColor.z,
 		_World->EnvM()->dayNightPhase.ambientIntensity
 	);
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 20), buff);
 
 	// Day
-	sprintf(buff, "Day[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]",
+	sprintf_s(buff, "Day[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]",
 		_World->EnvM()->dayNightPhase.dayColor.x, _World->EnvM()->dayNightPhase.dayColor.y, _World->EnvM()->dayNightPhase.dayColor.z,
 		_World->EnvM()->dayNightPhase.dayIntensity,
 		_World->EnvM()->dayNightPhase.dayDir.x, _World->EnvM()->dayNightPhase.dayDir.y, _World->EnvM()->dayNightPhase.dayDir.z
@@ -149,7 +149,7 @@ void GameState_InWorld::RenderUI()
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 40), buff);
 
 	// Night
-	sprintf(buff, "Nig[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]\0",
+	sprintf_s(buff, "Nig[c=[%0.2f %0.2f %0.2f] i=[%f] d=[%0.2f %0.2f %0.2f]]\0",
 		_World->EnvM()->dayNightPhase.nightColor.x, _World->EnvM()->dayNightPhase.nightColor.y, _World->EnvM()->dayNightPhase.nightColor.z,
 		_World->EnvM()->dayNightPhase.nightIntensity,
 		_World->EnvM()->dayNightPhase.nightDir.x, _World->EnvM()->dayNightPhase.nightDir.y, _World->EnvM()->dayNightPhase.nightDir.z
@@ -157,7 +157,7 @@ void GameState_InWorld::RenderUI()
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 60), buff);
 
 	// Fog
-	sprintf(buff, "Fog[end=[%f] koeff=[%f]]\0",
+	sprintf_s(buff, "Fog[end=[%f] koeff=[%f]]\0",
 		_World->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE),
 		_World->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_MULTIPLIER)
 	);
@@ -202,10 +202,10 @@ void GameState_InWorld::RenderUI()
 		_Render->RenderText(vec2(xPos + 20, yPos + i * 16), names[i]);
 	}
 
-	sprintf(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
+	sprintf_s(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
 
-	sprintf(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
+	sprintf_s(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 
 	if (_World->Map()->dir != nullptr)

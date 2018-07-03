@@ -12,7 +12,7 @@ class M2_Skin_Batch
 public:
 	M2_Skin_Batch(const M2* _parentM2);
 
-	void Render();
+	void Render(CM2_MeshPartID_Provider* _provider);
 
 	int32 getPriorityPlan() const { return m_PriorityPlan; }
 	uint32 getSkinProtoIndex() const { return m_SkinProtoIndex; }

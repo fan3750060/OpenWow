@@ -23,7 +23,6 @@ class Character
 public:
 	void InitDefault();
 	void Init(ByteBuffer& b);
-	void InitFromDisplayInfo(uint32 _id);
 
 	void Print();
 

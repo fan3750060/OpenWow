@@ -35,7 +35,6 @@ public:
 	void StepBuildGeometry();
 
 private:
-	M2*						m_ParentM2;
 	SM2_SkinProfile			m_SkinProto;
 	CM2_Skin*				m_Skin;
 	SmartPtr<IFile>			m_F;
@@ -47,4 +46,7 @@ private:
 	vector<SM2_SkinBones>	m_SkinBones;
 	vector<SM2_SkinSection> m_SkinSections;
 	vector<SM2_SkinBatch>	m_SkinBatches;
+
+	//--
+	M2*						m_ParentM2;
 };

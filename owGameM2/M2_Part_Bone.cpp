@@ -3,20 +3,20 @@
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, IFile** animfiles)
+CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles)
 {
 	m_Id = _proto.key_bone_id;
 	m_Flags = _proto.flags;
 	parent = _proto.parent_bone;
 	
-	trans.init(_proto.translation, f, global, animfiles, Fix_XZmY);
-	roll.init(_proto.rotation, f, global, animfiles, Fix_XZmYW);
-	scale.init(_proto.scale, f, global, animfiles, Fix_XZY);
+	trans.init(_proto.translation, f, global, Fix_XZmY, animfiles);
+	roll.init(_proto.rotation, f, global, Fix_XZmYW, animfiles);
+	scale.init(_proto.scale, f, global, Fix_XZY, animfiles);
 
 	pivot = _proto.pivot.toXZmY();
 }
 
-void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time, uint32 globalTime)
+void CM2_Part_Bone::calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 time, uint32 globalTime)
 {
 	if (m_IsCalculated)
 	{
@@ -41,7 +41,7 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time
 
 			if (parent >= 0)
 			{
-				m_RotationMatrix = allbones[parent].m_RotationMatrix * mat4::RotMat(q);
+				m_RotationMatrix = allbones[parent]->m_RotationMatrix * mat4::RotMat(q);
 			}
 			else
 			{
@@ -119,8 +119,8 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time
 
 	if (parent >= 0)
 	{
-		allbones[parent].calcMatrix(allbones, anim, time, globalTime);
-		m_TransformMatrix = allbones[parent].m_TransformMatrix * m;
+		allbones[parent]->calcMatrix(allbones, anim, time, globalTime);
+		m_TransformMatrix = allbones[parent]->m_TransformMatrix * m;
 	}
 	else
 	{

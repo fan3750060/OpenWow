@@ -7,7 +7,8 @@ enum DBC_LIQUIDTYPE_Type : uint32_t
 	lq_magma = 0,
 	lq_slime = 2,
 	lq_river = 3,
-	lq_ocean = lq_river
+	lq_ocean = lq_river,
+	lq_unknown
 };
 
 DBC_DEF_BEGIN(DBC_LiquidType)

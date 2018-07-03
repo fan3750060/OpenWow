@@ -29,7 +29,8 @@ CM2_Builder::CM2_Builder(M2* _model) :
 	m_F = GetManager<IFilesManager>()->Open(m_ParentM2->getFilename());
 	if (m_F == nullptr)
 	{
-		Log::Info("CM2_Builder[%s]: Unable to open file.", m_ParentM2->getFilename().c_str());
+		Log::Error("CM2_Builder[%s]: Unable to open file.", m_ParentM2->getFilename().c_str());
+		return;
 	}
 
 	m_ParentM2->m_FilePath = m_F->Path();
@@ -47,8 +48,6 @@ bool CM2_Builder::Load()
 	{
 		return false;
 	}
-
-
 
 	Step1Header();
 	Step2GlobalLoops();
@@ -116,8 +115,6 @@ void CM2_Builder::Step2GlobalLoops()
 	// Sequences
 	if (m_Header->sequences.size > 0)
 	{
-		animfiles = new IFile*[m_Header->sequences.size];
-
 		SM2_Sequence* Sequences = (SM2_Sequence*)(m_F->getData() + m_Header->sequences.offset);
 		for (uint32 i = 0; i < m_Header->sequences.size; i++)
 		{
@@ -125,16 +122,14 @@ void CM2_Builder::Step2GlobalLoops()
 
 			char buf[256];
 			sprintf_s(buf, "%s%04d-%02d.anim", m_ParentM2->m_FileNameWithoutExt.c_str(), Sequences[i].__animID, Sequences[i].variationIndex);
-			if (CMPQFile::GetFileSize(buf) > 0)
+
+			if (Sequences[i].flags.DataInM2)
 			{
-				animfiles[i] = GetManager<IFilesManager>()->Open(buf);
+				animfiles.push_back(nullptr);
 			}
 			else
 			{
-				animfiles[i] = nullptr;
-				//Log::Warn("MDX[%s]: Animation doesn't exists.", buf);
-				//Log::Warn("header.bones.size = [%d]", header.bones.size);
-				//assert1(animBones == false);
+				animfiles.push_back(GetManager<IFilesManager>()->Open(buf));
 			}
 		}
 	}
@@ -152,13 +147,14 @@ void CM2_Builder::Step2GlobalLoops()
 
 void CM2_Builder::Step3Bones()
 {
+#ifdef M2BUILDER_LOADBONES
 	// Bones
 	if (m_Header->bones.size > 0)
 	{
 		m_M2Bones = (SM2_Bone*)(m_F->getData() + m_Header->bones.offset);
 		for (uint32 i = 0; i < m_Header->bones.size; i++)
 		{
-			CM2_Part_Bone bone(m_F, m_M2Bones[i], m_GlobalLoops, animfiles);
+			CM2_Part_Bone* bone = new CM2_Part_Bone(m_F, m_M2Bones[i], m_GlobalLoops, &animfiles);
 			m_ParentM2->m_Bones.push_back(bone);
 		}
 
@@ -168,14 +164,18 @@ void CM2_Builder::Step3Bones()
 	// Bones Lookup
 	if (m_Header->bone_lookup_table.size > 0)
 	{
-		uint16* BonesLookup = (uint16*)(m_F->getData() + m_Header->bone_lookup_table.offset);
+		int16* BonesLookup = (int16*)(m_F->getData() + m_Header->bone_lookup_table.offset);
 		for (uint32 i = 0; i < m_Header->bone_lookup_table.size; i++)
 		{
 			m_ParentM2->m_BonesLookup.push_back(BonesLookup[i]);
 		}
 	}
 
-	//assert1(m_Header->bones.size == m_Header->bone_lookup_table.size);
+	ERASE_VECTOR(animfiles);
+
+#else
+	m_ParentM2->m_HasBones = false;
+#endif
 }
 
 void CM2_Builder::Step4Vertices()
@@ -208,7 +208,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		SM2_Color* m_Colors = (SM2_Color*)(m_F->getData() + m_Header->colors.offset);
 		for (uint32 i = 0; i < m_Header->colors.size; i++)
 		{
-			CM2_Part_Color color(m_F, m_Colors[i], m_GlobalLoops);
+			CM2_Part_Color* color = new CM2_Part_Color(m_F, m_Colors[i], m_GlobalLoops);
 			m_ParentM2->m_Colors.push_back(color);
 
 			// Animated
@@ -225,7 +225,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		SM2_Material* m_Materials = (SM2_Material*)(m_F->getData() + m_Header->materials.offset);
 		for (uint32 i = 0; i < m_Header->materials.size; i++)
 		{
-			CM2_Part_Material material(m_Materials[i]);
+			CM2_Part_Material* material = new CM2_Part_Material(m_Materials[i]);
 			m_ParentM2->m_Materials.push_back(material);
 		}
 	}
@@ -238,7 +238,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_Textures = (SM2_Texture*)(m_F->getData() + m_Header->textures.offset);	
 		for (uint32 i = 0; i < m_Header->textures.size; i++)
 		{
-			CM2_Part_Texture texture(m_F, m_Textures[i]);
+			CM2_Part_Texture* texture = new CM2_Part_Texture(m_F, m_Textures[i]);
 			m_ParentM2->m_Textures.push_back(texture);
 		}
 	}
@@ -246,7 +246,7 @@ void CM2_Builder::Step5ColorAndTextures()
 	// 3.2 Textures lookup
 	if (m_Header->textureLookup.size > 0)
 	{
-		uint16* TexturesLookup = (uint16*)(m_F->getData() + m_Header->textureLookup.offset);
+		int16* TexturesLookup = (int16*)(m_F->getData() + m_Header->textureLookup.offset);
 		for (uint32 i = 0; i < m_Header->textureLookup.size; i++)
 		{
 			m_ParentM2->m_TexturesLookup.push_back(TexturesLookup[i]);
@@ -256,7 +256,7 @@ void CM2_Builder::Step5ColorAndTextures()
 	// 3.3 Textures unit lookup
 	if (m_Header->textureUnitLookup.size > 0)
 	{
-		uint16* TexturesUnitLookup = (uint16*)(m_F->getData() + m_Header->textureUnitLookup.offset);
+		int16* TexturesUnitLookup = (int16*)(m_F->getData() + m_Header->textureUnitLookup.offset);
 		for (uint32 i = 0; i < m_Header->textureUnitLookup.size; i++)
 		{
 			m_ParentM2->m_TexturesUnitLookup.push_back(TexturesUnitLookup[i]);
@@ -266,7 +266,7 @@ void CM2_Builder::Step5ColorAndTextures()
 	// 3.4 Replaceble textures lookup
 	if (m_Header->replacable_texture_lookup.size > 0)
 	{
-		uint16* ReplacebleLookup = (uint16*)(m_F->getData() + m_Header->replacable_texture_lookup.offset);
+		int16* ReplacebleLookup = (int16*)(m_F->getData() + m_Header->replacable_texture_lookup.offset);
 		for (uint32 i = 0; i < m_Header->replacable_texture_lookup.size; i++)
 		{
 			m_ParentM2->m_ReplacebleLookup.push_back(ReplacebleLookup[i]);
@@ -281,7 +281,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesWeight = (SM2_TextureWeight*)(m_F->getData() + m_Header->textureWeights.offset);
 		for (uint32 i = 0; i < m_Header->textureWeights.size; i++)
 		{
-			CM2_Part_TextureWeight textureWeight(m_F, m_TexturesWeight[i], m_GlobalLoops);
+			CM2_Part_TextureWeight* textureWeight = new CM2_Part_TextureWeight(m_F, m_TexturesWeight[i], m_GlobalLoops);
 			m_ParentM2->m_TextureWeights.push_back(textureWeight);
 
 			// Animated
@@ -295,7 +295,7 @@ void CM2_Builder::Step5ColorAndTextures()
 	// 4.2 Textures weights lookup
 	if (m_Header->textureWeightsLookup.size > 0)
 	{
-		uint16* TextureWeightsLookup = (uint16*)(m_F->getData() + m_Header->textureWeightsLookup.offset);
+		int16* TextureWeightsLookup = (int16*)(m_F->getData() + m_Header->textureWeightsLookup.offset);
 		for (uint32 i = 0; i < m_Header->textureWeightsLookup.size; i++)
 		{
 			m_ParentM2->m_TextureWeightsLookup.push_back(TextureWeightsLookup[i]);
@@ -310,7 +310,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesTransform = (SM2_TextureTransform*)(m_F->getData() + m_Header->textureTransforms.offset);
 		for (uint32 i = 0; i < m_Header->textureTransforms.size; i++)
 		{
-			CM2_Part_TextureTransform textureTransform(m_F, m_TexturesTransform[i], m_GlobalLoops);
+			CM2_Part_TextureTransform* textureTransform = new CM2_Part_TextureTransform(m_F, m_TexturesTransform[i], m_GlobalLoops);
 			m_ParentM2->m_TexturesTransform.push_back(textureTransform);
 			
 			// AnimTextures
@@ -318,7 +318,7 @@ void CM2_Builder::Step5ColorAndTextures()
 				m_TexturesTransform[i].rotation.interpolation_type || 
 				m_TexturesTransform[i].scaling.interpolation_type)
 			{
-				m_ParentM2->m_AnimTextures = true;
+				m_ParentM2->m_IsAnimTextures = true;
 			}
 		}	
 	}
@@ -326,7 +326,7 @@ void CM2_Builder::Step5ColorAndTextures()
 	// 5.2 Textures transform lookup
 	if (m_Header->textureTransformsLookup.size > 0)
 	{
-		uint16* TextureTransformsLookup = (uint16*)(m_F->getData() + m_Header->textureTransformsLookup.offset);
+		int16* TextureTransformsLookup = (int16*)(m_F->getData() + m_Header->textureTransformsLookup.offset);
 		for (uint32 i = 0; i < m_Header->textureTransformsLookup.size; i++)
 		{
 			m_ParentM2->m_TexturesTransformLookup.push_back(TextureTransformsLookup[i]);
@@ -344,7 +344,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Light* m_Lights = (SM2_Light*)(m_F->getData() + m_Header->lights.offset);
 		for (uint32 i = 0; i < m_Header->lights.size; i++)
 		{
-			CM2_Part_Light light(m_F, m_Lights[i], m_GlobalLoops);
+			CM2_Part_Light* light = new CM2_Part_Light(m_F, m_Lights[i], m_GlobalLoops);
 			m_ParentM2->m_Lights.push_back(light);
 		}
 
@@ -359,7 +359,7 @@ void CM2_Builder::Step6Misc()
 		for (uint32 i = 0; i < m_Header->cameras.size; i++)
 		{
 			CM2_Part_Camera* camera = new CM2_Part_Camera(m_F, m_Cameras[i], m_GlobalLoops);
-			m_ParentM2->m_Cameras.push_back(*camera);
+			m_ParentM2->m_Cameras.push_back(camera);
 		}
 
 		// Animated
@@ -369,7 +369,7 @@ void CM2_Builder::Step6Misc()
 	// Cameras Lookup
 	if (m_Header->camerasLookup.size > 0)
 	{
-		uint16* CamerasLookup = (uint16*)(m_F->getData() + m_Header->camerasLookup.offset);
+		int16* CamerasLookup = (int16*)(m_F->getData() + m_Header->camerasLookup.offset);
 		for (uint32 i = 0; i < m_Header->camerasLookup.size; i++)
 		{
 			m_ParentM2->m_CamerasLookup.push_back(CamerasLookup[i]);
@@ -469,7 +469,7 @@ void CM2_Builder::Step9Collision()
 			collisionVertices[i] = collisionVertices[i].toXZmY();
 		}
 
-		collisonVB = _Render->r.createVertexBuffer(collisionVertices.size() * sizeof(vec3), collisionVertices.data(), false);
+		collisonVB = _Render->r.createVertexBuffer(static_cast<uint32>(collisionVertices.size()) * sizeof(vec3), collisionVertices.data(), false);
 	}
 
 	if (m_Header->collisionTriangles.size > 0)
@@ -501,6 +501,7 @@ void CM2_Builder::Step9Collision()
 
 void CM2_Builder::SetAnimated()
 {
+#ifdef M2BUILDER_LOADBONES
 	for (uint32 i = 0; i < m_Header->vertices.size && !(m_ParentM2->m_IsAnimBones); i++)
 	{
 		for (uint32 b = 0; b < m_ParentM2->C_BonesInfluences; b++)
@@ -534,6 +535,7 @@ void CM2_Builder::SetAnimated()
 			}
 		}
 	}
+#endif
 
-	m_ParentM2->m_IsAnimated = m_ParentM2->m_IsAnimBones || m_ParentM2->m_IsBillboard || m_ParentM2->m_AnimTextures || m_ParentM2->m_HasMisc;
+	m_ParentM2->m_IsAnimated = m_ParentM2->m_IsAnimBones || m_ParentM2->m_IsBillboard || m_ParentM2->m_IsAnimTextures || m_ParentM2->m_HasMisc;
 }

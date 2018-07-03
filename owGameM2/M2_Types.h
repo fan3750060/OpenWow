@@ -25,7 +25,18 @@ struct SM2_Sequence
 
 	float		movespeed;				// This is the speed the character moves with in this animation.
 
-	uint32		flags;					// See below.
+	struct Flags
+	{
+		uint32 unk0 : 1;
+		uint32 unk1 : 1;
+		uint32 unk2 : 1;
+		uint32 unk3 : 1;
+		uint32 LowPrioritySeq : 1;
+		uint32 DataInM2 : 1; // If set, the animation data is in the .m2 file. If not set, the animation data is in an .anim file.
+		uint32 HasNext : 1; // (To find the animation data, the client skips these by following aliasNext until an animation without 0x40 is found.)
+		uint32 IsBlended : 1; // (if either side of a transition has 0x80, lerp between end->start states, unless end==start by comparing bone values)
+		uint32 : 24;
+	} flags;
 	int16		frequency;				// This is used to determine how often the animation is played. For all animations of the same type, this adds up to 0x7FFF (32767).
 	uint16		unk0;
 	M2Range		replay;					// May both be 0 to not repeat. Client will pick a random number of repetitions within bounds if given.
@@ -108,7 +119,7 @@ struct SM2_Texture
 {
 	enum SM2_Texture_Type : uint32
 	{
-		NONE = 0,						//Texture given in filename
+		NONE = 0,						// Texture given in filename
 		TEX_COMPONENT_SKIN,				// Skin // Body + clothes
 		TEX_COMPONENT_OBJECT_SKIN,		// Object Skin // Item, Capes("Item\ObjectComponents\Cape\*.blp")
 		TEX_COMPONENT_WEAPON_BLADE,		// Weapon Blade // Used on several models but not used in the client as far as I see.Armor Reflect ?

@@ -15,11 +15,6 @@ CMPQFile::CMPQFile(cstring _name, cstring _path) :
 	CFile(_name, _path)
 {}
 
-CMPQFile::~CMPQFile()
-{
-	CFile::~CFile();
-}
-
 bool CMPQFile::Open()
 {
 	SMPQFileLocation location = GetManager<IMPQArchiveManager>()->GetFileLocation(Path_Name());

@@ -16,29 +16,6 @@ struct M2Array
 	uint32 offset;
 };
 
-#if (VERSION == VERSION_Vanila)
-struct M2TrackBase
-{
-	Interpolations						interpolation_type;
-	int16_t								global_sequence;
-	M2Array<pair<uint32_t, uint32_t>>	interpolation_ranges;
-	M2Array<uint32_t>					timestamps;
-};
-
-template<typename T>
-struct M2Track : public M2TrackBase
-{
-	M2Array<T>							values;
-};
-
-template<typename T>
-struct M2TrackFake
-{
-	M2Array<pair<uint32_t, uint32_t>>	interpolation_ranges;
-	M2Array<uint32_t>					timestamps;
-	M2Array<T>							values;
-};
-#else
 struct M2TrackBase
 {
 	Interpolations						interpolation_type;
@@ -58,7 +35,6 @@ struct M2TrackFake
 	M2Array<M2Array<uint32>>			timestamps;
 	M2Array<M2Array<T>>					values;
 };
-#endif
 
 struct M2CompQuat
 {

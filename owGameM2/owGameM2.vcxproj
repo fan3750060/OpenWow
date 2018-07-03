@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameM2.h" />
-    <ClInclude Include="M2_Animated.h" />
     <ClInclude Include="M2_AnimatedConverters.h" />
     <ClInclude Include="M2_Animated_WotLK.h" />
     <ClInclude Include="M2_Animation.h" />
@@ -124,6 +123,7 @@
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,6 +144,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

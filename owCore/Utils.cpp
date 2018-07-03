@@ -169,7 +169,7 @@ string Utils::GetFirstSubString(string& s, char separator)
 	return outs;
 }
 
-string Utils::getNextToken(cstring s, uint32_t &cursor, char separator)
+string Utils::getNextToken(cstring s, uint32_t& cursor, char separator)
 {
 	uint32_t seppos = s.find_first_of(separator, cursor);
 	if (seppos == string::npos)

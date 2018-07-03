@@ -77,7 +77,7 @@ string SHA1Hash::toString()
 	for (uint32 i = 0; i < SHA_DIGEST_LENGTH; i++)
 	{
 		char buf[4];
-		sprintf(buf, "%02X", mDigest[i]);
+		sprintf_s(buf, "%02X", mDigest[i]);
 		result += buf;
 	}
 
@@ -102,7 +102,7 @@ std::string ByteArrayToHexStr(uint8 const* bytes, uint32 arrayLen, bool reverse 
 	for (int32 i = init; i != end; i += op)
 	{
 		char buffer[4];
-		sprintf(buffer, "%02X", bytes[i]);
+		sprintf_s(buffer, "%02X", bytes[i]);
 		ss << buffer;
 	}
 

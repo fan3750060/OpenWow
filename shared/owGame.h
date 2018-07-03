@@ -24,3 +24,4 @@
 //--            World of warcraft Client                 --//
 //---------------------------------------------------------//
 #include "../owGame/Character.h"
+#include "../owGame/Creature.h"

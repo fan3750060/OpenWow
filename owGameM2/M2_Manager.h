@@ -8,9 +8,6 @@ public:
 	CM2_Manager();
 	~CM2_Manager();
 
-	
-	void updateEmitters(float dt);
-
 	// IM2Manager
 	M2* Add(cstring name) { return CRefManager1Dim::Add(name); }
 	bool Exists(cstring name) const { return CRefManager1Dim::Exists(name); }
@@ -20,4 +17,7 @@ public:
 	// CRefManager1Dim
 	M2* CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
+
+private:
+	M2 * m_DefaultModel;
 };

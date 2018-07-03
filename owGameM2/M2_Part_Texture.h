@@ -11,19 +11,13 @@ class CM2_Part_Texture
 public:
 	CM2_Part_Texture(IFile* f, const SM2_Texture& _proto);
 
-	void UpdateReplacedTexture(CM2_MeshPartID_Provider* _provider);
-
-	bool isWrapX() const { return m_WrapX; }
-	bool isWrapY() const { return m_WrapY; }
-
-	void set(uint32 _slot) const;
+	void set(uint32 _slot, CM2_MeshPartID_Provider* _provider) const;
 
 	// Common texture
 	R_Texture* getTexture() const { return m_Texture; }
-
 	// Special texture
+	bool isTextureSpecial() const { return m_SpecialType != SM2_Texture::SM2_Texture_Type::NONE; }
 	SM2_Texture::SM2_Texture_Type getSpecialTextureType() const { return m_SpecialType; }
-	R_Texture* getReplacedTexture() const { return m_TextureReplaced; }
 
 private:
 	bool								m_WrapX;
@@ -31,12 +25,9 @@ private:
 
 	// Common texture
 	SmartTexturePtr						m_Texture;
-
-	// Replaced texture
-	bool								m_TexturesUseSpecialTexture;
+	// Special texture
 	SM2_Texture::SM2_Texture_Type		m_SpecialType;
-	SmartTexturePtr						m_TextureReplaced;
-	
+
 	//--
 	CGroupQuality&						m_QualitySettings;
 };

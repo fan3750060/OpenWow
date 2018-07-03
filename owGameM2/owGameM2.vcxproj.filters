@@ -141,9 +141,6 @@
     <ClInclude Include="M2_Skin_Builder.h">
       <Filter>Builders</Filter>
     </ClInclude>
-    <ClInclude Include="M2_Animated.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="M2_Skin.h">
       <Filter>Skins</Filter>
     </ClInclude>

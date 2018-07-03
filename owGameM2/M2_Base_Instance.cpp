@@ -3,22 +3,28 @@
 // General
 #include "M2_Base_Instance.h"
 
+CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent) :
+	SceneNode(_parent),
+	m_Animator(nullptr),
+	m_NeedRecalcAnimation(true),
+	m_MeshProvider(nullptr),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+{
+	setDrawOrder(21);
+}
+
 CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, M2* _m2Object) :
 	SceneNode(_parent),
 	m_Object(_m2Object),
 	m_Animator(nullptr),
 	m_NeedRecalcAnimation(true),
+	m_MeshProvider(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	assert1(m_Object);
 
 	// Scene node params
 	{
-		// Translate
-		//m_Translate = vec3(100, 0, 100);
-		// Rotate
-		//m_Rotate = vec3(Math::TwoPi, Math::TwoPi, Math::PiHalf);
-		//
 		CalculateMatrix();
 		//
 		m_Bounds = m_Object->m_Bounds;
@@ -36,6 +42,10 @@ CM2_Base_Instance::~CM2_Base_Instance()
 		_Bindings->UnregisterUpdatableObject(this);
 	}
 
+	if (m_MeshProvider != nullptr)
+	{
+		delete m_MeshProvider;
+	}
 }
 
 void CM2_Base_Instance::InitLocal()
@@ -84,5 +94,5 @@ bool CM2_Base_Instance::PreRender3D()
 void CM2_Base_Instance::Render3D()
 {
 	//_Render->DrawBoundingBox(m_Bounds);
-	m_Object->Render(getAbsTrans());
+	m_Object->Render(getAbsTrans(), m_MeshProvider);
 }

@@ -84,13 +84,11 @@ bool CAuthSocket::S_LoginChallenge(ByteBuffer& _buff)
 	AuthChallenge_S challenge(_buff);
 
 	char buff[256];
-	sprintf(buff, "%s:%s", m_World->getUsername().c_str(), m_World->getPassword().c_str());
+	sprintf_s(buff, "%s:%s", m_World->getUsername().c_str(), m_World->getPassword().c_str());
 	string NameAndPass = Utils::ToUpper(buff);
 
 	BigNumber A, u, x;
 	BigNumber k(3);
-
-	uint8 m2[512];
 
 #pragma region Receive and initialize
 	BigNumber B, g, N, s;

@@ -59,14 +59,14 @@ void ParticleSystem::init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals)
 	slowdown = mta.slowdown; // FIXME
 	rotation = mta.rotation; // FIXME
 	pos = mta.Position.toXZmY();
-	texture = m_ParentM2->m_Textures[mta.texture].getTexture();
+	texture = m_ParentM2->m_Textures[mta.texture]->getTexture();
 	blend = mta.blendingType;
 	rows = mta.textureDimensions_rows;
 	cols = mta.textureDimensions_columns;
 	type = mta.particleColorIndex;
 	//order = mta.s2;
 	order = mta.particleColorIndex > 0 ? -1 : 0;
-	parent = m_ParentM2->m_Bones.data() + mta.bone;
+	parent = *(m_ParentM2->m_Bones.data() + mta.bone);
 
 	switch (mta.emitterType)
 	{

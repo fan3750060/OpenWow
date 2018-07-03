@@ -5,9 +5,9 @@
 class CM2_Part_Bone
 {
 public:
-	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, IFile** animfiles);
+	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles);
 
-	void calcMatrix(CM2_Part_Bone* allbones, uint16 anim, uint32 time, uint32 globalTime);
+	void calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 time, uint32 globalTime);
 
 	bool IsInterpolated(uint16 anim) const
 	{
@@ -42,19 +42,14 @@ private:
 
 	vec3 pivot, transPivot;
 
-	Matrix4f m_TransformMatrix;
-	Matrix4f m_RotationMatrix;
+	mat4 m_TransformMatrix;
+	mat4 m_RotationMatrix;
 
 private:
 	bool m_IsCalculated;
 
 	M2_Animated<vec3> trans;
-#if (VERSION == VERSION_Vanila)
-	M2_Animated<quat> roll;
-#else
 	M2_Animated<Quaternion, M2CompQuat, Quat16ToQuat32> roll;
-#endif
-	
 	M2_Animated<vec3> scale;
 };
 

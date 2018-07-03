@@ -100,7 +100,6 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 
 		_buf.seekRelative(size - 2);
 	}
-	_buf.Clear();
 
 	//-- process handlers
 
@@ -230,22 +229,18 @@ bool CWorldSocket::S_CharEnum(ByteBuffer& _buff)
 	bb.Write((uint64)chars[0].GUID);
 	SendData(CMSG_PLAYER_LOGIN, bb);*/
 
-	/* Orc
-	ByteBufferOutput bb;
-
-	bb.Write("TstcrTer", 9);
+	 //Orc
+	/*ByteBufferOutput bb;
+	bb.Write("TxtcrTer", 9);
 	bb.Write((uint8)2);
 	bb.Write((uint8)1);
 	bb.Write((uint8)0);
-
-	bb.Write((uint8)10);
+	bb.Write((uint8)88);
 	bb.Write((uint8)6);
 	bb.Write((uint8)3);
 	bb.Write((uint8)6);
 	bb.Write((uint8)5);
-
 	bb.Write((uint8)0);
-
 	SendData(CMSG_CHAR_CREATE, bb);*/
 	
 	return true;

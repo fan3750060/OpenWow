@@ -11,7 +11,7 @@ public:
 
 	// IEngine
 	bool Tick();
-	uint8 GetArgumentsCount() const override { return m_Arguments.size(); };
+	uint8 GetArgumentsCount() const override { return static_cast<uint32>(m_Arguments.size()); };
 	string GetArgument(uint8 index) const override { return m_Arguments[index]; }
 	uint32 GetFPS() const override { return m_FPS; }
 	void SetNeedExit() override { m_IsNeedExit = true; }

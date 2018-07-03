@@ -82,7 +82,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 
 		// Color
-		if (it.colorIndex != UINT16_MAX)
+		if (it.colorIndex != -1)
 		{
 			batch->color = &(m_ParentM2->GetColor(it.colorIndex));
 		}
@@ -94,24 +94,24 @@ void CM2_Skin_Builder::Step2InitBatches()
 		}
 
 		// Texture unit
-		if (it.texture_CoordIndex != UINT16_MAX)
+		if (it.texture_CoordIndex != -1)
 		{
 			batch->texture_Unit = m_ParentM2->m_TexturesUnitLookup[it.texture_CoordIndex];
 		}
 
 		// Texture weight
-		if (it.texture_WeightIndex != UINT16_MAX)
+		if (it.texture_WeightIndex != -1)
 		{
-			batch->texture_WeightIndex = &(m_ParentM2->m_TextureWeights[it.texture_WeightIndex]);
+			batch->texture_WeightIndex = (m_ParentM2->m_TextureWeights[it.texture_WeightIndex]);
 		}
 
 		// Texture transfowm
 		if (it.flags.TextureStatic == false)
 		{
-			if (it.texture_TransformIndex != UINT16_MAX)
+			if (it.texture_TransformIndex != -1)
 			{
-				uint16 index = m_ParentM2->m_TexturesTransformLookup[it.texture_TransformIndex];
-				if (index != UINT16_MAX)
+				int16 index = m_ParentM2->m_TexturesTransformLookup[it.texture_TransformIndex];
+				if (index != -1)
 				{
 					batch->texture_Transform = &(m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
 				}
@@ -133,7 +133,7 @@ void CM2_Skin_Builder::StepBuildGeometry()
 	}
 
 	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_IndexesIndexes.size() * sizeof(uint16), indices.data(), false);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_IndexesIndexes.size()) * sizeof(uint16), indices.data(), false);
 
 	// Begin geometry
 	m_Skin->__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PBNT2);

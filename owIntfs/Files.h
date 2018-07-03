@@ -23,14 +23,16 @@ __interface IByteBufferOutput
 	uint32 getSize() const;
 };
 
-__interface IFile : public IByteBuffer, public IRefItem
+struct IFile : public IByteBuffer, public IRefItem
 {
-	bool Open();
+	virtual ~IFile() {}
 
-	string Name() const;
-	string Path() const;
-	string Extension() const;
-	string Path_Name() const;
+	virtual bool Open() = 0;
+
+	virtual string Name() const = 0;
+	virtual string Path() const = 0;
+	virtual string Extension() const = 0;
+	virtual string Path_Name() const = 0;
 };
 
 __interface 

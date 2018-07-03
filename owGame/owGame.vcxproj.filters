@@ -25,6 +25,9 @@
     <Filter Include="Character">
       <UniqueIdentifier>{2fd666bf-90dd-47b6-b061-fae8d0d6171a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Creature">
+      <UniqueIdentifier>{68966ef0-1525-470e-b3a1-5ae615aa0b0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sky.cpp">
@@ -90,6 +93,15 @@
     </ClCompile>
     <ClCompile Include="M2_Character_Instance.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>Creature</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Character_MeshPartID_Provider.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatureMeshIDProvider.cpp">
+      <Filter>Creature</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +178,15 @@
     </ClInclude>
     <ClInclude Include="M2_Character_Instance.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>Creature</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Character_MeshPartID_Provider.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatureMeshIDProvider.h">
+      <Filter>Creature</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

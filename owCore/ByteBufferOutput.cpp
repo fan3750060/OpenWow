@@ -55,7 +55,7 @@ void ByteBufferOutput::Write(const uint8* _string, uint32 _size)
 
 void ByteBufferOutput::Write(cstring _string, uint32 _expectedSize)
 {
-	Append((uint8*)_string.c_str(), _string.size());
+	Append((uint8*)_string.c_str(), static_cast<uint32>(_string.size()));
 	if ((_string.size() < _expectedSize) && (_expectedSize != UINT32_MAX))
 	{
 		for (uint32 i = 0; i < _expectedSize - _string.size(); i++)

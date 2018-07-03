@@ -50,14 +50,14 @@ struct SM2_SkinBatch
 
 	uint16 geosetIndex;
 
-	uint16 colorIndex;				// A Color out of the Colors-Block or -1 if none.
-	uint16 materialIndex;			// The renderflags used on this texture-unit.
+	int16 colorIndex;				// A Color out of the Colors-Block or -1 if none.
+	int16 materialIndex;			// The renderflags used on this texture-unit.
 	uint16 materialLayer;			// Capped at 7 (see CM2Scene::BeginDraw)
 	uint16 textureCount;			// 1 to 4. Also seems to be the number of m_DiffuseTextures to load, starting at the texture lookup in the next field (0x10).
-	uint16 texture_Index;			// Index into Texture lookup table
-	uint16 texture_CoordIndex;		// Index into the texture unit lookup table.
-	uint16 texture_WeightIndex;		// Index into transparency lookup table.
-	uint16 texture_TransformIndex;	// Index into uvanimation lookup table. 
+	int16 texture_Index;			// Index into Texture lookup table
+	int16 texture_CoordIndex;		// Index into the texture unit lookup table.
+	int16 texture_WeightIndex;		// Index into transparency lookup table.
+	int16 texture_TransformIndex;	// Index into uvanimation lookup table. 
 };
 
 struct SM2_SkinProfile

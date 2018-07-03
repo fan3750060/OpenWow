@@ -54,7 +54,22 @@ ByteBuffer::ByteBuffer(uint8* _data, uint64_t _size) :
 
 ByteBuffer::~ByteBuffer()
 {
-	Clear();
+	if (!m_IsAllocated)
+	{
+		return;
+	}
+
+	if (m_IsOnlyPointer)
+	{
+		return;
+	}
+
+	if (m_Data != nullptr)
+	{
+		//Log::Error("Data deleted!!!");
+		delete[] m_Data;
+		m_Data = nullptr;
+	}
 }
 
 ByteBuffer& ByteBuffer::operator=(const ByteBuffer & _other)
@@ -137,33 +152,6 @@ void ByteBuffer::Init(uint8* _dataPtr, uint64_t _size)
 
 	m_CurrentPosition = 0;
 	m_BufferSize = _size;
-}
-
-void ByteBuffer::Clear()
-{
-	m_IsFilled = false;
-	m_IsOnlyPointer = false;
-	m_IsEOF = true;
-	m_IsAllocated = false;
-	m_CurrentPosition = 0;
-	m_BufferSize = 0;
-
-	if (!m_IsAllocated)
-	{
-		return;
-	}
-
-	if (m_IsOnlyPointer)
-	{
-		return;
-	}
-
-	if (m_Data != nullptr)
-	{
-		//Log::Error("Data deleted!!!");
-		delete[] m_Data;
-		m_Data = nullptr;
-	}
 }
 
 //
