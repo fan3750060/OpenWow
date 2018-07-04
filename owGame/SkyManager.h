@@ -38,6 +38,6 @@ private:
 	uint32 __vertsSize;
 
 	vector<SmartPtr<Sky>> skies;
-	//M2* stars;  // BOUZI FIXME ENABLE ME
+	M2* stars;  // BOUZI FIXME ENABLE ME
 };
 

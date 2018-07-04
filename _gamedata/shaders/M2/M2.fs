@@ -232,7 +232,7 @@ void main(void)
 		if (resultColor.a < (1.0f / 255.0f)) discard;
 	}
 	
-	setMatID(1.0f);
+	setMatID(gBlendMode);
 	setPos(VSout.position);
 	setNormal(normalize(VSout.normal));
 	setAlbedo4(resultColor);

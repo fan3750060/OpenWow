@@ -19,6 +19,7 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
 		m_Rotate = vec3(rotate.z, rotate.y, rotate.x);
+		//m_Rotate = vec3(0.0f, Random::GenerateRange(0.0f, Math::Pi) , 0.0f);
 		// Matrix
 		CalculateMatrix();
 		// Bounds
@@ -28,6 +29,8 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 	}
 
 	InitTransform();
+
+	setDrawOrder(21);
 }
 
 ADT_WMO_Instance::~ADT_WMO_Instance()

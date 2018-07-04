@@ -56,7 +56,10 @@ void CGroupQuality::InitDefault()
 	// Textures
 	Texture_Sampler = R_SamplerState2::SS_ANISO16;
 
+
+
 	// Drawing
+	draw_map_mccv = true;
 	WMO_MOCV = true;
 	WMO_AmbColor = false;
 
@@ -185,6 +188,12 @@ bool CGroupQuality::OnKeyboardPressed(int _key, int _scancode, int _mods)
 	if (_key == OW_KEY_V)
 	{
 		SwitchBool(WMO_AmbColor);
+		return true;
+	}
+
+	if (_key == OW_KEY_B)
+	{
+		SwitchBool(draw_map_mccv);
 		return true;
 	}
 

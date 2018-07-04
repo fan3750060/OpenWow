@@ -124,7 +124,7 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
-void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
+void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
 {
 	if (m_HasBones)
 	{
@@ -135,7 +135,12 @@ void M2::animate(uint16 _animationIndex, uint32 _time, uint32 globalTime)
 
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			m_Bones[i]->calcMatrix(m_Bones.data(), _animationIndex, _time, globalTime);
+			m_Bones[i]->calcMatrix(_animationIndex, _time, globalTime);
+		}
+
+		for (uint32 i = 0; i < m_Header.bones.size; i++)
+		{
+			m_Bones[i]->calcBillboard(_worldMatrix);
 		}
 	}
 

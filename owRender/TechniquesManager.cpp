@@ -21,19 +21,18 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	// Map
 
-	/*MCNK_Pass = new CMCNK_Pass(m_RenderDevice);
+	MCNK_Pass = new CMCNK_Pass(m_RenderDevice);
 	MCNK_Pass->Bind();
 	for (uint8 i = 0; i < 4; i++)
 	{
 		MCNK_Pass->SetColorTextureUnit(i, i);
-		MCNK_Pass->SetSpecularTextureUnit(i, 5 + i);
+		MCNK_Pass->SetSpecularTextureUnit(i, i);
 	}
-	MCNK_Pass->SetBlendBuffer(4);
+	MCNK_Pass->SetBlendBuffer();
 	MCNK_Pass->Unbind();
-	m_GeomTechniques.push_back(MCNK_Pass);*/
+	m_GeomTechniques.push_back(MCNK_Pass);
 
-
-	for (uint8 i = 0; i < 4; i ++)
+	/*for (uint8 i = 0; i < 4; i ++)
 	{
 		MCNK_Divided_Pass[i] = new CMCNK_Divided_Pass(m_RenderDevice, i);
 		MCNK_Divided_Pass[i]->Bind();
@@ -45,7 +44,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 		MCNK_Divided_Pass[i]->SetBlendBuffer(CMCNK_Divided_Pass::C_Blend);
 		MCNK_Divided_Pass[i]->Unbind();
 		m_GeomTechniques.push_back(MCNK_Divided_Pass[i]);
-	}
+	}*/
 
 	WDL_LowRes_Pass = new CWDL_LowRes_Pass(m_RenderDevice);
 	m_GeomTechniques.push_back(WDL_LowRes_Pass);

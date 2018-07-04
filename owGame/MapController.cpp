@@ -23,6 +23,14 @@ MapController::MapController() :
 
 	AddManager<IMapManager>(this);
 
+	// Scene node
+	{
+		setOpaque(true);
+
+		m_Bounds.setMin(vec3(Math::MinFloat));
+		m_Bounds.setMax(vec3(Math::MaxFloat));
+		m_Bounds.calculateCenter();
+	}
 
 	mProvider = nullptr;
 	dir = nullptr;

@@ -1,5 +1,28 @@
 #pragma once
 
+struct ADT_MHDR
+{
+	struct Flags
+	{
+		uint32 HasMFBO : 1;
+		uint32 IsNortrend : 1;
+	} flags;
+
+	uint32 MCIN;
+	uint32 MTEX;
+	uint32 MMDX;
+	uint32 MMID;
+	uint32 MWMO;
+	uint32 MWID;
+	uint32 MDDF;
+	uint32 MODF;
+	uint32 mfbo;                     // this is only set if flags & mhdr_MFBO.
+	uint32 mh2o;
+	uint32 mtxf;
+
+	uint8 unk1[16];
+};
+
 struct ADT_TextureInfo : public CRefItem
 {
 	ADT_TextureInfo() :
@@ -24,11 +47,11 @@ struct ADT_MCNK_Header
 		uint32 lq_ocean : 1;
 		uint32 lq_magma : 1;
 		uint32 lq_slime : 1;
-		uint32 unk0 : 1;
+		uint32 has_mccv : 1;
 		uint32 unk1 : 1;
 		uint32 unk2 : 7;
 		uint32 do_not_fix_alpha_map : 1;      // "fix" alpha maps in MCAL (4 bit alpha maps are 63*63 instead of 64*64). Note that this also means that it *has* to be 4 bit alpha maps, otherwise UnpackAlphaShadowBits will assert.
-		uint32 : 15;
+		uint32 : 16;
 	} flags;
 
 	DBC_LIQUIDTYPE_Type getLiquidType()
@@ -89,7 +112,9 @@ struct ADT_MCNK_Header
 	float xpos;
 	float ypos;
 
-	uint8 unk1[12];
+	uint32_t ofsMCCV;                             // only with flags.has_mccv, had uint32_t textureId; in ObscuR's structure.
+
+	uint8 unk1[8];
 };
 
 struct ADT_MCNK_MCLY

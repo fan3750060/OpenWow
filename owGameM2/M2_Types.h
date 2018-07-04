@@ -58,8 +58,8 @@ struct SM2_Bone
 		uint32 unk2 : 1;
 		uint32 spherical_billboard : 1;
 		uint32 cylindrical_billboard_lock_x : 1;
-		uint32 cylindrical_billboard_lock_y : 1;
 		uint32 cylindrical_billboard_lock_z : 1;
+		uint32 cylindrical_billboard_lock_y : 1;
 		uint32 unk3 : 1;
 		uint32 unk4 : 1;
 		uint32 transformed : 1;
@@ -71,7 +71,7 @@ struct SM2_Bone
 
 	int16			parent_bone;            // Parent bone ID or -1 if there is none.
 	uint16			submesh_id;				// Mesh part ID OR uDistToParent?
-#if (VERSION == VERSION_WotLK)
+
 	union 
 	{  
 		struct 
@@ -81,14 +81,9 @@ struct SM2_Bone
 		} CompressData;               // No model has ever had this part of the union used.
 		uint32_t boneNameCRC;         // these are for debugging only. their bone names match those in key bone lookup.
 	};
-#endif
 
 	M2Track<vec3>	translation;
-#if (VERSION == VERSION_Vanila)
-	M2Track<quat>	rotation;				// compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
-#else
 	M2Track<M2CompQuat>	rotation;				// compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
-#endif
 	M2Track<vec3>	scale;
 
 	vec3			pivot;					// The pivot point of that bone.

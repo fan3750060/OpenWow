@@ -33,6 +33,7 @@ public:
     uint32 __layout_GxVBF_P;
     uint32 __layout_GxVBF_PN;
 	uint32 __layout_GxVBF_PNT2;
+	uint32 __layout_GxVBF_PNCT2; // Tiles
     uint32 __layout_GxVBF_PÑ;
     uint32 __layout_GxVBF_PT;
     uint32 __layout_GxVBF_PBNT2;  // M2

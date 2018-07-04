@@ -352,5 +352,17 @@
     <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0.fs">
       <Filter>Techniques\Map\Divided</Filter>
     </None>
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Fog.fs">
+      <Filter>Techniques\Postprocess</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Light_Direction.fs">
+      <Filter>Techniques\Postprocess</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Simple.fs">
+      <Filter>Techniques\Postprocess</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_VS.vs">
+      <Filter>Techniques\Postprocess</Filter>
+    </None>
   </ItemGroup>
 </Project>

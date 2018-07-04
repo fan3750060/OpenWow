@@ -1,13 +1,17 @@
 #include "stdafx.h"
 
+// Include
+#include "M2.h"
+
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles)
+CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles) :
+	m_ParentBone(nullptr)
 {
 	m_Id = _proto.key_bone_id;
 	m_Flags = _proto.flags;
-	parent = _proto.parent_bone;
+	m_ParentBoneID = _proto.parent_bone;
 	
 	trans.init(_proto.translation, f, global, Fix_XZmY, animfiles);
 	roll.init(_proto.rotation, f, global, Fix_XZmYW, animfiles);
@@ -16,16 +20,45 @@ CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq gl
 	pivot = _proto.pivot.toXZmY();
 }
 
-void CM2_Part_Bone::calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 time, uint32 globalTime)
+void CM2_Part_Bone::setParentBone(const M2* _parentM2)
+{
+	if (m_ParentBoneID != -1)
+	{
+		m_ParentBone = _parentM2->m_Bones[m_ParentBoneID];
+	}
+
+	if (m_Flags.spherical_billboard)
+	{
+		//Log::Info("!!!!!!!!!!!!MODEL [%s] has SPHERE billboard!", _parentM2->getFilename().c_str());
+	}
+
+	if (m_Flags.cylindrical_billboard_lock_x)
+	{
+		Log::Error("!!!!!!!!!!!!MODEL [%s] has X billboard!", _parentM2->getFilename().c_str());
+		//assert1(false);
+	}
+
+	if (m_Flags.cylindrical_billboard_lock_z)
+	{
+		Log::Error("!!!!!!!!!!!MODEL [%s] has Z billboard!", _parentM2->getFilename().c_str());
+		//assert1(false);
+	}
+}
+
+void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 {
 	if (m_IsCalculated)
 	{
 		return;
 	}
 
-	mat4 m;
+	if (m_ParentBone != nullptr)
+	{
+		m_ParentBone->calcMatrix(anim, time, globalTime);
+	}
 
-	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim) || (IsBillboard()))
+	mat4 m;
+	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim))
 	{
 		m.translate(pivot);
 
@@ -34,14 +67,14 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 tim
 			m.translate(trans.getValue(anim, time, globalTime));
 		}
 
-		if (roll.uses(anim))
+		if (roll.uses(anim) && IsBillboard() == false)
 		{
 			quat q = roll.getValue(anim, time, globalTime);
 			m.rotate(q);
 
-			if (parent >= 0)
+			if (m_ParentBone != nullptr)
 			{
-				m_RotationMatrix = allbones[parent]->m_RotationMatrix * mat4::RotMat(q);
+				m_RotationMatrix = m_ParentBone->m_RotationMatrix * mat4::RotMat(q);
 			}
 			else
 			{
@@ -54,73 +87,13 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 tim
 			m.scale(scale.getValue(anim, time, globalTime));
 		}
 
-		if (IsBillboard())
-		{
-			m.rotate(0.0f, Math::Pi, 0.0f);
-		}
-
-		/*if (IsBillboard())
-		{
-			if (parent != -1)
-			{
-				if (allbones[parent].IsBillboard())
-				{
-					goto xxx;
-				}
-			}
-
-			mat4 worldPrevMatrix = m * _PipelineGlobal->GetWorld();
-
-			bool shitMatrix = false;
-			float scaleX = vec3(worldPrevMatrix.x[0], worldPrevMatrix.x[1], worldPrevMatrix.x[2]).length();
-			float scaleY = vec3(worldPrevMatrix.x[4], worldPrevMatrix.x[5], worldPrevMatrix.x[6]).length();
-			float scaleZ = vec3(worldPrevMatrix.x[8], worldPrevMatrix.x[9], worldPrevMatrix.x[10]).length();
-
-			mat4 view = _PipelineGlobal->GetView() * worldPrevMatrix;
-
-			// Set vectors
-			vec3 vUp;
-			vec3 vRight = (vec3(view.c[0][0], view.c[1][0], view.c[2][0]) / scaleX) * -1.0f;
-
-			// Calc billboard type
-			if (m_Flags.spherical_billboard)
-			{
-				vUp = vec3(view.c[0][1], view.c[1][1], view.c[2][1]) / scaleY;
-			}
-			else if (m_Flags.cylindrical_billboard_lock_x)
-			{
-				vUp = vec3(1, 0, 0);
-			}
-			else if(m_Flags.cylindrical_billboard_lock_y)
-			{
-				vUp = vec3(0, 0, 1);
-			}
-			else if(m_Flags.cylindrical_billboard_lock_z)
-			{
-				vUp = vec3(0, 1, 0);
-			}
-
-			//vec3 vForward = vec3(view.c[0][2], view.c[1][2], view.c[2][2]) / scaleZ;
-			//m.c[0][0] = vForward.x;
-			//m.c[0][1] = vForward.y;
-			//m.c[0][2] = vForward.z;
-
-			m.c[1][0] = vUp.x;
-			m.c[1][1] = vUp.y;
-			m.c[1][2] = vUp.z;
-
-			m.c[2][0] = vRight.x;
-			m.c[2][1] = vRight.y;
-			m.c[2][2] = vRight.z;
-		}*/
-
 		m.translate(pivot * -1.0f);
 	}
 
-	if (parent >= 0)
+	if (m_ParentBone != nullptr)
 	{
-		allbones[parent]->calcMatrix(allbones, anim, time, globalTime);
-		m_TransformMatrix = allbones[parent]->m_TransformMatrix * m;
+		assert1(m_ParentBone->IsCalculated());
+		m_TransformMatrix = m_ParentBone->getTransformMatrix() * m;
 	}
 	else
 	{
@@ -130,4 +103,49 @@ void CM2_Part_Bone::calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 tim
 	transPivot = m_TransformMatrix * pivot;
 
 	m_IsCalculated = true;
+}
+
+void CM2_Part_Bone::calcBillboard(cmat4 _worldMatrix)
+{
+	if (IsBillboard())
+	{
+		m_TransformMatrix.translate(pivot);
+		{
+			mat4 W = _worldMatrix * m_TransformMatrix;
+			mat4 VW = _Render->getCamera()->getViewMat() * W;
+
+			// Set vectors default
+			vec3 worldScale = W.extractScale();
+			vec3 vRight   = vec3(VW.c[0][0], VW.c[1][0], VW.c[2][0]) / worldScale.x;
+			vec3 vUp      = vec3(VW.c[0][1], VW.c[1][1], VW.c[2][1]) / worldScale.y;
+			vec3 vForward = vec3(VW.c[0][2], VW.c[1][2], VW.c[2][2]) / worldScale.z;
+			vRight *= -1.0f;
+
+			if (m_Flags.cylindrical_billboard_lock_x)
+			{
+				vUp = vec3(VW.c[0][1], 0, 0);
+			}
+			else if (m_Flags.cylindrical_billboard_lock_y)
+			{
+				vUp = vec3(0, VW.c[1][1], 0);
+			}
+			else if (m_Flags.cylindrical_billboard_lock_z)
+			{
+				vUp = vec3(0, 0, VW.c[2][1]);
+			}
+
+			m_TransformMatrix.c[0][0] = vForward.x;
+			m_TransformMatrix.c[0][1] = vForward.y;
+			m_TransformMatrix.c[0][2] = vForward.z;
+
+			m_TransformMatrix.c[1][0] = vUp.x;
+			m_TransformMatrix.c[1][1] = vUp.y;
+			m_TransformMatrix.c[1][2] = vUp.z;
+
+			m_TransformMatrix.c[2][0] = vRight.x;
+			m_TransformMatrix.c[2][1] = vRight.y;
+			m_TransformMatrix.c[2][2] = vRight.z;
+		}
+		m_TransformMatrix.translate(pivot * -1.0f);
+	}
 }

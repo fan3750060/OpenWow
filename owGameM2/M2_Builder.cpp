@@ -158,6 +158,11 @@ void CM2_Builder::Step3Bones()
 			m_ParentM2->m_Bones.push_back(bone);
 		}
 
+		for (uint32 i = 0; i < m_Header->bones.size; i++)
+		{
+			m_ParentM2->m_Bones[i]->setParentBone(m_ParentM2);
+		}
+
 		m_ParentM2->m_HasBones = true;
 	}
 

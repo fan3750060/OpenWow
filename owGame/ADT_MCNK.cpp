@@ -15,7 +15,7 @@
 
 ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	SceneNode(_parentTile),
-	m_ParentTextures(&_parentTile->m_Textures),
+	m_ParentADT(_parentTile),
 	m_File(_file),
 	m_BlendRBGShadowATexture(0),
 	m_IndexesCountHigh(0),
@@ -46,6 +46,8 @@ bool ADT_MCNK::Load()
 
 	// Scene node params
 	{
+		setOpaque(true);
+
 		// Set translate
 		m_Translate.x = header.xpos * (-1.0f) + C_ZeroPoint;
 		m_Translate.y = header.ypos;
@@ -59,7 +61,7 @@ bool ADT_MCNK::Load()
 
 	R_Buffer* verticesBuffer = nullptr;
 	R_Buffer* normalsBuffer = nullptr;
-
+	R_Buffer* mccvBuffer = nullptr;
 
 	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
@@ -121,8 +123,8 @@ bool ADT_MCNK::Load()
 		{
 			f->readBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
-			m_DiffuseTextures[i] = m_ParentTextures->at(mcly[i].textureIndex)->diffuseTexture;
-			m_SpecularTextures[i] = m_ParentTextures->at(mcly[i].textureIndex)->specularTexture;
+			m_DiffuseTextures[i] = m_ParentADT->m_Textures.at(mcly[i].textureIndex)->diffuseTexture;
+			m_SpecularTextures[i] = m_ParentADT->m_Textures.at(mcly[i].textureIndex)->specularTexture;
 		}
 	}
 
@@ -238,14 +240,49 @@ bool ADT_MCNK::Load()
 		}
 	}
 
+	// MCCV colors
+	f->seek(startPos + header.ofsMCCV);
+	{
+		vec4 mccvColors[C_MapBufferSize];
+		uint32 mccvColors2[C_MapBufferSize];
+		memset(mccvColors2, 0x00, sizeof(uint32) * C_MapBufferSize);
+
+		if (header.flags.has_mccv)
+		{
+			vec4* ttn = mccvColors;
+			uint32* ttn2 = mccvColors2;
+
+			for (int j = 0; j < 17; j++)
+			{
+				for (uint32 i = 0; i < ((j % 2u) ? 8u : 9u); i++)
+				{
+					uint8 nor[4];
+					f->readBytes(&nor, sizeof(uint32));
+
+					*ttn++ = vec4((float)nor[2] / 127.0f, (float)nor[1] / 127.0f, (float)nor[0] / 127.0f, (float)nor[3] / 127.0f);
+
+					*ttn2++ = uint32(
+						(uint8)(nor[3]) << 24 |
+						(uint8)(nor[0]) << 16 |
+						(uint8)(nor[1]) << 8 |
+						(uint8)(nor[2])
+					);
+				}
+			}
+		}
+
+		mccvBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(uint32), mccvColors2, false);
+	}
+
 	{ // Geom High
 		vector<uint16>& mapArrayHigh = Map_Shared::GenarateHighMapArray(header.holes);
 		m_IndexesCountHigh = mapArrayHigh.size();
 		__ibHigh = _Render->r.createIndexBuffer(mapArrayHigh.size() * sizeof(uint16), mapArrayHigh.data(), false);
 
-		__geomHigh = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNT2);
+		__geomHigh = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomHigh->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 		__geomHigh->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
 		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
 		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
 		__geomHigh->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
@@ -257,9 +294,10 @@ bool ADT_MCNK::Load()
 		m_IndexesCountDefault = mapArrayDefault.size();
 		__ibDefault = _Render->r.createIndexBuffer(mapArrayDefault.size() * sizeof(uint16), mapArrayDefault.data(), false);
 
-		__geomDefault = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNT2);
+		__geomDefault = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
 		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
@@ -326,19 +364,23 @@ void ADT_MCNK::Render3D()
 		_Render->r.setDepthMask(true);
 		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
-		CMCNK_Divided_Pass* pass = _Render->getTechniquesMgr()->MCNK_Divided_Pass[layersCnt];
+		CMCNK_Pass* pass = _Render->getTechniquesMgr()->MCNK_Pass;
 
 		pass->Bind();
 		{
 			// Bind m_DiffuseTextures
 			for (uint32 i = 0; i < header.nLayers; i++)
 			{
-				_Render->r.setTexture(CMCNK_Divided_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-				_Render->r.setTexture(CMCNK_Divided_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+				_Render->r.setTexture(CMCNK_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+				_Render->r.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 			}
 
+			pass->SetIsNortrend(true/*m_ParentADT->m_Header.flags.IsNortrend*/);
+			pass->SetIsMCCVExists(m_QualitySettings.draw_map_mccv && header.flags.has_mccv);
+			pass->SetLayersCount(header.nLayers);
+
 			// Bind blend
-			_Render->r.setTexture(CMCNK_Divided_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+			_Render->r.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
 
 			// Bind shadow
 			pass->SetShadowMapExists(header.flags.has_mcsh);
@@ -346,6 +388,7 @@ void ADT_MCNK::Render3D()
 			{
 				pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
 			}
+			pass->SetShadowMapExists(false);
 
 			float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length() - getBounds().getRadius();
 			if (distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low)

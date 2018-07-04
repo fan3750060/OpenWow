@@ -76,17 +76,17 @@ private:
 
 
 private:
-	ADT * m_ADTCache[C_TilesCacheSize];
-	ADT*	m_Current[C_RenderedTiles][C_RenderedTiles];
+	ADT*			m_ADTCache[C_TilesCacheSize];
+	ADT*			m_Current[C_RenderedTiles][C_RenderedTiles];
 
 
 
-	int32	m_CurrentTileX, m_CurrentTileZ;
-	bool	m_IsOnInvalidTile;
+	int32			m_CurrentTileX, m_CurrentTileZ;
+	bool			m_IsOnInvalidTile;
 
 public:
-	WDT * m_WDT;
-	WDL*    m_WDL;
+	WDT*			m_WDT;
+	WDL*			m_WDL;
 
 	CMinimapProvider* mProvider;
 	MinimapDir* dir;

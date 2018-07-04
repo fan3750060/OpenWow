@@ -6,6 +6,7 @@ in struct
 {
 	vec3 WorldSpacePos;
 	vec3 Normal;
+	vec4 VertexColorMCCV;
 	vec2 TexCoordDetail;
 	vec2 TexCoordAlpha;
 } VSInput;

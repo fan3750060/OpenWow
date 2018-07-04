@@ -243,6 +243,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Fog.fs" />
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Light_Direction.fs" />
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Simple.fs" />
+    <None Include="..\_gamedata\shaders\Postprocess\Postprocess_VS.vs" />
     <None Include="..\_gamedata\shaders\WMO.fs" />
     <None Include="..\_gamedata\shaders\WMO.vs" />
     <None Include="Technique.inl" />

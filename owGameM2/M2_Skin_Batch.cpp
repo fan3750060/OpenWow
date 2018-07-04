@@ -31,8 +31,6 @@ void M2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 
 	//--
 
-	material->Set();
-
 	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
 	{
 		pass->SetShader(newShader);

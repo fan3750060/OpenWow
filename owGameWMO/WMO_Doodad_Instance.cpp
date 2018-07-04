@@ -13,7 +13,7 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, u
 	{
 		// Convert
 		m_Translate = _placement.position.toXZmY();
-		m_RotateQuat = Quaternion(-_placement.orientation.z, _placement.orientation.x, _placement.orientation.y, _placement.orientation.w);;
+		m_RotateQuat = Quaternion(-_placement.orientation.z, _placement.orientation.x, _placement.orientation.y, _placement.orientation.w);
 		m_Scale = vec3(_placement.scale, -_placement.scale, -_placement.scale);
 		//
 		CalculateMatrix(true);
@@ -24,6 +24,7 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, u
 
 	InitLocal();
 
+	setDrawOrder(22);
 	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
 	setSelectable();
 }

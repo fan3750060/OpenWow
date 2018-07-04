@@ -43,6 +43,8 @@ public:
 	bool draw_water;
 	bool draw_wmo_water;
 
+	bool draw_map_mccv;
+
 	bool WMO_MOCV;
 	bool WMO_AmbColor;
 

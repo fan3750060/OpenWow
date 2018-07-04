@@ -36,4 +36,7 @@ protected:
 	CM2_MeshPartID_Provider* m_MeshProvider;
 
 	CGroupQuality&		m_QualitySettings;
+
+	double m_Time;
+	double m_DTime;
 };

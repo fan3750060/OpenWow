@@ -18,6 +18,7 @@ CWDL_LowResTile::CWDL_LowResTile(SceneNode* _parent, uint32 _indexX, uint32 _ind
 {
 	m_Bounds.calculateCenter();
 
+	setOpaque(true);
 	setDrawOrder(19);
 }
 

@@ -35,7 +35,8 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 	{
 		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
 	}
-
+	
+	_Render->getCamera()->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
 	_Render->getCamera()->Position = _pos;
 	_Render->getCamera()->m_UseDir = false;
 	_Render->getCamera()->SetNeedUpdate();

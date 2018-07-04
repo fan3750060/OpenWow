@@ -10,7 +10,6 @@ CWMO_Base_Instance::CWMO_Base_Instance(SceneNode* _parent, WMO* _wmoObject) :
 {
 	assert1(m_Object);
 
-	setDrawOrder(21);
 	setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
 	setSelectable();
 

@@ -808,8 +808,13 @@ void RenderDevice::applyRenderStates()
 		else
 		{
 			glEnable(GL_BLEND);
-			glBlendFuncSeparate(oglBlendFuncs[m_NewBlendState.srcRGBBlendFunc], oglBlendFuncs[m_NewBlendState.destRGBBlendFunc],
-				oglBlendFuncs[m_NewBlendState.srcABlendFunc], oglBlendFuncs[m_NewBlendState.destABlendFunc]);
+			glBlendFuncSeparate
+			(
+				oglBlendFuncs[m_NewBlendState.srcRGBBlendFunc], 
+				oglBlendFuncs[m_NewBlendState.destRGBBlendFunc],
+				oglBlendFuncs[m_NewBlendState.srcABlendFunc], 
+				oglBlendFuncs[m_NewBlendState.destABlendFunc]
+			);
 		}
 
 		m_CurBlendState.hash = m_NewBlendState.hash;

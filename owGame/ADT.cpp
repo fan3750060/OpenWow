@@ -11,28 +11,7 @@
 
 #include __PACK_BEGIN
 
-struct ADT_MHDR
-{
-	struct Flags
-	{
-		uint32 HasMFBO : 1;
-		uint32 IsNortrend : 1;
-	} flags;
 
-	uint32 MCIN;
-	uint32 MTEX;
-	uint32 MMDX;
-	uint32 MMID;
-	uint32 MWMO;
-	uint32 MWID;
-	uint32 MDDF;
-	uint32 MODF;
-	uint32 mfbo;                     // this is only set if flags & mhdr_MFBO.
-	uint32 mh2o;
-	uint32 mtxf;
-
-	uint8 unk1[16];
-};
 
 struct ADT_MCIN
 {
@@ -55,6 +34,8 @@ ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _
 {
 	// Scene node params
 	{
+		setOpaque(true);
+
 		// DON'T CALCULATE MATRIX
 		CalculateMatrix(); 
 
@@ -94,7 +75,6 @@ bool ADT::Load()
 	}
 
 	// MHDR + size (8)
-	ADT_MHDR m_Header;
 	f->seekRelative(8);
 	{
 		f->readBytes(&m_Header, sizeof(ADT_MHDR));

@@ -2,18 +2,23 @@
 
 #include "M2_Types.h"
 
+// FORWARD BEGIN
+class M2;
+// FORWARD END
+
 class CM2_Part_Bone
 {
 public:
 	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles);
 
-	void calcMatrix(CM2_Part_Bone** allbones, uint16 anim, uint32 time, uint32 globalTime);
+	void setParentBone(const M2* _parentM2);
+	void calcMatrix(uint16 anim, uint32 time, uint32 globalTime);
+	void calcBillboard(cmat4 _worldMatrix);
 
 	bool IsInterpolated(uint16 anim) const
 	{
 		return trans.uses(anim) || roll.uses(anim) || scale.uses(anim);
 	}
-
 	bool IsBillboard() const
 	{
 		return
@@ -26,18 +31,19 @@ public:
 	void SetNeedCalculate() { m_IsCalculated = false; }
 	bool IsCalculated() const { return m_IsCalculated; }
 
-	//
-
-	int16 getParentBoneId() const { return parent; }
-	cmat4 getTransformMatrix() const { return m_TransformMatrix; }
-	cmat4 getRotateMatrix() const { return m_RotationMatrix; }
-	cvec3 getPivot() const { return pivot; }
+	int32			getID() const { return m_Id; }
+	CM2_Part_Bone*	getParentBone() const { return m_ParentBone; }
+	int16			getParentBoneID() const { m_ParentBoneID; }
+	cmat4			getTransformMatrix() const { return m_TransformMatrix; }
+    cmat4			getRotateMatrix() const { return m_RotationMatrix; }
+	cvec3			getPivot() const { return pivot; }
 
 private:
 	int32           m_Id; // Bones lookup table
 	SM2_Bone::Flags m_Flags;
 
-	int16			parent;
+	int16			m_ParentBoneID;
+	CM2_Part_Bone*	m_ParentBone;
 	uint16			submesh;
 
 	vec3 pivot, transPivot;

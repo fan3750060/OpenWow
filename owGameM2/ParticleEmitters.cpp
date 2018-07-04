@@ -115,7 +115,7 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 
 		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var);
 	}
-	else if (sys->flags == 25 && sys->parent->getParentBoneId() < 1)
+	else if (sys->flags == 25 && sys->parent->getParentBoneID() < 1)
 	{ // Weapon Flame
 		p.pos = sys->parent->getPivot() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = mrot * vec3(0.0f, 1.0f, 0.0f);
@@ -124,7 +124,7 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 		//p.speed = dir.Normalize() * spd;
 
 	}
-	else if (sys->flags == 25 && sys->parent->getParentBoneId() > 0)
+	else if (sys->flags == 25 && sys->parent->getParentBoneID() > 0)
 	{ // Weapon with built-in Flame (Avenger lightsaber!)
 		p.pos = sys->parent->getTransformMatrix() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = vec3
@@ -136,7 +136,7 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var * 2);
 
 	}
-	else if (sys->flags == 17 && sys->parent->getParentBoneId() < 1)
+	else if (sys->flags == 17 && sys->parent->getParentBoneID() < 1)
 	{ // Weapon Glow
 		p.pos = sys->parent->getPivot() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = mrot * vec3(0, 1, 0);

@@ -63,6 +63,8 @@ void CM2_Part_Material::Set() const
 	_Render->r.setDepthTest(isDEPTHTEST);
 	_Render->r.setDepthMask(isDEPTHWRITE);
 
+	//_Render->r.setAlphaToCoverage(true);
+
 	switch (blending_mode)
 	{
 	case SM2_Material::M2BLEND_OPAQUE:

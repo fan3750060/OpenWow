@@ -21,6 +21,13 @@ public:
 	{
 		Matrix4f m;
 
+		/*
+		a b c d 
+		e f g h 
+		i j k l
+		0 0 0 1
+		*/
+
 		m.c[3][0] = x;
 		m.c[3][1] = y;
 		m.c[3][2] = z;
@@ -33,26 +40,8 @@ public:
 		return TransMat(_v.x, _v.y, _v.z);
 	}
 
-	//
-
-	static Matrix4f ScaleMat(float x, float y, float z)
-	{
-		Matrix4f m;
-
-		m.c[0][0] = x;
-		m.c[1][1] = y;
-		m.c[2][2] = z;
-
-		return m;
-	}
-
-	static Matrix4f ScaleMat(const Vec3f& _v)
-	{
-		return ScaleMat(_v.x, _v.y, _v.z);
-	}
-
-	//
-
+	//	
+	
 	static Matrix4f RotMat(float x, float y, float z)
 	{
 		// Rotation order: YXZ [* Vector]
@@ -73,6 +62,24 @@ public:
 	static Matrix4f RotMat(const Quaternion& _q)
 	{
 		return Matrix4f(Quaternion(_q.x, _q.y, _q.z, _q.w));
+	}
+
+	//--
+
+	static Matrix4f ScaleMat(float x, float y, float z)
+	{
+		Matrix4f m;
+
+		m.c[0][0] = x;
+		m.c[1][1] = y;
+		m.c[2][2] = z;
+
+		return m;
+	}
+
+	static Matrix4f ScaleMat(const Vec3f& _v)
+	{
+		return ScaleMat(_v.x, _v.y, _v.z);
 	}
 
 	//
@@ -443,6 +450,53 @@ public:
 		return m;
 	}
 
+	vec3 extractTranslate() const
+	{
+		return Vec3f(c[3][0], c[3][1], c[3][2]);
+	}
+
+	mat4 extractRotate() const
+	{
+		vec3 scale = extractScale();
+
+		mat4 m = *this;
+
+		// Down row
+		m.c[0][3] = 0.0f;
+		m.c[1][3] = 0.0f;
+		m.c[2][3] = 0.0f;
+		m.c[3][3] = 1.0f;
+
+		// Translation
+		m.c[3][0] = 0.0f;
+		m.c[3][1] = 0.0f;
+		m.c[3][2] = 0.0f;
+
+
+		/*m.c[0][0] /= scale.x;
+		m.c[0][1] /= scale.x;
+		m.c[0][2] /= scale.x;
+
+		m.c[1][0] /= scale.y;
+		m.c[1][1] /= scale.y;
+		m.c[1][2] /= scale.y;
+
+		m.c[2][0] /= scale.z;
+		m.c[2][1] /= scale.z;
+		m.c[2][2] /= scale.z;*/
+
+		return m;
+	}
+
+	vec3 extractScale() const
+	{
+		vec3 scale;
+		scale.x = vec3(c[0][0], c[0][1], c[0][2]).length(); // 1st column
+		scale.y = vec3(c[1][0], c[1][1], c[1][2]).length(); // 2nd column
+		scale.z = vec3(c[2][0], c[2][1], c[2][2]).length(); // 3rd columt
+		return scale;
+	}
+
 	void decompose(Vec3f &trans, Vec3f &rot, Vec3f &scale) const
 	{
 		// Getting translation is trivial
@@ -485,7 +539,6 @@ public:
 			rot.z = atan2f(c[0][1] / scale.x, c[1][1] / scale.y);
 		}
 	}
-
 
 	void setCol(unsigned int col, const Vec4f& v)
 	{

@@ -32,6 +32,8 @@ __interface IRenderable3D : public IObject
 
 	void setVisible(bool _value);
 	bool isVisible() const;
+	void setOpaque(bool _value);
+	bool isOpaque() const;
 	void setDrawOrder(uint32 _order);
 	uint32 getDrawOrder() const;
 };

@@ -251,10 +251,11 @@ void RenderStorage::CreateWoWLayouts()
 	R_VertexLayoutAttrib attribs_GxVBF_PNCT2[5] = { // 44
 		{"position",    0, 3, 0},
 		{"normal",      1, 3, 0},
-		{"color",       2, 1, 0},
+		{"color",       2, 4, 0}, // Original 1 but type is uint8
 		{"tc0",         3, 2, 0},
 		{"tc1",         4, 2, 0}
 	};
+	__layout_GxVBF_PNCT2 = m_RenderDevice->registerVertexLayout(5, attribs_GxVBF_PNCT2); // USED IN MapChunk
 
 	//--
 

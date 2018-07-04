@@ -27,7 +27,6 @@ public:
 
 public:
 	const SmartPtr<IFile> m_File;
-	const vector<SmartPtr<ADT_TextureInfo>>* m_ParentTextures;
 	ADT_MCNK_Header header;
 
 	ADT_MCNK_MCLY mcly[4];
@@ -43,7 +42,6 @@ public:
 		
 	SmartGeomPtr __geomDebugNormals;
 
-
 	// Qulity
 	SmartBufferPtr __ibHigh;
 	uint16  m_IndexesCountHigh;
@@ -53,5 +51,6 @@ public:
 	uint16  m_IndexesCountDefault;
 	SmartGeomPtr __geomDefault;
 
-	CGroupQuality& m_QualitySettings;
+	const ADT*		m_ParentADT;
+	CGroupQuality&	m_QualitySettings;
 };

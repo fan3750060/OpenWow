@@ -30,8 +30,6 @@ inline void FatalMessageBox(const char* _title, const char* _message, ...)
 	va_end(args);
 }
 
-//
-
 #define fail1() \
 { \
 	FatalMessageBox("Assertion failed!", "File: [%s]\nLine: [%d]\nFunction: [%s]\n", __FILE__, __LINE__, __FUNCTION__); \
@@ -43,6 +41,12 @@ inline void FatalMessageBox(const char* _title, const char* _message, ...)
 	FatalMessageBox("Assertion failed!", "File: [%s]\nLine: [%d]\nFunction: [%s]\nDescription: [%s]\n", __FILE__, __LINE__, __FUNCTION__, message); \
     terminate();\
 }
+
+//
+
+#define ASSERTS_ENABLED
+
+#ifdef ASSERTS_ENABLED
 
 #define assert1(expr) \
 if(!(expr))\
@@ -85,3 +89,14 @@ if(!(expr))\
     FatalMessageBox("Assertion failed!", "File: [%s]\nLine: [%d]\nFunction: [%s]\nExpression: [%s]\nDescription: [%s]\nArgument0: [%s]\nArgument1: [%s]\nArgument2: [%s]\nArgument3: [%s]\n", __FILE__, __LINE__, __FUNCTION__, #expr, message, arg0, arg1, arg2, arg3);\
     terminate();\
 }
+
+#else
+
+#define assert1(expr) 
+#define assert2(expr, message) 
+#define assert3(expr, message, arg0) 
+#define assert4(expr, message, arg0, arg1) 
+#define assert5(expr, message, arg0, arg1, arg2)
+#define assert6(expr, message, arg0, arg1, arg2, arg3)
+
+#endif

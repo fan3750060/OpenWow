@@ -45,7 +45,7 @@ public:
 
 	// Map
 	CMCNK_Pass* MCNK_Pass;
-	CMCNK_Divided_Pass* MCNK_Divided_Pass[4];
+	//CMCNK_Divided_Pass* MCNK_Divided_Pass[4];
 	CWDL_LowRes_Pass* WDL_LowRes_Pass;
 
 	// M2

@@ -1,9 +1,9 @@
 #pragma once
 
-class SceneNode : 
+class SceneNode :
 	public CRefItem,
-	public ILoadable, 
-	public IUpdatable, 
+	public ILoadable,
+	public IUpdatable,
 	public IRenderable3D
 {
 public:
@@ -17,11 +17,11 @@ public:
 	void setParent(SceneNode* _parent) { m_Parent = _parent; }
 	SceneNode* getParent() { return m_Parent; }
 	void addChild(SceneNode* _child)
-	{ 
+	{
 		assert1(std::find(m_Childs.begin(), m_Childs.end(), this) == m_Childs.end());
-		m_Childs.push_back(_child); 
+		m_Childs.push_back(_child);
 	}
-	void removeChild(SceneNode* _child) 
+	void removeChild(SceneNode* _child)
 	{
 		if (m_Childs.empty())
 		{
@@ -31,7 +31,7 @@ public:
 		assert1(std::find(m_Childs.begin(), m_Childs.end(), _child) != m_Childs.end());
 		m_Childs.erase(std::remove(m_Childs.begin(), m_Childs.end(), _child), m_Childs.end());
 	}
-	
+
 	cvec3 getTranslate() const { return m_Translate; }
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
@@ -51,7 +51,7 @@ public:
 	virtual bool Delete() override;
 	void setLoaded() override { m_IsLoaded = true; }
 	bool isLoaded() const override { return m_IsLoaded; }
-	
+
 	// IUpdatable
 	virtual void Input(CInput* _input, double _time, double _dTime) override {};
 	virtual void Update(double _time, double _dTime) override {};
@@ -63,6 +63,8 @@ public:
 	virtual void RenderDebug3D() { Render3D(); };
 	void setVisible(bool _value) override { m_IsVisible = _value; }
 	bool isVisible() const override { return m_IsVisible; }
+	void setOpaque(bool _value) override { m_IsOpaque = _value; }
+	bool isOpaque() const override { return m_IsOpaque; }
 	void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
 	uint32 getDrawOrder() const override { return m_DrawOrder; }
 	void setDebugColor(vec4 _value) { m_DebugColor = _value; }
@@ -72,7 +74,7 @@ protected:
 	void CalculateMatrix(bool _isRotationQuat = false);
 
 protected:
-	SceneNode*			m_Parent;
+	SceneNode * m_Parent;
 	vector<SceneNode*>  m_Childs;
 
 	vec3                m_Translate;
@@ -91,6 +93,7 @@ private: // ILoadable
 
 private: // IRenderable
 	bool				m_IsVisible;
+	bool				m_IsOpaque;
 	uint32				m_DrawOrder;
 	vec4				m_DebugColor;
 };
@@ -102,7 +105,7 @@ public:
 		m_Camera(_camera)
 	{}
 
-	bool operator() (const SceneNode* left, const SceneNode* right) const
+	/*bool operator() (const SceneNode* left, const SceneNode* right) const
 	{
 		if (left->getDrawOrder() < right->getDrawOrder())
 		{
@@ -118,8 +121,41 @@ public:
 			float distToCameraRight = (m_Camera->Position - right->getBounds().getCenter()).length();
 			return distToCameraLeft > distToCameraRight;
 		}
+	}*/
+
+	bool operator() (const SceneNode* left, const SceneNode* right) const
+	{
+		if (left->isOpaque() && right->isOpaque())
+		{
+			return left->getDrawOrder() < right->getDrawOrder();
+		}
+		else if (!(left->isOpaque()) && right->isOpaque())
+		{
+			return false;
+		}
+		else if (left->isOpaque() && !(right->isOpaque()))
+		{
+			return true;
+		}
+		else if (!(left->isOpaque()) && !(right->isOpaque()))
+		{
+			if (left->getDrawOrder() < right->getDrawOrder())
+			{
+				return true;
+			}
+			else if (left->getDrawOrder() > right->getDrawOrder())
+			{
+				return false;
+			}
+			else
+			{
+				float distToCameraLeft = (m_Camera->Position - left->getBounds().getCenter()).length() - left->getBounds().getRadius();
+				float distToCameraRight = (m_Camera->Position - right->getBounds().getCenter()).length() - right->getBounds().getRadius();
+				return distToCameraLeft > distToCameraRight;
+			}
+		}
 	}
 
 private:
-	Camera* m_Camera;
+	Camera * m_Camera;
 };

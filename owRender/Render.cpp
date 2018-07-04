@@ -36,11 +36,11 @@ void RenderGL::Init(IOpenGLAdapter* _adapter)
 	//--
 
 	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 4);
+	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
 
 	// Main game camera
 	m_Camera = new Camera;
-	m_Camera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 1.0f, 5000.0f);
+	m_Camera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
 	m_Camera->CreateRenderable();
 }
 

@@ -38,5 +38,7 @@ void WMO_Part_Material::set() const
 
 	_Render->r.setCullMode(m_Proto.flags.IsTwoSided ? RS_CULL_NONE : RS_CULL_BACK);
 
+	//_Render->r.setAlphaToCoverage(true);
+
 	_Render->getRenderStorage()->SetEGxBlend(m_Proto.blendMode);
 }

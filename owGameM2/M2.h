@@ -43,7 +43,7 @@ public:
 	void RenderCollision(cmat4 _worldMatrix);
 	void drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider);
 
-	void animate(uint16 _animationIndex, uint32 _time, uint32 globalTime);
+	void animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
 
 #pragma region Getters
 public:

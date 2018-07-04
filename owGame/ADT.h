@@ -42,6 +42,7 @@ public:
 	const string						m_Name;
 	const SmartPtr<IFile>				m_File;
 	const int							m_IndexX, m_IndexZ;
+	ADT_MHDR							m_Header;
 
 	vector<SmartPtr<ADT_TextureInfo>>	m_Textures;
 

@@ -29,6 +29,7 @@ WMO::~WMO()
 	//
 
 	if (m_TexturesNames) delete[] m_TexturesNames;
+	if (m_DoodadsFilenames) delete[] m_DoodadsFilenames;
 }
 
 void WMO::CreateInsances(CWMO_Base_Instance* _parent)
@@ -205,7 +206,9 @@ bool WMO::Load()
 		}
 		else if (strcmp(fourcc, "MODN") == 0) // List of filenames for M2 (mdx) models that appear in this WMO.
 		{
-			m_DoodadsFilenames = (char*)f->getDataFromCurrent();
+			m_DoodadsFilenames = new char[size + 1];
+			f->readBytes(m_DoodadsFilenames, size);
+			m_DoodadsFilenames[size] = 0x00;
 		}
 		else if (strcmp(fourcc, "MODD") == 0) // Information for doodad instances. 40 bytes per doodad instance, nDoodads entries.
 		{

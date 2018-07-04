@@ -24,7 +24,7 @@ public:
 	~ADT_WMO_Instance();
 
 	// ISceneNode
-	string getObjectInfo() override { return "@ADT_WMO@" + m_Object->getFilename(); }
+	string getObjectInfo() override { return "@ADT_WMO@" + m_Object->getFilename() + "[" + to_string(m_Rotate.x) + "," +  to_string(m_Rotate.y) + "," + to_string(m_Rotate.z) + "]"; }
 
 	// IRenderable3D
 	bool PreRender3D() override;
