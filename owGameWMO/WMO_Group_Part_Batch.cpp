@@ -6,7 +6,7 @@
 // General
 #include "WMO_Group_Part_Batch.h"
 
-WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Group_BatchDef& _proto) :
+WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const SWMO_Group_BatchDef& _proto) :
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),
 	m_Quality(GetSettingsGroup<CGroupQuality>())
@@ -24,6 +24,7 @@ void WMO_Group_Part_Batch::Render()
 	CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->m_WMO_GeometryPass;
 	{
 		pass->SetBlendMode(m_WMOMaterial->getBlendMode());
+
 		_Render->r.drawIndexed
 		(
 			PRIM_TRILIST,

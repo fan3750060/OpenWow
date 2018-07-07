@@ -4,8 +4,8 @@
 
 struct SM2_RibbonEmitter
 {
-	uint32 ribbonId;					// Always (as I have seen): -1.
-	uint32 boneIndex;					// A bone to attach to.
+	int32 ribbonId;					// Always (as I have seen): -1.
+	int32 boneIndex;					// A bone to attach to.
 	vec3 position;						// And a position, relative to that bone.
 
 	M2Array<uint16> textureIndices;		// into m_DiffuseTextures
@@ -25,6 +25,9 @@ struct SM2_RibbonEmitter
 
 	M2Track<uint16> texSlotTrack;
 	M2Track<uint8> visibilityTrack;
+
+	int16_t priorityPlane;
+	uint16_t padding;
 };
 
 //

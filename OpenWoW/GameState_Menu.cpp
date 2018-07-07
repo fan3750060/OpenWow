@@ -183,6 +183,14 @@ void GameState_Menu::RenderUI()
 			_Render->RenderText(vec2(400, 360), "Click to enter");
 		}
 	}
+
+	char buff[256];
+
+	sprintf_s(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
+	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
+
+	sprintf_s(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
+	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 }
 
 //

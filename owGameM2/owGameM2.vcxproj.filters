@@ -94,6 +94,12 @@
     <ClCompile Include="ShaderResolver.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="M2_Part_Attachment.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Part_Event.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="M2_SkinTypes.h">
@@ -186,6 +192,12 @@
     <ClInclude Include="M2_MeshPartID_Provider.h" />
     <ClInclude Include="ShaderResolver.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Attachment.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Part_Event.h">
+      <Filter>Parts</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

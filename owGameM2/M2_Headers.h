@@ -24,40 +24,28 @@ struct SM2_Header
     // Sequences
     M2Array<SM2_Sequence>			sequences;						// Information about the animations in the model.
     M2Array<int16>					sequencesLookup;				// Mapping of sequence IDs to the entries in the Animation sequences block.
-#if VERSION <= VERSION_BC
-	M2Array<uint32>					playable_animation_lookup;		// ???
-#endif
-	
 
     // Bones
     M2Array<SM2_Bone>				bones;                           // MAX_BONES = 0x100
-    M2Array<uint16>					NOTbonesLookup;                     // Lookup table for key skeletal bones.
+    M2Array<uint16>					gameBonesLookup;                 // Lookup table for game bones
 
     // Vertices
     M2Array<SM2_Vertex>				vertices;
 
 	// Skin
-#if VERSION <= VERSION_BC
-	M2Array<SM2_SkinProfile>		skin_profiles;					// Views (LOD) are now in .m_SkinSections.
-#else
-	uint32_t num_skin_profiles; 
-#endif
-
+	uint32_t						num_skin_profiles; 
 
     // Materials
     M2Array<SM2_Color>				colors;							// Color and alpha animations definitions.
     M2Array<SM2_Texture>			textures;
     M2Array<SM2_TextureWeight>		textureWeights;
-#if VERSION <= VERSION_BC
-	M2Array<void>					unk0;
-#endif
 	M2Array<SM2_TextureTransform>	textureTransforms;
 
     M2Array<uint16>					replacable_texture_lookup;		// ???
     M2Array<SM2_Material>			materials;						// Blending modes / render flags.
-	M2Array<uint16>					bone_lookup_table;				// ???	
+	M2Array<uint16>					bonesLookup;
     M2Array<uint16>					textureLookup;
-	M2Array<uint16>					textureUnitLookup;			// -1 env mapping, 0, 1 - indexes
+	M2Array<uint16>					textureUnitLookup;				// -1 env mapping, 0, 1 - indexes
     M2Array<uint16>					textureWeightsLookup;
     M2Array<uint16>					textureTransformsLookup;
 
@@ -73,24 +61,19 @@ struct SM2_Header
     M2Array<vec3>					collisionVertices;
     M2Array<vec3>					collisionNormals;
 
-
     // Attachments
-    M2Array<M2Attachment>			attachments;
+    M2Array<SM2_Attachment>			attachments;
     M2Array<uint16>					attachmentLookup;
 
-
     // Events
-    M2Array<M2Event>				events;
-
+    M2Array<SM2_Event>				events;
 
     // Light
     M2Array<SM2_Light>				lights;
 
-
     // Camara
     M2Array<SM2_Camera>				cameras;
     M2Array<uint16>					camerasLookup;
-
 
     // Emitters and particles
     M2Array<SM2_RibbonEmitter>		ribbon_emitters;
@@ -101,12 +84,5 @@ struct SM2_Header
 #endif
 
 };
-
-
-///////////////////
-///////////////////
-///////////////////
-
-#define	TEXTURE_MAX	128
 
 #include __PACK_END

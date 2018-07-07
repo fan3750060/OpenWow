@@ -81,15 +81,8 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
     BLPHeader header;
     f->readBytes(&header, 148);
 
-	if (header.width & (header.width - 1)) // TODO
-	{
-		return nullptr;
-	}
-
-	if (header.height & (header.height - 1))
-	{
-		return nullptr;
-	}
+	if (header.width & (header.width - 1)) return nullptr;
+	if (header.height & (header.height - 1)) return nullptr;
 
     assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
     assert1(header.type == 1);

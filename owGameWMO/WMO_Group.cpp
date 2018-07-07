@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-// Additional
+// Include
 #include "WMO.h"
-#include "WMO_Base_Instance.h"
+#include "WMO_Group_Instance.h"
 
 // General
 #include "WMO_Group.h"
 
-// Include 
+// Additional 
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
 
@@ -17,8 +17,6 @@ WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _gr
 	m_GroupIndex(_groupIndex),
 	m_F(_groupFile),
 	m_IsMOCVExists(false),
-	m_PortalsVis(true),
-	m_Calculated(false),
 	m_Quality(GetSettingsGroup<CGroupQuality>())
 {
 	m_WMOLiqiud = nullptr;
@@ -28,27 +26,29 @@ WMO_Group::~WMO_Group()
 {
 }
 
-void WMO_Group::CreateInsances(CWMO_Base_Instance* _parent)
+void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
 {
-	if (m_WMOLiqiud != nullptr)
+	if (m_WMOLiqiud.getPtr() != nullptr)
 	{
 		vec3 realPos = m_LiquidHeader.pos.toXZmY();
 		realPos.y = 0.0f; // why they do this???
 
 		CWMO_Liquid_Instance* liquid = new CWMO_Liquid_Instance(_parent, m_WMOLiqiud, realPos, this);
-		_parent->AddWMOLiquidInstance(liquid);
+		// add to scene node is automaticly
 	}
 
 	for (auto& index : m_DoodadsPlacementIndexes)
 	{
-		const WMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
+		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
 
 		SmartPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
+		CWMO_Doodad_Instance* instance = nullptr;
 		if (mdx)
 		{
-			CWMO_Doodad_Instance* instance = new CWMO_Doodad_Instance(_parent, mdx, index, placement, this);
-			_parent->AddDoodadInstance(instance);
+			instance = new CWMO_Doodad_Instance(_parent, mdx, index, placement);
+			// add to scene node is automaticly
 		}
+		_parent->addDoodadInstance(instance);
 	}
 }
 
@@ -85,17 +85,17 @@ void WMO_Group::Load()
 		else if (strcmp(fourcc, "MOGP") == 0)
 		{
 			// The MOGP chunk size will be way more than the header variables!
-			nextpos = m_F->getPos() + sizeof(WMO_Group_HeaderDef);
+			nextpos = m_F->getPos() + sizeof(SWMO_Group_HeaderDef);
 
-			m_F->readBytes(&m_Header, sizeof(WMO_Group_HeaderDef));
+			m_F->readBytes(&m_Header, sizeof(SWMO_Group_HeaderDef));
 
 			// Bounds
 			m_Bounds.set(m_Header.boundingBox.min, m_Header.boundingBox.max, true);
 		}
 		else if (strcmp(fourcc, "MOPY") == 0) // Material info for triangles
 		{
-			uint32 materialsInfoCount = size / sizeof(WMO_Group_MaterialDef);
-			WMO_Group_MaterialDef* materialsInfo = (WMO_Group_MaterialDef*)m_F->getDataFromCurrent();
+			uint32 materialsInfoCount = size / sizeof(SWMO_Group_MaterialDef);
+			SWMO_Group_MaterialDef* materialsInfo = (SWMO_Group_MaterialDef*)m_F->getDataFromCurrent();
 			for (uint32 i = 0; i < materialsInfoCount; i++)
 			{
 				m_MaterialsInfo.push_back(materialsInfo[i]);
@@ -145,10 +145,10 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // WMO_Group_Batch
 		{
-			for (uint32 i = 0; i < size / sizeof(WMO_Group_BatchDef); i++)
+			for (uint32 i = 0; i < size / sizeof(SWMO_Group_BatchDef); i++)
 			{
-				WMO_Group_BatchDef batchDef;
-				m_F->readBytes(&batchDef, sizeof(WMO_Group_BatchDef));
+				SWMO_Group_BatchDef batchDef;
+				m_F->readBytes(&batchDef, sizeof(SWMO_Group_BatchDef));
 
 				SmartPtr<WMO_Group_Part_Batch> batch = new WMO_Group_Part_Batch(m_ParentWMO, batchDef);
 				m_WMOBatchIndexes.push_back(batch);
@@ -208,7 +208,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MLIQ") == 0) // Liquid
 		{
-			m_F->readBytes(&m_LiquidHeader, sizeof(WMO_Group_MLIQDef));
+			m_F->readBytes(&m_LiquidHeader, sizeof(SWMO_Group_MLIQDef));
 
 			if (m_Header.liquidType > 0)
 			{
@@ -225,6 +225,9 @@ void WMO_Group::Load()
 		}
 		m_F->seek(nextpos);
 	}
+
+	delete m_F;
+	m_F = nullptr;
 
 	//
 
@@ -295,28 +298,42 @@ void WMO_Group::initLighting()
 
 
 
-void WMO_Group::Render(cmat4 _worldMatrix, const WMO_Doodad_SetInfo& _doodadSet)
+void WMO_Group::Render(cmat4 _world) const
 {
-	if (!m_PortalsVis)
-	{
-		return;
-	}
+	//if (m_Header.flags.IS_OUTDOOR) _Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	_Render->r.setDepthMask(true);
+	_Render->r.setDepthTest(true);
 
-	// GROUPS
 	_Render->r.setGeometry(__geom);
 
-	CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->m_WMO_GeometryPass;
+	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
 	{
-		// Vertex colors
-		pass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
-
-		// Ambient color
-		pass->SetUseAmbColor(m_Quality.WMO_AmbColor);
-		pass->SetAmbColor(m_ParentWMO->m_Header.getAmbColor());
-
-		for (auto it : m_WMOBatchIndexes)
+		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->m_WMO_GeometryPass;
+		pass->Bind();
 		{
-			it->Render();
+			pass->SetWorldMatrix(_world);
+
+			// Vertex colors
+			pass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
+
+			// Ambient color
+			pass->SetUseAmbColor(m_Quality.WMO_AmbColor);
+			pass->SetAmbColor(m_ParentWMO->m_Header.getAmbColor());
+
+			for (auto it : m_WMOBatchIndexes)
+			{
+				it->Render();
+			}
 		}
+		pass->Unbind();
+
+
 	}
+	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
+
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
+	_Render->r.setDepthMask(true);
+	_Render->r.setDepthTest(true);
 }

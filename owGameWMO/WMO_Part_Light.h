@@ -13,13 +13,12 @@ enum LightType
 class WMO_Part_Light : public CRefItem
 {
 public:
-	WMO_Part_Light(const WMO_LightDef& _proto);
+	WMO_Part_Light(const SWMO_LightDef& _proto);
 
 	void setup(uint32 light);
 
 public:
 	vec4 fcolor;
 
-public:
-	WMO_LightDef lightDef;
+	SWMO_LightDef lightDef;
 };

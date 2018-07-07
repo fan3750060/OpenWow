@@ -47,11 +47,11 @@ class SkyParams
 public:
     void Clear()
     {
-        for (uint8 i = 0; i < LIGHT_COLORS_COUNT; i++)
+        for (uint8 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
         {
             m_InterpolatedColors[i] = vec3();
         }
-        for (uint8 i = 0; i < LIGHT_FOGS_COUNT; i++)
+        for (uint8 i = 0; i < LightFogs::LIGHT_FOGS_COUNT; i++)
         {
             m_InterpolatedFogs[i] = 0.0f;
         }
@@ -65,10 +65,10 @@ public:
 
     SkyParams& operator+=(const SkyParams& _s)
     {
-        for (uint8 i = 0; i < LIGHT_COLORS_COUNT; i++)
+        for (uint8 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
             this->m_InterpolatedColors[i] += _s.m_InterpolatedColors[i];
 
-        for (uint8 i = 0; i < LIGHT_FOGS_COUNT; i++)
+        for (uint8 i = 0; i < LightFogs::LIGHT_FOGS_COUNT; i++)
             this->m_InterpolatedFogs[i] += _s.m_InterpolatedFogs[i];
 
         this->m_glow += _s.m_glow;
@@ -82,10 +82,10 @@ public:
 
     SkyParams& operator*=(float _weight)
     {
-        for (uint8 i = 0; i < LIGHT_COLORS_COUNT; i++)
+        for (uint8 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
             this->m_InterpolatedColors[i] *= _weight;
 
-        for (uint8 i = 0; i < LIGHT_FOGS_COUNT; i++)
+        for (uint8 i = 0; i < LightFogs::LIGHT_FOGS_COUNT; i++)
             this->m_InterpolatedFogs[i] *= _weight;
 
         this->m_glow *= _weight;
@@ -98,8 +98,8 @@ public:
     }
 
 public: // Params
-    vec3                      m_InterpolatedColors[LIGHT_COLORS_COUNT];
-    float                     m_InterpolatedFogs[LIGHT_FOGS_COUNT];
+    vec3                      m_InterpolatedColors[LightColors::LIGHT_COLORS_COUNT];
+    float                     m_InterpolatedFogs[LightFogs::LIGHT_FOGS_COUNT];
     float                     m_glow;
     float                     m_waterShallowAlpha;
     float                     m_waterDeepAlpha;
@@ -130,8 +130,8 @@ public:
     __DBC_FOREIGN_KEY_ID(uint32, DBC_LightSkybox, m_lightSkyboxID);
 
 private:
-    vector<SkyParam<vec3>>    m_IntBand_Colors[LIGHT_COLORS_COUNT];
-    vector<SkyParam<float>>   m_FloatBand_Fogs[LIGHT_FOGS_COUNT];
+    vector<SkyParam<vec3>>    m_IntBand_Colors[LightColors::LIGHT_COLORS_COUNT];
+    vector<SkyParam<float>>   m_FloatBand_Fogs[LightFogs::LIGHT_FOGS_COUNT];
 
 private:
     DBC_LightRecord m_LightRecord;

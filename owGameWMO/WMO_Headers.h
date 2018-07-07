@@ -2,10 +2,7 @@
 
 #include __PACK_BEGIN
 
-#pragma region WMO
-
-// HEADER
-struct WMO_HeaderDef
+struct SWMO_HeaderDef
 {
 	uint32 nTextures;
 	uint32 nGroups;
@@ -17,17 +14,17 @@ struct WMO_HeaderDef
 	CArgb ambColor;
 	__DBC_FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOID, wmoID);
 	CAaBox bounding_box;
-
 	struct Flags
 	{
-		uint16 FLAG_attenuate_vertices_based_on_distance_to_portal : 1;
-		uint16 FLAG_skip_base_color : 1;                       // do not add base (ambient) color (of MOHD) to MOCVs. apparently does more, e.g. required for multiple MOCVs
-		uint16 FLAG_use_liquid_type_dbc_id : 1;                // use real liquid type ID from DBCs instead of local one. See MLIQ for further reference.
-		uint16 FLAG_lighten_interiors : 1;                     // makes iterior groups much brighter, effects MOCV rendering. Used e.g.in Stormwind for having shiny bright interiors,
+		uint16 attenuate_vertices_based_on_distance_to_portal : 1;	// delete vertexes
+		uint16 skip_base_color : 1;									// do not add base (ambient) color (of MOHD) to MOCVs. apparently does more, e.g. ~!required!~ for multiple MOCVs
+		uint16 use_liquid_type_dbc_id : 1;							// use real liquid type ID from DBCs instead of local one. See MLIQ for further reference.
+		uint16 lighten_interiors : 1;								// makes iterior groups much brighter, effects MOCV rendering. Used e.g.in Stormwind for having shiny bright interiors,
 		uint16 : 12;
 	} flags;
+	uint16 unk0;										  // ≥ Legion (21108) includes base lod (→ numLod = 3 means '.wmo', 
 
-	uint16 numLod;                                             // ≥ Legion (21108) includes base lod (→ numLod = 3 means '.wmo', 'lod0.wmo' and 'lod1.wmo')
+	//--
 
 	vec4 getAmbColor() const
 	{
@@ -41,7 +38,7 @@ struct WMO_HeaderDef
 	}
 };
 
-struct WMO_MaterialDef
+struct SWMO_MaterialDef
 {
 	struct Flags
 	{
@@ -56,13 +53,13 @@ struct WMO_MaterialDef
 		uint32 : 24;
 	} flags;
 
-	uint32 shader;                 // Index into CMapObj::s_wmoShaderMetaData. See below (shader types).
+	uint32 shader;								// Index into CMapObj::s_wmoShaderMetaData. See below (shader types).
 	uint32 blendMode;
 
-	uint32 diffuseNameIndex;       // offset into MOTX
+	uint32 diffuseNameIndex;					// offset into MOTX
 
-	CBgra emissive_color;        // emissive color; see below (emissive color)
-	CBgra sidn_emissive_color;   // set at runtime; gets sidn-manipulated emissive color; see below (emissive color)
+	CBgra emissive_color;						// emissive color; see below (emissive color)
+	CBgra sidn_emissive_color;					// set at runtime; gets sidn-manipulated emissive color; see below (emissive color)
 
 	uint32 envNameIndex;
 
@@ -71,20 +68,20 @@ struct WMO_MaterialDef
 	__DBC_FOREIGN_KEY_ID(uint32, DBC_TerrainType, ground_type);
 
 	uint32 texture_2;
-
 	uint32 color_2;
 	uint32 flags_2;
+
 	uint32 unk0[4];
 };
 
-struct WMO_PortalDef
+struct SWMO_PortalDef
 {
 	uint16 startVertex;
 	uint16 count;
 	C4Plane plane;
 };
 
-struct WMO_PortalReferencesDef
+struct SWMO_PortalReferencesDef
 {
 	uint16 portalIndex;  // into MOPR
 	uint16 groupIndex;   // the other one
@@ -92,13 +89,13 @@ struct WMO_PortalReferencesDef
 	uint16 unk0;
 };
 
-struct WMO_VisibleBlockListDef
+struct SWMO_VisibleBlockListDef
 {
 	uint16 firstVertex;
 	uint16 count;
 };
 
-struct WMO_LightDef
+struct SWMO_LightDef
 {
 	uint8 type;
 	uint8 useAtten;
@@ -113,9 +110,9 @@ struct WMO_LightDef
 
 // Doodads
 
-struct WMO_Doodad_SetInfo
+struct SWMO_Doodad_SetInfo
 {
-	WMO_Doodad_SetInfo() :
+	SWMO_Doodad_SetInfo() :
 		name("none"),
 		start(UINT32_MAX),
 		size(UINT32_MAX)
@@ -132,7 +129,7 @@ struct WMO_Doodad_SetInfo
 	}
 };
 
-struct WMO_Doodad_PlacementInfo
+struct SWMO_Doodad_PlacementInfo
 {
 	struct Flags
 	{
@@ -158,7 +155,7 @@ struct WMO_Doodad_PlacementInfo
 	}
 };
 
-struct WMO_FogDef
+struct SWMO_FogDef
 {
 	struct Flags
 	{
@@ -184,120 +181,5 @@ struct WMO_FogDef
 		CBgra color;
 	} underwater_fog;
 };
-
-#pragma endregion
-
-
-#pragma region WMO Group
-
-struct WMOGroupFlags
-{
-	uint32 HAS_COLLISION : 1;                  // = 0x1			//Has MOBN and MOBR chunk.
-	uint32 UNK_0x2 : 1;                        // = 0x2			// UNUSED
-	uint32 HAS_VERTEX_COLORS : 1;              // = 0x4			//Has vertex colors(MOCV chunk).
-	uint32 IS_OUTDOOR : 1;                     // = 0x8			//EXTERIOR -- Outdoor
-
-	uint32 UNK_0x10 : 1;                       // = 0x10			(UNUSED: 20740)
-	uint32 UNK_0x20 : 1;                       // = 0x20			(UNUSED: 20740)
-	uint32 DO_NOT_USE_LIGHTING_DIFFUSE : 1;    // = 0x40			//Do not use local diffuse lightning .Applicable for both doodads from this wmo group(color from MODD) and water(CWorldView::GatherMapObjDefGroupLiquids).
-	uint32 IS_UNREACHABLE : 1;                 // = 0x80			//UNREACHABLE
-
-	uint32 UNK_0x100 : 1;                      // = 0x100
-	uint32 HAS_LIGHTS : 1;                     // = 0x200		    // Has m_Lights (MOLR chunk)
-	uint32 UNK_0x400 : 1;                      // = 0x400
-	uint32 HAS_DOODADS : 1;                    // = 0x800		    // Has doodads(MODR chunk)
-
-	uint32 HAS_WATER : 1;                      // = 0x1000		    //LIQUIDSURFACE -- Has water(MLIQ chunk)
-	uint32 IS_INDOOR : 1;                      // = 0x2000		    //INTERIOR -- Indoor
-	uint32 UNK_0x4000 : 1;                     // = 0x4000
-	uint32 UNK_0x8000 : 1;                     // = 0x8000
-
-	uint32 ALWAYS_DRAW : 1;                    // = 0x10000		//ALWAYSDRAW -- clear 0x8 after CMapObjGroup::Create() in MOGP and MOGI
-	uint32 UNK_0x20000 : 1;                    // = 0x20000		Has MORI and MORB chunks.
-	uint32 HAS_SKYBOX : 1;                     // = 0x40000		//Show m_Skybox -- automatically unset if MOSB not present.
-	uint32 UNK_0x80000 : 1;                    // = 0x80000		is_not_water_but_ocean, LiquidType related, see below in the MLIQ chunk.
-
-	uint32 UNK_0x100000 : 1;
-	uint32 UNK_0x200000 : 1;
-	uint32 UNK_0x400000 : 1;
-	uint32 UNK_0x800000 : 1;
-
-	uint32 : 8;
-};
-
-//-----
-
-struct WMO_Group_HeaderDef
-{
-	uint32 groupName;
-	uint32 descriptiveGroupName;
-	WMOGroupFlags flags;
-	CAaBox boundingBox;
-
-	uint16 portalStart; // Index into the MOPR chunk
-	uint16 portalCount; // Number of items used from the MOPR chunk
-
-	// Batches
-	uint16 transBatchCount;
-	uint16 intBatchCount;
-	uint16 extBatchCount;
-	uint16 unk0;
-
-	uint8 m_Fogs[4]; // Up to four indices into the WMO fog list
-	uint32 liquidType; // LiquidType related, see below in the MLIQ chunk.
-
-	__DBC_FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOGroupID, wmoGroupId);
-
-	uint32 unk1;
-	uint32 unk2;
-};
-
-struct WMO_Group_MaterialDef
-{
-	struct Flags
-	{
-		uint8 UNK_0x01 : 1;
-		uint8 NOCAMCOLLIDE : 1;
-		uint8 DETAIL : 1;
-		uint8 COLLISION : 1; // Turns off rendering of water ripple effects. May also do more. Should be used for ghost material triangles.
-		uint8 HINT : 1;
-		uint8 RENDER : 1;
-		uint8 UNK_0x40 : 1;
-		uint8 COLLIDE_HIT : 1;
-	} flags;
-	uint8 materialId; // 0xff for collision
-
-	bool isTransFace() { return flags.UNK_0x01 && (flags.DETAIL || flags.RENDER); }
-	bool isColor() { return !flags.COLLISION; }
-	bool isRenderFace() { return flags.RENDER && !flags.DETAIL; }
-	bool isCollidable() { return flags.COLLISION || isRenderFace(); }
-};
-
-struct WMO_Group_BatchDef
-{
-	int16 bx, by, bz;                      // a bounding box for culling, see "unknown_box" below
-	int16 tx, ty, tz;
-
-	uint32 indexStart;
-	uint16 indexCount;
-
-	uint16 vertexStart;
-	uint16 vertexEnd;
-
-	uint8 flags;
-	uint8 material_id; // index in MOMT
-
-	uint16 getVerticesCount() const { return vertexEnd - vertexStart; }
-};
-
-struct WMO_Group_MLIQDef
-{
-	uint32 X, Y;
-	uint32 A, B;
-	vec3 pos;
-	uint16 type;
-};
-
-#pragma endregion
 
 #include __PACK_END

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "WMO.h"
-#include "WMO_InstanceController.h"
+#include "WMO_Group_Instance.h"
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
 
@@ -14,9 +14,16 @@ public:
 	// WMO_Base_Instance
 	WMO* getObject() { return m_Object; }
 	void InitTransform();
-	void InitDefault();
-	void AddDoodadInstance(CWMO_Doodad_Instance* _doodad) { m_WMODoodads.push_back(_doodad); }
-	void AddWMOLiquidInstance(CWMO_Liquid_Instance* _doodad) { m_WMOLiquids.push_back(_doodad); }
+	void EmptyTransformAndBounds();
+
+	void AddGroupInstance(CWMO_Group_Instance* _group) { m_GroupInstances.push_back(_group); }
+	vector<CWMO_Group_Instance*>& getGroupInstances() { return m_GroupInstances; }
+
+	void AddOutdoorGroupInstance(CWMO_Group_Instance* _group) { m_OutdoorGroupInstances.push_back(_group); }
+	vector<CWMO_Group_Instance*>& getGroupOutdoorInstances() { return m_OutdoorGroupInstances; }
+
+	cmat4 getInvWorld() const { return m_InvWorld; }
+	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
 	// ISceneNode
 	string getObjectInfo() override { return "@WMO_Base@" + m_Object->getFilename(); }
@@ -30,11 +37,13 @@ public:
 
 protected:
 	const SmartWMOPtr						m_Object;
-	CWMO_InstanceController*				m_InstanceController;
-	WMO_Doodad_SetInfo						m_DoodadSetInfo;
+	SWMO_Doodad_SetInfo						m_DoodadSetInfo;
 
-	vector<SmartPtr<CWMO_Doodad_Instance>>	m_WMODoodads;
-	vector<SmartPtr<CWMO_Liquid_Instance>>	m_WMOLiquids;
+	mat4									m_InvWorld;
+	vector<vec3>							m_ConvertedVerts;
+	
+	vector<CWMO_Group_Instance*>			m_GroupInstances;
+	vector<CWMO_Group_Instance*>			m_OutdoorGroupInstances;
 
 	const CGroupQuality&					m_QualitySettings;
 };

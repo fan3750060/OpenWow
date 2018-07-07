@@ -10,7 +10,8 @@ CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent) :
 	m_MeshProvider(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
 	m_Time(0.0f),
-	m_DTime(0.0f)
+	m_DTime(0.0f),
+	m_DoodadColor(vec4(1.0f, 1.0f, 1.0f, 1.0f))
 {
 	setDrawOrder(21);
 }
@@ -21,7 +22,10 @@ CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, M2* _m2Object) :
 	m_Animator(nullptr),
 	m_NeedRecalcAnimation(true),
 	m_MeshProvider(nullptr),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
+	m_Time(0.0f),
+	m_DTime(0.0f),
+	m_DoodadColor(vec4(1.0f, 1.0f, 1.0f, 1.0f))
 {
 	assert1(m_Object);
 
@@ -99,5 +103,7 @@ void CM2_Base_Instance::Render3D()
 		//}
 	}
 
-	m_Object->Render(getAbsTrans(), m_MeshProvider);
+	//_Render->DrawBoundingBox(getBounds());
+
+	m_Object->Render(getAbsTrans(), m_MeshProvider, m_DoodadColor);
 }

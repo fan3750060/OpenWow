@@ -36,7 +36,7 @@ void RenderGL::Init(IOpenGLAdapter* _adapter)
 	//--
 
 	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 0);
+	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 4);
 
 	// Main game camera
 	m_Camera = new Camera;
@@ -233,12 +233,12 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool ro
 {
 	// Transform
 	mat4 worldTransform;
-	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
+	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.1f);
 	if (rotate)
 	{
 		worldTransform.rotate(vec3(0.0f, Math::Pi, 0.0f)); // FIXME
 	}
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
+	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();

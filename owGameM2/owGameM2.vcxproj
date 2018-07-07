@@ -14,6 +14,8 @@
     <ClCompile Include="M2_Animation.cpp" />
     <ClCompile Include="M2_Animator.cpp" />
     <ClCompile Include="M2_MeshPartID_Provider.cpp" />
+    <ClCompile Include="M2_Part_Attachment.cpp" />
+    <ClCompile Include="M2_Part_Event.cpp" />
     <ClCompile Include="M2_Part_Material.cpp" />
     <ClCompile Include="M2_Part_Texture.cpp" />
     <ClCompile Include="M2_Builder.cpp" />
@@ -46,6 +48,8 @@
     <ClInclude Include="M2_Animation.h" />
     <ClInclude Include="M2_Animator.h" />
     <ClInclude Include="M2_MeshPartID_Provider.h" />
+    <ClInclude Include="M2_Part_Attachment.h" />
+    <ClInclude Include="M2_Part_Event.h" />
     <ClInclude Include="M2_Part_Material.h" />
     <ClInclude Include="M2_Part_Texture.h" />
     <ClInclude Include="common.h" />

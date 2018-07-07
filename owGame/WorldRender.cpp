@@ -7,7 +7,7 @@
 
 WorldRender::WorldRender(WorldController * _WorldContoller)	: 
 	m_WorldContoller(_WorldContoller),
-	groupVideo(GetSettingsGroup<CGroupVideo>()),
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>()),
 	groupQuality(GetSettingsGroup<CGroupQuality>())
 {
 	_Bindings->RegisterRenderable3DObject(this, 6);
@@ -53,7 +53,7 @@ void WorldRender::RenderPostprocess()
 
 	if (groupQuality.drawfog)
 	{
-		float fogDist = m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE);
+		float fogDist = m_WorldContoller->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_DISTANCE);
 		groupQuality.UpdateByFog(fogDist);
 
 		DSFogRenderPass();
@@ -87,9 +87,9 @@ void WorldRender::DSFogRenderPass()
 	_Render->getTechniquesMgr()->Postprocess_Fog->Bind();
 	_Render->getTechniquesMgr()->Postprocess_Fog->SetCameraPos(_Render->getCamera()->Position);
 
-	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogDistance(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_DISTANCE));
-	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogModifier(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LIGHT_FOG_MULTIPLIER));
-	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogColor(m_WorldContoller->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_FOG));
+	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogDistance(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_DISTANCE));
+	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogModifier(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_MULTIPLIER));
+	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogColor(m_WorldContoller->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_FOG));
 
 	_Render->r.setDepthTest(false);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);

@@ -9,7 +9,7 @@
 
 TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice), 
-	groupVideo(GetSettingsGroup<CGroupVideo>())
+	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 	// Debug
 
@@ -98,20 +98,20 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 	Postprocess_Light_Direction = new CPOST_DirectionalLight(m_RenderDevice);
 	Postprocess_Light_Direction->Bind();
-	Postprocess_Light_Direction->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
+	Postprocess_Light_Direction->SetScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Light_Direction->SetMatSpecularPower(16);
 	Postprocess_Light_Direction->Unbind();
 	m_PostTechniques.push_back(Postprocess_Light_Direction);
 
 	Postprocess_Fog = new CPOST_Fog(m_RenderDevice);
 	Postprocess_Fog->Bind();
-	Postprocess_Fog->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
+	Postprocess_Fog->SetScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Fog->Unbind();
 	m_PostTechniques.push_back(Postprocess_Fog);
 
 	Postprocess_Simple = new CPOST_Simple(m_RenderDevice);
 	Postprocess_Simple->Bind();
-	Postprocess_Simple->SetScreenSize(groupVideo.windowSizeX, groupVideo.windowSizeY);
+	Postprocess_Simple->SetScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Simple->Unbind();
 	m_PostTechniques.push_back(Postprocess_Simple);
 

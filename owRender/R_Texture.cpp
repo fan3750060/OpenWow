@@ -210,7 +210,7 @@ bool R_Texture::getTextureData(int _slice, int _mipLevel, void* _buffer)
 
 	int fmt, type, compressed = 0;
 	glActiveTexture(GL_TEXTURE15);
-	glBindTexture(type, m_GLObj);
+	glBindTexture(m_Type, m_GLObj);
 
 	switch (m_Format)
 	{
@@ -241,7 +241,7 @@ bool R_Texture::getTextureData(int _slice, int _mipLevel, void* _buffer)
 		glGetTexImage(target, _mipLevel, fmt, type, _buffer);
 	}
 
-	glBindTexture(type, 0);
+	glBindTexture(m_Type, 0);
 	if (m_RenderDevice->m_TextureSlot[15].m_Texture)
 	{
 		glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);

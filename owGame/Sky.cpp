@@ -27,12 +27,12 @@ Sky::Sky(DBC_LightRecord data) :
 
 void Sky::LoadParams(LightParamsNames _param)
 {
-    for (uint32 i = 0; i < LIGHT_COLORS_COUNT; i++)
+    for (uint32 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
     {
         m_IntBand_Colors[i].clear();
     }
 
-    for (uint32 i = 0; i < LIGHT_FOGS_COUNT; i++)
+    for (uint32 i = 0; i < LightFogs::LIGHT_FOGS_COUNT; i++)
     {
         m_FloatBand_Fogs[i].clear();
     }
@@ -43,9 +43,9 @@ void Sky::LoadParams(LightParamsNames _param)
     //-- Color params
     //-----------------------------------------------
 
-    for (uint32 i = 0; i < LIGHT_COLORS_COUNT; i++)
+    for (uint32 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
     {
-        DBC_LightIntBandRecord* lightColorsRecord = DBC_LightIntBand[paramSet * LIGHT_COLORS_COUNT - (LIGHT_COLORS_COUNT - 1) + i];
+        DBC_LightIntBandRecord* lightColorsRecord = DBC_LightIntBand[paramSet * LightColors::LIGHT_COLORS_COUNT - (LightColors::LIGHT_COLORS_COUNT - 1) + i];
         if (lightColorsRecord == nullptr)
         {
             Log::Error("Color record for [%d] not fornd. SkyID [%d]", i, m_LightRecord.Get_ID());
@@ -63,9 +63,9 @@ void Sky::LoadParams(LightParamsNames _param)
     //-- Fog, Sun, Clouds param
     //-----------------------------------------------
 
-    for (uint32 i = 0; i < LIGHT_FOGS_COUNT; i++)
+    for (uint32 i = 0; i < LightFogs::LIGHT_FOGS_COUNT; i++)
     {
-        DBC_LightFloatBandRecord* lightFogRecord = DBC_LightFloatBand[paramSet * LIGHT_FOGS_COUNT - (LIGHT_FOGS_COUNT - 1) + i];
+        DBC_LightFloatBandRecord* lightFogRecord = DBC_LightFloatBand[paramSet * LightFogs::LIGHT_FOGS_COUNT - (LightFogs::LIGHT_FOGS_COUNT - 1) + i];
         if (lightFogRecord == nullptr)
         {
             Log::Error("Fog record for [%d] not fornd. SkyID [%d]", i, m_LightRecord.Get_ID());
@@ -76,7 +76,7 @@ void Sky::LoadParams(LightParamsNames _param)
         for (uint32 l = 0; l < lightFogRecord->Get_Count(); l++)
         {
             float param = lightFogRecord->Get_Values(l);
-            if (i == LIGHT_FOG_DISTANCE)
+            if (i == LightFogs::LIGHT_FOG_DISTANCE)
             {
                 param /= 36.0f;
             }
@@ -112,11 +112,11 @@ void Sky::LoadParams(LightParamsNames _param)
 
 SkyParams& Sky::GetByTime(uint32 _time)
 {
-    for (uint8 i = 0; i < LIGHT_COLORS_COUNT; i++)
+    for (uint8 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
     {
         m_InterpolatedColors[i] = GetByTimeTemplate(m_IntBand_Colors, i, _time);
     }
-    for (uint8 i = 0; i < LIGHT_FOGS_COUNT; i++)
+    for (uint8 i = 0; i < LightFogs::LIGHT_FOGS_COUNT; i++)
     {
         m_InterpolatedFogs[i] = GetByTimeTemplate(m_FloatBand_Fogs, i, _time);
     }

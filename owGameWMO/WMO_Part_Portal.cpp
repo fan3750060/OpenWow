@@ -3,15 +3,15 @@
 // Include
 #include "WMO.h"
 #include "WMO_Group.h"
-#include "WMO_InstanceController.h"
+#include "WMO_Base_Instance.h"
 
 // General
 #include "WMO_Part_Portal.h"
 
-CWMO_Part_Portal::CWMO_Part_Portal(const WMO* _parentWMO, const WMO_PortalDef& _proto) :
+CWMO_Part_Portal::CWMO_Part_Portal(const WMO* _parentWMO, const SWMO_PortalDef& _proto) :
 	m_ParentWMO(_parentWMO),
-	m_GrInner(nullptr),
-	m_GrOuter(nullptr)
+	m_GrInner(-1),
+	m_GrOuter(-1)
 {
 	m_StartVertex = _proto.startVertex;
 	m_Count = _proto.count;
@@ -56,16 +56,14 @@ void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
-void CWMO_Part_Portal::setGroup(WMO_Group * _group, int16 side)
+void CWMO_Part_Portal::setGroup(int32 _group, int16 side)
 {
 	if (side == 1)
 	{
-		assert1(m_GrInner == nullptr);
 		m_GrInner = _group;
 	}
 	else if (side == -1)
 	{
-		assert1(m_GrOuter == nullptr);
 		m_GrOuter = _group;
 	}
 	else
@@ -74,7 +72,7 @@ void CWMO_Part_Portal::setGroup(WMO_Group * _group, int16 side)
 	}
 }
 
-bool CWMO_Part_Portal::IsVisible(CWMO_InstanceController* _localContr, const Plane* _planes, uint32 _planesCount) const
+bool CWMO_Part_Portal::IsVisible(CWMO_Base_Instance* _localContr, const Plane* _planes, uint32 _planesCount) const
 {
 	if (_planes == nullptr || _planesCount == 0)
 	{

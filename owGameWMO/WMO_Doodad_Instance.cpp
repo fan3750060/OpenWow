@@ -3,11 +3,18 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
-CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, uint32 _index, const WMO_Doodad_PlacementInfo& _placement, const WMO_Group* _group) :
+CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
 	CM2_Base_Instance(_parent, _mdxObject),
 	m_Index(_index),
-	m_Group(_group)
+	m_PortalVis(true)
 {
+	if (_mdxObject->getFilename().find("LD_LIGHTSHAFT") != -1)
+	{
+		Log::Green("MODEL [%s] contains color [%f, %f, %f, %f]", _mdxObject->getFilename().c_str(), _placement.getColor().x, _placement.getColor().y, _placement.getColor().z, _placement.getColor().w);
+	}
+
+	//m_DoodadColor = _placement.getColor();
+
 	//m_Object->setDoodadColor(_placement.getColor());
 	// Scene node params
 	{
@@ -36,7 +43,7 @@ CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
 
 bool CWMO_Doodad_Instance::PreRender3D()
 {
-	if (!m_Group->m_PortalsVis)
+	if (!m_PortalVis)
 	{
 		return false;
 	}

@@ -9,6 +9,7 @@ public:
 		GeometryBase(_RenderDevice, "shaders/M2/M2_RibbonEmitters")
 	{
 		gColorMap = getLocation("gColorMap");
+		gColor = getLocation("gColor");
 	}
 
 	inline void SetColorTextureUnit(int TextureUnit)
@@ -16,6 +17,12 @@ public:
 		setTexture(gColorMap, TextureUnit);
 	}
 
+	inline void SetColor(vec4 _color)
+	{
+		setVec4(gColor, _color);
+	}
+
 private:
 	int8 gColorMap;
+	int8 gColor;
 };

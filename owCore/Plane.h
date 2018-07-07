@@ -38,6 +38,27 @@ public:
 	float dist;
 };
 
+inline bool cullBoxByPlanes(const Plane* _planes, uint32 _planesCount, const BoundingBox& b)
+{
+	// Idea for optimized AABB testing from www.lighthouse3d.com
+	for (uint32 i = 0; i < _planesCount; ++i)
+	{
+		cvec3 n = _planes[i].normal;
+
+		Vec3f positive = b.getMin();
+		if (n.x <= 0) positive.x = b.getMax().x;
+		if (n.y <= 0) positive.y = b.getMax().y;
+		if (n.z <= 0) positive.z = b.getMax().z;
+
+		if (_planes[i].distToPoint(positive) > 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 inline bool cullPolyByPlanes(const Plane* _planes, uint32 _planesCount, const vec3* verts, uint32 vertsCount)
 {
 	for (uint32 i = 0; i < _planesCount; ++i)

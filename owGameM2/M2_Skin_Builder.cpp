@@ -77,20 +77,20 @@ void CM2_Skin_Builder::Step2InitBatches()
 		batch->m_SkinProtoSection = m_SkinSections[it.skinSectionIndex];
 
 		// Get classes
-		batch->material = &(m_ParentM2->GetMaterial(it.materialIndex));
+		batch->material = (m_ParentM2->GetMaterial(it.materialIndex));
 
 
 
 		// Color
 		if (it.colorIndex != -1)
 		{
-			batch->color = &(m_ParentM2->GetColor(it.colorIndex));
+			batch->color = (m_ParentM2->GetColor(it.colorIndex));
 		}
 
 		// Textures
 		for (uint32 i = 0; i < it.textureCount; i++)
 		{
-			batch->m_Textures.push_back(&(m_ParentM2->GetTexture(it.texture_Index + i)));
+			batch->m_Textures.push_back((m_ParentM2->GetTexture(it.texture_Index + i)));
 		}
 
 		// Texture unit
@@ -113,7 +113,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 				int16 index = m_ParentM2->m_TexturesTransformLookup[it.texture_TransformIndex];
 				if (index != -1)
 				{
-					batch->texture_Transform = &(m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
+					batch->texture_Transform = (m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
 				}
 			}
 		}

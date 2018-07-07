@@ -13,6 +13,9 @@
     <Filter Include="Builder">
       <UniqueIdentifier>{0cf512f7-ca02-4421-9ea7-17b0a54e3b36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Groups">
+      <UniqueIdentifier>{3f2936b2-5b52-4e66-b693-368fcfe7587f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -20,7 +23,6 @@
     </ClCompile>
     <ClCompile Include="WMO_Liquid.cpp" />
     <ClCompile Include="WMO.cpp" />
-    <ClCompile Include="WMO_Group.cpp" />
     <ClCompile Include="WMOsManager.cpp" />
     <ClCompile Include="WMO_Part_Light.cpp">
       <Filter>Parts</Filter>
@@ -31,19 +33,12 @@
     <ClCompile Include="WMO_Part_Material.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
-    <ClCompile Include="WMO_Group_Part_Batch.cpp">
-      <Filter>Parts</Filter>
-    </ClCompile>
     <ClCompile Include="WMO_Builder.cpp">
       <Filter>Builder</Filter>
     </ClCompile>
     <ClCompile Include="WMO_Part_Portal.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
-    <ClCompile Include="WMO_Part_PortalsController.cpp">
-      <Filter>Parts</Filter>
-    </ClCompile>
-    <ClCompile Include="WMO_InstanceController.cpp" />
     <ClCompile Include="WMO_Liquid_Instance.cpp">
       <Filter>Instances</Filter>
     </ClCompile>
@@ -52,6 +47,16 @@
     </ClCompile>
     <ClCompile Include="WMO_Base_Instance.cpp">
       <Filter>Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Group.cpp">
+      <Filter>Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Group_Part_Batch.cpp">
+      <Filter>Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_PortalsController.cpp" />
+    <ClCompile Include="WMO_Group_Instance.cpp">
+      <Filter>Groups</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,16 +71,12 @@
     </ClInclude>
     <ClInclude Include="WMO_Liquid.h" />
     <ClInclude Include="WMO.h" />
-    <ClInclude Include="WMO_Group.h" />
     <ClInclude Include="WMO_Headers.h" />
     <ClInclude Include="WMOsManager.h" />
     <ClInclude Include="WMO_Part_Light.h">
       <Filter>Parts</Filter>
     </ClInclude>
     <ClInclude Include="WMO_Part_Material.h">
-      <Filter>Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_Group_Part_Batch.h">
       <Filter>Parts</Filter>
     </ClInclude>
     <ClInclude Include="WMO_Part_Fog.h">
@@ -87,10 +88,6 @@
     <ClInclude Include="WMO_Part_Portal.h">
       <Filter>Parts</Filter>
     </ClInclude>
-    <ClInclude Include="WMO_Part_PortalsController.h">
-      <Filter>Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="WMO_InstanceController.h" />
     <ClInclude Include="WMO_Liquid_Instance.h">
       <Filter>Instances</Filter>
     </ClInclude>
@@ -99,6 +96,19 @@
     </ClInclude>
     <ClInclude Include="WMO_Base_Instance.h">
       <Filter>Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Group.h">
+      <Filter>Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Group_Part_Batch.h">
+      <Filter>Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Group_Headers.h">
+      <Filter>Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_PortalsController.h" />
+    <ClInclude Include="WMO_Group_Instance.h">
+      <Filter>Groups</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

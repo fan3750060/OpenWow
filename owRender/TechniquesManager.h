@@ -75,5 +75,5 @@ private:
 	vector<PostprocessBase*>	m_PostTechniques;
 
 	RenderDevice*				m_RenderDevice;
-	const CGroupVideo&			groupVideo;
+	const CGroupVideo&			m_VideoSettings;
 };

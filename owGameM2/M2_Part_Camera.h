@@ -7,6 +7,9 @@ class CM2_Part_Camera
 public:
 	CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoopSeq global);
 
+	vec3 getTranslate() const { return pResult; }
+	vec3 getTarget() const { return tResult; }
+
 	void calc(uint32 time, uint32 globalTime);
 	void setup(cvec3 _startPoint, float rotate);
 	void getParams(vec3* _position, vec3* _target, float* _fov, float* _nearPlane, float* _farPlane);

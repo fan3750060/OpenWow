@@ -44,7 +44,7 @@ bool GameStateManager::SetGameState(IGameState* _newGameState)
         Log::Warn("GameStateManager[]: New CGameState in not inited. Initializating.");
         if (_newGameState->Init())
         {
-			Log::Error("GameStateManager[]: New CGameState is inited successfully.");
+			Log::Green("GameStateManager[]: New CGameState is inited successfully.");
 			_newGameState->SetInited(true);
         }
         else
@@ -57,7 +57,7 @@ bool GameStateManager::SetGameState(IGameState* _newGameState)
     m_CurrentGameState = dynamic_cast<CGameState*>(_newGameState);
     if (m_CurrentGameState->Set())
     {
-		Log::Error("GameStateManager[]: New CGameState is current now.");
+		Log::Green("GameStateManager[]: New CGameState is current now.");
         m_CurrentGameState->SetCurrent(true);
     }
     else

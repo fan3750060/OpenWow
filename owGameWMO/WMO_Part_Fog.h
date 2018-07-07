@@ -5,13 +5,12 @@
 class WMO_Part_Fog : public CRefItem
 {
 public:
-	WMO_Part_Fog(const WMO_FogDef& _proto);
+	WMO_Part_Fog(const SWMO_FogDef& _proto);
 
 	void setup();
 
 public:
 	vec4 color;
 
-public:
-	WMO_FogDef fogDef;
+	SWMO_FogDef fogDef;
 };

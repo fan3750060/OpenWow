@@ -16,7 +16,11 @@ public:
 	};
 
 public:
-	Image() : m_Texture(nullptr), m_Start(vec2()), m_Size(vec2()), m_CoordsCalculated(false)
+	Image() : 
+		m_Texture(nullptr), 
+		m_Start(vec2()), 
+		m_Size(vec2()), 
+		m_CoordsCalculated(false)
 	{}
 
 	Image(R_Texture* _texture) :

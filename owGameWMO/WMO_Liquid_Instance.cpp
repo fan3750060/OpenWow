@@ -16,10 +16,10 @@ CWMO_Liquid_Instance::~CWMO_Liquid_Instance()
 
 bool CWMO_Liquid_Instance::PreRender3D()
 {
-	if (!m_Group->m_PortalsVis)
+	/*if (!m_Group->m_PortalsVis)
 	{
 		return false;
-	}
+	}*/
 
 	return true;
 }

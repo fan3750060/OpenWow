@@ -15,6 +15,8 @@
 #include "M2_Part_TextureTransform.h"
 #include "M2_Part_TextureWeight.h"
 // Misc
+#include "M2_Part_Attachment.h"
+#include "M2_Part_Event.h"
 #include "M2_Part_Light.h"
 #include "M2_Part_Camera.h"
 // Particles
@@ -39,13 +41,12 @@ public:
 
 	void updateEmitters(float dt);
 
-	void Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider);
+	void Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor);
 	void RenderCollision(cmat4 _worldMatrix);
-	void drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider);
+	void drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor);
 
 	void animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
 
-#pragma region Getters
 public:
 	string getFilename() const { return m_FileName; }
 	string getFilenameWithoutExt() const { return m_FileNameWithoutExt; }
@@ -53,62 +54,165 @@ public:
 	string getUniqueName() const { return m_UniqueName; }
 	cbbox getBounds() const { return m_Bounds; }
 	
+#pragma region Loops & Sequences
+public:
 	const SM2_Sequence& getSequence(uint32 _index) const
 	{
-		assert1(_index < m_Header.sequencesLookup.size);
+		assert1(_index < m_SequencesLookup.size());
 		int16 newIndex = m_SequencesLookup[_index];
-		assert1(newIndex < static_cast<int16>(m_Header.sequences.size));
+		assert1(newIndex < static_cast<int16>(m_Sequences.size()));
 		return m_Sequences[newIndex];
 	}
 	const bool isAnimated() const { return m_IsAnimated; }
-	const CM2_Part_Bone& getBone(uint32 _index) const
+public:
+	GlobalLoopSeq						m_GlobalLoops;
+	vector<SM2_Sequence>				m_Sequences;
+	vector<int16>						m_SequencesLookup;
+	bool								m_IsAnimated;
+#pragma endregion
+
+
+#pragma region Bones
+public:
+	const CM2_Part_Bone* getBone(uint32 _index) const
 	{
-		assert1(_index < m_Header.bone_lookup_table.size);
+		if (_index >= m_BonesLookup.size())
+		{
+			//Log::Warn("M2[%s]: getBone [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_Header.bonesLookup.size);
+			return nullptr;
+		}
 		int16 newIndex = m_BonesLookup[_index];
-		assert1(newIndex < static_cast<int16>(m_Header.bones.size));
-		return *(m_Bones[newIndex]);
+		assert1(newIndex < static_cast<int16>(m_Bones.size()));
+		return (m_Bones[newIndex]);
+	}
+	const CM2_Part_Bone* getGameBone(GameBoneType::List _type) const
+	{
+		if (_type >= static_cast<int16>(m_GameBonesLookup.size()))
+		{
+			Log::Warn("M2[%s]: getGameBone [%d] not found in Lookup[%d]", m_FileName.c_str(), _type, m_GameBonesLookup.size());
+			return nullptr;
+		}
+		int16 newIndex = m_GameBonesLookup[_type];
+		assert1(newIndex < static_cast<int16>(m_Bones.size()));
+		return (m_Bones[newIndex]);
 	}
 	const bool hasBones() const { return m_HasBones; }
 	const bool isAnimBones() const { return m_IsAnimBones; }
 	const bool isBillboard() const { return m_IsBillboard; }
+public: //TODO
+	vector<CM2_Part_Bone*>				m_Bones;
+	vector<int16>						m_BonesLookup;
+	vector<int16>						m_GameBonesLookup;
+	bool								m_HasBones;
+	bool								m_IsAnimBones;
+	bool								m_IsBillboard;
+#pragma endregion
 
-	// Colors and Textures
 
-	const CM2_Part_Color& GetColor(uint32 _index) const
+#pragma region Colors and Textures
+public:
+	const CM2_Part_Color* GetColor(uint32 _index) const
 	{
-		assert1(_index < m_Header.colors.size);
-		return *(m_Colors[_index]);
+		assert1(_index < m_Colors.size());
+		return (m_Colors[_index]);
 	}
-	const CM2_Part_Material& GetMaterial(uint32 _index) const
+	const CM2_Part_Material* GetMaterial(uint32 _index) const
 	{
-		assert1(_index < m_Header.materials.size);
-		return *(m_Materials[_index]);
+		assert1(_index < m_Materials.size());
+		return (m_Materials[_index]);
 	}
-	const CM2_Part_Texture& GetTexture(uint32 _index) const
+public:
+	vector<CM2_Part_Color*>				m_Colors;
+	vector<CM2_Part_Material*>			m_Materials;
+#pragma endregion
+
+
+#pragma region Textures
+public:
+	const CM2_Part_Texture* GetTexture(uint32 _index) const
 	{
-		assert1(_index < m_Header.textureLookup.size);
+		if (_index >= m_TexturesLookup.size())
+		{
+			Log::Warn("M2[%s]: GetTexture [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_TexturesLookup.size());
+			return nullptr;
+		}
 		int16 newIndex = m_TexturesLookup[_index];
-		assert1(newIndex < static_cast<int16>(m_Header.textures.size));
-		return *(m_Textures[newIndex]);
+		assert1(newIndex < static_cast<int16>(m_Textures.size()));
+		return (m_Textures[newIndex]);
 	}
-	const CM2_Part_TextureWeight& GetTextureWeight(uint32 _index) const
+	const CM2_Part_TextureWeight* GetTextureWeight(uint32 _index) const
 	{
-		assert1(_index < m_Header.textureWeightsLookup.size);
+		if (_index >= m_TextureWeightsLookup.size())
+		{
+			Log::Warn("M2[%s]: GetTextureWeight [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_TextureWeightsLookup.size());
+			return nullptr;
+		}
 		int16 newIndex = m_TextureWeightsLookup[_index];
-		assert1(newIndex < static_cast<int16>(m_Header.textureWeights.size));
-		return *(m_TextureWeights[newIndex]);
+		assert1(newIndex < static_cast<int16>(m_TextureWeights.size()));
+		return (m_TextureWeights[newIndex]);
 	}
-	const CM2_Part_TextureTransform& GetTextureTransform(uint32 _index) const
+	const CM2_Part_TextureTransform* GetTextureTransform(uint32 _index) const
 	{
-		assert1(_index < m_Header.textureTransformsLookup.size);
+		if (_index >= m_TexturesTransformLookup.size())
+		{
+			Log::Warn("M2[%s]: GetTextureTransform [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_TexturesTransformLookup.size());
+			return nullptr;
+		}
 		int16 newIndex = m_TexturesTransformLookup[_index];
-		assert1(newIndex < static_cast<int16>(m_Header.textureTransforms.size));
-		return *(m_TexturesTransform[newIndex]);
+		assert1(newIndex < static_cast<int16>(m_TexturesTransform.size()));
+		return (m_TexturesTransform[newIndex]);
+	}
+public:
+	vector<CM2_Part_Texture*>			m_Textures;
+	vector<int16_t>						m_TexturesLookup;
+	//--
+	vector<int16_t>						m_TexturesUnitLookup;
+	vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
+	vector<int16_t>						m_TexturesCombos;
+	//--
+	vector<CM2_Part_TextureWeight*>		m_TextureWeights;
+	vector<int16_t>						m_TextureWeightsLookup;
+	//--
+	vector<CM2_Part_TextureTransform*>	m_TexturesTransform;
+	vector<int16_t>						m_TexturesTransformLookup;
+	bool								m_IsAnimTextures;
+#pragma endregion
+
+
+#pragma region Attachments
+	const CM2_Part_Attachment* getAttachment(uint32 _index) const
+	{
+		if (_index >= m_AttachmentsLookup.size())
+		{
+			Log::Warn("M2[%s]: getAttachment [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_AttachmentsLookup.size());
+			return nullptr;
+		}
+		int16 newIndex = m_AttachmentsLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Attachments.size()));
+		return (m_Attachments[newIndex]);
 	}
 
-	// Attachments
+	const CM2_Part_Light* getLight(uint32 _index) const
+	{
+		assert1(_index < m_Lights.size());
+		return (m_Lights[_index]);
+	}
+
+	const CM2_Part_Camera* getCamera(uint32 _index) const
+	{
+		if (_index >= m_CamerasLookup.size())
+		{
+			Log::Warn("M2[%s]: getCamera [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_CamerasLookup.size());
+			return nullptr;
+		}
+		int16 newIndex = m_CamerasLookup[_index];
+		assert1(newIndex < static_cast<int16>(m_Cameras.size()));
+		return (m_Cameras[newIndex]);
+	}
 
 #pragma endregion
+
+	
 
 
 #pragma region Header
@@ -117,22 +221,8 @@ public:
 	string								m_FileNameWithoutExt;
 	string								m_FilePath;
 
-	SM2_Header							m_Header;
 	string								m_UniqueName;
 	BoundingBox							m_Bounds;
-
-	// Loops & Sequences
-	GlobalLoopSeq						m_GlobalLoops;
-	vector<SM2_Sequence>				m_Sequences;
-	vector<int16>						m_SequencesLookup;
-	bool								m_IsAnimated;
-
-	// Bones
-	vector<CM2_Part_Bone*>				m_Bones;
-	vector<int16>						m_BonesLookup;
-	bool								m_HasBones;
-	bool								m_IsAnimBones;
-	bool								m_IsBillboard;
 
 	// Vertices
 	bool								m_IsContainGeom;
@@ -140,20 +230,14 @@ public:
 	// Skins
 	vector<CM2_Skin*>					m_Skins;
 
-	// Colors and textures
-	vector<CM2_Part_Color*>				m_Colors;
-	vector<CM2_Part_Material*>			m_Materials;
-	vector<CM2_Part_Texture*>			m_Textures;
-	vector<int16_t>						m_TexturesLookup;
-	vector<int16_t>						m_TexturesUnitLookup;
-	vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
-	vector<CM2_Part_TextureWeight*>		m_TextureWeights;
-	vector<int16_t>						m_TextureWeightsLookup;
-	vector<CM2_Part_TextureTransform*>	m_TexturesTransform;
-	vector<int16_t>						m_TexturesTransformLookup;
-	bool								m_IsAnimTextures;
+
+	//--
+
 
 	// Attachments, events, lights and cameras
+	vector<CM2_Part_Attachment*>		m_Attachments;
+	vector<int16_t>						m_AttachmentsLookup;
+	vector<CM2_Part_Event*>				m_Events;
 	vector<CM2_Part_Light*>				m_Lights;
 	vector<CM2_Part_Camera*>			m_Cameras;
 	vector<int16_t>						m_CamerasLookup;

@@ -40,7 +40,7 @@ M2::~M2()
 	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
 
-void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
+void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor)
 {
 	if (!m_IsContainGeom)
 	{
@@ -52,13 +52,14 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
 	_Render->getTechniquesMgr()->M2_Pass->Bind();
 	_Render->getTechniquesMgr()->M2_Pass->SetWorldMatrix(_worldMatrix);
 	_Render->getTechniquesMgr()->M2_Pass->SetAnimated(m_HasBones && m_IsAnimated);
+	_Render->getTechniquesMgr()->M2_Pass->SetColorDoodad(_doodadColor);
 	if (m_HasBones && m_IsAnimated)
 	{
 		//_Render->getTechniquesMgr()->M2_Pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
 		//_Render->getTechniquesMgr()->M2_Pass->SetBoneMaxCount(p->boneInfluences);
 
 		vector<mat4> bones;
-		for (uint32 i = 0; i < m_Header.bones.size; i++)
+		for (uint32 i = 0; i < m_Bones.size(); i++)
 		{
 			bones.push_back(m_Bones[i]->getTransformMatrix());
 		}
@@ -68,6 +69,7 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
 	for (auto& it : m_Skins)
 	{
 		it->Draw(_provider);
+		break;
 	}
 
 	_Render->getTechniquesMgr()->M2_Pass->Unbind();
@@ -79,14 +81,14 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
 	}*/
 }
 
-void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
+void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor)
 {
 	if (m_IsAnimated)
 	{
 		// draw ribbons
 		for (auto it : m_RibbonEmitters)
 		{
-			it->draw();
+			it->Render(_worldMatrix);
 		}
 
 #ifdef MDX_PARTICLES_ENABLE
@@ -98,12 +100,12 @@ void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider)
 #endif
 	}
 
-	drawModel(_worldMatrix, _provider);
+	drawModel(_worldMatrix, _provider, _doodadColor);
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)
 {
-	if (m_CollisionGeom == nullptr)
+	/*if (m_CollisionGeom == nullptr)
 	{
 		return;
 	}
@@ -121,24 +123,24 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);*/
 }
 
 void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
 {
 	if (m_HasBones)
 	{
-		for (uint32 i = 0; i < m_Header.bones.size; i++)
+		for (uint32 i = 0; i < m_Bones.size(); i++)
 		{
 			m_Bones[i]->SetNeedCalculate();
 		}
 
-		for (uint32 i = 0; i < m_Header.bones.size; i++)
+		for (uint32 i = 0; i < m_Bones.size(); i++)
 		{
 			m_Bones[i]->calcMatrix(_animationIndex, _time, globalTime);
 		}
 
-		for (uint32 i = 0; i < m_Header.bones.size; i++)
+		for (uint32 i = 0; i < m_Bones.size(); i++)
 		{
 			m_Bones[i]->calcBillboard(_worldMatrix);
 		}
@@ -154,9 +156,9 @@ void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint3
 	}*/
 
 
-	for (auto it : m_RibbonEmitters)
+	for (auto& it : m_RibbonEmitters)
 	{
-		it->setup(_animationIndex, _time, globalTime);
+		it->setup(_animationIndex, _time, globalTime, _worldMatrix);
 	}
 
 #ifdef MDX_PARTICLES_ENABLE
@@ -168,12 +170,9 @@ void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint3
 	}
 #endif
 
-	if (m_IsAnimTextures)
+	for (auto& it : m_TexturesTransform)
 	{
-		for (uint32 i = 0; i < m_Header.textureTransforms.size; i++)
-		{
-			m_TexturesTransform[i]->calc(_animationIndex, _time, globalTime);
-		}
+		it->calc(_animationIndex, _time, globalTime);
 	}
 
 	for (auto& it : m_TextureWeights)

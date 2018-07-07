@@ -51,7 +51,7 @@ void CWDL_LowResTile::Render3D()
 	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	_Render->getTechniquesMgr()->WDL_LowRes_Pass->Bind();
-	_Render->getTechniquesMgr()->WDL_LowRes_Pass->SetShadowColor(/*vec3(1.0, 0.0, 0.0)*/_World->EnvM()->m_SkyManager->GetColor(LIGHT_COLOR_FOG));
+	_Render->getTechniquesMgr()->WDL_LowRes_Pass->SetShadowColor(/*vec3(1.0, 0.0, 0.0)*/_World->EnvM()->m_SkyManager->GetColor(LightColors::LIGHT_COLOR_FOG));
 
 	_Render->r.setGeometry(m_Geom);
 	_Render->r.draw(PRIM_TRILIST, 0, 16 * 16 * 12);

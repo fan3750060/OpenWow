@@ -31,7 +31,7 @@ void GameState_WMOViewer::OpenFile(const char* _fname)
 	WMO* wmo = GetManager<IWMOManager>()->Add(path);
 	backgroundModel = new CWMO_Base_Instance(sceneManager->getRootNode(), wmo);
 	backgroundModel->InitTransform();
-	backgroundModel->InitDefault();
+	backgroundModel->EmptyTransformAndBounds();
 }
 
 bool GameState_WMOViewer::Init()
@@ -55,8 +55,14 @@ bool GameState_WMOViewer::Init()
 	m_TestCamera = new Camera;
 	m_TestCamera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 2000.0f);
 
+	BoundingBox bb;
+	bb.setMin(Math::MinFloat);
+	bb.setMax(Math::MaxFloat);
+	bb.calculateCenter();
+
 	SceneNode* root = new SceneNode();
 	root->setVisible(true);
+	root->setBounds(bb);
 
 	sceneManager = new CSceneManager(root);
 	sceneManager->setCamera(_Render->getCamera());
@@ -74,10 +80,10 @@ bool GameState_WMOViewer::Init()
 		//WMO* wmo = GetManager<IWMOManager>()->Add("World\\wmo\\Kalimdor\\Winterspring\\MD_WinterspringCave01.wmo");
 		backgroundModel = new CWMO_Base_Instance(root, wmo);
 		backgroundModel->InitTransform();
-		backgroundModel->InitDefault();
+		backgroundModel->EmptyTransformAndBounds();
 	}
 
-
+	
 
 	return true;
 }
@@ -106,7 +112,9 @@ void GameState_WMOViewer::Unset()
 //
 
 void GameState_WMOViewer::Update(double _time, double _dTime)
-{}
+{
+	
+}
 
 bool GameState_WMOViewer::PreRender3D()
 {

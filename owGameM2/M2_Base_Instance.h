@@ -39,4 +39,6 @@ protected:
 
 	double m_Time;
 	double m_DTime;
+
+	vec4 m_DoodadColor;
 };

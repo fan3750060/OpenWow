@@ -19,10 +19,8 @@ public:
 	void DSFogRenderPass();
 	void DSResultQuad();
 
-
-
 private:
 	WorldController*	m_WorldContoller;
-	CGroupVideo&		groupVideo;
+	CGroupVideo&		m_VideoSettings;
 	CGroupQuality&		groupQuality;
 };

@@ -44,4 +44,6 @@ private:
 	UniquePtr<CM2_Base_Instance> m2_Model;
 	SmartGeomPtr m_DebugGeom;
 	Character* m_Char;
+
+	CM2_Base_Instance*		m2_Camera;
 };

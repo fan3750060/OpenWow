@@ -181,7 +181,7 @@ struct SM2_Material
 	BlendModes blending_mode;
 };
 
-struct M2Attachment
+struct SM2_Attachment
 {
 	uint32 id;                        // Referenced in the lookup-block below.
 	uint16 bone;                      // attachment base
@@ -190,9 +190,9 @@ struct M2Attachment
 	M2Track<uint8> animate_attached;  // whether or not the attached model is animated when this model is. only a bool is used. default is true.
 };
 
-struct M2Event
+struct SM2_Event
 {
-	uint32 identifier;  // mostly a 3 character name prefixed with '$'.
+	char identifier[4];  // mostly a 3 character name prefixed with '$'.
 	uint32 data;        // This data is passed when the event is fired. 
 	uint32 bone;        // Somewhere it has to be attached.
 	vec3 position;    // Relative to that bone of course, animated. Pivot without animating.
@@ -237,10 +237,5 @@ struct SM2_Camera // TODO Spline keys
 
 #include __PACK_END
 
-#if (VERSION == VERSION_Vanila)
-#include "M2_Animated.h"
-#elif (VERSION == VERSION_WotLK)
 #include "M2_Animated_WotLK.h"
-#endif
-
 #include "M2_ParticlesTypes.h"

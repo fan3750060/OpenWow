@@ -35,7 +35,7 @@ public:
 	operator T*() const { return m_Ptr; }
 	operator const T*() const { return m_Ptr; }
 	operator bool() const { return m_Ptr != nullptr; }
-	T* getPtr() { return m_Ptr; }
+	T* getPtr() const { return m_Ptr; }
 
 	bool operator==(T* _other)	{		return m_Ptr == _other;	}
 	bool operator!=(T* _other)	{		return m_Ptr != _other;	}

@@ -23,11 +23,19 @@ CWMO_Base_Instance::~CWMO_Base_Instance()
 
 void CWMO_Base_Instance::InitTransform()
 {
-	m_InstanceController = new CWMO_InstanceController(m_Object, getAbsTrans());
 	m_Object->CreateInsances(this);
+
+	m_InvWorld = getAbsTrans().inverted();
+	if (m_Object->m_PortalController != nullptr)
+	{
+		for (auto& v : m_Object->m_PortalVertices)
+		{
+			m_ConvertedVerts.push_back(getAbsTrans() * v);
+		}
+	}
 }
 
-void CWMO_Base_Instance::InitDefault()
+void CWMO_Base_Instance::EmptyTransformAndBounds()
 {
 	// Matrix
 	CalculateMatrix();
@@ -55,6 +63,13 @@ bool CWMO_Base_Instance::PreRender3D()
 		return false;
 	}
 
+#ifndef WMO_DISABLE_PORTALS
+	if (m_Object->m_PortalController != nullptr)
+	{
+		m_Object->m_PortalController->Update(this, getInvWorld() * (_Render->getCamera()->Position));
+	}
+#endif
+
 	return true;
 }
 
@@ -67,6 +82,6 @@ void CWMO_Base_Instance::Render3D()
 
 	//_Render->DrawBoundingBox(m_Bounds);
 
-	m_Object->PreRender(m_InstanceController);
-	m_Object->Render(m_InstanceController, m_DoodadSetInfo);
+	
+	m_Object->Render(this);
 }

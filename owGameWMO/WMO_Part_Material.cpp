@@ -6,7 +6,7 @@
 // General
 #include "Wmo_Part_Material.h"
 
-WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const WMO_MaterialDef& _proto) :
+WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialDef& _proto) :
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())

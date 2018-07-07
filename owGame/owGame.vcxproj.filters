@@ -82,9 +82,6 @@
     <ClCompile Include="MinimapProvider.cpp">
       <Filter>Minimap</Filter>
     </ClCompile>
-    <ClCompile Include="WorldController.cpp">
-      <Filter>Minimap</Filter>
-    </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Character</Filter>
     </ClCompile>
@@ -103,6 +100,7 @@
     <ClCompile Include="CreatureMeshIDProvider.cpp">
       <Filter>Creature</Filter>
     </ClCompile>
+    <ClCompile Include="WorldController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sky.h">

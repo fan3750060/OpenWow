@@ -3,14 +3,15 @@
 #include "WMO_Headers.h"
 
 // FORWARD BEGIN
+class WMO;
 class WMO_Group;
-class CWMO_InstanceController;
+class CWMO_Base_Instance;
 // FORWARD END
 
 class CWMO_Part_Portal : public CRefItem
 {
 public:
-	CWMO_Part_Portal(const WMO* _parentWMO, const WMO_PortalDef& _proto);
+	CWMO_Part_Portal(const WMO* _parentWMO, const SWMO_PortalDef& _proto);
 
 	void Render(cmat4 _worldMatrix);
 
@@ -18,11 +19,11 @@ public:
 	uint16 getCount() const { return m_Count; }
 	const Plane& getPlane() const { return m_Plane; }
 
-	void setGroup(WMO_Group* _group, int16 side);
-	WMO_Group* getGrInner() { return m_GrInner; }
-	WMO_Group* getGrOuter() { return m_GrOuter; }
+	void setGroup(int32 _group, int16 side);
+	int32 getGrInner() { return m_GrInner; }
+	int32 getGrOuter() { return m_GrOuter; }
 
-	bool IsVisible(CWMO_InstanceController* _localContr, const Plane* _planes, uint32 _planesCount) const;
+	bool IsVisible(CWMO_Base_Instance* _localContr, const Plane* _planes, uint32 _planesCount) const;
 	bool IsPositive(cvec3 _InvWorldCamera) const;
 
 private:
@@ -33,8 +34,8 @@ private:
 	uint16					m_Count;
 	Plane					m_Plane;
 
-	WMO_Group*				m_GrInner;
-	WMO_Group*				m_GrOuter;
+	int32					m_GrInner;
+	int32					m_GrOuter;
 
 	SmartGeomPtr			m_Geom;
 };

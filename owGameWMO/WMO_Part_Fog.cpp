@@ -3,7 +3,7 @@
 // General
 #include "Wmo_Part_Fog.h"
 
-WMO_Part_Fog::WMO_Part_Fog(const WMO_FogDef& _proto)
+WMO_Part_Fog::WMO_Part_Fog(const SWMO_FogDef& _proto)
 {
 	fogDef = _proto;
 

@@ -13,8 +13,8 @@ public:
 	void Calculate(uint32 _time);
 	bool HasSkies() { return !skies.empty(); }
 
-	vec3 GetColor(LightColors _color) override { return m_Interpolated.m_InterpolatedColors[_color]; }
-	float GetFog(LightFogs _fog) override { return m_Interpolated.m_InterpolatedFogs[_fog]; }
+	vec3 GetColor(LightColors::List _color) override { return m_Interpolated.m_InterpolatedColors[_color]; }
+	float GetFog(LightFogs::List _fog) override { return m_Interpolated.m_InterpolatedFogs[_fog]; }
 	float GetGlow() override { return m_Interpolated.m_glow; }
 	float GetWaterShallowAlpha() override { return m_Interpolated.m_waterShallowAlpha; }
 	float GetWaterDarkAlpha() override { return m_Interpolated.m_waterDeepAlpha; }

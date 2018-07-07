@@ -63,12 +63,12 @@ bool GameState_M2Viewer::Init()
 	else
 	{
 		//M2* model = GetManager<IM2Manager>()->Add("CREATURE\\ArthasLichKing\\ArthasLichKing.M2");
-		M2* model = GetManager<IM2Manager>()->Add("Character\\Troll\\Male\\TrollMale.M2");
+		M2* model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
 		m2_Model = new CM2_Viewer_Instance(model);
 	}
 
-	m_Char = new Character();
-	m_Char->InitDefault();
+	//m_Char = new Character();
+	//m_Char->InitDefault();
 
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
@@ -77,6 +77,10 @@ bool GameState_M2Viewer::Init()
 
 	ADDCONSOLECOMMAND_CLASS_WITHARGS("a_play", GameState_M2Viewer, PlayAnim, uint16);
 	ADDCONSOLECOMMAND_CLASS("a_info", GameState_M2Viewer, InfoAnim);
+
+	DBC_CinematicCameraRecord* camRec = DBC_CinematicSequences[21]->Get_CameraRec();
+	M2* cinematicCamera = GetManager<IM2Manager>()->Add(camRec->Get_Filename());
+	m2_Camera = new CM2_Base_Instance(nullptr, cinematicCamera);
 
 	return true;
 }
@@ -106,6 +110,16 @@ void GameState_M2Viewer::Unset()
 
 void GameState_M2Viewer::Update(double _time, double _dTime)
 {
+	
+
+	//m2_Camera->getObject()->m_Cameras[0]->calc(_time * 3.0f, _dTime);
+	//m2_Model->setTranslate(m2_Camera->getObject()->m_Cameras[0]->getTranslate());
+	//m2_Model->setRotate(vec3(0, -Math::Pi / 2.0f, 0));
+
+	m2_Model->setTranslate(_Render->getCamera()->Position + _Render->getCamera()->Direction * 250.0f);
+	m2_Model->setRotate(_Render->getCamera()->Direction);
+
+	//_Render->getCamera()->Position = 
 	_Render->getCamera()->Update(_time, _dTime);
 }
 

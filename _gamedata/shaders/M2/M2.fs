@@ -10,7 +10,6 @@ in struct VSOutput
 	vec2 tc1;
 } VSout;
 
-
 // Textures
 uniform sampler2D gDiffuseTexture0;
 uniform sampler2D gDiffuseTexture1;
@@ -23,6 +22,9 @@ uniform int		gBlendMode;
 uniform bool	gColorEnable;
 uniform vec4	gColor;
 
+uniform bool	gColorDoodadEnable;
+uniform vec4	gColorDoodad;
+
 uniform bool	gTextureWeightEnable;
 uniform float	gTextureWeight;
 
@@ -31,7 +33,7 @@ vec4 Test()
 	vec4 tex0 = texture(gDiffuseTexture0, VSout.tc0);
 	vec4 tex1 = texture(gDiffuseTexture1, VSout.tc1);
 
-	vec4 _in = vec4(1.0f, 1.0f, 1.0f, tex0.a);
+	vec4 _in = vec4(gColorDoodad.rgb, tex0.a);
 	vec4 _out = vec4(0.0f);
 	
 	if (gColorEnable)

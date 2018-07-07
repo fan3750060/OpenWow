@@ -23,9 +23,10 @@ Font::~Font()
 
 void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 {
-	_Render->getTechniquesMgr()->UI_Font->Bind();
-	_Render->getTechniquesMgr()->UI_Font->SetProjectionMatrix(_Render->getOrthoMatrix());
-	_Render->getTechniquesMgr()->UI_Font->SetFontColor(vec3(_color.red, _color.green, _color.blue));
+	CUI_Font* pass = _Render->getTechniquesMgr()->UI_Font;
+	pass->Bind();
+	pass->SetProjectionMatrix(_Render->getOrthoMatrix());
+	pass->SetFontColor(vec3(_color.red, _color.green, _color.blue));
 
 	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, SS_FILTER_BILINEAR | SS_ADDR_CLAMP, 0);
 	_Render->r.setGeometry(m_Geometry);
@@ -33,18 +34,18 @@ void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 	for (uint32 i = 0; i < _string.length(); i++)
 	{
 		uint8 ch = _string.c_str()[i];
-		if (static_cast<uint32>(ch) < 0 || static_cast<uint32>(ch) >= Font::NUM_CHARS)
+		if (static_cast<uint32>(ch) >= Font::NUM_CHARS)
 		{
 			continue;
 		}
 
-		_Render->getTechniquesMgr()->UI_Font->SetCharOffset(_offset);
+		pass->SetCharOffset(_offset);
 		_offset.x += static_cast<float>(m_WidthArray[ch]);
 
 		_Render->r.draw(PRIM_TRILIST, (ch) * 6, 6);
 	}
 
-	_Render->getTechniquesMgr()->UI_Font->Unbind();
+	pass->Unbind();
 }
 
 uint32 Font::GetStringWidth(cstring _string) const

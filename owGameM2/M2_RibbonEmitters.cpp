@@ -7,7 +7,8 @@
 #include "M2_RibbonEmitters.h"
 
 CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
-	m_ParentM2(_model)
+	m_ParentM2(_model),
+	tcolor(vec4(1.0f))
 {
 	m_Bone = (m_ParentM2->m_Bones[_proto.boneIndex]);
 	posValue = pos = _proto.position.toXZmY();
@@ -33,7 +34,7 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	// in CoT, res and len are like 10 but the trails are supposed to be much longer (too short here)
 	m_EdgesPerSecond = (int)_proto.edgesPerSecond;
 	m_EdgesLifeTime = _proto.edgeLifetime;
-	length = m_EdgesPerSecond * m_EdgesLifeTime;
+	length = (float)m_EdgesPerSecond * m_EdgesLifeTime;
 
 	// create first segment
 	RibbonSegment rs;
@@ -42,10 +43,11 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	segs.push_back(rs);
 }
 
-void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime)
+void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime, cmat4 _worldMatrix)
 {
-	vec3 ntpos = m_Bone->getTransformMatrix() * pos;
-	vec3 ntup = m_Bone->getTransformMatrix() * (pos + vec3(0, 0, 1));
+	vec3 ntpos = _worldMatrix * (m_Bone->getTransformMatrix() * pos);
+	vec3 ntup = _worldMatrix * (m_Bone->getTransformMatrix() * (pos + vec3(0, 0, 1.0f)));
+
 	ntup -= ntpos;
 	ntup = ntup.normalized();
 	float dlen = (ntpos - posValue).length();
@@ -120,7 +122,7 @@ struct RibbonVertex
 	vec2 tex;
 };
 
-void CM2_RibbonEmitters::draw()
+void CM2_RibbonEmitters::Render(cmat4 _world)
 {
 	vector<RibbonVertex> vertices;
 
@@ -131,7 +133,7 @@ void CM2_RibbonEmitters::draw()
 		float u = l / length;
 
 		vertices.push_back(RibbonVertex(it->pos + it->up * tabove, vec2(u, 0)));
-		vertices.push_back(RibbonVertex(it->pos - it->up * tbelow, vec2(u, 0)));
+		vertices.push_back(RibbonVertex(it->pos - it->up * tbelow, vec2(u, 1)));
 
 		l += it->len;
 	}
@@ -141,7 +143,7 @@ void CM2_RibbonEmitters::draw()
 		// last segment...?
 		--it;
 		vertices.push_back(RibbonVertex(it->pos + it->up * tabove + it->back*(it->len / it->len0), vec2(1, 0)));
-		vertices.push_back(RibbonVertex(it->pos - it->up * tbelow + it->back*(it->len / it->len0), vec2(1, 0)));
+		vertices.push_back(RibbonVertex(it->pos - it->up * tbelow + it->back*(it->len / it->len0), vec2(1, 1)));
 	}
 
 
@@ -191,13 +193,13 @@ void CM2_RibbonEmitters::draw()
 	glDepthMask(GL_TRUE);*/
 
 
-	for (auto& it : vertices)
+	/*for (auto& it : vertices)
 	{
-		_Render->DrawCube(it.pos);
-	}
+		_Render->DrawSphere(mat4(), it.pos, 0.05f);
+	}*/
 
 	// Vertex buffer
-	/*SmartBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
+	SmartBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
 	SmartGeomPtr __geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PT);
@@ -211,7 +213,8 @@ void CM2_RibbonEmitters::draw()
 	_Render->r.setDepthMask(false);
 
 	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
-	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetPVW();
+	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetWorldMatrix(mat4());
+	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetColor(vec4(1.0f));
 
 	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, 0, 0);
 
@@ -223,5 +226,5 @@ void CM2_RibbonEmitters::draw()
 	_Render->r.setDepthMask(true);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-	*/
+	
 }

@@ -5,7 +5,7 @@
 // General
 #include "Wmo_Part_Light.h"
 
-WMO_Part_Light::WMO_Part_Light(const WMO_LightDef& _proto)
+WMO_Part_Light::WMO_Part_Light(const SWMO_LightDef& _proto)
 {
 	lightDef = _proto;
 

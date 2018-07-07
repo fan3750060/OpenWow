@@ -60,7 +60,7 @@ void CGroupQuality::InitDefault()
 
 	// Drawing
 	draw_map_mccv = true;
-	WMO_MOCV = true;
+	WMO_MOCV = false;
 	WMO_AmbColor = false;
 
 	// Disables

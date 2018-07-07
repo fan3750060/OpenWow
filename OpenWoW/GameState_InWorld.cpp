@@ -161,6 +161,7 @@ bool GameState_InWorld::OnKeyboardPressed(int _key, int _scancode, int _mods)
 	if (_key == OW_KEY_ESCAPE)
 	{
 		GetManager<IGameStateManager>()->SetGameState(GameStatesNames::GAME_STATE_MENU);
+		_World->Map()->Unload();
 		return true;
 	}
 

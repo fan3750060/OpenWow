@@ -34,13 +34,13 @@ void CM2_Part_Bone::setParentBone(const M2* _parentM2)
 
 	if (m_Flags.cylindrical_billboard_lock_x)
 	{
-		Log::Error("!!!!!!!!!!!!MODEL [%s] has X billboard!", _parentM2->getFilename().c_str());
+		//Log::Error("!!!!!!!!!!!!MODEL [%s] has X billboard!", _parentM2->getFilename().c_str());
 		//assert1(false);
 	}
 
 	if (m_Flags.cylindrical_billboard_lock_z)
 	{
-		Log::Error("!!!!!!!!!!!MODEL [%s] has Z billboard!", _parentM2->getFilename().c_str());
+		//Log::Error("!!!!!!!!!!!MODEL [%s] has Z billboard!", _parentM2->getFilename().c_str());
 		//assert1(false);
 	}
 }

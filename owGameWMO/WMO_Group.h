@@ -1,21 +1,16 @@
 ﻿#pragma once
 
-#include "WMO_Headers.h"
+#include "WMO_Group_Headers.h"
 
+// Parts
 #include "WMO_Group_Part_Batch.h"
 #include "WMO_Liquid.h"
 #include "WMO_Part_Portal.h"
 
 // FORWARD BEGIN
 class WMO;
-class CWMO_Base_Instance;
+class CWMO_Group_Instance;
 // FORWARD END
-
-struct MODD_PlacementInfo
-{
-	const WMO_Doodad_PlacementInfo** infos;
-	uint32 count;
-};
 
 class WMO_Group : public CRefItem
 {
@@ -23,31 +18,29 @@ public:
 	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, string _groupName, IFile* _groupFile);
 	~WMO_Group();
 
-	void CreateInsances(CWMO_Base_Instance* _parent);
+	void CreateInsances(CWMO_Group_Instance* _parent) const;
 
 	void Load();
 	void initLighting();
 
-	void Render(cmat4 _worldMatrix, const WMO_Doodad_SetInfo& _doodadSet);
+	void Render(cmat4 _world) const;
 
 public:
-	const WMO*								m_ParentWMO;
 	const string							m_GroupName;
 	const string							m_GroupDescription;
 	const uint32							m_GroupIndex;
-	const SmartPtr<IFile>					m_F;
-	WMO_Group_HeaderDef						m_Header;
+	IFile*									m_F;
+	SWMO_Group_HeaderDef					m_Header;
 	BoundingBox								m_Bounds;
-	bool									m_PortalsVis;
-	bool									m_Calculated;
-	vector<SmartPtr<CWMO_Part_Portal>>		m_Portals;
+
+	vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
 	SmartGeomPtr							__geom;
 
 public:
 	//-- Triangles --//
-	vector<WMO_Group_MaterialDef>			m_MaterialsInfo;
+	vector<SWMO_Group_MaterialDef>			m_MaterialsInfo;
 	bool									m_IsMOCVExists;
 
 	//-- Render bathes --//
@@ -64,8 +57,11 @@ public:
 	// MOBR chunk
 
 	//-- Liquid --//
-	WMO_Group_MLIQDef						m_LiquidHeader;
+	SWMO_Group_MLIQDef						m_LiquidHeader;
 	SmartPtr<CWMO_Liquid>					m_WMOLiqiud;
 
+
+	//--
+	const WMO*								m_ParentWMO;
 	const CGroupQuality&					m_Quality;
 };

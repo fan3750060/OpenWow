@@ -9,6 +9,8 @@ class CM2_Pass : public GeometryBase
 	int32 gColorEnable;
     int32 gColor;
 
+	int32 gColorDoodadEnable;
+	int32 gColorDoodad;
 
     int32  gIsAnimated;
 
@@ -43,7 +45,8 @@ public:
 		gColorEnable = getLocation("gColorEnable");
         gColor = getLocation("gColor");
 
-        
+		gColorDoodadEnable = getLocation("gColorDoodadEnable");
+		gColorDoodad = getLocation("gColorDoodad");
 
 		
 
@@ -74,7 +77,14 @@ public:
 		setVec4(gColor, _color);
 	}
 
-
+	inline void SetColorDoodadEnable(bool _value)
+	{
+		setInt(gColorDoodadEnable, _value);
+	}
+	inline void SetColorDoodad(vec4 _color)
+	{
+		setVec4(gColorDoodad, _color);
+	}
 
 
 

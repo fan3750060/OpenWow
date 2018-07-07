@@ -31,7 +31,7 @@ public:
 private:
 	M2*						m_ParentM2;
 	IFile*					m_F;
-	SM2_Header*				m_Header;
+	SM2_Header				m_Header;
 
 	// !! Don't delete this, it's temp data !! //
 

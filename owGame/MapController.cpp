@@ -60,8 +60,7 @@ void MapController::MapPreLoad(DBC_MapRecord _map)
 	// Delete if exists
 	if (m_WDL != nullptr)
 	{
-		delete m_WDL;
-		m_WDL = nullptr;
+		delete m_WDL; m_WDL = nullptr;
 	}
 
 	m_WDL = new WDL(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdl");
@@ -70,8 +69,7 @@ void MapController::MapPreLoad(DBC_MapRecord _map)
 	// Delete if exists
 	if (m_WDT != nullptr)
 	{
-		delete m_WDT;
-		m_WDT = nullptr;
+		delete m_WDT;	m_WDT = nullptr;
 	}
 
 	m_WDT = new WDT();
@@ -99,6 +97,9 @@ void MapController::MapPostLoad()
 
 void MapController::Unload()
 {
+	if (m_WDL) delete m_WDL;
+	if (m_WDT) delete m_WDT;
+
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
         if (m_ADTCache[i] != nullptr)

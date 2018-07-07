@@ -32,7 +32,9 @@ public:
 		m_Childs.erase(std::remove(m_Childs.begin(), m_Childs.end(), _child), m_Childs.end());
 	}
 
+	void setTranslate(vec3 _translate) { m_Translate = _translate; CalculateMatrix(); }
 	cvec3 getTranslate() const { return m_Translate; }
+	void setRotate(vec3 _rotate) { m_Rotate = _rotate; CalculateMatrix(); }
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
 	cvec3 getScale() const { return m_Scale; }

@@ -44,8 +44,8 @@ void Liquid::Render(cmat4 _worldMatrix)
 	{
 		if (m_SkyManager != nullptr)
 		{
-			_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_LIGHT));
-			_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LIGHT_COLOR_RIVER_DARK));
+			_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_LIGHT));
+			_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_DARK));
 			_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
 			_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
 		}
