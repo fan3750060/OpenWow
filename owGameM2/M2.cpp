@@ -47,7 +47,7 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4
 		return;
 	}
 
-	//RenderCollision();
+	RenderCollision(_worldMatrix);
 
 	_Render->getTechniquesMgr()->M2_Pass->Bind();
 	_Render->getTechniquesMgr()->M2_Pass->SetWorldMatrix(_worldMatrix);
@@ -105,7 +105,7 @@ void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _d
 
 void M2::RenderCollision(cmat4 _worldMatrix)
 {
-	/*if (m_CollisionGeom == nullptr)
+	if (m_CollisionGeom == nullptr)
 	{
 		return;
 	}
@@ -118,12 +118,12 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
 
 	_Render->r.setGeometry(m_CollisionGeom);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_Header.collisionTriangles.size, 0, m_Header.collisionVertices.size);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_CollisionIndCnt, 0, m_CollisionVetCnt);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);*/
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
 void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)

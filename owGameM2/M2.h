@@ -255,6 +255,8 @@ private:
 	// Buffers and geom
 	SmartBufferPtr						m_VBuffer;
 	SmartGeomPtr						m_CollisionGeom;
+	uint32								m_CollisionIndCnt;
+	uint32								m_CollisionVetCnt;
 
 private: // Static and Consts
 	const uint8							C_TexturesMaxCount = 128;

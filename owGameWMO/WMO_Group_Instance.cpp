@@ -43,4 +43,6 @@ bool CWMO_Group_Instance::PreRender3D()
 void CWMO_Group_Instance::Render3D()
 {
 	m_Object->Render(getAbsTrans());
+
+	m_Object->RenderCollision(getAbsTrans());
 }

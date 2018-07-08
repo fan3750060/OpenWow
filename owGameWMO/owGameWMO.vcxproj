@@ -15,6 +15,7 @@
     <ClCompile Include="WMO_Builder.cpp" />
     <ClCompile Include="WMO_Group_Instance.cpp" />
     <ClCompile Include="WMO_Group_Part_Batch.cpp" />
+    <ClCompile Include="WMO_Group_Part_BSP_Node.cpp" />
     <ClCompile Include="WMO_Liquid.cpp" />
     <ClCompile Include="WMO_Liquid_Instance.cpp" />
     <ClCompile Include="WMO_Doodad_Instance.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="WMO_Base_Instance.h" />
     <ClInclude Include="WMO_Builder.h" />
+    <ClInclude Include="WMO_Group_Part_BSP_Node.h" />
     <ClInclude Include="WMO_Group_Headers.h" />
     <ClInclude Include="WMO_Group_Instance.h" />
     <ClInclude Include="WMO_Group_Part_Batch.h" />

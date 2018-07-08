@@ -3,9 +3,11 @@
 #include "WMO_Group_Headers.h"
 
 // Parts
-#include "WMO_Group_Part_Batch.h"
 #include "WMO_Liquid.h"
 #include "WMO_Part_Portal.h"
+
+#include "WMO_Group_Part_Batch.h"
+#include "WMO_Group_Part_BSP_Node.h"
 
 // FORWARD BEGIN
 class WMO;
@@ -24,6 +26,7 @@ public:
 	void initLighting();
 
 	void Render(cmat4 _world) const;
+	void RenderCollision(cmat4 _world) const;
 
 public:
 	const string							m_GroupName;
@@ -40,6 +43,7 @@ public:
 
 public:
 	//-- Triangles --//
+	vec3 * dataFromMOVT;
 	vector<SWMO_Group_MaterialDef>			m_MaterialsInfo;
 	bool									m_IsMOCVExists;
 
@@ -55,6 +59,9 @@ public:
 	//-- Collision --//
 	// MOBN chunk
 	// MOBR chunk
+	vector<uint16> collisionIndexes;
+	SmartBufferPtr							VB_Collision;
+	vector<CWMO_Group_Part_BSP_Node*>		m_CollisionNodes;
 
 	//-- Liquid --//
 	SWMO_Group_MLIQDef						m_LiquidHeader;

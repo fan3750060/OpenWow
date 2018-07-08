@@ -112,6 +112,28 @@ struct SWMO_Group_BatchDef
 	uint16 getVerticesCount() const { return vertexEnd - vertexStart; }
 };
 
+
+
+struct SWMO_Group_MOBNDef
+{
+	enum Flags
+	{
+		Flag_XAxis = 0x0,
+		Flag_YAxis = 0x1,
+		Flag_ZAxis = 0x2,
+		Flag_AxisMask = 0x3,
+		Flag_Leaf = 0x4,
+		Flag_NoChild = 0xFFFF,
+	};
+
+	uint16_t flags;        // See above enum. 4: leaf, 0 for YZ-plane, 1 for XZ-plane, 2 for XY-plane
+	int16_t negChild;      // index of bsp child node (right in this array)
+	int16_t posChild;
+	uint16_t nFaces;       // num of triangle faces in MOBR
+	uint32_t faceStart;    // index of the first triangle index(in MOBR)
+	float planeDist;
+};
+
 struct SWMO_Group_MLIQDef
 {
 	uint32 X, Y;

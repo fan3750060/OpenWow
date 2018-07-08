@@ -19,6 +19,8 @@ public:
 	void* mapBuffer(uint32 _offset, uint32 _size, R_BufferMappingTypes _mapType);
 	void unmapBuffer();
 
+	uint32 getSize() const { return m_Size; }
+
 public:
 	uint32  m_Type;
 	uint32  m_GLObj;
