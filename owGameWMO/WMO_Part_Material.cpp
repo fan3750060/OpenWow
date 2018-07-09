@@ -27,6 +27,18 @@ WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialD
 	vec4 color = fromARGB(m_Proto.diffColor);
 }
 
+void WMO_Part_Material::fillRenderState(RenderState* _state) const
+{
+	uint16 sampler = m_QualitySettings.Texture_Sampler;
+	sampler |= (m_Proto.flags.TextureClampS) ? SS_ADDRU_CLAMP : SS_ADDRU_WRAP;
+	sampler |= (m_Proto.flags.TextureClampT) ? SS_ADDRV_CLAMP : SS_ADDRV_WRAP;
+
+	_state->setTexture(Material::C_DiffuseTextureIndex + 0, m_DiffuseTexture[0], sampler, 0);
+	_state->setTexture(Material::C_DiffuseTextureIndex + 1, m_DiffuseTexture[1], sampler, 0);
+	_state->setCullMode(m_Proto.flags.IsTwoSided ? RS_CULL_NONE : RS_CULL_BACK);
+	_Render->getRenderStorage()->SetEGxBlend(_state, m_Proto.blendMode);
+}
+
 void WMO_Part_Material::set() const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
@@ -40,5 +52,5 @@ void WMO_Part_Material::set() const
 
 	//_Render->r.setAlphaToCoverage(true);
 
-	_Render->getRenderStorage()->SetEGxBlend(m_Proto.blendMode);
+	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), m_Proto.blendMode);
 }

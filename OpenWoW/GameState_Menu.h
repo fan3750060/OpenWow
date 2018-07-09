@@ -46,5 +46,5 @@ private:
 	Commands cmd;
 
 	void randBackground();
-	CM2_Base_Instance* m_BackgroudModel;
+	SmartPtr<CM2_Base_Instance> m_BackgroudModel;
 };

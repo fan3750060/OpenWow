@@ -13,6 +13,10 @@ CBindingController::CBindingController()
 
 CBindingController::~CBindingController()
 {
+	delete m_InputListenerObjectCollection;
+	delete m_Renderable3DObjectCollection;
+	delete m_RenderableUIObjectCollection;
+	delete m_UpdatableObjectCollection;
 	OutputDebugString(L"CBindingController destroyed.\n");
 }
 

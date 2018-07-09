@@ -46,6 +46,16 @@ UIElement::UIElement(IUIMgr* _uimgr, uint32 _DeepAdding) :
 
 UIElement::~UIElement()
 {
+	for (uint32 i = 0; i < m_Childs.size(); i++)
+	{
+		if (m_Childs[i]->GetChildsCount() > 0)
+		{
+			m_Childs[i]->DeleteChilds();
+		}
+
+		delete m_Childs[i];
+	}
+
     Log::Info("UI: [%s] destroyed.", m_Name.c_str());
 }
 
@@ -219,7 +229,7 @@ void UIElement::RenderUI()
 
 void UIElement::DeleteChilds()
 {
-    for (auto chIt = m_Childs.begin(); chIt != m_Childs.end(); )
+    /*for (auto chIt = m_Childs.begin(); chIt != m_Childs.end(); )
     {
         UIElement*& child = (*chIt);
 
@@ -228,8 +238,17 @@ void UIElement::DeleteChilds()
             child->DeleteChilds();
         }
 
+		chIt = m_Childs.erase(chIt);
 		dynamic_cast<IUIMgrEx*>(mUIMgr)->DeleteUIElement(child);
+    }*/
 
-        chIt = m_Childs.erase(chIt);
-    }
+	/*for (auto& ch : m_Childs)
+	{
+		if (ch->GetChildsCount() > 0)
+		{
+			ch->DeleteChilds();
+		}
+		
+		delete ch;
+	}*/
 }

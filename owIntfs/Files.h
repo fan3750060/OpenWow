@@ -35,15 +35,17 @@ struct IFile : public IByteBuffer, public IRefItem
 	virtual string Path_Name() const = 0;
 };
 
-__interface 
+struct 
 	__declspec(uuid("5DC32EB8-9A63-4FAD-A4BF-81916B8EF86A"))
 	IFilesManager : public IManager
 {
-	IFile* Open(cstring _fileName);
+	virtual ~IFilesManager() {}
 
-	void Lock();
-	void Unlock();
-	void Guard();
+	virtual IFile* Open(cstring _fileName) = 0;
+
+	virtual void Lock() = 0;
+	virtual void Unlock() = 0;
+	virtual void Guard() = 0;
 };
 
 // FORWARD BEGIN
@@ -69,10 +71,12 @@ struct SMPQFileLocation
 	uint32 fileNumber;
 };
 
-__interface
+struct
 	__declspec(uuid("6658FDFF-48AB-4712-8FAE-A1C32DFF8815"))
 	IMPQArchiveManager : public IManager
 {
-	void AddArchive(string _filename);
-	SMPQFileLocation GetFileLocation(cstring _filename);
+	virtual ~IMPQArchiveManager() {};
+
+	virtual void AddArchive(string _filename) = 0;
+	virtual SMPQFileLocation GetFileLocation(cstring _filename) = 0;
 };

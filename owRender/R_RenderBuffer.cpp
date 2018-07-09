@@ -25,7 +25,7 @@ R_RenderBuffer::R_RenderBuffer(RenderDevice* _RenderDevice) :
 
 R_RenderBuffer::~R_RenderBuffer()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
 
 	if (m_DepthBufferGLObj != 0)
 	{
@@ -179,7 +179,7 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height
 	bool valid = true;
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
 	uint32 status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
 		valid = false;
@@ -189,7 +189,7 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBMultiSampledGLObj);
 		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
 		if (status != GL_FRAMEBUFFER_COMPLETE)
 		{
 			valid = false;
@@ -228,13 +228,13 @@ R_Texture* R_RenderBuffer::getRenderBufferTex(uint32 _bufIndex)
 void R_RenderBuffer::setRenderBuffer()
 {
 	// Resolve render buffer if necessary
-	if (m_RenderDevice->_curRendBuf != nullptr)
+	if (m_RenderDevice->m_RBCurrent != nullptr)
 	{
-		m_RenderDevice->_curRendBuf->resolveRenderBuffer();
+		m_RenderDevice->m_RBCurrent->resolveRenderBuffer();
 	}
 
 	// Set new render buffer
-	m_RenderDevice->_curRendBuf = this;
+	m_RenderDevice->m_RBCurrent = this;
 
 	// Unbind all m_DiffuseTextures to make sure that no FBO attachment is bound any more
 	for (uint32 i = 0; i < 16; ++i)
@@ -242,12 +242,12 @@ void R_RenderBuffer::setRenderBuffer()
 		m_RenderDevice->setTexture(i, 0, 0, 0);
 	}
 
-	m_RenderDevice->commitStates(PM_TEXTURES);
+	m_RenderDevice->commitStates(nullptr, PM_TEXTURES);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBMultiSampledGLObj != 0 ? m_FBMultiSampledGLObj : m_FBGLObj);
 	assert1(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-	m_RenderDevice->_fbWidth = m_Width;
-	m_RenderDevice->_fbHeight = m_Height;
+	m_RenderDevice->m_RBWidth = m_Width;
+	m_RenderDevice->m_RBHeight = m_Height;
 
 	if (m_FBMultiSampledGLObj != 0)
 	{
@@ -262,16 +262,16 @@ void R_RenderBuffer::setRenderBuffer()
 void R_RenderBuffer::resetRenderBuffer()
 {
 	// Resolve render buffer if necessary
-	if (m_RenderDevice->_curRendBuf != nullptr)
+	if (m_RenderDevice->m_RBCurrent != nullptr)
 	{
-		m_RenderDevice->_curRendBuf->resolveRenderBuffer();
+		m_RenderDevice->m_RBCurrent->resolveRenderBuffer();
 	}
 
 	// Set new render buffer
-	m_RenderDevice->_curRendBuf = nullptr;
+	m_RenderDevice->m_RBCurrent = nullptr;
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
-	if (m_RenderDevice->m_DefaultFBO == 0)
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
+	if (m_RenderDevice->m_RBDefault == 0)
 	{
 		if (m_RenderDevice->_doubleBuffered)
 			glDrawBuffer(m_RenderDevice->_outputBufferIndex == 1 ? GL_BACK_RIGHT : GL_BACK_LEFT);
@@ -279,8 +279,8 @@ void R_RenderBuffer::resetRenderBuffer()
 			glDrawBuffer(m_RenderDevice->_outputBufferIndex == 1 ? GL_FRONT_RIGHT : GL_FRONT_LEFT);
 	}
 
-	m_RenderDevice->_fbWidth = m_RenderDevice->m_ViewportWidth + m_RenderDevice->m_ViewportX;
-	m_RenderDevice->_fbHeight = m_RenderDevice->m_ViewportHeight + m_RenderDevice->m_ViewportY;
+	m_RenderDevice->m_RBWidth = m_RenderDevice->m_State.m_ViewportWidth + m_RenderDevice->m_State.m_ViewportX;
+	m_RenderDevice->m_RBHeight = m_RenderDevice->m_State.m_ViewportHeight + m_RenderDevice->m_State.m_ViewportY;
 
 	if (m_RenderDevice->m_IsDefaultFBOMultisampled)
 	{
@@ -305,12 +305,12 @@ bool R_RenderBuffer::getRenderBufferData(int _bufIndex, int* _width, int* _heigh
 	if (this == 0)
 	{
 		if (_bufIndex != 32 && _bufIndex != 0) return false;
-		if (_width != 0x0) *_width = m_RenderDevice->m_ViewportWidth;
-		if (_height != 0x0) *_height = m_RenderDevice->m_ViewportHeight;
+		if (_width != 0x0) *_width = m_RenderDevice->m_State.m_ViewportWidth;
+		if (_height != 0x0) *_height = m_RenderDevice->m_State.m_ViewportHeight;
 
-		x = m_RenderDevice->m_ViewportX; y = m_RenderDevice->m_ViewportY; w = m_RenderDevice->m_ViewportWidth; h = m_RenderDevice->m_ViewportHeight;
+		x = m_RenderDevice->m_State.m_ViewportX; y = m_RenderDevice->m_State.m_ViewportY; w = m_RenderDevice->m_State.m_ViewportWidth; h = m_RenderDevice->m_State.m_ViewportHeight;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
 		if (_bufIndex != 32)
 		{
 			if (m_RenderDevice->_doubleBuffered)
@@ -363,7 +363,7 @@ bool R_RenderBuffer::getRenderBufferData(int _bufIndex, int* _width, int* _heigh
 		glReadPixels(x, y, w, h, format, type, _dataBuffer);
 		retVal = true;
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
 
 	return retVal;
 }
@@ -405,6 +405,6 @@ void R_RenderBuffer::resolveRenderBuffer()
 		glBlitFramebuffer(0, 0, m_Width, m_Height, 0, 0, m_Width, m_Height, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	}
 
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RenderDevice->m_DefaultFBO);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RenderDevice->m_RBDefault);
 }

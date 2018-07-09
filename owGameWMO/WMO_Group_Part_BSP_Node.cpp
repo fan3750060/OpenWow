@@ -13,12 +13,12 @@ CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const WMO_Group * _parentGrou
 
 	vector<vec3> collisionVertices;
 	collisionVertices.reserve(m_Proto.nFaces * 3);
-	for (uint32 i = m_Proto.faceStart; i < m_Proto.faceStart + m_Proto.nFaces; i++)
+	/*for (uint32 i = m_Proto.faceStart; i < m_Proto.faceStart + m_Proto.nFaces; i++)
 	{
 		collisionVertices.push_back(_parentGroup->dataFromMOVT[_parentGroup->collisionIndexes[3 * i + 0]]);
 		collisionVertices.push_back(_parentGroup->dataFromMOVT[_parentGroup->collisionIndexes[3 * i + 1]]);
 		collisionVertices.push_back(_parentGroup->dataFromMOVT[_parentGroup->collisionIndexes[3 * i + 2]]);
-	}
+	}*/
 
 	R_Buffer* vb = _Render->r.createVertexBuffer(collisionVertices.size() * sizeof(vec3), collisionVertices.data(), false);
 
@@ -36,7 +36,7 @@ void CWMO_Group_Part_BSP_Node::Render(cmat4 _worldMatrix)
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
 	{
-		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->setWorld(_worldMatrix);
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(color);
 
 		_Render->r.setGeometry(m_GEOM_Collision);

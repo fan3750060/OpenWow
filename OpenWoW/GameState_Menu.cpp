@@ -67,7 +67,7 @@ bool GameState_Menu::Init()
 	m_LoadingScreenUI->Hide();
 
 	cmd = CMD_NONE;
-	randBackground();
+	//randBackground();
 
 	//_Map->PreLoad(DBC_Map[1]);
 	//LoadWorld(vec3(17644, 68, 17823));
@@ -186,10 +186,10 @@ void GameState_Menu::RenderUI()
 
 	char buff[256];
 
-	sprintf_s(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
+	sprintf_s(buff, "Buffer memory [%s]", _Render->r.getBufferMemStr().c_str());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
 
-	sprintf_s(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
+	sprintf_s(buff, "Texture memory [%s]", _Render->r.getTextureMemStr().c_str());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 }
 
@@ -240,7 +240,7 @@ void GameState_Menu::randBackground()
 {
 	char* ui[] = { "MainMenu_Northrend", "MainMenu_BurningCrusade", "MainMenu", "NightElf", "Human", "Dwarf", "Orc", "Tauren", "Scourge" };
 
-	char* randui = ui[0/*Random::GenerateMax(7)*/];
+	char* randui = ui[3/*Random::GenerateMax(7)*/];
 	char path[256];
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
 

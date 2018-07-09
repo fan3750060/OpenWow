@@ -40,13 +40,17 @@ public:
 	SmartTexturePtr m_BlendRBGShadowATexture;
 
 		
+	
+	
 	SmartGeomPtr __geomDebugNormals;
 
 	// Qulity
+	RenderState m_StateHigh;
 	SmartBufferPtr __ibHigh;
 	uint16  m_IndexesCountHigh;
 	SmartGeomPtr __geomHigh;
 
+	RenderState m_StateDefault;
 	SmartBufferPtr __ibDefault;
 	uint16  m_IndexesCountDefault;
 	SmartGeomPtr __geomDefault;

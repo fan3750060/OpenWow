@@ -11,7 +11,7 @@ public:
         gColor = getLocation("gColor");
     }
 
-	void SetShadowColor(vec3 _Color)
+	void setColor(vec3 _Color)
 	{
 		setVec3(gColor, _Color);
 	}

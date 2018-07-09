@@ -11,8 +11,6 @@
 
 #include __PACK_BEGIN
 
-
-
 struct ADT_MCIN
 {
 	uint32_t offset;               // absolute offset.
@@ -209,6 +207,12 @@ bool ADT::Load()
 		}
 	}
 
+	// Liquids
+	f->seek(startPos + m_Header.MH20);
+	{
+
+	}
+
 	//-- Load Textures -------------------------------------------------------------------
 
 	for (auto& it : m_Textures)
@@ -229,7 +233,7 @@ bool ADT::Load()
 		f->seek(chunks[i].offset);
 
 		// Chunk + size (8)
-		f->seekRelative(4);
+		f->seekRelative(4); // MCNK
 		uint32_t size;
 		f->readBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
@@ -253,7 +257,7 @@ bool ADT::Load()
 			m_Bounds.makeUnion(inst->getBounds());
 		}
 	}
-	
+
 	//-- MDXs -------------------------------------------------------------------------
 
 	for (auto& it : m_MDXsPlacementInfo)

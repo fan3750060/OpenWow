@@ -8,46 +8,12 @@ RenderStorage::RenderStorage(RenderDevice* _RenderDevice)
 {
 	CreateWoWLayouts();
 
-
-	CreateLayouts();
 	CreateGeometry();
 }
 
 RenderStorage::~RenderStorage()
 {
 
-}
-
-void RenderStorage::CreateLayouts()
-{
-	R_VertexLayoutAttrib attribsSky[2] = {
-		{"VertexPosition", 0, 3, 0},
-		{"color",          1, 3, 0}
-	};
-	__layoutSky = m_RenderDevice->registerVertexLayout(2, attribsSky);
-	//--------------------------------------------------------------------------------------------
-	R_VertexLayoutAttrib attribsWMO[3] = {
-		{"VertexPosition",      0, 3, 0},
-		{"textureCoords",  1, 2, 0},
-		{"normal",         2, 3, 0}
-	};
-	__layoutWMO = m_RenderDevice->registerVertexLayout(3, attribsWMO);
-
-	R_VertexLayoutAttrib attribsWMO_VC[5] = {
-		{"VertexPosition",      0, 3, 0},
-		{"textureCoords0",		1, 2, 0},
-		{"textureCoords1",		2, 2, 0},
-		{"normal",				3, 3, 0},
-		{"color",				4, 4, 0}
-	};
-	__layoutWMO_VC = m_RenderDevice->registerVertexLayout(5, attribsWMO_VC);
-	//--------------------------------------------------------------------------------------------
-	R_VertexLayoutAttrib attribsWater[3] = {
-		{"VertexPosition", 0, 3, 0},
-		{"textureCoords",  1, 3, 0},
-		{"normal",         2, 3, 0}
-	};
-	__layoutWater = m_RenderDevice->registerVertexLayout(3, attribsWater);
 }
 
 void RenderStorage::CreateGeometry()
@@ -207,29 +173,29 @@ void RenderStorage::CreateWoWLayouts()
 	R_VertexLayoutAttrib attribs_GxVBF_P[1] = { // 12
 		{"position",    0, 3, 0}
 	};
-	__layout_GxVBF_P = m_RenderDevice->registerVertexLayout(1, attribs_GxVBF_P); // USED IN LOW-RESOLUTION TILES
+	__layout_GxVBF_P = m_RenderDevice->registerVertexLayout(1, attribs_GxVBF_P);
 
-	//--
+	//-- NORMALS
 
 	R_VertexLayoutAttrib attribs_GxVBF_PN[2] = { // 24
 		{"position",    0, 3, 0},
 		{"normal",      1, 3, 0}
 	};
-	__layout_GxVBF_PN = m_RenderDevice->registerVertexLayout(2, attribs_GxVBF_PN); // USED IN LOW-RESOLUTION TILES
+	__layout_GxVBF_PN = m_RenderDevice->registerVertexLayout(2, attribs_GxVBF_PN);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PNC[3] = { // 28
 		{"position",    0, 3, 0},
 		{"normal",      1, 3, 0},
 		{"color",       2, 1, 0}
 	};
-
-	//--
+	__layout_GxVBF_PNC = m_RenderDevice->registerVertexLayout(3, attribs_GxVBF_PNC);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PNT[3] = { // 32
 		{"position",    0, 3, 0},
 		{"normal",      1, 3, 0},
 		{"tc",          2, 2, 0}
 	};
+	__layout_GxVBF_PNT = m_RenderDevice->registerVertexLayout(3, attribs_GxVBF_PNT);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PNCT[4] = { // 36
 		{"position",    0, 3, 0},
@@ -237,8 +203,7 @@ void RenderStorage::CreateWoWLayouts()
 		{"color",       2, 1, 0},
 		{"tc",          3, 2, 0}
 	};
-
-	//--
+	__layout_GxVBF_PNCT = m_RenderDevice->registerVertexLayout(4, attribs_GxVBF_PNCT);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PNT2[4] = { // 40
 		{"position",    0, 3, 0},
@@ -255,22 +220,22 @@ void RenderStorage::CreateWoWLayouts()
 		{"tc0",         3, 2, 0},
 		{"tc1",         4, 2, 0}
 	};
-	__layout_GxVBF_PNCT2 = m_RenderDevice->registerVertexLayout(5, attribs_GxVBF_PNCT2); // USED IN MapChunk
+	__layout_GxVBF_PNCT2 = m_RenderDevice->registerVertexLayout(5, attribs_GxVBF_PNCT2);
 
-	//--
+	//-- COLORS (NO NORMALS)
 
 	R_VertexLayoutAttrib attribs_GxVBF_PC[2] = { // 16
 		{"position",    0, 3, 0},
-		{"color",       1, 1, 0}
+		{"color",       1, 4, 0} // Original 1 but type is uint8
 	};
-	__layout_GxVBF_PÑ = m_RenderDevice->registerVertexLayout(2, attribs_GxVBF_PC); // USED IN M2
-
+	__layout_GxVBF_PC = m_RenderDevice->registerVertexLayout(2, attribs_GxVBF_PC);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PCT[3] = { // 24
 		{"position",    0, 3, 0},
 		{"color",       1, 1, 0},
 		{"tc",          2, 2, 0}
 	};
+	__layout_GxVBF_PCT = m_RenderDevice->registerVertexLayout(3, attribs_GxVBF_PCT);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PCT2[4] = { // 32
 		{"position",    0, 3, 0},
@@ -278,20 +243,22 @@ void RenderStorage::CreateWoWLayouts()
 		{"tc0",         2, 2, 0},
 		{"tc1",         3, 2, 0}
 	};
-
-	//--
+	__layout_GxVBF_PCT2 = m_RenderDevice->registerVertexLayout(4, attribs_GxVBF_PCT2);
+	
+	//-- TEXTURES (NO COLOR NO NORMALS)
 
 	R_VertexLayoutAttrib attribs_GxVBF_PT[2] = { // 20
 		{"position",    0, 3, 0},
 		{"tc",          1, 2, 0}
 	};
-	__layout_GxVBF_PT = m_RenderDevice->registerVertexLayout(2, attribs_GxVBF_PT); // USED IN M2
+	__layout_GxVBF_PT = m_RenderDevice->registerVertexLayout(2, attribs_GxVBF_PT);
 
 	R_VertexLayoutAttrib attribs_GxVBF_PT2[3] = { // 28
 		{"position",    0, 3, 0},
 		{"tc0",         1, 2, 0},
-		{"tc0",         2, 2, 0}
+		{"tc1",         2, 2, 0}
 	};
+	__layout_GxVBF_PT2 = m_RenderDevice->registerVertexLayout(3, attribs_GxVBF_PT2);
 
 	//--
 
@@ -303,9 +270,9 @@ void RenderStorage::CreateWoWLayouts()
 		{"tc0",         4, 2, 0},
 		{"tc1",         5, 2, 0}
 	};
-	__layout_GxVBF_PBNT2 = m_RenderDevice->registerVertexLayout(6, attribs_GxVBF_PBNT2); // USED IN M2
+	__layout_GxVBF_PBNT2 = m_RenderDevice->registerVertexLayout(6, attribs_GxVBF_PBNT2);
 
-	R_VertexLayoutAttrib attribs_GxVBF_PNC2T2[6] = { // Original 48
+	R_VertexLayoutAttrib attribs_GxVBF_PNC2T2[6] = { // 48
 		{"position",    0, 3, 0},
 		{"normal",      1, 3, 0},
 		{"color0",      2, 4, 0}, // Original 1 but type is uint8
@@ -313,71 +280,70 @@ void RenderStorage::CreateWoWLayouts()
 		{"tc0",         4, 2, 0},
 		{"tc1",         5, 2, 0}
 	};
-	__layout_GxVBF_PNC2T2 = m_RenderDevice->registerVertexLayout(6, attribs_GxVBF_PNC2T2); // USED IN MapChunk
+	__layout_GxVBF_PNC2T2 = m_RenderDevice->registerVertexLayout(6, attribs_GxVBF_PNC2T2);
 }
 
 //
 
-
-void RenderStorage::SetEGxBlend(uint8 _index)
+void RenderStorage::SetEGxBlend(RenderState* _state, uint8 _index)
 {
 	switch (_index)
 	{
 	case 0: // Opaque
-		m_RenderDevice->setBlendMode(false, BS_BLEND_ONE, BS_BLEND_ZERO);
+		_state->setBlendMode(false, BS_BLEND_ONE, BS_BLEND_ZERO);
 		break;
 
 	case 1: // AlphaKey
-		m_RenderDevice->setBlendMode(false, BS_BLEND_ONE, BS_BLEND_ZERO);
+		_state->setBlendMode(false, BS_BLEND_ONE, BS_BLEND_ZERO);
 		break;
 
 	case 2: // Alpha
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA);
+		_state->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA);
 		break;
 
 	case 3: // Add
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_ZERO, BS_BLEND_ONE);
+		_state->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_ZERO, BS_BLEND_ONE);
 		break;
 
 	case 4: // Mod
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_DEST_COLOR, BS_BLEND_ZERO, BS_BLEND_DEST_ALPHA, BS_BLEND_ZERO);
+		_state->setBlendModeEx(true, BS_BLEND_DEST_COLOR, BS_BLEND_ZERO, BS_BLEND_DEST_ALPHA, BS_BLEND_ZERO);
 		break;
 
 	case 5: // Mod2x
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_DEST_COLOR, BS_BLEND_SRC_COLOR, BS_BLEND_DEST_ALPHA, BS_BLEND_SRC_ALPHA);
+		_state->setBlendModeEx(true, BS_BLEND_DEST_COLOR, BS_BLEND_SRC_COLOR, BS_BLEND_DEST_ALPHA, BS_BLEND_SRC_ALPHA);
 		break;
 
 	case 6: // ModAdd
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_DEST_COLOR, BS_BLEND_ONE, BS_BLEND_DEST_ALPHA, BS_BLEND_ONE);
+		_state->setBlendModeEx(true, BS_BLEND_DEST_COLOR, BS_BLEND_ONE, BS_BLEND_DEST_ALPHA, BS_BLEND_ONE);
 		break;
 
 	case 7: // InvSrcAlphaAdd
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE);
+		_state->setBlendModeEx(true, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE);
 		break;
 
 	case 8: // InvSrcAlphaOpaque
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ZERO, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ZERO);
+		_state->setBlendModeEx(true, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ZERO, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ZERO);
 		break;
 
 	case 9: // SrcAlphaOpaque
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_ZERO, BS_BLEND_SRC_ALPHA, BS_BLEND_ZERO);
+		_state->setBlendModeEx(true, BS_BLEND_SRC_ALPHA, BS_BLEND_ZERO, BS_BLEND_SRC_ALPHA, BS_BLEND_ZERO);
 		break;
 
 	case 10: // NoAlphaAdd
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_ONE, BS_BLEND_ONE, BS_BLEND_ZERO, BS_BLEND_ONE);
+		_state->setBlendModeEx(true, BS_BLEND_ONE, BS_BLEND_ONE, BS_BLEND_ZERO, BS_BLEND_ONE);
 		break;
 
 	case 11: // ConstantAlpha
 		//GLSetBlend(true, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-		fail1();
+		fail2("Constant alpha EGxBlend doesn't support");
 		break;
 
 	case 12: // Screen
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_INV_DEST_COLOR, BS_BLEND_ONE, BS_BLEND_ONE, BS_BLEND_ZERO);
+		_state->setBlendModeEx(true, BS_BLEND_INV_DEST_COLOR, BS_BLEND_ONE, BS_BLEND_ONE, BS_BLEND_ZERO);
 		break;
 
 	case 13: // BlendAdd
-		m_RenderDevice->setBlendModeEx(true, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA);
+		_state->setBlendModeEx(true, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA, BS_BLEND_ONE, BS_BLEND_INV_SRC_ALPHA);
 		break;
 
 	default:

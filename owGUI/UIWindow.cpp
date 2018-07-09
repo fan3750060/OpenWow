@@ -12,6 +12,10 @@ UIWindow::UIWindow(IUIMgr* _uimgr) :
 	//color = COLOR_RED.Alpha(0.2);
 }
 
+UIWindow::~UIWindow()
+{
+}
+
 void UIWindow::Init(cvec2 _position, cvec2 _size, Image* _image, Color _color)
 {
 	m_IsTextEnable = false;

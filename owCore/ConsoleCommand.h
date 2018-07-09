@@ -4,6 +4,7 @@ class ConsoleCommand : public IConsoleCommand
 {
 public:
 	ConsoleCommand(cstring _commandName, Function* _function, bool _hasArgs = false);
+	virtual ~ConsoleCommand() override;
 
 	// IConsoleCommand
 	const string GetName() const override;
@@ -18,11 +19,13 @@ protected:
 };
 
 template <class ARGTYPE>
-class ConsoleCommand_WA : public ConsoleCommand, public IConsoleCommand
+class ConsoleCommand_WA : public ConsoleCommand
 {
 public:
 	ConsoleCommand_WA(cstring _commandName, Function* _function) :
 		ConsoleCommand(_commandName, _function, true)
+	{}
+	~ConsoleCommand_WA() override
 	{}
 
 	// IConsoleCommand

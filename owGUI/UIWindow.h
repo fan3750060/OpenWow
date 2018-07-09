@@ -8,6 +8,7 @@ class UIWindow : public UIElement
 	typedef UIElement base;
 public:
 	UIWindow(IUIMgr* _uimgr);
+	virtual ~UIWindow() override;
 
 	void Init(cvec2 _position, cvec2 _size, Image* _image, Color _color = COLOR_EMPTY);
 

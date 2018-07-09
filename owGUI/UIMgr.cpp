@@ -21,7 +21,7 @@ UIMgr::UIMgr()
 UIMgr::~UIMgr()
 {
 	//assert1(m_RootElement != nullptr);
-	//m_RootElement->DeleteChilds();
+	//delete m_RootElement;
 
     //
 
@@ -193,6 +193,7 @@ void UIMgr::DeleteUIElement(UIElement* _element)
 	}
 
 	delete _element;
+	_element = nullptr;
 }
 
 //

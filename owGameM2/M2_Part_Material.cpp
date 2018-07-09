@@ -3,99 +3,46 @@
 // General
 #include "M2_Part_Material.h"
 
-// Additional
-enum modelPixelShaders
+// M2Blend converter
+struct
 {
-	PS_Combiners_Opaque,
-	PS_Combiners_Mod,
-	PS_Combiners_Opaque_Mod,
-	PS_Combiners_Opaque_Mod2x,
-	PS_Combiners_Opaque_Mod2xNA,
-	PS_Combiners_Opaque_Opaque,
-	PS_Combiners_Mod_Mod,
-	PS_Combiners_Mod_Mod2x,
-	PS_Combiners_Mod_Add,
-	PS_Combiners_Mod_Mod2xNA,
-	PS_Combiners_Mod_AddNA,
-	PS_Combiners_Mod_Opaque,
-	PS_Combiners_Opaque_Mod2xNA_Alpha,
-	PS_Combiners_Opaque_AddAlpha,
-	PS_Combiners_Opaque_AddAlpha_Alpha,
-	PS_Combiners_Opaque_Mod2xNA_Alpha_Add,
-	PS_Combiners_Mod_AddAlpha,
-	PS_Combiners_Mod_AddAlpha_Alpha,
-	PS_Combiners_Opaque_Alpha_Alpha,
-	PS_Combiners_Opaque_Mod2xNA_Alpha_3s,
-	PS_Combiners_Opaque_AddAlpha_Wgt,
-	PS_Combiners_Mod_Add_Alpha,
-	PS_Combiners_Opaque_ModNA_Alpha,
-	PS_Combiners_Mod_AddAlpha_Wgt,
-	PS_Combiners_Opaque_Mod_Add_Wgt,
-	PS_Combiners_Opaque_Mod2xNA_Alpha_UnshAlpha,
-	PS_Combiners_Mod_Dual_Crossfade,
-	PS_Combiners_Opaque_Mod2xNA_Alpha_Alpha,
-	PS_Combiners_Mod_Masked_Dual_Crossfade,
-	PS_Combiners_Opaque_Alpha,
-	PS_Guild,
-	PS_Guild_NoBorder,
-	PS_Guild_Opaque,
-	PS_Combiners_Mod_Depth,
-	PS_Illum,
-	PS_Combiners_Mod_Mod_Mod_Const,
+	SM2_Material::BlendModes	M2Blend;
+	uint8						EGxBLend;
+} M2Blend_To_EGxBlend[SM2_Material::COUNT] =
+{
+	{ SM2_Material::M2BLEND_OPAQUE,			0 },
+	{ SM2_Material::M2BLEND_ALPHA_KEY,		1 },
+	{ SM2_Material::M2BLEND_ALPHA,			2 },
+	{ SM2_Material::M2BLEND_NO_ALPHA_ADD,	10 },
+	{ SM2_Material::M2BLEND_ADD,			3 },
+	{ SM2_Material::M2BLEND_MOD,			4 },
+	{ SM2_Material::M2BLEND_MOD2X,			5 }
 };
 
 CM2_Part_Material::CM2_Part_Material(const SM2_Material& _proto)
 {
-	isUNLIT = _proto.flags.UNLIT == 0;
-	isUNFOGGED = _proto.flags.UNFOGGED == 0;
-	isTWOSIDED = _proto.flags.TWOSIDED == 0;
-	isDEPTHTEST = _proto.flags.DEPTHTEST == 0;
-	isDEPTHWRITE = _proto.flags.DEPTHWRITE == 0;
+	m_IsLightingDisable = _proto.flags.UNLIT;
+	m_IsFogDisable = _proto.flags.UNFOGGED;
+	m_IsTwoSided = _proto.flags.TWOSIDED;
+	m_DepthTestEnabled = _proto.flags.DEPTHTEST == 0;
+	m_DepthMaskEnabled = _proto.flags.DEPTHWRITE == 0;
 
-	blending_mode = _proto.blending_mode;
+	m_M2BlendMode = _proto.m_BlendMode;
 
+}
+
+void CM2_Part_Material::fillRenderState(RenderState* _state) const
+{
+	_state->setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
+	_state->setDepthTest(m_DepthTestEnabled);
+	_state->setDepthMask(m_DepthMaskEnabled);
+	_Render->getRenderStorage()->SetEGxBlend(_state, M2Blend_To_EGxBlend[m_M2BlendMode].EGxBLend);
 }
 
 void CM2_Part_Material::Set() const
 {
-	_Render->getTechniquesMgr()->M2_Pass->SetBlendMode(blending_mode);
-
-	_Render->r.setDepthTest(isDEPTHTEST);
-	_Render->r.setDepthMask(isDEPTHWRITE);
-
-	//_Render->r.setAlphaToCoverage(true);
-
-	switch (blending_mode)
-	{
-	case SM2_Material::M2BLEND_OPAQUE:
-		_Render->getRenderStorage()->SetEGxBlend(0);
-		break;
-
-	case SM2_Material::M2BLEND_ALPHA_KEY:
-		_Render->getRenderStorage()->SetEGxBlend(1);
-		break;
-
-	case SM2_Material::M2BLEND_ALPHA:
-		_Render->getRenderStorage()->SetEGxBlend(2);
-		break;
-
-	case SM2_Material::M2BLEND_NO_ALPHA_ADD:
-		_Render->getRenderStorage()->SetEGxBlend(10);
-		break;
-
-	case SM2_Material::M2BLEND_ADD:
-		_Render->getRenderStorage()->SetEGxBlend(3);
-		break;
-
-	case SM2_Material::M2BLEND_MOD:
-		_Render->getRenderStorage()->SetEGxBlend(4);
-		break;
-
-	case SM2_Material::M2BLEND_MOD2X:
-		_Render->getRenderStorage()->SetEGxBlend(5);
-		break;
-
-	default:
-		fail1();
-	}
+	_Render->r.setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
+	_Render->r.setDepthTest(m_DepthTestEnabled);
+	_Render->r.setDepthMask(m_DepthMaskEnabled);
+	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), M2Blend_To_EGxBlend[m_M2BlendMode].EGxBLend);
 }

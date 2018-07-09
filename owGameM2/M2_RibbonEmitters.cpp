@@ -213,7 +213,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 	_Render->r.setDepthMask(false);
 
 	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
-	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetWorldMatrix(mat4());
+	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->setWorld(mat4());
 	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetColor(vec4(1.0f));
 
 	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, 0, 0);

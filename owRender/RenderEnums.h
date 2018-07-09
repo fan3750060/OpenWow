@@ -146,6 +146,19 @@ enum R_FillMode
 	RS_FILL_WIREFRAME = 1
 };
 
+struct R_TestModes
+{
+	enum List
+	{
+		LessEqual,
+		Less,
+		Equal,
+		Greater,
+		GreaterEqual,
+		Always
+	};
+};
+
 enum R_CullMode
 {
 	RS_CULL_BACK = 0,
@@ -195,9 +208,9 @@ struct R_BlendState
 			uint32  alphaToCoverageEnable : 1;
 			uint32  blendEnable : 1;
 			uint32  srcRGBBlendFunc : 4;
-			uint32  destRGBBlendFunc : 4;
+			uint32  dstRGBBlendFunc : 4;
 			uint32  srcABlendFunc : 4;
-			uint32  destABlendFunc : 4;
+			uint32  dstABlendFunc : 4;
 		};
 	};
 };

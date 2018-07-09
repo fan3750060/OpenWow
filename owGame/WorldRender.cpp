@@ -67,7 +67,7 @@ void WorldRender::RenderPostprocess()
 void WorldRender::DSDirectionalLightPass(DirectionalLight& _light)
 {
 	_Render->getTechniquesMgr()->Postprocess_Light_Direction->Bind();
-	_Render->getTechniquesMgr()->Postprocess_Light_Direction->SetCameraPos(_Render->getCamera()->Position);
+	_Render->getTechniquesMgr()->Postprocess_Light_Direction->setCameraPos(_Render->getCamera()->Position);
 
 	_Render->getTechniquesMgr()->Postprocess_Light_Direction->SetDirectionalLight(_light);
 
@@ -85,7 +85,7 @@ void WorldRender::DSDirectionalLightPass(DirectionalLight& _light)
 void WorldRender::DSFogRenderPass()
 {
 	_Render->getTechniquesMgr()->Postprocess_Fog->Bind();
-	_Render->getTechniquesMgr()->Postprocess_Fog->SetCameraPos(_Render->getCamera()->Position);
+	_Render->getTechniquesMgr()->Postprocess_Fog->setCameraPos(_Render->getCamera()->Position);
 
 	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogDistance(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_DISTANCE));
 	_Render->getTechniquesMgr()->Postprocess_Fog->SetFogModifier(m_WorldContoller->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_MULTIPLIER));

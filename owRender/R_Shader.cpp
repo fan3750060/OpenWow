@@ -6,7 +6,8 @@
 // Additional
 #include "OpenGL.h"
 
-R_Shader::R_Shader(RenderDevice* _RenderDevice) :
+R_Shader::R_Shader(RenderDevice* _RenderDevice, cstring _name) :
+	m_Name(_name),
 	m_ProgramGLObj(0),
 	m_RenderDevice(_RenderDevice)
 {}
@@ -73,17 +74,11 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 void R_Shader::bindShader()
 {
 	glUseProgram(m_ProgramGLObj);
-
-	m_RenderDevice->_curShaderId = this;
-	m_RenderDevice->_pendingMask |= PM_GEOMETRY;
 }
 
 void R_Shader::unbindShader()
 {
 	glUseProgram(0);
-
-	m_RenderDevice->_curShaderId = this;
-	m_RenderDevice->_pendingMask |= PM_GEOMETRY;
 }
 
 int R_Shader::getShaderConstLoc(const char *name)
@@ -163,7 +158,7 @@ void R_Shader::runComputeShader(uint32 xDim, uint32 yDim, uint32 zDim)
 {
 	bindShader();
 
-	if (m_RenderDevice->commitStates(~PM_GEOMETRY))
+	m_RenderDevice->commitStates(nullptr, ~PM_GEOMETRY);
 	{
 		glDispatchCompute(xDim, yDim, zDim);
 	}

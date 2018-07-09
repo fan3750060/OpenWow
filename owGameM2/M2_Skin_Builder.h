@@ -5,7 +5,7 @@
 
 struct M2_SkinBatch_PriorityPlan_Compare
 {
-	bool operator() (const M2_Skin_Batch* left, const M2_Skin_Batch* right) const
+	bool operator() (const CM2_Skin_Batch* left, const CM2_Skin_Batch* right) const
 	{
 		return left->getPriorityPlan() < right->getPriorityPlan();
 	}
@@ -14,7 +14,7 @@ struct M2_SkinBatch_PriorityPlan_Compare
 
 struct M2_SkinBatch_MeshID_Compare
 {
-	bool operator() (const M2_Skin_Batch* left, const M2_Skin_Batch* right) const
+	bool operator() (const CM2_Skin_Batch* left, const CM2_Skin_Batch* right) const
 	{
 		return left->getSkinProto().meshPartID < right->getSkinProto().meshPartID;
 	}

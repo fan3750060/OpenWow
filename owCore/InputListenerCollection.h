@@ -35,6 +35,8 @@ struct CInputListenerObjectCompare
 class CInputListenerObjectCollection : public IInputListener
 {
 public:
+	~CInputListenerObjectCollection();
+
     bool RegisterObject(IInputListener* _object, uint8 _priority = 0);
     void UnregisterObject(IInputListener* _object);
 

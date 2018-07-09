@@ -24,6 +24,7 @@ bool CGameState::Init()
 
 void CGameState::Destroy()
 {
+	delete m_Window;
 }
 
 bool CGameState::Set()

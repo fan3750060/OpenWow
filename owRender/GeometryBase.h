@@ -16,6 +16,8 @@ public:
 		gProjection = getLocation("gProjection");
 		gView = getLocation("gView");
 		gWorld = getLocation("gWorld");
+
+		gProjView = getLocation("gProjView");
 	}
 
 	GeometryBase(RenderDevice* _RenderDevice, cstring _vsName, cstring _fsName, cstring _gsName = "") : 
@@ -24,25 +26,31 @@ public:
 		gProjection = getLocation("gProjection");
 		gView = getLocation("gView");
 		gWorld = getLocation("gWorld");
+
+		gProjView = getLocation("gProjView");
 	}
 
-	void SetWorldMatrix(cmat4 WorldInverse)
+	void setWorld(cmat4 _world)
 	{
-		m_Shader->setShaderConst(gWorld, CONST_FLOAT44, &WorldInverse.x[0]);
+		m_Shader->setShaderConst(gWorld, CONST_FLOAT44, &_world.x[0]);
 	}
-
-	void SetViewMatrix(cmat4 WorldInverse)
+	void setView(cmat4 _view)
 	{
-		m_Shader->setShaderConst(gView, CONST_FLOAT44, &WorldInverse.x[0]);
+		m_Shader->setShaderConst(gView, CONST_FLOAT44, &_view.x[0]);
 	}
-
-	void SetProjectionMatrix(cmat4 WorldInverse)
+	void setProj(cmat4 _proj)
 	{
-		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &WorldInverse.x[0]);
+		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &_proj.x[0]);
+	}
+	void setProjView(cmat4 _projView)
+	{
+		m_Shader->setShaderConst(gProjView, CONST_FLOAT44, &_projView.x[0]);
 	}
 
 private:
 	int32 gProjection;
 	int32 gView;
 	int32 gWorld;
+
+	int32 gProjView;
 };

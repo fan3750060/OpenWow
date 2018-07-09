@@ -1,7 +1,5 @@
 #pragma once
 
-class RenderDevice;
-
 struct R_VertexBufferSlot
 {
 	R_VertexBufferSlot() :
@@ -28,6 +26,10 @@ struct R_VertexBufferSlot
 	uint32      m_Stride;
 	bool        m_NeedNorm;
 };
+
+// FORWARD BEGIN
+class RenderDevice;
+// FORWARD END
 
 class R_GeometryInfo : public CRefItem
 {

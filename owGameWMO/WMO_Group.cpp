@@ -95,6 +95,8 @@ void WMO_Group::Load()
 
 			m_F->readBytes(&m_Header, sizeof(SWMO_Group_HeaderDef));
 
+			assert1(m_Header.flags.HAS_3_MOTV == 0);
+
 			// Bounds
 			m_Bounds.set(m_Header.boundingBox.min, m_Header.boundingBox.max, true);
 		}
@@ -160,7 +162,7 @@ void WMO_Group::Load()
 				SWMO_Group_BatchDef batchDef;
 				m_F->readBytes(&batchDef, sizeof(SWMO_Group_BatchDef));
 
-				SmartPtr<WMO_Group_Part_Batch> batch = new WMO_Group_Part_Batch(m_ParentWMO, batchDef);
+				SmartPtr<WMO_Group_Part_Batch> batch = new WMO_Group_Part_Batch(m_ParentWMO, this, batchDef);
 				m_WMOBatchIndexes.push_back(batch);
 			}
 
@@ -199,13 +201,13 @@ void WMO_Group::Load()
 			uint32 indexesCnt = size / sizeof(uint16);
 			uint16* indices = (uint16*)m_F->getDataFromCurrent();
 
-			collisionIndexes.reserve(indexesCnt * 3);
+			/*collisionIndexes.reserve(indexesCnt * 3);
 			for (uint32 i = 0; i < indexesCnt; i++)
 			{
 				collisionIndexes[i * 3 + 0] = dataFromMOVI[3 * indices[i] + 0];
 				collisionIndexes[i * 3 + 1] = dataFromMOVI[3 * indices[i] + 1];
 				collisionIndexes[i * 3 + 2] = dataFromMOVI[3 * indices[i] + 2];
-			}
+			}*/
 		}
 		else if (strcmp(fourcc, "MOCV") == 0) // Vertex colors
 		{
@@ -259,24 +261,19 @@ void WMO_Group::Load()
 
 	// Create geom
 	{
-		assert1(VB_TextureCoords.size() < 3);
-
-		__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layoutWMO_VC);
+		__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geom->setGeomVertexParams(VB_Vertexes, R_DataType::T_FLOAT, 0, 0);
-		__geom->setGeomVertexParams(VB_TextureCoords[0], R_DataType::T_FLOAT, 0, 0);
-
-		if (VB_TextureCoords.size() == 2) // TODO
-		{
-			__geom->setGeomVertexParams(VB_TextureCoords[1], R_DataType::T_FLOAT, 0, 0);
-		}
-		else
-		{
-			__geom->setGeomVertexParams(VB_TextureCoords[0], R_DataType::T_FLOAT, 0, 0);
-		}
 		__geom->setGeomVertexParams(VB_Normals, R_DataType::T_FLOAT, 0, 0);
 		__geom->setGeomVertexParams(VB_Colors, R_DataType::T_FLOAT, 0, 0);
+		__geom->setGeomVertexParams(VB_TextureCoords[0], R_DataType::T_FLOAT, 0, 0);
+		__geom->setGeomVertexParams((VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0], R_DataType::T_FLOAT, 0, 0);
 		__geom->setGeomIndexParams(IB_Default, R_IndexFormat::IDXFMT_16);
 		__geom->finishCreatingGeometry();
+	}
+
+	for (auto& batch : m_WMOBatchIndexes)
+	{
+		batch->setGeom(__geom);
 	}
 
 	// Create collision geom
@@ -326,19 +323,12 @@ void WMO_Group::initLighting()
 
 void WMO_Group::Render(cmat4 _world) const
 {
-	//if (m_Header.flags.IS_OUTDOOR) _Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setDepthMask(true);
-	_Render->r.setDepthTest(true);
-
-	_Render->r.setGeometry(__geom);
-
 	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
 	{
-		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->m_WMO_GeometryPass;
+		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass;
 		pass->Bind();
 		{
-			pass->SetWorldMatrix(_world);
+			pass->setWorld(_world);
 
 			// Vertex colors
 			pass->SetHasMOCV(m_IsMOCVExists && m_Quality.WMO_MOCV);
@@ -353,15 +343,8 @@ void WMO_Group::Render(cmat4 _world) const
 			}
 		}
 		pass->Unbind();
-
-
 	}
 	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setDepthMask(true);
-	_Render->r.setDepthTest(true);
 }
 
 void WMO_Group::RenderCollision(cmat4 _world) const

@@ -67,7 +67,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 {
 	for (auto& it : m_SkinBatches)
 	{
-		M2_Skin_Batch* batch = new M2_Skin_Batch(m_ParentM2);
+		CM2_Skin_Batch* batch = new CM2_Skin_Batch(m_ParentM2, m_Skin);
 
 		batch->newShader = GetPixel(&it);
 
@@ -77,14 +77,12 @@ void CM2_Skin_Builder::Step2InitBatches()
 		batch->m_SkinProtoSection = m_SkinSections[it.skinSectionIndex];
 
 		// Get classes
-		batch->material = (m_ParentM2->GetMaterial(it.materialIndex));
-
-
+		batch->m_Material = (m_ParentM2->GetMaterial(it.materialIndex));
 
 		// Color
 		if (it.colorIndex != -1)
 		{
-			batch->color = (m_ParentM2->GetColor(it.colorIndex));
+			batch->m_Color = (m_ParentM2->GetColor(it.colorIndex));
 		}
 
 		// Textures
@@ -96,13 +94,13 @@ void CM2_Skin_Builder::Step2InitBatches()
 		// Texture unit
 		if (it.texture_CoordIndex != -1)
 		{
-			batch->texture_Unit = m_ParentM2->m_TexturesUnitLookup[it.texture_CoordIndex];
+			batch->m_TextureUnit = m_ParentM2->m_TexturesUnitLookup[it.texture_CoordIndex];
 		}
 
 		// Texture weight
 		if (it.texture_WeightIndex != -1)
 		{
-			batch->texture_WeightIndex = (m_ParentM2->m_TextureWeights[it.texture_WeightIndex]);
+			batch->m_TextureWeight = (m_ParentM2->m_TextureWeights[it.texture_WeightIndex]);
 		}
 
 		// Texture transfowm
@@ -113,7 +111,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 				int16 index = m_ParentM2->m_TexturesTransformLookup[it.texture_TransformIndex];
 				if (index != -1)
 				{
-					batch->texture_Transform = (m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
+					batch->m_TextureTransform = (m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
 				}
 			}
 		}
@@ -153,4 +151,9 @@ void CM2_Skin_Builder::StepBuildGeometry()
 	m_Skin->__geomDebugNormals->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex));
 	m_Skin->__geomDebugNormals->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 	m_Skin->__geomDebugNormals->finishCreatingGeometry();
+
+	for (auto& it : m_Skin->m_Batches)
+	{
+		it->Init();
+	}
 }

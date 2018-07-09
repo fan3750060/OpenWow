@@ -29,12 +29,12 @@ void Liquid::Render(cmat4 _worldMatrix)
 	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
 	{
 		_Render->getTechniquesMgr()->m_Water->Bind();
-		_Render->getTechniquesMgr()->m_Water->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->m_Water->setWorld(_worldMatrix);
 	}
 	else
 	{
 		_Render->getTechniquesMgr()->m_Magma->Bind();
-		_Render->getTechniquesMgr()->m_Magma->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->m_Magma->setWorld(_worldMatrix);
 	}
 
 	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % m_Textures.size();
@@ -58,7 +58,7 @@ void Liquid::Render(cmat4 _worldMatrix)
 		}
 	}
 
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndicesCnt, 0, m_VerticesCnt, false);
+	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndicesCnt, 0, m_VerticesCnt, nullptr, false);
 
 	PERF_INC(PERF_MAP_CHUNK_MH20);
 
@@ -319,7 +319,7 @@ void Liquid::createBuffer()
 	assert1(m_IndicesCnt > 0);
 
 	// Geometry
-	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layoutWater);
+	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(SLiquidVertexData));

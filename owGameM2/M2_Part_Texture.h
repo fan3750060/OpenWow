@@ -11,7 +11,7 @@ class CM2_Part_Texture
 public:
 	CM2_Part_Texture(IFile* f, const SM2_Texture& _proto);
 
-	void set(uint32 _slot, CM2_MeshPartID_Provider* _provider) const;
+	void set(RenderState* _state, uint32 _slot, CM2_MeshPartID_Provider* _provider) const;
 
 	// Common texture
 	R_Texture* getTexture() const { return m_Texture; }

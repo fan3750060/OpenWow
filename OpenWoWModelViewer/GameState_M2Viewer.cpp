@@ -138,7 +138,7 @@ void GameState_M2Viewer::Render3D()
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(mat4());
+	_Render->getTechniquesMgr()->Debug_Pass->setWorld(mat4());
 	{
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7f, 0.7f, 0.7f, 0.5f));
 

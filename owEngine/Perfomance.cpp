@@ -17,12 +17,12 @@ void Perfomance::FrameBegin()
 		m_DrawCount[i] = 0;
 	}
 
-	Start(PERF_GLOBAL);
+	//Start(PERF_GLOBAL);
 }
 
 void Perfomance::FrameEnd()
 {
-	Stop(PERF_GLOBAL);
+	//Stop(PERF_GLOBAL);
 }
 
 string Perfomance::Sum()

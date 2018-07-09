@@ -36,7 +36,7 @@ void CM2_Skin::Draw(CM2_MeshPartID_Provider* _provider)
 /*void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
 {
 	_Render->getTechniquesMgr()->DebugNormal_Pass->Bind();
-	_Render->getTechniquesMgr()->DebugNormal_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->getTechniquesMgr()->DebugNormal_Pass->setWorld(_worldMatrix);
 
 	_Render->r.setGeometry(__geomDebugNormals);
 
@@ -51,6 +51,7 @@ void CM2_Skin::Draw(CM2_MeshPartID_Provider* _provider)
 				p->m_SkinProtoSection.indexCount,
 				p->m_SkinProtoSection.vertexStart,
 				p->m_SkinProtoSection.vertexCount,
+				nullptr,
 				false
 			);
 		}

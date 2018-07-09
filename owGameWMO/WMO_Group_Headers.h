@@ -107,8 +107,6 @@ struct SWMO_Group_BatchDef
 	uint8 flags;
 	uint8 material_id; // index in MOMT
 
-					   //--
-
 	uint16 getVerticesCount() const { return vertexEnd - vertexStart; }
 };
 

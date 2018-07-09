@@ -1,8 +1,10 @@
 #pragma once
 
+// FORWARD BEGIN
 class RenderDevice;
+// FORWARD END
 
-struct R_RenderBuffer : public CRefItem
+class R_RenderBuffer : public CRefItem
 {
 	static const uint32 MaxColorAttachmentCount = 4;
 

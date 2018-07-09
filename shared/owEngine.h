@@ -3,17 +3,17 @@
 //---------------------------------------------------------//
 //--                    Common                           --//
 //---------------------------------------------------------//
-#include "../owGameShared/common.h"
-#include "../owGameShared/Engine.h"
-#include "../owGameShared/GameStateManager.h"
-#include "../owGameShared/Loader.h"
-#include "../owGameShared/OpenGLAdapterGLFW.h"
-#include "../owGameShared/SceneManager.h"
-#include "../owGameShared/Perfomance.h"
+#include "../owEngine/common.h"
+#include "../owEngine/Engine.h"
+#include "../owEngine/GameStateManager.h"
+#include "../owEngine/Loader.h"
+#include "../owEngine/OpenGLAdapterGLFW.h"
+#include "../owEngine/SceneManager.h"
+#include "../owEngine/Perfomance.h"
 
 //---------------------------------------------------------//
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
 
 // Liquid
-#include "../owGameShared/LiquidInstance.h"
+#include "../owEngine/LiquidInstance.h"

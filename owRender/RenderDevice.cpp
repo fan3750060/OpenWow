@@ -89,27 +89,18 @@ RenderDevice::RenderDevice() :
 {
 	_numVertexLayouts = 0;
 
-	m_ViewportX = 0; m_ViewportY = 0; m_ViewportWidth = 320; m_ViewportHeight = 240;
-	_scX = 0; _scY = 0; _scWidth = 320; _scHeight = 240;
-
-	_curShaderId = 0;
-	_curRendBuf = 0; _outputBufferIndex = 0;
+	m_RBCurrent = 0; _outputBufferIndex = 0;
 	m_TextureMem = 0; m_BufferMem = 0;
-	m_CurRasterState.hash = m_NewRasterState.hash = 0;
-	m_CurBlendState.hash = m_NewBlendState.hash = 0;
-	m_CurDepthStencilState.hash = m_NewDepthStencilState.hash = 0;
-	m_DefaultFBO = 0;
+	m_CurRasterState.hash = 0;
+	m_CurBlendState.hash = 0;
+	m_CurDepthStencilState.hash = 0;
+	m_RBDefault = 0;
 	m_IsDefaultFBOMultisampled = false;
-	m_IndexBufferFormat = R_IndexFormat::IDXFMT_16;
 	_activeVertexAttribsMask = 0;
-	_pendingMask = 0;
-	_tessPatchVerts = _lastTessPatchVertsValue = 0;
-	_memBarriers = NotSet;
+	
+	m_CurrTessPatchVertsValue = 0;
 
 	_maxComputeBufferAttachments = 8;
-	m_StorageBufs.reserve(_maxComputeBufferAttachments);
-
-	_maxTexSlots = 32; // texture units per stage
 
 	_doubleBuffered = false;
 
@@ -117,7 +108,7 @@ RenderDevice::RenderDevice() :
 	m_DefaultGeometry = new R_GeometryInfo(this);
 	m_DefaultGeometry->m_AtrribsBinded = true;
 
-	m_CurrentGeometry = m_DefaultGeometry;
+	m_State.m_CurrentGeometry = m_DefaultGeometry;
 }
 
 RenderDevice::~RenderDevice()
@@ -208,18 +199,18 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 		_doubleBuffered = doubleBuffered != 0;
 
 		// Get the currently bound frame buffer object to avoid reset to invalid FBO
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_DefaultFBO);
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_RBDefault);
 	}
 
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
 	{
 		m_DepthFormat = GL_DEPTH_COMPONENT32;
-		Log::Error("Render target depth precision limited to 32 bit");
+		Log::Info("Render target depth precision limited to 32 bit");
 		SmartPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 		if (testBuf32 == nullptr)
 		{
 			m_DepthFormat = GL_DEPTH_COMPONENT24;
-			Log::Error("Render target depth precision limited to 24 bit");
+			Log::Warn("Render target depth precision limited to 24 bit");
 			SmartPtr<R_RenderBuffer> testBuf24 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 			if (testBuf24 == nullptr)
 			{
@@ -259,7 +250,7 @@ void RenderDevice::beginRendering()
 	checkError();
 
 	//	Get the currently bound frame buffer object. 
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_DefaultFBO);
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &m_RBDefault);
 	resetStates();
 }
 
@@ -268,11 +259,11 @@ void RenderDevice::beginRendering()
 R_GeometryInfo* RenderDevice::beginCreatingGeometry(uint32 _vertexLayout)
 {
 	R_GeometryInfo* geometry = new R_GeometryInfo(this);
-	geometry->m_Layout = _vertexLayout;
-
+	
 	uint32 geometryGLObj;
 	glGenVertexArrays(1, &geometryGLObj);
 	geometry->m_VAOGLObj = geometryGLObj;
+	geometry->m_Layout = _vertexLayout;
 
 	return geometry;
 }
@@ -304,7 +295,6 @@ R_Buffer* RenderDevice::createShaderStorageBuffer(uint32 size, const void *data,
 	else
 	{
 		Log::Error("Shader storage buffers are not supported on this OpenGL 4 device.");
-
 		return 0;
 	}
 }
@@ -317,7 +307,7 @@ R_TextureBuffer* RenderDevice::createTextureBuffer(R_TextureFormats::List format
 	return buf;
 }
 
-// Textures
+// Texturesm
 
 R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB)
 {
@@ -329,9 +319,9 @@ R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int
 
 // Shaders
 
-R_Shader* RenderDevice::createShader(const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc, const char* tessControlShaderSrc, const char* tessEvaluationShaderSrc, const char* computeShaderSrc)
+R_Shader* RenderDevice::createShader(cstring _name, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc, const char* tessControlShaderSrc, const char* tessEvaluationShaderSrc, const char* computeShaderSrc)
 {
-	R_Shader* shader = new R_Shader(this);
+	R_Shader* shader = new R_Shader(this, _name);
 	shader->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
 	checkError();
 	return shader;
@@ -387,36 +377,40 @@ uint32 RenderDevice::getQueryResult(uint32 queryObj)
 
 // Public state management
 
-bool RenderDevice::commitStates(uint32 filter)
+void RenderDevice::commitStates(RenderState* _newStsate, uint32 filter)
 {
-	if ((_pendingMask & filter) == 0)
+	if (_newStsate == nullptr)
 	{
-		return true;
+		_newStsate = &m_State;
 	}
 
-	uint32 mask = _pendingMask & filter;
+	if ((_newStsate->m_StatePendingMask & filter) == 0)
+	{
+		return;
+	}
+	uint32 mask = _newStsate->m_StatePendingMask & filter;
 
 	// Set viewport
 	if (mask & PM_VIEWPORT)
 	{
-		glViewport(m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight);
-		_pendingMask &= ~PM_VIEWPORT;
+		glViewport(_newStsate->m_ViewportX, _newStsate->m_ViewportY, _newStsate->m_ViewportWidth, _newStsate->m_ViewportHeight);
+		m_State.m_StatePendingMask &= ~PM_VIEWPORT;
 	}
 	checkError();
 
 	// Update render state
 	if (mask & PM_RENDERSTATES)
 	{
-		applyRenderStates();
-		_pendingMask &= ~PM_RENDERSTATES;
+		applyRenderStates(_newStsate);
+		m_State.m_StatePendingMask &= ~PM_RENDERSTATES;
 	}
 	checkError();
 
 	// Set scissor rect
 	if (mask & PM_SCISSOR)
 	{
-		glScissor(_scX, _scY, _scWidth, _scHeight);
-		_pendingMask &= ~PM_SCISSOR;
+		glScissor(_newStsate->m_ScissorX, _newStsate->m_ScissorY, _newStsate->m_ScissorWidth, _newStsate->m_ScissorHeight);
+		m_State.m_StatePendingMask &= ~PM_SCISSOR;
 	}
 	checkError();
 
@@ -427,30 +421,30 @@ bool RenderDevice::commitStates(uint32 filter)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 
-			if (m_TextureSlot[i].usage != R_TextureUsage::Texture && m_TextureSlot[i].m_Texture != nullptr)
+			if (_newStsate->m_TextureSlot[i].usage != R_TextureUsage::Texture && _newStsate->m_TextureSlot[i].m_Texture != nullptr)
 			{
 				if (i >= MaxComputeImages)
 				{
 					continue;
 				}
 
-				R_Texture*& tex = m_TextureSlot[i].m_Texture;
+				R_Texture*& tex = _newStsate->m_TextureSlot[i].m_Texture;
 				uint32 access[3] = { GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE };
 
-				glBindImageTexture(i, tex->m_GLObj, 0, false, 0, access[m_TextureSlot[i].usage - 1], tex->m_GLFmt);
+				glBindImageTexture(i, tex->m_GLObj, 0, false, 0, access[_newStsate->m_TextureSlot[i].usage - 1], tex->m_GLFmt);
 				glBindTexture(GL_TEXTURE_CUBE_MAP, 0); // as image units are different from texture units - clear binded texture units
 				glBindTexture(GL_TEXTURE_3D, 0);
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
-			else if (m_TextureSlot[i].m_Texture != nullptr)
+			else if (_newStsate->m_TextureSlot[i].m_Texture != nullptr)
 			{
-				R_Texture*& tex = m_TextureSlot[i].m_Texture;
+				R_Texture*& tex = _newStsate->m_TextureSlot[i].m_Texture;
 				glBindTexture(tex->m_Type, tex->m_GLObj);
 
 				// Apply sampler state
-				if (tex->m_SamplerState != m_TextureSlot[i].m_SamplerState)
+				if (tex->m_SamplerState != _newStsate->m_TextureSlot[i].m_SamplerState)
 				{
-					tex->m_SamplerState = m_TextureSlot[i].m_SamplerState;
+					tex->m_SamplerState = _newStsate->m_TextureSlot[i].m_SamplerState;
 					applySamplerState(tex);
 				}
 			}
@@ -461,73 +455,76 @@ bool RenderDevice::commitStates(uint32 filter)
 				glBindTexture(GL_TEXTURE_2D, 0);
 			}
 		}
-		_pendingMask &= ~PM_TEXTURES;
+		m_State.m_StatePendingMask &= ~PM_TEXTURES;
 	}
 	checkError();
 
 	// Bind vertex buffers
 	if (mask & PM_GEOMETRY)
 	{
-		glBindVertexArray(m_CurrentGeometry->m_VAOGLObj);
-		m_IndexBufferFormat = m_CurrentGeometry->m_IndexBufferFormat;
-		_pendingMask &= ~PM_GEOMETRY;
-	}
+		glBindVertexArray(_newStsate->m_CurrentGeometry->m_VAOGLObj);
 
+		m_State.m_StatePendingMask &= ~PM_GEOMETRY;
+	}
 	checkError();
 
 	// Place memory barriers
 	if (mask & PM_BARRIER)
 	{
-		if (_memBarriers != NotSet)
+		if (_newStsate->m_MemoryBarriers != NotSet)
 		{
-			glMemoryBarrier(memoryBarrierType[(uint32)_memBarriers - 1]);
+			glMemoryBarrier(memoryBarrierType[(uint32)_newStsate->m_MemoryBarriers - 1]);
 		}
-		_pendingMask &= ~PM_BARRIER;
+		m_State.m_StatePendingMask &= ~PM_BARRIER;
 	}
 	checkError();
 
 	// Bind storage buffers
 	if (mask & PM_COMPUTE)
 	{
-		for (uint32_t i = 0; i < m_StorageBufs.size(); ++i)
+		for (uint32_t i = 0; i < _newStsate->m_StorageBufs.size(); ++i)
 		{
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_StorageBufs[i].slot, m_StorageBufs[i].oglObject);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, _newStsate->m_StorageBufs[i].slot, _newStsate->m_StorageBufs[i].oglObject);
 		}
 
-		_pendingMask &= ~PM_COMPUTE;
+		m_State.m_StatePendingMask &= ~PM_COMPUTE;
 	}
 	checkError();
-
-	return true;
 }
 
 void RenderDevice::resetStates()
 {
 	checkError();
 
-	m_CurrentGeometry = m_DefaultGeometry;
-	m_CurRasterState.hash = 0xFFFFFFFF; m_NewRasterState.hash = 0;
-	m_CurBlendState.hash = 0xFFFFFFFF; m_NewBlendState.hash = 0;
-	m_CurDepthStencilState.hash = 0xFFFFFFFF; m_NewDepthStencilState.hash = 0;
+	m_State.m_CurrentGeometry = m_DefaultGeometry;
 
-	_memBarriers = NotSet;
+	m_CurRasterState.hash = 0xFFFFFFFF; 
+	m_State.m_NewRasterState.hash = 0;
+
+	m_CurBlendState.hash = 0xFFFFFFFF; 
+	m_State.m_NewBlendState.hash = 0;
+
+	m_CurDepthStencilState.hash = 0xFFFFFFFF; 
+	m_State.m_NewDepthStencilState.hash = 0;
+
+	m_State.m_MemoryBarriers = NotSet;
 
 	for (uint32 i = 0; i < 16; ++i)
 	{
-		setTexture(i, nullptr, 0, 0);
+		m_State.setTexture(i, nullptr, 0, 0);
 	}
 
-	m_StorageBufs.clear();
+	m_State.m_StorageBufs.clear();
 
-	setColorWriteMask(true);
-	_pendingMask = 0xFFFFFFFF;
-	commitStates();
+	m_State.setColorWriteMask(true);
+	m_State.m_StatePendingMask = 0xFFFFFFFF;
+	commitStates(&m_State);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_DefaultFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RBDefault);
 }
 
 // Draw calls and clears
@@ -536,9 +533,9 @@ void RenderDevice::clear(uint32 flags, float *colorRGBA, float depth)
 {
 	uint32 prevBuffers[4] = { 0 };
 
-	if (_curRendBuf != nullptr)
+	if (m_RBCurrent != nullptr)
 	{
-		if ((flags & CLR_DEPTH) && _curRendBuf->m_DepthTexture == nullptr)
+		if ((flags & CLR_DEPTH) && m_RBCurrent->m_DepthTexture == nullptr)
 		{
 			flags &= ~CLR_DEPTH;
 		}
@@ -551,10 +548,10 @@ void RenderDevice::clear(uint32 flags, float *colorRGBA, float depth)
 
 		uint32 buffers[4], cnt = 0;
 
-		if ((flags & CLR_COLOR_RT0) && _curRendBuf->m_ColorsTextures[0] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT0;
-		if ((flags & CLR_COLOR_RT1) && _curRendBuf->m_ColorsTextures[1] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT1;
-		if ((flags & CLR_COLOR_RT2) && _curRendBuf->m_ColorsTextures[2] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT2;
-		if ((flags & CLR_COLOR_RT3) && _curRendBuf->m_ColorsTextures[3] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT3;
+		if ((flags & CLR_COLOR_RT0) && m_RBCurrent->m_ColorsTextures[0] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT0;
+		if ((flags & CLR_COLOR_RT1) && m_RBCurrent->m_ColorsTextures[1] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT1;
+		if ((flags & CLR_COLOR_RT2) && m_RBCurrent->m_ColorsTextures[2] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT2;
+		if ((flags & CLR_COLOR_RT3) && m_RBCurrent->m_ColorsTextures[3] != nullptr) buffers[cnt++] = GL_COLOR_ATTACHMENT3;
 
 		if (cnt == 0)
 		{
@@ -584,12 +581,12 @@ void RenderDevice::clear(uint32 flags, float *colorRGBA, float depth)
 
 	if (oglClearMask)
 	{
-		commitStates(PM_VIEWPORT | PM_SCISSOR | PM_RENDERSTATES);
+		commitStates(&m_State, PM_VIEWPORT | PM_SCISSOR | PM_RENDERSTATES);
 		glClear(oglClearMask);
 	}
 
 	// Restore state of glDrawBuffers
-	if (_curRendBuf != nullptr)
+	if (m_RBCurrent != nullptr)
 	{
 		glDrawBuffers(4, prevBuffers);
 	}
@@ -597,34 +594,56 @@ void RenderDevice::clear(uint32 flags, float *colorRGBA, float depth)
 	checkError();
 }
 
-void RenderDevice::draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts)
+void RenderDevice::draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts, RenderState* _state)
 {
-	if (commitStates())
+	if (_state == nullptr)
 	{
-		assert1(m_CurrentGeometry != nullptr);
-		assert1(m_CurrentGeometry != m_DefaultGeometry);
-		glDrawArrays(primitiveTypes[(uint32)primType], firstVert, numVerts);
+		_state = &m_State;
+	}
+
+	commitStates(_state);
+	{
+		assert1(_state->m_CurrentGeometry != nullptr);
+		assert1(_state->m_CurrentGeometry != m_DefaultGeometry);
+		glDrawArrays
+		(
+			primitiveTypes[(uint32)primType], 
+			firstVert, 
+			numVerts
+		);
 
 		checkError();
 	}
 }
 
-void RenderDevice::drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, bool _softReset)
+void RenderDevice::drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, RenderState* _state, bool _softReset)
 {
-	if (commitStates())
+	if (_state == nullptr)
 	{
-		firstIndex *= (m_IndexBufferFormat == R_IndexFormat::IDXFMT_32) ? 4u : 2u;
+		_state = &m_State;
+	}
 
-		assert1(m_CurrentGeometry != nullptr);
-		assert1(m_CurrentGeometry != m_DefaultGeometry);
-		glDrawRangeElements(primitiveTypes[(uint32)primType], firstVert, firstVert + numVerts, numIndices, indexFormats[m_IndexBufferFormat], (char *)0 + firstIndex);
+	commitStates(_state);
+	{
+		firstIndex *= (_state->m_CurrentGeometry->m_IndexBufferFormat == R_IndexFormat::IDXFMT_32) ? 4u : 2u;
+
+		assert1(_state->m_CurrentGeometry != nullptr);
+		assert1(_state->m_CurrentGeometry != m_DefaultGeometry);
+		glDrawRangeElements
+		(
+			primitiveTypes[(uint32)primType], 
+			firstVert, 
+			firstVert + numVerts, 
+			numIndices, 
+			indexFormats[_state->m_CurrentGeometry->m_IndexBufferFormat], 
+			(char *)0 + firstIndex
+		);
+		checkError();
 
 		if (_softReset)
 		{
 			glBindVertexArray(0);
 		}
-
-		checkError();
 	}
 }
 
@@ -640,83 +659,24 @@ void RenderDevice::checkError()
 	assert1(error != GL_STACK_OVERFLOW && error != GL_STACK_UNDERFLOW);
 }
 
-bool RenderDevice::applyVertexLayout(R_GeometryInfo& geo)
-{
-	uint32 newVertexAttribMask = 0;
-
-	if (_curShaderId == 0)
-	{
-		return false;
-	}
-
-	if (geo.m_Layout == 0)
-	{
-		return false;
-	}
-
-	R_VertexLayout &vl = m_VertexLayouts[geo.m_Layout - 1];
-	R_InputLayout &inputLayout = _curShaderId->m_InputLayouts[geo.m_Layout - 1];
-
-	if (!inputLayout.valid)
-	{
-		return false;
-	}
-
-	// Set vertex attrib pointers
-	for (uint32 i = 0; i < vl.numAttribs; ++i)
-	{
-		int8 attribIndex = inputLayout.attribIndices[i];
-		if (attribIndex >= 0)
-		{
-			R_VertexLayoutAttrib& attrib = vl.attribs[i];
-			const R_VertexBufferSlot& vbSlot = geo.m_VertexBufInfo[attrib.vbSlot];
-
-			assert1(geo.m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer->m_GLObj != 0 && geo.m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer->m_Type == GL_ARRAY_BUFFER);
-
-			glBindBuffer(GL_ARRAY_BUFFER, geo.m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer->m_GLObj);
-			glVertexAttribPointer(attribIndex, attrib.size, GL_FLOAT, GL_FALSE, vbSlot.m_Stride, (char *)0 + vbSlot.m_Offset + attrib.offset);
-
-			newVertexAttribMask |= 1 << attribIndex;
-		}
-	}
-
-
-	for (uint32 i = 0; i < 16; ++i)
-	{
-		uint32 curBit = 1 << i;
-		if ((newVertexAttribMask & curBit) != (_activeVertexAttribsMask & curBit))
-		{
-			if (newVertexAttribMask & curBit)
-			{
-				glEnableVertexAttribArray(i);
-			}
-			else
-			{
-				glDisableVertexAttribArray(i);
-			}
-		}
-	}
-	_activeVertexAttribsMask = newVertexAttribMask;
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	return true;
-}
-
 void RenderDevice::applySamplerState(R_Texture* tex)
 {
 	uint32 state = tex->m_SamplerState;
 	uint32 target = tex->m_Type;
 
-	const uint32 magFilters[] = { GL_LINEAR, GL_LINEAR, GL_NEAREST };
-	const uint32 minFiltersMips[] = { GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR, GL_NEAREST_MIPMAP_NEAREST };
-	const uint32 maxAniso[] = { 1, 2, 4, 0, 8, 0, 0, 0, 16 };
-	const uint32 wrapModes[] = { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_CLAMP_TO_BORDER };
+	const uint32 magFilters[]		= { GL_LINEAR,					GL_LINEAR,					GL_NEAREST };
+	const uint32 minFiltersMips[]	= { GL_LINEAR_MIPMAP_NEAREST,	GL_LINEAR_MIPMAP_LINEAR,	GL_NEAREST_MIPMAP_NEAREST };
+	const uint32 maxAniso[]			= { 1, 2, 4, 0, 8, 0, 0, 0, 16 };
+	const uint32 wrapModes[]		= { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_CLAMP_TO_BORDER };
 
 	if (tex->m_HasMips)
+	{
 		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFiltersMips[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
+	}
 	else
+	{
 		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, magFilters[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
+	}
 
 	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilters[(state & SS_FILTER_MASK) >> SS_FILTER_START]);
 	glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso[(state & SS_ANISO_MASK) >> SS_ANISO_START]);
@@ -735,28 +695,28 @@ void RenderDevice::applySamplerState(R_Texture* tex)
 	}
 }
 
-void RenderDevice::applyRenderStates()
+void RenderDevice::applyRenderStates(RenderState* _state)
 {
 	// Rasterizer state
-	if (m_NewRasterState.hash != m_CurRasterState.hash)
+	if (_state->m_NewRasterState.hash != m_CurRasterState.hash)
 	{
 		// FILL MODE
-		if (m_NewRasterState.fillMode == RS_FILL_SOLID)
+		if (_state->m_NewRasterState.fillMode == RS_FILL_SOLID)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
-		else
+		else if(_state->m_NewRasterState.fillMode == RS_FILL_WIREFRAME)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
 		// CULLING
-		if (m_NewRasterState.cullMode == RS_CULL_BACK)
+		if (_state->m_NewRasterState.cullMode == RS_CULL_BACK)
 		{
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 		}
-		else if (m_NewRasterState.cullMode == RS_CULL_FRONT)
+		else if (_state->m_NewRasterState.cullMode == RS_CULL_FRONT)
 		{
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_FRONT);
@@ -767,17 +727,17 @@ void RenderDevice::applyRenderStates()
 		}
 
 		// SCISSOR
-		if (!m_NewRasterState.scissorEnable)
-		{
-			glDisable(GL_SCISSOR_TEST);
-		}
-		else
+		if (_state->m_NewRasterState.scissorEnable)
 		{
 			glEnable(GL_SCISSOR_TEST);
 		}
+		else
+		{
+			glDisable(GL_SCISSOR_TEST);
+		}
 
 		// MASK
-		if (m_NewRasterState.renderTargetWriteMask)
+		if (_state->m_NewRasterState.renderTargetWriteMask)
 		{
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		}
@@ -786,44 +746,46 @@ void RenderDevice::applyRenderStates()
 			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		}
 
-		m_CurRasterState.hash = m_NewRasterState.hash;
+		m_CurRasterState.hash = _state->m_NewRasterState.hash;
 	}
 
 	// Blend state
-	if (m_NewBlendState.hash != m_CurBlendState.hash)
+	if (_state->m_NewBlendState.hash != m_CurBlendState.hash)
 	{
-		if (!m_NewBlendState.alphaToCoverageEnable)
-		{
-			glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-		}
-		else
+		// Alpha to coverage
+		if (_state->m_NewBlendState.alphaToCoverageEnable)
 		{
 			glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 		}
-
-		if (!m_NewBlendState.blendEnable)
-		{
-			glDisable(GL_BLEND);
-		}
 		else
+		{
+			glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		}
+
+		// Blend
+		if (_state->m_NewBlendState.blendEnable)
 		{
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate
 			(
-				oglBlendFuncs[m_NewBlendState.srcRGBBlendFunc], 
-				oglBlendFuncs[m_NewBlendState.destRGBBlendFunc],
-				oglBlendFuncs[m_NewBlendState.srcABlendFunc], 
-				oglBlendFuncs[m_NewBlendState.destABlendFunc]
+				oglBlendFuncs[_state->m_NewBlendState.srcRGBBlendFunc],
+				oglBlendFuncs[_state->m_NewBlendState.dstRGBBlendFunc],
+				oglBlendFuncs[_state->m_NewBlendState.srcABlendFunc],
+				oglBlendFuncs[_state->m_NewBlendState.dstABlendFunc]
 			);
 		}
+		else
+		{
+			glDisable(GL_BLEND);
+		}
 
-		m_CurBlendState.hash = m_NewBlendState.hash;
+		m_CurBlendState.hash = _state->m_NewBlendState.hash;
 	}
 
 	// Depth-stencil state
-	if (m_NewDepthStencilState.hash != m_CurDepthStencilState.hash)
+	if (_state->m_NewDepthStencilState.hash != m_CurDepthStencilState.hash)
 	{
-		if (m_NewDepthStencilState.depthWriteMask)
+		if (_state->m_NewDepthStencilState.depthWriteMask)
 		{
 			glDepthMask(GL_TRUE);
 		}
@@ -832,26 +794,26 @@ void RenderDevice::applyRenderStates()
 			glDepthMask(GL_FALSE);
 		}
 
-		if (m_NewDepthStencilState.depthEnable)
+		if (_state->m_NewDepthStencilState.depthEnable)
 		{
 			uint32 oglDepthFuncs[8] = { GL_LEQUAL, GL_LESS, GL_EQUAL, GL_GREATER, GL_GEQUAL, GL_ALWAYS, GL_ALWAYS, GL_ALWAYS };
 
 			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(oglDepthFuncs[m_NewDepthStencilState.depthFunc]);
+			glDepthFunc(oglDepthFuncs[_state->m_NewDepthStencilState.depthFunc]);
 		}
 		else
 		{
 			glDisable(GL_DEPTH_TEST);
 		}
 
-		m_CurDepthStencilState.hash = m_NewDepthStencilState.hash;
+		m_CurDepthStencilState.hash = _state->m_NewDepthStencilState.hash;
 	}
 
 	// Number of vertices in patch. Used in tesselation.
-	if (_tessPatchVerts != _lastTessPatchVertsValue)
+	if (_state->m_TesselationPatchVerts != m_CurrTessPatchVertsValue)
 	{
-		glPatchParameteri(GL_PATCH_VERTICES, _tessPatchVerts);
+		glPatchParameteri(GL_PATCH_VERTICES, _state->m_TesselationPatchVerts);
 
-		_lastTessPatchVertsValue = _tessPatchVerts;
+		m_CurrTessPatchVertsValue = _state->m_TesselationPatchVerts;
 	}
 }

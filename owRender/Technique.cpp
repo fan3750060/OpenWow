@@ -75,7 +75,7 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 	if (!_fileNameGS.empty())
 	{
 		string shGS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameGS));
-		Process(_fileNameVS, shVS.c_str(), shFS.c_str(), shGS.c_str());
+		Process(_fileNameGS, shVS.c_str(), shFS.c_str(), shGS.c_str());
 		return;
 	}
 	
@@ -83,16 +83,23 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 }
 
-void Technique::Process(cstring fileName, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
+void Technique::Process(cstring _name, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
 {
-    m_Shader = m_RenderDevice->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
+	string shaderName = _name;
+	size_t pos = shaderName.find_last_of('.');
+	if (pos != -1)
+	{
+		shaderName = shaderName.substr(0, pos - 1);
+	}
+	
+    m_Shader = m_RenderDevice->createShader(shaderName, vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, nullptr, nullptr, nullptr);
     if (m_RenderDevice->getShaderLog().empty())
     {
-        Log::Green("Shader[%s]: Successfull. Id [%d].", fileName.c_str(), m_Shader->m_ProgramGLObj);
+        Log::Green("Shader[%s]: Successfull. Id [%d].", shaderName.c_str(), m_Shader->m_ProgramGLObj);
     }
     else
     {
-        Log::Error("Shader[%s]: Error.", fileName.c_str());
+        Log::Error("Shader[%s]: Error.", shaderName.c_str());
         Log::Error(m_RenderDevice->getShaderLog().c_str());
     }
 }

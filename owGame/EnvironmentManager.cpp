@@ -67,7 +67,6 @@ void EnvironmentManager::outdoorLighting()
 
 	m_OutdoorDayDiffuseColor = vec4(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE) * dayNightPhase.dayIntensity, 1.0f);
 	m_OutdoorNightDiffuseColor = vec4(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE) * dayNightPhase.nightIntensity, 1.0f);
-
 	m_OutdoorSpecularColor = vec4(1.4f, 1.4f, 1.4f, 1.0f);
 }
 

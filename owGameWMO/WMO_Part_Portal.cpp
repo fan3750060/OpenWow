@@ -32,7 +32,7 @@ void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
 	{
-		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->setWorld(_worldMatrix);
 
 		vec4 color;
 		if (m_Plane.distToPoint(_worldMatrix.inverted() * _Render->getCamera()->Position) > 0.0f)

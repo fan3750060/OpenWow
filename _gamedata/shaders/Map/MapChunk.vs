@@ -18,16 +18,14 @@ out struct
 } VSInput;
 
 // Uniforms
-uniform mat4 gProjection;
-uniform mat4 gView;
+uniform mat4 gProjView;
 
 void main(void)
 {
-	mat4 PV = gProjection * gView;
-	gl_Position = PV * vec4(VertexPosition, 1.0);
+	gl_Position = gProjView * vec4(VertexPosition, 1.0);
 
 	VSInput.WorldSpacePos   = VertexPosition;
-	VSInput.Normal          = Normal;
+	VSInput.Normal          = vec3(-Normal.y, Normal.z, -Normal.x) / 127.0f;
 	VSInput.VertexColorMCCV = VertexColorMCCV;
 	VSInput.TexCoordDetail  = TexCoordDetail;
 	VSInput.TexCoordAlpha   = TexCoordAlpha;

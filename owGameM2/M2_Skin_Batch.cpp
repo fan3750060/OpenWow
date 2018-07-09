@@ -2,24 +2,31 @@
 
 // Include
 #include "M2.h"
+#include "M2_Skin.h"
 
 // General
 #include "M2_Skin_Batch.h"
 
 
-M2_Skin_Batch::M2_Skin_Batch(const M2* _parentM2) :
+CM2_Skin_Batch::CM2_Skin_Batch(const M2* _parentM2, const CM2_Skin* _parentSkin) :
 	m_ParentM2(_parentM2),
+	m_ParentSkin(_parentSkin),
 
-	color(nullptr),
-	material(nullptr),
-	texture_WeightIndex(nullptr),
-	texture_Transform(nullptr),
+	m_Color(nullptr),
+	m_Material(nullptr),
+	m_TextureWeight(nullptr),
+	m_TextureTransform(nullptr),
 
-	m_IsBilldoard(false),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
 
-void M2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
+void CM2_Skin_Batch::Init()
+{
+	m_Material->fillRenderState(&m_State);
+	m_State.setGeometry(m_ParentSkin->__geom);
+}
+
+void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 {
 	if (_provider != nullptr)
 	{
@@ -34,39 +41,38 @@ void M2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
 	{
 		pass->SetShader(newShader);
-		pass->SetBillboard(m_IsBilldoard);
 
 		// Model color
-		bool isColorEnable = (color != nullptr);
+		bool isColorEnable = (m_Color != nullptr);
 		pass->SetColorEnable(isColorEnable);
 		if (isColorEnable)
 		{
-			pass->SetColor(color->getValue());
+			pass->SetColor(m_Color->getValue());
 		}
 
 		// Material
-		material->Set();
+		pass->SetBlendMode(m_Material->getBlendMode());
 
 		// Bind textures
 		for (uint32 i = 0; i < m_Textures.size(); i++)
 		{
-			m_Textures[i]->set(Material::C_DiffuseTextureIndex + i, _provider);
+			m_Textures[i]->set(&m_State, Material::C_DiffuseTextureIndex + i, _provider);
 		}
 
 		// Texture alpha
-		bool isTextureWeightEnable = (texture_WeightIndex != nullptr);
+		bool isTextureWeightEnable = (m_TextureWeight != nullptr);
 		pass->SetTextureWeightEnable(isTextureWeightEnable);
 		if (isTextureWeightEnable)
 		{
-			pass->SetTextureWeight(texture_WeightIndex->getValue());
+			pass->SetTextureWeight(m_TextureWeight->getValue());
 		}
 
 		// Texture transform
-		bool isTextureTransformEnable = (texture_Transform != nullptr);
+		bool isTextureTransformEnable = (m_TextureTransform != nullptr);
 		pass->SetTextureAnimEnable(isTextureTransformEnable);
 		if (isTextureTransformEnable)
 		{
-			pass->SetTextureAnimMatrix(texture_Transform->getValue());
+			pass->SetTextureAnimMatrix(m_TextureTransform->getValue());
 		}
 	}
 
@@ -77,6 +83,7 @@ void M2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 		m_SkinProtoSection.indexCount,
 		m_SkinProtoSection.vertexStart,
 		m_SkinProtoSection.vertexCount,
+		&m_State,
 		false
 	);
 }

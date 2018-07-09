@@ -19,5 +19,7 @@ public:
 private:
 	const MapController*	m_MapController;
 	const int				m_IndexX, m_IndexZ;
+
+	ShaderContext			m_Context;
 	SmartGeomPtr			m_Geom;
 };

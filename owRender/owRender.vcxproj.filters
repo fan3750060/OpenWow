@@ -61,8 +61,20 @@
     <ClCompile Include="OpenGL.cpp">
       <Filter>RenderCore</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="RenderQueue.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Render\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPipeline.cpp">
+      <Filter>Render\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderContext.cpp">
+      <Filter>Render\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStates.cpp">
+      <Filter>RenderCore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +121,7 @@
       <Filter>Techniques\UI</Filter>
     </ClInclude>
     <ClInclude Include="Sky_GeometryPass.h">
-      <Filter>Techniques\Shaders</Filter>
+      <Filter>Techniques\Sky</Filter>
     </ClInclude>
     <ClInclude Include="lights_common.h">
       <Filter>Techniques\Postprocess</Filter>
@@ -168,9 +180,6 @@
     <ClInclude Include="Magma_Pass.h">
       <Filter>Techniques\Liquids</Filter>
     </ClInclude>
-    <ClInclude Include="WDL_LowRes_Pass.h">
-      <Filter>Techniques\Map</Filter>
-    </ClInclude>
     <ClInclude Include="M2_Pass.h">
       <Filter>Techniques\M2</Filter>
     </ClInclude>
@@ -178,9 +187,6 @@
       <Filter>Techniques\M2</Filter>
     </ClInclude>
     <ClInclude Include="Debug_GeometryPass.h">
-      <Filter>Techniques\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug_Normals.h">
       <Filter>Techniques\Debug</Filter>
     </ClInclude>
     <ClInclude Include="PostprocessBase.h">
@@ -192,17 +198,32 @@
     <ClInclude Include="UIBase.h">
       <Filter>Techniques\_Base</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="MCNK_Divided_Pass.h">
-      <Filter>Techniques\Map\Divided</Filter>
-    </ClInclude>
-    <ClInclude Include="MCNK_Pass.h">
-      <Filter>Techniques\Map\Merged</Filter>
-    </ClInclude>
     <ClInclude Include="WMO_GeomertyPass.h">
       <Filter>Techniques\WMO</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueue.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MCNK_Pass.h">
+      <Filter>Techniques\Map\MCNK</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug_Normals.h">
+      <Filter>Techniques\Debug\DebugNormal</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_LowRes_Pass.h">
+      <Filter>Techniques\Map\WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Render\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPipeline.h">
+      <Filter>Render\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderContext.h">
+      <Filter>Render\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStates.h">
+      <Filter>RenderCore</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -223,9 +244,6 @@
     </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{83e27261-1695-4e85-a7fe-099ead28f2d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Techniques\Shaders">
-      <UniqueIdentifier>{4f764ab4-cbb8-4e5e-a319-2e3029ed2fb9}</UniqueIdentifier>
     </Filter>
     <Filter Include="RenderCore">
       <UniqueIdentifier>{86c8b07c-1ebc-4ea6-a076-c4c41bc71d04}</UniqueIdentifier>
@@ -251,42 +269,33 @@
     <Filter Include="Techniques\_Base">
       <UniqueIdentifier>{1fa03493-3df8-48ef-85b4-ac66054b829b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Techniques\Map\Divided">
-      <UniqueIdentifier>{58b2a1d1-6532-4c4f-88c7-4399ada10ee2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Techniques\Map\Shared">
-      <UniqueIdentifier>{c7c2db2c-db2a-4d02-a215-8e5a697baa67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Techniques\Map\Merged">
-      <UniqueIdentifier>{9c705bd8-4812-4a82-a5d5-3f1eaa373d0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Techniques\WMO">
       <UniqueIdentifier>{73aa6f44-6821-4e55-890c-e2cfe737006c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Debug\DebugNormal">
+      <UniqueIdentifier>{7a5398d5-4113-4034-845b-5795207a5860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Map\MCNK">
+      <UniqueIdentifier>{c7c2db2c-db2a-4d02-a215-8e5a697baa67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Map\WDL">
+      <UniqueIdentifier>{f5ca9f87-f7d7-424c-895c-8becd2a742b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Techniques\Sky">
+      <UniqueIdentifier>{4f764ab4-cbb8-4e5e-a319-2e3029ed2fb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Types">
+      <UniqueIdentifier>{78eeff82-d39e-48d8-ab61-fcc4138426e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Technique.inl">
       <Filter>Techniques</Filter>
     </None>
-    <None Include="..\_gamedata\shaders\Map\MapTileLowRes.fs">
-      <Filter>Techniques\Map</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapTileLowRes.vs">
-      <Filter>Techniques\Map</Filter>
-    </None>
     <None Include="..\_gamedata\shaders\Debug\Debug.fs">
       <Filter>Techniques\Debug</Filter>
     </None>
     <None Include="..\_gamedata\shaders\Debug\Debug.vs">
-      <Filter>Techniques\Debug</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.fs">
-      <Filter>Techniques\Debug</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.gs">
-      <Filter>Techniques\Debug</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.vs">
       <Filter>Techniques\Debug</Filter>
     </None>
     <None Include="..\_gamedata\shaders\Liquid\Magma.fs">
@@ -302,25 +311,10 @@
       <Filter>Techniques\Liquids</Filter>
     </None>
     <None Include="..\_gamedata\shaders\Map\MapChunk.gs">
-      <Filter>Techniques\Map\Shared</Filter>
+      <Filter>Techniques\Map\MCNK</Filter>
     </None>
     <None Include="..\_gamedata\shaders\Map\MapChunk.vs">
-      <Filter>Techniques\Map\Shared</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk.fs">
-      <Filter>Techniques\Map\Merged</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_0.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_1.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_2.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_3.fs">
-      <Filter>Techniques\Map\Divided</Filter>
+      <Filter>Techniques\Map\MCNK</Filter>
     </None>
     <None Include="..\_gamedata\shaders\M2\M2.fs">
       <Filter>Techniques\M2</Filter>
@@ -340,18 +334,6 @@
     <None Include="..\_gamedata\shaders\WMO.vs">
       <Filter>Techniques\WMO</Filter>
     </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_1.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_2.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_3.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0.fs">
-      <Filter>Techniques\Map\Divided</Filter>
-    </None>
     <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Fog.fs">
       <Filter>Techniques\Postprocess</Filter>
     </None>
@@ -363,6 +345,30 @@
     </None>
     <None Include="..\_gamedata\shaders\Postprocess\Postprocess_VS.vs">
       <Filter>Techniques\Postprocess</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapChunk.fs">
+      <Filter>Techniques\Map\MCNK</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.fs">
+      <Filter>Techniques\Debug\DebugNormal</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.gs">
+      <Filter>Techniques\Debug\DebugNormal</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Debug\Debug_Normal.vs">
+      <Filter>Techniques\Debug\DebugNormal</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapTileLowRes.fs">
+      <Filter>Techniques\Map\WDL</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Map\MapTileLowRes.vs">
+      <Filter>Techniques\Map\WDL</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Sky.fs">
+      <Filter>Techniques\Sky</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\Sky.vs">
+      <Filter>Techniques\Sky</Filter>
     </None>
   </ItemGroup>
 </Project>

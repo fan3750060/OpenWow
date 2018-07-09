@@ -79,7 +79,7 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
 {
     // Read data
     BLPHeader header;
-    f->readBytes(&header, 148);
+    f->readBytes(&header, sizeof(BLPHeader));
 
 	if (header.width & (header.width - 1)) return nullptr;
 	if (header.height & (header.height - 1)) return nullptr;

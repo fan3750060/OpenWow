@@ -141,11 +141,11 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 		worldMatrix.translate(_playerPos + (-dayDir) * 300.0f);
 		worldMatrix.scale(20);
 
-		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->setWorld(worldMatrix);
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(dayColor, 1.0f));
 
 		
-		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, false);
+		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, nullptr, false);
 	}
 
     // Moon
@@ -154,7 +154,7 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 		worldMatrix.translate(_playerPos + (-nightDir) * 300.0f);
 		worldMatrix.scale(20);
 
-		_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(worldMatrix);
+		_Render->getTechniquesMgr()->Debug_Pass->setWorld(worldMatrix);
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(nightColor, 1.0f));
 
 		_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);

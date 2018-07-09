@@ -13,6 +13,8 @@ CSettings::CSettings()
 
 CSettings::~CSettings()
 {
+	ERASE_MAP(m_Groups);
+
 	DelManager<ISettings>();
 }
 

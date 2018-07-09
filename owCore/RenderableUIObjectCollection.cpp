@@ -3,6 +3,11 @@
 // General
 #include "RenderableUIObjectCollection.h"
 
+CRenderableUIObjectCollection::~CRenderableUIObjectCollection()
+{
+	ERASE_VECTOR(m_Objects);
+}
+
 bool CRenderableUIObjectCollection::RegisterObject(IRenderableUI* _uiObject, uint32 _DrawOrder)
 {
 	m_Objects.push_back(new CRenderableUIObject(_uiObject, _DrawOrder));

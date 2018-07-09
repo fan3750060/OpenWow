@@ -15,7 +15,7 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_WrapX = _proto.flags.WRAPX;
 	m_WrapY = _proto.flags.WRAPY;
 
-	
+
 	// Common texture
 	if (_proto.type == SM2_Texture::SM2_Texture_Type::NONE)
 	{
@@ -28,7 +28,7 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_SpecialType = _proto.type;
 }
 
-void CM2_Part_Texture::set(uint32 _slot, CM2_MeshPartID_Provider* _provider) const
+void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_MeshPartID_Provider* _provider) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
 
@@ -48,10 +48,10 @@ void CM2_Part_Texture::set(uint32 _slot, CM2_MeshPartID_Provider* _provider) con
 		{
 			R_Texture* specialTexture = _provider->getSpecialTexture(m_SpecialType);
 			assert1(specialTexture != nullptr);
-			_Render->r.setTexture(_slot, specialTexture, sampler, 0);
+			_state->setTexture(_slot, specialTexture, sampler, 0);
 		}
 		return;
 	}
 
-	_Render->r.setTexture(_slot, getTexture(), sampler, 0);
+	_state->setTexture(_slot, getTexture(), sampler, 0);
 }

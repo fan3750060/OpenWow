@@ -1,6 +1,8 @@
 #pragma once
 
+// FORWARD BEGIN
 class RenderDevice;
+// FORWARD END
 
 class R_Texture : public CRefItem
 {

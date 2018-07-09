@@ -1,11 +1,13 @@
 #pragma once
 
+// FORWARD BEGIN
 class RenderDevice;
+// FORWARD END
 
 class R_Shader : public CRefItem
 {
 public:
-	R_Shader(RenderDevice* _RenderDevice);
+	R_Shader(RenderDevice* _RenderDevice, cstring _name);
 	~R_Shader();
 	
 	void createShader(const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
@@ -24,6 +26,7 @@ private:
 	bool linkShaderProgram();
 
 public:
+	string				m_Name;
 	uint32				m_ProgramGLObj;
 	R_InputLayout		m_InputLayouts[MaxNumVertexLayouts];
 

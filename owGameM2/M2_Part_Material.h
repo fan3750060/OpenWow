@@ -7,14 +7,18 @@ class CM2_Part_Material
 public:
 	CM2_Part_Material(const SM2_Material& _proto);
 
+	void fillRenderState(RenderState* _state) const;
 	void Set() const;
 
-private:
-	bool isUNLIT;
-	bool isUNFOGGED;
-	bool isTWOSIDED;
-	bool isDEPTHTEST;
-	bool isDEPTHWRITE;
+	SM2_Material::BlendModes getBlendMode() const { return m_M2BlendMode; }
 
-	SM2_Material::BlendModes blending_mode;
+
+private:
+	bool m_IsLightingDisable;
+	bool m_IsFogDisable;
+	bool m_IsTwoSided;
+	bool m_DepthTestEnabled;
+	bool m_DepthMaskEnabled;
+
+	SM2_Material::BlendModes m_M2BlendMode;
 };

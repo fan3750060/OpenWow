@@ -47,35 +47,37 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4
 		return;
 	}
 
-	RenderCollision(_worldMatrix);
-
-	_Render->getTechniquesMgr()->M2_Pass->Bind();
-	_Render->getTechniquesMgr()->M2_Pass->SetWorldMatrix(_worldMatrix);
-	_Render->getTechniquesMgr()->M2_Pass->SetAnimated(m_HasBones && m_IsAnimated);
-	_Render->getTechniquesMgr()->M2_Pass->SetColorDoodad(_doodadColor);
-	if (m_HasBones && m_IsAnimated)
+	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
+	pass->Bind();
 	{
-		//_Render->getTechniquesMgr()->M2_Pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
-		//_Render->getTechniquesMgr()->M2_Pass->SetBoneMaxCount(p->boneInfluences);
+		pass->setWorld(_worldMatrix);
+		pass->SetAnimated(m_HasBones && m_IsAnimated);
+		pass->SetColorDoodad(_doodadColor);
 
-		vector<mat4> bones;
-		for (uint32 i = 0; i < m_Bones.size(); i++)
+		if (m_HasBones && m_IsAnimated)
 		{
-			bones.push_back(m_Bones[i]->getTransformMatrix());
+			//pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
+			//pass->SetBoneMaxCount(p->boneInfluences);
+
+			vector<mat4> bones;
+			for (uint32 i = 0; i < m_Bones.size(); i++)
+			{
+				bones.push_back(m_Bones[i]->getTransformMatrix());
+			}
+			pass->SetBones(bones);
 		}
-		_Render->getTechniquesMgr()->M2_Pass->SetBones(bones);
-	}
 
+		/*for (auto& it : m_Skins)
+		{
+			it->Draw(_provider);
+			break;
+		}*/
+		m_Skins.back()->Draw(_provider);
+	}
+	pass->Unbind();
+
+	/*RenderCollision(_worldMatrix);
 	for (auto& it : m_Skins)
-	{
-		it->Draw(_provider);
-		break;
-	}
-
-	_Render->getTechniquesMgr()->M2_Pass->Unbind();
-
-
-	/*for (auto& it : m_Skins)
 	{
 		it->RenderNormals();
 	}*/
@@ -114,7 +116,7 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(_worldMatrix);
+	_Render->getTechniquesMgr()->Debug_Pass->setWorld(_worldMatrix);
 	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
 
 	_Render->r.setGeometry(m_CollisionGeom);

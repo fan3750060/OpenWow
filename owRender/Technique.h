@@ -14,7 +14,7 @@ protected:
 	Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS);
     Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _filenameGS);
 
-    void Process(cstring fileName, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc);
+    void Process(cstring _name, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc);
 
 public:
 	inline void Bind();

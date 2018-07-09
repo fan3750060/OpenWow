@@ -16,9 +16,9 @@ struct ADT_MHDR
 	uint32 MWID;
 	uint32 MDDF;
 	uint32 MODF;
-	uint32 mfbo;                     // this is only set if flags & mhdr_MFBO.
-	uint32 mh2o;
-	uint32 mtxf;
+	uint32 MFBO;                     // this is only set if flags & mhdr_MFBO.
+	uint32 MH20;
+	uint32 MTXF;
 
 	uint8 unk1[16];
 };

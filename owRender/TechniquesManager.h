@@ -58,7 +58,7 @@ public:
 
 	// Others
 	CSky_GeometryPass* Sky_Pass;
-	CWMO_GeomertyPass* m_WMO_GeometryPass;
+	CWMO_GeomertyPass* WMO_Pass;
 
 	// Postprocess
 	CPOST_Fog* Postprocess_Fog;

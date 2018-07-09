@@ -3,14 +3,18 @@
 #include "M2_Part_Material.h"
 
 // FORWARD BEGIN
+class M2;
+class CM2_Skin;
 class CM2_Skin_Builder;
 // FORWARD END
 
-class M2_Skin_Batch
+class CM2_Skin_Batch
 {
 	friend CM2_Skin_Builder;
 public:
-	M2_Skin_Batch(const M2* _parentM2);
+	CM2_Skin_Batch(const M2* _parentM2, const CM2_Skin* _parentSkin);
+
+	void Init();
 
 	void Render(CM2_MeshPartID_Provider* _provider);
 
@@ -23,18 +27,19 @@ private:
 	uint32								m_SkinProtoIndex;
 	SM2_SkinSection						m_SkinProtoSection;
 
-	const CM2_Part_Color*				color;
-	const CM2_Part_Material*			material;
+	const CM2_Part_Color*				m_Color;
+	const CM2_Part_Material*			m_Material;
 	vector<const CM2_Part_Texture*>		m_Textures;
-	int16								texture_Unit;
-	const CM2_Part_TextureWeight*		texture_WeightIndex;
-	const CM2_Part_TextureTransform*	texture_Transform;
+	int16								m_TextureUnit;
+	const CM2_Part_TextureWeight*		m_TextureWeight;
+	const CM2_Part_TextureTransform*	m_TextureTransform;
 
-	bool								m_IsBilldoard;
+	int32								newShader;
 
-	int32 newShader;
+	RenderState							m_State;
 
 	//--
 	const M2*							m_ParentM2;
+	const CM2_Skin*						m_ParentSkin;
 	CGroupQuality&						m_QualitySettings;
 };

@@ -166,7 +166,9 @@ struct SM2_Material
 		M2BLEND_NO_ALPHA_ADD,
 		M2BLEND_ADD,
 		M2BLEND_MOD,
-		M2BLEND_MOD2X
+		M2BLEND_MOD2X,
+
+		COUNT
 	};
 
 	struct Flags
@@ -178,7 +180,7 @@ struct SM2_Material
 		uint16 DEPTHWRITE : 1;
 		uint16 : 11;
 	} flags;
-	BlendModes blending_mode;
+	BlendModes m_BlendMode;
 };
 
 struct SM2_Attachment

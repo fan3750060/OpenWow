@@ -8,6 +8,7 @@ class UIInput : public UIElement
 {
 public:
     UIInput(IUIMgr* _uimgr);
+	virtual ~UIInput() override;
 
     void Init(cvec2 _position, cvec2 _size, InputMode _inputMode = MODE_ANY);
 

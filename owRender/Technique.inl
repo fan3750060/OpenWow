@@ -2,7 +2,6 @@
 
 #include "Technique.h"
 
-
 inline void Technique::Bind()
 {
 	m_Shader->bindShader();
@@ -13,16 +12,16 @@ inline void Technique::Unbind()
 	m_Shader->unbindShader();
 }
 
-
 inline int32 Technique::getLocation(const char* name) const
 {
     int32 location = m_Shader->getShaderConstLoc(name);
 	if (location < 0)
 	{
-		Log::Error("Attrib [%s] not found in shader [%d]", name, m_Shader->m_ProgramGLObj);
+		Log::Warn("Technique[%s]: Attrib [%s] not found.", m_Shader->m_Name.c_str(), name);
 	}
 	return location;
 }
+
 //
 
 inline void Technique::setTexture(const char* name, uint32 value) const

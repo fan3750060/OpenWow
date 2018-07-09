@@ -13,7 +13,7 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, u
 		Log::Green("MODEL [%s] contains color [%f, %f, %f, %f]", _mdxObject->getFilename().c_str(), _placement.getColor().x, _placement.getColor().y, _placement.getColor().z, _placement.getColor().w);
 	}
 
-	//m_DoodadColor = _placement.getColor();
+	m_DoodadColor = _placement.getColor();
 
 	//m_Object->setDoodadColor(_placement.getColor());
 	// Scene node params

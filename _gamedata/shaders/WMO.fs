@@ -1,17 +1,15 @@
 #version 330
 #include "lib/fragDeferredWrite.glsl"
 
-struct VSOutput
+// Input
+in struct VSOutput
 {
 	vec3 WorldSpacePos;
-	vec2 TexCoord0;
-	vec2 TexCoord1;
 	vec3 Normal;
 	vec4 Color;
-};
-
-// Input
-in VSOutput VSout;
+	vec2 TexCoord0;
+	vec2 TexCoord1;
+} VSout;
 
 // Uniforms
 uniform sampler2D gColorMap0;
@@ -47,11 +45,12 @@ void main(void)
 		//resultColor *= gAmbColor;
 	}
 
+	// Blending
 	if (gBlendMode == 0) // GxBlend_Opaque
 	{
 		resultColor.a = 1.0f;
 	}
-	else if(gBlendMode == 1) // GxBlend_AlphaKey
+	else if (gBlendMode == 1) // GxBlend_AlphaKey
 	{
 		if (resultColor.a < (224.0f / 255.0f)) discard;
 	}

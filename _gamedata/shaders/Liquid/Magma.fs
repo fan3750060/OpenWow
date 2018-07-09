@@ -1,15 +1,13 @@
 #version 330
 #include "../lib/fragDeferredWrite.glsl"
 
-struct VSOutput
+// Input
+in struct VSOutput
 {
 	vec3 WorldSpacePos;
 	vec3 TexCoord;
 	vec3 Normal;
-};
-
-// Input
-in VSOutput VSout;
+} VSout;
 
 // Uniforms
 uniform sampler2D gColorMap;

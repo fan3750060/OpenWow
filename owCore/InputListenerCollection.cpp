@@ -3,6 +3,11 @@
 // General
 #include "InputListenerCollection.h"
 
+CInputListenerObjectCollection::~CInputListenerObjectCollection()
+{
+	ERASE_VECTOR(m_Objects);
+}
+
 bool CInputListenerObjectCollection::RegisterObject(IInputListener* _Object, uint8 _priority)
 {
     m_Objects.push_back(new CInputListener(_Object, _priority));

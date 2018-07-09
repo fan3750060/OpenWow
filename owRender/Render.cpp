@@ -84,7 +84,7 @@ void RenderGL::UnbindRBs()
 void RenderGL::PostprocessSimple()
 {
 	m_TechniquesManager->Postprocess_Simple->Bind();
-	m_TechniquesManager->Postprocess_Simple->SetCameraPos(_Render->getCamera()->Position);
+	m_TechniquesManager->Postprocess_Simple->setCameraPos(_Render->getCamera()->Position);
 
 	r.setDepthTest(false);
 	r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
@@ -106,7 +106,7 @@ void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();
-	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
+	m_TechniquesManager->Debug_Pass->setWorld(world);
 	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
 
 	r.setGeometry(m_RenderStorage->_cubeGeo);
@@ -130,7 +130,7 @@ void RenderGL::DrawSphere(cmat4 _world, cvec3 _pos, float _radius, vec4 _color)
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();
-	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
+	m_TechniquesManager->Debug_Pass->setWorld(world);
 	m_TechniquesManager->Debug_Pass->SetColor4(_color);
 
 	r.setGeometry(m_RenderStorage->_sphereGeo);
@@ -151,7 +151,7 @@ void RenderGL::DrawGeo(cvec3 _pos, vec4 _color)
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();
-	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
+	m_TechniquesManager->Debug_Pass->setWorld(world);
 	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
 
 	r.setGeometry(m_RenderStorage->_coneGeo);
@@ -175,7 +175,7 @@ void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	m_TechniquesManager->Debug_Pass->Bind();
-	m_TechniquesManager->Debug_Pass->SetWorldMatrix(world);
+	m_TechniquesManager->Debug_Pass->setWorld(world);
 	m_TechniquesManager->Debug_Pass->SetColor4(_color);
 
 	r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
@@ -210,7 +210,7 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();
-	m_TechniquesManager->UI_Texture->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
+	m_TechniquesManager->UI_Texture->setProj(m_OrhoMatrix * worldTransform);
 
 	// State
 	r.setTexture(Material::C_DiffuseTextureIndex, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
@@ -242,7 +242,7 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool ro
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();
-	m_TechniquesManager->UI_Texture->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
+	m_TechniquesManager->UI_Texture->setProj(m_OrhoMatrix * worldTransform);
 
 	// State
 	r.setTexture(Material::C_DiffuseTextureIndex, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
@@ -264,7 +264,7 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture * _texture, vec2 _size, float 
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();
-	m_TechniquesManager->UI_Texture->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
+	m_TechniquesManager->UI_Texture->setProj(m_OrhoMatrix * worldTransform);
 
 	// State
 	r.setTexture(Material::C_DiffuseTextureIndex, _texture, SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
@@ -287,7 +287,7 @@ void RenderGL::RenderRectangle(vec2 _pos, vec2 _size, const Color& _color)
 
 	// Shader
 	m_TechniquesManager->UI_Color->Bind();
-	m_TechniquesManager->UI_Color->SetProjectionMatrix(m_OrhoMatrix * worldTransform);
+	m_TechniquesManager->UI_Color->setProj(m_OrhoMatrix * worldTransform);
 	m_TechniquesManager->UI_Color->SetColor(_color);
 
 	// State

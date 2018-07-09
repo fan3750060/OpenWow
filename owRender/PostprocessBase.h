@@ -24,12 +24,17 @@ public:
         gCameraPosition = getLocation("gCameraPosition");
     }
 
-    void SetScreenSize(float _width, float _height)
+	void setScreenSize(cvec2 _size)
+	{
+		setVec2(gScreenSize, _size);
+	}
+
+    void setScreenSize(float _width, float _height)
     {
         setVec2(gScreenSize, vec2(_width, _height));
     }
 
-    void SetCameraPos(cvec3 _cameraPos)
+    void setCameraPos(cvec3 _cameraPos)
     {
         setVec3(gCameraPosition, _cameraPos);
     }

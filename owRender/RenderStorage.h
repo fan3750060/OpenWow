@@ -14,30 +14,35 @@ public:
 	RenderStorage(RenderDevice* _RenderDevice);
 	~RenderStorage();
 
-	void CreateLayouts();
 	void CreateGeometry();
 	void CreateWoWLayouts();
 
-	void SetEGxBlend(uint8 _index);
+	void SetEGxBlend(RenderState* _state, uint8 _index);
 	
     //----------------------------------------------
     // Layouts
     //----------------------------------------------
 
     // Layouts geometry
-    uint32 __layoutSky;
-    uint32 __layoutWMO;
-    uint32 __layoutWMO_VC;
-    uint32 __layoutWater;
 
     uint32 __layout_GxVBF_P;
+
     uint32 __layout_GxVBF_PN;
+	uint32 __layout_GxVBF_PNC;
+	uint32 __layout_GxVBF_PNT;
+	uint32 __layout_GxVBF_PNCT;
 	uint32 __layout_GxVBF_PNT2;
-	uint32 __layout_GxVBF_PNCT2; // Tiles
-    uint32 __layout_GxVBF_PÑ;
+	uint32 __layout_GxVBF_PNCT2;
+	// NO NORMAL
+    uint32 __layout_GxVBF_PC;
+	uint32 __layout_GxVBF_PCT;
+	uint32 __layout_GxVBF_PCT2;
+	// NO NORMAL AND COLOR
     uint32 __layout_GxVBF_PT;
-    uint32 __layout_GxVBF_PBNT2;  // M2
-    uint32 __layout_GxVBF_PNC2T2; // Tiles
+	uint32 __layout_GxVBF_PT2;
+
+    uint32 __layout_GxVBF_PBNT2;
+    uint32 __layout_GxVBF_PNC2T2;
 
 	//----------------------------------------------
 	// Geometry & VertexBuffers

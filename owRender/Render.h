@@ -12,29 +12,6 @@ class FontsManager;
 class TechniquesManager;
 class RenderStorage;
 
-struct RenderTarget
-{
-	std::string           id;
-	uint32                numColBufs;
-	R_TextureFormats::List  format;
-	uint32                width, height;
-	uint32                samples;
-	float                 scale;  // Scale factor for FB width and height
-	bool                  hasDepthBuf;
-	uint32                rendBuf;
-
-	RenderTarget()
-	{
-		hasDepthBuf = false;
-		numColBufs = 0;
-		rendBuf = 0;
-		width = height = 0;
-		samples = 0;
-		scale = 0;
-		format = R_TextureFormats::Unknown;
-	}
-};
-
 class RenderGL : public IRender
 {
 	CLASS_INSTANCE(RenderGL);

@@ -497,7 +497,7 @@ void CM2_Builder::Step8Skins()
 	}
 #elif (VERSION == VERSION_WotLK)
 	assert1(m_Header.num_skin_profiles > 0);
-	for (uint32 i = 0; i < 1/*m_ParentM2->m_Header.num_skin_profiles*/; i++)
+	for (uint32 i = 0; i < m_Header.num_skin_profiles; i++)
 	{
 		char buf[256];
 		sprintf_s(buf, "%s%02d.skin", m_ParentM2->m_FileNameWithoutExt.c_str(), i);

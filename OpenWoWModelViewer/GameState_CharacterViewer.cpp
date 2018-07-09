@@ -139,7 +139,7 @@ void GameState_CharacterViewer::Render3D()
 	m.scale(1000.0f);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->SetWorldMatrix(m);
+	_Render->getTechniquesMgr()->Debug_Pass->setWorld(m);
 	{
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7f, 0.7f, 0.7f, 0.5f));
 

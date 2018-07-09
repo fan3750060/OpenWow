@@ -61,12 +61,12 @@ public:
 	vector<vec3>							m_PortalVertices;		// MOPV chunk
 	SmartBufferPtr							m_PortalVB;
 	vector<CWMO_Part_Portal*>				m_Portals;
-	vector<SWMO_PortalReferencesDef>			m_PortalReferences;		// MOPR chunk
-	CWMO_PortalsController*			m_PortalController;
+	vector<SWMO_PortalReferencesDef>		m_PortalReferences;		// MOPR chunk
+	CWMO_PortalsController*					m_PortalController;
 
 	//-- Visible block
 	vector<vec3>							m_VisibleBlockVertices;	// MOVV chunk
-	vector<SWMO_VisibleBlockListDef>			m_VisibleBlockList;		// MOVB chunk
+	vector<SWMO_VisibleBlockListDef>		m_VisibleBlockList;		// MOVB chunk
 
 
 	// -- Lights --//

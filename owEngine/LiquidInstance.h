@@ -16,5 +16,6 @@ public:
 private:
 	SmartPtr<Liquid>	m_Object;
 
+	//--
 	CGroupQuality&		m_QualitySettings;
 };

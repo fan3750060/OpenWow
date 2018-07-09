@@ -45,7 +45,7 @@ int main(int argumentCount, char* arguments[])
 	gsManager.AddGameState(GameStatesNames::GAME_STATE_WMO_VIEW, new GameState_WMOViewer());
 	gsManager.AddGameState(GameStatesNames::GAME_STATE_M2_VIEW, new GameState_M2Viewer());
 	gsManager.AddGameState(GameStatesNames::GAME_STATE_CHAR_VIEW, new GameState_CharacterViewer());
-	gsManager.SetGameState(GameStatesNames::GAME_STATE_WMO_VIEW);
+	gsManager.SetGameState(GameStatesNames::GAME_STATE_CHAR_VIEW);
 
 	while (engine.Tick());
 

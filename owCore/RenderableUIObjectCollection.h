@@ -29,6 +29,8 @@ struct CRenderableUIObjectCompare
 class CRenderableUIObjectCollection
 {
 public:
+	~CRenderableUIObjectCollection();
+
 	bool RegisterObject(IRenderableUI* _uiObject, uint32 _DrawOrder = 0);
 	void UnregisterObject(IRenderableUI* _uiObject);
 

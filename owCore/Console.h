@@ -6,6 +6,7 @@ class CConsole : public IConsole
 {
 public:
 	CConsole();
+	~CConsole();
 
 	void AddCommonCommands();
 

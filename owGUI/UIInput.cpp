@@ -16,6 +16,10 @@ UIInput::UIInput(IUIMgr* _uimgr) :
 	m_Text = "";
 }
 
+UIInput::~UIInput()
+{
+}
+
 void UIInput::Init(cvec2 _position, cvec2 _size, InputMode _inputMode)
 {
 	m_TextOffset = vec2(6, _size.y / 2);

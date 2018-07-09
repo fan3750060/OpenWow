@@ -77,7 +77,7 @@
     <ClInclude Include="WowTypes.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\owGameShared.h">
+    <ClInclude Include="..\shared\owEngine.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">

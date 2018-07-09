@@ -53,9 +53,9 @@ R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List _fo
 	glTexBuffer(GL_TEXTURE_BUFFER, m_GLFmt, m_Buffer->m_GLObj);
 
 	glBindTexture(GL_TEXTURE_BUFFER, 0);
-	if (m_RenderDevice->m_TextureSlot[15].m_Texture)
+	if (m_RenderDevice->m_State.m_TextureSlot[15].m_Texture)
 	{
-		glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);
+		glBindTexture(m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_GLObj);
 	}
 
 	return this;

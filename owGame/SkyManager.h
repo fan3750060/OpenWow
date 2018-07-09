@@ -33,7 +33,7 @@ private:
 
 private:
 	SkyParams m_Interpolated;
-	SmartBufferPtr __vb;
+	SmartBufferPtr colorsBuffer;
 	SmartGeomPtr __geom;
 	uint32 __vertsSize;
 

@@ -103,6 +103,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GPUTimer.cpp" />
+    <ClCompile Include="RenderPipeline.cpp" />
+    <ClCompile Include="RenderQueue.cpp" />
+    <ClCompile Include="RenderStates.cpp" />
     <ClCompile Include="RenderStorage.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontsManager.cpp" />
@@ -114,6 +117,7 @@
     <ClCompile Include="R_Shader.cpp" />
     <ClCompile Include="R_Texture.cpp" />
     <ClCompile Include="R_TextureBuffer.cpp" />
+    <ClCompile Include="ShaderContext.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -133,8 +137,11 @@
     <ClInclude Include="GPUTimer.h" />
     <ClInclude Include="lights_common.h" />
     <ClInclude Include="Magma_Pass.h" />
-    <ClInclude Include="MCNK_Divided_Pass.h" />
     <ClInclude Include="MCNK_Pass.h" />
+    <ClInclude Include="RenderPipeline.h" />
+    <ClInclude Include="RenderQueue.h" />
+    <ClInclude Include="RenderStates.h" />
+    <ClInclude Include="ShaderContext.h" />
     <ClInclude Include="UIBase.h" />
     <ClInclude Include="WDL_LowRes_Pass.h" />
     <ClInclude Include="Material.h" />
@@ -227,14 +234,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-    <None Include="..\_gamedata\shaders\Map\MapChunk_0.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_1.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_2.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_3.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_0.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_1.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_2.fs" />
-    <None Include="..\_gamedata\shaders\Map\MapChunk_WotLK_3.fs" />
     <None Include="..\_gamedata\shaders\Map\MapTileLowRes.fs">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -247,6 +246,8 @@
     <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Light_Direction.fs" />
     <None Include="..\_gamedata\shaders\Postprocess\Postprocess_Simple.fs" />
     <None Include="..\_gamedata\shaders\Postprocess\Postprocess_VS.vs" />
+    <None Include="..\_gamedata\shaders\Sky.fs" />
+    <None Include="..\_gamedata\shaders\Sky.vs" />
     <None Include="..\_gamedata\shaders\WMO.fs" />
     <None Include="..\_gamedata\shaders\WMO.vs" />
     <None Include="Technique.inl" />

@@ -11,8 +11,6 @@ in struct
 	vec2 TexCoordAlpha;
 } VSInput;
 
-
-
 // Layers
 uniform bool gIsNortrend;
 uniform bool gIsMCCVExists;
@@ -58,13 +56,12 @@ void main()
 	{
 		layersColor = texture(gColorMap[0], VSInput.TexCoordDetail).rgb;
 		layersSpecular = texture(gSpecularMap[0], VSInput.TexCoordDetail);
+
 		for(int i = 1; i < gLayersCount; i++)
 		{
 			float alphaCurrent = texture(gBlend, VSInput.TexCoordAlpha)[i - 1];
-			layersColor *= (1.0 - alphaCurrent);
-			layersColor += texture(gColorMap[i], VSInput.TexCoordDetail).rgb * alphaCurrent;
-			layersSpecular *= (1.0 - alphaCurrent);
-			layersSpecular += texture(gSpecularMap[i], VSInput.TexCoordDetail) * alphaCurrent;
+			layersColor = mix(layersColor, texture(gColorMap[i], VSInput.TexCoordDetail).rgb, alphaCurrent);
+			layersSpecular = mix(layersSpecular, texture(gSpecularMap[i], VSInput.TexCoordDetail),alphaCurrent);
 		}
 
 		resultColor = layersColor;
@@ -73,8 +70,8 @@ void main()
 			
 	if (gShadowMapExists)
 	{
-		float alphaCurrent = texture(gBlend, VSInput.TexCoordAlpha).a;
-		resultColor = resultColor * (1.0 - alphaCurrent) + gShadowColor * alphaCurrent;
+		float alphaShadow = texture(gBlend, VSInput.TexCoordAlpha).a;
+		resultColor = mix(resultColor,  gShadowColor, alphaShadow);
 	}
 
 	if (gIsMCCVExists)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseManager.h"
-
+/*
 class R_GeometryInfo;
 enum R_DrawBarriers;
 class R_Buffer;
@@ -10,7 +10,7 @@ enum R_CullMode;
 enum R_BlendFunc;
 enum R_DepthFunc;
 
-__interface 
+struct 
 	__declspec(uuid("D5E224F6-0034-4760-94A3-6CD9717190B5"))
 	IRenderDevice : public IManager
 {
@@ -47,9 +47,9 @@ __interface
 	void getAlphaToCoverage(bool &enabled) const;
 
 
-	void setBlendMode(bool enabled, R_BlendFunc srcRGBBlendFunc, R_BlendFunc destRGBBlendFunc);
-	void setBlendModeEx(bool enabled, R_BlendFunc srcRGBBlendFunc, R_BlendFunc destRGBBlendFunc, R_BlendFunc srcABlendFunc, R_BlendFunc destABlendFunc);
-	void getBlendMode(bool &enabled, R_BlendFunc& srcRGBBlendFunc, R_BlendFunc& destRGBBlendFunc) const;
+	void setBlendMode(bool enabled, R_BlendFunc srcRGBBlendFunc, R_BlendFunc dstRGBBlendFunc);
+	void setBlendModeEx(bool enabled, R_BlendFunc srcRGBBlendFunc, R_BlendFunc dstRGBBlendFunc, R_BlendFunc srcABlendFunc, R_BlendFunc dstABlendFunc);
+	void getBlendMode(bool &enabled, R_BlendFunc& srcRGBBlendFunc, R_BlendFunc& dstRGBBlendFunc) const;
 
 	void setDepthMask(bool enabled);
 	void getDepthMask(bool &enabled) const;
@@ -61,4 +61,4 @@ __interface
 	void getDepthFunc(R_DepthFunc &depthFunc) const;
 
 	void setTessPatchVertices(uint16 verts);
-};
+};*/

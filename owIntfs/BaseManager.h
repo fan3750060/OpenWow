@@ -6,42 +6,53 @@ class Font;
 class WMO;
 class M2;
 
-__interface 
+struct 
 	__declspec(uuid("BDC2768B-055D-42EA-ABE3-CF17CD21178D"))
 	IManager
-{};
+{
+	virtual ~IManager() {};
+};
 
 template<class T>
-__interface IRefManager : public IManager
+struct IRefManager : public IManager
 {	
-	T* Add(cstring name);
-	bool Exists(cstring name) const;
-	void Delete(cstring name);
-	void Delete(T* item);
+	virtual ~IRefManager() {};
+	virtual T* Add(cstring name) = 0;
+	virtual bool Exists(cstring name) const = 0;
+	virtual void Delete(cstring name) = 0;
+	virtual void Delete(T* item) = 0;
 };
 
 
-__interface 
+struct
 	__declspec(uuid("5C02C392-FD7A-4013-AAB7-43C8E81602AB"))
 	ITexturesManager : public IRefManager<R_Texture>
-{};
+{
+	virtual ~ITexturesManager() {};
+};
 
 
-__interface 
+struct
 	__declspec(uuid("1427E242-CCB8-4AEC-ABC8-17DE58A96B05"))
 	IFontsManager : public IRefManager<Font>
-{};
+{
+	virtual ~IFontsManager() {};
+};
 
 
-__interface 
+struct 
 	__declspec(uuid("42D47100-B825-47F1-BE2F-6F7C78443884"))
 	IWMOManager : public IRefManager<WMO>
-{};
+{
+	virtual ~IWMOManager() {};
+};
 
-__interface 
+struct
 	__declspec(uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))
 	IM2Manager : public IRefManager<M2>
-{};
+{
+	virtual ~IM2Manager() {};
+};
 
 //--
 

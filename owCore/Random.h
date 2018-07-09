@@ -3,14 +3,14 @@
 class Random
 {
 public:
-	static  void SetSeed(unsigned long TSeed);
+	static void SetSeed(unsigned long TSeed);
 
-	static  float Generate();
-	static  int GenerateMax(int TMax);
-	static  uint32 GenerateMax(uint32 TMax);
-	static  int GenerateRange(int TMin, int TMax);
-	static  uint32 GenerateRange(uint32 TMin, uint32 TMax);
-	static  float GenerateRange(float TMin, float TMax);
+	static float Generate();
+	static int GenerateMax(int TMax);
+	static uint32 GenerateMax(uint32 TMax);
+	static int GenerateRange(int TMin, int TMax);
+	static uint32 GenerateRange(uint32 TMin, uint32 TMax);
+	static float GenerateRange(float TMin, float TMax);
 
 private:
 	static unsigned long GenerateRandomInteger();

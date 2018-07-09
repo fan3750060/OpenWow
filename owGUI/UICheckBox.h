@@ -6,7 +6,7 @@ class UICheckBox : public UIElement {
 	typedef UIElement base;
 public:
 	UICheckBox(IUIMgr* _uimgr);
-	virtual ~UICheckBox();
+	virtual ~UICheckBox() override;
 
 	 void Init(cvec2 _position);
 

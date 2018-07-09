@@ -7,7 +7,7 @@ class UIButton3t : public UIButton
     typedef UIButton base;
 public:
     UIButton3t(IUIMgr* _uimgr);
-    virtual ~UIButton3t();
+    virtual ~UIButton3t() override;
 
     void Init(cvec2 _position, cstring _textureName);
 

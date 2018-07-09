@@ -16,7 +16,7 @@ public:
 		gProjection = getLocation("gProjection");
 	}
 
-	void SetProjectionMatrix(cmat4 WorldInverse)
+	void setProj(cmat4 WorldInverse)
 	{
 		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &WorldInverse.x[0]);
 	}

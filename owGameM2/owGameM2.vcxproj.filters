@@ -171,9 +171,6 @@
     <ClInclude Include="M2_Animation.h">
       <Filter>Animations</Filter>
     </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>

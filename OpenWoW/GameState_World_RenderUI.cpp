@@ -202,10 +202,10 @@ void GameState_InWorld::RenderUI()
 		_Render->RenderText(vec2(xPos + 20, yPos + i * 16), names[i]);
 	}
 
-	sprintf_s(buff, "Buffer memory [%d] bytes", _Render->r.getBufferMem());
+	sprintf_s(buff, "Buffer memory [%s]", _Render->r.getBufferMemStr().c_str());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
 
-	sprintf_s(buff, "R_Texture memory [%d] bytes", _Render->r.getTextureMem());
+	sprintf_s(buff, "R_Texture memory [%s]", _Render->r.getTextureMemStr().c_str());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 
 	if (_World->Map()->dir != nullptr)

@@ -9,16 +9,12 @@ layout(location = 4) in vec2 tc0;
 layout(location = 5) in vec2 tc1;
 
 // Uniforms
-uniform mat4 gProjection;
-uniform mat4 gView;
+uniform mat4 gProjView;
 uniform mat4 gWorld;
 
 // Bones
 uniform bool gIsAnimated;
 uniform mat4 gBones[251];
-
-// Billboard
-uniform bool gBillboard;
 
 // Texture animating
 uniform bool gTextureAnimEnable;
@@ -64,47 +60,15 @@ void main(void)
 		newVertex = vec4(position, 1.0f);
 	}
 		
-	/*if (gBillboard)
-	{
-		mat4 VW = gView * gWorld;
-			
-		// Column 0:
-	    VW[0][0] = 0;
-		VW[0][1] = 0;
-		VW[0][2] = 1;
+	gl_Position = gProjView * gWorld * newVertex;
 
-		// Column 1: Y
-		VW[1][0] = 0;
-		VW[1][1] = 1;
-		VW[1][2] = 0;
-
-		// Column 2:
-		VW[2][0] = 1;
-		VW[2][1] = 0;
-	    VW[2][2] = 0;
-		
-		mat4 bbView = mat4
-		//(
-        //vec4(-1.0,0.0,0.0,0.0),
-        //vec4(0.0,1.0,0.0,0.0),
-        //vec4(0.0,0.0,1.0,0.0),
-        //gView[3] 
-		//);
-		
-		gl_Position = gProjection * VW * newVertex;
-	}
-	else*/
-	{
-		gl_Position = gProjection * gView * gWorld * newVertex;
-	}
-	
 	VSout.position = (gWorld * vec4(newVertex.xyz, 1.0f)).xyz;
 	VSout.normal = (gWorld * vec4(normal.xyz, 0.0)).xyz;
 	
 	if (gTextureAnimEnable)
 	{
-		VSout.tc0 = (gTextureAnimMatrix * vec4(tc0, 1.0, 1.0)).xy;
-		VSout.tc1 = (gTextureAnimMatrix * vec4(tc1, 1.0, 1.0)).xy;
+		VSout.tc0 = (gTextureAnimMatrix * vec4(tc0, 1.0f, 1.0f)).xy;
+		VSout.tc1 = (gTextureAnimMatrix * vec4(tc1, 1.0f, 1.0f)).xy;
 	}
 	else
 	{

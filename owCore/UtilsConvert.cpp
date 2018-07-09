@@ -59,7 +59,6 @@ bool Utils::ToBool(cstring _string)
 	if (_str == "false") return false;
 	if (_str == "0") return false;
 
-	//Log::Error("Utils: %s %s doesn't know how to handle %s", __FILE__, __FUNCTION__, _string.c_str());
 	return false;
 }
 

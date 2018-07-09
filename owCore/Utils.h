@@ -207,3 +207,41 @@ inline string cp1251_to_utf8(const char *str)
 
 	return res;
 }
+
+inline string convertToString(uint32 _bytes)
+{
+	uint32 p = 0;
+	uint32 first = 0;
+	uint32 second = 0;
+	while (true)
+	{
+		if ((_bytes / 1024) == 0)
+			break;
+
+		first = _bytes / 1024;
+		second = _bytes % 1024;
+
+		_bytes = _bytes / 1024;
+		p++;
+	}
+
+	string buf;
+	buf += to_string(first) + "," + to_string(second); // bytes
+	switch (p)
+	{
+	case 0:
+		buf += "B";
+		break;
+	case 1:
+		buf += "kB";
+		break;
+	case 2:
+		buf += "MB";
+		break;
+	case 3:
+		buf += "GB";
+		break;
+	}
+
+	return buf;
+}

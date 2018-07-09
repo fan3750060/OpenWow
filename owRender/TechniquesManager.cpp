@@ -7,8 +7,8 @@
 #include "Material.h"
 #include "Render.h"
 
-TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
-	: m_RenderDevice(_RenderDevice), 
+TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) : 
+	m_RenderDevice(_RenderDevice), 
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 	// Debug
@@ -59,6 +59,8 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	M2_Pass->Unbind();
 	m_GeomTechniques.push_back(M2_Pass);
 
+	// M2 ribbons
+
 	M2_RibbonEmitters_Pass = new CM2_RibbonEmitters_Pass(m_RenderDevice);
 	M2_RibbonEmitters_Pass->Bind();
 	M2_RibbonEmitters_Pass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
@@ -80,38 +82,40 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 	m_Water->Unbind();
 	m_GeomTechniques.push_back(m_Water);
 
-	// Other
+	// Sky
 
 	Sky_Pass = new CSky_GeometryPass(m_RenderDevice);
 	m_GeomTechniques.push_back(Sky_Pass);
 
-	m_WMO_GeometryPass = new CWMO_GeomertyPass(m_RenderDevice);
-	m_WMO_GeometryPass->Bind();
-	m_WMO_GeometryPass->SetColorTextureUnit(0, Material::C_DiffuseTextureIndex + 0);
-	m_WMO_GeometryPass->SetColorTextureUnit(1, Material::C_DiffuseTextureIndex + 1);
-	m_WMO_GeometryPass->SetColorTextureUnit(2, Material::C_DiffuseTextureIndex + 2);
-	m_WMO_GeometryPass->SetSpecularTextureUnit(Material::C_SpecularTextureIndex);
-	m_WMO_GeometryPass->Unbind();
-	m_GeomTechniques.push_back(m_WMO_GeometryPass);
+	// WMO
+
+	WMO_Pass = new CWMO_GeomertyPass(m_RenderDevice);
+	WMO_Pass->Bind();
+	WMO_Pass->SetColorTextureUnit(0, Material::C_DiffuseTextureIndex + 0);
+	WMO_Pass->SetColorTextureUnit(1, Material::C_DiffuseTextureIndex + 1);
+	WMO_Pass->SetColorTextureUnit(2, Material::C_DiffuseTextureIndex + 2);
+	WMO_Pass->SetSpecularTextureUnit(Material::C_SpecularTextureIndex);
+	WMO_Pass->Unbind();
+	m_GeomTechniques.push_back(WMO_Pass);
 
 	// Postprocess
 
 	Postprocess_Light_Direction = new CPOST_DirectionalLight(m_RenderDevice);
 	Postprocess_Light_Direction->Bind();
-	Postprocess_Light_Direction->SetScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
+	Postprocess_Light_Direction->setScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Light_Direction->SetMatSpecularPower(16);
 	Postprocess_Light_Direction->Unbind();
 	m_PostTechniques.push_back(Postprocess_Light_Direction);
 
 	Postprocess_Fog = new CPOST_Fog(m_RenderDevice);
 	Postprocess_Fog->Bind();
-	Postprocess_Fog->SetScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
+	Postprocess_Fog->setScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Fog->Unbind();
 	m_PostTechniques.push_back(Postprocess_Fog);
 
 	Postprocess_Simple = new CPOST_Simple(m_RenderDevice);
 	Postprocess_Simple->Bind();
-	Postprocess_Simple->SetScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
+	Postprocess_Simple->setScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Simple->Unbind();
 	m_PostTechniques.push_back(Postprocess_Simple);
 
@@ -132,7 +136,34 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice)
 
 TechniquesManager::~TechniquesManager()
 {
+	delete Debug_Pass;
+	delete DebugNormal_Pass;
 
+	// Map
+	delete MCNK_Pass;
+	delete WDL_LowRes_Pass;
+
+	// M2
+	delete M2_Pass;
+	delete M2_RibbonEmitters_Pass;
+
+	// Liquids
+	delete m_Magma;
+	delete m_Water;
+
+	// Others
+	delete Sky_Pass;
+	delete WMO_Pass;
+
+	// Postprocess
+	delete Postprocess_Fog;
+	delete Postprocess_Light_Direction;
+	delete Postprocess_Simple;
+
+	// UI
+	delete UI_Color;
+	delete UI_Font;
+	delete UI_Texture;
 }
 
 void TechniquesManager::PreRender3D(Camera* _camera, R_RenderBuffer* _rb)
@@ -140,8 +171,7 @@ void TechniquesManager::PreRender3D(Camera* _camera, R_RenderBuffer* _rb)
 	for (auto& it : m_GeomTechniques)
 	{
 		it->Bind();
-		it->SetProjectionMatrix(_camera->getProjMat());
-		it->SetViewMatrix(_camera->getViewMat());
+		it->setProjView(_camera->getProjMat() * _camera->getViewMat());
 		it->Unbind();
 	}
 
@@ -151,8 +181,8 @@ void TechniquesManager::PreRender3D(Camera* _camera, R_RenderBuffer* _rb)
 	for (auto& it : m_PostTechniques)
 	{
 		it->Bind();
-		it->SetCameraPos(_camera->Position);
-		it->SetScreenSize(width, height);
+		it->setCameraPos(_camera->Position);
+		it->setScreenSize(width, height);
 		it->Unbind();
 	}
 }

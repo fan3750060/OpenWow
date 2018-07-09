@@ -33,6 +33,13 @@ CConsole::CConsole()
 	AddManager<IConsole>(this);
 }
 
+CConsole::~CConsole()
+{
+	//ERASE_VECTOR(m_ConsoleCommands);
+
+	DelManager<IConsole>();
+}
+
 void CConsole::AddCommonCommands()
 {
 	ADDCONSOLECOMMAND_WITHARGS("test1_with_1", Test1, int32);

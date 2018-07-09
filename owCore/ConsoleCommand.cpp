@@ -9,6 +9,11 @@ ConsoleCommand::ConsoleCommand(cstring _commandName, Function* _function, bool _
 	m_HasArgs(_hasArgs)
 {}
 
+ConsoleCommand::~ConsoleCommand()
+{
+	delete m_Function;
+}
+
 const string ConsoleCommand::GetName() const 
 { 
 	return m_Name; 

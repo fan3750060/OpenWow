@@ -1,14 +1,12 @@
 #version 330
 #include "lib/fragDeferredWrite.glsl"
 
-struct VSOutput
+// Input
+in struct VSOutput
 {
 	vec3 WorldSpacePos;
 	vec3 Color;
-};
-
-// Input
-in VSOutput VSout;
+} VSout;
 
 void main(void)
 {

@@ -25,8 +25,8 @@
 #include <owGUI.h>
 #pragma comment(lib, "owGUI.lib")
 
-#include <owGameShared.h>
-#pragma comment(lib, "owGameShared.lib")
+#include <owEngine.h>
+#pragma comment(lib, "owEngine.lib")
 
 #include <owGameM2.h>
 #pragma comment(lib, "owGameM2.lib")

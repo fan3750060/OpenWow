@@ -119,9 +119,9 @@ R_Texture* R_Texture::createTexture(R_TextureTypes::List _type, int _width, int 
 	m_RenderDevice->applySamplerState(this);
 
 	glBindTexture(m_Type, 0);
-	if (m_RenderDevice->m_TextureSlot[15].m_Texture)
+	if (m_RenderDevice->m_State.m_TextureSlot[15].m_Texture)
 	{
-		glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);
+		glBindTexture(m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_GLObj);
 	}
 
 	// Calculate memory requirements
@@ -194,9 +194,9 @@ void R_Texture::uploadTextureData(int _slice, int _mipLevel, const void* _pixels
 	}
 
 	glBindTexture(m_Type, 0);
-	if (m_RenderDevice->m_TextureSlot[15].m_Texture)
+	if (m_RenderDevice->m_State.m_TextureSlot[15].m_Texture)
 	{
-		glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);
+		glBindTexture(m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_GLObj);
 	}
 }
 
@@ -242,9 +242,9 @@ bool R_Texture::getTextureData(int _slice, int _mipLevel, void* _buffer)
 	}
 
 	glBindTexture(m_Type, 0);
-	if (m_RenderDevice->m_TextureSlot[15].m_Texture)
+	if (m_RenderDevice->m_State.m_TextureSlot[15].m_Texture)
 	{
-		glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);
+		glBindTexture(m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_GLObj);
 	}
 
 	return true;
@@ -263,9 +263,9 @@ void R_Texture::bindImageToTexture(void* _eglImage)
 		glEGLImageTargetTexture2DOES(m_Type, _eglImage);
 		m_RenderDevice->checkError();
 		glBindTexture(m_Type, 0);
-		if (m_RenderDevice->m_TextureSlot[15].m_Texture)
+		if (m_RenderDevice->m_State.m_TextureSlot[15].m_Texture)
 		{
-			glBindTexture(m_RenderDevice->m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_TextureSlot[15].m_Texture->m_GLObj);
+			glBindTexture(m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_GLObj);
 		}
 	}
 }

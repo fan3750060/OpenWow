@@ -69,26 +69,54 @@ bool ADT_MCNK::Load()
 	// Normals
 	f->seek(startPos + header.ofsNormal);
 	{
-		vec3 tempNormals[C_MapBufferSize];
-		vec3* ttn = tempNormals;
+		struct int24
+		{
+			int24() :
+				x(0),
+				y(0),
+				z(0)
+			{}
+
+			int24(int8 _x, int8 _y, int8 _z) :
+				x(_x),
+				y(_y),
+				z(_z)
+			{}
+
+			int8 x;
+			int8 y;
+			int8 z;
+		};
+
+		int24 normals_INT24[C_MapBufferSize];
+		memset(normals_INT24, 0x00, sizeof(int24) * C_MapBufferSize);
+		int24* t_normals_INT24 = normals_INT24;
+
 		for (int j = 0; j < 17; j++)
 		{
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
-				int8 nor[3];
-				f->readBytes(nor, 3);
+				int24 nor;
+				f->readBytes(&nor, sizeof(int24));
 
-				*ttn++ = vec3(-(float)nor[1] / 127.0f, (float)nor[2] / 127.0f, -(float)nor[0] / 127.0f);
+				//*ttn++ = vec3(-(float)nor.y / 127.0f, (float)nor.z / 127.0f, -(float)nor.x / 127.0f);
+				*t_normals_INT24++ = nor;
 			}
 		}
-		normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
+
+		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
+		normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(int24), normals_INT24, false);
 	}
 
 	// Heights
 	f->seek(startPos + header.ofsHeight);
 	{
+		float heights[C_MapBufferSize];
+		float* t_heights = heights;
+
 		vec3 tempVertexes[C_MapBufferSize];
 		vec3* ttv = tempVertexes;
+
 		for (uint32 j = 0; j < 17; j++)
 		{
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
@@ -224,6 +252,8 @@ bool ADT_MCNK::Load()
 
 		}
 	}
+	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
 
 	// Liquids
 	f->seek(startPos + header.ofsLiquid);
@@ -243,14 +273,12 @@ bool ADT_MCNK::Load()
 	// MCCV colors
 	f->seek(startPos + header.ofsMCCV);
 	{
-		vec4 mccvColors[C_MapBufferSize];
-		uint32 mccvColors2[C_MapBufferSize];
-		memset(mccvColors2, 0x00, sizeof(uint32) * C_MapBufferSize);
+		uint32 mccvColorsUINT8[C_MapBufferSize];
+		memset(mccvColorsUINT8, 0x00, sizeof(uint32) * C_MapBufferSize);
 
 		if (header.flags.has_mccv)
 		{
-			vec4* ttn = mccvColors;
-			uint32* ttn2 = mccvColors2;
+			uint32* t_mccvColorsUINT8 = mccvColorsUINT8;
 
 			for (int j = 0; j < 17; j++)
 			{
@@ -259,9 +287,8 @@ bool ADT_MCNK::Load()
 					uint8 nor[4];
 					f->readBytes(&nor, sizeof(uint32));
 
-					*ttn++ = vec4((float)nor[2] / 127.0f, (float)nor[1] / 127.0f, (float)nor[0] / 127.0f, (float)nor[3] / 127.0f);
-
-					*ttn2++ = uint32(
+					//*t_mccvColorsVEC4++ = vec4((float)nor[2] / 127.0f, (float)nor[1] / 127.0f, (float)nor[0] / 127.0f, (float)nor[3] / 127.0f);
+					*t_mccvColorsUINT8++ = uint32(
 						(uint8)(nor[3]) << 24 |
 						(uint8)(nor[0]) << 16 |
 						(uint8)(nor[1]) << 8 |
@@ -271,7 +298,7 @@ bool ADT_MCNK::Load()
 			}
 		}
 
-		mccvBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(uint32), mccvColors2, false);
+		mccvBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(uint32), mccvColorsUINT8, false);
 	}
 
 	{ // Geom High
@@ -281,7 +308,7 @@ bool ADT_MCNK::Load()
 
 		__geomHigh = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomHigh->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-		__geomHigh->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
 		__geomHigh->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
 		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
 		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
@@ -296,7 +323,7 @@ bool ADT_MCNK::Load()
 
 		__geomDefault = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
 		__geomDefault->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
 		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
@@ -304,18 +331,30 @@ bool ADT_MCNK::Load()
 		__geomDefault->finishCreatingGeometry();
 	}
 
-	////////////////////////////
 	// Debug geom
 	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PN);
 	__geomDebugNormals->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomDebugNormals->setGeomVertexParams(normalsBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomDebugNormals->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
+	__geomDebugNormals->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
+	__geomDebugNormals->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
 	__geomDebugNormals->finishCreatingGeometry();
 
-	//--
+	// High state
+	m_StateHigh.setGeometry(__geomHigh);
+	for (uint32 i = 0; i < header.nLayers; i++)
+	{
+		m_StateHigh.setTexture(CMCNK_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		m_StateHigh.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+	}
+	m_StateHigh.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
 
-	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
-	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
+	// Default state
+	m_StateDefault.setGeometry(__geomDefault);
+	for (uint32 i = 0; i < header.nLayers; i++)
+	{
+		m_StateDefault.setTexture(CMCNK_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		m_StateDefault.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+	}
+	m_StateDefault.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
 
 	return true;
 }
@@ -356,31 +395,18 @@ void ADT_MCNK::Render3D()
 		return;
 	}
 
+	float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length() - getBounds().getRadius();
+	bool isDefaultGeom = distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low;
+
 	PERF_START(PERF_MAP);
 	{
-		_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-		//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-		_Render->r.setDepthTest(true);
-		_Render->r.setDepthMask(true);
-		_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-
 		CMCNK_Pass* pass = _Render->getTechniquesMgr()->MCNK_Pass;
 
 		pass->Bind();
 		{
-			// Bind m_DiffuseTextures
-			for (uint32 i = 0; i < header.nLayers; i++)
-			{
-				_Render->r.setTexture(CMCNK_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-				_Render->r.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-			}
-
 			pass->SetIsNortrend(true/*m_ParentADT->m_Header.flags.IsNortrend*/);
 			pass->SetIsMCCVExists(m_QualitySettings.draw_map_mccv && header.flags.has_mccv);
 			pass->SetLayersCount(header.nLayers);
-
-			// Bind blend
-			_Render->r.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
 
 			// Bind shadow
 			pass->SetShadowMapExists(header.flags.has_mcsh);
@@ -388,18 +414,14 @@ void ADT_MCNK::Render3D()
 			{
 				pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
 			}
-			pass->SetShadowMapExists(false);
 
-			float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length() - getBounds().getRadius();
-			if (distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low)
+			if (isDefaultGeom)
 			{
-				_Render->r.setGeometry(__geomDefault);
-				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, true);
+				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, &m_StateDefault, true);
 			}
 			else
 			{
-				_Render->r.setGeometry(__geomHigh);
-				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize, true);
+				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize, &m_StateHigh, true);
 			}
 		}
 		pass->Unbind();
@@ -442,11 +464,20 @@ void ADT_MCNK::Render3D()
 
 void ADT_MCNK::RenderNormals()
 {
-	_Render->getTechniquesMgr()->DebugNormal_Pass->Bind();
+	/*if (!m_QualitySettings.draw_mcnk)
+	{
+		return;
+	}*/
 
-	_Render->r.setGeometry(__geomDebugNormals);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize);
+	CDebug_Normals* pass = _Render->getTechniquesMgr()->DebugNormal_Pass;
 
-	_Render->getTechniquesMgr()->DebugNormal_Pass->Unbind();
+	pass->Bind();
+	{
+		pass->setWorld(mat4());
+
+		_Render->r.setGeometry(__geomDebugNormals);
+		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize);
+	}
+	pass->Unbind();
 }
 

@@ -34,4 +34,12 @@ for (auto it = _name.begin(); it != _name.end();) \
     auto obj = *it; \
     it = _name.erase(it); \
     delete obj; \
-}
+} \
+_name.clear()
+
+#define ERASE_MAP(_name) \
+for (auto itr = _name.begin(); itr != _name.end(); itr++) \
+{ \
+	delete (itr->second); \
+} \
+_name.clear();

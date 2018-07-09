@@ -33,6 +33,8 @@ CConsoleOpenGL::CConsoleOpenGL() :
 CConsoleOpenGL::~CConsoleOpenGL()
 {
 	_Bindings->UnregisterInputListener(this);
+
+	ERASE_VECTOR(messages);
 }
 
 void CConsoleOpenGL::RenderUI()

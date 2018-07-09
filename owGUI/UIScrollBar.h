@@ -6,7 +6,7 @@ class UIScrollBar : public UIElement {
 	typedef UIElement base;
 public:
 	UIScrollBar(IUIMgr* _uimgr);
-	~UIScrollBar();
+	virtual ~UIScrollBar() override;
 
 	 void Init(cvec2 _position, cvec2 _size);
 
