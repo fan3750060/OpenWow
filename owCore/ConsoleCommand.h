@@ -4,7 +4,7 @@ class ConsoleCommand : public IConsoleCommand
 {
 public:
 	ConsoleCommand(cstring _commandName, Function* _function, bool _hasArgs = false);
-	virtual ~ConsoleCommand() override;
+	virtual ~ConsoleCommand();
 
 	// IConsoleCommand
 	const string GetName() const override;
@@ -25,7 +25,7 @@ public:
 	ConsoleCommand_WA(cstring _commandName, Function* _function) :
 		ConsoleCommand(_commandName, _function, true)
 	{}
-	~ConsoleCommand_WA() override
+	virtual ~ConsoleCommand_WA()
 	{}
 
 	// IConsoleCommand

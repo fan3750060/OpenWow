@@ -5,15 +5,27 @@
 #include "GameState_InWorld.h"
 #include <ctime>
 
+/*
+	Инициализация:
+	1) BaseManager
+	2) Хелперы
+	3) Ввод/вывод
+*/
 
 int main(int argumentCount, char* arguments[])
 {
-#ifdef _DEBUG 
+//#ifdef _DEBUG 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-#endif
+//#endif
 	{
+		CBaseManager baseManager;
+		_BaseManager = &baseManager;
+
 		Random::SetSeed(static_cast<unsigned long>(time(0)));
+
+		CBindingController bindingController;
+		_Bindings = &bindingController;
 
 		CSettings settings;
 		settings.AddDefaults();
@@ -39,11 +51,11 @@ int main(int argumentCount, char* arguments[])
 
 		UIMgr uiMgrEx;
 
+		OpenGLAdapter_GLFW adapter;
+
 		CEngine engine;
-		engine.Init(new OpenGLAdapter_GLFW());
+		engine.Init(&adapter);
 		engine.SetArguments(argumentCount, arguments);
-
-
 
 		OpenDBs();
 

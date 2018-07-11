@@ -5,6 +5,7 @@
 // Record create
 #define CONCAT_GET(a) Get_##a
 #define CONCAT_CLASS(a) a##Record
+#define CONCAT_DESTRUCTOR(a) virtual ~##a##Record() {}
 
 // Add data
 
@@ -14,10 +15,24 @@ type CONCAT_GET(_name)() const \
 	return getValue<type>(static_cast<uint32>(_field - 1)); \
 }
 
+#define __DBC_TARRAY(_type, _name, _field, _size) \
+_type CONCAT_GET(_name)(uint8 _index) const \
+{ \
+    assert1(_index < _size); \
+	return getValue<_type>(static_cast<uint32>(_field - 1 + _index)); \
+}
+
 #define __DBC_STRING(_name, _field) \
 const char* CONCAT_GET(_name)() const \
 { \
 	return getString(static_cast<uint32>(_field - 1)); \
+}
+
+#define __DBC_STRARR(_name, _field, _size) \
+const char* CONCAT_GET(_name)(uint8 _index) const \
+{ \
+	assert1(_index < _size); \
+	return getString(static_cast<uint32>(_field - 1 + _index)); \
 }
 
 #define __DBC_LOCSTR(_name, _field) \
@@ -30,13 +45,6 @@ string CONCAT_GET(_name)(int8 _locale = -1) const \
 _dbc##Record* CONCAT_GET(_name)() const \
 { \
 	return _dbc[static_cast<uint32>(getValue<uint32>(static_cast<uint32>(_field - 1)))]; \
-}
-
-#define __DBC_TARRAY(_type, _name, _field, _size) \
-_type CONCAT_GET(_name)(uint8 _index) const \
-{ \
-    assert1(_index < _size); \
-	return getValue<_type>(static_cast<uint32>(_field - 1 + _index)); \
 }
 
 // Uses in common classes
@@ -74,6 +82,7 @@ public: \
 	CONCAT_CLASS(accessName)() {} \
 	CONCAT_CLASS(accessName)(const DBCFile<CONCAT_CLASS(accessName)>::Iterator& _iterator) : Record(_iterator->m_DBC_Stats, _iterator->m_Offset) { } \
 	CONCAT_CLASS(accessName)(DBCFile<CONCAT_CLASS(accessName)>* file, const uint8* offset) : Record(file, offset) { } \
+	CONCAT_DESTRUCTOR(accessName) \
 public:
 
 // Class end
@@ -103,6 +112,8 @@ class DBCStats
 {
 	friend Record;
 public:
+	virtual ~DBCStats() {};
+
 	uint32_t getRecordSize() const { return recordSize; }
 	uint32_t getRecordCount() const { return recordCount; }
 	uint32_t getFieldCount() const { return fieldCount; }
@@ -128,6 +139,7 @@ public:
 	Record(const Record& _record) : m_DBC_Stats(_record.m_DBC_Stats), m_Offset(_record.m_Offset) {}
 	Record(Record&& _record) = delete;
 	Record(const DBCStats* _dbcStats, const uint8* offset) : m_DBC_Stats(_dbcStats), m_Offset(offset) {}
+	virtual ~Record() {}
 
 	Record& operator=(const Record& r)
 	{
@@ -207,7 +219,7 @@ class DBCFile : public DBCStats
 	friend RECORD_T;
 public:
 	DBCFile(const char* _fileName);
-	~DBCFile();
+	virtual ~DBCFile();
 
 	bool Open();
 
@@ -259,7 +271,7 @@ protected:
 
 private:
 	string m_FileName;
-	IFile* m_File;
+	UniquePtr<IFile> m_File;
 };
 
 #include "DBC__File.inl"

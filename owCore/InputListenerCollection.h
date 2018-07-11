@@ -8,6 +8,13 @@ public:
 		m_Priority(_priority)
 	{}
 
+	CInputListener& operator=(const CInputListener& _other)
+	{
+		this->m_InputListener = _other.m_InputListener;
+		this->m_Priority = _other.m_Priority;
+		return *this;
+	}
+
 	void OnMouseMoved(cvec2 _mousePos) { m_InputListener->OnMouseMoved(_mousePos); }
 	bool OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos) { return m_InputListener->OnMouseButtonPressed(_button, _mods, _mousePos); }
 	bool OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos) { return m_InputListener->OnMouseButtonReleased(_button, _mods, _mousePos); }
@@ -21,14 +28,14 @@ public:
 
 private:
 	IInputListener* m_InputListener;
-	const uint8		m_Priority;
+	uint8		m_Priority;
 };
 
 struct CInputListenerObjectCompare
 {
-	bool operator() (const CInputListener* left, const CInputListener* right) const
+	bool operator() (const CInputListener& left, const CInputListener& right) const
 	{
-		return left->getPriority() < right->getPriority();
+		return left.getPriority() < right.getPriority();
 	}
 };
 
@@ -50,5 +57,5 @@ public:
 	bool OnCharInput(uint32 _char) override;
 
 private:
-    vector<CInputListener*> m_Objects;
+    vector<CInputListener> m_Objects;
 };

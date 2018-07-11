@@ -27,7 +27,7 @@ private:
 	vec3										pos;
 	vec3										posValue;
 
-	SmartTexturePtr								m_Texture;
+	SharedTexturePtr								m_Texture;
 	const CM2_Part_Material*							m_Material;
 
 	M2_Animated<vec3>							m_Color;

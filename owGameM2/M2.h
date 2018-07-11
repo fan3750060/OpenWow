@@ -253,8 +253,8 @@ public:
 
 private:
 	// Buffers and geom
-	SmartBufferPtr						m_VBuffer;
-	SmartGeomPtr						m_CollisionGeom;
+	SharedBufferPtr						m_VBuffer;
+	SharedGeomPtr						m_CollisionGeom;
 	uint32								m_CollisionIndCnt;
 	uint32								m_CollisionVetCnt;
 
@@ -271,4 +271,4 @@ struct M2Deleter
 		GetManager<IM2Manager>()->Delete(p);
 	}
 };
-typedef SmartPtr<M2, M2Deleter> SmartM2Ptr;
+typedef SharedPtr<M2, M2Deleter> SmartM2Ptr;

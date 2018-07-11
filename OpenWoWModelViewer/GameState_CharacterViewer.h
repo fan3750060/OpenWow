@@ -39,6 +39,6 @@ public:
 
 private:
 	static const uint32 cnt = 30;
-	SmartGeomPtr m_DebugGeom;
+	SharedGeomPtr m_DebugGeom;
 	Creature* m_Char[cnt * cnt];
 };

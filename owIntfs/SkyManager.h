@@ -48,18 +48,20 @@ struct LightFogs
 	};
 };
 
-__interface 
+struct 
 	__declspec(uuid("8D86DF19-0FB3-47F3-B0BC-215788EA5500"))
 	ISkyManager : public IManager
 {
-	void Calculate(uint32 _time);
-	bool HasSkies();
+	virtual ~ISkyManager() = 0 {};
 
-	vec3 GetColor(LightColors::List _color);
-	float GetFog(LightFogs::List _fog);
-	float GetGlow();
-	float GetWaterShallowAlpha();
-	float GetWaterDarkAlpha();
-	float GetOceanShallowAlpha();
-	float GetOceanDarkAlpha();
+	virtual void Calculate(uint32 _time) = 0;
+	virtual bool HasSkies() = 0;
+
+	virtual vec3 GetColor(LightColors::List _color) = 0;
+	virtual float GetFog(LightFogs::List _fog) = 0;
+	virtual float GetGlow() = 0;
+	virtual float GetWaterShallowAlpha() = 0;
+	virtual float GetWaterDarkAlpha() = 0;
+	virtual float GetOceanShallowAlpha() = 0;
+	virtual float GetOceanDarkAlpha() = 0;
 };

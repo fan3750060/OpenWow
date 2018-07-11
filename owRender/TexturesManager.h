@@ -4,6 +4,7 @@ class TexturesManager : public ITexturesManager, public CRefManager1DimAssync<R_
 {
 public:
 	TexturesManager(IOpenGLAdapter* _adapter, RenderDevice* _RenderDevice);
+	virtual ~TexturesManager();
 
 	R_Texture* DefaultTexture() { return m_DefaultTexture2DObj; }
 
@@ -23,12 +24,11 @@ public:
 	static R_Texture* LoadBLPTexture(IFile* _file, R_Texture* _texture);
 
 private:
-	SmartTexturePtr	m_DefaultTexture2DObj;
-	SmartTexturePtr	m_DefaultTexture3DObj;
-	SmartTexturePtr	m_DefaultTextureCubeObj;
+	SharedTexturePtr	m_DefaultTexture2DObj;
+	SharedTexturePtr	m_DefaultTexture3DObj;
+	SharedTexturePtr	m_DefaultTextureCubeObj;
 
 private:
-	IOpenGLAdapter* m_Adapter;
-	RenderDevice* m_RenderDevice;
+	IOpenGLAdapter*		m_Adapter;
+	RenderDevice*		m_RenderDevice;
 };
-

@@ -20,7 +20,7 @@ CWMO_Part_Portal::CWMO_Part_Portal(const WMO* _parentWMO, const SWMO_PortalDef& 
 	m_Plane.normal = _proto.plane.normal.toXZmY();
 	m_Plane.dist = _proto.plane.distance;
 
-	m_Geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
+	m_Geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_P);
 	m_Geom->setGeomVertexParams(m_ParentWMO->m_PortalVB, R_DataType::T_FLOAT, 0, sizeof(vec3));
 	m_Geom->finishCreatingGeometry();
 }
@@ -48,7 +48,7 @@ void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(color);
 
 		_Render->r.setGeometry(m_Geom);
-		_Render->r.draw(PRIM_TRISTRIP, m_StartVertex, m_Count);
+		_Render->r.draw(m_StartVertex, m_Count);
 	}
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 

@@ -9,6 +9,8 @@ enum Commands
 class GameState_Menu : public CGameState, CRenderable3DObject
 {
 public:
+	virtual ~GameState_Menu();
+
 	void OnBtn(DBC_MapRecord _e);
 	bool LoadWorld(vec3 _pos);
 
@@ -43,8 +45,10 @@ private:
     UIElement* m_MinimapUI;
 	UIElement* m_LoadingScreenUI;
 
+	vector<SharedPtr<UIWowButon>> m_Buttons;
+
 	Commands cmd;
 
 	void randBackground();
-	SmartPtr<CM2_Base_Instance> m_BackgroudModel;
+	SharedPtr<CM2_Base_Instance> m_BackgroudModel;
 };

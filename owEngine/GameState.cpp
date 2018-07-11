@@ -12,6 +12,11 @@ CGameState::CGameState() :
 	m_Engine = GetManager<IEngine>();
 }
 
+CGameState::~CGameState()
+{
+	delete m_Window;
+}
+
 bool CGameState::Init()
 {
     m_Window = new UIWindow(GetManager<IUIMgr>());

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Map_Shared.h"
 #include "ADT.h"
 #include "WDT.h"
 #include "WDL.h"
@@ -11,40 +12,35 @@ public:
 	MapController();
 	~MapController();
 
-	void MapPreLoad(DBC_MapRecord _map);
+	void MapPreLoad(const DBC_MapRecord& _map);
 	void MapLoad();
 	void MapPostLoad();
-
 	void Unload();
 
 	//
-
 	void EnterMap(int32 x, int32 z);
 	ADT* LoadTile(int32 x, int32 z);
 	void ClearCache();
 	uint32 GetAreaID();
 
+	
+
 	// ISceneNode
 	string getObjectInfo() override { return "@MapController@"; }
-
-	// IRenderable3D
-	bool PreRender3D() override;
 
 	// IMapManager
 	void Update() override;
 
 public: // Getters
-	string GetFolder() { return m_MapFolder; }
-	DBC_MapRecord& GetDBCMap() { return m_DBC_Map; }
-
+	const DBC_MapRecord& GetDBCMap() const { return m_DBC_Map; }
+	string getFilenameT() const { return m_MapFilenameT; }
+	
 	int GetCurrentX() const { return m_CurrentTileX; }
 	int GetCurrentZ() const { return m_CurrentTileZ; }
 
-	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
 	void SetOutOfBounds(bool _value) { m_IsOnInvalidTile = _value; }
-
-
-
+	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
+	
 	bool getTileIsCurrent(int x, int z) const
 	{
 		int midTile = static_cast<uint32>(C_RenderedTiles / 2);
@@ -71,15 +67,13 @@ private:
 	bool IsTileInCurrent(ADT* _mapTile);
 
 private:
-	string			m_MapFolder;
+	string			m_MapFilenameT;
 	DBC_MapRecord	m_DBC_Map;
 
 
 private:
 	ADT*			m_ADTCache[C_TilesCacheSize];
 	ADT*			m_Current[C_RenderedTiles][C_RenderedTiles];
-
-
 
 	int32			m_CurrentTileX, m_CurrentTileZ;
 	bool			m_IsOnInvalidTile;

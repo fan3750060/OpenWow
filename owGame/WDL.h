@@ -3,10 +3,14 @@
 #include "WDL_LowResTile.h"
 #include "ADT_WMO_Instance.h"
 
+// FORWARD BEGIN
+class MapController;
+// FORWARD END
+
 class WDL
 {
 public:
-	WDL(cstring _fileName);
+	WDL(MapController* _mapController);
 	~WDL();
 
 	void CreateInsances(SceneNode* _parent);
@@ -16,12 +20,12 @@ public:
 	R_Texture* getMinimap() { return m_Minimap; }
 
 private:
-	const string 						m_FileName;
+	const MapController*				m_MapController;
 
-	SmartTexturePtr						m_Minimap;
+	SharedTexturePtr						m_Minimap;
 	uint32								m_MAREOffsets[C_TilesInMap][C_TilesInMap];
-	vector<SmartPtr<CWDL_LowResTile>>	m_LowResilutionTiles;
+	vector<SharedPtr<CWDL_LowResTile>>	m_LowResilutionTiles;
 	vector<string>						m_LowResolutionWMOsNames;
 	vector<ADT_MODF>					m_LowResolutionWMOsPlacementInfo;
-	vector<SmartPtr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
+	vector<SharedPtr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
 };

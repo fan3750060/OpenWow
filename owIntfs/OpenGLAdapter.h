@@ -20,6 +20,7 @@ public:
 	void SetWindowSize(int32 _width, int32 _height);
 	void SetWindowTitle(cstring _title);
 
+	void CreateCursor();
 	void ShowCursor();
 	void HideCursor();
 

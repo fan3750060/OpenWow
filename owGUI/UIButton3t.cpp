@@ -8,32 +8,27 @@
 
 UIButton3t::UIButton3t(IUIMgr* _uimgr) :
 	UIButton(_uimgr)
-{}
+{
+	for (uint32 i = 0; i < 4; i++)
+	{
+		buttonsImages[i] = nullptr;
+	}
+}
 
 UIButton3t::~UIButton3t()
 {
-	for (int i = 0; i < 4; i++)
-		delete buttonsImages[i];
-	m_Image = nullptr;
+	int x = 0;
 }
 
 void UIButton3t::Init(cvec2 _position, cstring _textureName)
 {
-	auto buttonTexture = _Render->TexturesMgr()->Add(_textureName);
-	auto buttonSize = vec2(buttonTexture->GetSize().x, buttonTexture->GetSize().y / 4);
-
-    for (int i = 0; i < 4; i++)
-    {
-        buttonsImages[i] = new Image(buttonTexture, vec2(0, buttonSize.y * i), buttonSize);
-    }
-
-	//
-
-	base::Init(_position, buttonsImages[0]);
+	base::Init(_position, nullptr);
 }
 
 void UIButton3t::OnRenderUI()
 {
+	m_SecondImage = nullptr;
+
 	switch (buttonStatus)
 	{
 		case BUTTON_NORMAL:
@@ -45,7 +40,8 @@ void UIButton3t::OnRenderUI()
 		break;
 
 		case BUTTON_HOVER:
-		m_Image = buttonsImages[2];
+		m_Image = buttonsImages[0];
+		m_SecondImage = buttonsImages[2];
 		break;
 
 		case BUTTON_DISABLED:

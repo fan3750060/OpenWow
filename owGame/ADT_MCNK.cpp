@@ -10,8 +10,7 @@
 #include "ADT_Liquid.h"
 #include "MapController.h"
 #include "Map_Shared.h"
-#include "WorldController.h" // TODO
-//
+#include "WorldController.h"
 
 ADT_MCNK::ADT_MCNK(ADT* _parentTile, IFile* _file) :
 	SceneNode(_parentTile),
@@ -37,12 +36,10 @@ ADT_MCNK::~ADT_MCNK()
 
 bool ADT_MCNK::Load()
 {
-	SmartPtr<IFile> f = m_File;
-	uint32_t startPos = f->getPos();
+	uint32_t startPos = m_File->getPos();
 
 	// Read header
-	f->readBytes(&header, sizeof(ADT_MCNK_Header));
-
+	m_File->readBytes(&header, sizeof(ADT_MCNK_Header));
 
 	// Scene node params
 	{
@@ -67,7 +64,7 @@ bool ADT_MCNK::Load()
 	memset(blendbuf, 0, 64 * 64 * 4);
 
 	// Normals
-	f->seek(startPos + header.ofsNormal);
+	m_File->seek(startPos + header.ofsNormal);
 	{
 		struct int24
 		{
@@ -97,7 +94,7 @@ bool ADT_MCNK::Load()
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				int24 nor;
-				f->readBytes(&nor, sizeof(int24));
+				m_File->readBytes(&nor, sizeof(int24));
 
 				//*ttn++ = vec3(-(float)nor.y / 127.0f, (float)nor.z / 127.0f, -(float)nor.x / 127.0f);
 				*t_normals_INT24++ = nor;
@@ -109,7 +106,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Heights
-	f->seek(startPos + header.ofsHeight);
+	m_File->seek(startPos + header.ofsHeight);
 	{
 		float heights[C_MapBufferSize];
 		float* t_heights = heights;
@@ -122,7 +119,7 @@ bool ADT_MCNK::Load()
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				float h;
-				f->readBytes(&h, sizeof(float));
+				m_File->readBytes(&h, sizeof(float));
 
 				float xpos = i * C_UnitSize;
 				float zpos = j * 0.5f * C_UnitSize;
@@ -145,11 +142,11 @@ bool ADT_MCNK::Load()
 	}
 
 	// Textures
-	f->seek(startPos + header.ofsLayer);
+	m_File->seek(startPos + header.ofsLayer);
 	{
 		for (uint32 i = 0; i < header.nLayers; i++)
 		{
-			f->readBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
+			m_File->readBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
 			m_DiffuseTextures[i] = m_ParentADT->m_Textures.at(mcly[i].textureIndex)->diffuseTexture;
 			m_SpecularTextures[i] = m_ParentADT->m_Textures.at(mcly[i].textureIndex)->specularTexture;
@@ -157,7 +154,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Shadows
-	f->seek(startPos + header.ofsShadow);
+	m_File->seek(startPos + header.ofsShadow);
 	{
 		uint8 sbuf[64 * 64];
 		uint8* p;
@@ -165,7 +162,7 @@ bool ADT_MCNK::Load()
 		p = sbuf;
 		for (int j = 0; j < 64; j++)
 		{
-			f->readBytes(c, 8);
+			m_File->readBytes(c, 8);
 			for (int i = 0; i < 8; i++)
 			{
 				for (int b = 0x01; b != 0x100; b <<= 1)
@@ -182,13 +179,13 @@ bool ADT_MCNK::Load()
 	}
 
 	// Alpha
-	f->seek(startPos + header.ofsAlpha);
+	m_File->seek(startPos + header.ofsAlpha);
 	{
 		for (uint32 i = 1; i < header.nLayers; i++)
 		{
 			uint8 amap[64 * 64];
 			memset(amap, 0x00, 64 * 64);
-			const uint8* abuf = f->getDataFromCurrent() + mcly[i].offsetInMCAL;
+			const uint8* abuf = m_File->getDataFromCurrent() + mcly[i].offsetInMCAL;
 
 			if (mcly[i].flags.alpha_map_compressed) // Compressed: MPHD is only about bit depth!
 			{
@@ -198,7 +195,7 @@ bool ADT_MCNK::Load()
 				for (uint16 offset_output = 0; offset_output < 4096;)
 				{
 					const bool fill = *input & 0x80;
-					const uint16  n = *input & 0x7F;
+					const uint16 n = *input & 0x7F;
 					++input;
 
 					if (fill)
@@ -249,29 +246,28 @@ bool ADT_MCNK::Load()
 			{
 				blendbuf[p * 4 + (i - 1)] = amap[p];
 			}
-
 		}
 	}
 	m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
 
 	// Liquids
-	f->seek(startPos + header.ofsLiquid);
+	m_File->seek(startPos + header.ofsLiquid);
 	{
 		if (header.sizeLiquid > 8)
 		{
 			CRange height;
-			f->readBytes(&height, 8);
+			m_File->readBytes(&height, 8);
 
 			CADT_Liquid* m_Liquid = new CADT_Liquid(8, 8);
-			m_Liquid->CreateFromMCLQ(f, header);
+			m_Liquid->CreateFromMCLQ(m_File, header);
 
 			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
 		}
 	}
 
 	// MCCV colors
-	f->seek(startPos + header.ofsMCCV);
+	m_File->seek(startPos + header.ofsMCCV);
 	{
 		uint32 mccvColorsUINT8[C_MapBufferSize];
 		memset(mccvColorsUINT8, 0x00, sizeof(uint32) * C_MapBufferSize);
@@ -285,9 +281,8 @@ bool ADT_MCNK::Load()
 				for (uint32 i = 0; i < ((j % 2u) ? 8u : 9u); i++)
 				{
 					uint8 nor[4];
-					f->readBytes(&nor, sizeof(uint32));
+					m_File->readBytes(&nor, sizeof(uint32));
 
-					//*t_mccvColorsVEC4++ = vec4((float)nor[2] / 127.0f, (float)nor[1] / 127.0f, (float)nor[0] / 127.0f, (float)nor[3] / 127.0f);
 					*t_mccvColorsUINT8++ = uint32(
 						(uint8)(nor[3]) << 24 |
 						(uint8)(nor[0]) << 16 |
@@ -302,37 +297,37 @@ bool ADT_MCNK::Load()
 	}
 
 	{ // Geom High
-		vector<uint16>& mapArrayHigh = Map_Shared::GenarateHighMapArray(header.holes);
+		vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
 		m_IndexesCountHigh = mapArrayHigh.size();
 		__ibHigh = _Render->r.createIndexBuffer(mapArrayHigh.size() * sizeof(uint16), mapArrayHigh.data(), false);
 
-		__geomHigh = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
+		__geomHigh = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomHigh->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 		__geomHigh->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
 		__geomHigh->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
-		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-		__geomHigh->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(_MapShared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+		__geomHigh->setGeomVertexParams(_MapShared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
 		__geomHigh->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
 		__geomHigh->finishCreatingGeometry();
 	}
 
 	{ // Geom Default
-		vector<uint16>& mapArrayDefault = Map_Shared::GenarateDefaultMapArray(header.holes);
+		vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
 		m_IndexesCountDefault = mapArrayDefault.size();
 		__ibDefault = _Render->r.createIndexBuffer(mapArrayDefault.size() * sizeof(uint16), mapArrayDefault.data(), false);
 
-		__geomDefault = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
+		__geomDefault = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
 		__geomDefault->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
-		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-		__geomDefault->setGeomVertexParams(Map_Shared::BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(_MapShared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
+		__geomDefault->setGeomVertexParams(_MapShared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
 		__geomDefault->finishCreatingGeometry();
 	}
 
 	// Debug geom
-	__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PN);
+	__geomDebugNormals = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
 	__geomDebugNormals->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 	__geomDebugNormals->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
 	__geomDebugNormals->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
@@ -355,6 +350,7 @@ bool ADT_MCNK::Load()
 		m_StateDefault.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 	}
 	m_StateDefault.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);
+	m_HighCall.bindUniformsFunc = ADT_MCNK::BindUniforms;
 
 	return true;
 }
@@ -367,11 +363,11 @@ bool ADT_MCNK::Delete()
 bool ADT_MCNK::PreRender3D()
 {
 	// Check distance to camera
-	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - m_Bounds.getCenter().toX0Z()).length() - getBounds().getRadius();
+	/*float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - m_Bounds.getCenter().toX0Z()).length() - getBounds().getRadius();
 	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	{
 		return false;
-	}
+	}*/
 
 	// Check frustrum
 	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
@@ -404,7 +400,7 @@ void ADT_MCNK::Render3D()
 
 		pass->Bind();
 		{
-			pass->SetIsNortrend(true/*m_ParentADT->m_Header.flags.IsNortrend*/);
+			pass->SetIsNortrend(false/*m_ParentADT->m_Header.flags.IsNortrend*/);
 			pass->SetIsMCCVExists(m_QualitySettings.draw_map_mccv && header.flags.has_mccv);
 			pass->SetLayersCount(header.nLayers);
 
@@ -417,16 +413,21 @@ void ADT_MCNK::Render3D()
 
 			if (isDefaultGeom)
 			{
-				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountDefault, 0, C_MapBufferSize, &m_StateDefault, true);
+				_Render->r.drawIndexed(0, m_IndexesCountDefault, 0, C_MapBufferSize, &m_StateDefault, true);
 			}
 			else
 			{
-				_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize, &m_StateHigh, true);
+				_Render->r.drawIndexed(0, m_IndexesCountHigh, 0, C_MapBufferSize, &m_StateHigh, true);
 			}
 		}
 		pass->Unbind();
 	}
 	PERF_STOP(PERF_MAP);
+}
+
+void ADT_MCNK::BindUniforms(Technique* _techique)
+{
+
 }
 
 //
@@ -476,7 +477,7 @@ void ADT_MCNK::RenderNormals()
 		pass->setWorld(mat4());
 
 		_Render->r.setGeometry(__geomDebugNormals);
-		_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndexesCountHigh, 0, C_MapBufferSize);
+		_Render->r.drawIndexed(0, m_IndexesCountHigh, 0, C_MapBufferSize);
 	}
 	pass->Unbind();
 }

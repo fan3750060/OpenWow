@@ -63,6 +63,14 @@ struct C3sVector
 	int16 z;
 };
 
+struct C4Vec
+{
+	uint8 x;
+	uint8 y;
+	uint8 z;
+	uint8 w;
+};
+
 struct C3Segment
 {
 	vec3 start;

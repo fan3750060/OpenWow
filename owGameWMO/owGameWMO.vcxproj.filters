@@ -116,5 +116,8 @@
     <ClInclude Include="WMO_Group_Part_BSP_Node.h">
       <Filter>Groups</Filter>
     </ClInclude>
+    <ClInclude Include="WMO_Fixes.h">
+      <Filter>Groups</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

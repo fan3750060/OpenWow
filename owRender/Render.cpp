@@ -6,6 +6,8 @@
 // Additional
 #include "Material.h"
 
+RenderGL* _Render;
+
 RenderGL::RenderGL() :
 	m_OpenGLAdapter(nullptr),
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
@@ -14,6 +16,14 @@ RenderGL::RenderGL() :
 RenderGL::~RenderGL()
 {
 	delete m_Camera;
+	delete m_RenderBuffer;
+
+	delete m_RenderStorage;
+	delete m_FontsManager;
+	delete m_TechniquesManager;
+	delete m_RenderQueue;
+
+	delete m_TexturesManager;
 }
 
 void RenderGL::Init(IOpenGLAdapter* _adapter)
@@ -32,11 +42,12 @@ void RenderGL::Init(IOpenGLAdapter* _adapter)
 	m_TexturesManager = new TexturesManager(m_OpenGLAdapter, &r);
 	m_FontsManager = new FontsManager(&r);
 	m_TechniquesManager = new TechniquesManager(&r);
+	m_RenderQueue = new RenderQueue(&r);
 
 	//--
 
 	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 4);
+	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 4);
 
 	// Main game camera
 	m_Camera = new Camera;
@@ -110,7 +121,7 @@ void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
 
 	r.setGeometry(m_RenderStorage->_cubeGeo);
-	r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+	r.drawIndexed(0, 36, 0, 8);
 
 	m_TechniquesManager->Debug_Pass->Unbind();
 
@@ -134,7 +145,7 @@ void RenderGL::DrawSphere(cmat4 _world, cvec3 _pos, float _radius, vec4 _color)
 	m_TechniquesManager->Debug_Pass->SetColor4(_color);
 
 	r.setGeometry(m_RenderStorage->_sphereGeo);
-	r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126);
+	r.drawIndexed(0, 128 * 3, 0, 126);
 
 	m_TechniquesManager->Debug_Pass->Unbind();
 
@@ -155,7 +166,7 @@ void RenderGL::DrawGeo(cvec3 _pos, vec4 _color)
 	m_TechniquesManager->Debug_Pass->SetColor4(vec4(1, 1, 1, 1));
 
 	r.setGeometry(m_RenderStorage->_coneGeo);
-	r.drawIndexed(PRIM_TRILIST, 0, 66, 0, 13);
+	r.drawIndexed(0, 66, 0, 13);
 
 	m_TechniquesManager->Debug_Pass->Unbind();
 
@@ -178,7 +189,7 @@ void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 	m_TechniquesManager->Debug_Pass->setWorld(world);
 	m_TechniquesManager->Debug_Pass->SetColor4(_color);
 
-	r.drawIndexed(PRIM_TRILIST, 0, 36, 0, 8);
+	r.drawIndexed(0, 36, 0, 8);
 
 	m_TechniquesManager->Debug_Pass->Unbind();
 
@@ -217,7 +228,7 @@ void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 	r.setGeometry(m_RenderStorage->__QuadVTDynamic);
 
 	// Draw call
-	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+	r.drawIndexed(0, 6, 0, 4);
 
 	m_TechniquesManager->UI_Texture->Unbind();
 }
@@ -249,7 +260,7 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool ro
 	r.setGeometry(m_RenderStorage->__QuadVT);
 
 	// Draw call
-	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+	r.drawIndexed(0, 6, 0, 4);
 
 	m_TechniquesManager->UI_Texture->Unbind();
 }
@@ -271,7 +282,7 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture * _texture, vec2 _size, float 
 	r.setGeometry(m_RenderStorage->__QuadVT);
 
 	// Draw call
-	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+	r.drawIndexed(0, 6, 0, 4);
 
 	m_TechniquesManager->UI_Texture->Unbind();
 }
@@ -294,7 +305,7 @@ void RenderGL::RenderRectangle(vec2 _pos, vec2 _size, const Color& _color)
 	r.setGeometry(m_RenderStorage->__Quad);
 
 	// Draw call
-	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+	r.drawIndexed(0, 6, 0, 4);
 
 	m_TechniquesManager->UI_Color->Unbind();
 }
@@ -366,18 +377,17 @@ void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAl
 void RenderGL::RenderQuad()
 {
 	r.setGeometry(m_RenderStorage->__Quad);
-	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+	r.drawIndexed(0, 6, 0, 4);
 }
 
 void RenderGL::RenderQuadVT()
 {
 	r.setGeometry(m_RenderStorage->__QuadVT);
-	r.drawIndexed(PRIM_TRILIST, 0, 6, 0, 4);
+	r.drawIndexed(0, 6, 0, 4);
 }
 
 #pragma endregion
 
-//
 //
 
 void RenderGL::OnWindowResized(uint32 _width, uint32 _height)

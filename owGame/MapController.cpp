@@ -5,8 +5,6 @@
 
 // Additional
 #include "WorldController.h"
-#include "Map_Shared.h"
-
 
 MapController::MapController() :
 	m_WDT(nullptr),
@@ -17,7 +15,10 @@ MapController::MapController() :
     memset(m_Current, 0, sizeof(m_Current));
     m_IsOnInvalidTile = false;
 
-	Map_Shared::Init();
+	if (_MapShared == nullptr)
+	{
+		_MapShared = new CMapShared();
+	}
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
@@ -44,18 +45,19 @@ MapController::MapController() :
 
 MapController::~MapController()
 {
+	delete _MapShared; _MapShared = nullptr;
+
 	DelManager<IMapManager>();
 }
 
 //
 
-void MapController::MapPreLoad(DBC_MapRecord _map)
+void MapController::MapPreLoad(const DBC_MapRecord& _map)
 {
     m_DBC_Map = _map;
+	m_MapFilenameT = CMapShared::getMapFolder(m_DBC_Map);
 
     Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
-
-    m_MapFolder = "World\\Maps\\" + string(m_DBC_Map.Get_Directory()) + "\\";
 
 	// Delete if exists
 	if (m_WDL != nullptr)
@@ -63,17 +65,16 @@ void MapController::MapPreLoad(DBC_MapRecord _map)
 		delete m_WDL; m_WDL = nullptr;
 	}
 
-	m_WDL = new WDL(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdl");
+	m_WDL = new WDL(this);
 	m_WDL->Load();
 
 	// Delete if exists
 	if (m_WDT != nullptr)
 	{
-		delete m_WDT;	m_WDT = nullptr;
+		delete m_WDT; m_WDT = nullptr;
 	}
 
-	m_WDT = new WDT();
-	m_WDT->Load(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdt");
+	m_WDT = new WDT(this);
 }
 
 void MapController::MapLoad()
@@ -83,7 +84,7 @@ void MapController::MapLoad()
 	_World->EnvM()->InitSkies(m_DBC_Map);
 
 	// Load data
-	m_WDT->Load(m_MapFolder + m_DBC_Map.Get_Directory() + ".wdt");
+	m_WDT->Load();
 }
 
 void MapController::MapPostLoad()
@@ -108,6 +109,14 @@ void MapController::Unload()
 			m_ADTCache[i] = nullptr;
         }
     }
+
+	for (int i = 0; i < C_RenderedTiles; i++)
+	{
+		for (int j = 0; j < C_RenderedTiles; j++)
+		{
+			m_Current[i][j] = nullptr;
+		}
+	}
 }
 
 //
@@ -220,10 +229,7 @@ ADT* MapController::LoadTile(int32 x, int32 z)
     }
 
     // Create new tile
-	char name[256];
-	sprintf_s(name, "World\\Maps\\%s\\%s_%d_%d.adt", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_Directory(), x, z);
-
-    m_ADTCache[firstnull] = new ADT(this, x, z, name, GetManager<IFilesManager>()->Open(name));
+    m_ADTCache[firstnull] = new ADT(this, x, z);
 	m_ADTCache[firstnull]->Load();
 	//GetManager<ILoader>()->AddToLoadQueue(m_ADTCache[firstnull]);
     return m_ADTCache[firstnull];
@@ -248,25 +254,24 @@ uint32 MapController::GetAreaID()
 		return UINT32_MAX;
 	}
 
-    int tileX, tileZ, chunkX, chunkZ;
-    tileX = (int)(_Render->getCamera()->Position.x / C_TileSize);
-    tileZ = (int)(_Render->getCamera()->Position.z / C_TileSize);
+	int32 tileX = (int)(_Render->getCamera()->Position.x / C_TileSize);
+	int32 tileZ = (int)(_Render->getCamera()->Position.z / C_TileSize);
 
-    chunkX = (int)(fmod(_Render->getCamera()->Position.x, C_TileSize) / C_ChunkSize);
-    chunkZ = (int)(fmod(_Render->getCamera()->Position.z, C_TileSize) / C_ChunkSize);
+	int32 chunkX = (int)(fmod(_Render->getCamera()->Position.x, C_TileSize) / C_ChunkSize);
+	int32 chunkZ = (int)(fmod(_Render->getCamera()->Position.z, C_TileSize) / C_ChunkSize);
 
 	if (
-		(tileX < m_CurrentTileX - static_cast<int>(C_RenderedTiles / 2)) || 
-		(tileX > m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2)) ||
-		(tileZ < m_CurrentTileZ - static_cast<int>(C_RenderedTiles / 2)) || 
-		(tileZ > m_CurrentTileZ + static_cast<int>(C_RenderedTiles / 2))
+		(tileX < m_CurrentTileX - static_cast<int32>(C_RenderedTiles / 2)) || 
+		(tileX > m_CurrentTileX + static_cast<int32>(C_RenderedTiles / 2)) ||
+		(tileZ < m_CurrentTileZ - static_cast<int32>(C_RenderedTiles / 2)) || 
+		(tileZ > m_CurrentTileZ + static_cast<int32>(C_RenderedTiles / 2))
 		)
 	{
 		return UINT32_MAX;
 	}
 
-	int32 indexX = tileZ - m_CurrentTileZ + static_cast<int>(C_RenderedTiles / 2);
-	int32 indexY = tileX - m_CurrentTileX + static_cast<int>(C_RenderedTiles / 2);
+	int32 indexX = tileZ - m_CurrentTileZ + static_cast<int32>(C_RenderedTiles / 2);
+	int32 indexY = tileX - m_CurrentTileX + static_cast<int32>(C_RenderedTiles / 2);
 
 	ADT* curTile = m_Current[indexX][indexY];
 	if (curTile == nullptr)
@@ -283,10 +288,7 @@ uint32 MapController::GetAreaID()
     return curChunk->header.areaid;
 }
 
-bool MapController::PreRender3D()
-{
-	return true;
-}
+
 
 bool MapController::IsTileInCurrent(ADT* _mapTile)
 {

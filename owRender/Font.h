@@ -25,8 +25,21 @@ public:
 	static const uint32 NUM_CHARS = 256;
 
 private:
-	SmartTexturePtr	m_Texture;
-	SmartGeomPtr	m_Geometry;
+	SharedTexturePtr	m_Texture;
+	SharedGeomPtr	m_Geometry;
 	vector<uint32>	m_WidthArray;
 	uint32			m_Height;
 };
+
+struct FontDeleter
+{
+	void operator()(Font* p)
+	{
+		IFontsManager* fontManager = GetManager<IFontsManager>();
+		if (fontManager != nullptr)
+		{
+			fontManager->Delete(p);
+		}
+	}
+};
+typedef SharedPtr<Font, FontDeleter> SharedFontPtr;

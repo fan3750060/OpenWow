@@ -16,17 +16,17 @@ public:
 	const WMO_Group* getObject() const { return m_Object; }
 
 	void addDoodadInstance(CWMO_Doodad_Instance* _doodad) { m_Doodads.push_back(_doodad); }
-	const vector<CWMO_Doodad_Instance*>& getDoodadsInstances() { return m_Doodads; }
+	const vector<SharedPtr<CWMO_Doodad_Instance>>& getDoodadsInstances() { return m_Doodads; }
 
 	// Disable render
 	bool PreRender3D() override;
 	void Render3D() override;
 
 //private:
-	const WMO_Group*						m_Object;
+	const WMO_Group*							m_Object;
 
-	bool									m_PortalsVis;
-	bool									m_Calculated;
+	bool										m_PortalsVis;
+	bool										m_Calculated;
 
-	vector<CWMO_Doodad_Instance*>			m_Doodads;
+	vector<SharedPtr<CWMO_Doodad_Instance>>		m_Doodads;
 };

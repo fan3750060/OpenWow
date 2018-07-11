@@ -45,6 +45,8 @@ public:
 class SkyParams
 {
 public:
+	virtual ~SkyParams();
+
     void Clear()
     {
         for (uint8 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
@@ -113,6 +115,8 @@ class Sky : public CRefItem, public SkyParams
 public:
     Sky();
     Sky(DBC_LightRecord data);
+	virtual ~Sky();
+
     void LoadParams(LightParamsNames _param);
 
     SkyParams& GetByTime(uint32 _time);

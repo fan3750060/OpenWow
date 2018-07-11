@@ -6,6 +6,7 @@ class GameStateManager : public IGameStateManager
 {
 public:
 	GameStateManager();
+	~GameStateManager();
 
 	// IGameStateManager
     void AddGameState(GameStatesNames::List _name, IGameState* _gameState) override;

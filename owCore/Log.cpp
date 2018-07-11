@@ -17,11 +17,14 @@ CLog::CLog()
 
 	AddManager<ILog>(this);
 
-	AddDebugOutput(new DebugOutput_ConsoleWindows);
+	m_DebugOutput_ConsoleWindows = new DebugOutput_ConsoleWindows;
+	AddDebugOutput(m_DebugOutput_ConsoleWindows);
 }
 
 CLog::~CLog()
 {
+	delete m_DebugOutput_ConsoleWindows;
+
 	DelManager<ILog>();
 
 	DeleteCriticalSection(&debugCS);

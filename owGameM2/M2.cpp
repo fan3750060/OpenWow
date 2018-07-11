@@ -32,10 +32,15 @@ M2::~M2()
 	ERASE_VECTOR(m_TextureWeights);
 	ERASE_VECTOR(m_TexturesTransform);
 
+	ERASE_VECTOR(m_Events);
+	ERASE_VECTOR(m_Attachments);
 	ERASE_VECTOR(m_Lights);
 	ERASE_VECTOR(m_Cameras);
 
 	ERASE_VECTOR(m_RibbonEmitters);
+
+
+	ERASE_VECTOR(m_Skins);
 
 	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
@@ -120,7 +125,7 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
 
 	_Render->r.setGeometry(m_CollisionGeom);
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_CollisionIndCnt, 0, m_CollisionVetCnt);
+	_Render->r.drawIndexed(0, m_CollisionIndCnt, 0, m_CollisionVetCnt);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 

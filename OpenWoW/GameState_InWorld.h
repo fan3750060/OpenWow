@@ -3,6 +3,8 @@
 class GameState_InWorld : public CGameState, CRenderable3DObject
 {
 public:
+	virtual ~GameState_InWorld();
+
     bool Init() override;
     void Destroy() override;
 	void SwitchOnEnd() { m_Ended = true; _Render->getCamera()->EnableUpdate(); }
@@ -41,7 +43,6 @@ private:
 	vec3					m_DefPos;
 	float					m_Rot;
 	bool					m_Ended;
-
 
 	WorldRender*			m_WorldRender;
 };

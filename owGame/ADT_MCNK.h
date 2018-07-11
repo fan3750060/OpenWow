@@ -25,36 +25,37 @@ public:
 	bool PreRender3D() override;
 	void Render3D() override;
 
+	static void BindUniforms(Technique* _techique);
+
 public:
-	const SmartPtr<IFile> m_File;
+	SharedPtr<IFile> m_File;
 	ADT_MCNK_Header header;
 
 	ADT_MCNK_MCLY mcly[4];
+	SharedTexturePtr m_DiffuseTextures[4];
+	SharedTexturePtr m_SpecularTextures[4];
 
-	SmartTexturePtr m_DiffuseTextures[4];
-	SmartTexturePtr m_SpecularTextures[4];
+	SharedPtr<Liquid_Instance> m_LiquidInstance;
+
+	SharedTexturePtr m_BlendRBGShadowATexture;
 
 
-	SmartPtr<Liquid_Instance> m_LiquidInstance;
-
-	SmartTexturePtr m_BlendRBGShadowATexture;
-
-		
-	
-	
-	SmartGeomPtr __geomDebugNormals;
+	SharedGeomPtr __geomDebugNormals;
 
 	// Qulity
+	RenderDrawCall m_HighCall;
 	RenderState m_StateHigh;
-	SmartBufferPtr __ibHigh;
+	SharedBufferPtr __ibHigh;
 	uint16  m_IndexesCountHigh;
-	SmartGeomPtr __geomHigh;
+	SharedGeomPtr __geomHigh;
 
+	RenderDrawCall m_DefaultCall;
 	RenderState m_StateDefault;
-	SmartBufferPtr __ibDefault;
+	SharedBufferPtr __ibDefault;
 	uint16  m_IndexesCountDefault;
-	SmartGeomPtr __geomDefault;
+	SharedGeomPtr __geomDefault;
 
+	//--
 	const ADT*		m_ParentADT;
 	CGroupQuality&	m_QualitySettings;
 };

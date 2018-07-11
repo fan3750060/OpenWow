@@ -23,7 +23,7 @@ private:
 	const SWMO_MaterialDef	m_Proto;
 
 
-	SmartTexturePtr			m_DiffuseTexture[3];
+	SharedTexturePtr			m_DiffuseTexture[3];
 
 	CGroupQuality&			m_QualitySettings;
 };

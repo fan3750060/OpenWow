@@ -16,9 +16,5 @@ private:
 	M2_Animated<Quaternion> roll;
 	M2_Animated<vec3>		scale;
 
-	vec3					transValue;
-	Quaternion				rollValue;
-	vec3					scaleVal;
-
 	mat4					matrix;
 };

@@ -25,6 +25,10 @@ Sky::Sky(DBC_LightRecord data) :
     LoadParams(LightParamsNames::ParamsClear);
 }
 
+Sky::~Sky()
+{
+}
+
 void Sky::LoadParams(LightParamsNames _param)
 {
     for (uint32 i = 0; i < LightColors::LIGHT_COLORS_COUNT; i++)
@@ -122,4 +126,8 @@ SkyParams& Sky::GetByTime(uint32 _time)
     }
 
     return *this;
+}
+
+SkyParams::~SkyParams()
+{
 }

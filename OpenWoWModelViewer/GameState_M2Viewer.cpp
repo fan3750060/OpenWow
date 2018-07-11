@@ -19,7 +19,7 @@ void GameState_M2Viewer::CreateDebugGeom()
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
-	m_DebugGeom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
+	m_DebugGeom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 	m_DebugGeom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	m_DebugGeom->finishCreatingGeometry();
 }
@@ -116,8 +116,8 @@ void GameState_M2Viewer::Update(double _time, double _dTime)
 	//m2_Model->setTranslate(m2_Camera->getObject()->m_Cameras[0]->getTranslate());
 	//m2_Model->setRotate(vec3(0, -Math::Pi / 2.0f, 0));
 
-	m2_Model->setTranslate(_Render->getCamera()->Position + _Render->getCamera()->Direction * 250.0f);
-	m2_Model->setRotate(_Render->getCamera()->Direction);
+	//m2_Model->setTranslate(_Render->getCamera()->Position + _Render->getCamera()->Direction * 250.0f);
+	//m2_Model->setRotate(_Render->getCamera()->Direction);
 
 	//_Render->getCamera()->Position = 
 	_Render->getCamera()->Update(_time, _dTime);
@@ -143,7 +143,7 @@ void GameState_M2Viewer::Render3D()
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7f, 0.7f, 0.7f, 0.5f));
 
 		_Render->r.setGeometry(m_DebugGeom);
-		_Render->r.draw(PRIM_TRILIST, 0, 6);
+		_Render->r.draw(0, 6);
 	}
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);

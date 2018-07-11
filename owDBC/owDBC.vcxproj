@@ -37,12 +37,14 @@
     <ClInclude Include="DBC_LightIntBand.h" />
     <ClInclude Include="DBC_LightParams.h" />
     <ClInclude Include="DBC_LightSkyBox.h" />
+    <ClInclude Include="DBC_LiquidMaterial.h" />
     <ClInclude Include="DBC_LiquidType.h" />
     <ClInclude Include="DBC_LoadingScreen.h" />
     <ClInclude Include="DBC_Map.h" />
     <ClInclude Include="DBC_Map_WotLK.h" />
     <ClInclude Include="DBC_TerrainType.h" />
     <ClInclude Include="DBC_WMOAreaTable.h" />
+    <ClInclude Include="DBC_WorldSafeLocs.h" />
     <ClInclude Include="DBC__File.h" />
     <ClInclude Include="DBC__Forwards.h" />
     <ClInclude Include="DBC__Storage.h" />

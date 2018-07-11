@@ -12,7 +12,7 @@ class UIMgrEx;
 class UIWindow;
 // FORWARD END
 
-class UIElement
+class UIElement : public CRefItem
 {
 	friend UIMgr;
 	friend UIMgrEx;
@@ -107,8 +107,9 @@ private:
 protected:
 	vec2        m_Position;
 	vec2        m_Size;
-	SmartPtr<Image>      m_Image;
-	SmartTexturePtr    m_Texture;
+	Image*      m_Image;
+	Image*      m_SecondImage;
+	SharedTexturePtr    m_Texture;
 	Color       m_Color;
 
 private:

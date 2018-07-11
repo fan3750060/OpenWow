@@ -35,7 +35,7 @@ CConsole::CConsole()
 
 CConsole::~CConsole()
 {
-	//ERASE_VECTOR(m_ConsoleCommands);
+	ERASE_VECTOR(m_ConsoleCommands);
 
 	DelManager<IConsole>();
 }

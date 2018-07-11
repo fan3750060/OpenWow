@@ -501,7 +501,7 @@ void CM2_Builder::Step8Skins()
 	{
 		char buf[256];
 		sprintf_s(buf, "%s%02d.skin", m_ParentM2->m_FileNameWithoutExt.c_str(), i);
-		SmartPtr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
+		SharedPtr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
 		assert1(skinFile != nullptr);
 
 		CM2_Skin* skin = new CM2_Skin(m_ParentM2);
@@ -551,7 +551,7 @@ void CM2_Builder::Step9Collision()
 	{
 		m_ParentM2->m_CollisionVetCnt = m_Header.collisionVertices.size;
 		m_ParentM2->m_CollisionIndCnt = m_Header.collisionTriangles.size;
-		m_ParentM2->m_CollisionGeom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
+		m_ParentM2->m_CollisionGeom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 		m_ParentM2->m_CollisionGeom->setGeomVertexParams(collisonVB, R_DataType::T_FLOAT, 0, sizeof(vec3)); // pos 0-2
 		m_ParentM2->m_CollisionGeom->setGeomIndexParams(collisonIB, R_IndexFormat::IDXFMT_16);
 		m_ParentM2->m_CollisionGeom->finishCreatingGeometry();

@@ -206,18 +206,18 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 	{
 		m_DepthFormat = GL_DEPTH_COMPONENT32;
 		Log::Info("Render target depth precision limited to 32 bit");
-		SmartPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
+		/*SharedPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 		if (testBuf32 == nullptr)
 		{
 			m_DepthFormat = GL_DEPTH_COMPONENT24;
 			Log::Warn("Render target depth precision limited to 24 bit");
-			SmartPtr<R_RenderBuffer> testBuf24 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
+			SharedPtr<R_RenderBuffer> testBuf24 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 			if (testBuf24 == nullptr)
 			{
 				m_DepthFormat = GL_DEPTH_COMPONENT16;
 				Log::Error("Render target depth precision limited to 16 bit");
 			}
-		}
+		}*/
 	}
 
 	resetStates();
@@ -256,14 +256,16 @@ void RenderDevice::beginRendering()
 
 // Geometry
 
-R_GeometryInfo* RenderDevice::beginCreatingGeometry(uint32 _vertexLayout)
+SharedGeomPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
 {
-	R_GeometryInfo* geometry = new R_GeometryInfo(this);
+	SharedGeomPtr geometry = new R_GeometryInfo(this);
 	
 	uint32 geometryGLObj;
 	glGenVertexArrays(1, &geometryGLObj);
+
 	geometry->m_VAOGLObj = geometryGLObj;
-	geometry->m_Layout = _vertexLayout;
+	geometry->m_VertexLayout = _vertexLayout;
+	geometry->m_PrimType = primType;
 
 	return geometry;
 }
@@ -594,7 +596,7 @@ void RenderDevice::clear(uint32 flags, float *colorRGBA, float depth)
 	checkError();
 }
 
-void RenderDevice::draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts, RenderState* _state)
+void RenderDevice::draw(uint32 firstVert, uint32 numVerts, RenderState* _state)
 {
 	if (_state == nullptr)
 	{
@@ -607,7 +609,7 @@ void RenderDevice::draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVe
 		assert1(_state->m_CurrentGeometry != m_DefaultGeometry);
 		glDrawArrays
 		(
-			primitiveTypes[(uint32)primType], 
+			primitiveTypes[(uint32)_state->m_CurrentGeometry->m_PrimType],
 			firstVert, 
 			numVerts
 		);
@@ -616,7 +618,7 @@ void RenderDevice::draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVe
 	}
 }
 
-void RenderDevice::drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, RenderState* _state, bool _softReset)
+void RenderDevice::drawIndexed(uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, RenderState* _state, bool _softReset)
 {
 	if (_state == nullptr)
 	{
@@ -631,7 +633,7 @@ void RenderDevice::drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint
 		assert1(_state->m_CurrentGeometry != m_DefaultGeometry);
 		glDrawRangeElements
 		(
-			primitiveTypes[(uint32)primType], 
+			primitiveTypes[(uint32)_state->m_CurrentGeometry->m_PrimType],
 			firstVert, 
 			firstVert + numVerts, 
 			numIndices, 

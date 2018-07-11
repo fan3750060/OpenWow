@@ -22,16 +22,16 @@ CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const WMO_Group * _parentGrou
 
 	R_Buffer* vb = _Render->r.createVertexBuffer(collisionVertices.size() * sizeof(vec3), collisionVertices.data(), false);
 
-	m_GEOM_Collision = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
+	m_GEOM_Collision = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 	m_GEOM_Collision->setGeomVertexParams(vb, R_DataType::T_FLOAT, 0, sizeof(vec3));
 	m_GEOM_Collision->finishCreatingGeometry();
 
-	color = vec4(Random::GenerateRange(0.6f, 1.0f), Random::GenerateRange(0.6f, 1.0f), Random::GenerateRange(0.6f, 1.0f), 1.0f);
+	color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 }
 
 void CWMO_Group_Part_BSP_Node::Render(cmat4 _worldMatrix)
 {
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
@@ -40,7 +40,7 @@ void CWMO_Group_Part_BSP_Node::Render(cmat4 _worldMatrix)
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(color);
 
 		_Render->r.setGeometry(m_GEOM_Collision);
-		_Render->r.draw(PRIM_TRILIST, 0, m_Proto.nFaces);
+		_Render->r.draw(0, m_Proto.nFaces);
 	}
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 

@@ -370,5 +370,23 @@
     <None Include="..\_gamedata\shaders\Sky.vs">
       <Filter>Techniques\Sky</Filter>
     </None>
+    <None Include="..\_gamedata\shaders\UI\UI_Color.fs">
+      <Filter>Techniques\UI</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\UI\UI_Color.vs">
+      <Filter>Techniques\UI</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\UI\UI_Font.fs">
+      <Filter>Techniques\UI</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\UI\UI_Font.vs">
+      <Filter>Techniques\UI</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\UI\UI_Texture.fs">
+      <Filter>Techniques\UI</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\UI\UI_Texture.vs">
+      <Filter>Techniques\UI</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -14,11 +14,13 @@
 #include "DBC_LightIntBand.h"
 #include "DBC_LightParams.h"
 #include "DBC_LightSkyBox.h"
+#include "DBC_LiquidMaterial.h"
 #include "DBC_LiquidType.h"
 #include "DBC_LoadingScreen.h"
 #include "DBC_Map_WotLK.h"
 #include "DBC_TerrainType.h"
 #include "DBC_WMOAreaTable.h"
+#include "DBC_WorldSafeLocs.h"
 
 // Character
 #include "DBC_CharacterFacialHairStyles.h"

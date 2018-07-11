@@ -8,7 +8,7 @@ class R_Texture : public CRefItem
 {
 public:
 	R_Texture(cstring _name, RenderDevice* _renderDevice);
-	~R_Texture();
+	virtual ~R_Texture();
 
 	void FillDataBy(R_Texture* _other)
 	{
@@ -61,7 +61,11 @@ struct R_TextureDeleter
 		if (textManager != nullptr)
 		{
 			textManager->Delete(p);
+			return;
 		}
+
+		delete p;
+		p = nullptr;
 	}
 };
-typedef SmartPtr<R_Texture, R_TextureDeleter> SmartTexturePtr;
+typedef SharedPtr<R_Texture, R_TextureDeleter> SharedTexturePtr;

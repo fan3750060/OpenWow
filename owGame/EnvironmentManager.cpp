@@ -29,6 +29,7 @@ EnvironmentManager::EnvironmentManager() :
 
 EnvironmentManager::~EnvironmentManager()
 {
+	if (m_SkyManager) delete m_SkyManager;
 	_Bindings->UnregisterRenderable3DObject(this);
 	_Bindings->UnregisterUpdatableObject(this);
 }

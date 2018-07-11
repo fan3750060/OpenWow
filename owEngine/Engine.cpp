@@ -22,6 +22,11 @@ CEngine::CEngine() :
 
 CEngine::~CEngine()
 {
+	delete _Render;
+	delete _Perfomance;
+
+	delete openGLConsole;
+
 	Log::Green("CEngine[]: Destroy engine.");
 
 	DelManager<IEngine>();
@@ -29,11 +34,17 @@ CEngine::~CEngine()
 
 void CEngine::Init(IOpenGLAdapter* _OpenGLAdapter)
 {
+	_Render = new RenderGL();
 	_Render->Init(_OpenGLAdapter);
 	_Render->getAdapter()->MakeMainContext();
 
+	_Perfomance = new Perfomance();
+
+
 	openGLConsole = new CConsoleOpenGL();
-	GetManager<ILog>()->AddDebugOutput(openGLConsole);
+	
+
+	_OpenGLAdapter->CreateCursor();
 }
 
 void CEngine::SetArguments(int argumentCount, char* arguments[])

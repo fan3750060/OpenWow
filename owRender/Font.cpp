@@ -37,7 +37,7 @@ void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 			pass->SetCharOffset(_offset);
 			_offset.x += static_cast<float>(m_WidthArray[ch]);
 
-			_Render->r.draw(PRIM_TRILIST, (ch) * 6, 6);
+			_Render->r.draw((ch) * 6, 6);
 		}
 	}
 	pass->Unbind();

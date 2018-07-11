@@ -118,7 +118,7 @@ private:
 	}
 
 private:
-	SmartTexturePtr  m_Texture;
+	SharedTexturePtr  m_Texture;
 	vec2        m_Start;
 	vec2        m_Size;
 

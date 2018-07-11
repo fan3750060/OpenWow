@@ -5,7 +5,6 @@
 
 class WorldController
 {
-	CLASS_INSTANCE(WorldController);
 public:
 	WorldController();
 	~WorldController();
@@ -23,4 +22,4 @@ private:
 	EnvironmentManager*  m_EnvironmentManager;
 };
 
-#define _World WorldController::instance()
+extern WorldController* _World;

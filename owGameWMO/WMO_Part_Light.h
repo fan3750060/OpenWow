@@ -17,7 +17,10 @@ public:
 
 	void setup(uint32 light);
 
+	void Render(cmat4 _world);
+
 public:
+	vec3 m_Position;
 	vec4 fcolor;
 
 	SWMO_LightDef lightDef;

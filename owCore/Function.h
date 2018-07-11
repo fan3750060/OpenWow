@@ -11,6 +11,7 @@ protected:
 
 public:
 	Function(procType _FuncPtr) : m_FuncPtr(_FuncPtr) {}
+	virtual ~Function() {};
 
 protected:
     Function() : m_FuncPtr(nullptr) {}
@@ -39,6 +40,7 @@ protected:
 
 public:
 	Function_Class(T* _ClassInstancePtr, classProcType _ClassMethodPtr) : Function(), m_ClassInstancePtr(_ClassInstancePtr), m_ClassMethodPtr(_ClassMethodPtr) {}
+	virtual ~Function_Class() {};
 
 protected:
     Function_Class(T* _ClassInstancePtr) : Function(), m_ClassInstancePtr(_ClassInstancePtr), m_ClassMethodPtr(nullptr) {}

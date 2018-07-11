@@ -27,7 +27,6 @@ CWMO_Group_Instance::CWMO_Group_Instance(CWMO_Base_Instance* _parent, const WMO_
 
 CWMO_Group_Instance::~CWMO_Group_Instance()
 {
-	ERASE_VECTOR(m_Doodads);
 }
 
 bool CWMO_Group_Instance::PreRender3D()

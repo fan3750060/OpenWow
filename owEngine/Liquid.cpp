@@ -10,7 +10,8 @@ Liquid::Liquid(uint32 x, uint32 y) :
 	m_TilesX(x),
 	m_TilesY(y),
 	ydir(1.0f),
-	m_SkyManager(GetManager<ISkyManager>())
+	m_SkyManager(GetManager<ISkyManager>()),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	m_TilesCount = (m_TilesX + 1) * (m_TilesY + 1);
 }
@@ -24,54 +25,54 @@ void Liquid::Render(cmat4 _worldMatrix)
 	_Render->r.setDepthTest(true);
 	_Render->r.setDepthMask(true);
 
-	_Render->r.setGeometry(__geom);
-
-	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
+	for (auto& layer : m_WaterLayers)
 	{
-		_Render->getTechniquesMgr()->m_Water->Bind();
-		_Render->getTechniquesMgr()->m_Water->setWorld(_worldMatrix);
-	}
-	else
-	{
-		_Render->getTechniquesMgr()->m_Magma->Bind();
-		_Render->getTechniquesMgr()->m_Magma->setWorld(_worldMatrix);
-	}
+		_Render->r.setGeometry(layer.m_Geometry);
 
-	uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % m_Textures.size();
-	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Textures[texidx], 0, 0);
-
-	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
-	{
-		if (m_SkyManager != nullptr)
+		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 		{
-			_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_LIGHT));
-			_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_DARK));
-			_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
-			_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
+			_Render->getTechniquesMgr()->m_Water->Bind();
+			_Render->getTechniquesMgr()->m_Water->setWorld(_worldMatrix);
 		}
 		else
 		{
-			_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(vec3(0.0f, 0.0f, 1.0f));
-			_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(vec3(0.0f, 0.0f, 1.0f));
-			_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(1.0f);
-			_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(1.0f);
+			_Render->getTechniquesMgr()->m_Magma->Bind();
+			_Render->getTechniquesMgr()->m_Magma->setWorld(_worldMatrix);
+		}
+
+		uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % layer.m_Textures.size();
+		_Render->r.setTexture(Material::C_DiffuseTextureIndex, layer.m_Textures[texidx], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+
+		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+		{
+			if (m_SkyManager != nullptr)
+			{
+				_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_LIGHT));
+				_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_DARK));
+				_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
+				_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
+			}
+			else
+			{
+				_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(vec3(0.0f, 0.0f, 1.0f));
+				_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(vec3(0.0f, 0.0f, 1.0f));
+				_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(1.0f);
+				_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(1.0f);
+			}
+		}
+
+		_Render->r.drawIndexed(0, layer.m_IndicesCnt, 0, layer.m_VerticesCnt, nullptr, false);
+		PERF_INC(PERF_MAP_CHUNK_MH20);
+
+		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+		{
+			_Render->getTechniquesMgr()->m_Water->Unbind();
+		}
+		else
+		{
+			_Render->getTechniquesMgr()->m_Magma->Unbind();
 		}
 	}
-
-	_Render->r.drawIndexed(PRIM_TRILIST, 0, m_IndicesCnt, 0, m_VerticesCnt, nullptr, false);
-
-	PERF_INC(PERF_MAP_CHUNK_MH20);
-
-	if (m_Type == DBC_LIQUIDTYPE_Type::lq_river || m_Type == DBC_LIQUIDTYPE_Type::lq_ocean)
-	{
-		_Render->getTechniquesMgr()->m_Water->Unbind();
-	}
-	else
-	{
-		_Render->getTechniquesMgr()->m_Magma->Unbind();
-	}
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 //--
 
@@ -116,17 +117,24 @@ struct SLiquidFlag
 #include __PACK_END
 #pragma endregion
 
-void Liquid::initGeometry(DBC_LIQUIDTYPE_Type _type, IFile* f)
+void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, IFile* f)
 {
-	m_Type = _type;
-
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
 
+	Liquid_Layer layer;
+	layer.LiquidType = _type;
+	layer.InitTextures();
+	layer.VertexFormat = _type->Get_LiquidMaterialID()->Get_LiquidVertexFormat();
+	if (_type->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+	{
+		layer.VertexFormat = 2;
+	}
 	layer.x = 0;
 	layer.y = 0;
 	layer.Width = m_TilesX;
 	layer.Height = m_TilesY;
+	
 
 	for (uint32 j = 0; j < m_TilesY + 1; j++)
 	{
@@ -134,56 +142,33 @@ void Liquid::initGeometry(DBC_LIQUIDTYPE_Type _type, IFile* f)
 		{
 			uint32 p = j * (m_TilesX + 1) + i;
 
-			if (flags[p].liquid & 0x08)
-			{
-				layer.renderTiles.push_back(false);
-			}
-			else
-			{
-				flag = flags[p].liquid;
-				layer.renderTiles.push_back(true);
-			}
+			layer.renderTiles.push_back((flags[p].liquid & 0x08) == 0);
 
-			if (_type == DBC_LIQUIDTYPE_Type::lq_river)
+			if (layer.VertexFormat == 0)
 			{
 				layer.heights.push_back(map[p].waterVert.height);
 				layer.depths.push_back(map[p].waterVert.depth);
 			}
-			else if (_type == DBC_LIQUIDTYPE_Type::lq_ocean)
+			else if (layer.VertexFormat == 1)
 			{
-				layer.heights.push_back(0.0f);
+				layer.heights.push_back(map[p].magmaVert.height);
+				layer.textureCoords.push_back
+				(
+					make_pair
+					(
+						static_cast<float>(map[p].magmaVert.s) / 8.0f,
+						static_cast<float>(map[p].magmaVert.t) / 8.0f
+					)
+				);
+			}
+			else if (layer.VertexFormat == 2)
+			{
 				layer.depths.push_back(map[p].oceanVert.depth);
-			}
-			else if (_type == DBC_LIQUIDTYPE_Type::lq_magma)
-			{
-				layer.heights.push_back(map[p].magmaVert.height);
-				layer.textureCoords.push_back
-				(
-					make_pair
-					(
-						static_cast<float>(map[p].magmaVert.s) / 1000.0f,
-						static_cast<float>(map[p].magmaVert.t) / 1000.0f
-					)
-				);
-			}
-			else if (_type == DBC_LIQUIDTYPE_Type::lq_slime)
-			{
-				layer.heights.push_back(map[p].magmaVert.height);
-				layer.textureCoords.push_back
-				(
-					make_pair
-					(
-						static_cast<float>(map[p].magmaVert.s) / 1000.0f,
-						static_cast<float>(map[p].magmaVert.t) / 1000.0f
-					)
-				);
-			}
-			else
-			{
-				fail1();
 			}
 		}
 	}
+
+	m_WaterLayers.push_back(layer);
 
 	createBuffer();
 }
@@ -194,172 +179,145 @@ struct SLiquidVertexData
 {
 	vec3 position;
 	vec3 textureCoord;
-	vec3 normal;
 };
 #include __PACK_END
 #pragma endregion
 
 void Liquid::createBuffer()
 {
-	vector<SLiquidVertexData> mh2oVertices;
-	vector<uint16> m_Indices;
-
-	uint32 cntr = 0;
-
-
-	for (uint8 y = layer.y; y < layer.Height + layer.y; y++)
+	for (auto& layer : m_WaterLayers)
 	{
-		for (uint8 x = layer.x; x < layer.Width + layer.x; x++)
+		vector<SLiquidVertexData> mh2oVertices;
+		vector<uint16> m_Indices;
+		uint32 cntr = 0;
+
+		for (uint8 y = layer.y; y < layer.Height + layer.y; y++)
 		{
-			unsigned tx = x - layer.x;
-			unsigned ty = y - layer.y;
-
-			// p1--p4
-			// |    |
-			// p2--p3
-			unsigned p1 = tx + ty * (layer.Width + 1);
-			unsigned p2 = tx + (ty + 1)     * (layer.Width + 1);
-			unsigned p3 = tx + 1 + (ty + 1) * (layer.Width + 1);
-			unsigned p4 = tx + 1 + ty * (layer.Width + 1);
-
-			// heights
-			float h1, h2, h3, h4;
-			h1 = h2 = h3 = h4 = 0.0f;
-			if (layer.heights.size() > 0)
+			for (uint8 x = layer.x; x < layer.Width + layer.x; x++)
 			{
-				h1 = layer.heights[p1];
-				h2 = layer.heights[p2];
-				h3 = layer.heights[p3];
-				h4 = layer.heights[p4];
-			}
+				unsigned tx = x - layer.x;
+				unsigned ty = y - layer.y;
 
-			// R_Texture coords
-			std::pair<float, float> t1, t2, t3, t4;
-			t1 = make_pair(0.0f, 0.0f);
-			t2 = make_pair(0.0f, 1.0f);
-			t3 = make_pair(1.0f, 1.0f);
-			t4 = make_pair(1.0f, 0.0f);
-			if (layer.textureCoords.size() > 0)
-			{
-				t1 = layer.textureCoords[p1];
-				t2 = layer.textureCoords[p2];
-				t3 = layer.textureCoords[p3];
-				t4 = layer.textureCoords[p4];
-			}
+				// p1--p4
+				// |    |
+				// p2--p3
+				unsigned p1 = tx + ty * (layer.Width + 1);
+				unsigned p2 = tx + (ty + 1)     * (layer.Width + 1);
+				unsigned p3 = tx + 1 + (ty + 1) * (layer.Width + 1);
+				unsigned p4 = tx + 1 + ty * (layer.Width + 1);
 
-			// alpha
-			float a1, a2, a3, a4;
-			a1 = a2 = a3 = a4 = 1.0f;
-			if (layer.depths.size() > 0)
-			{
-				a1 = minf(static_cast<float>(layer.depths[p1]) / 127.0f, 1.0f); // whats the magic formular here ???
-				a2 = minf(static_cast<float>(layer.depths[p2]) / 127.0f, 1.0f);
-				a3 = minf(static_cast<float>(layer.depths[p3]) / 127.0f, 1.0f);
-				a4 = minf(static_cast<float>(layer.depths[p4]) / 127.0f, 1.0f);
-			}
-
-			// Skip hidden water tile
-			if (layer.renderTiles.size() != 0)
-			{
-				if (!layer.renderTiles[tx + ty * layer.Width])
+				// heights
+				float h1, h2, h3, h4;
+				h1 = h2 = h3 = h4 = 0.0f;
+				if (layer.heights.size() > 0)
 				{
-					continue;
+					h1 = layer.heights[p1];
+					h2 = layer.heights[p2];
+					h3 = layer.heights[p3];
+					h4 = layer.heights[p4];
 				}
+
+				// R_Texture coords
+				std::pair<float, float> t1, t2, t3, t4;
+				t1 = make_pair(0.0f, 0.0f);
+				t2 = make_pair(0.0f, 1.0f);
+				t3 = make_pair(1.0f, 1.0f);
+				t4 = make_pair(1.0f, 0.0f);
+				if (layer.textureCoords.size() > 0)
+				{
+					t1 = layer.textureCoords[p1];
+					t2 = layer.textureCoords[p2];
+					t3 = layer.textureCoords[p3];
+					t4 = layer.textureCoords[p4];
+				}
+
+				// alpha
+				float a1, a2, a3, a4;
+				a1 = a2 = a3 = a4 = 1.0f;
+				if (layer.depths.size() > 0)
+				{
+					a1 = minf(static_cast<float>(layer.depths[p1]) / 127.0f, 1.0f); // whats the magic formular here ???
+					a2 = minf(static_cast<float>(layer.depths[p2]) / 127.0f, 1.0f);
+					a3 = minf(static_cast<float>(layer.depths[p3]) / 127.0f, 1.0f);
+					a4 = minf(static_cast<float>(layer.depths[p4]) / 127.0f, 1.0f);
+				}
+
+				// Skip hidden water tile
+				if (layer.renderTiles.size() != 0)
+				{
+					if (!layer.renderTiles[tx + ty * layer.Width])
+					{
+						continue;
+					}
+				}
+
+				// Insert vertex
+
+				mh2oVertices.push_back
+				(
+					{
+					vec3(C_UnitSize * static_cast<float>(x), h1, ydir * (C_UnitSize * static_cast<float>(y))),
+					vec3(t1.first, t1.second, a1)
+					}
+				);
+
+				mh2oVertices.push_back
+				({
+					vec3(C_UnitSize * static_cast<float>(x), h2, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
+					vec3(t2.first, t2.second, a2)
+					});
+
+				mh2oVertices.push_back
+				({
+					vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h4, ydir * (C_UnitSize * static_cast<float>(y))),
+					vec3(t4.first, t4.second, a4)
+					});
+
+				mh2oVertices.push_back
+				({
+					vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h3, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
+					vec3(t3.first, t3.second, a3)
+					});
+
+				m_Indices.push_back(cntr + 2);
+				m_Indices.push_back(cntr + 1);
+				m_Indices.push_back(cntr + 0);
+				m_Indices.push_back(cntr + 3);
+				m_Indices.push_back(cntr + 1);
+				m_Indices.push_back(cntr + 2);
+
+				cntr += 4;
 			}
-
-			// Insert vertex
-
-			mh2oVertices.push_back
-			({
-				vec3(C_UnitSize * static_cast<float>(x), h1, ydir * (C_UnitSize * static_cast<float>(y))),
-				vec3(t1.first, t1.second, a1),
-				defaultNormal
-				});
-
-			mh2oVertices.push_back
-			({
-				vec3(C_UnitSize * static_cast<float>(x), h2, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
-				vec3(t2.first, t2.second, a2),
-				defaultNormal
-				});
-
-			mh2oVertices.push_back
-			({
-				vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h4, ydir * (C_UnitSize * static_cast<float>(y))),
-				vec3(t4.first, t4.second, a4),
-				defaultNormal
-				});
-
-			mh2oVertices.push_back
-			({
-				vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h3, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
-				vec3(t3.first, t3.second, a3),
-				defaultNormal
-				});
-
-			m_Indices.push_back(cntr + 2);
-			m_Indices.push_back(cntr + 1);
-			m_Indices.push_back(cntr + 0);
-			m_Indices.push_back(cntr + 3);
-			m_Indices.push_back(cntr + 1);
-			m_Indices.push_back(cntr + 2);
-
-			cntr += 4;
 		}
+
+		// Vertex buffer
+		R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
+		layer.m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
+		assert1(layer.m_VerticesCnt > 0);
+
+		// Index bufer
+		R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
+		layer.m_IndicesCnt = static_cast<uint32>(m_Indices.size());
+		assert1(layer.m_IndicesCnt > 0);
+
+		// Geometry
+		layer.m_Geometry = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
+		layer.m_Geometry->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
+		layer.m_Geometry->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
+		layer.m_Geometry->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
+		layer.m_Geometry->finishCreatingGeometry();
 	}
-
-	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
-	m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
-	assert1(m_VerticesCnt > 0);
-
-	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
-	m_IndicesCnt = static_cast<uint32>(m_Indices.size());
-	assert1(m_IndicesCnt > 0);
-
-	// Geometry
-	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNT);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 24, sizeof(SLiquidVertexData));
-	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-	__geom->finishCreatingGeometry();
 }
 
-void Liquid::InitTextures(DBC_LIQUIDTYPE_Type _liquidType)
+void Liquid_Layer::InitTextures()
 {
-	string baseName;
-
-	//if ((flag & 0x08) == 0)
-	//	Log::Warn("[%d][%d][%d][%d][%d]", flag & 0x01, flag & 0x02, flag & 0x04, flag & 0x10, flag & 0x20);
-
-	if (_liquidType == DBC_LIQUIDTYPE_Type::lq_river)
-	{
-		baseName = "XTextures\\river\\lake_a";
-	}
-	else if (_liquidType == DBC_LIQUIDTYPE_Type::lq_ocean)
-	{
-		baseName = "XTextures\\ocean\\ocean";
-	}
-	else if (_liquidType == DBC_LIQUIDTYPE_Type::lq_magma)
-	{
-		baseName = "XTextures\\lava\\lava";
-	}
-	else if (_liquidType == DBC_LIQUIDTYPE_Type::lq_slime)
-	{
-		baseName = "XTextures\\slime\\slime";
-	}
-	else
-	{
-		fail1();
-	}
+	string baseName = LiquidType->Get_Texture(0);
 
 	char buf[256];
 	for (int i = 1; i <= 30; i++)
 	{
-		sprintf_s(buf, "%s.%d.blp", baseName.c_str(), i);
-		SmartTexturePtr texture = _Render->TexturesMgr()->Add(buf);
+		sprintf_s(buf, baseName.c_str(), i);
+		SharedTexturePtr texture = _Render->TexturesMgr()->Add(buf);
 		m_Textures.push_back(texture);
 	}
 }

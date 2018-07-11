@@ -59,7 +59,7 @@ public:
 
 	//-- Portals --//
 	vector<vec3>							m_PortalVertices;		// MOPV chunk
-	SmartBufferPtr							m_PortalVB;
+	SharedBufferPtr							m_PortalVB;
 	vector<CWMO_Part_Portal*>				m_Portals;
 	vector<SWMO_PortalReferencesDef>		m_PortalReferences;		// MOPR chunk
 	CWMO_PortalsController*					m_PortalController;
@@ -94,4 +94,4 @@ struct WMODeleter
 		GetManager<IWMOManager>()->Delete(p);
 	}
 };
-typedef SmartPtr<WMO, WMODeleter> SmartWMOPtr;
+typedef SharedPtr<WMO, WMODeleter> SmartWMOPtr;

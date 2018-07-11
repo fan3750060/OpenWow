@@ -248,6 +248,12 @@
     <None Include="..\_gamedata\shaders\Postprocess\Postprocess_VS.vs" />
     <None Include="..\_gamedata\shaders\Sky.fs" />
     <None Include="..\_gamedata\shaders\Sky.vs" />
+    <None Include="..\_gamedata\shaders\UI\UI_Color.fs" />
+    <None Include="..\_gamedata\shaders\UI\UI_Color.vs" />
+    <None Include="..\_gamedata\shaders\UI\UI_Font.fs" />
+    <None Include="..\_gamedata\shaders\UI\UI_Font.vs" />
+    <None Include="..\_gamedata\shaders\UI\UI_Texture.fs" />
+    <None Include="..\_gamedata\shaders\UI\UI_Texture.vs" />
     <None Include="..\_gamedata\shaders\WMO.fs" />
     <None Include="..\_gamedata\shaders\WMO.vs" />
     <None Include="Technique.inl" />

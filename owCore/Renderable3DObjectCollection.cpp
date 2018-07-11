@@ -24,7 +24,7 @@ void CRenderable3DObjectCollection::UnregisterObject(IRenderable3D* _uiObject)
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 	m_ObjectsNeedSort = true;
 
-	assert1(GetBaseManager()->GetPhase() != Phase_Pre3D && GetBaseManager()->GetPhase() != Phase_3D && GetBaseManager()->GetPhase() != Phase_Post3D);
+	assert1(_BaseManager->GetPhase() != Phase_Pre3D && _BaseManager->GetPhase() != Phase_3D && _BaseManager->GetPhase() != Phase_Post3D);
 }
 
 void CRenderable3DObjectCollection::Render3D(IPerfomance* _perfomance)
@@ -37,7 +37,7 @@ void CRenderable3DObjectCollection::Render3D(IPerfomance* _perfomance)
 
 	_perfomance->Start(PERF_PHASE_PRE3D);
 	{
-		GetBaseManager()->SetPhase(Phase_Pre3D);
+		_BaseManager->SetPhase(Phase_Pre3D);
 		for (auto& it : m_Objects)
 		{
 			it->setVisible(it->PreRender3D());
@@ -50,7 +50,7 @@ void CRenderable3DObjectCollection::Render3D(IPerfomance* _perfomance)
 
 	_perfomance->Start(PERF_PHASE_3D);
 	{
-		GetBaseManager()->SetPhase(Phase_3D);
+		_BaseManager->SetPhase(Phase_3D);
 		for (auto& it : m_Objects)
 		{
 			if (it->isVisible())
@@ -66,7 +66,7 @@ void CRenderable3DObjectCollection::Render3D(IPerfomance* _perfomance)
 
 	_perfomance->Start(PERF_PHASE_POST3D);
 	{
-		GetBaseManager()->SetPhase(Phase_Post3D);
+		_BaseManager->SetPhase(Phase_Post3D);
 		for (auto& it : m_Objects)
 		{
 			if (it->isVisible())
@@ -78,5 +78,5 @@ void CRenderable3DObjectCollection::Render3D(IPerfomance* _perfomance)
 	}
 	_perfomance->Stop(PERF_PHASE_POST3D);
 
-	GetBaseManager()->SetPhase(Phase_NONE);
+	_BaseManager->SetPhase(Phase_NONE);
 }

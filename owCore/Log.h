@@ -26,6 +26,8 @@ private:
     void PushMessageToAllDebugOutputs(const char* _message, IDebugOutput::DebugMessageType _type, va_list& _vaList);
 
 private:
+	IDebugOutput* m_DebugOutput_ConsoleWindows;
+
     vector<IDebugOutput*> m_DebugOutputs;
     CRITICAL_SECTION debugCS;
 };

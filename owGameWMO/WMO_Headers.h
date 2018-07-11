@@ -11,7 +11,7 @@ struct SWMO_HeaderDef
 	uint32 nDoodadNames;
 	uint32 nDoodadDefs;
 	uint32 nDoodadSets;
-	CArgb ambColor;
+	uint32 ambColor; // CArgb
 	__DBC_FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOID, wmoID);
 	CAaBox bounding_box;
 	struct Flags
@@ -26,7 +26,7 @@ struct SWMO_HeaderDef
 
 	//--
 
-	vec4 getAmbColor() const
+	/*vec4 getAmbColor() const
 	{
 		return vec4
 		(
@@ -35,7 +35,7 @@ struct SWMO_HeaderDef
 			static_cast<float>(ambColor.b) / 255.0f,
 			static_cast<float>(ambColor.a) / 255.0f
 		);
-	}
+	}*/
 };
 
 struct SWMO_MaterialDef
@@ -68,7 +68,7 @@ struct SWMO_MaterialDef
 	__DBC_FOREIGN_KEY_ID(uint32, DBC_TerrainType, ground_type);
 
 	uint32 texture_2;
-	uint32 color_2;
+	uint32 color_2;  // liquid diffuse
 	uint32 flags_2;
 
 	uint32 unk0[4];
@@ -97,7 +97,15 @@ struct SWMO_VisibleBlockListDef
 
 struct SWMO_LightDef
 {
-	uint8 type;
+	enum LightType : uint8
+	{
+		OMNI_LGT = 0,
+		SPOT_LGT = 1,
+		DIRECT_LGT = 2,
+		AMBIENT_LGT = 3,
+	};
+
+	LightType type;
 	uint8 useAtten;
 	uint8 unk0[2];
 	uint32 color;

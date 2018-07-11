@@ -15,5 +15,6 @@ out vec2 OutTextCoord;
 void main(void)
 {
 	gl_Position = gProjection * vec4(VertexPosition, 1.0);
+
 	OutTextCoord = TexCoord;
 }

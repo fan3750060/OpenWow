@@ -7,9 +7,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleCommand.h">
-      <Filter>Core\Debug, Console &amp; Log</Filter>
-    </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>Core\Debug, Console &amp; Log</Filter>
     </ClInclude>
@@ -42,9 +39,6 @@
     </ClInclude>
     <ClInclude Include="Bindings.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="PlatformFactory.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="OpenGLAdapter.h">
       <Filter>Render</Filter>

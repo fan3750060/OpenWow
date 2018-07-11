@@ -8,6 +8,7 @@ class CGameState : public IGameState, public IUpdatable, public IRenderableUI, p
 	friend GameStateManager;
 public:
     CGameState();
+	virtual ~CGameState();
 
 	// IGameState
 	virtual bool Init() override;

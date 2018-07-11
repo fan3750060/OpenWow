@@ -78,7 +78,6 @@ void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 
 	_Render->r.drawIndexed
 	(
-		PRIM_TRILIST,
 		m_SkinProtoSection.indexStart,
 		m_SkinProtoSection.indexCount,
 		m_SkinProtoSection.vertexStart,

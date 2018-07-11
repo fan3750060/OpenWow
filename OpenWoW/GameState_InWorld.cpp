@@ -3,6 +3,11 @@
 // General
 #include "GameState_InWorld.h"
 
+GameState_InWorld::~GameState_InWorld()
+{
+	delete sceneManager;
+}
+
 bool GameState_InWorld::Init()
 {
 	CGameState::Init();

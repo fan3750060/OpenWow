@@ -6,7 +6,7 @@ class R_Buffer : public CRefItem
 {
 public:
 	R_Buffer(RenderDevice* _RenderDevice);
-	~R_Buffer();
+	virtual ~R_Buffer();
 
 	//
 
@@ -38,4 +38,4 @@ struct R_BufferDeleter
 		delete p;
 	}
 };
-typedef SmartPtr<R_Buffer, R_BufferDeleter> SmartBufferPtr;
+typedef SharedPtr<R_Buffer, R_BufferDeleter> SharedBufferPtr;

@@ -16,11 +16,11 @@ struct ConsoleMessage
 
 class CConsoleOpenGL : public IInputListener, public CDebugOutput
 {
-	typedef vector<ConsoleMessage*> ConsoleMessages;
+	typedef vector<ConsoleMessage> ConsoleMessages;
 public:
 
 	CConsoleOpenGL();
-	~CConsoleOpenGL();
+	virtual ~CConsoleOpenGL();
 
 	void RenderUI();
 

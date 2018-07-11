@@ -23,6 +23,7 @@ UIElement::UIElement(IUIMgr* _uimgr, uint32 _DeepAdding) :
     m_Position = vec2();
     m_Size = vec2();
     m_Image = nullptr;
+	m_SecondImage = nullptr;
     m_Texture = nullptr;
     m_Color = COLOR_EMPTY;
 
@@ -46,7 +47,7 @@ UIElement::UIElement(IUIMgr* _uimgr, uint32 _DeepAdding) :
 
 UIElement::~UIElement()
 {
-	for (uint32 i = 0; i < m_Childs.size(); i++)
+	/*for (uint32 i = 0; i < m_Childs.size(); i++)
 	{
 		if (m_Childs[i]->GetChildsCount() > 0)
 		{
@@ -54,7 +55,7 @@ UIElement::~UIElement()
 		}
 
 		delete m_Childs[i];
-	}
+	}*/
 
     Log::Info("UI: [%s] destroyed.", m_Name.c_str());
 }
@@ -177,6 +178,10 @@ void UIElement::OnRenderUI()
         if (m_Image)
         {
             _Render->RenderImage(GetPosition(), m_Image, m_Size);
+			if (m_SecondImage)
+			{
+				_Render->RenderImage(GetPosition(), m_SecondImage, m_Size);
+			}
         }
         else if (m_Texture)
         {

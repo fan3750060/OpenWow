@@ -31,7 +31,7 @@ public:
 	void beginRendering();
 
 	// Geometry
-	R_GeometryInfo* beginCreatingGeometry(uint32 _vertexLayout);
+	SharedGeomPtr beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
 
 	// Buffers
 	R_Buffer* createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
@@ -219,8 +219,8 @@ private:
 
 public: // Draw calls and clears
 	void clear(uint32 flags = CLR_COLOR_RT0 | CLR_COLOR_RT1 | CLR_COLOR_RT2 | CLR_COLOR_RT3 | CLR_DEPTH, float* colorRGBA = 0x0, float depth = 1.0f);
-	void draw(R_PrimitiveType primType, uint32 firstVert, uint32 numVerts, RenderState* _state = nullptr);
-	void drawIndexed(R_PrimitiveType primType, uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, RenderState* _state = nullptr, bool _softReset = true);
+	void draw(uint32 firstVert, uint32 numVerts, RenderState* _state = nullptr);
+	void drawIndexed(uint32 firstIndex, uint32 numIndices, uint32 firstVert, uint32 numVerts, RenderState* _state = nullptr, bool _softReset = false);
 	void checkError();
 
 public:
@@ -249,7 +249,7 @@ private:
 	
 
 
-	SmartGeomPtr				m_DefaultGeometry;
+	SharedGeomPtr				m_DefaultGeometry;
 
 
 	//------------------------------------------------------------------------------------
@@ -261,11 +261,9 @@ private:
 
 	//------------------------------------------------------------------------------------
 	// Render state
-
 	R_RasterState				m_CurRasterState;
 	R_BlendState				m_CurBlendState;
 	R_DepthStencilState			m_CurDepthStencilState;
-
 	uint16						m_CurrTessPatchVertsValue;
 
 	RenderState					m_State;

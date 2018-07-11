@@ -18,27 +18,33 @@ __interface IInputListener : public IObject
 class CInput;
 // FORWARD END
 
-__interface IUpdatable : public IObject
+struct IUpdatable : public IObject
 {
-	void Input(CInput* _input, double _time, double _dTime);
-	void Update(double _time, double _dTime);
+	virtual ~IUpdatable() = 0 {}
+
+	virtual void Input(CInput* _input, double _time, double _dTime) = 0;
+	virtual void Update(double _time, double _dTime) = 0;
 };
 
-__interface IRenderable3D : public IObject
+struct IRenderable3D : public IObject
 {
-	bool PreRender3D();
-	void Render3D();
-	void PostRender3D();
+	virtual ~IRenderable3D() = 0 {}
 
-	void setVisible(bool _value);
-	bool isVisible() const;
-	void setOpaque(bool _value);
-	bool isOpaque() const;
-	void setDrawOrder(uint32 _order);
-	uint32 getDrawOrder() const;
+	virtual bool PreRender3D() = 0;
+	virtual void Render3D() = 0;
+	virtual void PostRender3D() = 0;
+
+	virtual void setVisible(bool _value) = 0;
+	virtual bool isVisible() const = 0;
+	virtual void setOpaque(bool _value) = 0;
+	virtual bool isOpaque() const = 0;
+	virtual void setDrawOrder(uint32 _order) = 0;
+	virtual uint32 getDrawOrder() const = 0;
 };
 
-__interface IRenderableUI : public IObject
+struct IRenderableUI : public IObject
 {
-	void RenderUI();
+	virtual ~IRenderableUI() = 0 {}
+
+	virtual void RenderUI() = 0;
 };

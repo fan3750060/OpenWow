@@ -2,11 +2,11 @@
 
 #include "Sky.h"
 
-class SkyManager : public ISkyManager, public CRenderable3DObject
+class SkyManager : public CRenderable3DObject, public ISkyManager
 {
 public:
 	SkyManager(DBC_MapRecord _mapRecord);
-	~SkyManager();
+	virtual ~SkyManager();
 
 public:
 	// ISkyManager
@@ -33,11 +33,11 @@ private:
 
 private:
 	SkyParams m_Interpolated;
-	SmartBufferPtr colorsBuffer;
-	SmartGeomPtr __geom;
+	SharedBufferPtr colorsBuffer;
+	SharedGeomPtr __geom;
 	uint32 __vertsSize;
 
-	vector<SmartPtr<Sky>> skies;
+	vector<Sky*> skies;
 	M2* stars;  // BOUZI FIXME ENABLE ME
 };
 

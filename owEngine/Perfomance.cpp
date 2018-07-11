@@ -3,6 +3,8 @@
 // General
 #include "Perfomance.h"
 
+Perfomance* _Perfomance;
+
 Perfomance::Perfomance()
 {
 	FrameBegin();

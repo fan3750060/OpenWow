@@ -58,10 +58,11 @@ struct SWMO_Group_HeaderDef
 	uint16 portalCount; // Number of items used from the MOPR chunk
 
 						// Batches
-	uint16 transBatchCount;
-	uint16 intBatchCount;
-	uint16 extBatchCount;
-	uint16 unk0;
+	uint16 batchCounts[4];
+	//uint16 transBatchCount;
+	//uint16 intBatchCount;
+	//uint16 extBatchCount;
+	//uint16 unk0;
 
 	uint8 fogIds[4]; // Up to four indices into the WMO fog list
 	uint32 liquidType; // LiquidType related, see below in the MLIQ chunk.
@@ -137,7 +138,7 @@ struct SWMO_Group_MLIQDef
 	uint32 X, Y;
 	uint32 A, B;
 	vec3 pos;
-	uint16 type;
+	uint16 materialID;
 };
 
 #include __PACK_END

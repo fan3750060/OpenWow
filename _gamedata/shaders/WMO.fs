@@ -35,16 +35,18 @@ void main(void)
 
 	if (gHasMOCV)
 	{
-		resultColor *= VSout.Color;
+		// MUL
+		//resultColor *= VSout.Color;
+
+		// MULL_ADD
+		vec4 newResultColor = resultColor + VSout.Color;
+		resultColor *= (newResultColor);
+
+		//resultColor /= 2.0f;
 		//resultColor.rgb = mix(resultColor.rgb, VSout.Color.rgb, VSout.Color.a);
 		//resultColor.rgb += VSout.Color.rgb;
 	}
 	
-	if (gUseAmbColor)
-	{
-		//resultColor *= gAmbColor;
-	}
-
 	// Blending
 	if (gBlendMode == 0) // GxBlend_Opaque
 	{

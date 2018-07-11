@@ -123,7 +123,7 @@ bool WMO::Load()
 
 				char fname[256];
 				sprintf_s(fname, "%s_%03d.wmo", temp, i);
-				IFile* groupFile = GetManager<IFilesManager>()->Open(fname);
+				IFile* groupFile = GetManager<IFilesManager>()->Open(fname); // It delete later
 
 				string groupName = groupFile->Name();
 				if (groupInfos[i].nameoffset > 0)
@@ -284,14 +284,18 @@ bool WMO::Load()
 	return true;
 }
 
-//#define WMO_DISABLE_PORTALS
-
 void WMO::Render(CWMO_Base_Instance* _localContr) const
 {
 	/*for (auto& it : m_Portals)
 	{
 		it->Render(_localContr->getAbsTrans());
 	}*/
+
+
+	for (auto& it : m_Lights)
+	{
+		it->Render(_localContr->getAbsTrans());
+	}
 }
 
 bool WMO::drawSkybox()

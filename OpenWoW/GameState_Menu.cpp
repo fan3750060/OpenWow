@@ -7,6 +7,14 @@
 #include "GameState_InWorld.h"
 
 
+GameState_Menu::~GameState_Menu()
+{
+	delete _World;
+
+	delete m_MinimapUI;
+	delete m_LoadingScreenUI;
+}
+
 void GameState_Menu::OnBtn(DBC_MapRecord _e)
 {
 	Log::Green("Load level %s [%d]", _e.Get_Directory(), _e.Get_ID());
@@ -56,7 +64,9 @@ bool GameState_Menu::Init()
 {
 	CGameState::Init();
 
-	_World->EnvM()->isVisible();
+
+	_World = new WorldController();
+	
 
 	m_MinimapUI = new UIElement(GetManager<IUIMgr>(), 100);
 	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), (R_Texture*)nullptr, COLOR_WHITE);
@@ -81,18 +91,22 @@ bool GameState_Menu::Init()
 	currentY[1] = mapsYStart;
 	currentY[2] = mapsYStart;
 
-	auto image = new Image(_Render->TexturesMgr()->Add("Interface\\Buttons\\UI-DialogBox-Button-Up.blp"), vec2(), vec2(128, 22));
-
-	for (auto i = DBC_Map.begin(); i != DBC_Map.end(); ++i)
+	for (auto& i : DBC_Map)
 	{
+		if (!CMPQFile::IsFileExists(CMapShared::getMapFolder(i) + ".wdt"))
+		{
+			continue;
+		}
+
 		// Add btn
-		UIButton* btn = new UIButton(GetManager<IUIMgr>());
-		btn->Init(vec2(100 + 200 * i->Get_Expansion(), currentY[i->Get_Expansion()] += mapsYdelta), image);
+		UIWowButon* btn = new UIWowButon(GetManager<IUIMgr>());
+		btn->Init(vec2(100 + 200 * i.Get_Expansion(), currentY[i.Get_Expansion()] += mapsYdelta));
 		btn->AttachTo(m_Window);
 		btn->ShowText();
-		btn->SetText(i->Get_Name().c_str());
+		btn->SetText(i.Get_Name().c_str());
+		m_Buttons.push_back(btn);
 
-		SETBUTTONACTION_ARG(btn, GameState_Menu, this, OnBtn, DBC_MapRecord, i.get());
+		SETBUTTONACTION_ARG(btn, GameState_Menu, this, OnBtn, DBC_MapRecord, i);
 	}
 
 	//

@@ -25,10 +25,12 @@
     <ClCompile Include="UIMgr.cpp" />
     <ClCompile Include="UIScrollBar.cpp" />
     <ClCompile Include="UIWindow.cpp" />
+    <ClCompile Include="UIWoWButton.cpp" />
     <ClCompile Include="UIWoWWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGUI.h" />
+    <ClInclude Include="UIWoWButton.h" />
     <ClInclude Include="UIWoWWindow.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UIButton.h" />

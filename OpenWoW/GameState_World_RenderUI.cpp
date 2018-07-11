@@ -210,6 +210,6 @@ void GameState_InWorld::RenderUI()
 
 	if (_World->Map()->dir != nullptr)
 	{
-		_World->Map()->dir->Render(_Render->getCamera()->Position);
+		//_World->Map()->dir->Render(_Render->getCamera()->Position);
 	}
 }

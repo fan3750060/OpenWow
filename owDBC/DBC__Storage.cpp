@@ -15,11 +15,13 @@ DBC_LOAD(DBC_LightFloatBand,			"LightFloatBand.dbc")
 DBC_LOAD(DBC_LightIntBand,				"LightIntBand.dbc")
 DBC_LOAD(DBC_LightParams,				"LightParams.dbc")
 DBC_LOAD(DBC_LightSkybox,				"LightSkybox.dbc")
+DBC_LOAD(DBC_LiquidMaterial,			"LiquidMaterial.dbc")
 DBC_LOAD(DBC_LiquidType,				"LiquidType.dbc")
 DBC_LOAD(DBC_LoadingScreen,				"LoadingScreens.dbc")
 DBC_LOAD(DBC_Map,						"Map.dbc")
 DBC_LOAD(DBC_TerrainType,				"TerrainType.dbc")
 DBC_LOAD(DBC_WMOAreaTable,				"WMOAreaTable.dbc")
+DBC_LOAD(DBC_WorldSafeLocs,				"WorldSafeLocs.dbc")
 
 // Character
 DBC_LOAD(DBC_CharacterFacialHairStyles,		"CharacterFacialHairStyles.dbc")
@@ -45,12 +47,14 @@ void OpenDBs()
     DBC_LightIntBand.Open();
     DBC_LightParams.Open();
     DBC_LightSkybox.Open();
+	DBC_LiquidMaterial.Open();
     DBC_LiquidType.Open();
     DBC_LoadingScreen.Open();
     DBC_Map.Open();
 	DBC_TerrainType.Open();
     DBC_WMOAreaTable.Open();
-
+	DBC_WorldSafeLocs.Open();
+		
 	// Character
 	DBC_CharacterFacialHairStyles.Open();
 	DBC_CharHairGeosets.Open();

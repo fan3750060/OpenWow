@@ -21,8 +21,8 @@ public:
 private:
 	vector<CM2_Skin_Batch*>		m_Batches;
 
-	SmartGeomPtr				__geom;
-	SmartGeomPtr				__geomDebugNormals;
+	SharedGeomPtr				__geom;
+	SharedGeomPtr				__geomDebugNormals;
 
 	//--
 	M2* m_ParentM2;

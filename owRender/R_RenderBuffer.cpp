@@ -98,7 +98,7 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height
 		for (uint32 j = 0; j < _numColBufs; ++j)
 		{
 			// Create a color texture
-			R_Texture* texObj = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, m_Width, m_Height, 1, _format, false, false, false, false);
+			SharedTexturePtr texObj = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, m_Width, m_Height, 1, _format, false, false, false, false);
 			assert1(texObj != nullptr);
 			texObj->uploadTextureData(0, 0, 0x0);
 			m_ColorsTextures[j] = texObj;
@@ -152,8 +152,8 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
 
 		// Create a depth texture
-		R_Texture* texObj = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, m_Width, m_Height, 1, R_TextureFormats::DEPTH, false, false, false, false);
-		assert1(texObj != 0);
+		SharedTexturePtr texObj = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, m_Width, m_Height, 1, R_TextureFormats::DEPTH, false, false, false, false);
+		assert1(texObj != nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 		texObj->uploadTextureData(0, 0, 0x0);
 		m_DepthTexture = texObj;

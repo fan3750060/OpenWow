@@ -23,9 +23,7 @@ private:
 	bool								m_WrapX;
 	bool								m_WrapY;
 
-	// Common texture
-	SmartTexturePtr						m_Texture;
-	// Special texture
+	SharedTexturePtr						m_Texture;
 	SM2_Texture::SM2_Texture_Type		m_SpecialType;
 
 	//--

@@ -10,10 +10,7 @@ CWMO_Liquid::CWMO_Liquid(uint32 _x, uint32 _y) :
 void CWMO_Liquid::CreateFromWMO(IFile* f, WMO_Part_Material* _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor)
 {
 	ydir = -1.0f; // Magic for WMO
-
-	initGeometry(DBC_LIQUIDTYPE_Type::lq_river, f);
-	//InitTextures((DBC_LIQUIDTYPE_Type)_liquidType->Get_Type());
-	InitTextures(DBC_LIQUIDTYPE_Type::lq_river);
+	initGeometry(_liquidType, f);
 
 	/*if (_indoor)
 	{

@@ -18,7 +18,6 @@ FontsManager::FontsManager(RenderDevice* _RenderDevice)
 	AddManager<IFontsManager>(this);
 }
 
-
 Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 {
 	return CRefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
@@ -45,7 +44,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 		return nullptr;
 	}
 
-    R_Texture* texture = 0;
+    
     vector<uint32> charWidth;
     charWidth.reserve(Font::NUM_CHARS);
 	uint32 charHeight = 0;
@@ -176,13 +175,13 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 
 	//
 
-    R_GeometryInfo* __geom = m_RenderDevice->beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PT);
+    SharedGeomPtr __geom = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0,            sizeof(Texture_Vertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, sizeof(vec3), sizeof(Texture_Vertex));
 	__geom->finishCreatingGeometry();
 
 	// Font texture
-	texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, imageWidth, imageHeight, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	SharedTexturePtr texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, imageWidth, imageHeight, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	texture->uploadTextureData(0, 0, image);
 
 	delete[] image;

@@ -11,7 +11,7 @@ static const uint32 dataTypes[8] = { GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT, GL_UNS
 R_GeometryInfo::R_GeometryInfo(RenderDevice* _RenderDevice) :
 	m_VAOGLObj(0),
 	m_IndexBuffer(nullptr),
-	m_Layout(0),
+	m_VertexLayout(0),
 	m_IndexBufferFormat(R_IndexFormat::IDXFMT_16),
 	m_AtrribsBinded(false),
 	m_RenderDevice(_RenderDevice)
@@ -52,7 +52,7 @@ void R_GeometryInfo::finishCreatingGeometry()
 	}
 
 	uint32 newVertexAttribMask = 0;
-	R_VertexLayout vl = m_RenderDevice->m_VertexLayouts[m_Layout - 1];
+	R_VertexLayout vl = m_RenderDevice->m_VertexLayouts[m_VertexLayout - 1];
 
 	// Set vertex attrib pointers
 	for (uint32 i = 0; i < vl.numAttribs; ++i)

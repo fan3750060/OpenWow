@@ -7,7 +7,7 @@ class UIButton : public UIElement
     typedef UIElement base;
 public:
     UIButton(IUIMgr* _uimgr);
-    virtual ~UIButton() override;
+    virtual ~UIButton();
 
     void Init(cvec2 _position, Image* _image);
 

@@ -73,6 +73,10 @@ TexturesManager::TexturesManager(IOpenGLAdapter* _adapter, RenderDevice* _Render
 	AddManager<ITexturesManager>(this);
 }
 
+TexturesManager::~TexturesManager()
+{
+}
+
 //
 
 R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)

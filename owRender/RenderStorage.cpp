@@ -38,8 +38,8 @@ void RenderStorage::CreateGeometry()
 	// Unit quad
 	//-----------------------------------------
 
-	R_Buffer* __vbQuad = m_RenderDevice->createVertexBuffer(verticesQuad.size() * sizeof(vec3), verticesQuad.data(), false);
-	__Quad = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_P);
+	SharedBufferPtr __vbQuad = m_RenderDevice->createVertexBuffer(verticesQuad.size() * sizeof(vec3), verticesQuad.data(), false);
+	__Quad = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	__Quad->setGeomVertexParams(__vbQuad, R_DataType::T_FLOAT, 0, 0);
 	__Quad->setGeomIndexParams(__ibQuadDefault, R_IndexFormat::IDXFMT_16);
 	__Quad->finishCreatingGeometry();
@@ -48,11 +48,11 @@ void RenderStorage::CreateGeometry()
 	// Unit quad with texture coords
 	//-----------------------------------------
 
-	R_Buffer* __vbQuadVT = m_RenderDevice->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
+	SharedBufferPtr __vbQuadVT = m_RenderDevice->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
 	__vbQuadVT->updateBufferData(0,					4 * sizeof(vec3), verticesQuad.data());
 	__vbQuadVT->updateBufferData(4 * sizeof(vec3),	4 * sizeof(vec2), texCoordsQuad.data());
 
-	__QuadVT = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_PT);
+	__QuadVT = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_PT);
 	__QuadVT->setGeomVertexParams(__vbQuadVT, R_DataType::T_FLOAT, 0, 0);
 	__QuadVT->setGeomVertexParams(__vbQuadVT, R_DataType::T_FLOAT, 4 * sizeof(vec3), 0);
 	__QuadVT->setGeomIndexParams(__ibQuadDefault, R_IndexFormat::IDXFMT_16);
@@ -66,7 +66,7 @@ void RenderStorage::CreateGeometry()
 	__vbQuadVTDynamic->updateBufferData(0,					4 * sizeof(vec3), verticesQuad.data());
 	__vbQuadVTDynamic->updateBufferData(4 * sizeof(vec3),	4 * sizeof(vec2), texCoordsQuad.data());
 
-	__QuadVTDynamic = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_PT);
+	__QuadVTDynamic = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_PT);
 	__QuadVTDynamic->setGeomVertexParams(__vbQuadVTDynamic, R_DataType::T_FLOAT, 0, 0);
 	__QuadVTDynamic->setGeomVertexParams(__vbQuadVTDynamic, R_DataType::T_FLOAT, 4 * sizeof(vec3), 0);
 	__QuadVTDynamic->setGeomIndexParams(__ibQuadDefault, R_IndexFormat::IDXFMT_16);
@@ -85,10 +85,10 @@ void RenderStorage::CreateGeometry()
 		4, 0, 3, 3, 7, 4,   3, 2, 6, 6, 7, 3,   4, 5, 1, 1, 0, 4
 	};
 
-	R_Buffer* _vbCube = m_RenderDevice->createVertexBuffer(8 * sizeof(vec3), cubeVerts);
-	R_Buffer* _ibCube = m_RenderDevice->createIndexBuffer(36 * sizeof(uint16), cubeInds);
+	SharedBufferPtr _vbCube = m_RenderDevice->createVertexBuffer(8 * sizeof(vec3), cubeVerts);
+	SharedBufferPtr _ibCube = m_RenderDevice->createIndexBuffer(36 * sizeof(uint16), cubeInds);
 
-	_cubeGeo = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_P);
+	_cubeGeo = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	_cubeGeo->setGeomVertexParams(_vbCube, R_DataType::T_FLOAT, 0, sizeof(vec3));
 	_cubeGeo->setGeomIndexParams(_ibCube, IDXFMT_16);
 	_cubeGeo->finishCreatingGeometry();
@@ -133,10 +133,10 @@ void RenderStorage::CreateGeometry()
 		}
 	}
 
-	R_Buffer* _vbSphere = m_RenderDevice->createVertexBuffer(126 * sizeof(vec3), spVerts);
-	R_Buffer* _ibSphere = m_RenderDevice->createIndexBuffer(128 * 3 * sizeof(uint16), spInds);
+	SharedBufferPtr _vbSphere = m_RenderDevice->createVertexBuffer(126 * sizeof(vec3), spVerts);
+	SharedBufferPtr _ibSphere = m_RenderDevice->createIndexBuffer(128 * 3 * sizeof(uint16), spInds);
 
-	_sphereGeo = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_P);
+	_sphereGeo = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	_sphereGeo->setGeomVertexParams(_vbSphere, R_DataType::T_FLOAT, 0, sizeof(vec3));
 	_sphereGeo->setGeomIndexParams(_ibSphere, IDXFMT_16);
 	_sphereGeo->finishCreatingGeometry();
@@ -159,10 +159,10 @@ void RenderStorage::CreateGeometry()
 		2, 12, 10,   2, 1, 12,   12, 11, 10
 	};
 
-	R_Buffer* _vbCone = m_RenderDevice->createVertexBuffer(13 * sizeof(vec3), coneVerts);
-	R_Buffer* _ibCone = m_RenderDevice->createIndexBuffer(22 * 3 * sizeof(uint16), coneInds);
+	SharedBufferPtr _vbCone = m_RenderDevice->createVertexBuffer(13 * sizeof(vec3), coneVerts);
+	SharedBufferPtr _ibCone = m_RenderDevice->createIndexBuffer(22 * 3 * sizeof(uint16), coneInds);
 
-	_coneGeo = m_RenderDevice->beginCreatingGeometry(__layout_GxVBF_P);
+	_coneGeo = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	_coneGeo->setGeomVertexParams(_vbCone, R_DataType::T_FLOAT, 0, sizeof(vec3));
 	_coneGeo->setGeomIndexParams(_ibCone, IDXFMT_16);
 	_coneGeo->finishCreatingGeometry();
@@ -186,7 +186,7 @@ void RenderStorage::CreateWoWLayouts()
 	R_VertexLayoutAttrib attribs_GxVBF_PNC[3] = { // 28
 		{"position",    0, 3, 0},
 		{"normal",      1, 3, 0},
-		{"color",       2, 1, 0}
+		{"color",       2, 4, 0} // Original 1 but type is uint8
 	};
 	__layout_GxVBF_PNC = m_RenderDevice->registerVertexLayout(3, attribs_GxVBF_PNC);
 

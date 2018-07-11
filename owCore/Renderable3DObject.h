@@ -7,6 +7,8 @@ public:
 		m_IsVisible(false),
 		m_IsOpaque(false)
 	{}
+	virtual ~CRenderable3DObject()
+	{}
 
 	// IRenderable
 	bool isVisible() const { return m_IsVisible; }

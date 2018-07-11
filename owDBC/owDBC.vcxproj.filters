@@ -96,6 +96,12 @@
     <ClInclude Include="DBC_CreatureDisplayInfoExtra.h">
       <Filter>DBCs\DisplayInfo</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_LiquidMaterial.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_WorldSafeLocs.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

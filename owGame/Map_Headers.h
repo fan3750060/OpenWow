@@ -33,8 +33,8 @@ struct ADT_TextureInfo : public CRefItem
 	//
 
 	string textureName;
-	SmartTexturePtr diffuseTexture;
-	SmartTexturePtr specularTexture;
+	SharedTexturePtr diffuseTexture;
+	SharedTexturePtr specularTexture;
 };
 
 struct ADT_MCNK_Header
@@ -54,26 +54,26 @@ struct ADT_MCNK_Header
 		uint32 : 16;
 	} flags;
 
-	DBC_LIQUIDTYPE_Type getLiquidType()
+	const DBC_LiquidTypeRecord* getLiquidType()
 	{
 		if (flags.lq_river)
 		{
-			return DBC_LIQUIDTYPE_Type::lq_river;
+			return DBC_LiquidType[1];
 		}
 		else if (flags.lq_ocean)
 		{
-			return  DBC_LIQUIDTYPE_Type::lq_ocean;
+			return DBC_LiquidType[2];
 		}
 		else if (flags.lq_magma)
 		{
-			return DBC_LIQUIDTYPE_Type::lq_magma;
+			return DBC_LiquidType[3];
 		}
 		else if (flags.lq_slime)
 		{
-			return DBC_LIQUIDTYPE_Type::lq_slime;
+			return DBC_LiquidType[4];
 		}
 
-		return DBC_LIQUIDTYPE_Type::lq_unknown;
+		return nullptr;
 	}
 
 	uint32 indexX;

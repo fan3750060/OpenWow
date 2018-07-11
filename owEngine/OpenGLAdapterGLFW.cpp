@@ -107,6 +107,8 @@ OpenGLAdapter_GLFW::OpenGLAdapter_GLFW()
 
 OpenGLAdapter_GLFW::~OpenGLAdapter_GLFW()
 {
+	delete m_Input;
+
 	glfwTerminate();
 }
 
@@ -148,6 +150,21 @@ void OpenGLAdapter_GLFW::SetWindowSize(int32 _width, int32 _height)
 void OpenGLAdapter_GLFW::SetWindowTitle(cstring _title)
 {
 	glfwSetWindowTitle(m_Window, _title.c_str());
+}
+
+void OpenGLAdapter_GLFW::CreateCursor()
+{
+	/*R_Texture* tex = _Render->TexturesMgr()->Add("Interface\\CURSOR\\Point.blp");
+
+	GLFWimage* image = new GLFWimage;
+	image->width = 32;
+	image->height = 32;
+	image->pixels = new uint8[image->width * image->height * 4];
+
+	tex->getTextureData(0, 0, image->pixels);
+
+	GLFWcursor* cur = glfwCreateCursor(image, 0, 0);
+	glfwSetCursor(m_Window, cur);*/
 }
 
 void OpenGLAdapter_GLFW::ShowCursor()

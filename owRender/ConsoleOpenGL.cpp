@@ -27,14 +27,15 @@ CConsoleOpenGL::CConsoleOpenGL() :
 
     //
 
+	GetManager<ILog>()->AddDebugOutput(this);
 	_Bindings->RegisterInputListener(this);
 }
 
 CConsoleOpenGL::~CConsoleOpenGL()
 {
-	_Bindings->UnregisterInputListener(this);
+	GetManager<ILog>()->DeleteDebugOutput(this);
 
-	ERASE_VECTOR(messages);
+	_Bindings->UnregisterInputListener(this);
 }
 
 void CConsoleOpenGL::RenderUI()
@@ -56,7 +57,7 @@ void CConsoleOpenGL::RenderUI()
 		{
 			break;
 		}
-		_Render->RenderText(textOffset + vec2(0, consoleHeight - (curLine * fontHeight)), _message->text, consoleFont, _message->color);
+		_Render->RenderText(textOffset + vec2(0, consoleHeight - (curLine * fontHeight)), _message.text, consoleFont, _message.color);
 		curLine++;
 	}
 
@@ -244,5 +245,5 @@ void CConsoleOpenGL::Print(string _messageFmt, DebugMessageType _type)
 		break;
 	}
 
-	messages.push_back(new ConsoleMessage(_messageFmt, color));
+	messages.push_back(ConsoleMessage(_messageFmt, color));
 }

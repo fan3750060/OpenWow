@@ -5,12 +5,11 @@
 
 CInputListenerObjectCollection::~CInputListenerObjectCollection()
 {
-	ERASE_VECTOR(m_Objects);
 }
 
 bool CInputListenerObjectCollection::RegisterObject(IInputListener* _Object, uint8 _priority)
 {
-    m_Objects.push_back(new CInputListener(_Object, _priority));
+    m_Objects.push_back(CInputListener(_Object, _priority));
 	std::sort(m_Objects.begin(), m_Objects.end(), CInputListenerObjectCompare());
 
     return true;
@@ -18,9 +17,9 @@ bool CInputListenerObjectCollection::RegisterObject(IInputListener* _Object, uin
 
 void CInputListenerObjectCollection::UnregisterObject(IInputListener* _Object)
 {
-	for (auto it  = m_Objects.begin(); it != m_Objects.end(); ++it)
+	for (auto& it  = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
-		if ((*it)->getInputListener() == _Object)
+		if ((it)->getInputListener() == _Object)
 		{
 			m_Objects.erase(it);
 			break;
@@ -32,17 +31,17 @@ void CInputListenerObjectCollection::UnregisterObject(IInputListener* _Object)
 
 void CInputListenerObjectCollection::OnMouseMoved(cvec2 _mousePos)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        it->OnMouseMoved(_mousePos);
+        it.OnMouseMoved(_mousePos);
     }
 }
 
 bool CInputListenerObjectCollection::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        if (it->OnMouseButtonPressed(_button, _mods, _mousePos))
+        if (it.OnMouseButtonPressed(_button, _mods, _mousePos))
         {
             return true;
         }
@@ -53,9 +52,9 @@ bool CInputListenerObjectCollection::OnMouseButtonPressed(int _button, int _mods
 
 bool CInputListenerObjectCollection::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        if (it->OnMouseButtonReleased(_button, _mods, _mousePos))
+        if (it.OnMouseButtonReleased(_button, _mods, _mousePos))
         {
             return true;
         }
@@ -66,9 +65,9 @@ bool CInputListenerObjectCollection::OnMouseButtonReleased(int _button, int _mod
 
 bool CInputListenerObjectCollection::OnMouseWheel(int _yoffset)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        if (it->OnMouseWheel(_yoffset))
+        if (it.OnMouseWheel(_yoffset))
         {
             return true;
         }
@@ -79,9 +78,9 @@ bool CInputListenerObjectCollection::OnMouseWheel(int _yoffset)
 
 bool CInputListenerObjectCollection::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        if (it->OnKeyboardPressed(_key, _scancode, _mods))
+        if (it.OnKeyboardPressed(_key, _scancode, _mods))
         {
             return true;
         }
@@ -92,9 +91,9 @@ bool CInputListenerObjectCollection::OnKeyboardPressed(int _key, int _scancode, 
 
 bool CInputListenerObjectCollection::OnKeyboardReleased(int _key, int _scancode, int _mods)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        if (it->OnKeyboardReleased(_key, _scancode, _mods))
+        if (it.OnKeyboardReleased(_key, _scancode, _mods))
         {
             return true;
         }
@@ -105,9 +104,9 @@ bool CInputListenerObjectCollection::OnKeyboardReleased(int _key, int _scancode,
 
 bool CInputListenerObjectCollection::OnCharInput(uint32 _char)
 {
-    for (auto it : m_Objects)
+    for (auto& it : m_Objects)
     {
-        if (it->OnCharInput(_char))
+        if (it.OnCharInput(_char))
         {
             return true;
         }

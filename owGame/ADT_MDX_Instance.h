@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-struct ADT_MDDF
+struct ADT_MDXDef
 {
 	uint32 nameIndex;
 	uint32 uniqueId;
@@ -18,7 +18,7 @@ struct ADT_MDDF
 class ADT_MDX_Instance : public CM2_Base_Instance
 {
 public:
-	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo);
+	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDXDef& _placementInfo);
 	~ADT_MDX_Instance();
 
 	// ISceneNode

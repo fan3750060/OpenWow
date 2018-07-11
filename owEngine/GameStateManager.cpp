@@ -9,6 +9,11 @@ GameStateManager::GameStateManager() :
 	AddManager<IGameStateManager>(this);
 }
 
+GameStateManager::~GameStateManager()
+{
+	ERASE_MAP(m_GameStatesCollection);
+}
+
 void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _gameState)
 {
     assert1(_gameState != nullptr);

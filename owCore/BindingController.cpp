@@ -3,6 +3,8 @@
 // General
 #include "BindingController.h"
 
+CBindingController* _Bindings;
+
 CBindingController::CBindingController()
 {
 	m_InputListenerObjectCollection = new CInputListenerObjectCollection();

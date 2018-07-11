@@ -20,7 +20,6 @@
     <ClInclude Include="..\shared\owIntfs.h" />
     <ClInclude Include="Bindings.h" />
     <ClInclude Include="Console.h" />
-    <ClInclude Include="ConsoleCommand.h" />
     <ClInclude Include="DebugOutput.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Files.h" />
@@ -33,7 +32,6 @@
     <ClInclude Include="Networking.h" />
     <ClInclude Include="OpenGLAdapter.h" />
     <ClInclude Include="Perfomance.h" />
-    <ClInclude Include="PlatformFactory.h" />
     <ClInclude Include="Refs.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="RenderDevice.h" />

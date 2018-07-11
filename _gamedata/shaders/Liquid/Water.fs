@@ -6,7 +6,6 @@ in struct VSOutput
 {
 	vec3 WorldSpacePos;
 	vec3 TexCoord;
-	vec3 Normal;
 } VSout;
 
 // Uniforms
@@ -30,7 +29,7 @@ void main(void)
 	
 	setMatID(1.0);
 	setPos(VSout.WorldSpacePos);
-	setNormal(normalize(VSout.Normal));
+	setNormal(vec3(1.0f, 1.0f, 1.0f));
 	setAlbedo4(/*vec4(0.0, 1.0, 0.0f, 1.0f)*/resultColor);
 	setSpecParams(texture(gSpecularMap, VSout.TexCoord.xy).rgb, 1.0);
 };

@@ -14,6 +14,7 @@ protected:
     
 public:
     Function_WA(procTypeArgs _FuncWAPtr) : Function(nullptr), m_FuncWithArgumentPtr(_FuncWAPtr) {}
+	virtual ~Function_WA() {};
 
 protected:  // For Function_SA
     Function_WA() : Function(nullptr), m_FuncWithArgumentPtr(nullptr) {}
@@ -47,6 +48,7 @@ protected:
     
 public:
     Function_Class_WA(T* _ClassInstancePtr, classProcTypeArgs _ClassMethodWAPtr) : Function_WA<ARGTYPE>(), Function_Class<T>(_ClassInstancePtr), m_ClassMethodWithArgumentPtr(_ClassMethodWAPtr) {}
+	virtual ~Function_Class_WA() {};
 
 protected:
     Function_Class_WA(T* _ClassInstancePtr) : Function_WA<ARGTYPE>(), Function_Class<T>(_ClassInstancePtr), m_ClassMethodWithArgumentPtr(nullptr) {}

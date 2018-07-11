@@ -50,6 +50,8 @@ void CWMO_Base_Instance::Update(double _time, double _dTime)
 
 }
 
+#define WMO_DISABLE_PORTALS
+
 bool CWMO_Base_Instance::PreRender3D()
 {
 	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();

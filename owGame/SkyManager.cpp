@@ -14,11 +14,11 @@ const uint32 C_SkycolorsCount = 7;
 
 SkyManager::SkyManager(DBC_MapRecord _mapRecord)
 {
-	for (auto it = DBC_Light.begin(); it != DBC_Light.end(); ++it)
+	for (auto& it : DBC_Light)
 	{
-		if (_mapRecord.Get_ID() == it->Get_MapID()->Get_ID())
+		if (_mapRecord.Get_ID() == it.Get_MapID()->Get_ID())
 		{
-			Sky* sky = new Sky(it.get());
+			Sky* sky = new Sky(it);
 			skies.push_back(sky);
 
 			//Log::Warn("Sky [%d] position = %f, %f, %f", it->second->Get_Map(), sky->position.x, sky->position.y, sky->position.z);
@@ -51,6 +51,8 @@ SkyManager::SkyManager(DBC_MapRecord _mapRecord)
 
 SkyManager::~SkyManager()
 {
+	ERASE_VECTOR(skies);
+
 	_Bindings->UnregisterRenderable3DObject(this);
 }
 
@@ -66,7 +68,7 @@ void SkyManager::Calculate(uint32 _time)
 	m_Interpolated.Clear();
 
 	// interpolation
-	for (auto it : skies)
+	for (auto& it : skies)
 	{
 		if (it->m_Wight > 0.0f)
 		{
@@ -116,7 +118,7 @@ bool SkyManager::DEBUG_Render()
 
 			pass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
 
-			_Render->r.drawIndexed(PRIM_TRILIST, 0, 128 * 3, 0, 126, nullptr, false);
+			_Render->r.drawIndexed(0, 128 * 3, 0, 126, nullptr, false);
 		}
 	}
 	pass->Unbind();
@@ -151,7 +153,7 @@ void SkyManager::Render3D()
 		pass->setWorld(worldMatrix);
 
 		_Render->r.setGeometry(__geom);
-		_Render->r.draw(PRIM_TRILIST, 0, __vertsSize);
+		_Render->r.draw(0, __vertsSize);
 	}
 	pass->Unbind();
 
@@ -200,7 +202,7 @@ void SkyManager::InitBuffer()
 	colorsBuffer = _Render->r.createVertexBuffer(vertices.size() * sizeof(vec4), nullptr, true);
 
 	// Geometry
-	__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PC);
+	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PC);
 	__geom->setGeomVertexParams(vertexBuffer, R_DataType::T_FLOAT, 0, 0);
 	__geom->setGeomVertexParams(colorsBuffer, R_DataType::T_FLOAT, 0, 0);
 	__geom->finishCreatingGeometry();

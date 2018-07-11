@@ -22,6 +22,7 @@ public:
 	void SetWindowSize(int32 _width, int32 _height) override;
 	void SetWindowTitle(cstring _title) override;
 
+	void CreateCursor();
 	void ShowCursor() override;
 	void HideCursor() override;
 

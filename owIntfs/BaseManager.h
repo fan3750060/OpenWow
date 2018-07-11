@@ -10,13 +10,14 @@ struct
 	__declspec(uuid("BDC2768B-055D-42EA-ABE3-CF17CD21178D"))
 	IManager
 {
-	virtual ~IManager() {};
+	virtual ~IManager() = 0 {};
 };
 
 template<class T>
 struct IRefManager : public IManager
 {	
 	virtual ~IRefManager() {};
+
 	virtual T* Add(cstring name) = 0;
 	virtual bool Exists(cstring name) const = 0;
 	virtual void Delete(cstring name) = 0;

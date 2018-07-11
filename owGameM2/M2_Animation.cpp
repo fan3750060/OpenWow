@@ -26,3 +26,12 @@ CM2_Animation::CM2_Animation(const M2* _m2, uint16 _animID, string _name, uint16
 	m_EndTimeStamp = _sequence.duration;
 #endif
 }
+
+CM2_Animation::~CM2_Animation()
+{
+	if (m_Next != nullptr)
+	{
+		delete m_Next;
+		m_Next = nullptr;
+	}
+}

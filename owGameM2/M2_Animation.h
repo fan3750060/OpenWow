@@ -6,6 +6,7 @@ class CM2_Animation
 {
 public:
 	CM2_Animation(const M2* _m2, uint16 _animID, string _name, uint16 indexIntoSeq, const SM2_Sequence& _sequence);
+	~CM2_Animation();
 
 	// Table data
 	uint16					getAnimID()			const { return m_AnimID; }

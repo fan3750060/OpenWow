@@ -12,15 +12,18 @@
 // FORWARD BEGIN
 class WMO;
 class CWMO_Group_Instance;
+class CWMO_Doodad_Instance;
 // FORWARD END
 
 class WMO_Group : public CRefItem
 {
 public:
 	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, string _groupName, IFile* _groupFile);
-	~WMO_Group();
+	virtual ~WMO_Group();
 
 	void CreateInsances(CWMO_Group_Instance* _parent) const;
+
+	uint32 to_wmo_liquid(int x);
 
 	void Load();
 	void initLighting();
@@ -39,7 +42,7 @@ public:
 	vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
-	SmartGeomPtr							__geom;
+	SharedGeomPtr							__geom;
 
 public:
 	//-- Triangles --//
@@ -48,10 +51,13 @@ public:
 	bool									m_IsMOCVExists;
 
 	//-- Render bathes --//
-	vector<SmartPtr<WMO_Group_Part_Batch>>	m_WMOBatchIndexes;
+	vector<WMO_Group_Part_Batch*>			m_WMOBatchIndexes;
+	SWMO_Group_BatchDef*					moba;
 
 	//-- Lights --//
 	vector<uint16>							m_WMOLightsIndexes;
+	C4Vec*									mocv;
+	uint32									mocv_count;
 
 	//-- Doodads references --//
 	vector<uint16>							m_DoodadsPlacementIndexes;
@@ -60,13 +66,12 @@ public:
 	// MOBN chunk
 	// MOBR chunk
 	vector<uint16> collisionIndexes;
-	SmartBufferPtr							VB_Collision;
+	SharedBufferPtr							VB_Collision;
 	vector<CWMO_Group_Part_BSP_Node*>		m_CollisionNodes;
 
 	//-- Liquid --//
 	SWMO_Group_MLIQDef						m_LiquidHeader;
-	SmartPtr<CWMO_Liquid>					m_WMOLiqiud;
-
+	SharedPtr<CWMO_Liquid>					m_WMOLiqiud;
 
 	//--
 	const WMO*								m_ParentWMO;

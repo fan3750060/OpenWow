@@ -6,7 +6,6 @@ in struct VSOutput
 {
 	vec3 WorldSpacePos;
 	vec3 TexCoord;
-	vec3 Normal;
 } VSout;
 
 // Uniforms
@@ -21,11 +20,9 @@ uniform vec3 gColorDark;
 
 void main(void)
 {
-	float alpha = texture(gColorMap, VSout.TexCoord.xy).a;
-	
 	setMatID(1.0);
 	setPos(VSout.WorldSpacePos);
-	setNormal(normalize(VSout.Normal));
+	setNormal(vec3(1.0f, 1.0f, 1.0f));
 	setAlbedo4(texture(gColorMap, VSout.TexCoord.xy).rgba);
 	setSpecParams(vec3(0.0f, 0.0f, 0.0f), 1.0);
 };

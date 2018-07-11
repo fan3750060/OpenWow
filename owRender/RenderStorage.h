@@ -48,25 +48,25 @@ public:
 	// Geometry & VertexBuffers
     //----------------------------------------------
 
-    R_GeometryInfo* __QuadVTDynamic;
+	SharedGeomPtr __QuadVTDynamic;
 
     // 2D
 
-    R_GeometryInfo* __Quad;
-    R_GeometryInfo* __QuadVT;
-    R_Buffer* __vbQuadVTDynamic;
+	SharedGeomPtr __Quad;
+	SharedGeomPtr __QuadVT;
+	SharedBufferPtr __vbQuadVTDynamic;
 
     // 3D
 
-    R_GeometryInfo* _cubeGeo;
-    R_GeometryInfo* _sphereGeo;
-    R_GeometryInfo* _coneGeo;
+    SharedGeomPtr _cubeGeo;
+	SharedGeomPtr _sphereGeo;
+	SharedGeomPtr _coneGeo;
 
     //----------------------------------------------
     // Index buffers
     //----------------------------------------------
 
-    R_Buffer* __ibQuadDefault;
+	SharedBufferPtr __ibQuadDefault;
 
 private:
 	RenderDevice* m_RenderDevice;

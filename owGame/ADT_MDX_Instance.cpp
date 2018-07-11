@@ -6,7 +6,7 @@
 // Additional
 #include "WorldController.h"
 
-ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDDF& _placementInfo) :
+ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDXDef& _placementInfo) :
 	CM2_Base_Instance(_parent, _mdxObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;

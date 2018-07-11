@@ -14,12 +14,14 @@ void CM2_Part_TextureTransform::calc(uint16 anim, uint32 time, uint32 globalTime
 {
 	matrix = Matrix4f();
 	
+	vec3 transValue;
 	if (trans.uses(anim))
 	{
 		transValue = trans.getValue(anim, time, globalTime);
 		matrix.translate(transValue);
 	}
 
+	Quaternion rollValue;
 	if (roll.uses(anim))
 	{
 		matrix.translate(vec3(0.5f, 0.5f, 0.5f));
@@ -30,6 +32,7 @@ void CM2_Part_TextureTransform::calc(uint16 anim, uint32 time, uint32 globalTime
 		matrix.translate(vec3(-0.5f, -0.5f, -0.5f));
 	}
 
+	vec3 scaleVal;
 	if (scale.uses(anim))
 	{
 		scaleVal = scale.getValue(anim, time, globalTime);

@@ -19,7 +19,7 @@ void GameState_CharacterViewer::CreateDebugGeom()
 
 	// Vertex buffer
 	R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data());
-	m_DebugGeom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
+	m_DebugGeom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 	m_DebugGeom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
 	m_DebugGeom->finishCreatingGeometry();
 }
@@ -144,7 +144,7 @@ void GameState_CharacterViewer::Render3D()
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7f, 0.7f, 0.7f, 0.5f));
 
 		_Render->r.setGeometry(m_DebugGeom);
-		_Render->r.draw(PRIM_TRILIST, 0, 6);
+		_Render->r.draw(0, 6);
 	}
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);

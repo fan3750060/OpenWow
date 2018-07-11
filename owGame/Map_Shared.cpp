@@ -3,11 +3,7 @@
 // General
 #include "Map_Shared.h"
 
-SmartBufferPtr Map_Shared::BufferTextureCoordDetail;
-SmartBufferPtr Map_Shared::BufferTextureCoordAlpha;
-
-vector<uint16>  Map_Shared::m_HighMapStrip;
-vector<uint16>  Map_Shared::m_DefaultMapStrip;
+CMapShared* _MapShared = nullptr;
 
 bool isHole(uint16 holes, uint16 i, uint16 j)
 {
@@ -17,7 +13,7 @@ bool isHole(uint16 holes, uint16 i, uint16 j)
 	return (holes & holetab_h[i] & holetab_v[j]) != 0;
 }
 
-void Map_Shared::Init()
+CMapShared::CMapShared()
 {
 	m_HighMapStrip = GenarateHighMapArray();
 	m_DefaultMapStrip = GenarateDefaultMapArray();
@@ -61,7 +57,12 @@ void Map_Shared::Init()
 	BufferTextureCoordAlpha = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec2), alphaTextureCoord, false);
 }
 
-vector<uint16> Map_Shared::GenarateHighMapArray(uint16 _holes)
+string CMapShared::getMapFolder(const DBC_MapRecord& _map)
+{
+	return "World\\Maps\\" + string(_map.Get_Directory()) + "\\" + string(_map.Get_Directory());
+}
+
+vector<uint16> CMapShared::GenarateHighMapArray(uint16 _holes)
 {
 	if (_holes == 0 && !m_HighMapStrip.empty())
 	{
@@ -109,7 +110,7 @@ vector<uint16> Map_Shared::GenarateHighMapArray(uint16 _holes)
 	return myIndexes;
 }
 
-vector<uint16> Map_Shared::GenarateDefaultMapArray(uint16 _holes)
+vector<uint16> CMapShared::GenarateDefaultMapArray(uint16 _holes)
 {
 	if (_holes == 0 && !m_DefaultMapStrip.empty())
 	{

@@ -42,29 +42,3 @@ static inline T& GetSettingsGroup()
 {
 	return *(T*)(GetManager<ISettings>()->GetGroup(__uuidof(T)));
 }
-
-// Settings fast access
-// Be sure that you call init before call!!!
-
-/*class Settings
-{
-	CLASS_INSTANCE(Settings)
-public:
-	Settings();
-
-	CGroupDistances& Distances;
-	CGroupOpenGL& OpenGL;
-	CGroupQuality& Quality;
-	CGroupRenderCaps& RenderCaps;
-	CGroupVideo& Video;
-};
-
-Settings::Settings() :
-	Distances(GetSettingsGroup<CGroupDistances>()),
-	OpenGL(GetSettingsGroup<CGroupOpenGL>()),
-	Quality(GetSettingsGroup<CGroupQuality>()),
-	RenderCaps(GetSettingsGroup<CGroupRenderCaps>()),
-	Video(GetSettingsGroup<CGroupVideo>())
-{}
-
-#define _Settings Settings::instance()*/

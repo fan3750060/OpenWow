@@ -12,6 +12,5 @@
 #include "../owRender/TexturesManager.h"
 #include "../owRender/ShaderContext.h"
 
-
 // Techiques
 #include "../owRender/TechniquesManager.h"

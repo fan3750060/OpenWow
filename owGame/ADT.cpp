@@ -7,6 +7,7 @@
 #include "ADT.h"
 
 // Additional
+#include "ADT_Liquid.h"
 #include "WorldController.h"
 
 #include __PACK_BEGIN
@@ -21,13 +22,11 @@ struct ADT_MCIN
 
 #include __PACK_END
 
-ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file) :
+ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ) :
 	SceneNode(_mapController),
 	m_MapController(_mapController),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
-	m_Name(_name),
-	m_File(_file),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	// Scene node params
@@ -59,11 +58,12 @@ ADT::~ADT()
 
 bool ADT::Load()
 {
-	SmartPtr<IFile> f = m_File;
+	char filename[256];
+	sprintf_s(filename, "%s_%d_%d.adt", m_MapController->getFilenameT().c_str(), m_IndexX, m_IndexZ);
 
+	SharedPtr<IFile> f = GetManager<IFilesManager>()->Open(filename);
 	uint32_t startPos = f->getPos() + 20;
-	ADT_MCIN chunks[256];
-
+	
 	// MVER + size (8)
 	f->seekRelative(8);
 	{
@@ -79,6 +79,7 @@ bool ADT::Load()
 	}
 
 	// Chunks info
+	ADT_MCIN chunks[256];
 	f->seek(startPos + m_Header.MCIN);
 	{
 		f->seekRelative(4);
@@ -87,10 +88,7 @@ bool ADT::Load()
 
 		uint32 count = size / sizeof(ADT_MCIN);
 		assert1(count == C_ChunksInTileGlobal);
-		for (uint32_t i = 0; i < count; i++)
-		{
-			f->readBytes(&chunks[i], sizeof(ADT_MCIN));
-		}
+		memcpy(chunks, f->getDataFromCurrent(), sizeof(ADT_MCIN) * count);
 	}
 
 	// TextureInfo
@@ -102,7 +100,7 @@ bool ADT::Load()
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 
-		SmartPtr<ADT_TextureInfo> textureInfo = new ADT_TextureInfo();
+		SharedPtr<ADT_TextureInfo> textureInfo = new ADT_TextureInfo();
 		textureInfo->textureName = _string;
 
 		m_Textures.push_back(textureInfo);
@@ -176,17 +174,17 @@ bool ADT::Load()
 	}
 
 	// M2 PlacementInfo
-	vector<ADT_MDDF> m_MDXsPlacementInfo;
+	vector<ADT_MDXDef> m_MDXsPlacementInfo;
 	f->seek(startPos + m_Header.MDDF);
 	{
 		f->seekRelative(4);
 		uint32_t size;
 		f->readBytes(&size, sizeof(uint32_t));
 
-		for (uint32 i = 0; i < size / sizeof(ADT_MDDF); i++)
+		for (uint32 i = 0; i < size / sizeof(ADT_MDXDef); i++)
 		{
-			ADT_MDDF placementInfo;
-			f->readBytes(&placementInfo, sizeof(ADT_MDDF));
+			ADT_MDXDef placementInfo;
+			f->readBytes(&placementInfo, sizeof(ADT_MDXDef));
 			m_MDXsPlacementInfo.push_back(placementInfo);
 		}
 	}
@@ -208,9 +206,33 @@ bool ADT::Load()
 	}
 
 	// Liquids
-	f->seek(startPos + m_Header.MH20);
+	if (m_Header.MH20 != 0)
 	{
+		f->seek(startPos + m_Header.MH20);
+		{
+			f->seekRelative(4);
+			uint32_t size;
+			f->readBytes(&size, sizeof(uint32_t));
+			assert1(size > 0);
 
+			const uint8* abuf = f->getDataFromCurrent();
+			for (uint32 i = 0; i < C_ChunksInTile; i++)
+			{
+				for (uint32 j = 0; j < C_ChunksInTile; j++)
+				{
+					MH2O_Header* mh2o_Header = (MH2O_Header*) abuf;
+					if (mh2o_Header->layersCount > 0)
+					{
+						CADT_Liquid* liquid = new CADT_Liquid(8, 8);
+						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
+
+						// Create instance
+						new Liquid_Instance(this, liquid, vec3(m_Translate.x + j * C_ChunkSize, 0.0f, m_Translate.z + i * C_ChunkSize));
+					}
+					abuf += sizeof(MH2O_Header);
+				}
+			}
+		}
 	}
 
 	//-- Load Textures -------------------------------------------------------------------
@@ -238,7 +260,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
 
-		SmartPtr<ADT_MCNK> chunk = new ADT_MCNK(this, f);
+		SharedPtr<ADT_MCNK> chunk = new ADT_MCNK(this, f);
 		chunk->Load();
 		m_Chunks.push_back(chunk);
 
@@ -273,7 +295,7 @@ bool ADT::Load()
 
 	//---------------------------------------------------------------------------------
 
-	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, m_Name.c_str());
+	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
 
 	return SceneNode::Load();
 }

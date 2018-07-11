@@ -33,7 +33,6 @@ void WMO_Group_Part_Batch::Render()
 
 		_Render->r.drawIndexed
 		(
-			PRIM_TRILIST,
 			m_Proto.indexStart,
 			m_Proto.indexCount,
 			m_Proto.vertexStart,

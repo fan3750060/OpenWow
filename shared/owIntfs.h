@@ -12,7 +12,6 @@
 
 #include "../owIntfs/Bindings.h"
 #include "../owIntfs/Console.h"
-#include "../owIntfs/ConsoleCommand.h"
 #include "../owIntfs/DebugOutput.h"
 #include "../owIntfs/Engine.h"
 #include "../owIntfs/Files.h"
@@ -24,7 +23,6 @@
 #include "../owIntfs/Networking.h"
 #include "../owIntfs/OpenGLAdapter.h"
 #include "../owIntfs/Perfomance.h"
-#include "../owIntfs/PlatformFactory.h"
 #include "../owIntfs/Render.h"
 #include "../owIntfs/RenderDevice.h"
 #include "../owIntfs/Scene.h"

@@ -7,7 +7,6 @@ inline bool operator<(const GUID& lhs, const GUID& rhs)
 
 class CBaseManager : public IBaseManager
 {
-	CLASS_INSTANCE(CBaseManager)
 public:
 	CBaseManager();
 	~CBaseManager();
@@ -24,27 +23,24 @@ private:
 	SBaseManagerPhases m_CurrentPhase;
 };
 
-// Helpers
+extern CBaseManager* _BaseManager;
 
-static inline IBaseManager* GetBaseManager()
-{
-	return CBaseManager::instance();
-}
+// Helpers
 
 template<class T>
 static inline void AddManager(IManager* _manager)
 {
-	GetBaseManager()->RegisterManager(__uuidof(T), _manager);
+	_BaseManager->RegisterManager(__uuidof(T), _manager);
 }
 
 template<class T>
 static inline void DelManager()
 {
-	GetBaseManager()->UnregisterManager(__uuidof(T));
+	_BaseManager->UnregisterManager(__uuidof(T));
 }
 
 template<class T>
 static inline T* GetManager()
 {
-	return (T*)(GetBaseManager()->GetManager(__uuidof(T)));
+	return (T*)(_BaseManager->GetManager(__uuidof(T)));
 }

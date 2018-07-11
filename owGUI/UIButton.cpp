@@ -7,12 +7,11 @@
 #include "UIButton.h"
 
 UIButton::UIButton(IUIMgr* _uimgr) :
-	UIElement(_uimgr)
+	UIElement(_uimgr),
+	onPressFunction(nullptr),
+	buttonStatus(BUTTON_NORMAL)
 {
 	m_IsTextEnable = false;
-
-	onPressFunction = nullptr;
-	buttonStatus = BUTTON_NORMAL;
 }
 
 UIButton::~UIButton()

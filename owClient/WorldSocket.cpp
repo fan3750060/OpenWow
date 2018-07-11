@@ -230,18 +230,18 @@ bool CWorldSocket::S_CharEnum(ByteBuffer& _buff)
 	SendData(CMSG_PLAYER_LOGIN, bb);*/
 
 	 //Orc
-	/*ByteBufferOutput bb;
-	bb.Write("TxtcrTer", 9);
+	ByteBufferOutput bb;
+	bb.Write("Txtyryer", 9);
 	bb.Write((uint8)2);
 	bb.Write((uint8)1);
 	bb.Write((uint8)0);
-	bb.Write((uint8)88);
+	bb.Write((uint8)15);
 	bb.Write((uint8)6);
 	bb.Write((uint8)3);
 	bb.Write((uint8)6);
 	bb.Write((uint8)5);
 	bb.Write((uint8)0);
-	SendData(CMSG_CHAR_CREATE, bb);*/
+	SendData(CMSG_CHAR_CREATE, bb);
 	
 	return true;
 }

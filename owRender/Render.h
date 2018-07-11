@@ -6,15 +6,10 @@
 #include "TexturesManager.h"
 #include "TechniquesManager.h"
 #include "RenderStorage.h"
-
-class TexturesManager;
-class FontsManager;
-class TechniquesManager;
-class RenderStorage;
+#include "RenderQueue.h"
 
 class RenderGL : public IRender
 {
-	CLASS_INSTANCE(RenderGL);
 public:
 	RenderGL();
 	~RenderGL();
@@ -81,12 +76,14 @@ public: // Getters
 	FontsManager* FontsMgr() { return m_FontsManager; }
 	TechniquesManager* getTechniquesMgr() { return m_TechniquesManager; }
 
+	void PushToQueue(RenderDrawCall _call) { m_RenderQueue->PushCall(_call); }
+
 private:
 	void OnWindowResized(uint32 _width, uint32 _height);
 
 public:
 	RenderDevice				r;
-	SmartPtr<R_RenderBuffer>	m_RenderBuffer;
+	R_RenderBuffer*				m_RenderBuffer;
 
 private:
 	mat4						m_OrhoMatrix;
@@ -97,8 +94,9 @@ private:
 	TexturesManager*			m_TexturesManager;
 	FontsManager*				m_FontsManager;
 	TechniquesManager*			m_TechniquesManager;
-	
+	RenderQueue*				m_RenderQueue;
+
 	CGroupVideo&				m_VideoSettings;
 };
 
-#define _Render RenderGL::instance()
+extern RenderGL* _Render;

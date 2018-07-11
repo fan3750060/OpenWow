@@ -13,7 +13,7 @@ public:
 	R_TextureBuffer* createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
 
 public:
-	SmartBufferPtr	m_Buffer;
+	SharedBufferPtr	m_Buffer;
 	uint32			m_GLFmt;
 	uint32			m_GLTexID;
 

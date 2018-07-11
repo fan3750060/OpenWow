@@ -3,6 +3,8 @@
 // General
 #include "WorldController.h"
 
+WorldController* _World;
+
 WorldController::WorldController()
 {
 	m_MapController = new MapController();
@@ -12,7 +14,12 @@ WorldController::WorldController()
 }
 
 WorldController::~WorldController()
-{}
+{
+	delete m_MapController;
+	delete m_MDXsManager;
+	delete m_WMOsManager;
+	delete m_EnvironmentManager;
+}
 
 void WorldController::EnterMap(vec3 _pos)
 {

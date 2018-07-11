@@ -17,10 +17,10 @@ public:
 	void EmptyTransformAndBounds();
 
 	void AddGroupInstance(CWMO_Group_Instance* _group) { m_GroupInstances.push_back(_group); }
-	vector<CWMO_Group_Instance*>& getGroupInstances() { return m_GroupInstances; }
+	vector<SharedPtr<CWMO_Group_Instance>>& getGroupInstances() { return m_GroupInstances; }
 
 	void AddOutdoorGroupInstance(CWMO_Group_Instance* _group) { m_OutdoorGroupInstances.push_back(_group); }
-	vector<CWMO_Group_Instance*>& getGroupOutdoorInstances() { return m_OutdoorGroupInstances; }
+	vector<SharedPtr<CWMO_Group_Instance>>& getGroupOutdoorInstances() { return m_OutdoorGroupInstances; }
 
 	cmat4 getInvWorld() const { return m_InvWorld; }
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
@@ -42,8 +42,8 @@ protected:
 	mat4									m_InvWorld;
 	vector<vec3>							m_ConvertedVerts;
 	
-	vector<CWMO_Group_Instance*>			m_GroupInstances;
-	vector<CWMO_Group_Instance*>			m_OutdoorGroupInstances;
+	vector<SharedPtr<CWMO_Group_Instance>>	m_GroupInstances;
+	vector<SharedPtr<CWMO_Group_Instance>>	m_OutdoorGroupInstances;
 
 	const CGroupQuality&					m_QualitySettings;
 };

@@ -8,5 +8,15 @@ out vec4 FragColor;
 
 void main(void)
 {
-	FragColor = texture(gTexture, OutTextCoord);
+	vec4 resultColor = texture(gTexture, OutTextCoord);
+
+	/*if 
+	(
+		resultColor.r == 0.0f && 
+		resultColor.g == 0.0f &&
+		resultColor.b == 0.0f
+	) 
+	discard;*/
+
+	FragColor = resultColor;
 }

@@ -14,6 +14,7 @@ DBC_DEFINE(DBC_LightFloatBand);
 DBC_DEFINE(DBC_LightIntBand);
 DBC_DEFINE(DBC_LightParams);
 DBC_DEFINE(DBC_LightSkybox);
+DBC_DEFINE(DBC_LiquidMaterial);
 DBC_DEFINE(DBC_LiquidType);
 DBC_DEFINE(DBC_LoadingScreen);
 DBC_DEFINE(DBC_Map);

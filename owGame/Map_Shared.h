@@ -1,19 +1,21 @@
 #pragma once
 
-class Map_Shared
+class CMapShared
 {
 public:
-	static void Init();
+	CMapShared();
 
-	//
+	SharedBufferPtr BufferTextureCoordDetail;
+	SharedBufferPtr BufferTextureCoordAlpha;
 
-	static SmartBufferPtr BufferTextureCoordDetail;
-	static SmartBufferPtr BufferTextureCoordAlpha;
+	static string getMapFolder(const DBC_MapRecord& _map);
 
-	static vector<uint16> GenarateHighMapArray(uint16 _holes = 0);
-	static vector<uint16> GenarateDefaultMapArray(uint16 _holes = 0);
+	vector<uint16> GenarateHighMapArray(uint16 _holes = 0);
+	vector<uint16> GenarateDefaultMapArray(uint16 _holes = 0);
 
 private:
-	static vector<uint16>  m_HighMapStrip;
-	static vector<uint16>  m_DefaultMapStrip;
+	vector<uint16>  m_HighMapStrip;
+	vector<uint16>  m_DefaultMapStrip;
 };
+
+extern CMapShared* _MapShared;

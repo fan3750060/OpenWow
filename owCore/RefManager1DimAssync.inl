@@ -99,9 +99,13 @@ inline void CRefManager1DimAssync<T>::Delete(T* item)
 		if (it->second == item)
 		{
 			this->Delete(it->first);
-			break;
+			return;
 		}
 	}
+
+	// If not found
+	delete item;
+	item = nullptr;
 }
 
 template <class T>

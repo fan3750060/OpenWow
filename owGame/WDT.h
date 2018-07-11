@@ -2,6 +2,10 @@
 
 #include "ADT_WMO_Instance.h"
 
+// FORWARD BEGIN
+class MapController;
+// FORWARD END
+
 struct WDT_MPHD_Flags
 {
 	uint32 Flag_GlobalWMO : 1;  // Use global map object definition.
@@ -20,8 +24,8 @@ struct WDT_MAIN
 		uint32 Flag_HasADT : 1;
 		uint32 Flag_IsLoaded : 1;
 		uint32 : 30;
-	}			flags;
-	uint32_t	asyncId;
+	} flags;
+	uint32_t asyncId;
 };
 
 // FORWARD BEGIN
@@ -32,11 +36,11 @@ class WDT
 {
 	friend MapController;
 public:
-	WDT();
+	WDT(MapController* _mapController);
 
 	void CreateInsances(SceneNode* _parent);
 
-	void Load(cstring _name);
+	void Load();
 
 	//--
 
@@ -49,12 +53,13 @@ public:
 	bool isUncompressedAlpha() const { return m_Flag.Flag_8bitMCAL; }
 
 private:
-	WDT_MPHD_Flags		m_Flag;
-	bool				m_IsTileBased;
-	WDT_MAIN			m_TileFlag[C_TilesInMap][C_TilesInMap];
+	const MapController*				m_MapController;
+	WDT_MPHD_Flags						m_Flag;
+	bool								m_IsTileBased;
+	WDT_MAIN							m_TileFlag[C_TilesInMap][C_TilesInMap];
 
 private:
-	string						m_GlobalWMOName;
-	ADT_MODF					m_GlobalWMOPlacementInfo;
-	SmartPtr<ADT_WMO_Instance>	m_GlobalWMO;
+	string								m_GlobalWMOName;
+	ADT_MODF							m_GlobalWMOPlacementInfo;
+	SharedPtr<ADT_WMO_Instance>			m_GlobalWMO;
 };

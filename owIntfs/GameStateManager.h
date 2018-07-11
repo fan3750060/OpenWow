@@ -19,14 +19,16 @@ struct GameStatesNames
 __interface IManager;
 // Forward END
 
-__interface 
+struct 
 	__declspec(uuid("03594F17-5474-47F0-9B6A-7842ACDF888A"))
 	IGameStateManager : IManager
 {
-	void AddGameState(GameStatesNames::List _name, IGameState* _gameState);
+	virtual ~IGameStateManager() = 0 {};
 
-	bool SetGameState(GameStatesNames::List _name);
-	bool SetGameState(IGameState* _newGameState);
+	virtual void AddGameState(GameStatesNames::List _name, IGameState* _gameState) = 0;
 
-	IGameState* GetGameState();
+	virtual bool SetGameState(GameStatesNames::List _name) = 0;
+	virtual bool SetGameState(IGameState* _newGameState) = 0;
+
+	virtual IGameState* GetGameState() = 0;
 };

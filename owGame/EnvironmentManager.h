@@ -5,11 +5,11 @@
 
 //
 
-class EnvironmentManager : public IUpdatable, public CRenderable3DObject
+class EnvironmentManager : public CRenderable3DObject, public IUpdatable
 {
 public:
 	EnvironmentManager();
-	~EnvironmentManager();
+	virtual ~EnvironmentManager();
 
 	void InitSkies(DBC_MapRecord _mapRecord);
 	void outdoorLighting();
@@ -39,7 +39,7 @@ public:
 
 	SkyManager* m_SkyManager;
 
-	SmartPtr<DayNightCycle> dayNightCycle;
+	SharedPtr<DayNightCycle> dayNightCycle;
 	DayNightPhase dayNightPhase;
 
 	CGroupQuality& m_QualitySettings;

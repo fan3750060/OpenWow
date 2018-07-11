@@ -6,6 +6,8 @@
 // Additional
 #include "FilesManager.h"
 
+CBaseManager* _BaseManager;
+
 CBaseManager::CBaseManager() :
 	m_CurrentPhase(Phase_NONE)
 {}

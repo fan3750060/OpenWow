@@ -41,7 +41,7 @@ protected:
     inline void setMat4(int32 _loc, cmat4 mat) const;
 
 protected:
-	SmartPtr<R_Shader>  m_Shader;
+	SharedPtr<R_Shader>  m_Shader;
 	RenderDevice*		m_RenderDevice;
 };
 

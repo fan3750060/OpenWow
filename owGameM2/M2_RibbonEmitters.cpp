@@ -199,10 +199,10 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 	}*/
 
 	// Vertex buffer
-	SmartBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
+	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
-	SmartGeomPtr __geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PT);
+	SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_LINES, _Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(RibbonVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(RibbonVertex));
 	__geom->finishCreatingGeometry();
@@ -219,7 +219,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, 0, 0);
 
 	_Render->r.setGeometry(__geom);
-	_Render->r.draw(PRIM_LINES, 0, vertices.size());
+	_Render->r.draw(0, vertices.size());
 
 	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Unbind();
 

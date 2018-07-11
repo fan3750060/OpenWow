@@ -5,7 +5,7 @@
 
 #pragma region Language
 
-string ProcessInclude(IFile* f)
+string ProcessInclude(UniquePtr<IFile> f)
 {
 	if (f == nullptr)
 	{

@@ -44,7 +44,7 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 
 CM2_Animator::~CM2_Animator()
 {
-
+	ERASE_MAP(m_Animations);
 }
 
 void CM2_Animator::PlayAnimation(int16 _id, bool _loop)

@@ -5,7 +5,6 @@
 
 class Perfomance : public IPerfomance
 {
-	CLASS_INSTANCE(Perfomance);
 public:
 	Perfomance();
 
@@ -53,7 +52,7 @@ private:
 	uint32 m_DrawCount[PERF_TIMERS_COUNT];
 };
 
-#define _Perfomance Perfomance::instance()
+extern Perfomance* _Perfomance;
 
 // Macros
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -11,7 +11,7 @@
 // Compile options needed: /Zi /D_DEBUG /MLd
 
 #define new MYDEBUG_NEW
-#endif
+//#endif
 
 namespace StaticAssert
 {

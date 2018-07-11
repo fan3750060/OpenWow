@@ -134,7 +134,7 @@ void CM2_Skin_Builder::StepBuildGeometry()
 	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_IndexesIndexes.size()) * sizeof(uint16), indices.data(), false);
 
 	// Begin geometry
-	m_Skin->__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PBNT2);
+	m_Skin->__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PBNT2);
 	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex)); // pos 0-2
 	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(SM2_Vertex)); // blend 3
 	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(SM2_Vertex)); // index 4
@@ -146,7 +146,7 @@ void CM2_Skin_Builder::StepBuildGeometry()
 
 	////////////////////////////
 	// Debug geom
-	m_Skin->__geomDebugNormals = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PN);
+	m_Skin->__geomDebugNormals = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
 	m_Skin->__geomDebugNormals->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex));
 	m_Skin->__geomDebugNormals->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex));
 	m_Skin->__geomDebugNormals->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);

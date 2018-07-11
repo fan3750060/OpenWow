@@ -7,7 +7,6 @@
 
 class CBindingController
 {
-	CLASS_INSTANCE(CBindingController);
 public:
 	CBindingController();
 	~CBindingController();
@@ -29,4 +28,4 @@ public:
 	CUpdatableObjectCollection*     m_UpdatableObjectCollection;
 };
 
-#define _Bindings CBindingController::instance()
+extern CBindingController* _Bindings;

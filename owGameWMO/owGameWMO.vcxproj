@@ -37,6 +37,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="WMO_Base_Instance.h" />
     <ClInclude Include="WMO_Builder.h" />
+    <ClInclude Include="WMO_Fixes.h" />
     <ClInclude Include="WMO_Group_Part_BSP_Node.h" />
     <ClInclude Include="WMO_Group_Headers.h" />
     <ClInclude Include="WMO_Group_Instance.h" />

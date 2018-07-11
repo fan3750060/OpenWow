@@ -20,11 +20,11 @@ struct R_VertexBufferSlot
 
 	//
 
-	R_Buffer*   m_VertexBuffer;
-	R_DataType  m_VertexBufferDataType;
-	uint32      m_Offset;
-	uint32      m_Stride;
-	bool        m_NeedNorm;
+	SharedBufferPtr	m_VertexBuffer;
+	R_DataType		m_VertexBufferDataType;
+	uint32			m_Offset;
+	uint32			m_Stride;
+	bool			m_NeedNorm;
 };
 
 // FORWARD BEGIN
@@ -35,7 +35,7 @@ class R_GeometryInfo : public CRefItem
 {
 public:
 	R_GeometryInfo(RenderDevice* _RenderDevice);
-	~R_GeometryInfo();
+	virtual ~R_GeometryInfo();
 
 	//
 
@@ -46,8 +46,9 @@ public:
 public:
 	vector<R_VertexBufferSlot>	m_VertexBufInfo;
 	uint32						m_VAOGLObj;
-	SmartBufferPtr				m_IndexBuffer;
-	uint32						m_Layout;
+	SharedBufferPtr				m_IndexBuffer;
+	R_PrimitiveType				m_PrimType;
+	uint32						m_VertexLayout;
 	R_IndexFormat				m_IndexBufferFormat;
 	bool						m_AtrribsBinded;
 
@@ -55,4 +56,4 @@ protected:
 	RenderDevice*				m_RenderDevice;
 };
 
-typedef SmartPtr<R_GeometryInfo> SmartGeomPtr;
+typedef SharedPtr<R_GeometryInfo> SharedGeomPtr;

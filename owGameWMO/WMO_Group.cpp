@@ -10,6 +10,7 @@
 // Additional 
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
+#include "WMO_Fixes.h"
 
 WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _groupName, IFile* _groupFile) :
 	m_ParentWMO(_parentWMO),
@@ -24,6 +25,8 @@ WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _gr
 
 WMO_Group::~WMO_Group()
 {
+	ERASE_VECTOR(m_WMOBatchIndexes);
+	ERASE_VECTOR(m_CollisionNodes);
 }
 
 void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
@@ -41,28 +44,43 @@ void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
 
-		SmartPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
+		SharedPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
 		CWMO_Doodad_Instance* instance = nullptr;
 		if (mdx)
 		{
-			instance = new CWMO_Doodad_Instance(_parent, mdx, index, placement);
+			instance = new CWMO_Doodad_Instance(_parent, mdx, this, index, placement);
 			// add to scene node is automaticly
 		}
 		_parent->addDoodadInstance(instance);
 	}
 }
 
+uint32 WMO_Group::to_wmo_liquid(int x)
+{
+	DBC_LIQUIDTYPE_Type::List basic = (DBC_LIQUIDTYPE_Type::List)(x & 3);
+	switch (basic)
+	{
+	case DBC_LIQUIDTYPE_Type::water:
+		return (m_Header.flags.IS_NOT_WATER_BUT_OCEAN) ? 14 : 13;
+	case DBC_LIQUIDTYPE_Type::ocean:
+		return 14;
+	case DBC_LIQUIDTYPE_Type::magma:
+		return 19;
+	case DBC_LIQUIDTYPE_Type::slime:
+		return 20;
+	}
+}
 
 void WMO_Group::Load()
 {
 	// Buffer
 	uint16* dataFromMOVI = nullptr;
-	SmartBufferPtr	IB_Default = nullptr;
+	SharedBufferPtr	IB_Default = nullptr;
 	dataFromMOVT = nullptr;
-	SmartBufferPtr	VB_Vertexes = nullptr;
-	vector<SmartBufferPtr>	VB_TextureCoords;
-	SmartBufferPtr	VB_Normals = nullptr;
-	SmartBufferPtr	VB_Colors = nullptr;
+	SharedBufferPtr	VB_Vertexes = nullptr;
+	vector<SharedBufferPtr>	VB_TextureCoords;
+	SharedBufferPtr	VB_Normals = nullptr;
+	SharedBufferPtr	VB_Colors = nullptr;
 
 	// CollisionTEMP
 	uint32 collisionCount = 0;
@@ -157,12 +175,17 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // WMO_Group_Batch
 		{
+			uint32 batchesCount = size / sizeof(SWMO_Group_BatchDef);
+			SWMO_Group_BatchDef* batches = (SWMO_Group_BatchDef*)m_F->getDataFromCurrent();
+			moba = new SWMO_Group_BatchDef[batchesCount];
+			memcpy(moba, batches, sizeof(SWMO_Group_BatchDef) * batchesCount);
+
 			for (uint32 i = 0; i < size / sizeof(SWMO_Group_BatchDef); i++)
 			{
 				SWMO_Group_BatchDef batchDef;
 				m_F->readBytes(&batchDef, sizeof(SWMO_Group_BatchDef));
 
-				SmartPtr<WMO_Group_Part_Batch> batch = new WMO_Group_Part_Batch(m_ParentWMO, this, batchDef);
+				WMO_Group_Part_Batch* batch = new WMO_Group_Part_Batch(m_ParentWMO, this, batchDef);
 				m_WMOBatchIndexes.push_back(batch);
 			}
 
@@ -214,18 +237,25 @@ void WMO_Group::Load()
 			assert1(m_Header.flags.HAS_VERTEX_COLORS);
 			uint32 vertexColorsCount = size / sizeof(CBgra);
 			CBgra* vertexColors = (CBgra*)m_F->getDataFromCurrent();
+			mocv = new C4Vec[vertexColorsCount];
+			memcpy(mocv, vertexColors, sizeof(C4Vec) * vertexColorsCount);
+			mocv_count = vertexColorsCount;
+
+			FixColorVertexAlpha(this);
+
 			// Convert
 			vector<vec4> vertexColorsConverted;
 			for (uint32 i = 0; i < vertexColorsCount; i++)
 			{
 				vertexColorsConverted.push_back(vec4
 				(
-					static_cast<float>(vertexColors[i].r) / 255.0f,
-					static_cast<float>(vertexColors[i].g) / 255.0f,
-					static_cast<float>(vertexColors[i].b) / 255.0f,
-					static_cast<float>(vertexColors[i].a) / 255.0f
+					static_cast<float>(mocv[i].z) / 255.0f,
+					static_cast<float>(mocv[i].y) / 255.0f,
+					static_cast<float>(mocv[i].x) / 255.0f,
+					static_cast<float>(mocv[i].w) / 255.0f
 				));
 			}
+
 			// Buffer
 			VB_Colors = _Render->r.createVertexBuffer(vertexColorsConverted.size() * sizeof(vec4), vertexColorsConverted.data(), false);
 			m_IsMOCVExists = vertexColorsCount > 0;
@@ -234,14 +264,35 @@ void WMO_Group::Load()
 		{
 			m_F->readBytes(&m_LiquidHeader, sizeof(SWMO_Group_MLIQDef));
 
-			if (m_Header.liquidType > 0)
-			{
-				Log::Green("WMO[%s]: LiquidType CHUNK = [%d]", m_ParentWMO->m_FileName.c_str(), m_LiquidHeader.type);
+			Log::Green("WMO[%s]: LiquidType CHUNK = HEADER[%d] [%d]", m_ParentWMO->m_FileName.c_str(), m_Header.liquidType, m_ParentWMO->m_Header.flags.use_liquid_type_dbc_id);
 
-				//assert1(m_Header.liquidType == 15);
-				m_WMOLiqiud = new CWMO_Liquid(m_LiquidHeader.A, m_LiquidHeader.B);
-				m_WMOLiqiud->CreateFromWMO(m_F, m_ParentWMO->m_Materials[m_LiquidHeader.type], DBC_LiquidType[m_Header.liquidType & 3], m_Header.flags.IS_INDOOR);
+			uint32 liquid_type;
+			if (m_ParentWMO->m_Header.flags.use_liquid_type_dbc_id)
+			{
+				if (m_Header.liquidType < 21)
+				{
+					liquid_type = to_wmo_liquid(m_Header.liquidType - 1);
+				}
+				else
+				{
+					liquid_type = m_Header.liquidType;
+				}
 			}
+			else
+			{
+				if (m_Header.liquidType < 20)
+				{
+					liquid_type = to_wmo_liquid(m_Header.liquidType);
+				}
+				else
+				{
+					liquid_type = m_Header.liquidType + 1;
+				}
+			}
+
+			m_WMOLiqiud = new CWMO_Liquid(m_LiquidHeader.A, m_LiquidHeader.B);
+			m_WMOLiqiud->CreateFromWMO(m_F, m_ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
+
 		}
 		else
 		{
@@ -261,7 +312,7 @@ void WMO_Group::Load()
 
 	// Create geom
 	{
-		__geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_PNCT2);
+		__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geom->setGeomVertexParams(VB_Vertexes, R_DataType::T_FLOAT, 0, 0);
 		__geom->setGeomVertexParams(VB_Normals, R_DataType::T_FLOAT, 0, 0);
 		__geom->setGeomVertexParams(VB_Colors, R_DataType::T_FLOAT, 0, 0);
@@ -335,7 +386,7 @@ void WMO_Group::Render(cmat4 _world) const
 
 			// Ambient color
 			pass->SetUseAmbColor(m_Quality.WMO_AmbColor);
-			pass->SetAmbColor(m_ParentWMO->m_Header.getAmbColor());
+			//pass->SetAmbColor(m_ParentWMO->m_Header.getAmbColor());
 
 			for (auto it : m_WMOBatchIndexes)
 			{
@@ -345,6 +396,8 @@ void WMO_Group::Render(cmat4 _world) const
 		pass->Unbind();
 	}
 	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
+
+	//RenderCollision(_world);
 }
 
 void WMO_Group::RenderCollision(cmat4 _world) const

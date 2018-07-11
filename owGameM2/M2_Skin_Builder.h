@@ -37,7 +37,7 @@ public:
 private:
 	SM2_SkinProfile			m_SkinProto;
 	CM2_Skin*				m_Skin;
-	SmartPtr<IFile>			m_F;
+	SharedPtr<IFile>			m_F;
 
 	//
 

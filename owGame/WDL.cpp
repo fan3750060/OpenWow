@@ -1,13 +1,16 @@
 #include "stdafx.h"
 
+// Include
+#include "MapController.h"
+
 // General
 #include "WDL.h"
 
 // Additional
 #include "WorldController.h"
 
-WDL::WDL(cstring _fileName) :
-	m_FileName(_fileName),
+WDL::WDL(MapController* _mapController) :
+	m_MapController(_mapController),
 	m_Minimap(nullptr)
 {}
 
@@ -17,11 +20,13 @@ WDL::~WDL()
 
 void WDL::CreateInsances(SceneNode* _parent)
 {
+	string fileName = m_MapController->getFilenameT() + ".wdl";
+
 	// Low-resolution tiles
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
 	{
-		Log::Info("World[%s]: WDL: Error opening.", m_FileName.c_str());
+		Log::Info("World[%s]: WDL: Error opening.", fileName.c_str());
 		return;
 	}
 
@@ -80,14 +85,10 @@ void WDL::CreateInsances(SceneNode* _parent)
 				// Vertex buffer
 				R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data(), false);
 
-				// Index bufer
-				//uint32 __ib = _Render->r.createIndexBuffer(striplen, strip);
-
 				//
 
-				R_GeometryInfo* __geom = _Render->r.beginCreatingGeometry(_Render->getRenderStorage()->__layout_GxVBF_P);
+				SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 				__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-				//__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 				__geom->finishCreatingGeometry();
 
 
@@ -109,10 +110,12 @@ void WDL::CreateInsances(SceneNode* _parent)
 
 void WDL::Load()
 {
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
+	string fileName = m_MapController->getFilenameT() + ".wdl";
+
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
 	{
-		Log::Info("World[%s]: WDL: Error opening.", m_FileName.c_str());
+		Log::Info("World[%s]: WDL: Error opening.", fileName.c_str());
 		return;
 	}
 
@@ -172,7 +175,7 @@ void WDL::Load()
 		}
 		else
 		{
-			Log::Info("Map[%s]: WDL: Chunks [%s], Size [%d] not implemented.", m_FileName.c_str(), fourcc, size);
+			Log::Fatal("Map[%s]: WDL: Chunks [%s], Size [%d] not implemented.", fileName.c_str(), fourcc, size);
 		}
 		f->seek(nextpos);
 	}

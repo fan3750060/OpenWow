@@ -1,12 +1,16 @@
 #include "stdafx.h"
 
+// Include
+#include "MapController.h"
+
 // General
 #include "WDT.h"
 
 // Additional
 #include "WorldController.h"
 
-WDT::WDT() :
+WDT::WDT(MapController* _mapController) :
+	m_MapController(_mapController),
 	m_IsTileBased(false)
 {}
 
@@ -20,12 +24,14 @@ void WDT::CreateInsances(SceneNode* _parent)
 	}
 }
 
-void WDT::Load(cstring _name)
+void WDT::Load()
 {
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(_name);
+	string fileName = m_MapController->getFilenameT() + ".wdt";
+
+	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
 	{
-		Log::Info("Map[%s]: WDT: Error opening.", _name.c_str());
+		Log::Info("Map[%s]: WDT: Error opening.", fileName.c_str());
 		return;
 	}
 
@@ -86,7 +92,7 @@ void WDT::Load(cstring _name)
 		}
 		else
 		{
-			Log::Info("Map[%s]: WDT: Chunks [%s], Size [%d] not implemented.", _name.c_str(), fourcc, size);
+			Log::Fatal("Map[%s]: WDT: Chunks [%s], Size [%d] not implemented.", fileName.c_str(), fourcc, size);
 		}
 
 		f->seek(nextpos);

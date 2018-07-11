@@ -49,7 +49,7 @@ private:
 	float sizes[3];
 	float mid, slowdown, rotation;
 	vec3 pos;
-	SmartTexturePtr texture;
+	SharedTexturePtr texture;
 	ParticleEmitter* emitter;
 	ParticleList particles;
 	int blend, order, type;

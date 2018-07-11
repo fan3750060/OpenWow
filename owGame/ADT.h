@@ -13,7 +13,7 @@ class MapController;
 class ADT : public SceneNode
 {
 public:
-	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ, string _name, IFile* _file);
+	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ);
 	~ADT();
 
 	ADT_MCNK* getChunk(int32 x, int32 z)
@@ -27,7 +27,7 @@ public:
 	}
 
 	// ISceneNode
-	string getObjectInfo() override { return "@ADT@" + m_Name; }
+	string getObjectInfo() override { return "@ADT@" + to_string(m_IndexX) + ":" + to_string(m_IndexZ); }
 
 	// ILoadableObject
 	bool Load() override;
@@ -39,17 +39,15 @@ public:
 
 public:
 	const MapController*				m_MapController;
-	const string						m_Name;
-	const SmartPtr<IFile>				m_File;
 	const int							m_IndexX, m_IndexZ;
 	ADT_MHDR							m_Header;
 
-	vector<SmartPtr<ADT_TextureInfo>>	m_Textures;
+	vector<SharedPtr<ADT_TextureInfo>>	m_Textures;
 
 	// Instances
-	vector<SmartPtr<ADT_WMO_Instance>>	m_WMOsInstances;
-	vector<SmartPtr<ADT_MDX_Instance>>	m_MDXsInstances;
-	vector<SmartPtr<ADT_MCNK>>			m_Chunks;
+	vector<SharedPtr<ADT_WMO_Instance>>	m_WMOsInstances;
+	vector<SharedPtr<ADT_MDX_Instance>>	m_MDXsInstances;
+	vector<SharedPtr<ADT_MCNK>>			m_Chunks;
 
 	//
 	CGroupQuality&						m_QualitySettings;

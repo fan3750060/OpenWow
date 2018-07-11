@@ -10,7 +10,7 @@ class R_RenderBuffer : public CRefItem
 
 public:
 	R_RenderBuffer(RenderDevice* _RenderDevice);
-	~R_RenderBuffer();
+	virtual ~R_RenderBuffer();
 
 	//
 
@@ -29,8 +29,8 @@ public:
 	uint32				m_Width, m_Height;
 	uint32				m_Samples;
 
-	SmartTexturePtr		m_DepthTexture;
-	SmartTexturePtr		m_ColorsTextures[MaxColorAttachmentCount];
+	SharedTexturePtr	m_DepthTexture;
+	SharedTexturePtr	m_ColorsTextures[MaxColorAttachmentCount];
 	uint32				m_DepthBufferGLObj;
 	uint32				m_ColorsBuffersGLObj[MaxColorAttachmentCount];  // Used for multisampling
 

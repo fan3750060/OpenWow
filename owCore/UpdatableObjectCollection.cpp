@@ -8,7 +8,7 @@
 
 bool CUpdatableObjectCollection::RegisterObject(IUpdatable* _uiObject)
 {
-	assert1(GetBaseManager()->GetPhase() != Phase_Input && GetBaseManager()->GetPhase() != Phase_Update);
+	assert1(_BaseManager->GetPhase() != Phase_Input && _BaseManager->GetPhase() != Phase_Update);
 	m_Objects.push_back(_uiObject);
 
 	return true;
@@ -16,14 +16,14 @@ bool CUpdatableObjectCollection::RegisterObject(IUpdatable* _uiObject)
 
 void CUpdatableObjectCollection::UnregisterObject(IUpdatable * _uiObject)
 {
-	assert1(GetBaseManager()->GetPhase() != Phase_Input && GetBaseManager()->GetPhase() != Phase_Update);
+	assert1(_BaseManager->GetPhase() != Phase_Input && _BaseManager->GetPhase() != Phase_Update);
 	m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 }
 
 void CUpdatableObjectCollection::Update(IPerfomance* _perfomance, CInput* _input, double _time, double _dTime)
 {
 	_perfomance->Start(PERF_PHASE_INPUT);
-	GetBaseManager()->SetPhase(Phase_Input);
+	_BaseManager->SetPhase(Phase_Input);
 	for (auto& it : m_Objects)
 	{
 		it->Input(_input, _time, _dTime);
@@ -34,7 +34,7 @@ void CUpdatableObjectCollection::Update(IPerfomance* _perfomance, CInput* _input
 	//--
 
 	_perfomance->Start(PERF_PHASE_UPDATE);
-	GetBaseManager()->SetPhase(Phase_Update);
+	_BaseManager->SetPhase(Phase_Update);
 	for (auto& it : m_Objects)
 	{
 		it->Update(_time, _dTime);
@@ -42,5 +42,5 @@ void CUpdatableObjectCollection::Update(IPerfomance* _perfomance, CInput* _input
 	}
 	_perfomance->Stop(PERF_PHASE_UPDATE);
 
-	GetBaseManager()->SetPhase(Phase_NONE);
+	_BaseManager->SetPhase(Phase_NONE);
 }

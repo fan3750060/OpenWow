@@ -12,20 +12,20 @@ struct DefaultDeleter
 };
 
 template<class T, class D = DefaultDeleter<T>>
-class SmartPtr
+class SharedPtr
 {
 public:
-	SmartPtr(T* ptr = nullptr) 
+	SharedPtr(T* ptr = nullptr) 
 	{
 		m_Ptr = ptr;
 		AddRef();
 	}
-	SmartPtr(const SmartPtr& _other)
+	SharedPtr(const SharedPtr& _other)
 	{
 		m_Ptr = _other.m_Ptr;
 		AddRef();
 	}
-	~SmartPtr()
+	~SharedPtr()
 	{
 		Release();
 	}
@@ -40,13 +40,13 @@ public:
 	bool operator==(T* _other)	{		return m_Ptr == _other;	}
 	bool operator!=(T* _other)	{		return m_Ptr != _other;	}
 
-	SmartPtr& operator=(const SmartPtr& _other)
+	SharedPtr& operator=(const SharedPtr& _other)
 	{
 		m_Ptr = _other.m_Ptr;
 		AddRef();
 		return *this;
 	}
-	SmartPtr& operator=(T* ptr)
+	SharedPtr& operator=(T* ptr)
 	{
 		Release();
 		m_Ptr = ptr;

@@ -28,7 +28,6 @@ CM2_Part_Material::CM2_Part_Material(const SM2_Material& _proto)
 	m_DepthMaskEnabled = _proto.flags.DEPTHWRITE == 0;
 
 	m_M2BlendMode = _proto.m_BlendMode;
-
 }
 
 void CM2_Part_Material::fillRenderState(RenderState* _state) const
