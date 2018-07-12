@@ -6,6 +6,17 @@
 // General
 #include "M2_RibbonEmitters.h"
 
+struct RibbonVertex
+{
+	RibbonVertex(vec3 _pos, vec2 _tex) :
+		pos(_pos),
+		tex(_tex)
+	{}
+
+	vec3 pos;
+	vec2 tex;
+};
+
 CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_model),
 	tcolor(vec4(1.0f))
@@ -41,6 +52,9 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	rs.pos = posValue;
 	rs.len = 0;
 	segs.push_back(rs);
+
+
+
 }
 
 void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime, cmat4 _worldMatrix)
@@ -111,17 +125,6 @@ void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime, cma
 	}
 }
 
-struct RibbonVertex
-{
-	RibbonVertex(vec3 _pos, vec2 _tex) :
-		pos(_pos),
-		tex(_tex)
-	{}
-
-	vec3 pos;
-	vec2 tex;
-};
-
 void CM2_RibbonEmitters::Render(cmat4 _world)
 {
 	vector<RibbonVertex> vertices;
@@ -154,7 +157,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 
 	glDisable(GL_CULL_FACE);
 	glDepthMask(GL_FALSE);
-	
+
 	glColor4fv(tcolor);
 
 	glBegin(GL_QUAD_STRIP);
@@ -193,38 +196,38 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 	glDepthMask(GL_TRUE);*/
 
 
-	/*for (auto& it : vertices)
+	for (auto& it : vertices)
 	{
-		_Render->DrawSphere(mat4(), it.pos, 0.05f);
-	}*/
+		_Render->DrawSphere(mat4(), it.pos, 0.1f);
+	}
+
 
 	// Vertex buffer
 	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
-	SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_LINES, _Render->getRenderStorage()->__layout_GxVBF_PT);
+	SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(RibbonVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(RibbonVertex));
 	__geom->finishCreatingGeometry();
 
+	//__vb->updateBufferData(0, vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_ONE);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setDepthMask(false);
 
-	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Bind();
-	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->setWorld(mat4());
-	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->SetColor(vec4(1.0f));
-
-	_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, 0, 0);
-
 	_Render->r.setGeometry(__geom);
-	_Render->r.draw(0, vertices.size());
 
-	_Render->getTechniquesMgr()->M2_RibbonEmitters_Pass->Unbind();
+	CM2_RibbonEmitters_Pass* pass = _Render->getTechniquesMgr()->M2_RibbonEmitters_Pass;
+	pass->Bind();
+	{
+		pass->setWorld(mat4());
+		pass->SetColor(vec4(1.0f));
 
-	_Render->r.setDepthMask(true);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-	
+		_Render->r.setTexture(Material::C_DiffuseTextureIndex, m_Texture, 0, 0);
+
+		_Render->r.draw(0, vertices.size());
+	}
+	pass->Unbind();
 }

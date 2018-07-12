@@ -5,7 +5,7 @@
 
 GameState_InWorld::~GameState_InWorld()
 {
-	delete sceneManager;
+	OW_SAFEDELETE(sceneManager);
 }
 
 bool GameState_InWorld::Init()
@@ -22,10 +22,10 @@ bool GameState_InWorld::Init()
 	m_TestCamera->setupViewParams(Math::Pi / 2.0f, m_VideoSettings.aspectRatio, 5.0f, 10000.0f);
 
 
-	for (auto i = DBC_CinematicSequences.Records().begin(); i != DBC_CinematicSequences.Records().end(); ++i)
+	for (auto& i : DBC_CinematicSequences)
 	{
-		auto record = (i->second);
-		Log::Info("[%d] = [%d][%s]", record->Get_ID(), record->Get_CameraRec()->Get_ID(), record->Get_CameraRec()->Get_Filename());
+		const DBC_CinematicSequencesRecord& record = i;
+		Log::Info("[%d] = [%d][%s]", record.Get_ID(), record.Get_CameraRec()->Get_ID(), record.Get_CameraRec()->Get_Filename());
 	}
 
 	sceneManager = new CSceneManager(_World->Map());

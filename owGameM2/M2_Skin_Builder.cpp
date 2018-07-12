@@ -1,12 +1,16 @@
 #include "stdafx.h"
 
+// Include
+#include "M2_Builder.h"
+
 // General
 #include "M2_Skin_Builder.h"
 
 // Additional
 #include "ShaderResolver.h"
 
-CM2_Skin_Builder::CM2_Skin_Builder(M2* _model, CM2_Skin* _skin, IFile* _file) :
+CM2_Skin_Builder::CM2_Skin_Builder(CM2_Builder* _m2Builder, M2* _model, CM2_Skin* _skin, IFile* _file) :
+	m_M2Builder(_m2Builder),
 	m_ParentM2(_model),
 	m_Skin(_skin),
 	m_F(_file)
@@ -21,46 +25,63 @@ void CM2_Skin_Builder::Load()
 {
 	Step1LoadProfile();
 	Step2InitBatches();
-	StepBuildGeometry();
 }
 
 void CM2_Skin_Builder::Step1LoadProfile()
 {
-	m_F->readBytes(&m_SkinProto, sizeof(SM2_SkinProfile));
+	m_F->readBytes(&m_SkinProfile, sizeof(SM2_SkinProfile));
 
 	// Skin data
-	uint16*	t_verticesIndexes = (uint16*)(m_F->getData() + m_SkinProto.vertices.offset);
-	for (uint32 i = 0; i < m_SkinProto.vertices.size; i++)
+	uint16*				t_verticesIndexes	= (uint16*)				(m_F->getData() + m_SkinProfile.vertices.offset);
+	uint16*				t_indexesIndexes	= (uint16*)				(m_F->getData() + m_SkinProfile.indices.offset);
+	SM2_SkinBones*		t_bonesIndexes		= (SM2_SkinBones*)		(m_F->getData() + m_SkinProfile.bones.offset);
+	SM2_SkinSection*	t_sections			= (SM2_SkinSection*)	(m_F->getData() + m_SkinProfile.submeshes.offset);
+	SM2_SkinBatch*		t_Batches			= (SM2_SkinBatch*)		(m_F->getData() + m_SkinProfile.batches.offset);
+
+	assert1(m_SkinProfile.vertices.size == m_SkinProfile.bones.size);
+
+	for (uint32 sectionIndex = 0; sectionIndex < m_SkinProfile.submeshes.size; sectionIndex++)
 	{
-		m_VerticesIndexes.push_back(t_verticesIndexes[i]);
+		const SM2_SkinSection& section = t_sections[sectionIndex];
+		CM2_SkinSection* skinSection = new CM2_SkinSection(m_ParentM2, section);
+
+		skinSection->m_Verts.reserve(section.vertexCount);
+		for (uint32 vert = section.vertexStart; vert < section.vertexStart + section.vertexCount; vert++)
+		{
+			SM2_Vertex newVertex = m_M2Builder->m_Vertexes[t_verticesIndexes[vert]];
+			for (uint32 bone = 0; bone < section.boneInfluences; ++bone)
+			{
+				uint8 boneIndex = t_bonesIndexes[vert].index[bone];
+				newVertex.bone_indices[bone] = boneIndex;
+				assert1(boneIndex < section.boneCount);
+			}
+			skinSection->m_Verts.push_back(newVertex);
+		}
+
+		skinSection->m_Index.reserve(section.indexCount);
+		for (uint32 ind = section.indexStart; ind < section.indexStart + section.indexCount; ind++)
+		{
+			uint16 index = t_indexesIndexes[ind];
+			assert1(index >= section.vertexStart);
+			assert1(index < section.vertexStart + section.vertexCount);
+			skinSection->m_Index.push_back(index - section.vertexStart);
+		}
+
+		skinSection->Final();
+
+		m_Skin->m_Sections.push_back(skinSection);
 	}
 
-	uint16*	t_indexesIndexes = (uint16*)(m_F->getData() + m_SkinProto.indices.offset);
-	for (uint32 i = 0; i < m_SkinProto.indices.size; i++)
-	{
-		m_IndexesIndexes.push_back(t_indexesIndexes[i]);
-	}
+	//--
 
-	SM2_SkinBones* t_bonesIndexes = (SM2_SkinBones*)(m_F->getData() + m_SkinProto.bones.offset);
-	for (uint32 i = 0; i < m_SkinProto.bones.size; i++)
-	{
-		m_SkinBones.push_back(t_bonesIndexes[i]);
-	}
-
-	SM2_SkinSection* t_skins = (SM2_SkinSection*)(m_F->getData() + m_SkinProto.submeshes.offset);
-	for (uint32 i = 0; i < m_SkinProto.submeshes.size; i++)
-	{
-		m_SkinSections.push_back(t_skins[i]);
-	}
-
-	SM2_SkinBatch* t_Batches = (SM2_SkinBatch*)(m_F->getData() + m_SkinProto.batches.offset);
-	for (uint32 i = 0; i < m_SkinProto.batches.size; i++)
+	for (uint32 i = 0; i < m_SkinProfile.batches.size; i++)
 	{
 		m_SkinBatches.push_back(t_Batches[i]);
 	}
 
-	uint32	t_bonesMax = m_SkinProto.boneCountMax;
+	uint32	t_bonesMax = m_SkinProfile.boneCountMax;
 	//assert1(t_bonesMax == 256);
+	//Log::Warn("t_bonesMax = %d", t_bonesMax);
 }
 
 void CM2_Skin_Builder::Step2InitBatches()
@@ -73,8 +94,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 		// Geometry data
 		batch->m_PriorityPlan = it.priorityPlane;
-		batch->m_SkinProtoIndex = it.skinSectionIndex;
-		batch->m_SkinProtoSection = m_SkinSections[it.skinSectionIndex];
+		batch->m_SkinSection = m_Skin->m_Sections[it.skinSectionIndex];
 
 		// Get classes
 		batch->m_Material = (m_ParentM2->GetMaterial(it.materialIndex));
@@ -116,44 +136,10 @@ void CM2_Skin_Builder::Step2InitBatches()
 			}
 		}
 
+		batch->Init();
+
 		m_Skin->m_Batches.push_back(batch);
 	}
 
 	std::sort(m_Skin->m_Batches.begin(), m_Skin->m_Batches.end(), M2_SkinBatch_PriorityPlan_Compare());
-}
-
-void CM2_Skin_Builder::StepBuildGeometry()
-{
-	vector<uint16> indices;
-	for (uint32 i = 0; i < m_IndexesIndexes.size(); i++)
-	{
-		indices.push_back(m_VerticesIndexes[m_IndexesIndexes[i]]);
-	}
-
-	// Index bufer
-	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_IndexesIndexes.size()) * sizeof(uint16), indices.data(), false);
-
-	// Begin geometry
-	m_Skin->__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PBNT2);
-	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex)); // pos 0-2
-	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(SM2_Vertex)); // blend 3
-	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(SM2_Vertex)); // index 4
-	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex)); // normal 5-7
-	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(SM2_Vertex)); // tc0 8-9
-	m_Skin->__geom->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(SM2_Vertex)); // tc1 10-11
-	m_Skin->__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-	m_Skin->__geom->finishCreatingGeometry();
-
-	////////////////////////////
-	// Debug geom
-	m_Skin->__geomDebugNormals = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
-	m_Skin->__geomDebugNormals->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex));
-	m_Skin->__geomDebugNormals->setGeomVertexParams(m_ParentM2->m_VBuffer, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex));
-	m_Skin->__geomDebugNormals->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-	m_Skin->__geomDebugNormals->finishCreatingGeometry();
-
-	for (auto& it : m_Skin->m_Batches)
-	{
-		it->Init();
-	}
 }

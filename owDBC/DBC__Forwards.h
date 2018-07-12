@@ -3,8 +3,8 @@
 // Common
 #include "DBC__File.h"
 
-DBC_DEFINE(DBÑ_AnimationData);
-DBC_DEFINE(DBÑ_AreaTable);
+DBC_DEFINE(DBC_AnimationData);
+DBC_DEFINE(DBC_AreaTable);
 DBC_DEFINE(DBC_CinematicCamera);
 DBC_DEFINE(DBC_CinematicSequences);
 DBC_DEFINE(DBC_GroundEffectDoodad);

@@ -13,7 +13,7 @@ typedef const vector<SM2_Loop>* cGlobalLoopSeq;
 
 struct SM2_Sequence
 {
-	__DBC_FOREIGN_KEY_ID(uint16, DBÑ_AnimationData, animID); // Animation id in AnimationData.dbc	
+	FOREIGN_KEY_ID(uint16, DBC_AnimationData, animID); // Animation id in AnimationData.dbc	
 	uint16		variationIndex;			// Sub-animation id: Which number in a row of animations this one is.
 
 #if (VERSION == VERSION_Vanila)

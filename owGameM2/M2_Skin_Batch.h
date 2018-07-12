@@ -1,6 +1,7 @@
 #pragma once
 
 #include "M2_Part_Material.h"
+#include "M2_SkinSection.h"
 
 // FORWARD BEGIN
 class M2;
@@ -16,16 +17,14 @@ public:
 
 	void Init();
 
-	void Render(CM2_MeshPartID_Provider* _provider);
+	void Render(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
 
 	int32 getPriorityPlan() const { return m_PriorityPlan; }
-	uint32 getSkinProtoIndex() const { return m_SkinProtoIndex; }
-	const SM2_SkinSection& getSkinProto() const { return m_SkinProtoSection; }
+	const CM2_SkinSection* getSkin() const { return m_SkinSection; }
 
 private:
 	int32								m_PriorityPlan;
-	uint32								m_SkinProtoIndex;
-	SM2_SkinSection						m_SkinProtoSection;
+	CM2_SkinSection*					m_SkinSection;
 
 	const CM2_Part_Color*				m_Color;
 	const CM2_Part_Material*			m_Material;

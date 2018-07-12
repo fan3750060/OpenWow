@@ -9,10 +9,9 @@
 
 GameState_Menu::~GameState_Menu()
 {
-	delete _World;
-
-	delete m_MinimapUI;
-	delete m_LoadingScreenUI;
+	OW_SAFEDELETE(_World);
+	OW_SAFEDELETE(m_MinimapUI);
+	OW_SAFEDELETE(m_LoadingScreenUI);
 }
 
 void GameState_Menu::OnBtn(DBC_MapRecord _e)

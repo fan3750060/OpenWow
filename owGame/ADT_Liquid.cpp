@@ -16,7 +16,7 @@ void CADT_Liquid::CreateFromMCLQ(IFile* f, ADT_MCNK_Header header)
 #include __PACK_BEGIN
 struct MH2O_Instance
 {
-	__DBC_FOREIGN_KEY_ID(uint16, DBC_LiquidType, liquidType);
+	FOREIGN_KEY_ID(uint16, DBC_LiquidType, liquidType);
 	uint16_t VertexFormat;
 
 	float minHeightLevel;

@@ -101,9 +101,12 @@ void CM2_Base_Instance::Render3D()
 		//	m_NeedRecalcAnimation = true;
 		//}
 		//}
+
+		m_Object->Render(getAbsTrans(), m_MeshProvider, m_DoodadColor, m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
+		return;
 	}
 
 	//_Render->DrawBoundingBox(getBounds());
 
-	m_Object->Render(getAbsTrans(), m_MeshProvider, m_DoodadColor);
+	m_Object->Render(getAbsTrans(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time));
 }

@@ -31,7 +31,6 @@ private:
 
 	Function*					m_OnAnimationEnded;
 
-
 	double						animtime;
 	uint32						m_CurrentTime;
 };

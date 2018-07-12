@@ -111,7 +111,7 @@ int R_Shader::getShaderBufferLoc(const char *name)
 	}
 }
 
-void R_Shader::setShaderConst(int loc, R_ShaderConstType type, const void *values, uint32 count)
+void R_Shader::setShaderConst(int loc, R_ShaderConstType type, const void* values, uint32 count)
 {
 	if (loc == -1)
 	{

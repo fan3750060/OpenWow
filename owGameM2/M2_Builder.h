@@ -1,11 +1,13 @@
 #pragma once
 
 #include "M2.h"
+#include "M2_Skin_Builder.h"
 
 #define M2BUILDER_LOADBONES
 
 class CM2_Builder
 {
+	friend CM2_Skin_Builder;
 public:
 	CM2_Builder(M2* _model);
 	~CM2_Builder();

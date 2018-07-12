@@ -17,14 +17,14 @@ Texture3	-					-					-					ScalpUpperTexture	-
 
 string CharSectionWrapper::getSkinTexture(Character* _character)
 {
-	for (auto& i = DBC_CharSections.begin(); i != DBC_CharSections.end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		if (i->Get_GeneralType() == DBC_CharSections_GeneralType::Skin &&
-			i->Get_Race() == _character->Race &&
-			i->Get_Gender() == _character->Gender &&
-			i->Get_VariationOrColor() == _character->skin)
+		if (i.Get_GeneralType() == DBC_CharSections_GeneralType::Skin &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->skin)
 		{
-			return i->Get_Texture1();
+			return i.Get_Texture1();
 		}
 	}
 
@@ -38,17 +38,16 @@ string CharSectionWrapper::getSkinTexture(Character* _character)
 
 string CharSectionWrapper::getFaceLowerTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::Face &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_VariationOrColor() == _character->face
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::Face &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->face
 			)
 		{
-			return record->Get_Texture1();
+			return i.Get_Texture1();
 		}
 	}
 
@@ -58,17 +57,16 @@ string CharSectionWrapper::getFaceLowerTexture(Character* _character)
 
 string CharSectionWrapper::getFaceUpperTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::Face &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_VariationOrColor() == _character->face
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::Face &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->face
 			)
 		{
-			return record->Get_Texture2();
+			return i.Get_Texture2();
 		}
 	}
 
@@ -82,17 +80,16 @@ string CharSectionWrapper::getFaceUpperTexture(Character* _character)
 
 string CharSectionWrapper::getFacialHairLowerTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::FacialHair &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_VariationOrColor() == _character->facialStyle
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::FacialHair &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->facialStyle
 			)
 		{
-			return record->Get_Texture1();
+			return i.Get_Texture1();
 		}
 	}
 
@@ -102,17 +99,16 @@ string CharSectionWrapper::getFacialHairLowerTexture(Character* _character)
 
 string CharSectionWrapper::getFacialHairUpperTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::FacialHair &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_VariationOrColor() == _character->facialStyle
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::FacialHair &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->facialStyle
 			)
 		{
-			return record->Get_Texture2();
+			return i.Get_Texture2();
 		}
 	}
 
@@ -140,16 +136,15 @@ uint32 CharSectionWrapper::getFacial1Geoset(Character * _character)
 
 uint32 CharSectionWrapper::getFacial2Geoset(Character * _character)
 {
-	for (auto i = DBC_CharacterFacialHairStyles.Records().begin(); i != DBC_CharacterFacialHairStyles.Records().end(); ++i)
+	for (auto& i : DBC_CharacterFacialHairStyles)
 	{
-		DBC_CharacterFacialHairStylesRecord* record = i->second;
 		if (
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_Variation() == _character->facialStyle
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_Variation() == _character->facialStyle
 			)
 		{
-			return record->Get_Group_02xx();
+			return i.Get_Group_02xx();
 		}
 	}
 
@@ -159,16 +154,15 @@ uint32 CharSectionWrapper::getFacial2Geoset(Character * _character)
 
 uint32 CharSectionWrapper::getFacial3Geoset(Character * _character)
 {
-	for (auto i = DBC_CharacterFacialHairStyles.Records().begin(); i != DBC_CharacterFacialHairStyles.Records().end(); ++i)
+	for (auto& i : DBC_CharacterFacialHairStyles)
 	{
-		DBC_CharacterFacialHairStylesRecord* record = i->second;
 		if (
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_Variation() == _character->facialStyle
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_Variation() == _character->facialStyle
 			)
 		{
-			return record->Get_Group_03xx();
+			return i.Get_Group_03xx();
 		}
 	}
 
@@ -182,18 +176,17 @@ uint32 CharSectionWrapper::getFacial3Geoset(Character * _character)
 
 string CharSectionWrapper::getHairTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_Type() == _character->hairStyle &&
-			record->Get_VariationOrColor() == _character->hairColor
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_Type() == _character->hairStyle &&
+			i.Get_VariationOrColor() == _character->hairColor
 			)
 		{
-			return record->Get_Texture1();
+			return i.Get_Texture1();
 		}
 	}
 
@@ -203,17 +196,16 @@ string CharSectionWrapper::getHairTexture(Character* _character)
 
 string CharSectionWrapper::getHairScalpLowerTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_VariationOrColor() == _character->hairStyle
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->hairStyle
 			)
 		{
-			return record->Get_Texture2();
+			return i.Get_Texture2();
 		}
 	}
 
@@ -223,17 +215,16 @@ string CharSectionWrapper::getHairScalpLowerTexture(Character* _character)
 
 string CharSectionWrapper::getHairScalpUpperTexture(Character* _character)
 {
-	for (auto i = DBC_CharSections.Records().begin(); i != DBC_CharSections.Records().end(); ++i)
+	for (auto& i : DBC_CharSections)
 	{
-		DBC_CharSectionsRecord* record = i->second;
 		if (
-			record->Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
-			record->Get_Race() == _character->Race &&
-			record->Get_Gender() == _character->Gender &&
-			record->Get_VariationOrColor() == _character->hairStyle
+			i.Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_VariationOrColor() == _character->hairStyle
 			)
 		{
-			return record->Get_Texture3();
+			return i.Get_Texture3();
 		}
 	}
 
@@ -258,16 +249,16 @@ uint32 CharSectionWrapper::getHairGeoset(Character* _character)
 	}
 	assert1(charSections != nullptr);*/
 
-	DBC_CharHairGeosetsRecord* charHairRecord = nullptr;
-	for (auto i = DBC_CharHairGeosets.Records().begin(); i != DBC_CharHairGeosets.Records().end(); ++i)
+	const DBC_CharHairGeosetsRecord* charHairRecord = nullptr;
+	for (auto& i : DBC_CharHairGeosets)
 	{
 		if (
-			i->second->Get_Race() == _character->Race &&
-			i->second->Get_Gender() == _character->Gender &&
-			i->second->Get_HairType() == _character->hairStyle
+			i.Get_Race() == _character->Race &&
+			i.Get_Gender() == _character->Gender &&
+			i.Get_HairType() == _character->hairStyle
 			)
 		{
-			charHairRecord = i->second;
+			charHairRecord = &i;
 		}
 	}
 	assert1(charHairRecord != nullptr);

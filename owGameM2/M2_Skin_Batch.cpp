@@ -23,14 +23,14 @@ CM2_Skin_Batch::CM2_Skin_Batch(const M2* _parentM2, const CM2_Skin* _parentSkin)
 void CM2_Skin_Batch::Init()
 {
 	m_Material->fillRenderState(&m_State);
-	m_State.setGeometry(m_ParentSkin->__geom);
+	//m_State.setGeometry(m_ParentSkin->__geom);
 }
 
-void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
+void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
 {
 	if (_provider != nullptr)
 	{
-		if (!_provider->isMeshEnabled(m_SkinProtoSection.meshPartID))
+		if (!_provider->isMeshEnabled(m_SkinSection->getProto().meshPartID))
 		{
 			return;
 		}
@@ -76,13 +76,7 @@ void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider)
 		}
 	}
 
-	_Render->r.drawIndexed
-	(
-		m_SkinProtoSection.indexStart,
-		m_SkinProtoSection.indexCount,
-		m_SkinProtoSection.vertexStart,
-		m_SkinProtoSection.vertexCount,
-		&m_State,
-		false
-	);
+	m_SkinSection->Draw(&m_State, _animationIndex, _worldMatrix, _time, globalTime);
+
+
 }

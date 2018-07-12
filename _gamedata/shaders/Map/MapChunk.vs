@@ -25,7 +25,7 @@ void main(void)
 	gl_Position = gProjView * vec4(VertexPosition, 1.0);
 
 	VSInput.WorldSpacePos   = VertexPosition;
-	VSInput.Normal          = vec3(-Normal.y, Normal.z, -Normal.x) / 127.0f;
+	VSInput.Normal          = vec3(-Normal.y, Normal.z, -Normal.x) / 127.0f; // Map chunk specific
 	VSInput.VertexColorMCCV = VertexColorMCCV;
 	VSInput.TexCoordDetail  = TexCoordDetail;
 	VSInput.TexCoordAlpha   = TexCoordAlpha;

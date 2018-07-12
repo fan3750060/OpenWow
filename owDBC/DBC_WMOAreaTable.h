@@ -15,7 +15,7 @@ __DBC_TVALUE(int32,			WMOGroupID,				4);
 //foreign_key<uint32_t, &ZoneIntroMusicTableRec::m_ID> m_IntroSound;
 
 __DBC_TVALUE(uint32,		Flags,					10);
-__DBC_REF_ID(DBÑ_AreaTable, AreaTableID,			11);
+__DBC_REF_ID(DBC_AreaTable, AreaTableID,			11);
 __DBC_LOCSTR(				AreaNamelang,			12);
 
 DBC_DEF_END

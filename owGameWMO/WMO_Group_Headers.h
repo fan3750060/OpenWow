@@ -67,7 +67,7 @@ struct SWMO_Group_HeaderDef
 	uint8 fogIds[4]; // Up to four indices into the WMO fog list
 	uint32 liquidType; // LiquidType related, see below in the MLIQ chunk.
 
-	__DBC_FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOGroupID, wmoGroupId);
+	FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOGroupID, wmoGroupId);
 
 	uint32 unk1;
 	uint32 unk2;

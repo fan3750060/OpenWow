@@ -14,7 +14,8 @@ uniform mat4 gWorld;
 
 // Bones
 uniform bool gIsAnimated;
-uniform mat4 gBones[251];
+uniform mat4 gBones[200];
+uniform  int gBonesMaxInfluences; 
 
 // Texture animating
 uniform bool gTextureAnimEnable;
@@ -33,7 +34,7 @@ void main(void)
 {
 	vec4 newVertex = vec4(0.0f);
 	
-	if (gIsAnimated)
+	if (gIsAnimated && gBonesMaxInfluences > 0)
 	{
 		uint blendWeights[4];
 		blendWeights[0] = (blendWeight & 0xFF000000u >> 24) & 0x000000FFu;
@@ -47,7 +48,7 @@ void main(void)
 		blendIndicess[2] = (blendIndices & 0x0000FF00u >>  8) & 0x000000FFu;
 		blendIndicess[3] = (blendIndices & 0x000000FFu      ) & 0x000000FFu;
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < gBonesMaxInfluences; i++)
 		{
 			if (blendWeights[i] > 0u)
 			{

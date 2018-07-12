@@ -2,6 +2,11 @@
 
 #include "M2.h"
 #include "M2_Skin.h"
+#include "M2_SkinSection.h"
+
+// FORWARD BEGIN
+class CM2_Builder;
+// FORWARD END
 
 struct M2_SkinBatch_PriorityPlan_Compare
 {
@@ -16,14 +21,14 @@ struct M2_SkinBatch_MeshID_Compare
 {
 	bool operator() (const CM2_Skin_Batch* left, const CM2_Skin_Batch* right) const
 	{
-		return left->getSkinProto().meshPartID < right->getSkinProto().meshPartID;
+		return left->getSkin()->getProto().meshPartID < right->getSkin()->getProto().meshPartID;
 	}
 };
 
 class CM2_Skin_Builder
 {
 public:
-	CM2_Skin_Builder(M2* _model, CM2_Skin* _skin, IFile* _file);
+	CM2_Skin_Builder(CM2_Builder* _m2Builder, M2* _model, CM2_Skin* _skin, IFile* _file);
 	~CM2_Skin_Builder();
 
 	void Load();
@@ -32,21 +37,16 @@ public:
 	void Step1LoadProfile();
 	void Step2InitBatches();
 
-	void StepBuildGeometry();
-
 private:
-	SM2_SkinProfile			m_SkinProto;
+	SM2_SkinProfile			m_SkinProfile;
 	CM2_Skin*				m_Skin;
-	SharedPtr<IFile>			m_F;
+	SharedPtr<IFile>		m_F;
 
 	//
 
-	vector<uint16>			m_VerticesIndexes;
-	vector<uint16>			m_IndexesIndexes;
-	vector<SM2_SkinBones>	m_SkinBones;
-	vector<SM2_SkinSection> m_SkinSections;
 	vector<SM2_SkinBatch>	m_SkinBatches;
 
 	//--
+	CM2_Builder*			m_M2Builder;
 	M2*						m_ParentM2;
 };

@@ -15,9 +15,9 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 	m_CurrentTime(0)
 {
 	uint16 u = 0;
-	for (auto i = DBÑ_AnimationData.Records().begin(); i != DBÑ_AnimationData.Records().end(); ++i)
+	for (auto& i : DBC_AnimationData)
 	{
-		DBÑ_AnimationDataRecord* record = (i->second);
+		const DBC_AnimationDataRecord* record = (&i);
 
 		// Get animation with index (record->Get_ID() and variation index == 0)
 		int16 findedSeqIndex = -1;
@@ -68,7 +68,7 @@ void CM2_Animator::PlayAnimation(int16 _id, bool _loop)
 
 	m_CurrentTime = m_CurrentAnimation->getStart();
 	m_IsPlayed = false;
-	animtime = 0;
+	animtime = 0.0;
 }
 
 void CM2_Animator::PrintList()
@@ -96,7 +96,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 	}
 
 	// Ended!
-	/*const CM2_Animation* nextAnim = m_CurrentAnimation->getNext();
+	const CM2_Animation* nextAnim = m_CurrentAnimation->getNext();
 	if (m_CurrentAnimation->getNext() != nullptr)
 	{
 		m_CurrentAnimation = nextAnim;
@@ -104,7 +104,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 		m_IsPlayed = false;
 		animtime = 0;
 		return;
-	}*/
+	}
 
 	m_CurrentTime = m_CurrentAnimation->getEnd() - 1;
 	m_IsPlayed = true;

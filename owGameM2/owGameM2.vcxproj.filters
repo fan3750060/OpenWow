@@ -100,6 +100,9 @@
     <ClCompile Include="M2_Part_Event.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
+    <ClCompile Include="M2_SkinSection.cpp">
+      <Filter>Skins</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="M2_SkinTypes.h">
@@ -195,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="M2_Part_Event.h">
       <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_SkinSection.h">
+      <Filter>Skins</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

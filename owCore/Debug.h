@@ -1,17 +1,16 @@
 #pragma once
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-
 
 #define MYDEBUG_NEW new( _NORMAL_BLOCK, __FILE__, __LINE__ )
 // Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the allocations to be of _CLIENT_BLOCK type
 // Compile options needed: /Zi /D_DEBUG /MLd
 
 #define new MYDEBUG_NEW
-//#endif
+#endif
 
 namespace StaticAssert
 {

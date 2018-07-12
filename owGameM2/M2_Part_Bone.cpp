@@ -26,23 +26,6 @@ void CM2_Part_Bone::setParentBone(const M2* _parentM2)
 	{
 		m_ParentBone = _parentM2->m_Bones[m_ParentBoneID];
 	}
-
-	if (m_Flags.spherical_billboard)
-	{
-		//Log::Info("!!!!!!!!!!!!MODEL [%s] has SPHERE billboard!", _parentM2->getFilename().c_str());
-	}
-
-	if (m_Flags.cylindrical_billboard_lock_x)
-	{
-		//Log::Error("!!!!!!!!!!!!MODEL [%s] has X billboard!", _parentM2->getFilename().c_str());
-		//assert1(false);
-	}
-
-	if (m_Flags.cylindrical_billboard_lock_z)
-	{
-		//Log::Error("!!!!!!!!!!!MODEL [%s] has Z billboard!", _parentM2->getFilename().c_str());
-		//assert1(false);
-	}
 }
 
 void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
@@ -67,7 +50,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 			m.translate(trans.getValue(anim, time, globalTime));
 		}
 
-		if (roll.uses(anim) && IsBillboard() == false)
+		if (roll.uses(anim))
 		{
 			quat q = roll.getValue(anim, time, globalTime);
 			m.rotate(q);

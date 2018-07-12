@@ -12,7 +12,7 @@ struct SWMO_HeaderDef
 	uint32 nDoodadDefs;
 	uint32 nDoodadSets;
 	uint32 ambColor; // CArgb
-	__DBC_FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOID, wmoID);
+	FOREIGN_KEY(uint32, DBC_WMOAreaTable, WMOID, wmoID);
 	CAaBox bounding_box;
 	struct Flags
 	{
@@ -65,7 +65,7 @@ struct SWMO_MaterialDef
 
 	uint32 diffColor;
 
-	__DBC_FOREIGN_KEY_ID(uint32, DBC_TerrainType, ground_type);
+	FOREIGN_KEY_ID(uint32, DBC_TerrainType, ground_type);
 
 	uint32 texture_2;
 	uint32 color_2;  // liquid diffuse

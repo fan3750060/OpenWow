@@ -132,6 +132,6 @@ struct ADT_MCNK_MCLY
 		uint32 : 21;
 	} flags;
 	uint32 offsetInMCAL;
-	__DBC_FOREIGN_KEY_ID(uint16, DBC_GroundEffectTexture, effectId);
+	FOREIGN_KEY_ID(uint16, DBC_GroundEffectTexture, effectId);
 	int16 unk0;
 };

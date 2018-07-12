@@ -4,8 +4,8 @@
 #include "DBC__Storage.h"
 
 // Tables
-DBC_LOAD(DBÑ_AnimationData,				"AnimationData.dbc")
-DBC_LOAD(DBÑ_AreaTable,					"AreaTable.dbc")
+DBC_LOAD(DBC_AnimationData,				"AnimationData.dbc")
+DBC_LOAD(DBC_AreaTable,					"AreaTable.dbc")
 DBC_LOAD(DBC_CinematicCamera,			"CinematicCamera.dbc")
 DBC_LOAD(DBC_CinematicSequences,		"CinematicSequences.dbc")
 DBC_LOAD(DBC_GroundEffectDoodad,		"GroundEffectDoodad.dbc")
@@ -36,8 +36,8 @@ DBC_LOAD(DBC_CreatureModelData,				"CreatureModelData.dbc")
 
 void OpenDBs()
 {
-	DBÑ_AnimationData.Open();
-	DBÑ_AreaTable.Open();
+	DBC_AnimationData.Open();
+	DBC_AreaTable.Open();
 	DBC_CinematicCamera.Open();
 	DBC_CinematicSequences.Open();
     DBC_GroundEffectDoodad.Open();

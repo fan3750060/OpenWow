@@ -11,7 +11,6 @@
 
 CM2_Skin::CM2_Skin(M2* _model) :
 	m_ParentM2(_model),
-	__geom(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
 
@@ -22,13 +21,11 @@ CM2_Skin::~CM2_Skin()
 
 //
 
-void CM2_Skin::Draw(CM2_MeshPartID_Provider* _provider)
+void CM2_Skin::Draw(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
 {
-	_Render->r.setGeometry(__geom);
-
 	for (auto& p : m_Batches)
 	{
-		p->Render(_provider);
+		p->Render(_provider, _animationIndex, _worldMatrix, _time, globalTime);
 	}
 }
 

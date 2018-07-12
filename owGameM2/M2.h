@@ -41,9 +41,9 @@ public:
 
 	void updateEmitters(float dt);
 
-	void Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor);
+	void Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor, uint16 _animationIndex, uint32 _time, uint32 globalTime);
 	void RenderCollision(cmat4 _worldMatrix);
-	void drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor);
+	void drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor, uint16 _animationIndex, uint32 _time, uint32 globalTime);
 
 	void animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
 
@@ -253,7 +253,6 @@ public:
 
 private:
 	// Buffers and geom
-	SharedBufferPtr						m_VBuffer;
 	SharedGeomPtr						m_CollisionGeom;
 	uint32								m_CollisionIndCnt;
 	uint32								m_CollisionVetCnt;

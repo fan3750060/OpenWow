@@ -4,6 +4,7 @@
 #include "GameState.h"
 
 CGameState::CGameState() : 
+	m_Window(nullptr),
 	m_IsInited(false), 
 	m_IsCurrent(false),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
@@ -14,7 +15,7 @@ CGameState::CGameState() :
 
 CGameState::~CGameState()
 {
-	delete m_Window;
+	OW_SAFEDELETE(m_Window);
 }
 
 bool CGameState::Init()

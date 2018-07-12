@@ -1,11 +1,5 @@
 #version 330
 
-struct VSOutput
-{
-	vec3 WorldSpacePos;
-	vec2 TexCoord;
-};
-
 // Vertex attrib
 layout(location = 0) in vec3 VertexPosition;
 layout(location = 1) in vec2 TexCoord;
@@ -13,19 +7,21 @@ layout(location = 1) in vec2 TexCoord;
 // Input
 
 // Uniforms
-uniform mat4 gProjection;
-uniform mat4 gView;
+uniform mat4 gProjView;
 uniform mat4 gWorld;
 
 // Out
-out VSOutput VSout;
+out struct VSOutput
+{
+	vec3 WorldSpacePos;
+	vec2 TexCoord;
+} VSout;
 
 void main(void)
 {
-	mat4 PVW = gProjection * gView * gWorld;
-	gl_Position = PVW * vec4(VertexPosition, 1.0);
+	vec4 worldVertex = gWorld * vec4(VertexPosition, 1.0);
+	gl_Position = gProjView * worldVertex;
 
-	VSout.WorldSpacePos = (gWorld * vec4(VertexPosition, 1.0)).xyz;
+	VSout.WorldSpacePos = worldVertex.xyz;
 	VSout.TexCoord = TexCoord;
 };
-

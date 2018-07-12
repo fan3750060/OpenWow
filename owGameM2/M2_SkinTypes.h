@@ -20,7 +20,8 @@ struct SM2_SkinSection
 
 	uint16 boneCount;           // Number of elements in the bone lookup table.
 	uint16 bonesStartIndex;     // Starting index in the bone lookup table.
-	uint16 boneInfluences;      // <= 4	 // from <=BC documentation: Highest number of bones needed at one time in this Submesh --Tinyn (wowdev.org) 
+	uint16 boneInfluences;      // <= 4	 
+								// from <=BC documentation: Highest number of bones needed at one time in this Submesh --Tinyn (wowdev.org) 
 								// In 2.x this is the amount of of bones up the parent-chain affecting the submesh --NaK
 	uint16 centerBoneIndex;
 	vec3   centerPosition;      // Average position of all the vertices in the sub mesh.
@@ -72,5 +73,8 @@ struct SM2_SkinProfile
 	M2Array<SM2_SkinSection>	submeshes;
 	M2Array<SM2_SkinBatch>		batches;
 	uint32						boneCountMax;
+	// WoW takes this and divides it by the number of bones in each submesh, then stores the biggest one.
+	// Maximum number of bones per drawcall for each view. Related to (old) GPU numbers of registers. 
+	// Values seen : 256, 64, 53, 21
 };
 #include __PACK_END

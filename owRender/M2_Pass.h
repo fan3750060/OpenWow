@@ -4,27 +4,30 @@
 
 class CM2_Pass : public GeometryBase
 {
-    int32 gBones;
+	// Bones & animated
+    int32 gIsAnimated;
+	int32 gBones;
+	int32 gBonesStartIndex;
+	int32 gBonesCount;
+	int32 gBonesMaxInfluences;
 
+	// Blend
+	int32 gShader;
+	int32 gBlendMode;
+
+	// Colors
 	int32 gColorEnable;
-    int32 gColor;
+	int32 gColor;
 
 	int32 gColorDoodadEnable;
 	int32 gColorDoodad;
 
-    int32  gIsAnimated;
-
-	int32 gShader;
-
+	// Textures
     int32  gDiffuseTexture[2];
     int32  gSpecularTexture;
 
-    int32  gBlendMode;
-
 	int32  gTextureWeightEnable;
     int32  gTextureWeight;
-
-    int32  gBillboard;
 
     int32  gTextureAnimEnable;
     int32  gTextureAnimMatrix;
@@ -35,36 +38,68 @@ public:
     {
 		gIsAnimated = getLocation("gIsAnimated");
         gBones = getLocation("gBones");
+		gBonesStartIndex = getLocation("gBonesStartIndex");
+		gBonesCount = getLocation("gBonesCount");
+		gBonesMaxInfluences = getLocation("gBonesMaxInfluences");
 
-
+		// Blend
 		gShader = getLocation("gShader");
 		gBlendMode = getLocation("gBlendMode");
 
-
-
+		// Colors
 		gColorEnable = getLocation("gColorEnable");
         gColor = getLocation("gColor");
 
 		gColorDoodadEnable = getLocation("gColorDoodadEnable");
 		gColorDoodad = getLocation("gColorDoodad");
 
-		
-
+		// Textures
         gDiffuseTexture[0] = getLocation("gDiffuseTexture0");
 		gDiffuseTexture[1] = getLocation("gDiffuseTexture1");
-
         gSpecularTexture = getLocation("gSpecularTexture");
-
-        
 
 		gTextureWeightEnable = getLocation("gTextureWeightEnable");
         gTextureWeight = getLocation("gTextureWeight");
 
-        gBillboard = getLocation("gBillboard");
-
         gTextureAnimEnable = getLocation("gTextureAnimEnable");
         gTextureAnimMatrix = getLocation("gTextureAnimMatrix");
     }
+
+	
+
+
+
+    inline void SetAnimated(int32 m_IsAnimated)
+    {
+        setInt(gIsAnimated, m_IsAnimated);
+    }
+    inline void SetBones(vector<mat4>& _bones)
+    {
+		assert1(_bones.size() > 0);
+        m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), static_cast<uint32>(_bones.size()));
+    }
+	inline void SetBonesStartIndex(int _index)
+	{
+		setInt(gBonesStartIndex, _index);
+	}
+	inline void SetBonesCount(int _index)
+	{
+		setInt(gBonesCount, _index);
+	}
+	inline void SetBonesMaxInfluences(int _index)
+	{
+		setInt(gBonesMaxInfluences, _index);
+	}
+
+	// Blend
+	inline void SetShader(int _blendMode)
+	{
+		setInt(gShader, _blendMode);
+	}
+	inline void SetBlendMode(int _blendMode)
+	{
+		setInt(gBlendMode, _blendMode);
+	}
 
 	// Colors
 
@@ -86,59 +121,17 @@ public:
 		setVec4(gColorDoodad, _color);
 	}
 
-
-
-    inline void SetAnimated(int32 m_IsAnimated)
-    {
-        setInt(gIsAnimated, m_IsAnimated);
-    }
-
-    inline void SetBones(vector<mat4>& _bones)
-    {
-        if (_bones.empty())
-        {
-            fail1();
-        }
-
-        m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), static_cast<uint32>(_bones.size()));
-    }
-
-	// Shader
-
-	inline void SetShader(int _blendMode)
-	{
-		setInt(gShader, _blendMode);
-	}
-	// Blending & Alpha
-
-	inline void SetBlendMode(int _blendMode)
-	{
-		setInt(gBlendMode, _blendMode);
-	}
-	// Billboard
-	inline void SetBillboard(int _flag)
-	{
-		setInt(gBillboard, _flag);
-	}
-
-
-
 	// Textures
  
 	inline void SetDiffuseTexture(int index, int TextureUnit)
 	{
 		setTexture(gDiffuseTexture[index], TextureUnit);
 	}
-
 	inline void SetSpecularTexture(int TextureUnit)
 	{
 		setTexture(gSpecularTexture, TextureUnit);
 	}
 
-
-
-
-	// R_Texture Weight
 	inline void SetTextureWeightEnable(bool _value)
 	{
 		setInt(gTextureWeightEnable, _value);
@@ -148,15 +141,10 @@ public:
 		setFloat(gTextureWeight, _weight);
 	}
 
-
-
-
-	// TextureAnim
 	inline void SetTextureAnimEnable(bool _flag)
 	{
 		setInt(gTextureAnimEnable, _flag);
 	}
-
 	inline void SetTextureAnimMatrix(mat4 _matrix)
 	{
 		setMat4(gTextureAnimMatrix, _matrix);

@@ -27,8 +27,11 @@ private:
 	vec3										pos;
 	vec3										posValue;
 
-	SharedTexturePtr								m_Texture;
-	const CM2_Part_Material*							m_Material;
+	SharedTexturePtr							m_Texture;
+	const CM2_Part_Material*					m_Material;
+
+	//SharedBufferPtr								__vb;
+	//SharedGeomPtr								__geom;
 
 	M2_Animated<vec3>							m_Color;
 	M2_Animated<float, short, ShortToFloat>		m_Alpha;

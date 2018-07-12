@@ -45,7 +45,7 @@ M2::~M2()
 	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
 
-void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor)
+void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor, uint16 _animationIndex, uint32 _time, uint32 globalTime)
 {
 	if (!m_IsContainGeom)
 	{
@@ -56,28 +56,15 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4
 	pass->Bind();
 	{
 		pass->setWorld(_worldMatrix);
-		pass->SetAnimated(m_HasBones && m_IsAnimated);
+		
 		pass->SetColorDoodad(_doodadColor);
 
-		if (m_HasBones && m_IsAnimated)
+		for (auto& it : m_Skins)
 		{
-			//pass->SetBoneStartIndex(p->bonesStartIndex); FIXME
-			//pass->SetBoneMaxCount(p->boneInfluences);
-
-			vector<mat4> bones;
-			for (uint32 i = 0; i < m_Bones.size(); i++)
-			{
-				bones.push_back(m_Bones[i]->getTransformMatrix());
-			}
-			pass->SetBones(bones);
-		}
-
-		/*for (auto& it : m_Skins)
-		{
-			it->Draw(_provider);
+			it->Draw(_provider, _animationIndex, _worldMatrix, _time, globalTime);
 			break;
-		}*/
-		m_Skins.back()->Draw(_provider);
+		}
+		//m_Skins.back()->Draw(_provider, _animationIndex, _worldMatrix, _time, globalTime);
 	}
 	pass->Unbind();
 
@@ -88,14 +75,14 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4
 	}*/
 }
 
-void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor)
+void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor, uint16 _animationIndex, uint32 _time, uint32 globalTime)
 {
 	if (m_IsAnimated)
 	{
 		// draw ribbons
 		for (auto it : m_RibbonEmitters)
 		{
-			it->Render(_worldMatrix);
+			//it->Render(_worldMatrix);
 		}
 
 #ifdef MDX_PARTICLES_ENABLE
@@ -107,7 +94,7 @@ void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _d
 #endif
 	}
 
-	drawModel(_worldMatrix, _provider, _doodadColor);
+	drawModel(_worldMatrix, _provider, _doodadColor, _animationIndex, _time, globalTime);
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)

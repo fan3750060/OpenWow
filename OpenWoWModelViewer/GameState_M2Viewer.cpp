@@ -62,8 +62,9 @@ bool GameState_M2Viewer::Init()
 	}
 	else
 	{
-		//M2* model = GetManager<IM2Manager>()->Add("CREATURE\\ArthasLichKing\\ArthasLichKing.M2");
-		M2* model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
+		M2* model = GetManager<IM2Manager>()->Add("CREATURE\\ArthasLichKing\\ArthasLichKing.M2");
+		//M2* model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
+		//M2* model = GetManager<IM2Manager>()->Add("Character\\Orc\\Male\\OrcMale.M2");
 		m2_Model = new CM2_Viewer_Instance(model);
 	}
 

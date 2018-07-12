@@ -82,17 +82,17 @@ void GameState_InWorld::RenderUI()
 
 
 	// Area
-	DBÑ_AreaTableRecord* areaRecord = nullptr;
+	DBC_AreaTableRecord* areaRecord = nullptr;
 	string areaName = "<unknown>";
 
-	areaRecord = DBÑ_AreaTable[_World->Map()->GetAreaID()];
+	areaRecord = DBC_AreaTable[_World->Map()->GetAreaID()];
 	if (areaRecord != nullptr)
 	{
 		areaName = areaRecord->Get_AreaName();
 	}
 
 	// Region
-	DBÑ_AreaTableRecord* regionRecord = nullptr;
+	DBC_AreaTableRecord* regionRecord = nullptr;
 	string regionName = "<unknown>";
 
 	if (areaRecord != nullptr)
