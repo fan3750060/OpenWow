@@ -69,7 +69,6 @@ void CM2_Base_Instance::Update(double _time, double _dTime)
 	m_Time = _time;
 	m_DTime = _dTime;
 	
-
 	m_Object->updateEmitters(_dTime);
 }
 

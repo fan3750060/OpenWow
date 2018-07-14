@@ -15,7 +15,7 @@ public:
 
 	// ISceneNode
 	void setParent(SceneNode* _parent) { m_Parent = _parent; }
-	SceneNode* getParent() { return m_Parent; }
+	const SceneNode* getParent() { return m_Parent; }
 	void addChild(SceneNode* _child)
 	{
 		assert1(std::find(m_Childs.begin(), m_Childs.end(), this) == m_Childs.end());
@@ -34,10 +34,14 @@ public:
 
 	void setTranslate(vec3 _translate) { m_Translate = _translate; CalculateMatrix(); }
 	cvec3 getTranslate() const { return m_Translate; }
+
 	void setRotate(vec3 _rotate) { m_Rotate = _rotate; CalculateMatrix(); }
 	cvec3 getRotate() const { return m_Rotate; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
+
+	void setScale(float _scale) { m_Scale = vec3(_scale, _scale, _scale); CalculateMatrix(); }
 	cvec3 getScale() const { return m_Scale; }
+
 	void setBounds(BoundingBox _bbox) { m_Bounds = _bbox; }
 	cbbox getBounds() const { return m_Bounds; }
 	cmat4 getRelTrans() const { return m_RelTransform; }
@@ -76,7 +80,7 @@ protected:
 	void CalculateMatrix(bool _isRotationQuat = false);
 
 protected:
-	SceneNode * m_Parent;
+	SceneNode*	m_Parent;
 	vector<SceneNode*>  m_Childs;
 
 	vec3                m_Translate;

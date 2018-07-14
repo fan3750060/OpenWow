@@ -36,7 +36,7 @@ void Liquid_Instance::Render3D()
 		return;
 	}
 
-	//_Render->DrawBoundingBox(m_Bounds);
+	_Render->DrawBoundingBox(m_Bounds);
 
 	m_Object->Render(getAbsTrans());
 }

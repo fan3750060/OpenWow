@@ -203,7 +203,12 @@ struct SM2_Event
 
 struct SM2_Light
 {
-	uint16			type;						// Types are listed below.
+	enum Type : uint16
+	{
+		Directional = 0,
+		Point
+	};
+	Type			type;						// Types are listed below.
 	int16			bone;                       // -1 if not attached to a bone
 	vec3			position;					// relative to bone, if given
 

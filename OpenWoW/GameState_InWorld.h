@@ -1,5 +1,7 @@
 #pragma once
 
+#include "WorldRender.h"
+
 class GameState_InWorld : public CGameState, CRenderable3DObject
 {
 public:

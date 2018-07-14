@@ -4,6 +4,7 @@
 #include "GameState_WMOViewer.h"
 #include "GameState_M2Viewer.h"
 #include "GameState_CharacterViewer.h"
+#include "GameState_CreaturesViewer.h"
 
 #include <ctime>
 
@@ -52,11 +53,18 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
+		GameState_WMOViewer gsWMOWiew;
+		GameState_M2Viewer gsM2Wiew;
+		GameState_CharacterViewer gsCharacterWiew;
+		GameState_CreaturesViewer gsCreaturesWiew;
+
 		GameStateManager gsManager;
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_WMO_VIEW, new GameState_WMOViewer());
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_M2_VIEW, new GameState_M2Viewer());
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_CHAR_VIEW, new GameState_CharacterViewer());
-		gsManager.SetGameState(GameStatesNames::GAME_STATE_CHAR_VIEW);
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_WMO_VIEW, &gsWMOWiew);
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_M2_VIEW, &gsM2Wiew);
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_CHARACTER_VIEW, &gsCharacterWiew);
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_CREATURE_VIEW, &gsCreaturesWiew);
+
+		gsManager.SetGameState(GameStatesNames::GAME_STATE_CHARACTER_VIEW);
 
 		while (engine.Tick());
 	}

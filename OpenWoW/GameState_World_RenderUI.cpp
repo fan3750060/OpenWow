@@ -50,11 +50,11 @@ void GameState_InWorld::RenderUI()
 		int basex = 200;
 		int basey = 0;
 
-		if (_World->Map()->m_WDL->getMinimap() != 0)
+		if (_World->Map()->getMinimap() != 0)
 		{
 			const int len = 768;
 
-			_Render->RenderTexture(vec2(basex, basey), _World->Map()->m_WDL->getMinimap(), vec2(len, len));
+			_Render->RenderTexture(vec2(basex, basey), _World->Map()->getMinimap(), vec2(len, len));
 
 			// Player position
 			/*glBegin(GL_LINES);
@@ -129,12 +129,12 @@ void GameState_InWorld::RenderUI()
 	_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 22), "CamRot: [" + to_string(_Render->getCamera()->Roll) + "], [" + to_string(_Render->getCamera()->Pitch) + "]");
 
 	// Time
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 150, 0), "TIME [" + to_string(_World->EnvM()->m_GameTime.GetHour()) + "." + to_string(_World->EnvM()->m_GameTime.GetMinute()) + "]");
+	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 150, 0), "TIME [" + to_string(_World->Map()->getTime()->GetHour()) + "." + to_string(_World->Map()->getTime()->GetMinute()) + "]");
 	char buff[256];
 
 	// Ambient
 
-	sprintf_s(buff, "Amb[c=[%0.2f %0.2f %0.2f] i=[%f]]",
+	/*sprintf_s(buff, "Amb[c=[%0.2f %0.2f %0.2f] i=[%f]]",
 		_World->EnvM()->dayNightPhase.ambientColor.x, _World->EnvM()->dayNightPhase.ambientColor.y, _World->EnvM()->dayNightPhase.ambientColor.z,
 		_World->EnvM()->dayNightPhase.ambientIntensity
 	);
@@ -154,12 +154,12 @@ void GameState_InWorld::RenderUI()
 		_World->EnvM()->dayNightPhase.nightIntensity,
 		_World->EnvM()->dayNightPhase.nightDir.x, _World->EnvM()->dayNightPhase.nightDir.y, _World->EnvM()->dayNightPhase.nightDir.z
 	);
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 60), buff);
+	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 60), buff);*/
 
 	// Fog
 	sprintf_s(buff, "Fog[end=[%f] koeff=[%f]]\0",
-		_World->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_DISTANCE),
-		_World->EnvM()->m_SkyManager->GetFog(LightFogs::LIGHT_FOG_MULTIPLIER)
+		_World->Map()->getSkyManager()->GetFog(LightFogs::LIGHT_FOG_DISTANCE),
+		_World->Map()->getSkyManager()->GetFog(LightFogs::LIGHT_FOG_MULTIPLIER)
 	);
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 80), buff);
 
@@ -198,7 +198,7 @@ void GameState_InWorld::RenderUI()
 	};
 	for (uint8 i = 0; i < 18; i++)
 	{
-		_Render->RenderRectangle(vec2(xPos, yPos + i * 16), vec2(16.0f, 16.0f), Color(_World->EnvM()->m_SkyManager->GetColor((LightColors::List)i)));
+		_Render->RenderRectangle(vec2(xPos, yPos + i * 16), vec2(16.0f, 16.0f), Color(_World->Map()->getSkyManager()->GetColor((LightColors::List)i)));
 		_Render->RenderText(vec2(xPos + 20, yPos + i * 16), names[i]);
 	}
 
@@ -208,8 +208,8 @@ void GameState_InWorld::RenderUI()
 	sprintf_s(buff, "R_Texture memory [%s]", _Render->r.getTextureMemStr().c_str());
 	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
 
-	if (_World->Map()->dir != nullptr)
+	/*if (_World->Map()->dir != nullptr)
 	{
-		//_World->Map()->dir->Render(_Render->getCamera()->Position);
-	}
+		_World->Map()->dir->Render(_Render->getCamera()->Position);
+	}*/
 }

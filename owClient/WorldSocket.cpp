@@ -6,6 +6,9 @@
 // General
 #include "WorldSocket.h"
 
+// Additional
+#include "Character.h"
+
 CWorldSocket::CWorldSocket(CAuthWorldController* _world, RealmInfo* _realm) :
 	m_World(_world),
 	m_Realm(_realm)

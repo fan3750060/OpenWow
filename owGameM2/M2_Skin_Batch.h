@@ -5,7 +5,6 @@
 
 // FORWARD BEGIN
 class M2;
-class CM2_Skin;
 class CM2_Skin_Builder;
 // FORWARD END
 
@@ -13,7 +12,7 @@ class CM2_Skin_Batch
 {
 	friend CM2_Skin_Builder;
 public:
-	CM2_Skin_Batch(const M2* _parentM2, const CM2_Skin* _parentSkin);
+	CM2_Skin_Batch(const M2* _parentM2);
 
 	void Init();
 
@@ -39,6 +38,5 @@ private:
 
 	//--
 	const M2*							m_ParentM2;
-	const CM2_Skin*						m_ParentSkin;
 	CGroupQuality&						m_QualitySettings;
 };

@@ -88,7 +88,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 {
 	for (auto& it : m_SkinBatches)
 	{
-		CM2_Skin_Batch* batch = new CM2_Skin_Batch(m_ParentM2, m_Skin);
+		CM2_Skin_Batch* batch = new CM2_Skin_Batch(m_ParentM2);
 
 		batch->newShader = GetPixel(&it);
 

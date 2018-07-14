@@ -11,8 +11,8 @@ public:
 	{}
 
 	// IRenderable
-	bool isVisible() const { return m_IsVisible; }
 	void setVisible(bool _value) override { m_IsVisible = _value; }
+	bool isVisible() const { return m_IsVisible; }
 	void setOpaque(bool _value) override { m_IsOpaque = _value; }
 	bool isOpaque() const override { return m_IsOpaque; }
 	inline void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; }

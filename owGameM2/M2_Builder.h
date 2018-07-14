@@ -28,10 +28,10 @@ public:
 	// Parts loader
 
 	void SetAnimated();
-	bool IsAnimated() const { return m_ParentM2->m_IsAnimated; }
+	bool IsAnimated() const { return m_M2->m_IsAnimated; }
 
 private:
-	M2*						m_ParentM2;
+	M2*						m_M2;
 	IFile*					m_F;
 	SM2_Header				m_Header;
 

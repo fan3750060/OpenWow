@@ -7,7 +7,7 @@ class CM2_Base_Instance : public SceneNode
 public:
 	CM2_Base_Instance(SceneNode* _parent);
 	CM2_Base_Instance(SceneNode* _parent, M2* _m2Object);
-	~CM2_Base_Instance();
+	virtual ~CM2_Base_Instance();
 
 	// CM2_Base_Instance
 	void InitLocal();

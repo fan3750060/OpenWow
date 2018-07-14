@@ -1,5 +1,10 @@
 #pragma once
 
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#pragma comment (lib, "Ws2_32.lib")
+#pragma comment (lib, "Mswsock.lib")
+
 #define SOCKETBASE_MAXBUFFERSIZE 10000//4096
 
 class CSocketBase : public ISocket

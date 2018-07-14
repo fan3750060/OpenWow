@@ -38,9 +38,9 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 	_World->EnterMap(_pos);
 	_World->Map()->MapPostLoad();
 
-	if (_World->Map()->m_WDT->MapHasGlobalWMO())
+	if (!_World->Map()->isTileBased())
 	{
-		_pos = _World->Map()->m_WDT->GetGlobalWMOPlacementInfo().position;
+		_pos = _World->Map()->getGlobalInstance()->getBounds().getCenter();
 	}
 	
 	_Render->getCamera()->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
@@ -177,9 +177,9 @@ void GameState_Menu::RenderUI()
 {
 	if (cmd == CMD_SELECT)
 	{
-		if (_World->Map()->m_WDL->getMinimap() != nullptr)
+		if (_World->Map()->getMinimap() != nullptr)
 		{
-			m_MinimapUI->SetTexture(_World->Map()->m_WDL->getMinimap());
+			m_MinimapUI->SetTexture(_World->Map()->getMinimap());
 			m_MinimapUI->Show();
 		}
 		else
@@ -187,7 +187,7 @@ void GameState_Menu::RenderUI()
 			m_MinimapUI->Hide();
 		}
 
-		if (_World->Map()->m_WDT->MapHasTiles())
+		if (_World->Map()->isTileBased())
 		{
 			_Render->RenderText(vec2(400, 0), "Select your starting point");
 		}

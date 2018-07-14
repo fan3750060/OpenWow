@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="CM2_Viewer_Instance.h" />
     <ClInclude Include="GameState_CharacterViewer.h" />
+    <ClInclude Include="GameState_CreaturesViewer.h" />
     <ClInclude Include="GameState_M2Viewer.h" />
     <ClInclude Include="GameState_WMOViewer.h" />
     <ClInclude Include="stdafx.h" />
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="CM2_Viewer_Instance.cpp" />
     <ClCompile Include="GameState_CharacterViewer.cpp" />
+    <ClCompile Include="GameState_CreaturesViewer.cpp" />
     <ClCompile Include="GameState_M2Viewer.cpp" />
     <ClCompile Include="GameState_WMOViewer.cpp" />
     <ClCompile Include="stdafx.cpp">

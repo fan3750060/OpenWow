@@ -14,16 +14,13 @@ public:
 	void fillRenderState(RenderState* _state) const;
 	void set() const;
 	
-
 	uint32 getBlendMode() const { return m_Proto.blendMode; }
 
-
 private:
-	const WMO*				m_ParentWMO;
-	const SWMO_MaterialDef	m_Proto;
-
+	const WMO*					m_ParentWMO;
+	const SWMO_MaterialDef		m_Proto;
 
 	SharedTexturePtr			m_DiffuseTexture[3];
 
-	CGroupQuality&			m_QualitySettings;
+	CGroupQuality&				m_QualitySettings;
 };

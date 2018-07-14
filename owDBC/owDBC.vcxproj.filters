@@ -15,28 +15,10 @@
     <ClInclude Include="DBC__File.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="DBC_AreaTable.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
     <ClInclude Include="DBC_GroundEffectDoodad.h">
       <Filter>DBCs</Filter>
     </ClInclude>
     <ClInclude Include="DBC_GroundEffectTexture.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_Light.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightFloatBand.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightIntBand.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightParams.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_LightSkyBox.h">
       <Filter>DBCs</Filter>
     </ClInclude>
     <ClInclude Include="DBC_LiquidType.h">
@@ -66,12 +48,6 @@
     <ClInclude Include="..\shared\owDBC.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="DBC_CinematicSequences.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_CinematicCamera.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
     <ClInclude Include="DBC_Map_WotLK.h">
       <Filter>DBCs</Filter>
     </ClInclude>
@@ -87,20 +63,44 @@
     <ClInclude Include="DBC_ChrRaces.h">
       <Filter>DBCs\Characters</Filter>
     </ClInclude>
-    <ClInclude Include="DBC_CreatureDisplayInfo.h">
-      <Filter>DBCs\DisplayInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_CreatureModelData.h">
-      <Filter>DBCs\DisplayInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC_CreatureDisplayInfoExtra.h">
-      <Filter>DBCs\DisplayInfo</Filter>
-    </ClInclude>
     <ClInclude Include="DBC_LiquidMaterial.h">
       <Filter>DBCs</Filter>
     </ClInclude>
     <ClInclude Include="DBC_WorldSafeLocs.h">
       <Filter>DBCs</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_AreaTable.h">
+      <Filter>DBCs\Area</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CinematicCamera.h">
+      <Filter>DBCs\Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CinematicSequences.h">
+      <Filter>DBCs\Cinematic</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CreatureDisplayInfo.h">
+      <Filter>DBCs\Creature</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CreatureDisplayInfoExtra.h">
+      <Filter>DBCs\Creature</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CreatureModelData.h">
+      <Filter>DBCs\Creature</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_Light.h">
+      <Filter>DBCs\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightFloatBand.h">
+      <Filter>DBCs\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightIntBand.h">
+      <Filter>DBCs\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightParams.h">
+      <Filter>DBCs\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LightSkyBox.h">
+      <Filter>DBCs\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,8 +113,20 @@
     <Filter Include="DBCs\Characters">
       <UniqueIdentifier>{a5b5a1a7-27eb-4cbb-9932-24314d81f7ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DBCs\DisplayInfo">
-      <UniqueIdentifier>{0f606b7a-b2c6-46d6-9591-04181cb4140b}</UniqueIdentifier>
+    <Filter Include="DBCs\Achivement">
+      <UniqueIdentifier>{3b6860ef-83ea-49b9-8aa0-ea0d3e4e7663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Area">
+      <UniqueIdentifier>{767c79a4-acbf-441c-b4a3-56a30a62d782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Cinematic">
+      <UniqueIdentifier>{39412db1-8839-462f-8345-e696b6fe24cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Creature">
+      <UniqueIdentifier>{5cd1eff1-491c-4beb-9bba-ad97e0b5eac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Light">
+      <UniqueIdentifier>{264c9aca-761f-4a37-831c-369fb7bfc85e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -140,14 +140,6 @@ void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint3
 		}
 	}
 
-	/*for (uint32 i = 0; i < m_Header.lights.size; i++)
-	{
-	if (m_Lights[i].getBoneIndex() >= 0)
-	{
-	m_Lights[i].tpos = m_Bones[m_Lights[i].getBoneIndex()].getTransformMatrix() * m_Lights[i].pos;
-	m_Lights[i].tdir = m_Bones[m_Lights[i].getBoneIndex()].getRotateMatrix() * m_Lights[i].dir;
-	}
-	}*/
 
 
 	for (auto& it : m_RibbonEmitters)
@@ -164,6 +156,11 @@ void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint3
 	}
 #endif
 
+	for (auto& it : m_Colors)
+	{
+		it->calc(_animationIndex, _time, globalTime);
+	}
+
 	for (auto& it : m_TexturesTransform)
 	{
 		it->calc(_animationIndex, _time, globalTime);
@@ -174,9 +171,9 @@ void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint3
 		it->calc(_animationIndex, _time, globalTime);
 	}
 
-	for (auto& it : m_Colors)
+	for (auto& it : m_Lights)
 	{
-		it->calc(_animationIndex, _time, globalTime);
+		it->setup(_animationIndex, _time, globalTime);
 	}
 
 	for (auto& it : m_Cameras)

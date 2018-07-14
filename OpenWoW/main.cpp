@@ -59,9 +59,12 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
+		GameState_Menu gsMenu;
+		GameState_InWorld gsWorld;
+
 		GameStateManager gsManager;
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_MENU, new GameState_Menu());
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_WORLD, new GameState_InWorld());
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_MENU, &gsMenu);
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_WORLD, &gsWorld);
 		gsManager.SetGameState(GameStatesNames::GAME_STATE_MENU);
 
 		while (engine.Tick());

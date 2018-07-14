@@ -88,5 +88,6 @@ private:
 	M2_AttachmentType::List	m_Type;
 	const CM2_Part_Bone*	m_Bone;
 	vec3					m_Position;
+
 	M2_Animated<uint8>		m_IsAnimateAttached;
 };

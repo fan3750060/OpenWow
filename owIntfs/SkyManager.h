@@ -27,8 +27,7 @@ struct LightColors
 		LIGHT_COLOR_RIVER_LIGHT,
 		LIGHT_COLOR_RIVER_DARK,
 
-		//--------------------
-		LIGHT_COLORS_COUNT
+		COUNT
 	};
 };
 
@@ -43,8 +42,7 @@ struct LightFogs
 		LIGHT_FOG_UNK0,
 		LIGHT_FOG_UNK1,
 
-		//--------------------
-		LIGHT_FOGS_COUNT
+		COUNT
 	};
 };
 
@@ -55,13 +53,13 @@ struct
 	virtual ~ISkyManager() = 0 {};
 
 	virtual void Calculate(uint32 _time) = 0;
-	virtual bool HasSkies() = 0;
+	virtual bool HasSkies() const = 0;
 
-	virtual vec3 GetColor(LightColors::List _color) = 0;
-	virtual float GetFog(LightFogs::List _fog) = 0;
-	virtual float GetGlow() = 0;
-	virtual float GetWaterShallowAlpha() = 0;
-	virtual float GetWaterDarkAlpha() = 0;
-	virtual float GetOceanShallowAlpha() = 0;
-	virtual float GetOceanDarkAlpha() = 0;
+	virtual vec3 GetColor(LightColors::List _color) const = 0;
+	virtual float GetFog(LightFogs::List _fog) const = 0;
+	virtual float GetGlow() const = 0;
+	virtual float GetWaterShallowAlpha() const = 0;
+	virtual float GetWaterDarkAlpha() const = 0;
+	virtual float GetOceanShallowAlpha() const = 0;
+	virtual float GetOceanDarkAlpha() const = 0;
 };

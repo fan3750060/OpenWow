@@ -17,5 +17,6 @@ private:
 	uint32					m_Data;
 	const CM2_Part_Bone*	m_Bone;
 	vec3					m_Position;
+
 	M2_Animated<bool>		m_IsEnabled;
 };

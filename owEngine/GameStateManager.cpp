@@ -11,7 +11,6 @@ GameStateManager::GameStateManager() :
 
 GameStateManager::~GameStateManager()
 {
-	ERASE_MAP(m_GameStatesCollection);
 }
 
 void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _gameState)

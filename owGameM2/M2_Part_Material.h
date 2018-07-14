@@ -12,7 +12,6 @@ public:
 
 	SM2_Material::BlendModes getBlendMode() const { return m_M2BlendMode; }
 
-
 private:
 	bool m_IsLightingDisable;
 	bool m_IsFogDisable;

@@ -29,6 +29,5 @@
 #include <owGameWMO.h>
 #pragma comment(lib, "owGameWMO.lib")
 
-// Character support
-#include <owGame.h>
-#pragma comment(lib, "owGame.lib")
+#include <owClient.h>
+#pragma comment(lib, "owClient.lib")

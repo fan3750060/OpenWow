@@ -2,15 +2,13 @@
 
 // Include
 #include "M2.h"
-#include "M2_Skin.h"
 
 // General
 #include "M2_Skin_Batch.h"
 
 
-CM2_Skin_Batch::CM2_Skin_Batch(const M2* _parentM2, const CM2_Skin* _parentSkin) :
+CM2_Skin_Batch::CM2_Skin_Batch(const M2* _parentM2) :
 	m_ParentM2(_parentM2),
-	m_ParentSkin(_parentSkin),
 
 	m_Color(nullptr),
 	m_Material(nullptr),
@@ -23,7 +21,6 @@ CM2_Skin_Batch::CM2_Skin_Batch(const M2* _parentM2, const CM2_Skin* _parentSkin)
 void CM2_Skin_Batch::Init()
 {
 	m_Material->fillRenderState(&m_State);
-	//m_State.setGeometry(m_ParentSkin->__geom);
 }
 
 void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
@@ -41,6 +38,7 @@ void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animatio
 	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
 	{
 		pass->SetShader(newShader);
+		pass->SetBlendMode(m_Material->getBlendMode());
 
 		// Model color
 		bool isColorEnable = (m_Color != nullptr);
@@ -49,9 +47,6 @@ void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animatio
 		{
 			pass->SetColor(m_Color->getValue());
 		}
-
-		// Material
-		pass->SetBlendMode(m_Material->getBlendMode());
 
 		// Bind textures
 		for (uint32 i = 0; i < m_Textures.size(); i++)

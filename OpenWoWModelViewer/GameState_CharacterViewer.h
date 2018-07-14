@@ -8,7 +8,6 @@ public:
 	void CreateDebugGeom();
 	void PlayAnim(uint16 _anim);
 	void InfoAnim();
-	void DeleteAll();
 
 	// IGameState
 	bool Init() override;
@@ -38,7 +37,7 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-	static const uint32 cnt = 25;
 	SharedGeomPtr m_DebugGeom;
-	Creature* m_Char[cnt * cnt];
+
+	Character* m_Char;
 };

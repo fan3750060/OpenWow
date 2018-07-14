@@ -9,5 +9,7 @@
 //---------------------------------------------------------//
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
-
 #include "../owClient/AuthWorldController.h"
+
+#include "../owClient/Character.h"
+#include "../owClient/Creature.h"

@@ -26,26 +26,12 @@ void GameState_CharacterViewer::CreateDebugGeom()
 
 void GameState_CharacterViewer::PlayAnim(uint16 _anim)
 {
-	//m_Char->getModel()->getAnimator()->PlayAnimation(_anim);
+	m_Char->m_Model->getAnimator()->PlayAnimation(_anim);
 }
 
 void GameState_CharacterViewer::InfoAnim()
 {
-	//m_Char->getModel()->getAnimator()->PrintList();
-}
-
-void GameState_CharacterViewer::DeleteAll()
-{
-	for (int i = 0; i < cnt; i++)
-	{
-		for (int j = 0; j < cnt; j++)
-		{
-			int index = i + j * cnt;
-
-			delete m_Char[index];
-			m_Char[index] = nullptr;
-		}
-	}
+	m_Char->m_Model->getAnimator()->PrintList();
 }
 
 bool GameState_CharacterViewer::Init()
@@ -56,38 +42,16 @@ bool GameState_CharacterViewer::Init()
 
 	CreateDebugGeom();
 
-	vector<uint32> exists;
+	m_Char = new Character();
+	m_Char->InitDefault();
+	m_Char->m_Model->setScale(10.0f);
 
-	for (int i = 0; i < cnt; i++)
-	{
-		for (int j = 0; j < cnt; j++)
-		{
-			int index = i + j * cnt;
-			m_Char[index] = new Creature(vec3(i * 10.0f, 0.0f, j * 10.0f));
-			//m_Char->InitDefault();
-
-			while (true)
-			{
-				int random = Random::GenerateMax(32000);
-				DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
-				if (rec == nullptr)	continue;
-				if (rec->Get_HumanoidData() != nullptr) continue;
-				if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
-
-				m_Char[index]->InitFromDisplayInfo(random);
-				exists.push_back(random);
-				break;
-			}
-			
-		}
-	}
 	_Render->getCamera()->Position = vec3(50, 50, 50);
 	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
 	_Render->getCamera()->SetNeedUpdate();
 
 	ADDCONSOLECOMMAND_CLASS_WITHARGS("a_play", GameState_CharacterViewer, PlayAnim, uint16);
 	ADDCONSOLECOMMAND_CLASS("a_info", GameState_CharacterViewer, InfoAnim);
-	ADDCONSOLECOMMAND_CLASS("del_all", GameState_CharacterViewer, DeleteAll);
 
 	return true;
 }
@@ -149,18 +113,10 @@ void GameState_CharacterViewer::Render3D()
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
-	// Geom
-	for (int i = 0; i < cnt; i++)
+	if (m_Char)
 	{
-		for (int j = 0; j < cnt; j++)
-		{
-			int index = i + j * cnt;
-			if (m_Char[index])
-			{
-				m_Char[index]->PreRender3D();
-				m_Char[index]->Render3D();
-			}
-		}
+		m_Char->m_Model->PreRender3D();
+		m_Char->m_Model->Render3D();
 	}
 }
 

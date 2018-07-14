@@ -14,6 +14,8 @@
     <ClInclude Include="GameState_InWorld.h" />
     <ClInclude Include="GameState_Menu.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WorldController.h" />
+    <ClInclude Include="WorldRender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameState_InWorld.cpp" />
@@ -24,6 +26,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WorldController.cpp" />
+    <ClCompile Include="WorldRender.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{645797A4-A484-4D99-A130-88BD45546BD5}</ProjectGuid>
