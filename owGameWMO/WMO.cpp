@@ -309,7 +309,7 @@ bool WMO::drawSkybox()
 	worldMatrix.translate(_Render->getCamera()->Position);
 	worldMatrix.scale(2.0f);
 
-	m_Skybox->Render(worldMatrix, nullptr, vec4(1.0f), 0, 0, 0);
+	//m_Skybox->Render(worldMatrix, nullptr, vec4(1.0f), 0, 0, 0);
 
 	//_World->EnvM()->m_HasSky = true;
 

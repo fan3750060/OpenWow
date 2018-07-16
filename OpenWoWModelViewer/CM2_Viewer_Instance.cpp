@@ -8,12 +8,9 @@ CM2_Viewer_Instance::CM2_Viewer_Instance(M2 * _object) :
 {
 	// Scene node params
 	{
-		m_Scale = vec3(10.0f);
+		setScale(10.0f);
 
-		CalculateMatrix(true);
-		//
-		m_Bounds = m_Object->getBounds();
-		m_Bounds.transform(getAbsTrans());
+		CalculateMatrix();
 	}
 
 	InitLocal();

@@ -11,19 +11,16 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 	// Scene node params
 	{
 		// Translate
-		m_Translate = _placementInfo.position;
+		setTranslate(_placementInfo.position, false);
 		// Rotate
 		vec3 rotate = _placementInfo.rotation.toRad();
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
-		m_Rotate = vec3(rotate.z, rotate.y, rotate.x);
+		setRotate(vec3(rotate.z, rotate.y, rotate.x));
 		// Scale
-		m_Scale = vec3(static_cast<float>(_placementInfo.scale) / 1024.0f);
-		//
+		setScale(static_cast<float>(_placementInfo.scale) / 1024.0f);
+
 		CalculateMatrix();
-		//
-		m_Bounds = m_Object->getBounds();
-		m_Bounds.transform(getAbsTrans());
 	}
 
 	InitLocal();
@@ -46,8 +43,7 @@ bool ADT_MDX_Instance::PreRender3D()
 	}
 
 	// Check distance to camera
-	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_MDX_Distance)
+	if (!checkDistance2D(m_QualitySettings.ADT_MDX_Distance))
 	{
 		return false;
 	}

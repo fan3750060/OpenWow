@@ -117,7 +117,7 @@ void CMPQArchiveManager::AddArchive(string filename)
 
 SMPQFileLocation CMPQArchiveManager::GetFileLocation(cstring filename)
 {
-	for (auto i = m_OpenArchives.rbegin(); i != m_OpenArchives.rend(); ++i)
+	for (auto& i = m_OpenArchives.rbegin(); i != m_OpenArchives.rend(); ++i)
 	{
 		mpq_archive_s* mpq_a = *i;
 

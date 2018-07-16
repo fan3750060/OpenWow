@@ -21,9 +21,6 @@
     <ClInclude Include="DBC_GroundEffectTexture.h">
       <Filter>DBCs</Filter>
     </ClInclude>
-    <ClInclude Include="DBC_LiquidType.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
     <ClInclude Include="DBC_LoadingScreen.h">
       <Filter>DBCs</Filter>
     </ClInclude>
@@ -63,9 +60,6 @@
     <ClInclude Include="DBC_ChrRaces.h">
       <Filter>DBCs\Characters</Filter>
     </ClInclude>
-    <ClInclude Include="DBC_LiquidMaterial.h">
-      <Filter>DBCs</Filter>
-    </ClInclude>
     <ClInclude Include="DBC_WorldSafeLocs.h">
       <Filter>DBCs</Filter>
     </ClInclude>
@@ -102,6 +96,33 @@
     <ClInclude Include="DBC_LightSkyBox.h">
       <Filter>DBCs\Light</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_LiquidType.h">
+      <Filter>DBCs\Liquids</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_LiquidMaterial.h">
+      <Filter>DBCs\Liquids</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_ItemDisplayInfo.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CharComponentTextureLayouts.h">
+      <Filter>DBCs\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_CharComponentTextureSections.h">
+      <Filter>DBCs\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_Item.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_ItemBagFamily.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_ItemClass.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_Material.h">
+      <Filter>DBCs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -127,6 +148,12 @@
     </Filter>
     <Filter Include="DBCs\Light">
       <UniqueIdentifier>{264c9aca-761f-4a37-831c-369fb7bfc85e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Item">
+      <UniqueIdentifier>{b137316c-6481-479e-8774-387b6d76248e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBCs\Liquids">
+      <UniqueIdentifier>{2eff785e-0c2f-435b-ae06-d2d48b243d89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

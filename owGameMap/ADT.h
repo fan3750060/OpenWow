@@ -10,7 +10,7 @@
 class MapController;
 // FORWARD END
 
-class ADT : public SceneNode
+class ADT : public SceneNode, public ILoadable
 {
 public:
 	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ);
@@ -27,11 +27,14 @@ public:
 	}
 
 	// ISceneNode
-	string getObjectInfo() override { return "@ADT@" + to_string(m_IndexX) + ":" + to_string(m_IndexZ); }
+	string getObjectInfo() const override { return "@ADT@" + to_string(m_IndexX) + ":" + to_string(m_IndexZ); }
+	void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
 
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
+	void setLoaded() {}
+	bool isLoaded() const { return true; }
 
 	// IRenderable3D
 	bool PreRender3D() override;

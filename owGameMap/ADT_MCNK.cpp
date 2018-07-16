@@ -47,14 +47,15 @@ bool ADT_MCNK::Load()
 		setOpaque(true);
 
 		// Set translate
-		m_Translate.x = header.xpos * (-1.0f) + C_ZeroPoint;
-		m_Translate.y = header.ypos;
-		m_Translate.z = header.zpos * (-1.0f) + C_ZeroPoint;
+		setTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint), false);
 
 		// Bounds
-		m_Bounds.setMin(vec3(m_Translate.x, Math::MaxFloat, m_Translate.z));
-		m_Bounds.setMax(vec3(m_Translate.x + C_ChunkSize, Math::MinFloat, m_Translate.z + C_ChunkSize));
-		m_Bounds.calculateCenter();
+		BoundingBox bbox
+		(
+			vec3(getTranslate().x,               Math::MaxFloat, getTranslate().z), 
+			vec3(getTranslate().x + C_ChunkSize, Math::MinFloat, getTranslate().z + C_ChunkSize)
+		);
+		setBounds(bbox);
 	}
 
 	R_Buffer* verticesBuffer = nullptr;
@@ -115,6 +116,8 @@ bool ADT_MCNK::Load()
 		vec3 tempVertexes[C_MapBufferSize];
 		vec3* ttv = tempVertexes;
 
+		BoundingBox bbox = getBounds();
+
 		for (uint32 j = 0; j < 17; j++)
 		{
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
@@ -129,15 +132,16 @@ bool ADT_MCNK::Load()
 					xpos += C_UnitSize * 0.5f;
 				}
 
-				vec3 v = m_Translate + vec3(xpos, h, zpos);
+				vec3 v = getTranslate() + vec3(xpos, h, zpos);
 				*ttv++ = v;
 
-				m_Bounds.setMinY(minf(v.y, m_Bounds.getMin().y));
-				m_Bounds.setMaxY(maxf(v.y, m_Bounds.getMax().y));
+				bbox.setMinY(minf(v.y, bbox.getMin().y));
+				bbox.setMaxY(maxf(v.y, bbox.getMax().y));
 			}
 		}
 
-		m_Bounds.calculateCenter();
+		bbox.calculateCenter();
+		setBounds(bbox);
 
 		verticesBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempVertexes, false);
 	}
@@ -263,7 +267,7 @@ bool ADT_MCNK::Load()
 			CADT_Liquid* m_Liquid = new CADT_Liquid(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(m_Translate.x, 0.0f, m_Translate.z));
+			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(getTranslate().x, 0.0f, getTranslate().z));
 		}
 	}
 
@@ -371,7 +375,7 @@ bool ADT_MCNK::PreRender3D()
 	}*/
 
 	// Check frustrum
-	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	if (!checkFrustum())
 	{
 		return false;
 	}
@@ -392,7 +396,7 @@ void ADT_MCNK::Render3D()
 		return;
 	}
 
-	float distToCamera3D = (_Render->getCamera()->Position - m_Bounds.getCenter()).length() - getBounds().getRadius();
+	float distToCamera3D = (_Render->getCamera()->Position - getBounds().getCenter()).length() - getBounds().getRadius();
 	bool isDefaultGeom = distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low;
 
 	PERF_START(PERF_MAP);

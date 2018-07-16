@@ -54,7 +54,6 @@ bool CM2_Builder::Load()
 	Step4Vertices();
 	Step5ColorAndTextures();
 	Step6Misc();
-	Step7Particles();
 
 	Step8Skins();
 	Step9Collision();
@@ -146,6 +145,8 @@ void CM2_Builder::Step2GlobalLoops()
 void CM2_Builder::Step3Bones()
 {
 #ifdef M2BUILDER_LOADBONES
+	CM2_Comp_Skeleton* skeleton = new CM2_Comp_Skeleton();
+
 	// Bones
 	if (m_Header.bones.size > 0)
 	{
@@ -153,15 +154,15 @@ void CM2_Builder::Step3Bones()
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
 			CM2_Part_Bone* bone = new CM2_Part_Bone(m_F, m_M2Bones[i], m_GlobalLoops, &animfiles);
-			m_M2->m_Bones.push_back(bone);
+			skeleton->m_Bones.push_back(bone);
 		}
 
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			m_M2->m_Bones[i]->setParentBone(m_M2);
+			skeleton->m_Bones[i]->setParentBone(skeleton);
 		}
 
-		m_M2->m_HasBones = true;
+		skeleton->m_HasBones = true;
 	}
 
 	// Bones Lookup
@@ -170,7 +171,7 @@ void CM2_Builder::Step3Bones()
 		int16* BonesLookup = (int16*)(m_F->getData() + m_Header.bonesLookup.offset);
 		for (uint32 i = 0; i < m_Header.bonesLookup.size; i++)
 		{
-			m_M2->m_BonesLookup.push_back(BonesLookup[i]);
+			skeleton->m_BonesLookup.push_back(BonesLookup[i]);
 		}
 	}
 
@@ -180,16 +181,18 @@ void CM2_Builder::Step3Bones()
 		int16* GameBonesLookup = (int16*)(m_F->getData() + m_Header.gameBonesLookup.offset);
 		for (uint32 i = 0; i < m_Header.gameBonesLookup.size; i++)
 		{
-			m_M2->m_GameBonesLookup.push_back(GameBonesLookup[i]);
+			skeleton->m_GameBonesLookup.push_back(GameBonesLookup[i]);
 		}
 
-		assert1(m_Header.gameBonesLookup.size <= GameBoneType::Count);
+		assert1(m_Header.gameBonesLookup.size <= M2_GameBoneType::Count);
 	}
 
 	ERASE_VECTOR(animfiles);
 
+	m_M2->m_Skeleton = skeleton;
+
 #else
-	m_ParentM2->m_HasBones = false;
+	m_M2->m_Skeleton->m_HasBones = false;
 #endif
 }
 
@@ -216,6 +219,8 @@ void CM2_Builder::Step4Vertices()
 
 void CM2_Builder::Step5ColorAndTextures()
 {
+	CM2_Comp_Materials* materials = new CM2_Comp_Materials();
+
 	// 1 Colors
 	if (m_Header.colors.size > 0)
 	{
@@ -223,12 +228,12 @@ void CM2_Builder::Step5ColorAndTextures()
 		for (uint32 i = 0; i < m_Header.colors.size; i++)
 		{
 			CM2_Part_Color* color = new CM2_Part_Color(m_F, m_Colors[i], m_GlobalLoops);
-			m_M2->m_Colors.push_back(color);
+			materials->m_Colors.push_back(color);
 
 			// Animated
 			if (m_Colors[i].color.interpolation_type || m_Colors[i].alpha.interpolation_type)
 			{
-				m_M2->m_HasMisc = true;
+				//m_M2->m_HasMisc = true;
 			}
 		}
 	}
@@ -240,7 +245,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		for (uint32 i = 0; i < m_Header.materials.size; i++)
 		{
 			CM2_Part_Material* material = new CM2_Part_Material(m_Materials[i]);
-			m_M2->m_Materials.push_back(material);
+			materials->m_Materials.push_back(material);
 		}
 	}
 
@@ -253,7 +258,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		for (uint32 i = 0; i < m_Header.textures.size; i++)
 		{
 			CM2_Part_Texture* texture = new CM2_Part_Texture(m_F, m_Textures[i]);
-			m_M2->m_Textures.push_back(texture);
+			materials->m_Textures.push_back(texture);
 		}
 	}
 
@@ -263,7 +268,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		int16* TexturesLookup = (int16*)(m_F->getData() + m_Header.textureLookup.offset);
 		for (uint32 i = 0; i < m_Header.textureLookup.size; i++)
 		{
-			m_M2->m_TexturesLookup.push_back(TexturesLookup[i]);
+			materials->m_TexturesLookup.push_back(TexturesLookup[i]);
 		}
 	}
 
@@ -273,7 +278,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		int16* TexturesUnitLookup = (int16*)(m_F->getData() + m_Header.textureUnitLookup.offset);
 		for (uint32 i = 0; i < m_Header.textureUnitLookup.size; i++)
 		{
-			m_M2->m_TexturesUnitLookup.push_back(TexturesUnitLookup[i]);
+			materials->m_TexturesUnitLookup.push_back(TexturesUnitLookup[i]);
 		}
 	}
 
@@ -283,7 +288,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		int16* ReplacebleLookup = (int16*)(m_F->getData() + m_Header.replacable_texture_lookup.offset);
 		for (uint32 i = 0; i < m_Header.replacable_texture_lookup.size; i++)
 		{
-			m_M2->m_ReplacebleLookup.push_back(ReplacebleLookup[i]);
+			materials->m_ReplacebleLookup.push_back(ReplacebleLookup[i]);
 		}
 	}
 
@@ -293,7 +298,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		int16* TexturesCombos = (int16*)(m_F->getData() + m_Header.textureCombinerCombos.offset);
 		for (uint32 i = 0; i < m_Header.textureCombinerCombos.size; i++)
 		{
-			m_M2->m_TexturesCombos.push_back(TexturesCombos[i]);
+			materials->m_TexturesCombos.push_back(TexturesCombos[i]);
 		}
 	}
 
@@ -306,12 +311,12 @@ void CM2_Builder::Step5ColorAndTextures()
 		for (uint32 i = 0; i < m_Header.textureWeights.size; i++)
 		{
 			CM2_Part_TextureWeight* textureWeight = new CM2_Part_TextureWeight(m_F, m_TexturesWeight[i], m_GlobalLoops);
-			m_M2->m_TextureWeights.push_back(textureWeight);
+			materials->m_TextureWeights.push_back(textureWeight);
 
 			// Animated
 			if (m_TexturesWeight[i].weight.interpolation_type)
 			{
-				m_M2->m_HasMisc = true;
+				//m_M2->m_HasMisc = true;
 			}
 		}
 	}
@@ -322,7 +327,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		int16* TextureWeightsLookup = (int16*)(m_F->getData() + m_Header.textureWeightsLookup.offset);
 		for (uint32 i = 0; i < m_Header.textureWeightsLookup.size; i++)
 		{
-			m_M2->m_TextureWeightsLookup.push_back(TextureWeightsLookup[i]);
+			materials->m_TextureWeightsLookup.push_back(TextureWeightsLookup[i]);
 		}
 	}
 
@@ -335,14 +340,14 @@ void CM2_Builder::Step5ColorAndTextures()
 		for (uint32 i = 0; i < m_Header.textureTransforms.size; i++)
 		{
 			CM2_Part_TextureTransform* textureTransform = new CM2_Part_TextureTransform(m_F, m_TexturesTransform[i], m_GlobalLoops);
-			m_M2->m_TexturesTransform.push_back(textureTransform);
+			materials->m_TexturesTransform.push_back(textureTransform);
 
 			// AnimTextures
 			if (m_TexturesTransform[i].translation.interpolation_type ||
 				m_TexturesTransform[i].rotation.interpolation_type ||
 				m_TexturesTransform[i].scaling.interpolation_type)
 			{
-				m_M2->m_IsAnimTextures = true;
+				materials->m_IsAnimTextures = true;
 			}
 		}
 	}
@@ -353,15 +358,19 @@ void CM2_Builder::Step5ColorAndTextures()
 		int16* TextureTransformsLookup = (int16*)(m_F->getData() + m_Header.textureTransformsLookup.offset);
 		for (uint32 i = 0; i < m_Header.textureTransformsLookup.size; i++)
 		{
-			m_M2->m_TexturesTransformLookup.push_back(TextureTransformsLookup[i]);
+			materials->m_TexturesTransformLookup.push_back(TextureTransformsLookup[i]);
 		}
 	}
 
 	//assert1(m_Header.textureTransforms.size == m_Header.textureTransformsLookup.size);
+
+	m_M2->m_Materials = materials;
 }
 
 void CM2_Builder::Step6Misc()
 {
+	CM2_Comp_Miscellaneous* miscellaneous = new CM2_Comp_Miscellaneous();
+
 	// Attachments
 	if (m_Header.attachments.size > 0)
 	{
@@ -369,11 +378,11 @@ void CM2_Builder::Step6Misc()
 		for (uint32 i = 0; i < m_Header.attachments.size; i++)
 		{
 			CM2_Part_Attachment* attachment = new CM2_Part_Attachment(m_M2, m_F, Attachments[i], m_GlobalLoops);
-			m_M2->m_Attachments.push_back(attachment);
+			miscellaneous->m_Attachments.push_back(attachment);
 		}
 
 		// Animated
-		m_M2->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;
 	}
 
 	// Attachments Lookup
@@ -382,7 +391,7 @@ void CM2_Builder::Step6Misc()
 		int16* AttachmentsLookup = (int16*)(m_F->getData() + m_Header.attachmentLookup.offset);
 		for (uint32 i = 0; i < m_Header.attachmentLookup.size; i++)
 		{
-			m_M2->m_AttachmentsLookup.push_back(AttachmentsLookup[i]);
+			miscellaneous->m_AttachmentsLookup.push_back(AttachmentsLookup[i]);
 		}
 	}
 
@@ -393,11 +402,11 @@ void CM2_Builder::Step6Misc()
 		for (uint32 i = 0; i < m_Header.events.size; i++)
 		{
 			CM2_Part_Event* event = new CM2_Part_Event(m_M2, m_F, Events[i], m_GlobalLoops);
-			m_M2->m_Events.push_back(event);
+			miscellaneous->m_Events.push_back(event);
 		}
 
 		// Animated
-		m_M2->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;
 	}
 
 	// Lights
@@ -407,11 +416,11 @@ void CM2_Builder::Step6Misc()
 		for (uint32 i = 0; i < m_Header.lights.size; i++)
 		{
 			CM2_Part_Light* light = new CM2_Part_Light(m_M2, m_F, Lights[i], m_GlobalLoops);
-			m_M2->m_Lights.push_back(light);
+			miscellaneous->m_Lights.push_back(light);
 		}
 
 		// Animated
-		m_M2->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;
 	}
 
 	// Cameras
@@ -421,11 +430,11 @@ void CM2_Builder::Step6Misc()
 		for (uint32 i = 0; i < m_Header.cameras.size; i++)
 		{
 			CM2_Part_Camera* camera = new CM2_Part_Camera(m_F, Cameras[i], m_GlobalLoops);
-			m_M2->m_Cameras.push_back(camera);
+			miscellaneous->m_Cameras.push_back(camera);
 		}
 
 		// Animated
-		m_M2->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;
 	}
 
 	// Cameras Lookup
@@ -434,13 +443,10 @@ void CM2_Builder::Step6Misc()
 		int16* CamerasLookup = (int16*)(m_F->getData() + m_Header.camerasLookup.offset);
 		for (uint32 i = 0; i < m_Header.camerasLookup.size; i++)
 		{
-			m_M2->m_CamerasLookup.push_back(CamerasLookup[i]);
+			miscellaneous->m_CamerasLookup.push_back(CamerasLookup[i]);
 		}
 	}
-}
 
-void CM2_Builder::Step7Particles()
-{
 	// Ribbons
 	if (m_Header.ribbon_emitters.size > 0)
 	{
@@ -448,29 +454,29 @@ void CM2_Builder::Step7Particles()
 		for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
 		{
 			CM2_RibbonEmitters* ribbon = new CM2_RibbonEmitters(m_M2, m_F, Ribbons[i], m_GlobalLoops);
-			m_M2->m_RibbonEmitters.push_back(ribbon);
+			miscellaneous->m_RibbonEmitters.push_back(ribbon);
 		}
 
 		// Animated
-		m_M2->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;
 	}
 
-#ifdef MDX_PARTICLES_ENABLE
 	// Particle systems
-	if (m_Header.particle_emitters.size > 0)
+	/*if (m_Header.particle_emitters.size > 0)
 	{
-		M2Particle* pdefs = (M2Particle*)(m_F->getData() + m_Header.particle_emitters.offset);
-		m_ParentM2->particleSystems = new ParticleSystem[m_Header.particle_emitters.size];
+		M2Particle* Particles = (M2Particle*)(m_F->getData() + m_Header.particle_emitters.offset);
 		for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 		{
-			m_ParentM2->particleSystems[i].m_ParentM2 = m_ParentM2;
-			m_ParentM2->particleSystems[i].init(m_F, pdefs[i], m_GlobalLoops->data());
+			ParticleSystem* particle = new ParticleSystem();
+			particle->m_ParentM2 = m_M2;
+			particle->init(m_F, Particles[i], m_GlobalLoops);
 		}
 
 		// Animated
-		m_ParentM2->m_HasMisc = true;
-	}
-#endif
+		miscellaneous->m_HasMisc = true;
+	}*/
+
+	m_M2->m_Miscellaneous = miscellaneous;
 }
 
 void CM2_Builder::Step8Skins()
@@ -496,10 +502,11 @@ void CM2_Builder::Step8Skins()
 	}
 #elif (VERSION == VERSION_WotLK)
 	assert1(m_Header.num_skin_profiles > 0);
-	//for (uint32 i = 0; i < m_Header.num_skin_profiles; i++)
+	for (uint32 i = 0; i < 1/*m_Header.num_skin_profiles*/; i++)
 	{
 		char buf[256];
-		sprintf_s(buf, "%s%02d.skin", m_M2->m_FileNameWithoutExt.c_str(), m_Header.num_skin_profiles - 1);
+		sprintf_s(buf, "%s%02d.skin", m_M2->m_FileNameWithoutExt.c_str(), i);
+
 		SharedPtr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
 		assert1(skinFile != nullptr);
 
@@ -567,7 +574,7 @@ void CM2_Builder::Step9Collision()
 void CM2_Builder::SetAnimated()
 {
 #ifdef M2BUILDER_LOADBONES
-	for (uint32 i = 0; i < m_Header.vertices.size && !(m_M2->m_IsAnimBones); i++)
+	for (uint32 i = 0; i < m_Header.vertices.size && !(m_M2->getSkeleton()->m_IsAnimBones); i++)
 	{
 		for (uint32 b = 0; b < m_M2->C_BonesInfluences; b++)
 		{
@@ -590,10 +597,10 @@ void CM2_Builder::SetAnimated()
 						bone.flags.cylindrical_billboard_lock_z
 						)
 					{
-						m_M2->m_IsBillboard = true;
+						m_M2->getSkeleton()->m_IsBillboard = true;
 					}
 
-					m_M2->m_IsAnimBones = true;
+					m_M2->getSkeleton()->m_IsAnimBones = true;
 
 					break;
 				}
@@ -602,5 +609,5 @@ void CM2_Builder::SetAnimated()
 	}
 #endif
 
-	m_M2->m_IsAnimated = m_M2->m_IsAnimBones || m_M2->m_IsBillboard || m_M2->m_IsAnimTextures || m_M2->m_HasMisc;
+	m_M2->m_IsAnimated = m_M2->getSkeleton()->m_IsAnimBones || m_M2->getSkeleton()->m_IsBillboard || m_M2->getMaterials()->m_IsAnimTextures || m_M2->getMiscellaneous()->m_HasMisc || true;
 }

@@ -7,6 +7,9 @@ int main(int argumentCount, char* arguments[])
 {
 	Random::SetSeed(static_cast<unsigned long>(time(0)));
 
+	CBaseManager baseManager;
+	_BaseManager = &baseManager;
+
 	CLog log;
 
 	CAuthWorldController authWorldController;

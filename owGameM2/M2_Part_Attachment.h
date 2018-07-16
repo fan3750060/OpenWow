@@ -9,70 +9,90 @@ class M2;
 
 struct M2_AttachmentType
 {
-	enum List : uint32_t
+	enum List : uint32
 	{
-		ShieldORMountMainorORItemVisual0 = 0,
-		HandRightORItemVisual1,
-		HandLeftORItemVisual2,
-		ElbowRightORItemVisual3,
-		ElbowLeftORItemVisual4,
+		Shield = 0,
+		MountMain = 0,
+		ItemVisual0 = 0,
 
-		ShoulderRight,
-		ShoulderLeft,
-		KneeRight,
-		KneeLeft,
-		HipRight,
-		HipLeft,
+		HandRight = 1,
+		ItemVisual1 = 1,
 
-		Helm,
-		Back,
+		HandLeft = 2,
+		ItemVisual2 = 2,
 
-		ShoulderFlapRight,
-		ShoulderFlapLeft,
-		ChestBloodFront,
-		ChestBloodBack,
+		ElbowRight = 3,
+		ItemVisual3 = 3,
 
-		Breath,
-		PlayerName,
-		Base,
-		Head,
-		SpellLeftHand,
-		SpellRightHand,
-		Special1,
-		Special2,
-		Special3,
-		SheathMainHand,
-		SheathOffHand,
-		SheathShield,
-		PlayerNameMounted,
-		LargeWeaponLeft,
-		LargeWeaponRight,
-		HipWeaponLeft,
-		HipWeaponRight,
-		Chest,
-		HandArrow,
+		ElbowLeft = 4,
+		ItemVisual4 = 4,
 
-		Bullet,
-		SpellHandOmni,
-		SpellHandDirected,
+		ShoulderRight = 5,
+		ShoulderLeft = 6,
 
-		VehicleSeat1,
-		VehicleSeat2,
-		VehicleSeat3,
-		VehicleSeat4,
-		VehicleSeat5,
-		VehicleSeat6,
-		VehicleSeat7,
-		VehicleSeat8,
+		KneeRight = 7,
+		KneeLeft = 8,
 
-		LeftFoot,
-		RightFoot,
+		HipRight = 9,
+		HipLeft = 10,
 
-		ShieldNoGlove,
-		SpineLow,
+		Helm = 11,
+		Back = 12,
 
-		AlteredShoulderR,
-		AlteredShoulderL,
+		ShoulderFlapRight = 13,
+		ShoulderFlapLeft = 14,
+
+		ChestBloodFront = 15,
+		ChestBloodBack = 16,
+
+		Breath = 17,
+		PlayerName = 18,
+		Base = 19,
+		Head = 20,
+
+		SpellLeftHand = 21,
+		SpellRightHand = 22,
+
+		Special1 = 23,
+		Special2 = 24,
+		Special3 = 25,
+
+		SheathMainHand = 26,
+		SheathOffHand = 27,
+		SheathShield = 28,
+
+		PlayerNameMounted = 29,
+
+		LargeWeaponLeft = 30,
+		LargeWeaponRight = 31,
+
+		HipWeaponLeft = 32,
+		HipWeaponRight = 33,
+
+		Chest = 34,
+		HandArrow = 35,
+
+		Bullet = 36,
+		SpellHandOmni = 37,
+		SpellHandDirected = 38,
+
+		VehicleSeat1 = 39,
+		VehicleSeat2 = 40,
+		VehicleSeat3 = 41,
+		VehicleSeat4 = 42,
+		VehicleSeat5 = 43,
+		VehicleSeat6 = 44,
+		VehicleSeat7 = 45,
+		VehicleSeat8 = 46,
+
+		LeftFoot = 47,
+		RightFoot = 48,
+
+		ShieldNoGlove = 49,
+		SpineLow = 50,
+
+		AlteredShoulderR = 51,
+		AlteredShoulderL = 52,
 
 		Count = 53
 	};
@@ -83,11 +103,15 @@ class CM2_Part_Attachment
 {
 public:
 	CM2_Part_Attachment(const M2* _parentM2, IFile* f, const SM2_Attachment& _proto, cGlobalLoopSeq global);
+	
+	const CM2_Part_Bone* getBone() const { return m_Bone; }
+	const cvec3 getPosition() const { return m_Position; }
+
+	void render(cmat4 _worldMatrix);
 
 private:
 	M2_AttachmentType::List	m_Type;
 	const CM2_Part_Bone*	m_Bone;
 	vec3					m_Position;
-
 	M2_Animated<uint8>		m_IsAnimateAttached;
 };

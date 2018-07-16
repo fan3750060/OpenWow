@@ -11,7 +11,7 @@ public:
 	~CWMO_Liquid_Instance();
 
 	// ISceneNode
-	string getObjectInfo() override { return "@WMO_LIQ@"; }
+	string getObjectInfo() const override { return "@WMO_LIQ@"; }
 
 	// IRenderable3D
 	bool PreRender3D() override;

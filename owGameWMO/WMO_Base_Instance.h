@@ -26,7 +26,7 @@ public:
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
 	// ISceneNode
-	string getObjectInfo() override { return "@WMO_Base@" + m_Object->getFilename(); }
+	string getObjectInfo() const override { return "@WMO_Base@" + m_Object->getFilename(); }
 
 	// IUpdatable
 	void Update(double _time, double _dTime) override;
@@ -44,6 +44,4 @@ protected:
 	
 	vector<SharedPtr<CWMO_Group_Instance>>	m_GroupInstances;
 	vector<SharedPtr<CWMO_Group_Instance>>	m_OutdoorGroupInstances;
-
-	const CGroupQuality&					m_QualitySettings;
 };

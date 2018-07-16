@@ -5,43 +5,14 @@
 
 void GameState_InWorld::RenderUI()
 {
-	/*vec2 size = _Render->m_RenderBuffer->getRenderBufferTex(0)->GetSize() / 4.0f;
-	vec2 start = m_VideoSettings.GetWindowSize() - size * 2.0f;
-
-	_Render->RenderRectangle
-	(
-	start,
-	size * 2.0f,
-	COLOR_BLACK
-	);
-
+	vec2 size = m_TestRenderBufferFinal->getRenderBufferTex(0)->GetSize() / 2.5f;
 	_Render->RenderTexture
 	(
-	start,
-	_Render->m_RenderBuffer->getRenderBufferTex(0),
-	size
+		m_VideoSettings.GetWindowSize() - size,
+		m_TestRenderBufferFinal->getRenderBufferTex(0),
+		size,
+		true
 	);
-
-	_Render->RenderTexture
-	(
-	start + vec2(size.x, 0),
-	_Render->m_RenderBuffer->getRenderBufferTex(1),
-	size
-	);
-
-	_Render->RenderTexture
-	(
-	start + vec2(0, size.y),
-	_Render->m_RenderBuffer->getRenderBufferTex(2),
-	size
-	);
-
-	_Render->RenderTexture
-	(
-	start + vec2(size.x, size.y),
-	_Render->m_RenderBuffer->getRenderBufferTex(3),
-	size
-	);*/
 
 
 
@@ -114,7 +85,7 @@ void GameState_InWorld::RenderUI()
 
 	///
 
-	
+
 
 	if (sceneManager->getIntersectedNode() != nullptr)
 	{

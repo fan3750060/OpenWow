@@ -10,7 +10,7 @@ public:
 	CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 _indexZ, R_GeometryInfo* _geom);
 
 	// ISceneNode
-	string getObjectInfo() override { return "@WDL_LOWRES@"; }
+	string getObjectInfo() const override { return "@WDL_LOWRES@"; }
 
 	// IRenderable3D
 	bool PreRender3D() override;

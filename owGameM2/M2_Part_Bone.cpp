@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // Include
-#include "M2.h"
+#include "M2_Comp_Skeleton.h"
 
 // General
 #include "M2_Part_Bone.h"
@@ -9,10 +9,12 @@
 CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles) :
 	m_ParentBone(nullptr)
 {
-	m_Id = _proto.key_bone_id;
+	m_GameBoneId = _proto.key_bone_id;
 	m_Flags = _proto.flags;
+
 	m_ParentBoneID = _proto.parent_bone;
-	
+	submesh = _proto.submesh_id;
+
 	trans.init(_proto.translation, f, global, Fix_XZmY, animfiles);
 	roll.init(_proto.rotation, f, global, Fix_XZmYW, animfiles);
 	scale.init(_proto.scale, f, global, Fix_XZY, animfiles);
@@ -20,11 +22,11 @@ CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq gl
 	pivot = _proto.pivot.toXZmY();
 }
 
-void CM2_Part_Bone::setParentBone(const M2* _parentM2)
+void CM2_Part_Bone::setParentBone(const CM2_Comp_Skeleton* _skeleton)
 {
 	if (m_ParentBoneID != -1)
 	{
-		m_ParentBone = _parentM2->m_Bones[m_ParentBoneID];
+		m_ParentBone = _skeleton->getBoneDirect(m_ParentBoneID);
 	}
 }
 
@@ -41,7 +43,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 	}
 
 	mat4 m;
-	if (roll.uses(anim) || scale.uses(anim) || trans.uses(anim))
+	if (IsInterpolated(anim))
 	{
 		m.translate(pivot);
 
@@ -57,6 +59,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 
 			if (m_ParentBone != nullptr)
 			{
+				assert1(m_ParentBone->IsCalculated());
 				m_RotationMatrix = m_ParentBone->m_RotationMatrix * mat4::RotMat(q);
 			}
 			else

@@ -9,6 +9,13 @@ BoundingBox::BoundingBox() :
 	m_IsCenterCalc(false)
 {}
 
+BoundingBox::BoundingBox(cvec3 _min, cvec3 _max) :
+	m_Min(_min),
+	m_Max(_max)
+{
+	calculateCenter();
+}
+
 void BoundingBox::set(cvec3 _min, cvec3 _max, bool _needConvert)
 {
 	m_Min = _min;

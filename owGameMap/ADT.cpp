@@ -30,21 +30,19 @@ ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ) :
 {
 	// Scene node params
 	{
-		setOpaque(true);
-
-		// DON'T CALCULATE MATRIX
-		CalculateMatrix(); 
-
 		// Set translate
-		m_Translate = vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize);
+		setTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize), false);
 
 		// Bounds
-		m_Bounds.setMin(vec3(m_Translate.x, Math::MaxFloat, m_Translate.z));
-		m_Bounds.setMax(vec3(m_Translate.x + C_TileSize, Math::MinFloat, m_Translate.z + C_TileSize));
-		m_Bounds.calculateCenter();
-		
+		BoundingBox bbox
+		(
+			vec3(getTranslate().x,              Math::MaxFloat, getTranslate().z),
+			vec3(getTranslate().x + C_TileSize, Math::MinFloat, getTranslate().z + C_TileSize)
+		);
+		setBounds(bbox);
 	}
 
+	setOpaque(true);
 	setDrawOrder(20);
 	setDebugColor(vec4(0.0f, 0.3f, 0.3f, 0.3f));
 	setSelectable();
@@ -226,7 +224,7 @@ bool ADT::Load()
 						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
 
 						// Create instance
-						new Liquid_Instance(this, liquid, vec3(m_Translate.x + j * C_ChunkSize, 0.0f, m_Translate.z + i * C_ChunkSize));
+						new Liquid_Instance(this, liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
 					}
 					abuf += sizeof(MH2O_Header);
 				}
@@ -263,21 +261,26 @@ bool ADT::Load()
 		chunk->Load();
 		m_Chunks.push_back(chunk);
 
-		m_Bounds.makeUnion(chunk->getBounds());
+		BoundingBox bbox = getBounds();
+		bbox.makeUnion(chunk->getBounds());
+		setBounds(bbox);
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	/*for (auto& it : m_WMOsPlacementInfo)
+	for (auto& it : m_WMOsPlacementInfo)
 	{
 		WMO* wmo = (WMO*)GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
 		{
 			ADT_WMO_Instance* inst = new ADT_WMO_Instance(this, wmo, it);
 			m_WMOsInstances.push_back(inst);
-			m_Bounds.makeUnion(inst->getBounds());
+
+			BoundingBox bbox = getBounds();
+			bbox.makeUnion(inst->getBounds());
+			setBounds(bbox);
 		}
-	}*/
+	}
 
 	//-- MDXs -------------------------------------------------------------------------
 
@@ -288,7 +291,10 @@ bool ADT::Load()
 		{
 			ADT_MDX_Instance* inst = new ADT_MDX_Instance(this, mdx, it);
 			m_MDXsInstances.push_back(inst);
-			m_Bounds.makeUnion(inst->getBounds());
+
+			BoundingBox bbox = getBounds();
+			bbox.makeUnion(inst->getBounds());
+			setBounds(bbox);
 		}
 	}
 
@@ -296,7 +302,7 @@ bool ADT::Load()
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
 
-	return SceneNode::Load();
+	return true;
 }
 
 bool ADT::Delete()
@@ -312,7 +318,7 @@ bool ADT::PreRender3D()
 	}
 
 	// Check frustrum
-	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	if (!checkFrustum())
 	{
 		return false;
 	}

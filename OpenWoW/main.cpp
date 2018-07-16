@@ -19,10 +19,10 @@ int main(int argumentCount, char* arguments[])
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 	{
+		Random::SetSeed(static_cast<unsigned long>(time(0)));
+
 		CBaseManager baseManager;
 		_BaseManager = &baseManager;
-
-		Random::SetSeed(static_cast<unsigned long>(time(0)));
 
 		CBindingController bindingController;
 		_Bindings = &bindingController;

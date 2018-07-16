@@ -30,9 +30,11 @@ public:
 	ParticleSystem();
 	~ParticleSystem();
 
-	void init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals);
+	void init(IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals);
+
 	void update(float dt, uint32 _globalTime);
 	void setup(uint16 anim, uint32 time, uint32 _globalTime);
+
 	void draw();
 
 public:
@@ -66,7 +68,7 @@ private:
 	int32 flags;
 	int16 pType;
 
-	CM2_Part_Bone* parent;
+	const CM2_Part_Bone* parent;
 
 };
 

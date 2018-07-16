@@ -2,16 +2,12 @@
 
 class SceneNode :
 	public CRefItem,
-	public ILoadable,
 	public IUpdatable,
 	public IRenderable3D
 {
 public:
-	SceneNode();
-	SceneNode(SceneNode* _parent);
+	SceneNode(SceneNode* _parent = nullptr);
 	virtual ~SceneNode();
-
-	vector<SceneNode*>& getChilds() { return m_Childs; }
 
 	// ISceneNode
 	void setParent(SceneNode* _parent) { m_Parent = _parent; }
@@ -31,32 +27,61 @@ public:
 		assert1(std::find(m_Childs.begin(), m_Childs.end(), _child) != m_Childs.end());
 		m_Childs.erase(std::remove(m_Childs.begin(), m_Childs.end(), _child), m_Childs.end());
 	}
+	vector<SceneNode*>& getChilds() { return m_Childs; }
 
-	void setTranslate(vec3 _translate) { m_Translate = _translate; CalculateMatrix(); }
+	// Translate
+	void setTranslate(cvec3 _translate, bool _calculateMatrix = true) 
+	{ 
+		if (m_Translate == _translate) return;
+		m_Translate = _translate; 
+		if (_calculateMatrix) CalculateMatrix();
+	}
 	cvec3 getTranslate() const { return m_Translate; }
 
-	void setRotate(vec3 _rotate) { m_Rotate = _rotate; CalculateMatrix(); }
+	// Rotate
+	void setRotate(cvec3 _rotate, bool _calculateMatrix = true)
+	{ 
+		if (m_Rotate == _rotate) return;
+		m_Rotate = _rotate; 
+		if (_calculateMatrix) CalculateMatrix();
+	}
 	cvec3 getRotate() const { return m_Rotate; }
+	void setRotateQuat(cquat _rotate, bool _calculateMatrix = true)
+	{
+		m_RotateQuat = _rotate;
+		if (_calculateMatrix) CalculateMatrix();
+	}
 	cquat getRotateQuat() const { return m_RotateQuat; }
 
-	void setScale(float _scale) { m_Scale = vec3(_scale, _scale, _scale); CalculateMatrix(); }
+	// Scale
+	void setScale(cvec3 _scale, bool _calculateMatrix = true)
+	{ 
+		if (m_Scale == _scale) return;
+		m_Scale = _scale; 
+		if (_calculateMatrix) CalculateMatrix();
+	}
 	cvec3 getScale() const { return m_Scale; }
 
+	// Bounds
 	void setBounds(BoundingBox _bbox) { m_Bounds = _bbox; }
 	cbbox getBounds() const { return m_Bounds; }
+
+	// General transform
+	void setRelTrans(cmat4 _matrix) { m_RelTransform = _matrix; }
 	cmat4 getRelTrans() const { return m_RelTransform; }
+
+	void setAbsTrans(cmat4 _matrix) { m_AbsTransform = _matrix; }
 	cmat4 getAbsTrans() const { return m_AbsTransform; }
+
+	// Checks
+	bool checkFrustum() const;
+	bool checkDistance2D(float _distance) const;
+	bool checkDistance(float _distance) const;
 
 	// ISceneNode::Selectable
 	void setSelectable() { m_Selectable = true; }
-	bool getSelectable() { return m_Selectable; }
-	virtual string getObjectInfo() { return "emp"; };
-
-	// ILoadable
-	virtual bool Load() override;
-	virtual bool Delete() override;
-	void setLoaded() override { m_IsLoaded = true; }
-	bool isLoaded() const override { return m_IsLoaded; }
+	bool isSelectable() const { return m_Selectable; }
+	virtual string getObjectInfo() const { return "emp"; };
 
 	// IUpdatable
 	virtual void Input(CInput* _input, double _time, double _dTime) override {};
@@ -67,6 +92,7 @@ public:
 	virtual void Render3D() override { /*override me*/ }
 	virtual void PostRender3D() override { /* override me*/ }
 	virtual void RenderDebug3D() { Render3D(); };
+
 	void setVisible(bool _value) override { m_IsVisible = _value; }
 	bool isVisible() const override { return m_IsVisible; }
 	void setOpaque(bool _value) override { m_IsOpaque = _value; }
@@ -77,10 +103,10 @@ public:
 	vec4 getDebugColor() const { return m_DebugColor; }
 
 protected:
-	void CalculateMatrix(bool _isRotationQuat = false);
+	virtual void CalculateMatrix(bool _isRotationQuat = false);
 
-protected:
-	SceneNode*	m_Parent;
+private:
+	SceneNode*			m_Parent;
 	vector<SceneNode*>  m_Childs;
 
 	vec3                m_Translate;
@@ -94,14 +120,14 @@ private:
 	mat4				m_AbsTransform;
 	bool				m_Selectable;
 
-private: // ILoadable
-	bool				m_IsLoaded;
-
 private: // IRenderable
 	bool				m_IsVisible;
 	bool				m_IsOpaque;
 	uint32				m_DrawOrder;
 	vec4				m_DebugColor;
+
+protected:
+	const CGroupQuality&	m_QualitySettings;
 };
 
 class SceneNodeCompare
@@ -160,6 +186,8 @@ public:
 				return distToCameraLeft > distToCameraRight;
 			}
 		}
+
+		return false;
 	}
 
 private:

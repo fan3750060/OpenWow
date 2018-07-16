@@ -1,49 +1,58 @@
 #pragma once
 
-enum Race : uint8
+struct Race
 {
-	Human = 1,
-	Orc = 2,
-	Dwarf = 3,
-	Nightelf = 4,
-	Undead = 5,
-	Tauren = 6,
-	Gnome = 7,
-	Troll = 8,
-	Goblin = 9,
-	Bloodelf = 10,
-	Draenei = 11,
-	FelOrc = 12,
-	Naga = 13,
-	Broken = 14,
-	Skeleton = 15,
-	Vrykul = 16,
-	Tuskarr = 17,
-	ForestTroll = 18,
-	Taunka = 19,
-	NorthrendSkeleton = 20,
-	IceTroll = 21
+	enum List : uint8
+	{
+		Human = 1,
+		Orc = 2,
+		Dwarf = 3,
+		Nightelf = 4,
+		Undead = 5,
+		Tauren = 6,
+		Gnome = 7,
+		Troll = 8,
+		Goblin = 9,
+		Bloodelf = 10,
+		Draenei = 11,
+		FelOrc = 12,
+		Naga = 13,
+		Broken = 14,
+		Skeleton = 15,
+		Vrykul = 16,
+		Tuskarr = 17,
+		ForestTroll = 18,
+		Taunka = 19,
+		NorthrendSkeleton = 20,
+		IceTroll = 21
+	};
 };
 
-enum Class : uint8
+struct Class
 {
-	Warrior = 1,
-	Paladin = 2,
-	Hunter = 3,
-	Rogue = 4,
-	Priest = 5,
-	DeathKnight = 6,
-	Shaman = 7,
-	Mage = 8,
-	Warlock = 9,
-	Druid = 11,
+	enum List : uint8
+	{
+		Warrior = 1,
+		Paladin = 2,
+		Hunter = 3,
+		Rogue = 4,
+		Priest = 5,
+		DeathKnight = 6,
+		Shaman = 7,
+		Mage = 8,
+		Warlock = 9,
+		Druid = 11,
+	};
 };
 
-enum Gender : uint8
+struct Gender
 {
-	Male = 0,
-	Female = 1,
-	None = 2,
+	enum List : uint8
+	{
+		Male = 0,
+		Female = 1,
+		None = 2,
+	};
 };
 
 enum CharacterFlags : uint32
@@ -51,7 +60,7 @@ enum CharacterFlags : uint32
 	CHARACTER_FLAG_NONE = 0x00000000,
 	CHARACTER_FLAG_UNK1 = 0x00000001,
 	CHARACTER_FLAG_UNK2 = 0x00000002,
-	CHARACTER_LOCKED_FOR_TRANSFER = 0x00000004,
+	CHARACTER_FLAG_LOCKED_FOR_TRANSFER = 0x00000004,
 	CHARACTER_FLAG_UNK4 = 0x00000008,
 	CHARACTER_FLAG_UNK5 = 0x00000010,
 	CHARACTER_FLAG_UNK6 = 0x00000020,
@@ -90,3 +99,5 @@ enum CharacterCustomizeFlags : uint32
 	CHAR_CUSTOMIZE_FLAG_FACTION = 0x00010000,       // name, gender, faction, etc...
 	CHAR_CUSTOMIZE_FLAG_RACE = 0x00100000        // name, gender, race, etc...
 };
+
+

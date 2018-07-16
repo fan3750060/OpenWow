@@ -4,136 +4,217 @@
 #include "Character.h"
 
 // Additional
-#include "CharSectionWrapper.h"
-#include "M2_Character_MeshPartID_Provider.h"
+#include "Character_SectionWrapper.h"
+#include "Character_SkinTextureBaker.h"
 
-void Character::InitDefault()
+Character::Character() :
+	Creature()
 {
-	/*------------------------------------------------------------
-	Char Spiritwolf, Lvl 80, Race 8, Class 7, Gender 0
-	Zone 440, Map 1, Pos[-11387.166016, -4688.737305, 6.372300]
-	skin 0, face 0, hairStyle 6, hairColor 1, facialStyle 4
-	------------------------------------------------------------*/
+	setMeshEnabled(MeshIDType::Ears, EarsStyles::Enabled);
+	setMeshEnabled(MeshIDType::Eyeglows, EyeglowsStyles::Racial);
+}
 
-	// Шаман
-	/*Race = Troll;
-	Class = Shaman;
-	Gender = Male;
-	skin = 0;
-	face = 0;
-	hairStyle = 6;
-	hairColor = 1;
-	facialStyle = 4;*/
+void Character::InitFromTemplate(const CharacterTemplate& b)
+{
+	// 1. Template
+	{
+		TemplateSet(b);
+	}
 
-	// Филки
-	Race = Bloodelf;
-	Class = Paladin;
-	Gender = Female;
-	skin = 2;
-	face = 6;
-	hairStyle = 17;
-	hairColor = 9;
-	facialStyle = 8;
+	// 2. Load model
+	{
+		CreateCharacterModel();
+	}
 
-	// TestOrc
-	/*Race = Orc;
-	Class = Paladin;
-	Gender = Male;
-	skin = 5;
-	face = 6;
-	hairStyle = 3;
-	hairColor = 6;
-	facialStyle = 5;*/
+	// 3. Items visual data
+	RefreshItemVisualData();
 
-	// TEST
-	/*Race = Tuskarr;
-	Class = Paladin;
-	Gender = Male;
-	skin = 0;
-	face = 0;
-	hairStyle = 0;
-	hairColor = 0;
-	facialStyle = 0;*/
+	// 4. Creature textures
+	{
+		Character_SkinTextureBaker baker;
 
+		// Default textures
+		setSpecialTexture(SM2_Texture::Type::SKIN, baker.createTexture(this));
+		setSpecialTexture(SM2_Texture::Type::SKIN_EXTRA, Character_SectionWrapper::getSkinExtraTexture(this));
+		setSpecialTexture(SM2_Texture::Type::CHAR_HAIR, Character_SectionWrapper::getHairTexture(this));
+
+		// Cloak
+		CItem_VisualData& item = m_VisualItems[EQUIPMENT_SLOT_BACK];
+		if (item.InventoryType != InventoryType::NON_EQUIP)
+		{
+			assert1(item.getObjectComponents().size() == 1);
+			R_Texture* cloackTexttre = item.getObjectComponents()[0].texture;
+			setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
+		}
+
+		// Geosets
+		setHairGeoset(Character_SectionWrapper::getHairGeoset(this));
+		setFacial1Geoset(Character_SectionWrapper::getFacial1Geoset(this));
+		setFacial2Geoset(Character_SectionWrapper::getFacial2Geoset(this));
+		setFacial3Geoset(Character_SectionWrapper::getFacial3Geoset(this));
+	}
+}
+
+void Character::InitFromDisplayInfo(uint32 _id)
+{
+	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
+	assert1(rec != nullptr);
+
+	DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	assert1(humanoidRecExtra != nullptr);
+
+	// 1. Template
+	{
+		Race = (Race::List)humanoidRecExtra->Get_Race()->Get_ID();
+		Gender = (Gender::List)humanoidRecExtra->Get_Gender();
+		skin = humanoidRecExtra->Get_SkinColor();
+		face = humanoidRecExtra->Get_FaceType();
+		hairStyle = humanoidRecExtra->Get_HairType();
+		hairColor = humanoidRecExtra->Get_HairStyleOrColor();
+		facialStyle = humanoidRecExtra->Get_BeardStyle();
+
+		ItemsTemplates[EQUIPMENT_SLOT_HEAD] = ItemTemplate(humanoidRecExtra->Get_Helm(), InventoryType::HEAD, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_SHOULDERS] = ItemTemplate(humanoidRecExtra->Get_Shoulder(), InventoryType::SHOULDERS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_BODY] = ItemTemplate(humanoidRecExtra->Get_Shirt(), InventoryType::BODY, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_CHEST] = ItemTemplate(humanoidRecExtra->Get_Chest(), InventoryType::CHEST, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_WAIST] = ItemTemplate(humanoidRecExtra->Get_Belt(), InventoryType::WAIST, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_LEGS] = ItemTemplate(humanoidRecExtra->Get_Legs(), InventoryType::LEGS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_FEET] = ItemTemplate(humanoidRecExtra->Get_Boots(), InventoryType::FEET, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_WRISTS] = ItemTemplate(humanoidRecExtra->Get_Wrist(), InventoryType::WRISTS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_HANDS] = ItemTemplate(humanoidRecExtra->Get_Gloves(), InventoryType::HANDS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_TABARD] = ItemTemplate(humanoidRecExtra->Get_Tabard(), InventoryType::TABARD, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_BACK] = ItemTemplate(humanoidRecExtra->Get_Cape(), InventoryType::CLOAK, 0);
+	}
+
+	// 2. Load model
+	{
+		// We ???always??? can load model from (CreatureDisplayInfo->Model)
+		CreateCreatureModel(rec);
+	}
+
+	// 3. Items
+	RefreshItemVisualData();
+
+	// 2. Character data
+	Race = (Race::List)humanoidRecExtra->Get_Race()->Get_ID();
+	Gender = (Gender::List)humanoidRecExtra->Get_Gender();
+	skin = humanoidRecExtra->Get_SkinColor();
+	face = humanoidRecExtra->Get_FaceType();
+	hairStyle = humanoidRecExtra->Get_HairType();
+	hairColor = humanoidRecExtra->Get_HairStyleOrColor();
+	facialStyle = humanoidRecExtra->Get_BeardStyle();
+
+	// 3. Creature textures
+	{
+		// Default textures
+		string bakedTextureName = humanoidRecExtra->Get_Texture();
+		R_Texture* bakedSkinTexture = nullptr;
+		if (bakedTextureName.empty() || !(CMPQFile::IsFileExists("Textures\\BakedNpcTextures\\" + bakedTextureName)))
+		{
+			Character_SkinTextureBaker baker;
+			bakedSkinTexture = baker.createTexture(this);
+
+			Log::Error("Character[%d]: Missing baked texture for humanoid[%d]. Create own.", rec->Get_ID(), humanoidRecExtra->Get_ID());
+		}
+		else
+		{
+			bakedSkinTexture = GetManager<ITexturesManager>()->Add("Textures\\BakedNpcTextures\\" + bakedTextureName);
+		}
+
+		setSpecialTexture(SM2_Texture::Type::SKIN, bakedSkinTexture);
+		setSpecialTexture(SM2_Texture::Type::SKIN_EXTRA, Character_SectionWrapper::getSkinExtraTexture(this));
+		setSpecialTexture(SM2_Texture::Type::CHAR_HAIR, Character_SectionWrapper::getHairTexture(this));
+
+		// Cloak
+		CItem_VisualData& item = m_VisualItems[EQUIPMENT_SLOT_BACK];
+		if (item.InventoryType != InventoryType::NON_EQUIP)
+		{
+			assert1(item.getObjectComponents().size() == 1);
+			R_Texture* cloackTexttre = item.getObjectComponents()[0].texture;
+			setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
+		}
+
+		// Geosets
+		setHairGeoset   (Character_SectionWrapper::getHairGeoset   (this));
+		setFacial1Geoset(Character_SectionWrapper::getFacial1Geoset(this));
+		setFacial2Geoset(Character_SectionWrapper::getFacial2Geoset(this));
+		setFacial3Geoset(Character_SectionWrapper::getFacial3Geoset(this));
+	}
+}
+
+//--
+
+
+
+//--
+
+void Character::Render3D()
+{
+	CM2_Base_Instance::Render3D();
+
+	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
+	{
+		if (slot == EQUIPMENT_SLOT_HEAD && (Flags & CHARACTER_FLAG_HIDE_HELM))
+		{
+			continue;
+		}
+
+		m_VisualItems[slot].Render3D();
+	}
+}
+
+//--
+
+M2* Character::CreateCharacterModel()
+{
 	string modelClientFileString = DBC_ChrRaces[Race]->Get_ClientFileString();
-	string modelGender = Gender == Male ? "Male" : "Female";
+	string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
 	string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
 
 	M2* model = GetManager<IM2Manager>()->Add(fullModelName);
+	assert1(model != nullptr);
 
-	m_Model = new CM2_Character_Instance(model, vec3(), 1.0f);
+	setM2(model);
 
-	{
-		M2_Character_MeshPartID_Provider* provider = new M2_Character_MeshPartID_Provider();
+	CalculateMatrix();
+	InitLocal();
 
-		provider->setSpecialTexture(SM2_Texture::SM2_Texture_Type::TEX_COMPONENT_SKIN, CharSectionWrapper::getSkinTexture(this));
-		provider->setSpecialTexture(SM2_Texture::SM2_Texture_Type::TEX_COMPONENT_CHAR_HAIR, CharSectionWrapper::getHairTexture(this));
-
-		provider->setHairGeoset(CharSectionWrapper::getHairGeoset(this));
-
-		provider->setFacial1Geoset(CharSectionWrapper::getFacial1Geoset(this));
-		provider->setFacial2Geoset(CharSectionWrapper::getFacial2Geoset(this));
-		provider->setFacial3Geoset(CharSectionWrapper::getFacial3Geoset(this));
-
-		m_Model->setMeshProvider(provider);
-	}
+	return model;
 }
 
-void Character::Init(ByteBuffer& b)
+void Character::RefreshItemVisualData()
 {
-	uint32 beginSize = b.getPos();
-
-	b.readBytes(&GUID, 8);
-	b.readString(&Name);
-	b.readBytes(&Race, 1);
-	b.readBytes(&Class, 1);
-	b.readBytes(&Gender, 1);
-
-	b.readBytes(&skin, 1);
-	b.readBytes(&face, 1);
-	b.readBytes(&hairStyle, 1);
-	b.readBytes(&hairColor, 1);
-	b.readBytes(&facialStyle, 1);
-
-	b.readBytes(&Level, 1);
-	b.readBytes(&ZoneId, 4);
-	b.readBytes(&MapId, 4);
-
-	b.readBytes(&X, 4);
-	b.readBytes(&Y, 4);
-	b.readBytes(&Z, 4);
-
-	b.readBytes(&GuildId, 4);
-	b.readBytes(&Flags, 4);
-	b.readBytes(&CustumizeFlags, 4);
-	b.readBytes(&IsFirstLogin, 1);
-
-	b.readBytes(&PetInfoId, 4);
-	b.readBytes(&PetLevel, 4);
-	b.readBytes(&PetFamilyId, 4);
-
-	// read items
-	for (int i = 0; i < 20; i++)
+	// 3. Items visual data
+	for (uint32 i = 0; i < INVENTORY_SLOT_BAG_END; i++)
 	{
-		Items[i].Init(b);
-	}
+		m_VisualItems[i].TemplateSet(ItemsTemplates[i]);
+		m_VisualItems[i].Load(this);
 
-	// read bags
-	for (int i = 0; i < 4; i++)
-	{
-		b.seekRelative(4);
-		b.seekRelative(1);
-		b.seekRelative(4);
+		if (i == EQUIPMENT_SLOT_HEAD)
+		{
+			if ((Flags & CHARACTER_FLAG_HIDE_HELM))
+			{
+				setMeshEnabled(MeshIDType::Ears, EarsStyles::Enabled);
+				continue;
+			}
+			else
+			{
+				setMeshEnabled(MeshIDType::Ears, EarsStyles::None);
+			}
+		}
+		else if (i == EQUIPMENT_SLOT_BACK)
+		{
+			if ((Flags & CHARACTER_FLAG_HIDE_CLOAK))
+			{
+				setMeshEnabled(MeshIDType::Cloak, 1);
+				continue;
+			}
+		}
+
+		for (auto& geoset : m_VisualItems[i].getGeosetComponents())
+		{
+			setMeshEnabled(geoset.mesh, geoset.getMeshID());
+		}
 	}
 }
 
-
-
-void Character::Print()
-{
-	Log::Green("-------------------------------------------------------------");
-	Log::Green("Char %s, Lvl %d, Race %d, Class %d, Gender %d", Name.c_str(), Level, Race, Class, Gender);
-	Log::Green("Zone %d, Map %d, Pos[%f, %f, %f]", ZoneId, MapId, X, Y, Z);
-	Log::Green("skin %d, face %d, hairStyle %d, hairColor %d, facialStyle %d", skin, face, hairStyle, hairColor, facialStyle);
-	Log::Green("-------------------------------------------------------------");
-}

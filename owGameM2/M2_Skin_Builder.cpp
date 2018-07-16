@@ -14,12 +14,10 @@ CM2_Skin_Builder::CM2_Skin_Builder(CM2_Builder* _m2Builder, M2* _model, CM2_Skin
 	m_ParentM2(_model),
 	m_Skin(_skin),
 	m_F(_file)
-{
-}
+{}
 
 CM2_Skin_Builder::~CM2_Skin_Builder()
-{
-}
+{}
 
 void CM2_Skin_Builder::Load()
 {
@@ -43,9 +41,9 @@ void CM2_Skin_Builder::Step1LoadProfile()
 	for (uint32 sectionIndex = 0; sectionIndex < m_SkinProfile.submeshes.size; sectionIndex++)
 	{
 		const SM2_SkinSection& section = t_sections[sectionIndex];
-		CM2_SkinSection* skinSection = new CM2_SkinSection(m_ParentM2, section);
+		CM2_SkinSection* skinSection = new CM2_SkinSection(m_ParentM2, sectionIndex, section);
 
-		skinSection->m_Verts.reserve(section.vertexCount);
+		vector<SM2_Vertex> vertexes;
 		for (uint32 vert = section.vertexStart; vert < section.vertexStart + section.vertexCount; vert++)
 		{
 			SM2_Vertex newVertex = m_M2Builder->m_Vertexes[t_verticesIndexes[vert]];
@@ -55,19 +53,19 @@ void CM2_Skin_Builder::Step1LoadProfile()
 				newVertex.bone_indices[bone] = boneIndex;
 				assert1(boneIndex < section.boneCount);
 			}
-			skinSection->m_Verts.push_back(newVertex);
+			vertexes.push_back(newVertex);
 		}
 
-		skinSection->m_Index.reserve(section.indexCount);
+		vector<uint16> indexes;
 		for (uint32 ind = section.indexStart; ind < section.indexStart + section.indexCount; ind++)
 		{
 			uint16 index = t_indexesIndexes[ind];
 			assert1(index >= section.vertexStart);
 			assert1(index < section.vertexStart + section.vertexCount);
-			skinSection->m_Index.push_back(index - section.vertexStart);
+			indexes.push_back(index - section.vertexStart);
 		}
 
-		skinSection->Final();
+		skinSection->CreateGeometry(vertexes, indexes);
 
 		m_Skin->m_Sections.push_back(skinSection);
 	}
@@ -86,6 +84,8 @@ void CM2_Skin_Builder::Step1LoadProfile()
 
 void CM2_Skin_Builder::Step2InitBatches()
 {
+	CM2_Comp_Materials* materials = m_ParentM2->getMaterials();
+
 	for (auto& it : m_SkinBatches)
 	{
 		CM2_Skin_Batch* batch = new CM2_Skin_Batch(m_ParentM2);
@@ -97,30 +97,30 @@ void CM2_Skin_Builder::Step2InitBatches()
 		batch->m_SkinSection = m_Skin->m_Sections[it.skinSectionIndex];
 
 		// Get classes
-		batch->m_Material = (m_ParentM2->GetMaterial(it.materialIndex));
+		batch->m_Material = (materials->GetMaterial(it.materialIndex));
 
 		// Color
 		if (it.colorIndex != -1)
 		{
-			batch->m_Color = (m_ParentM2->GetColor(it.colorIndex));
+			batch->m_Color = (materials->GetColor(it.colorIndex));
 		}
 
 		// Textures
 		for (uint32 i = 0; i < it.textureCount; i++)
 		{
-			batch->m_Textures.push_back((m_ParentM2->GetTexture(it.texture_Index + i)));
+			batch->m_Textures.push_back((materials->GetTexture(it.texture_Index + i)));
 		}
 
 		// Texture unit
 		if (it.texture_CoordIndex != -1)
 		{
-			batch->m_TextureUnit = m_ParentM2->m_TexturesUnitLookup[it.texture_CoordIndex];
+			batch->m_TextureUnit = materials->m_TexturesUnitLookup[it.texture_CoordIndex];
 		}
 
 		// Texture weight
 		if (it.texture_WeightIndex != -1)
 		{
-			batch->m_TextureWeight = (m_ParentM2->m_TextureWeights[it.texture_WeightIndex]);
+			batch->m_TextureWeight = (materials->m_TextureWeights[it.texture_WeightIndex]);
 		}
 
 		// Texture transfowm
@@ -128,10 +128,10 @@ void CM2_Skin_Builder::Step2InitBatches()
 		{
 			if (it.texture_TransformIndex != -1)
 			{
-				int16 index = m_ParentM2->m_TexturesTransformLookup[it.texture_TransformIndex];
+				int16 index = materials->m_TexturesTransformLookup[it.texture_TransformIndex];
 				if (index != -1)
 				{
-					batch->m_TextureTransform = (m_ParentM2->GetTextureTransform(it.texture_TransformIndex));
+					batch->m_TextureTransform = (materials->GetTextureTransform(it.texture_TransformIndex));
 				}
 			}
 		}
@@ -141,5 +141,8 @@ void CM2_Skin_Builder::Step2InitBatches()
 		m_Skin->m_Batches.push_back(batch);
 	}
 
-	std::sort(m_Skin->m_Batches.begin(), m_Skin->m_Batches.end(), M2_SkinBatch_PriorityPlan_Compare());
+	std::sort(m_Skin->m_Batches.begin(), m_Skin->m_Batches.end(), [](const CM2_Skin_Batch* left, const CM2_Skin_Batch* right)
+	{
+		return left->getPriorityPlan() < right->getPriorityPlan();
+	});
 }

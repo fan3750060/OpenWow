@@ -7,6 +7,7 @@ class BoundingBox
 {
 public:
 	BoundingBox();
+	BoundingBox(cvec3 _mix, cvec3 _max);
 
 	BoundingBox& operator=(const BoundingBox& _other)
 	{

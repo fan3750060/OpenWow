@@ -82,11 +82,11 @@ struct SM2_Bone
 		uint32_t boneNameCRC;         // these are for debugging only. their bone names match those in key bone lookup.
 	};
 
-	M2Track<vec3>	translation;
+	M2Track<vec3>       translation;
 	M2Track<M2CompQuat>	rotation;				// compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
-	M2Track<vec3>	scale;
+	M2Track<vec3>       scale;
 
-	vec3			pivot;					// The pivot point of that bone.
+	vec3                pivot;					// The pivot point of that bone.
 };
 
 struct SM2_Vertex
@@ -97,13 +97,11 @@ struct SM2_Vertex
 	vec3	normal;
 	vec2	tex_coords[2];  // two DiffuseTextures, depending on shader used
 };
-
 #include __PACK_END
 
 #include "M2_SkinTypes.h"
 
 #include __PACK_BEGIN
-
 struct SM2_Color
 {
 	M2Track<vec3> color;     // vertex colors in rgb order
@@ -112,27 +110,27 @@ struct SM2_Color
 
 struct SM2_Texture
 {
-	enum SM2_Texture_Type : uint32
+	enum Type : uint32
 	{
-		NONE = 0,						// Texture given in filename
-		TEX_COMPONENT_SKIN,				// Skin // Body + clothes
-		TEX_COMPONENT_OBJECT_SKIN,		// Object Skin // Item, Capes("Item\ObjectComponents\Cape\*.blp")
-		TEX_COMPONENT_WEAPON_BLADE,		// Weapon Blade // Used on several models but not used in the client as far as I see.Armor Reflect ?
-		TEX_COMPONENT_WEAPON_HANDLE,	// Weapon Handle
-		TEX_COMPONENT_ENVIRONMENT,		// (OBSOLETE)Environment(Please remove from source art)
-		TEX_COMPONENT_CHAR_HAIR,		// Character Hair
-		TEX_COMPONENT_CHAR_FACIAL_HAIR,	// (OBSOLETE)Character Facial Hair(Please remove from source art)
-		TEX_COMPONENT_SKIN_EXTRA,		// Skin Extra
-		TEX_COMPONENT_UI_SKIN,			// UI Skin // Used on inventory art M2s(1) : inventoryartgeometry.m2 and inventoryartgeometryold.m2
-		TEX_COMPONENT_TAUREN_MANE,		// (OBSOLETE)Tauren Mane(Please remove from source art) //Only used in quillboarpinata.m2.I can't even find something referencing that file. Oo Is it used?
-		TEX_COMPONENT_MONSTER_1,		// Monster Skin 1 //Skin for creatures or gameobjects #1
-		TEX_COMPONENT_MONSTER_2,		// Monster Skin 2 //Skin for creatures or gameobjects #2
-		TEX_COMPONENT_MONSTER_3,		// Monster Skin 3 //Skin for creatures or gameobjects #3
-		TEX_COMPONENT_ITEM_ICON,		// Item Icon // Used on inventory art M2s(2) : ui - button.m2 and forcedbackpackitem.m2(CSimpleModel_ReplaceIconTexture("texture"))
+		NONE = 0,			// Texture given in filename
+		SKIN,				// Skin // Body + clothes
+		OBJECT_SKIN,		// Object Skin // Item, Capes("Item\ObjectComponents\Cape\*.blp")
+		WEAPON_BLADE,		// Weapon Blade // Used on several models but not used in the client as far as I see.Armor Reflect ?
+		WEAPON_HANDLE,		// Weapon Handle
+		ENVIRONMENT,		// (OBSOLETE)Environment(Please remove from source art)
+		CHAR_HAIR,			// Character Hair
+		CHAR_FACIAL_HAIR,	// (OBSOLETE)Character Facial Hair(Please remove from source art)
+		SKIN_EXTRA,			// Skin Extra
+		UI_SKIN,			// UI Skin // Used on inventory art M2s(1) : inventoryartgeometry.m2 and inventoryartgeometryold.m2
+		TAUREN_MANE,		// (OBSOLETE)Tauren Mane(Please remove from source art) //Only used in quillboarpinata.m2.I can't even find something referencing that file. Oo Is it used?
+		MONSTER_1,			// Monster Skin 1 //Skin for creatures or gameobjects #1
+		MONSTER_2,			// Monster Skin 2 //Skin for creatures or gameobjects #2
+		MONSTER_3,			// Monster Skin 3 //Skin for creatures or gameobjects #3
+		ITEM_ICON,			// Item Icon // Used on inventory art M2s(2) : ui - button.m2 and forcedbackpackitem.m2(CSimpleModel_ReplaceIconTexture("texture"))
 		
-		TEX_COMPONENT_COUNT
+		COUNT
 	};
-	SM2_Texture_Type type;
+	Type type;
 
 	struct Flags
 	{
@@ -207,8 +205,7 @@ struct SM2_Light
 	{
 		Directional = 0,
 		Point
-	};
-	Type			type;						// Types are listed below.
+	} type;
 	int16			bone;                       // -1 if not attached to a bone
 	vec3			position;					// relative to bone, if given
 
@@ -229,7 +226,6 @@ struct SM2_Camera // TODO Spline keys
 	uint32 type; // 0: portrait, 1: characterinfo; -1: else (flyby etc.); referenced backwards in the lookup table.
 
 	float fov;
-
 	float far_clip;
 	float near_clip;
 
@@ -241,8 +237,7 @@ struct SM2_Camera // TODO Spline keys
 
 	M2Track<float> roll; // The camera can have some roll-effect. Its 0 to 2*Pi. 
 };
-
 #include __PACK_END
 
-#include "M2_Animated_WotLK.h"
+#include "M2_Animated.h"
 #include "M2_ParticlesTypes.h"

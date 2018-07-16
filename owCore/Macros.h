@@ -4,7 +4,8 @@
 // Build settings
 // =================================================================================================
 
-//#define MDX_PARTICLES_ENABLE
+#define MDX_PARTICLES_ENABLE
+
 #define CLASSIC    0
 #define BC         1
 #define WOTLK      2

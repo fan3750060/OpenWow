@@ -13,7 +13,7 @@ CM2_Manager::CM2_Manager()
 
 	AddManager<IM2Manager>(this);
 
-	m_DefaultModel = Add("World\\Scale\\HumanMaleScale.m2");
+	m_DefaultModel = Add("World\\Scale\\50x50.m2");
 }
 
 CM2_Manager::~CM2_Manager()

@@ -16,14 +16,20 @@
     <Filter Include="HTTP\World">
       <UniqueIdentifier>{c8ec6c2e-39ff-48cf-91ec-6dd4d91d9bd6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Types">
-      <UniqueIdentifier>{75ade36c-8f7e-47c1-9c10-2417d65282bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Types\Character">
+    <Filter Include="Character">
       <UniqueIdentifier>{184a7fc6-825a-4df8-a20c-a8b5d2bed81a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Types\Creature">
+    <Filter Include="Character\Items">
+      <UniqueIdentifier>{6bae6273-5baf-4441-8bb4-8fb687c18bc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character\Helpers">
+      <UniqueIdentifier>{56d7860f-0ed7-4bd0-b8fd-a437356d6230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Creature">
       <UniqueIdentifier>{bf170495-f29d-4375-be4d-a232c7642eed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{c513c374-7723-4e14-8cb7-ac14a342bbb8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,33 +57,47 @@
     <ClCompile Include="OutPacket.cpp">
       <Filter>HTTP\World</Filter>
     </ClCompile>
-    <ClCompile Include="AuthWorldController.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
-    <ClCompile Include="RealmInfo.cpp">
-      <Filter>Types</Filter>
-    </ClCompile>
     <ClCompile Include="SocketBase.cpp">
       <Filter>HTTP</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>Types\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="CharSectionWrapper.cpp">
-      <Filter>Types\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="M2_Character_Instance.cpp">
-      <Filter>Types\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="M2_Character_MeshPartID_Provider.cpp">
-      <Filter>Types\Character</Filter>
+      <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="Creature.cpp">
-      <Filter>Types\Creature</Filter>
+      <Filter>Creature</Filter>
     </ClCompile>
-    <ClCompile Include="CreatureMeshIDProvider.cpp">
-      <Filter>Types\Creature</Filter>
+    <ClCompile Include="WorldHandlers.cpp">
+      <Filter>HTTP\World</Filter>
     </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Character\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterTemplate.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemTemplate.cpp">
+      <Filter>Character\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature_M2Instance.cpp">
+      <Filter>Creature</Filter>
+    </ClCompile>
+    <ClCompile Include="Item_M2Instance.cpp">
+      <Filter>Character\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item_VisualData.cpp">
+      <Filter>Character\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatureEx.cpp">
+      <Filter>Creature</Filter>
+    </ClCompile>
+    <ClCompile Include="Character_SectionWrapper.cpp">
+      <Filter>Character\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Character_SkinTextureBaker.cpp">
+      <Filter>Character\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthWorldController.cpp" />
+    <ClCompile Include="RealmInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -122,35 +142,55 @@
     <ClInclude Include="InPacket.h">
       <Filter>HTTP\World</Filter>
     </ClInclude>
-    <ClInclude Include="AuthWorldController.h">
-      <Filter>Types</Filter>
-    </ClInclude>
-    <ClInclude Include="RealmInfo.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="SocketBase.h">
       <Filter>HTTP</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>Types\Character</Filter>
+      <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="CharacterEnums.h">
-      <Filter>Types\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="CharSectionWrapper.h">
-      <Filter>Types\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="M2_Character_Instance.h">
-      <Filter>Types\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="M2_Character_MeshPartID_Provider.h">
-      <Filter>Types\Character</Filter>
+      <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Creature.h">
-      <Filter>Types\Creature</Filter>
+      <Filter>Creature</Filter>
     </ClInclude>
-    <ClInclude Include="CreatureMeshIDProvider.h">
-      <Filter>Types\Creature</Filter>
+    <ClInclude Include="WorldHandlers.h">
+      <Filter>HTTP\World</Filter>
     </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Character\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterTemplate.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Player_Enums.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemTemplate.h">
+      <Filter>Character\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshIDEnums.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Item_M2Instance.h">
+      <Filter>Character\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature_M2Instance.h">
+      <Filter>Creature</Filter>
+    </ClInclude>
+    <ClInclude Include="Item_VisualData.h">
+      <Filter>Character\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatureEx.h">
+      <Filter>Creature</Filter>
+    </ClInclude>
+    <ClInclude Include="Character_SectionWrapper.h">
+      <Filter>Character\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Character_SkinTextureBaker.h">
+      <Filter>Character\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthWorldController.h" />
+    <ClInclude Include="RealmInfo.h" />
   </ItemGroup>
 </Project>

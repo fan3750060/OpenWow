@@ -11,14 +11,13 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 	// Scene node params
 	{
 		// Translate
-		m_Translate = _position;
+		setTranslate(_position, false);
 		//
 		CalculateMatrix();
 		//
-		m_Bounds.setMin(-vec3(25, 25, 25)); // Don't use from WMO model!!!
-		m_Bounds.setMax(vec3(25, 25, 25));
-		m_Bounds.calculateCenter();
-		m_Bounds.transform(getAbsTrans());
+		BoundingBox bbox(-vec3(25, 25, 25), vec3(25, 25, 25));
+		bbox.transform(getAbsTrans());
+		setBounds(bbox);
 	}
 
 	setDrawOrder(29);
@@ -36,7 +35,7 @@ void Liquid_Instance::Render3D()
 		return;
 	}
 
-	_Render->DrawBoundingBox(m_Bounds);
+	_Render->DrawBoundingBox(getBounds());
 
 	m_Object->Render(getAbsTrans());
 }

@@ -22,7 +22,7 @@ public:
 	virtual ~ADT_MDX_Instance();
 
 	// ISceneNode
-	string getObjectInfo() override { return "@ADT_MDX@" + m_Object->getFilename(); }
+	string getObjectInfo() const override { return "@ADT_MDX@" + getM2()->getFilename(); }
 
 	// IRenderable3D
 	bool PreRender3D() override;

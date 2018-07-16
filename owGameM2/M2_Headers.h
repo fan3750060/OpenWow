@@ -77,7 +77,7 @@ struct SM2_Header
 
     // Emitters and particles
     M2Array<SM2_RibbonEmitter>		ribbon_emitters;
-    M2Array<M2Particle>				particle_emitters;
+    M2Array<SM2_Particle>				particle_emitters;
 
 #if VERSION >= VERSION_WotLK
 	M2Array<uint16>					textureCombinerCombos;

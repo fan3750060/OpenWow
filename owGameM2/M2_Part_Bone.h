@@ -3,31 +3,37 @@
 #include "M2_Types.h"
 
 // FORWARD BEGIN
-class M2;
+class CM2_Comp_Skeleton;
 // FORWARD END
 
-struct GameBoneType
+struct M2_GameBoneType
 {
 	enum List : int16
 	{
 		ArmL = 0,
 		ArmR = 1,
+
 		ShoulderL = 2,
 		ShoulderR = 3,
+
 		SpineLow = 4,
 		Waist = 5,
+
 		Head = 6,
 		Jaw = 7,
+
 		IndexFingerR = 8,
 		MiddleFingerR = 9,
 		PinkyFingerR = 10,
 		RingFingerR = 11,
 		ThumbR = 12,
+
 		IndexFingerL = 13,
 		MiddleFingerL = 14,
 		PinkyFingerL = 15,
 		RingFingerL = 16,
 		ThumbL = 17,
+
 		$BTH = 18,
 		$CSR = 19,
 		$CSL = 20,
@@ -37,6 +43,7 @@ struct GameBoneType
 		$CHD = 24,
 		$CCH = 25,
 		Root = 26,
+
 		Wheel1 = 27,
 		Wheel2 = 28,
 		Wheel3 = 29,
@@ -46,7 +53,7 @@ struct GameBoneType
 		Wheel7 = 33,
 		Wheel8 = 34,
 
-		Count = 35
+		Count
 	};
 };
 
@@ -55,7 +62,9 @@ class CM2_Part_Bone
 public:
 	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles);
 
-	void setParentBone(const M2* _parentM2);
+	void setParentBone(const CM2_Comp_Skeleton* _skeleton);
+	uint16 getSubmesh() const { return submesh; };
+
 	void calcMatrix(uint16 anim, uint32 time, uint32 globalTime);
 	void calcBillboard(cmat4 _worldMatrix);
 
@@ -75,15 +84,16 @@ public:
 	void SetNeedCalculate() { m_IsCalculated = false; }
 	bool IsCalculated() const { return m_IsCalculated; }
 
-	int32			getID() const { return m_Id; }
+	int32			getGameBoneID() const { return m_GameBoneId; }
 	CM2_Part_Bone*	getParentBone() const { return m_ParentBone; }
 	int16			getParentBoneID() const { return m_ParentBoneID; }
 	cmat4			getTransformMatrix() const { return m_TransformMatrix; }
 	cmat4			getRotateMatrix() const { return m_RotationMatrix; }
 	cvec3			getPivot() const { return pivot; }
+	cvec3			getTransPivot() const { return transPivot; }
 
 private:
-	int32           m_Id; // Bones lookup table
+	int32           m_GameBoneId; // Bones lookup table
 	SM2_Bone::Flags m_Flags;
 
 	int16			m_ParentBoneID;

@@ -2,10 +2,11 @@
 
 // Include
 #include "M2.h"
+#include "M2_Base_Instance.h"
+#include "M2_Skin_Builder.h"
 
 // General
 #include "M2_Skin_Batch.h"
-
 
 CM2_Skin_Batch::CM2_Skin_Batch(const M2* _parentM2) :
 	m_ParentM2(_parentM2),
@@ -23,14 +24,13 @@ void CM2_Skin_Batch::Init()
 	m_Material->fillRenderState(&m_State);
 }
 
-void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
+void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)
 {
-	if (_provider != nullptr)
+	uint32 meshPartID = m_SkinSection->getProto().meshPartID;
+
+	if (!_instance->isMeshEnabled(meshPartID))
 	{
-		if (!_provider->isMeshEnabled(m_SkinSection->getProto().meshPartID))
-		{
-			return;
-		}
+		return;
 	}
 
 	//--
@@ -51,7 +51,7 @@ void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animatio
 		// Bind textures
 		for (uint32 i = 0; i < m_Textures.size(); i++)
 		{
-			m_Textures[i]->set(&m_State, Material::C_DiffuseTextureIndex + i, _provider);
+			m_Textures[i]->set(&m_State, Material::C_DiffuseTextureIndex + i, _instance);
 		}
 
 		// Texture alpha
@@ -71,7 +71,5 @@ void CM2_Skin_Batch::Render(CM2_MeshPartID_Provider* _provider, uint16 _animatio
 		}
 	}
 
-	m_SkinSection->Draw(&m_State, _animationIndex, _worldMatrix, _time, globalTime);
-
-
+	m_SkinSection->Draw(&m_State, _instance);
 }

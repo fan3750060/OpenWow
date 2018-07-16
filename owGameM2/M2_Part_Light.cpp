@@ -20,7 +20,7 @@ CM2_Part_Light::CM2_Part_Light(const M2* _parentM2, IFile* f, const SM2_Light& _
 	type = _proto.type;
 	if (_proto.bone != -1)
 	{
-		m_Bone = _parentM2->getBone(_proto.bone);
+		m_Bone = _parentM2->getSkeleton()->getBoneLookup(_proto.bone);
 	}
 
 	position = _proto.position.toXZmY();

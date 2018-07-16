@@ -1,43 +1,36 @@
 #include "stdafx.h"
 
+// Include
+#include "M2_Base_Instance.h"
+#include "M2_Builder.h"
+#include "M2_Skin_Builder.h"
+
 // General
 #include "M2.h"
 
 M2::M2(cstring name) :
 	m_FileName(name),
 	m_UniqueName(""),
+
+	m_Materials(nullptr),
+	m_Miscellaneous(nullptr),
+	m_Skeleton(nullptr),
+
 	// Loops and sequences
 	m_IsAnimated(false),
-	// Bones
-	m_HasBones(false),
-	m_IsAnimBones(false),
-	m_IsBillboard(false),
+
 	// Vertices
-	m_IsContainGeom(false),
-	// Colors and textures
-	m_IsAnimTextures(false),
-	// Misc
-	m_HasMisc(false)
+	m_IsContainGeom(false)
 {
 	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 }
 
 M2::~M2()
 {
-	ERASE_VECTOR(m_Bones);
+	OW_SAFEDELETE(m_Materials);
+	OW_SAFEDELETE(m_Miscellaneous);
+	OW_SAFEDELETE(m_Skeleton);
 
-	ERASE_VECTOR(m_Colors);
-	ERASE_VECTOR(m_Materials);
-	ERASE_VECTOR(m_Textures);
-	ERASE_VECTOR(m_TextureWeights);
-	ERASE_VECTOR(m_TexturesTransform);
-
-	ERASE_VECTOR(m_Events);
-	ERASE_VECTOR(m_Attachments);
-	ERASE_VECTOR(m_Lights);
-	ERASE_VECTOR(m_Cameras);
-
-	ERASE_VECTOR(m_RibbonEmitters);
 
 
 	ERASE_VECTOR(m_Skins);
@@ -45,7 +38,7 @@ M2::~M2()
 	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
 }
 
-void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor, uint16 _animationIndex, uint32 _time, uint32 globalTime)
+void M2::Render(CM2_Base_Instance* _instance)
 {
 	if (!m_IsContainGeom)
 	{
@@ -55,46 +48,27 @@ void M2::drawModel(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4
 	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
 	pass->Bind();
 	{
-		pass->setWorld(_worldMatrix);
-		
-		pass->SetColorDoodad(_doodadColor);
+		pass->setWorld(_instance->getAbsTrans());
+		pass->SetColorDoodad(_instance->getColor());
 
-		for (auto& it : m_Skins)
+		/*for (auto& it : m_Skins)
 		{
-			it->Draw(_provider, _animationIndex, _worldMatrix, _time, globalTime);
+			it->Draw(_instance);
 			break;
-		}
-		//m_Skins.back()->Draw(_provider, _animationIndex, _worldMatrix, _time, globalTime);
+		}*/
+		m_Skins.back()->Draw(_instance);
 	}
 	pass->Unbind();
 
+	// Ribbons
+	m_Miscellaneous->render(_instance->getAbsTrans());
+
 	/*RenderCollision(_worldMatrix);
+
 	for (auto& it : m_Skins)
 	{
-		it->RenderNormals();
+	it->RenderNormals();
 	}*/
-}
-
-void M2::Render(cmat4 _worldMatrix, CM2_MeshPartID_Provider* _provider, cvec4 _doodadColor, uint16 _animationIndex, uint32 _time, uint32 globalTime)
-{
-	if (m_IsAnimated)
-	{
-		// draw ribbons
-		for (auto it : m_RibbonEmitters)
-		{
-			//it->Render(_worldMatrix);
-		}
-
-#ifdef MDX_PARTICLES_ENABLE
-		// draw particle systems
-		for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
-		{
-			particleSystems[i].draw();
-		}
-#endif
-	}
-
-	drawModel(_worldMatrix, _provider, _doodadColor, _animationIndex, _time, globalTime);
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)
@@ -120,65 +94,21 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
-void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
+void M2::calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
 {
-	if (m_HasBones)
+	if (m_Skeleton)
 	{
-		for (uint32 i = 0; i < m_Bones.size(); i++)
-		{
-			m_Bones[i]->SetNeedCalculate();
-		}
-
-		for (uint32 i = 0; i < m_Bones.size(); i++)
-		{
-			m_Bones[i]->calcMatrix(_animationIndex, _time, globalTime);
-		}
-
-		for (uint32 i = 0; i < m_Bones.size(); i++)
-		{
-			m_Bones[i]->calcBillboard(_worldMatrix);
-		}
+		m_Skeleton->calc(_animationIndex, _time, globalTime, _worldMatrix);
 	}
 
-
-
-	for (auto& it : m_RibbonEmitters)
+	if (m_Materials)
 	{
-		it->setup(_animationIndex, _time, globalTime, _worldMatrix);
+		m_Materials->calc(_animationIndex, _time, globalTime);
 	}
 
-#ifdef MDX_PARTICLES_ENABLE
-	for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
+	if (m_Miscellaneous)
 	{
-		// random time distribution for teh win ..?
-		int pt = (animtime + (int)(tmax*particleSystems[i].tofs)) % tmax;
-		particleSystems[i].setup(_animationIndex, _time);
-	}
-#endif
-
-	for (auto& it : m_Colors)
-	{
-		it->calc(_animationIndex, _time, globalTime);
-	}
-
-	for (auto& it : m_TexturesTransform)
-	{
-		it->calc(_animationIndex, _time, globalTime);
-	}
-
-	for (auto& it : m_TextureWeights)
-	{
-		it->calc(_animationIndex, _time, globalTime);
-	}
-
-	for (auto& it : m_Lights)
-	{
-		it->setup(_animationIndex, _time, globalTime);
-	}
-
-	for (auto& it : m_Cameras)
-	{
-		it->calc(_time, globalTime);
+		m_Miscellaneous->calc(_animationIndex, _time, globalTime, _worldMatrix);
 	}
 }
 
@@ -186,9 +116,9 @@ void M2::animate(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint3
 void M2::updateEmitters(float dt)
 {
 #ifdef MDX_PARTICLES_ENABLE
-	for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
-	{
-		particleSystems[i].update(dt);
-	}
+	//for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
+	//{
+	//	particleSystems[i].update(dt);
+	//}
 #endif
 }

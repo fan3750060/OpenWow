@@ -2,6 +2,8 @@
 
 // Include
 #include "M2.h"
+#include "M2_Base_Instance.h"
+#include "M2_Skin_Builder.h"
 
 // General
 #include "M2_Skin.h"
@@ -17,18 +19,18 @@ CM2_Skin::CM2_Skin(M2* _model) :
 CM2_Skin::~CM2_Skin()
 {
 	ERASE_VECTOR(m_Batches);
+	ERASE_VECTOR(m_Sections);
 }
 
 //
 
-void CM2_Skin::Draw(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
+void CM2_Skin::Draw(CM2_Base_Instance* _instance)
 {
 	for (auto& p : m_Batches)
 	{
-		p->Render(_provider, _animationIndex, _worldMatrix, _time, globalTime);
+		p->Render(_instance);
 	}
 }
-
 
 /*void CM2_Skin::RenderNormals(cmat4 _worldMatrix)
 {

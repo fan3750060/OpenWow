@@ -3,33 +3,17 @@
 // General
 #include "SceneNode.h"
 
-SceneNode::SceneNode() : 
-	m_Parent(nullptr),
-	m_Rotate(vec3(0.0f, 0.0f, 0.0f)),
-	m_Scale(vec3(1.0f, 1.0f, 1.0f)),
-	m_IsLoaded(false),
-	m_Selectable(false),
-	m_IsVisible(false),
-	m_IsOpaque(false),
-	m_DrawOrder(0),
-	m_DebugColor(vec4(0.5f, 0.5f, 0.5f, 0.5f))
-{
-	//CalculateMatrix();
-}
-
 SceneNode::SceneNode(SceneNode* _parent) : 
 	m_Parent(_parent),
 	m_Rotate(vec3(0.0f, 0.0f, 0.0f)),
 	m_Scale(vec3(1.0f, 1.0f, 1.0f)),
-	m_IsLoaded(false),
 	m_Selectable(false),
 	m_IsVisible(false),
 	m_IsOpaque(false),
 	m_DrawOrder(0),
-	m_DebugColor(vec4(0.5f, 0.5f, 0.5f, 0.5f))
+	m_DebugColor(vec4(0.5f, 0.5f, 0.5f, 0.5f)),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	//CalculateMatrix();
-
 	if (m_Parent != nullptr)
 	{
 		m_Parent->addChild(this);
@@ -38,29 +22,29 @@ SceneNode::SceneNode(SceneNode* _parent) :
 
 SceneNode::~SceneNode()
 {
-	/*for (auto it = m_Childs.begin(); it != m_Childs.end(); )
-	{
-		SceneNode* item = (*it);
-		item->setParent(nullptr);
-		delete item;
-		it = m_Childs.erase(it);
-		item = nullptr;
-	}*/
-
 	if (m_Parent != nullptr)
 	{
 		m_Parent->removeChild(this);
 	}
 }
 
-bool SceneNode::Load()
+bool SceneNode::checkFrustum() const
 {
-	return true;
+	return !_Render->getCamera()->_frustum.cullBox(getBounds());
 }
 
-bool SceneNode::Delete()
+bool SceneNode::checkDistance2D(float _distance) const
 {
-	return true;
+	// Check distance to camera
+	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
+	return distToCamera2D < _distance;
+}
+
+bool SceneNode::checkDistance(float _distance) const
+{
+	// Check distance to camera
+	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length() - getBounds().getRadius();
+	return distToCamera < _distance;
 }
 
 void SceneNode::CalculateMatrix(bool _isRotationQuat)
@@ -88,4 +72,12 @@ void SceneNode::CalculateMatrix(bool _isRotationQuat)
 	{
 		m_AbsTransform = m_RelTransform;
 	}
+
+	/*if (m_Childs.size() > 0)
+	{
+		for (auto& ch : m_Childs)
+		{
+			ch->CalculateMatrix();
+		}
+	}*/
 }

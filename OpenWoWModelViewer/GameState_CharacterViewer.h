@@ -39,5 +39,9 @@ public:
 private:
 	SharedGeomPtr m_DebugGeom;
 
-	Character* m_Char;
+	SharedPtr<Character> m_Char[10];
+
+
+	static const uint32 cnt = 20;
+	SharedPtr<Character> m_CharExtra[cnt * cnt];
 };

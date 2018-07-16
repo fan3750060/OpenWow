@@ -82,7 +82,7 @@ void GameState_InWorld::Update(double _time, double _dTime)
 
 		vec3 pos, tar;
 		float fov, nearP, farP;
-		m2_Camera->getObject()->m_Cameras[0]->getParams(&pos, &tar, &fov, &nearP, &farP);
+		m2_Camera->getM2()->getMiscellaneous()->getCamera(0)->getParams(&pos, &tar, &fov, &nearP, &farP);
 
 		pos = m_DefPos + rotateV(pos, 4.52f);
 		tar = m_DefPos + rotateV(tar, 4.52f);

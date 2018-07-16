@@ -13,7 +13,9 @@
   <ItemGroup>
     <ClCompile Include="M2_Animation.cpp" />
     <ClCompile Include="M2_Animator.cpp" />
-    <ClCompile Include="M2_MeshPartID_Provider.cpp" />
+    <ClCompile Include="M2_Comp_Materials.cpp" />
+    <ClCompile Include="M2_Comp_Miscellaneous.cpp" />
+    <ClCompile Include="M2_Comp_Skeleton.cpp" />
     <ClCompile Include="M2_Part_Attachment.cpp" />
     <ClCompile Include="M2_Part_Event.cpp" />
     <ClCompile Include="M2_Part_Material.cpp" />
@@ -45,10 +47,12 @@
   <ItemGroup>
     <ClInclude Include="..\shared\owGameM2.h" />
     <ClInclude Include="M2_AnimatedConverters.h" />
-    <ClInclude Include="M2_Animated_WotLK.h" />
+    <ClInclude Include="M2_Animated.h" />
     <ClInclude Include="M2_Animation.h" />
     <ClInclude Include="M2_Animator.h" />
-    <ClInclude Include="M2_MeshPartID_Provider.h" />
+    <ClInclude Include="M2_Comp_Materials.h" />
+    <ClInclude Include="M2_Comp_Miscellaneous.h" />
+    <ClInclude Include="M2_Comp_Skeleton.h" />
     <ClInclude Include="M2_Part_Attachment.h" />
     <ClInclude Include="M2_Part_Event.h" />
     <ClInclude Include="M2_Part_Material.h" />

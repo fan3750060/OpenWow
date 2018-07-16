@@ -22,19 +22,16 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, c
 	{
 		//m_DoodadColor = vec4(1.0f);
 	}
-
 	//m_Object->setDoodadColor(_placement.getColor());
+
 	// Scene node params
 	{
 		// Convert
-		m_Translate = _placement.position.toXZmY();
-		m_RotateQuat = Quaternion(-_placement.orientation.z, _placement.orientation.x, _placement.orientation.y, _placement.orientation.w);
-		m_Scale = vec3(_placement.scale, -_placement.scale, -_placement.scale);
+		setTranslate(_placement.position.toXZmY(), false);
+		setRotateQuat(Quaternion(-_placement.orientation.z, _placement.orientation.x, _placement.orientation.y, _placement.orientation.w), false);
+		setScale(vec3(_placement.scale, -_placement.scale, -_placement.scale), false);
 		//
 		CalculateMatrix(true);
-		//
-		m_Bounds = m_Object->getBounds();
-		m_Bounds.transform(getAbsTrans());
 	}
 
 	InitLocal();

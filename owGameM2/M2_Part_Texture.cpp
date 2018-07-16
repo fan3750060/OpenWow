@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-// Include 
-#include "M2_MeshPartID_Provider.h"
-#include "M2.h"
+// Include
+#include "M2_Base_Instance.h"
 
 // General
 #include "M2_Part_Texture.h"
@@ -17,14 +16,14 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	m_SpecialType = _proto.type;
 
 	// Common texture
-	if (m_SpecialType == SM2_Texture::SM2_Texture_Type::NONE)
+	if (m_SpecialType == SM2_Texture::Type::NONE)
 	{
 		string textureFileName = (const char*)(f->getData() + _proto.filename.offset);
 		m_Texture = _Render->TexturesMgr()->Add(textureFileName);
 	}
 }
 
-void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_MeshPartID_Provider* _provider) const
+void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
 
@@ -40,11 +39,10 @@ void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_MeshPartID_Pro
 
 	if (isTextureSpecial())
 	{
-		if (_provider != nullptr)
+		R_Texture* texture = _instance->getSpecialTexture(m_SpecialType);
+		if (texture != nullptr)
 		{
-			R_Texture* specialTexture = _provider->getSpecialTexture(m_SpecialType);
-			assert1(specialTexture != nullptr);
-			_state->setTexture(_slot, specialTexture, sampler, 0);
+			_state->setTexture(_slot, texture, sampler, 0);
 		}
 
 		return;

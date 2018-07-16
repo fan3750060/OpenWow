@@ -1,66 +1,37 @@
 #pragma once
 
-#include "CharacterEnums.h"
-#include "M2_Character_Instance.h"
+#include "Creature.h"
 
-struct Item
-{
-	void Init(ByteBuffer& b)
-	{
-		b.readBytes(&DisplayId, 4);
-		b.readBytes(&InventoryType, 1);
-		b.seekRelative(4);
-	}
+#include "CharacterTemplate.h"
 
-public:
-	uint32 DisplayId;
-	uint8 InventoryType;
-};
+#include "Item_VisualData.h"
 
-
-class Character
+class Character : public Creature, public CharacterTemplate
 {
 public:
-	void InitDefault();
-	void Init(ByteBuffer& b);
+	Character();
 
-	void Print();
+	// Initialization
+	void InitFromTemplate(const CharacterTemplate& b);
+	void InitFromDisplayInfo(uint32 _id) override;
 
-public:
-	// System
-	uint64						GUID;
-	string						Name;
-	// Race
-	Race						Race;
-	Class						Class;
-	Gender						Gender;
-	// Items
-	uint8						skin;
-	uint8						face;
-	uint8						hairStyle;
-	uint8						hairColor;
-	uint8						facialStyle;
-	// Level
-	uint8						Level;
-	// Location
-	uint32						ZoneId;
-	uint32						MapId;
-	float						X, Y, Z;
-	// Guild
-	uint32						GuildId;
-	// Flags
-	CharacterFlags				Flags;
-	CharacterCustomizeFlags		CustumizeFlags;
-	bool						IsFirstLogin;
-	// Pet
-	uint32						PetInfoId;
-	uint32						PetLevel;
-	uint32						PetFamilyId;
-	// Items
-	Item						Items[20];
+	// Mesh provider
+	void setHairGeoset(uint32 _value) { setMeshEnabled(MeshIDType::SkinAndHair, _value); }
+	void setFacial1Geoset(uint32 _value) { setMeshEnabled(MeshIDType::Facial1, _value); }
+	void setFacial2Geoset(uint32 _value) { setMeshEnabled(MeshIDType::Facial2, _value); }
+	void setFacial3Geoset(uint32 _value) { setMeshEnabled(MeshIDType::Facial3, _value); }
 
-	// Model
-public:
-	CM2_Character_Instance* m_Model;
-	R_Texture*				m_SkinTexture;
+	// Texture components helper
+	const CItem_VisualData* getItemTextureComponents(InventoryType::List _slot) const { return &m_VisualItems[_slot]; }
+
+	// IRenderable
+	void Render3D() override;
+
+private:
+	M2* CreateCharacterModel();
+	void RefreshItemVisualData();
+
+private:
+	CharacterTemplate   m_Template;
+	CItem_VisualData    m_VisualItems[INVENTORY_SLOT_BAG_END];
 };

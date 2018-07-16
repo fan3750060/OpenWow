@@ -7,7 +7,7 @@ class ADT;
 class MapController;
 // FORWARD END
 
-class ADT_MCNK : public SceneNode
+class ADT_MCNK : public SceneNode, public ILoadable
 {
 public:
 	ADT_MCNK(MapController* _mapController, ADT* _parentTile, IFile* _file);
@@ -16,11 +16,14 @@ public:
 	void RenderNormals();
 
 	// ISceneNode
-	string getObjectInfo() override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
+	string getObjectInfo() const override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
+	void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
 
-	// ILoadableObject
+	// ILoadable
 	bool Load() override;
 	bool Delete() override;
+	void setLoaded() {}
+	bool isLoaded() const { return true; } // TODO FIXME
 
 	// IRenderable
 	bool PreRender3D() override;

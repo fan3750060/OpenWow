@@ -26,12 +26,12 @@ void GameState_CharacterViewer::CreateDebugGeom()
 
 void GameState_CharacterViewer::PlayAnim(uint16 _anim)
 {
-	m_Char->m_Model->getAnimator()->PlayAnimation(_anim);
+	m_Char[0]->getAnimator()->PlayAnimation(_anim);
 }
 
 void GameState_CharacterViewer::InfoAnim()
 {
-	m_Char->m_Model->getAnimator()->PrintList();
+	m_Char[0]->getAnimator()->PrintList();
 }
 
 bool GameState_CharacterViewer::Init()
@@ -42,9 +42,61 @@ bool GameState_CharacterViewer::Init()
 
 	CreateDebugGeom();
 
-	m_Char = new Character();
-	m_Char->InitDefault();
-	m_Char->m_Model->setScale(10.0f);
+
+	vector<uint32> exists;
+	for (int i = 0; i < cnt; i++)
+	{
+		for (int j = 0; j < cnt; j++)
+		{
+			int index = i + j * cnt;
+			m_CharExtra[index] = new Character();
+			//m_Char->InitDefault();
+
+			while (true)
+			{
+				int random = Random::GenerateMax(32000);
+
+				DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
+				if (rec == nullptr)	continue;
+
+				DBC_CreatureDisplayInfoExtraRecord* exRec = rec->Get_HumanoidData();
+				if (exRec == nullptr) continue;
+
+				if (exRec->Get_Race()->Get_ID() > 10) continue;
+
+
+				if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
+
+				m_CharExtra[index]->InitFromDisplayInfo(random);
+				m_CharExtra[index]->setScale(5.0f);
+
+				exists.push_back(random);
+				break;
+			}
+
+			m_CharExtra[index]->setTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
+		}
+	}
+
+	/*CharacterTemplate tempPala;
+	tempPala.TemplateFillDefaultPaladin();
+
+	CharacterTemplate tempShaman;
+	tempShaman.TemplateFillDefaultShaman();
+
+	m_Char[0] = new Character();
+	m_Char[0]->InitFromTemplate(tempPala);
+	m_Char[0]->setScale(10.0f);
+
+	m_Char[1] = new Character();
+	m_Char[1]->setTranslate(vec3(0, 0, 25), false);
+	m_Char[1]->InitFromTemplate(tempShaman);
+	m_Char[1]->setScale(10.0f);
+
+	m_Char[2] = new Character();
+	m_Char[2]->setTranslate(vec3(0, 0, 50), false);
+	m_Char[2]->InitFromDisplayInfo(2638);
+	m_Char[2]->setScale(10.0f);*/
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
 	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
@@ -113,10 +165,28 @@ void GameState_CharacterViewer::Render3D()
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
-	if (m_Char)
+	for (uint32 i = 0; i < 10; i++)
 	{
-		m_Char->m_Model->PreRender3D();
-		m_Char->m_Model->Render3D();
+		if (m_Char[i])
+		{
+			m_Char[i]->PreRender3D();
+			m_Char[i]->Render3D();
+		}
+	}
+
+
+	// Geom
+	for (int i = 0; i < cnt; i++)
+	{
+		for (int j = 0; j < cnt; j++)
+		{
+			int index = i + j * cnt;
+			if (m_CharExtra[index])
+			{
+				m_CharExtra[index]->PreRender3D();
+				m_CharExtra[index]->Render3D();
+			}
+		}
 	}
 }
 

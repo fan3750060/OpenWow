@@ -96,7 +96,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 	}
 
 	// Ended!
-	const CM2_Animation* nextAnim = m_CurrentAnimation->getNext();
+	/*const CM2_Animation* nextAnim = m_CurrentAnimation->getNext();
 	if (m_CurrentAnimation->getNext() != nullptr)
 	{
 		m_CurrentAnimation = nextAnim;
@@ -104,7 +104,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 		m_IsPlayed = false;
 		animtime = 0;
 		return;
-	}
+	}*/
 
 	m_CurrentTime = m_CurrentAnimation->getEnd() - 1;
 	m_IsPlayed = true;

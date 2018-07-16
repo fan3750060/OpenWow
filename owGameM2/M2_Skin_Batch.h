@@ -5,6 +5,7 @@
 
 // FORWARD BEGIN
 class M2;
+class CM2_Base_Instance;
 class CM2_Skin_Builder;
 // FORWARD END
 
@@ -16,7 +17,7 @@ public:
 
 	void Init();
 
-	void Render(CM2_MeshPartID_Provider* _provider, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
+	void Render(CM2_Base_Instance* _instance);
 
 	int32 getPriorityPlan() const { return m_PriorityPlan; }
 	const CM2_SkinSection* getSkin() const { return m_SkinSection; }
@@ -36,7 +37,7 @@ private:
 
 	RenderState							m_State;
 
-	//--
+private: // PARENT
 	const M2*							m_ParentM2;
 	CGroupQuality&						m_QualitySettings;
 };

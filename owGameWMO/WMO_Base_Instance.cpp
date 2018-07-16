@@ -5,8 +5,7 @@
 
 CWMO_Base_Instance::CWMO_Base_Instance(SceneNode* _parent, WMO* _wmoObject) :
 	SceneNode(_parent),
-	m_Object(_wmoObject),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+	m_Object(_wmoObject)
 {
 	assert1(m_Object);
 
@@ -39,10 +38,13 @@ void CWMO_Base_Instance::EmptyTransformAndBounds()
 {
 	// Matrix
 	CalculateMatrix();
+
 	// Bounds
-	m_Bounds.setMin(vec3(-100000.0f, -100000.0f, -100000.0f));
-	m_Bounds.setMax(vec3(100000.0f, 100000.0f, 100000.0f));
-	m_Bounds.calculateCenter();
+	BoundingBox bbox;
+	bbox.setMin(vec3(-100000.0f, -100000.0f, -100000.0f));
+	bbox.setMax(vec3(100000.0f, 100000.0f, 100000.0f));
+	bbox.calculateCenter();
+	setBounds(bbox);
 }
 
 void CWMO_Base_Instance::Update(double _time, double _dTime)
@@ -54,13 +56,12 @@ void CWMO_Base_Instance::Update(double _time, double _dTime)
 
 bool CWMO_Base_Instance::PreRender3D()
 {
-	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_WMO_Distance)
+	if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
 	{
 		return false;
 	}
 
-	if (_Render->getCamera()->_frustum.cullBox(m_Bounds))
+	if (!checkFrustum())
 	{
 		return false;
 	}

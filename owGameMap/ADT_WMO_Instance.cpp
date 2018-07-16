@@ -13,18 +13,17 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 	// Scene node params
 	{
 		// Translate
-		m_Translate = _placementInfo.position;
+		setTranslate(_placementInfo.position, false);
 		// Rotate
 		vec3 rotate = _placementInfo.rotation.toRad();
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
-		m_Rotate = vec3(rotate.z, rotate.y, rotate.x);
+		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);
 		// Matrix
 		CalculateMatrix();
 		// Bounds
-		m_Bounds.setMin(_placementInfo.boundingBox.min); // Don't use from WMO model!!!
-		m_Bounds.setMax(_placementInfo.boundingBox.max);
-		m_Bounds.calculateCenter();
+		BoundingBox bbox(_placementInfo.boundingBox.min, _placementInfo.boundingBox.max);
+		setBounds(bbox);
 	}
 
 	InitTransform();

@@ -25,7 +25,7 @@ public:
 	uint32 GetAreaID();
 
 	// ISceneNode
-	string getObjectInfo() override { return "@MapController@"; }
+	string getObjectInfo() const override { return "@MapController@"; }
 
 	// IMapManager
 	void Update() override;

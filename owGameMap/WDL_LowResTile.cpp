@@ -13,11 +13,15 @@ CWDL_LowResTile::CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 
 	m_IndexZ(_indexZ),
 	m_Geom(_geom)
 {
-	m_Bounds.calculateCenter();
+	{
+		BoundingBox bbox; // Infinity
+		bbox.calculateCenter();
+		setBounds(bbox);
 
-	// Scene node settings
-	setOpaque(true);
-	setDrawOrder(19);
+		// Scene node settings
+		setOpaque(true);
+		setDrawOrder(19);
+	}
 
 	// State
 	m_State.setDepthTest(false);

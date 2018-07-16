@@ -47,13 +47,12 @@ bool GameState_CreaturesViewer::Init()
 	CreateDebugGeom();
 
 	vector<uint32> exists;
-
 	for (int i = 0; i < cnt; i++)
 	{
 		for (int j = 0; j < cnt; j++)
 		{
 			int index = i + j * cnt;
-			m_Char[index] = new Creature(vec3(i * 10.0f, 0.0f, j * 10.0f));
+			m_Char[index] = new Creature();
 			//m_Char->InitDefault();
 
 			while (true)
@@ -69,6 +68,7 @@ bool GameState_CreaturesViewer::Init()
 				break;
 			}
 			
+			m_Char[index]->setTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
 		}
 	}
 	_Render->getCamera()->Position = vec3(50, 50, 50);

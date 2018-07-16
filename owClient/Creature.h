@@ -1,18 +1,25 @@
 #pragma once
 
-#include "M2_Character_Instance.h"
+#include "Creature_M2Instance.h"
 
-class Creature : public CM2_Base_Instance
+#include "MeshIDEnums.h"
+
+class Creature : public Creature_M2Instance
 {
 public:
-	Creature(vec3 _position);
+	Creature();
 
-	void InitFromDisplayInfo(uint32 _id);
+	// Initialization
+	virtual void InitFromDisplayInfo(uint32 _id);
+
+	// Mesh provider
+	virtual void setMeshEnabled(MeshIDType::List _type, uint32 _value);
+	virtual bool isMeshEnabled(uint32 _index) const override;
+
+protected:
+	void CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record);
 
 private:
-	void RecalculateMatrix();
-
-private:
-	vec3 m_CreaturePosition;
-	float m_CreatureScale;
+	// Mesh provider
+	uint32				m_MeshID[MeshIDType::Count];
 };

@@ -58,7 +58,7 @@ void CSceneManager::RenderRecursy(SceneNode* _node)
 
 void CSceneManager::Intersection(SceneNode * _node)
 {
-	if (!(_node->getSelectable()))
+	if (!(_node->isSelectable()))
 	{
 		return;
 	}

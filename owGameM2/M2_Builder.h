@@ -21,7 +21,6 @@ public:
 	void Step4Vertices();
 	void Step5ColorAndTextures();
 	void Step6Misc();
-	void Step7Particles();
 	void Step8Skins();
 	void Step9Collision();
 

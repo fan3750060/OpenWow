@@ -27,9 +27,8 @@ MapController::MapController() :
 	{
 		setOpaque(true);
 
-		m_Bounds.setMin(vec3(Math::MinFloat));
-		m_Bounds.setMax(vec3(Math::MaxFloat));
-		m_Bounds.calculateCenter();
+		BoundingBox bbox(Math::MinFloat, Math::MaxFloat);
+		setBounds(bbox);
 	}
 
 	/*time_t t = time(0);   // get time now

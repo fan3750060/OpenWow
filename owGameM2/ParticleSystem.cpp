@@ -30,7 +30,7 @@ ParticleSystem::~ParticleSystem()
 	delete emitter;
 }
 
-void ParticleSystem::init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals)
+void ParticleSystem::init(IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals)
 {
 	speed.init(mta.emissionSpeed, f, globals);
 	variation.init(mta.speedVariation, f, globals);
@@ -59,14 +59,14 @@ void ParticleSystem::init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals)
 	slowdown = mta.slowdown; // FIXME
 	rotation = mta.rotation; // FIXME
 	pos = mta.Position.toXZmY();
-	texture = m_ParentM2->m_Textures[mta.texture]->getTexture();
+	texture = m_ParentM2->getMaterials()->m_Textures[mta.texture]->getTexture();
 	blend = mta.blendingType;
 	rows = mta.textureDimensions_rows;
 	cols = mta.textureDimensions_columns;
 	type = mta.particleColorIndex;
 	//order = mta.s2;
 	order = mta.particleColorIndex > 0 ? -1 : 0;
-	parent = *(m_ParentM2->m_Bones.data() + mta.bone);
+	parent = m_ParentM2->getSkeleton()->getBoneDirect(mta.bone);
 
 	switch (mta.emitterType)
 	{
@@ -92,7 +92,7 @@ void ParticleSystem::init(IFile* f, M2Particle& mta, cGlobalLoopSeq globals)
 	// 57 = Faith halo, ring?
 	// 9 = water elemental
 
-	billboard = !(mta.flags.M2PARTICLE_FLAGS_DONOTBILLBOARD);
+	billboard = (mta.flags.DONOTBILLBOARD == false);
 
 
 	manim = mtime = 0;

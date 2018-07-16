@@ -5,7 +5,7 @@
 
 inline void FixColorVertexAlpha(WMO_Group* _group)
 {
-	int begin_second_fixup = 0;
+	uint32 begin_second_fixup = 0;
 	if (_group->m_Header.batchCounts[0])
 	{
 		begin_second_fixup = *((uint16*)&_group->moba[(uint16)_group->m_Header.batchCounts[0]] - 2) + 1;
@@ -13,7 +13,7 @@ inline void FixColorVertexAlpha(WMO_Group* _group)
 
 	if (_group->m_ParentWMO->m_Header.flags.lighten_interiors)
 	{
-		for (int i = begin_second_fixup; i < _group->mocv_count; ++i)
+		for (uint32 i = begin_second_fixup; i < _group->mocv_count; ++i)
 		{
 			_group->mocv[i].w = _group->m_Header.flags.IS_OUTDOOR ? 0xFF : 0x00;
 		}
@@ -35,7 +35,7 @@ inline void FixColorVertexAlpha(WMO_Group* _group)
 			v36 = (_group->m_ParentWMO->m_Header.ambColor >> 16) & 0xff;
 		}
 
-		for (int mocv_index = 0; mocv_index < begin_second_fixup; ++mocv_index)
+		for (uint32 mocv_index = 0; mocv_index < begin_second_fixup; ++mocv_index)
 		{
 			_group->mocv[mocv_index].x -= v36;
 			_group->mocv[mocv_index].y -= v37;
@@ -59,7 +59,7 @@ inline void FixColorVertexAlpha(WMO_Group* _group)
 			_group->mocv[mocv_index++].z = v14 / 2;
 		}
 
-		for (int i = begin_second_fixup; i < _group->mocv_count; ++i)
+		for (uint32 i = begin_second_fixup; i < _group->mocv_count; ++i)
 		{
 			int32 v19 = (_group->mocv[i].x * _group->mocv[i].w) / 64 + _group->mocv[i].x - v36;
 			_group->mocv[i].x = std::min(255, std::max(v19 / 2, 0));

@@ -6,6 +6,8 @@
 #include "GameState_CharacterViewer.h"
 #include "GameState_CreaturesViewer.h"
 
+#include "GameState_CreateCharacter.h"
+
 #include <ctime>
 
 int main(int argumentCount, char* arguments[])
@@ -57,14 +59,16 @@ int main(int argumentCount, char* arguments[])
 		GameState_M2Viewer gsM2Wiew;
 		GameState_CharacterViewer gsCharacterWiew;
 		GameState_CreaturesViewer gsCreaturesWiew;
+		GameState_CreateCharacter gsCreateCharacter;
 
 		GameStateManager gsManager;
 		gsManager.AddGameState(GameStatesNames::GAME_STATE_WMO_VIEW, &gsWMOWiew);
 		gsManager.AddGameState(GameStatesNames::GAME_STATE_M2_VIEW, &gsM2Wiew);
 		gsManager.AddGameState(GameStatesNames::GAME_STATE_CHARACTER_VIEW, &gsCharacterWiew);
 		gsManager.AddGameState(GameStatesNames::GAME_STATE_CREATURE_VIEW, &gsCreaturesWiew);
+		gsManager.AddGameState(GameStatesNames::GAME_STATE_CREATE_CHARACTER, &gsCreateCharacter);
 
-		gsManager.SetGameState(GameStatesNames::GAME_STATE_CHARACTER_VIEW);
+		gsManager.SetGameState(GameStatesNames::GAME_STATE_CREATE_CHARACTER);
 
 		while (engine.Tick());
 	}

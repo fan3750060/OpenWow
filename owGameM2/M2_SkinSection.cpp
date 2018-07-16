@@ -2,23 +2,25 @@
 
 // Include
 #include "M2.h"
+#include "M2_Base_Instance.h"
 #include "M2_Skin_Builder.h"
 
 // General
 #include "M2_SkinSection.h"
 
-CM2_SkinSection::CM2_SkinSection(M2* _model, const SM2_SkinSection& _proto) :
-	m_ParentM2(_model),
+CM2_SkinSection::CM2_SkinSection(M2* _model, const uint16 _index, const SM2_SkinSection& _proto) :
+	m_Index(_index),
 	m_Proto(_proto),
+	m_ParentM2(_model),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 
 }
 
-void CM2_SkinSection::Final()
+void CM2_SkinSection::CreateGeometry(vector<SM2_Vertex>& _vertexes, vector<uint16>& _indexes)
 {
-	R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(m_Verts.size()) * sizeof(SM2_Vertex), m_Verts.data(), false);
-	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Index.size()) * sizeof(uint16), m_Index.data(), false);
+	R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
+	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(_indexes.size()) * sizeof(uint16), _indexes.data(), false);
 
 	// Begin geometry
 	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PBNT2);
@@ -30,36 +32,40 @@ void CM2_SkinSection::Final()
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(SM2_Vertex)); // tc1 10-11
 	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
 	__geom->finishCreatingGeometry();
-
-	m_Verts.clear();
-	m_Index.clear();
 }
 
-void CM2_SkinSection::Draw(RenderState* _state, uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
+void CM2_SkinSection::Draw(RenderState* _state, CM2_Base_Instance* _instance)
 {
 	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
 
-	bool isAnimated =  m_ParentM2->m_HasBones /*&& m_ParentM2->m_IsAnimated*/;
+	CM2_Comp_Skeleton* skeleton = m_ParentM2->getSkeleton();
+
+	bool isAnimated = skeleton->hasBones() && m_ParentM2->m_IsAnimated;
 	pass->SetAnimated(isAnimated);
 	if (isAnimated)
 	{
 		pass->SetBonesMaxInfluences(m_Proto.boneInfluences);
 
-		/*for (uint32 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		/*for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
 		{
-			m_ParentM2->m_Bones[m_ParentM2->m_BonesLookup[i]]->calcMatrix(_animationIndex, _time, globalTime);
+			skeleton->getBoneLookup(i)->SetNeedCalculate();
 		}
 
-		for (uint32 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
 		{
-			m_ParentM2->m_Bones[m_ParentM2->m_BonesLookup[i]]->calcBillboard(_worldMatrix);
+			skeleton->getBoneLookup(i)->calcMatrix(_instance->getAnimator()->getSequenceIndex(), _instance->getAnimator()->getCurrentTime(), _instance->m_Time);
+		}
+
+		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		{
+			skeleton->getBoneLookup(i)->calcBillboard(_instance->getAbsTrans());
 		}*/
 
 		vector<mat4> bones;
-		for (uint32 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
 		{
-			assert1(m_ParentM2->m_BonesLookup[i] != -1);
-			bones.push_back(m_ParentM2->m_Bones[m_ParentM2->m_BonesLookup[i]]->getTransformMatrix());
+			assert1(skeleton->isLookupBoneCorrect(i));
+			bones.push_back(skeleton->getBoneLookup(i)->getTransformMatrix());
 		}
 
 		pass->SetBones(bones);
@@ -69,11 +75,8 @@ void CM2_SkinSection::Draw(RenderState* _state, uint16 _animationIndex, cmat4 _w
 
 	_Render->r.drawIndexed
 	(
-		0,
-		getProto().indexCount,
-		0,
-		getProto().vertexCount,
-		_state,
-		false
+		0, getProto().indexCount,
+		0, getProto().vertexCount,
+		_state,	false
 	);
 }

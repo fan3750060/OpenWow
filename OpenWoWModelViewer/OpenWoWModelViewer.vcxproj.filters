@@ -9,6 +9,7 @@
     <ClInclude Include="GameState_WMOViewer.h" />
     <ClInclude Include="GameState_CharacterViewer.h" />
     <ClInclude Include="GameState_CreaturesViewer.h" />
+    <ClInclude Include="GameState_CreateCharacter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -20,6 +21,7 @@
     <ClCompile Include="GameState_WMOViewer.cpp" />
     <ClCompile Include="GameState_CharacterViewer.cpp" />
     <ClCompile Include="GameState_CreaturesViewer.cpp" />
+    <ClCompile Include="GameState_CreateCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

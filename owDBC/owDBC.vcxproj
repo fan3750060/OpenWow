@@ -22,6 +22,8 @@
     <ClInclude Include="DBC_AnimationData.h" />
     <ClInclude Include="DBC_AreaTable.h" />
     <ClInclude Include="DBC_CharacterFacialHairStyles.h" />
+    <ClInclude Include="DBC_CharComponentTextureLayouts.h" />
+    <ClInclude Include="DBC_CharComponentTextureSections.h" />
     <ClInclude Include="DBC_CharHairGeosets.h" />
     <ClInclude Include="DBC_CharSections.h" />
     <ClInclude Include="DBC_ChrRaces.h" />
@@ -32,6 +34,10 @@
     <ClInclude Include="DBC_CreatureModelData.h" />
     <ClInclude Include="DBC_GroundEffectDoodad.h" />
     <ClInclude Include="DBC_GroundEffectTexture.h" />
+    <ClInclude Include="DBC_Item.h" />
+    <ClInclude Include="DBC_ItemBagFamily.h" />
+    <ClInclude Include="DBC_ItemClass.h" />
+    <ClInclude Include="DBC_ItemDisplayInfo.h" />
     <ClInclude Include="DBC_Light.h" />
     <ClInclude Include="DBC_LightFloatBand.h" />
     <ClInclude Include="DBC_LightIntBand.h" />
@@ -42,6 +48,7 @@
     <ClInclude Include="DBC_LoadingScreen.h" />
     <ClInclude Include="DBC_Map.h" />
     <ClInclude Include="DBC_Map_WotLK.h" />
+    <ClInclude Include="DBC_Material.h" />
     <ClInclude Include="DBC_TerrainType.h" />
     <ClInclude Include="DBC_WMOAreaTable.h" />
     <ClInclude Include="DBC_WorldSafeLocs.h" />

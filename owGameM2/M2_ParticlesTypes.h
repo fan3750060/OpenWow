@@ -32,35 +32,25 @@ struct SM2_RibbonEmitter
 
 //
 
-struct M2Particle
+struct SM2_Particle
 {
 	uint32 particleId;                      // Always (as I have seen): -1.
 	struct
 	{
-		uint32 M2PARTICLE_FLAGS_AFFECTEDBYLIGHTING : 1;
+		uint32 AFFECTEDBYLIGHTING : 1;
 		uint32 unk0 : 2;
-		uint32 M2PARTICLE_FLAGS_WORLDUP : 1;
-		uint32 M2PARTICLE_FLAGS_DONOTTRAIL : 1;
-		uint32 M2PARTICLE_FLAGS_INLIGHTING : 1;
+		uint32 WORLDUP : 1;
+		uint32 DONOTTRAIL : 1;
+		uint32 INLIGHTING : 1;
 		uint32 unk1 : 6;
-		uint32 M2PARTICLE_FLAGS_DONOTBILLBOARD : 1;
+		uint32 DONOTBILLBOARD : 1;
 		uint32 : 19;
 	} flags;
 
-	vec3 Position;                        // The position. Relative to the following bone.
+	vec3 Position;							// The position. Relative to the following bone.
 	uint16 bone;                            // The bone its attached to.
 
-	union
-	{
-		uint16 texture;                         // And the m_DiffuseTextures that are used. 
-		struct                                    // For multi-textured particles actually three ids
-		{
-			uint16 texture_0 : 5;
-			uint16 texture_1 : 5;
-			uint16 texture_2 : 5;
-			uint16 : 1;
-		};
-	};
+	uint16 texture;                         // And the m_DiffuseTextures that are used. 
 
 	M2Array<char> geometry_model_filename;    // if given, this emitter spawns models
 	M2Array<char> recursion_model_filename;   // if given, this emitter is an alias for the (maximum 4) emitters of the given model
@@ -102,8 +92,6 @@ struct M2Particle
 
 	M2Track<float> zSource;                   // When greater than 0, the initial velocity of the particle is (particle.position - C3Vector(0, 0, zSource)).Normalize()
 
-											  // Params BEGIN
-
 	M2TrackFake<vec3> colorTrack;              // Most likely they all have 3 timestamps for {start, middle, end}.
 	M2TrackFake<short> alphaTrack;                 // FIXME FIXED16
 
@@ -119,20 +107,20 @@ struct M2Particle
 	float rotation;				//Sprite Rotation
 	float unknown2[2];
 
-	/*float tailLength;                         // TailCellTime?
-	float TwinkleSpeed;                       // has something to do with the spread
-	float TwinklePercent;                     // has something to do with the spread
+	/*float tailLength;				// TailCellTime?
+	float TwinkleSpeed;				// has something to do with the spread
+	float TwinklePercent;			// has something to do with the spread
 
 	CRange twinkleScale;
-	float BurstMultiplier;                    // ivelScale
-	float drag;                               // For a non-zero values, instead of travelling linearly the particles seem to slow down sooner. Speed is multiplied by exp( -drag * t ).
+	float BurstMultiplier;			// ivelScale
+	
+	float drag;						// For a non-zero values, instead of travelling linearly the particles seem to slow down sooner. Speed is multiplied by exp( -drag * t ).
 
-	float baseSpin;                           // Initial rotation of the particle quad
+	float baseSpin;					// Initial rotation of the particle quad
 	float baseSpinVary;
 
-	float Spin;                               // Rotation of the particle quad per second
+	float Spin;						// Rotation of the particle quad per second
 	float spinVary;*/
-
 
 	M2Box tumble;
 	vec3 WindVector;
@@ -143,16 +131,8 @@ struct M2Particle
 	float followSpeed2;
 	float followScale2;
 
-	M2Array<vec3> splinePoints;            //Set only for spline praticle emitter. Contains array of points for spline
-
-										   // Params END
-
-	M2Track<uint8> enabledIn;                // (boolean) Appears to be used sparely now, probably there's a flag that links particles to animation sets where they are enabled.
-
-	struct vector_2fp_6_9 { short x; short y; };
-
-	vector_2fp_6_9 multiTextureParam0[2];
-	vector_2fp_6_9 multiTextureParam1[2];
+	M2Array<vec3> splinePoints;     // Set only for spline praticle emitter. Contains array of points for spline
+	M2Track<uint8> enabledIn;       // (boolean) Appears to be used sparely now, probably there's a flag that links particles to animation sets where they are enabled.
 };
 
 #include __PACK_END

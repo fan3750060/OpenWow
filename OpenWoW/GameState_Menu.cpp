@@ -146,7 +146,7 @@ void GameState_Menu::Update(double _time, double _dTime)
 	if (m_BackgroudModel)
 	{
 		m_BackgroudModel->Update(_time, _dTime);
-		m_BackgroudModel->getObject()->m_Cameras[0]->setup(0, 0);
+		m_BackgroudModel->getM2()->getMiscellaneous()->getCamera(0)->setup(0, 0);
 	}
 }
 
@@ -258,7 +258,7 @@ void GameState_Menu::randBackground()
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
 
 	M2* mdx = GetManager<IM2Manager>()->Add(path);
-	mdx->m_Cameras[0]->setup(0, 0);
+	mdx->getMiscellaneous()->getCamera(0)->setup(0, 0);
 
 	m_BackgroudModel = new CM2_Base_Instance(nullptr, mdx);
 	m_BackgroudModel->InitLocal();

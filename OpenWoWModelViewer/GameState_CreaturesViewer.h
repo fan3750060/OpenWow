@@ -38,6 +38,6 @@ public:
 private:
 	SharedGeomPtr m_DebugGeom;
 
-	static const uint32 cnt = 25;
+	static const uint32 cnt = 5;
 	Creature* m_Char[cnt * cnt];
 };

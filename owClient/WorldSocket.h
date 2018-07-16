@@ -27,7 +27,6 @@ public:
 
 	bool S_AuthChallenge(ByteBuffer& _buff);
 	bool S_AuthResponse(ByteBuffer& _buff);
-
 	bool S_CharEnum(ByteBuffer& _buff);
 
 	//--
@@ -35,14 +34,14 @@ public:
 
 
 private:
-	CAuthWorldController*	m_World;
-	CSocketBase*			socketBase;
-	AuthCrypt				cryptUtils;
+	CAuthWorldController*						m_World;
+	CSocketBase*								socketBase;
+	AuthCrypt									cryptUtils;
 
-	std::unordered_map<Opcodes, HandlerFunc> m_Handlers;
-	std::queue<InPacket> m_Packets;
+	std::unordered_map<Opcodes, HandlerFunc>	m_Handlers;
+	std::queue<InPacket>						m_Packets;
 
-	RealmInfo*	m_Realm;
+	RealmInfo*									m_Realm;
 
-	BigNumber Key;
+	BigNumber									Key;
 };
