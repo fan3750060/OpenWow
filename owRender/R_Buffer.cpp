@@ -29,6 +29,7 @@ R_Buffer* R_Buffer::createBuffer(uint32 _bufType, uint32 _size, const void* _dat
 	m_IsDynamic = _isDynamic;
 
 	glGenBuffers(1, &m_GLObj);
+	assert1(m_GLObj != 0);
 	glBindBuffer(m_Type, m_GLObj);
 	glBufferData(m_Type, _size, _data, _isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBindBuffer(m_Type, 0);

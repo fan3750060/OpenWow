@@ -261,5 +261,4 @@ void GameState_Menu::randBackground()
 	mdx->getMiscellaneous()->getCamera(0)->setup(0, 0);
 
 	m_BackgroudModel = new CM2_Base_Instance(nullptr, mdx);
-	m_BackgroudModel->InitLocal();
 }

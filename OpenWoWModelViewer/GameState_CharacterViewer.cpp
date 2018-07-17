@@ -42,8 +42,7 @@ bool GameState_CharacterViewer::Init()
 
 	CreateDebugGeom();
 
-
-	vector<uint32> exists;
+	/*vector<uint32> exists;
 	for (int i = 0; i < cnt; i++)
 	{
 		for (int j = 0; j < cnt; j++)
@@ -76,9 +75,9 @@ bool GameState_CharacterViewer::Init()
 
 			m_CharExtra[index]->setTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
 		}
-	}
+	}*/
 
-	/*CharacterTemplate tempPala;
+	CharacterTemplate tempPala;
 	tempPala.TemplateFillDefaultPaladin();
 
 	CharacterTemplate tempShaman;
@@ -88,7 +87,7 @@ bool GameState_CharacterViewer::Init()
 	m_Char[0]->InitFromTemplate(tempPala);
 	m_Char[0]->setScale(10.0f);
 
-	m_Char[1] = new Character();
+	/*m_Char[1] = new Character();
 	m_Char[1]->setTranslate(vec3(0, 0, 25), false);
 	m_Char[1]->InitFromTemplate(tempShaman);
 	m_Char[1]->setScale(10.0f);

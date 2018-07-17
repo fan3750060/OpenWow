@@ -40,28 +40,19 @@ void GameState_CreateCharacter::CreateBackgroud(Race::List _charRace)
 	model->getMiscellaneous()->getCameraDirect(0)->setup(0, 0);
 
 	m_BackgroudModel = new CM2_Base_Instance(nullptr, model);
-	m_BackgroudModel->InitLocal();
 }
 
-void GameState_CreateCharacter::OnBtnPrev()
+void GameState_CreateCharacter::OnBtnRace(int _val)
 {
-	m_CurrentRace -= 1;
+	m_CurrentRace += 1;
 	if (m_CurrentRace < 0)
 	{
 		m_CurrentRace = 9;
 	}
-
-	UpdateState();
-}
-
-void GameState_CreateCharacter::OnBtnNext()
-{
-	m_CurrentRace += 1;
 	if (m_CurrentRace > 9)
 	{
 		m_CurrentRace = 0;
 	}
-
 	UpdateState();
 }
 
@@ -72,9 +63,17 @@ void GameState_CreateCharacter::UpdateState()
 	DBC_ChrRacesRecord* raceRecord = DBC_ChrRaces[race];
 	assert1(raceRecord != nullptr);
 
-	OW_SAFEDELETE(m_Char);
+	CharacterTemplate tempPala;
+	tempPala.TemplateFillDefaultPaladin();
+
 	m_Char = new Character();
-	m_Char->InitFromDisplayInfoCreating(raceRecord->Get_MaleModelID(), race, Gender::Male);
+	m_Char->InitFromTemplate(tempPala);
+	m_Char->setScale(10.0f);
+
+
+	/*OW_SAFEDELETE(m_Char);
+	m_Char = new Character();
+	m_Char->InitFromDisplayInfoCreating(raceRecord->Get_MaleModelID(), race, Gender::Male);*/
 
 	CreateBackgroud(race);
 }
@@ -90,18 +89,18 @@ bool GameState_CreateCharacter::Init()
 	// UI
 
 	UIWowButon* btnPrev = new UIWowButon(GetManager<IUIMgr>());
-	btnPrev->Init(vec2(50, 50));
+	btnPrev->Init(vec2(20, 20));
 	btnPrev->AttachTo(m_Window);
 	btnPrev->ShowText();
 	btnPrev->SetText("<");
-	btnPrev->SetAction(FUNCTION_CLASS_Builder(GameState_CreateCharacter, this, OnBtnPrev));
+	SETBUTTONACTION_ARG(btnPrev, GameState_CreateCharacter, this, OnBtnRace, int32, -1);
 
 	UIWowButon* btnNext = new UIWowButon(GetManager<IUIMgr>());
-	btnNext->Init(vec2(260, 50));
+	btnNext->Init(vec2(220, 20));
 	btnNext->AttachTo(m_Window);
 	btnNext->ShowText();
 	btnNext->SetText(">");
-	btnNext->SetAction(FUNCTION_CLASS_Builder(GameState_CreateCharacter, this, OnBtnNext));
+	SETBUTTONACTION_ARG(btnNext, GameState_CreateCharacter, this, OnBtnRace, int32, 1);
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
 	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));

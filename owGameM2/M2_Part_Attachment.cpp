@@ -18,9 +18,10 @@ CM2_Part_Attachment::CM2_Part_Attachment(const M2* _parentM2, IFile* f, const SM
 
 void CM2_Part_Attachment::render(cmat4 _worldMatrix)
 {
-	//if (m_Type >= M2_AttachmentType::ChestBloodFront)
-	//{
-	//	return;
-	//}
+	if (m_Type >= 5)
+	{
+		return;
+	}
+
 	//_Render->DrawSphere(mat4(), _worldMatrix * m_Bone->getTransPivot(), 0.5f);
 }

@@ -225,6 +225,9 @@
     <ClInclude Include="RenderStates.h">
       <Filter>RenderCore</Filter>
     </ClInclude>
+    <ClInclude Include="M2_Particle_Pass.h">
+      <Filter>Techniques\M2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Textures">
@@ -387,6 +390,12 @@
     </None>
     <None Include="..\_gamedata\shaders\UI\UI_Texture.vs">
       <Filter>Techniques\UI</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\M2\M2_Particles.fs">
+      <Filter>Techniques\M2</Filter>
+    </None>
+    <None Include="..\_gamedata\shaders\M2\M2_Particles.vs">
+      <Filter>Techniques\M2</Filter>
     </None>
   </ItemGroup>
 </Project>

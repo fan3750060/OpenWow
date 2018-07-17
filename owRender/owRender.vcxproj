@@ -136,6 +136,7 @@
     <ClInclude Include="GeometryBase.h" />
     <ClInclude Include="GPUTimer.h" />
     <ClInclude Include="lights_common.h" />
+    <ClInclude Include="M2_Particle_Pass.h" />
     <ClInclude Include="Magma_Pass.h" />
     <ClInclude Include="MCNK_Pass.h" />
     <ClInclude Include="RenderPipeline.h" />
@@ -220,6 +221,8 @@
     </None>
     <None Include="..\_gamedata\shaders\M2\M2.fs" />
     <None Include="..\_gamedata\shaders\M2\M2.vs" />
+    <None Include="..\_gamedata\shaders\M2\M2_Particles.fs" />
+    <None Include="..\_gamedata\shaders\M2\M2_Particles.vs" />
     <None Include="..\_gamedata\shaders\M2\M2_RibbonEmitters.fs" />
     <None Include="..\_gamedata\shaders\M2\M2_RibbonEmitters.vs" />
     <None Include="..\_gamedata\shaders\Map\MapChunk.fs">

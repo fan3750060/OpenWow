@@ -642,7 +642,7 @@ void RenderDevice::drawIndexed(uint32 firstIndex, uint32 numIndices, uint32 firs
 		);
 		checkError();
 
-		if (_softReset)
+		if (true)
 		{
 			glBindVertexArray(0);
 		}

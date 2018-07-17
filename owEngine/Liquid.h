@@ -76,10 +76,7 @@ protected:
 protected:
 	uint32						m_TilesX, m_TilesY;
 	uint32						m_TilesCount;
-
-	
-
-
+	BoundingBox					m_Bounds;
 
 	vector<Liquid_Layer>		m_WaterLayers;
 

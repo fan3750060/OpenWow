@@ -34,10 +34,13 @@
     <ClInclude Include="DBC_CreatureModelData.h" />
     <ClInclude Include="DBC_GroundEffectDoodad.h" />
     <ClInclude Include="DBC_GroundEffectTexture.h" />
+    <ClInclude Include="DBC_HelmetGeosetVisData.h" />
     <ClInclude Include="DBC_Item.h" />
     <ClInclude Include="DBC_ItemBagFamily.h" />
     <ClInclude Include="DBC_ItemClass.h" />
     <ClInclude Include="DBC_ItemDisplayInfo.h" />
+    <ClInclude Include="DBC_ItemVisualEffects.h" />
+    <ClInclude Include="DBC_ItemVisuals.h" />
     <ClInclude Include="DBC_Light.h" />
     <ClInclude Include="DBC_LightFloatBand.h" />
     <ClInclude Include="DBC_LightIntBand.h" />

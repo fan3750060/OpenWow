@@ -22,6 +22,14 @@ CM2_Comp_Miscellaneous::~CM2_Comp_Miscellaneous()
 	ERASE_VECTOR(m_RibbonEmitters);
 }
 
+void CM2_Comp_Miscellaneous::update(double _time, double _dTime)
+{
+	for (auto& it : particleSystems)
+	{
+		it->update(_time, _dTime);
+	}
+}
+
 void CM2_Comp_Miscellaneous::calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat)
 {
 	for (auto& it : m_Lights)
@@ -41,8 +49,6 @@ void CM2_Comp_Miscellaneous::calc(uint16 anim, uint32 time, uint32 globalTime, c
 
 	for (auto& it : particleSystems)
 	{
-		// random time distribution for teh win ..?
-		//int pt = (animtime + (int)(tmax*particleSystems[i].tofs)) % tmax;
 		it->setup(anim, time, globalTime);
 	}
 }
@@ -62,6 +68,6 @@ void CM2_Comp_Miscellaneous::render(cmat4 _worldMat)
 
 	for (auto& it : particleSystems)
 	{
-		it->draw();
+		it->Render3D(_worldMat);
 	}
 }

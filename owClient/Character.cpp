@@ -39,10 +39,10 @@ void Character::InitFromTemplate(const CharacterTemplate& b)
 
 void Character::InitFromDisplayInfo(uint32 _id)
 {
-	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
+	const DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
-	DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra != nullptr);
 
 	// 1. Template
@@ -106,7 +106,7 @@ void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender
 	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
-	DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra == nullptr);
 
 	// 1. Template
@@ -159,7 +159,7 @@ void Character::Render3D()
 
 //--
 
-M2* Character::CreateCharacterModel()
+void Character::CreateCharacterModel()
 {
 	string modelClientFileString = DBC_ChrRaces[Race]->Get_ClientFileString();
 	string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
@@ -169,11 +169,6 @@ M2* Character::CreateCharacterModel()
 	assert1(model != nullptr);
 
 	setM2(model);
-
-	CalculateMatrix();
-	InitLocal();
-
-	return model;
 }
 
 void Character::RefreshItemVisualData()

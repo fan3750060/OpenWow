@@ -462,19 +462,18 @@ void CM2_Builder::Step6Misc()
 	}
 
 	// Particle systems
-	/*if (m_Header.particle_emitters.size > 0)
+	if (m_Header.particle_emitters.size > 0)
 	{
-		M2Particle* Particles = (M2Particle*)(m_F->getData() + m_Header.particle_emitters.offset);
+		SM2_Particle* Particles = (SM2_Particle*)(m_F->getData() + m_Header.particle_emitters.offset);
 		for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 		{
-			ParticleSystem* particle = new ParticleSystem();
-			particle->m_ParentM2 = m_M2;
-			particle->init(m_F, Particles[i], m_GlobalLoops);
+			CM2_ParticleSystem* particle = new CM2_ParticleSystem(m_M2, m_F, Particles[i], m_GlobalLoops);
+			miscellaneous->particleSystems.push_back(particle);
 		}
 
 		// Animated
 		miscellaneous->m_HasMisc = true;
-	}*/
+	}
 
 	m_M2->m_Miscellaneous = miscellaneous;
 }

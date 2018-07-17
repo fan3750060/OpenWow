@@ -1,18 +1,17 @@
 #pragma once
 
 // FORWARD BEGIN
-class ParticleSystem;
+class CM2_ParticleSystem;
 // FORWARD END
-
 
 class ParticleEmitter
 {
 public:
-	ParticleEmitter(ParticleSystem* sys) : sys(sys) {}
+	ParticleEmitter(CM2_ParticleSystem* sys) : m_ParticleSystem(sys) {}
 	virtual Particle newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2, uint32 _globalTime) = 0;
 
 protected:
-	ParticleSystem* sys;
+	CM2_ParticleSystem* m_ParticleSystem;
 };
 
 //--
@@ -20,7 +19,10 @@ protected:
 class PlaneParticleEmitter : public ParticleEmitter
 {
 public:
-	PlaneParticleEmitter(ParticleSystem* sys) : ParticleEmitter(sys) {}
+	PlaneParticleEmitter(CM2_ParticleSystem* sys) : 
+		ParticleEmitter(sys) 
+	{}
+
 	Particle newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2, uint32 _globalTime);
 };
 
@@ -29,6 +31,9 @@ public:
 class SphereParticleEmitter : public ParticleEmitter
 {
 public:
-	SphereParticleEmitter(ParticleSystem *sys) : ParticleEmitter(sys) {}
+	SphereParticleEmitter(CM2_ParticleSystem *sys) : 
+		ParticleEmitter(sys) 
+	{}
+
 	Particle newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2, uint32 _globalTime);
 };

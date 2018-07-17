@@ -7,8 +7,7 @@ public:
 
 	void CreateBackgroud(Race::List _charRace);
 
-	void OnBtnPrev();
-	void OnBtnNext();
+	void OnBtnRace(int _val = 0);
 	void UpdateState();
 	int32 m_CurrentRace;
 

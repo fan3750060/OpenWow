@@ -15,7 +15,7 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 		//
 		CalculateMatrix();
 		//
-		BoundingBox bbox(-vec3(25, 25, 25), vec3(25, 25, 25));
+		BoundingBox bbox(Math::MinFloat, Math::MaxFloat);
 		bbox.transform(getAbsTrans());
 		setBounds(bbox);
 	}
@@ -35,7 +35,7 @@ void Liquid_Instance::Render3D()
 		return;
 	}
 
-	_Render->DrawBoundingBox(getBounds());
+	//_Render->DrawBoundingBox(getBounds());
 
 	m_Object->Render(getAbsTrans());
 }

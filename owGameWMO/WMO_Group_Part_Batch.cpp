@@ -20,6 +20,7 @@ WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Grou
 
 	// Init renderState
 	m_WMOMaterial->fillRenderState(&m_State);
+	//m_State.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 	m_State.setDepthMask(true);
 	m_State.setDepthTest(true);
 	//m_State.setGeometry(_parentGroup->__geom); geom is nullptr now, set it later
@@ -38,7 +39,7 @@ void WMO_Group_Part_Batch::Render()
 			m_Proto.vertexStart,
 			m_Proto.getVerticesCount(),
 			&m_State,
-			false
+			true
 		);
 	}
 }

@@ -77,6 +77,6 @@ void CM2_SkinSection::Draw(RenderState* _state, CM2_Base_Instance* _instance)
 	(
 		0, getProto().indexCount,
 		0, getProto().vertexCount,
-		_state,	false
+		_state,	true
 	);
 }

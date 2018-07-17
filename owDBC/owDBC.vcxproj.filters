@@ -123,6 +123,15 @@
     <ClInclude Include="DBC_Material.h">
       <Filter>DBCs</Filter>
     </ClInclude>
+    <ClInclude Include="DBC_HelmetGeosetVisData.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_ItemVisualEffects.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC_ItemVisuals.h">
+      <Filter>DBCs\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

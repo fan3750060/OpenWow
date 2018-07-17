@@ -66,7 +66,15 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 	M2_RibbonEmitters_Pass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	M2_RibbonEmitters_Pass->Unbind();
 	m_GeomTechniques.push_back(M2_RibbonEmitters_Pass);
+	
+	// M2 particles
 
+	M2_Particles_Pass = new CM2_Particle_Pass(m_RenderDevice);
+	M2_Particles_Pass->Bind();
+	M2_Particles_Pass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
+	M2_Particles_Pass->Unbind();
+	m_GeomTechniques.push_back(M2_Particles_Pass);
+	
 	// Liquids
 
 	m_Magma = new CMagma_Pass(m_RenderDevice);

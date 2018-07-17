@@ -40,12 +40,12 @@ struct
 	{ InventoryType::SHIELD,        "Shield",   MESHID_ALLUNK,                                                         1, M2_AttachmentType::Shield                                         },
 	{ InventoryType::RANGED,        "WEAPON",   MESHID_ALLUNK,                                                         1, M2_AttachmentType::HandRight                                      },
 
-	{ InventoryType::CLOAK,         "Cape",     { MeshIDType::Cloak,     MeshIDType::UNK,      MeshIDType::UNK },      1, M2_AttachmentType::Back /*Cloack specific*/                       },  
+	{ InventoryType::CLOAK,         "Cape",     { MeshIDType::Cloak,     MeshIDType::UNK,      MeshIDType::UNK },      1, M2_AttachmentType::Back /*Cloack specific*/                       },
 
 	{ InventoryType::TWOHWEAPON,    "WEAPON",   MESHID_ALLUNK,                                                         1, M2_AttachmentType::HandRight                                      },
 	{ InventoryType::BAG,           "Pouch" },
 	{ InventoryType::TABARD,        "",         { MeshIDType::Tabard,    MeshIDType::UNK,      MeshIDType::UNK }                                                                            },
-	
+
 	{ InventoryType::ROBE, },
 
 	{ InventoryType::WEAPONMAINHAND,"WEAPON",   MESHID_ALLUNK,                                                         1, M2_AttachmentType::HandRight                                      },
@@ -78,7 +78,8 @@ struct
 };
 
 CItem_VisualData::CItem_VisualData(Character* _owner) :
-	ItemTemplate()
+	ItemTemplate(),
+	m_ParentCharacter(_owner)
 {}
 
 /*CItem_VisualData::CItem_VisualData(uint32 _displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID) :
@@ -99,7 +100,7 @@ void CItem_VisualData::Load()
 
 void CItem_VisualData::Render3D()
 {
-	if (InventoryType ==  InventoryType::CLOAK)
+	if (InventoryType == InventoryType::CLOAK)
 	{
 		return;
 	}
@@ -128,7 +129,7 @@ void CItem_VisualData::InitObjectComponents()
 		if (InventoryType == InventoryType::HEAD)
 		{
 			char modelPostfix[64];
-			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_Owner->Race]->Get_ClientPrefix(), getGenderLetter(m_Owner->Gender));
+			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_ParentCharacter->Race]->Get_ClientPrefix(), getGenderLetter(m_ParentCharacter->Gender));
 
 			int dotPosition = objectFileName.find_last_of('.');
 			assert1(dotPosition != -1);
@@ -143,14 +144,52 @@ void CItem_VisualData::InitObjectComponents()
 
 		// Fill data
 		M2* model = LoadObjectModel(InventoryType, objectFileName);
-		R_Texture* texture = LoadObjectTexture(InventoryType, objectTextureName);
-		const CM2_Part_Attachment* attach = m_Owner->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
+		R_Texture* itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
+		const CM2_Part_Attachment* itemObjectAttach = m_ParentCharacter->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
-		CItem_M2Instance* instance = new CItem_M2Instance(m_Owner, model, attach);
-		instance->setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, texture);
-		
-		m_ObjectComponents.push_back({ instance, texture, attach });
+		CItem_M2Instance* itemObjectInstance = new CItem_M2Instance(m_ParentCharacter, model);
+		itemObjectInstance->Attach(itemObjectAttach);
+		itemObjectInstance->setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, itemObjectTexture);
+
+		// Visual effect
+		const DBC_ItemVisualsRecord* visuals = /*displayInfo->Get_ItemVisualID()*/DBC_ItemVisuals[EnchantAuraID];
+		if (visuals != nullptr)
+		{
+			for (uint32 j = 0; j < DBC_ItemVisuals_VisualEffect_Count; j++)
+			{
+				const DBC_ItemVisualEffectsRecord* visEffect = visuals->Get_VisualEffect(j);
+				if (visEffect == nullptr)
+				{
+					continue;
+				}
+
+				string visEffectModelName = visEffect->Get_Name();
+				if (visEffectModelName.empty())
+				{
+					continue;
+				}
+
+				M2* visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
+
+				CM2_Base_Instance* visInstance = new CM2_Base_Instance(itemObjectInstance, visModel);
+				const CM2_Part_Attachment* visAttach = nullptr;
+
+				if (itemObjectInstance->getM2()->getMiscellaneous()->isAttachmentExists((M2_AttachmentType::List)j))
+				{
+					visAttach = itemObjectInstance->getM2()->getMiscellaneous()->getAttachment((M2_AttachmentType::List)j);
+				}
+				else
+				{
+					visAttach = itemObjectAttach;
+				}
+
+				visInstance->Attach(visAttach);
+				itemObjectInstance->AddVisualEffect(visInstance);
+			}
+		}
+
+		m_ObjectComponents.push_back({ itemObjectInstance, itemObjectTexture, itemObjectAttach });
 	}
 }
 
@@ -184,7 +223,8 @@ void CItem_VisualData::InitTextureComponents()
 			continue;
 		}
 
-		m_TextureComponents[i] = LoadSkinTexture(ItemTextureComponents[i].list, textureComponentName);
+		R_Texture* textureComponent = LoadSkinTexture(ItemTextureComponents[i].list, textureComponentName);
+		m_TextureComponents[i] = textureComponent;
 	}
 }
 
@@ -201,8 +241,8 @@ R_Texture* CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, 
 R_Texture* CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, string _textureName)
 {
 	string universalTexture = getTextureComponentName(_type, _textureName, Gender::None);
-	string maleTexture      = getTextureComponentName(_type, _textureName, Gender::Male);
-	string femaleTexture    = getTextureComponentName(_type, _textureName, Gender::Female);
+	string maleTexture = getTextureComponentName(_type, _textureName, Gender::Male);
+	string femaleTexture = getTextureComponentName(_type, _textureName, Gender::Female);
 
 	if (CMPQFile::IsFileExists(universalTexture))
 	{
@@ -215,10 +255,6 @@ R_Texture* CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _t
 	else if (CMPQFile::IsFileExists(femaleTexture))
 	{
 		return GetManager<ITexturesManager>()->Add(femaleTexture);
-	}
-	else
-	{
-		//fail1();
 	}
 
 	return nullptr;
@@ -239,12 +275,11 @@ string CItem_VisualData::getTextureComponentName(DBC_CharComponent_Sections::Lis
 
 char CItem_VisualData::getGenderLetter(Gender::List _gender)
 {
-	char gender;
 	switch (_gender)
 	{
-		case Gender::Male: return 'M';
-		case Gender::Female: return 'F';
-		case Gender::None: return 'U';
+	case Gender::Male: return 'M';
+	case Gender::Female: return 'F';
+	case Gender::None: return 'U';
 	}
 
 	return '\0';

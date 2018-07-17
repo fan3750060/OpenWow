@@ -29,7 +29,6 @@ class CItem_VisualData : public ItemTemplate
 {
 public:
 	CItem_VisualData(Character* _owner);
-	//CItem_VisualData(uint32	_displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID);
 
 	void Load();
 
@@ -48,7 +47,6 @@ private:
 	R_Texture* LoadObjectTexture (InventoryType::List _objectType, string _textureName);
 	R_Texture* LoadSkinTexture   (DBC_CharComponent_Sections::List _type, string _textureName);
 	
-
 	// Helpers
 	string getTextureComponentName(DBC_CharComponent_Sections::List _type, string _textureName, Gender::List _gender);
 	char getGenderLetter(Gender::List _gender);
@@ -59,5 +57,5 @@ private:
 	SharedTexturePtr         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
 private: // PARENT
-	Character* m_Owner;
+	Character* m_ParentCharacter;
 };

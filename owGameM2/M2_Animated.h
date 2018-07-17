@@ -136,6 +136,12 @@ public:
 			anim = 0;
 		}
 
+		// TODO: Delete me
+		if (anim >= m_Count)
+		{
+			return T();
+		}
+
 		const vector<uint32>& pTimes = m_Times[anim];
 		const vector<T>& pData = m_Data[anim];
 

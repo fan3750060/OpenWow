@@ -57,7 +57,7 @@ void CEngine::SetArguments(int argumentCount, char* arguments[])
 bool CEngine::Tick()
 {
 	last_t = t;
-	t = static_cast<uint32>(_Render->getAdapter()->GetTime() * 500.0); // TODO TIME FACTOR
+	t = static_cast<uint32>(_Render->getAdapter()->GetTime() * 500.0);
 	uint32 dt = t - last_t;
 	_time += dt;
 

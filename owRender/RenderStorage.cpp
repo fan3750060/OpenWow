@@ -232,7 +232,7 @@ void RenderStorage::CreateWoWLayouts()
 
 	R_VertexLayoutAttrib attribs_GxVBF_PCT[3] = { // 24
 		{"position",    0, 3, 0},
-		{"color",       1, 1, 0},
+		{"color",       1, 4, 0}, // Original 1 but type is uint8
 		{"tc",          2, 2, 0}
 	};
 	__layout_GxVBF_PCT = m_RenderDevice->registerVertexLayout(3, attribs_GxVBF_PCT);

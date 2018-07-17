@@ -12,6 +12,7 @@
 // M2
 #include "M2_Pass.h"
 #include "M2_RibbonEmitters_Pass.h"
+#include "M2_Particle_Pass.h"
 
 // Liquids
 #include "Magma_Pass.h"
@@ -51,6 +52,7 @@ public:
 	// M2
 	CM2_Pass* M2_Pass;
 	CM2_RibbonEmitters_Pass* M2_RibbonEmitters_Pass;
+	CM2_Particle_Pass* M2_Particles_Pass;
 
 	// Liquids
 	CMagma_Pass* m_Magma;

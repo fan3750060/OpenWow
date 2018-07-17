@@ -29,7 +29,7 @@ public:
 	void Render3D() override;
 
 private:
-	M2* CreateCharacterModel();
+	void CreateCharacterModel();
 
 	// Refreshers
 	void RefreshItemVisualData();

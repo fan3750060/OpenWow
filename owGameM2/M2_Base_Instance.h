@@ -9,9 +9,11 @@ public:
 	virtual ~CM2_Base_Instance();
 
 	// CM2_Base_Instance
-	void InitLocal();
-	void setM2(M2* _model) { assert1(m_M2 == nullptr); m_M2 = _model; CalculateMatrix(); }
+	void setM2(M2* _model);
 	M2* getM2() const { return m_M2; }
+
+	void Attach(const CM2_Part_Attachment* _attachment);
+	void Detach();
 
 	// Color & Alpha
 	void setColor(vec4 _color) { m_Color = _color; }
@@ -19,8 +21,8 @@ public:
 	void setAlpha(float _alpha) { m_Alpha = _alpha; }
 	float getAlpha() const { return m_Alpha; }
 
-	// Mesh provider
-	virtual bool isMeshEnabled(uint32 _index) const { return true; }
+	// Mesh & textures provider
+	virtual bool isMeshEnabled(uint32 _index) const;
 	void setSpecialTexture(SM2_Texture::Type _type, cstring _textureName);
 	void setSpecialTexture(SM2_Texture::Type _type, R_Texture* _texture);
 	R_Texture* getSpecialTexture(SM2_Texture::Type _type) const;
@@ -30,15 +32,16 @@ public:
 	double m_Time;  // TODO: Delete me!!!
 	double m_DTime; // TODO: Delete me!!!
 
-	// ISceneNode
-	virtual void CalculateMatrix(bool _isRotationQuat = false) override;
-
 	// IUpdatable
 	void Update(double _time, double _dTime) override;
 
 	// IRenderable3D
 	bool PreRender3D() override;
 	void Render3D() override;
+
+protected:
+	void InitLocal();
+	virtual void CalculateMatrix(bool _isRotationQuat = false) override;
 
 private:
 	// Color & Alpha
@@ -53,5 +56,6 @@ private:
 	bool				m_NeedRecalcAnimation;
 
 private: // PARENT
-	SmartM2Ptr			m_M2;
+	SmartM2Ptr					m_M2;
+	const CM2_Part_Attachment*	m_Attached;
 };

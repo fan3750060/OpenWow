@@ -68,7 +68,7 @@ int main(int argumentCount, char* arguments[])
 		gsManager.AddGameState(GameStatesNames::GAME_STATE_CREATURE_VIEW, &gsCreaturesWiew);
 		gsManager.AddGameState(GameStatesNames::GAME_STATE_CREATE_CHARACTER, &gsCreateCharacter);
 
-		gsManager.SetGameState(GameStatesNames::GAME_STATE_CREATE_CHARACTER);
+		gsManager.SetGameState(GameStatesNames::GAME_STATE_CHARACTER_VIEW);
 
 		while (engine.Tick());
 	}

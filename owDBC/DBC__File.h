@@ -42,9 +42,15 @@ string CONCAT_GET(_name)(int8 _locale = -1) const                \
 }
 
 #define __DBC_REF_ID(_dbc, _name, _field)                                                 \
-_dbc##Record* CONCAT_GET(_name)() const                                                   \
+const _dbc##Record* CONCAT_GET(_name)() const                                             \
 {                                                                                         \
 	return _dbc[static_cast<uint32>(getValue<uint32>(static_cast<uint32>(_field - 1)))];  \
+}
+
+#define __DBC_REFSID(_dbc, _name, _field, _size)                                                   \
+const _dbc##Record* CONCAT_GET(_name)(uint8 _index) const                                          \
+{                                                                                                  \
+	return _dbc[static_cast<uint32>(getValue<uint32>(static_cast<uint32>(_field - 1 + _index)))];  \
 }
 
 // Uses in common classes

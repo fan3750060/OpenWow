@@ -36,10 +36,13 @@
 #include "DBC_CreatureModelData.h"
 
 // Item
+#include "DBC_HelmetGeosetVisData.h"
 #include "DBC_Item.h"
 #include "DBC_ItemBagFamily.h"
 #include "DBC_ItemClass.h"
 #include "DBC_ItemDisplayInfo.h"
+#include "DBC_ItemVisualEffects.h"
+#include "DBC_ItemVisuals.h"
 
 // Light
 #include "DBC_Light.h"

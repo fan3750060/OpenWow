@@ -43,6 +43,7 @@ void GameState_M2Viewer::OpenFile(const char* _fname)
 
 	M2* m2 = GetManager<IM2Manager>()->Add(path);
 	m2_Model = new CM2_Viewer_Instance(m2);
+	m2_Model->setScale(10.0f);
 }
 
 bool GameState_M2Viewer::Init()
@@ -62,10 +63,13 @@ bool GameState_M2Viewer::Init()
 	}
 	else
 	{
-		M2* model = GetManager<IM2Manager>()->Add("CREATURE\\ArthasLichKing\\ArthasLichKing.M2");
+		//M2* model = GetManager<IM2Manager>()->Add("CREATURE\\ArthasLichKing\\ArthasLichKing.M2");
 		//M2* model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
 		//M2* model = GetManager<IM2Manager>()->Add("Character\\Orc\\Male\\OrcMale.M2");
+		//M2* model = GetManager<IM2Manager>()->Add("PARTICLES\\LootFX.m2");
+		M2* model = GetManager<IM2Manager>()->Add("Spells\\Enchantments\\RedGlow_High.m2");
 		m2_Model = new CM2_Viewer_Instance(model);
+		m2_Model->setScale(10.0f);
 	}
 
 	//m_Char = new Character();
@@ -79,7 +83,7 @@ bool GameState_M2Viewer::Init()
 	ADDCONSOLECOMMAND_CLASS_WITHARGS("a_play", GameState_M2Viewer, PlayAnim, uint16);
 	ADDCONSOLECOMMAND_CLASS("a_info", GameState_M2Viewer, InfoAnim);
 
-	DBC_CinematicCameraRecord* camRec = DBC_CinematicSequences[21]->Get_CameraRec();
+	const DBC_CinematicCameraRecord* camRec = DBC_CinematicSequences[21]->Get_CameraRec();
 	M2* cinematicCamera = GetManager<IM2Manager>()->Add(camRec->Get_Filename());
 	m2_Camera = new CM2_Base_Instance(nullptr, cinematicCamera);
 
@@ -134,12 +138,15 @@ bool GameState_M2Viewer::PreRender3D()
 
 void GameState_M2Viewer::Render3D()
 {
+	mat4 m;
+	m.translate(0.0f, -5.0f, 0.0f);
+
 	// Debug
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->setWorld(mat4());
+	_Render->getTechniquesMgr()->Debug_Pass->setWorld(m);
 	{
 		_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.7f, 0.7f, 0.7f, 0.5f));
 

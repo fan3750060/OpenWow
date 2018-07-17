@@ -4,11 +4,11 @@
 
 struct SM2_RibbonEmitter
 {
-	int32 ribbonId;					// Always (as I have seen): -1.
+	int32 ribbonId;					    // Always (as I have seen): -1.
 	int32 boneIndex;					// A bone to attach to.
 	vec3 position;						// And a position, relative to that bone.
 
-	M2Array<uint16> textureIndices;		// into m_DiffuseTextures
+	M2Array<uint16> textureIndices;		// into DiffuseTextures
 	M2Array<uint16> materialIndices;	// into materials
 
 	M2Track<vec3> colorTrack;
@@ -47,23 +47,23 @@ struct SM2_Particle
 		uint32 : 19;
 	} flags;
 
-	vec3 Position;							// The position. Relative to the following bone.
-	uint16 bone;                            // The bone its attached to.
+	vec3 Position;							  // The position. Relative to the following bone.
+	int16 bone;                               // The bone its attached to.
 
-	uint16 texture;                         // And the m_DiffuseTextures that are used. 
+	uint16 texture;                           // And the m_DiffuseTextures that are used. 
 
 	M2Array<char> geometry_model_filename;    // if given, this emitter spawns models
 	M2Array<char> recursion_model_filename;   // if given, this emitter is an alias for the (maximum 4) emitters of the given model
 
-	uint8 blendingType;                     // A blending type for the particle. See Below
-	uint8 emitterType;                      // 1 - Plane (rectangle), 2 - Sphere, 3 - Spline, 4 - Bone
-	uint16 particleColorIndex;              // This one is used for ParticleColor.dbc. See below.
+	uint8 blendingType;                       // A blending type for the particle. See Below
+	uint8 emitterType;                        // 1 - Plane (rectangle), 2 - Sphere, 3 - Spline, 4 - Bone
+	uint16 particleColorIndex;                // This one is used for ParticleColor.dbc. See below.
 
-	uint8 particleType;                     // Found below.
-	uint8 headorTail;                       // 0 - Head, 1 - Tail, 2 - Both 
+	uint8 particleType;                       // Found below.
+	uint8 headorTail;                         // 0 - Head, 1 - Tail, 2 - Both 
 
-	uint16 textureTileRotation;             // Rotation for the texture tile. (Values: -1,0,1) -- priorityPlane
-	uint16 textureDimensions_rows;          // for tiled m_DiffuseTextures
+	int16 textureTileRotation;               // Rotation for the texture tile. (Values: -1,0,1) -- priorityPlane
+	uint16 textureDimensions_rows;            // for tiled m_DiffuseTextures
 	uint16 textureDimensions_columns;
 
 	M2Track<float> emissionSpeed;             // Base velocity at which particles are emitted.
@@ -80,7 +80,6 @@ struct SM2_Particle
 	M2Track<float> lifespan;
 	float lifespanVary;                       // An individual particle's lifespan is added to by lifespanVary * random(-1, 1)
 
-
 	M2Track<float> emissionRate;
 	float emissionRateVary;                   // This adds to the base emissionRate value the same way as lifespanVary. The random value is different every update.
 
@@ -92,12 +91,14 @@ struct SM2_Particle
 
 	M2Track<float> zSource;                   // When greater than 0, the initial velocity of the particle is (particle.position - C3Vector(0, 0, zSource)).Normalize()
 
-	M2TrackFake<vec3> colorTrack;              // Most likely they all have 3 timestamps for {start, middle, end}.
-	M2TrackFake<short> alphaTrack;                 // FIXME FIXED16
+
+	M2TrackFake<vec3> colorTrack;             // Most likely they all have 3 timestamps for {start, middle, end}.
+	M2TrackFake<short> alphaTrack;            // FIXME FIXED16
 
 	M2TrackFake<vec2> scaleTrack;
-	vec2 scaleVary;                       // A percentage amount to randomly vary the scale of each particle
-	M2TrackFake<uint16> headCellTrack;           // Some kind of intensity values seen: 0,16,17,32 (if set to different it will have high intensity)
+	vec2 scaleVary;                           // A percentage amount to randomly vary the scale of each particle
+
+	M2TrackFake<uint16> headCellTrack;        // Some kind of intensity values seen: 0,16,17,32 (if set to different it will have high intensity)
 	M2TrackFake<uint16> tailCellTrack;
 
 	float unk[3];
@@ -132,6 +133,8 @@ struct SM2_Particle
 	float followScale2;
 
 	M2Array<vec3> splinePoints;     // Set only for spline praticle emitter. Contains array of points for spline
+	
+	
 	M2Track<uint8> enabledIn;       // (boolean) Appears to be used sparely now, probably there's a flag that links particles to animation sets where they are enabled.
 };
 

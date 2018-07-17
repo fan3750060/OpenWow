@@ -57,7 +57,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 		}
 
 		vector<uint16> indexes;
-		for (uint32 ind = section.indexStart; ind < section.indexStart + section.indexCount; ind++)
+		for (uint16 ind = section.indexStart; ind < section.indexStart + section.indexCount; ind++)
 		{
 			uint16 index = t_indexesIndexes[ind];
 			assert1(index >= section.vertexStart);

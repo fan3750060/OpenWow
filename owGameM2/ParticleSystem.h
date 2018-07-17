@@ -1,18 +1,15 @@
 #pragma once
 
-// Includes
 #include "Particle.h"
 
-// Typedefs
+#include "M2_Types.h"
+#include "M2_Part_Bone.h"
+
 typedef list<Particle> ParticleList;
 
 // Defines
 #define MAX_PARTICLES 10000
 
-// Classes
-class ParticleSystem;
-
-//
 
 struct TexCoordSet
 {
@@ -21,43 +18,44 @@ struct TexCoordSet
 
 #include "ParticleEmitters.h"
 
-class ParticleSystem
+class CM2_ParticleSystem
 {
 	friend class ParticleEmitter;
 	friend class PlaneParticleEmitter;
 	friend class SphereParticleEmitter;
 public:
-	ParticleSystem();
-	~ParticleSystem();
+	CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals);
+	~CM2_ParticleSystem();
 
-	void init(IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals);
-
-	void update(float dt, uint32 _globalTime);
+	void update(double _time, double _dTime);
 	void setup(uint16 anim, uint32 time, uint32 _globalTime);
 
-	void draw();
+	void Render3D(cmat4 _worldMatrix);
 
-public:
-	M2* m_ParentM2;
-	float tofs;
+private:
+
+	ParticleEmitter* m_Emitter;
+	SharedTexturePtr texture;
 
 private:
 	void initTile(vec2 *tc, int num);
 
 private:
-	M2_Animated<float> speed, variation, spread, lat, gravity, lifespan, rate, areal, areaw, deacceleration;
+	M2_Animated<float> emissionSpeed, speedVariation, verticalRange, horizontalRange, gravity, lifespan, emissionRate, emissionAreaLength, emissionAreaWidth, zSource;
 	M2_Animated<uint8> enabled;
 	vec4 colors[3];
 	float sizes[3];
 	float mid, slowdown, rotation;
-	vec3 pos;
-	SharedTexturePtr texture;
-	ParticleEmitter* emitter;
+	vec3 m_Position;
+	
+	
 	ParticleList particles;
 	int blend, order, type;
-	int manim, mtime;
+
+
+	uint32 m_CurrentAnimation, m_CurrentTime, m_GlobalTime;
 	int rows, cols;
-	vector<TexCoordSet> tiles;
+	vector<TexCoordSet> m_Tiles;
 
 	bool billboard;
 
@@ -68,8 +66,11 @@ private:
 	int32 flags;
 	int16 pType;
 
-	const CM2_Part_Bone* parent;
+	RenderState							m_State;
 
+private:
+	const M2*             m_ParentM2;
+	const CM2_Part_Bone*  m_ParentBone;
 };
 
 template<class T>

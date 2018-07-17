@@ -26,11 +26,10 @@ public:
 	M2(cstring name);
 	~M2();
 
-	void updateEmitters(float dt);
-
 	void Render(CM2_Base_Instance* _instance);
 	void RenderCollision(cmat4 _worldMatrix);
 
+	void update(double _time, double _dTime);
 	void calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
 
 public:

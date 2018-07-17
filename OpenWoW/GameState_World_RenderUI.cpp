@@ -63,7 +63,7 @@ void GameState_InWorld::RenderUI()
 	}
 
 	// Region
-	DBC_AreaTableRecord* regionRecord = nullptr;
+	const DBC_AreaTableRecord* regionRecord = nullptr;
 	string regionName = "<unknown>";
 
 	if (areaRecord != nullptr)

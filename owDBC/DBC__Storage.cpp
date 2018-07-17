@@ -32,15 +32,18 @@ DBC_LOAD(DBC_CinematicCamera, "CinematicCamera.dbc")
 DBC_LOAD(DBC_CinematicSequences, "CinematicSequences.dbc")
 
 // Creature
-DBC_LOAD(DBC_CreatureDisplayInfo,			"CreatureDisplayInfo.dbc")
-DBC_LOAD(DBC_CreatureDisplayInfoExtra,		"CreatureDisplayInfoExtra.dbc")
-DBC_LOAD(DBC_CreatureModelData,				"CreatureModelData.dbc")
+DBC_LOAD(DBC_CreatureDisplayInfo, "CreatureDisplayInfo.dbc")
+DBC_LOAD(DBC_CreatureDisplayInfoExtra, "CreatureDisplayInfoExtra.dbc")
+DBC_LOAD(DBC_CreatureModelData, "CreatureModelData.dbc")
 
 // Item
+DBC_LOAD(DBC_HelmetGeosetVisData, "HelmetGeosetVisData.dbc")
 DBC_LOAD(DBC_Item, "Item.dbc")
 DBC_LOAD(DBC_ItemBagFamily, "ItemBagFamily.dbc")
 DBC_LOAD(DBC_ItemClass, "ItemClass.dbc")
 DBC_LOAD(DBC_ItemDisplayInfo, "ItemDisplayInfo.dbc")
+DBC_LOAD(DBC_ItemVisualEffects, "ItemVisualEffects.dbc")
+DBC_LOAD(DBC_ItemVisuals, "ItemVisuals.dbc")
 
 // Light
 DBC_LOAD(DBC_Light, "Light.dbc")
@@ -91,10 +94,13 @@ void OpenDBs()
 	DBC_CreatureModelData.Open();
 
 	// Item
+	DBC_HelmetGeosetVisData.Open();
 	DBC_Item.Open();
 	DBC_ItemBagFamily.Open();
 	DBC_ItemClass.Open();
 	DBC_ItemDisplayInfo.Open();
+	DBC_ItemVisualEffects.Open();
+	DBC_ItemVisuals.Open();
 
 	// Light
 	DBC_Light.Open();

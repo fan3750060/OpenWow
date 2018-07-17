@@ -16,7 +16,7 @@ public:
 	float                     m_Fogs[LightFogs::COUNT];
 
 	bool					  m_highlightSky;
-	DBC_LightSkyboxRecord*	  m_SkyBox;
+	const DBC_LightSkyboxRecord*	  m_SkyBox;
 	float                     m_glow;
 	float                     m_waterShallowAlpha;
 	float                     m_waterDeepAlpha;

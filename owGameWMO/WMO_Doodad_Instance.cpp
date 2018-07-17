@@ -34,8 +34,6 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, c
 		CalculateMatrix(true);
 	}
 
-	InitLocal();
-
 	setDrawOrder(22);
 	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
 	setSelectable();

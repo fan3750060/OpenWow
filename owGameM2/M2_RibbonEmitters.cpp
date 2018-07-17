@@ -198,7 +198,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 
 	for (auto& it : vertices)
 	{
-		_Render->DrawSphere(mat4(), it.pos, 0.1f);
+		//_Render->DrawSphere(mat4(), it.pos, 0.1f);
 	}
 
 

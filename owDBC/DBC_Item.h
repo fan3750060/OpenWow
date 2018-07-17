@@ -38,69 +38,24 @@ struct InventoryType
 
 		COUNT
 	};
-};
 
-/*struct CharacterVisualSlots
-{
-	enum List : uint8
+	static bool isWeapon(InventoryType::List _item)
 	{
-		HEAD = 0,
-		SHOULDERS,
-		SHIRT,
-		CHEST,
-		BELT,
-		LEGS,
-		BOOTS,
-		WRISTS,
-		GLOVES,
-		TABARD,
-		CLOACK,
+		if (_item == WEAPON)
+			return true;
 
-		// Weapons
-		MAINHAND,
-		OFFHAND,
-		RANGED,
+		if (_item == TWOHWEAPON)
+			return true;
 
-		COUNT
-	};
+		if (_item == WEAPONMAINHAND)
+			return true;
+
+		if (_item == WEAPONOFFHAND)
+			return true;
+
+		return false;
+	}
 };
-
-struct
-{
-	InventoryType::List invType;
-	CharacterVisualSlots::List visItem;
-} static ItemInventoryTypeToCharacterVisualSlots[InventoryType::COUNT] =
-{
-	{ InventoryType::NON_EQUIP,      CharacterVisualSlots::COUNT },
-	{ InventoryType::HEAD,           CharacterVisualSlots::HEAD },
-	{ InventoryType::NECK,           CharacterVisualSlots::COUNT },
-	{ InventoryType::SHOULDERS,      CharacterVisualSlots::SHOULDERS },
-	{ InventoryType::BODY,           CharacterVisualSlots::SHIRT },
-	{ InventoryType::CHEST,          CharacterVisualSlots::CHEST },
-	{ InventoryType::WAIST,          CharacterVisualSlots::BELT },
-	{ InventoryType::LEGS,           CharacterVisualSlots::LEGS },
-	{ InventoryType::FEET,           CharacterVisualSlots::BOOTS },
-	{ InventoryType::WRISTS,         CharacterVisualSlots::WRISTS },
-	{ InventoryType::HANDS,          CharacterVisualSlots::GLOVES },
-	{ InventoryType::FINGER,         CharacterVisualSlots::COUNT },
-	{ InventoryType::TRINKET,        CharacterVisualSlots::COUNT },
-	{ InventoryType::WEAPON,         CharacterVisualSlots::MAINHAND },
-	{ InventoryType::SHIELD,         CharacterVisualSlots::OFFHAND },
-	{ InventoryType::RANGED,         CharacterVisualSlots::RANGED },
-	{ InventoryType::CLOAK,          CharacterVisualSlots::CLOACK },
-	{ InventoryType::TWOHWEAPON,     CharacterVisualSlots::MAINHAND },
-	{ InventoryType::BAG,            CharacterVisualSlots::COUNT },
-	{ InventoryType::TABARD,         CharacterVisualSlots::TABARD },
-	{ InventoryType::ROBE,           CharacterVisualSlots::COUNT }, // ???
-	{ InventoryType::WEAPONMAINHAND, CharacterVisualSlots::MAINHAND },
-	{ InventoryType::WEAPONOFFHAND,  CharacterVisualSlots::OFFHAND },
-	{ InventoryType::HOLDABLE,       CharacterVisualSlots::COUNT },
-	{ InventoryType::AMMO,           CharacterVisualSlots::COUNT },
-	{ InventoryType::THROWN,         CharacterVisualSlots::RANGED },
-	{ InventoryType::RANGEDRIGHT,    CharacterVisualSlots::RANGED }, // ???
-	{ InventoryType::QUIVER,         CharacterVisualSlots::COUNT },
-	{ InventoryType::RELIC,          CharacterVisualSlots::COUNT }
-};*/
 
 DBC_DEF_BEGIN(DBC_Item)
 

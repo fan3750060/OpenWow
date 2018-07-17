@@ -29,7 +29,7 @@ __DBC_STRING(UpperLegTexture, 21);
 __DBC_STRING(LowerLegTexture, 22);
 __DBC_STRING(FootTexture, 23);
 
-__DBC_TVALUE(uint32, ItemVisualID, 24);
+__DBC_REF_ID(DBC_ItemVisuals, ItemVisualID, 24);
 __DBC_TVALUE(uint32, ParticleColorID, 25);
 
 DBC_DEF_END

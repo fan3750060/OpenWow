@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // Include
-#include "M2.h"
+#include "ParticleSystem.h"
 
 // General
 #include "ParticleEmitters.h"
@@ -97,15 +97,15 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 	mat4 mrot;
 
 	CalcSpreadMatrix(spr, spr, 1.0f, 1.0f);
-	mrot = sys->parent->getRotateMatrix() * SpreadMat;
+	mrot = m_ParticleSystem->m_ParentBone->getRotateMatrix() * SpreadMat;
 
-	if (sys->flags == 1041)
+	if (m_ParticleSystem->flags == 1041)
 	{ // Trans Halo
-		p.pos = sys->parent->getTransformMatrix() * (sys->pos + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w)));
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w)));
 
 		const float t = Random::GenerateRange(0.0f, Math::TwoPi);
 
-		p.pos = vec3(0.0f, sys->pos.y + 0.15f, sys->pos.z) + vec3(cos(t) / 8, 0.0f, sin(t) / 8); // Need to manually correct for the halo - why?
+		p.pos = vec3(0.0f, m_ParticleSystem->m_Position.y + 0.15f, m_ParticleSystem->m_Position.z) + vec3(cos(t) / 8, 0.0f, sin(t) / 8); // Need to manually correct for the halo - why?
 
 																								 // var isn't being used, which is set to 1.0f,  whats the importance of this?
 																								 // why does this set of values differ from other particles
@@ -115,47 +115,47 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 
 		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var);
 	}
-	else if (sys->flags == 25 && sys->parent->getParentBoneID() < 1)
+	else if (m_ParticleSystem->flags == 25 && m_ParticleSystem->m_ParentBone->getParentBoneID() < 1)
 	{ // Weapon Flame
-		p.pos = sys->parent->getPivot() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		p.pos = m_ParticleSystem->m_ParentBone->getPivot() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = mrot * vec3(0.0f, 1.0f, 0.0f);
 		p.dir = dir.normalized();
 		//vec3 dir = sys->model->bones[sys->parent->parent].mrot * sys->parent->mrot * vec3(0.0f, 1.0f, 0.0f);
 		//p.speed = dir.Normalize() * spd;
 
 	}
-	else if (sys->flags == 25 && sys->parent->getParentBoneID() > 0)
+	else if (m_ParticleSystem->flags == 25 && m_ParticleSystem->m_ParentBone->getParentBoneID() > 0)
 	{ // Weapon with built-in Flame (Avenger lightsaber!)
-		p.pos = sys->parent->getTransformMatrix() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = vec3
 		(
-			sys->parent->getTransformMatrix().c[1][0], 
-			sys->parent->getTransformMatrix().c[1][1], 
-			sys->parent->getTransformMatrix().c[1][2]
+			m_ParticleSystem->m_ParentBone->getTransformMatrix().c[1][0], 
+			m_ParticleSystem->m_ParentBone->getTransformMatrix().c[1][1], 
+			m_ParticleSystem->m_ParentBone->getTransformMatrix().c[1][2]
 		) * vec3(0.0f, 1.0f, 0.0f);
 		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var * 2);
 
 	}
-	else if (sys->flags == 17 && sys->parent->getParentBoneID() < 1)
+	else if (m_ParticleSystem->flags == 17 && m_ParticleSystem->m_ParentBone->getParentBoneID() < 1)
 	{ // Weapon Glow
-		p.pos = sys->parent->getPivot() * (sys->pos + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		p.pos = m_ParticleSystem->m_ParentBone->getPivot() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
 		vec3 dir = mrot * vec3(0, 1, 0);
 		p.dir = dir.normalized();
 	}
 	else
 	{
-		p.pos = sys->pos + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w));
-		p.pos = sys->parent->getTransformMatrix() * p.pos;
+		p.pos = m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w));
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * p.pos;
 
 		//vec3 dir = mrot * vec3(0,1,0);
-		vec3 dir = sys->parent->getRotateMatrix() * vec3(0, 1, 0);
+		vec3 dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec3(0, 1, 0);
 
 		p.dir = dir;//.Normalize();
 		p.down = vec3(0, -1.0f, 0); // dir * -1.0f;
 		p.speed = dir.normalized() * spd * (1.0f + Random::GenerateRange(-var, var));
 	}
 
-	if (!sys->billboard)
+	if (!m_ParticleSystem->billboard)
 	{
 		p.corners[0] = mrot * vec3(-1, 0, +1);
 		p.corners[1] = mrot * vec3(+1, 0, +1);
@@ -164,11 +164,11 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 	}
 
 	p.life = 0;
-	p.maxlife = sys->lifespan.getValue(anim, time, _globalTime);
+	p.maxlife = m_ParticleSystem->lifespan.getValue(anim, time, _globalTime);
 
 	p.origin = p.pos;
 
-	p.m_TileExists = Random::GenerateRange(0, sys->rows*sys->cols - 1);
+	p.m_TileExists = Random::GenerateRange(0, m_ParticleSystem->rows*m_ParticleSystem->cols - 1);
 	return p;
 }
 
@@ -178,7 +178,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	vec3 dir;
 	float radius;
 
-	radius = Random::GenerateRange(0, 1);
+	radius = Random::GenerateRange(0.0f, 1.0f);
 
 	// Old method
 	//float t = Random::GenerateRange(0,2*Math::Pi);
@@ -195,7 +195,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	mat4 mrot;
 
 	CalcSpreadMatrix(spr * 2, spr2 * 2, w, l);
-	mrot = sys->parent->getRotateMatrix()*SpreadMat;
+	mrot = m_ParticleSystem->m_ParentBone->getRotateMatrix()*SpreadMat;
 
 	// New
 	// Length should never technically be zero ?
@@ -221,18 +221,18 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	rotate(0,0, &bdir.z, &bdir.x, phi);
 	*/
 
-	if (sys->flags == 57 || sys->flags == 313)
+	if (m_ParticleSystem->flags == 57 || m_ParticleSystem->flags == 313)
 	{ // Faith Halo
 		vec3 bdir(w*cosf(t)*1.6, 0.0f, l*sinf(t)*1.6);
 
-		p.pos = sys->pos + bdir;
-		p.pos = sys->parent->getTransformMatrix() * p.pos;
+		p.pos = m_ParticleSystem->m_Position + bdir;
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * p.pos;
 
 		if (bdir.length2() == 0)
 			p.speed = vec3(0, 0, 0);
 		else
 		{
-			dir = sys->parent->getRotateMatrix() * (bdir.normalized());//mrot * vec3(0, 1.0f,0);
+			dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * (bdir.normalized());//mrot * vec3(0, 1.0f,0);
 			p.speed = dir.normalized() * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
 		}
 
@@ -247,22 +247,22 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		bdir.z = bdir.y;
 		bdir.y = temp;
 
-		p.pos = sys->parent->getTransformMatrix() * sys->pos + bdir;
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * m_ParticleSystem->m_Position + bdir;
 
 
 		//p.pos = sys->pos + bdir;
 		//p.pos = sys->parent->mat * p.pos;
 
 
-		if ((bdir.length2() == 0) && ((sys->flags & 0x100) != 0x100))
+		if ((bdir.length2() == 0) && ((m_ParticleSystem->flags & 0x100) != 0x100))
 		{
 			p.speed = vec3(0, 0, 0);
-			dir = sys->parent->getRotateMatrix() * vec3(0, 1, 0);
+			dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec3(0, 1, 0);
 		}
 		else
 		{
-			if (sys->flags & 0x100)
-				dir = sys->parent->getRotateMatrix() * vec3(0, 1, 0);
+			if (m_ParticleSystem->flags & 0x100)
+				dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec3(0, 1, 0);
 			else
 				dir = bdir.normalized();
 
@@ -274,10 +274,10 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	p.down = vec3(0, -1.0f, 0);
 
 	p.life = 0;
-	p.maxlife = sys->lifespan.getValue(anim, time, _globalTime);
+	p.maxlife = m_ParticleSystem->lifespan.getValue(anim, time, _globalTime);
 
 	p.origin = p.pos;
 
-	p.m_TileExists = Random::GenerateRange(0, sys->rows*sys->cols - 1);
+	p.m_TileExists = Random::GenerateRange(0, m_ParticleSystem->rows*m_ParticleSystem->cols - 1);
 	return p;
 }

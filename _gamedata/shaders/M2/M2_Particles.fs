@@ -5,6 +5,7 @@
 in struct VSOutput
 {
 	vec3 WorldSpacePos;
+	vec4 Color;
 	vec2 TexCoord;
 } VSout;
 
@@ -15,8 +16,7 @@ uniform vec4 gColor;
 void main(void)
 {
 	vec4 resultColor = texture(gColorMap, VSout.TexCoord);
-	resultColor *= gColor;
-
+	resultColor *= VSout.Color;
 
 	setMatID(1.0);
 	setPos(VSout.WorldSpacePos);

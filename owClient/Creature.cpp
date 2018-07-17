@@ -25,7 +25,7 @@ void Creature::InitFromDisplayInfo(uint32 _id)
 	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
-	DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra == nullptr);
 
 	// 1. Load model
@@ -97,7 +97,7 @@ bool Creature::isMeshEnabled(uint32 _index) const
 
 void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
 {
-	DBC_CreatureModelDataRecord* modelRec = _record->Get_Model();
+	const DBC_CreatureModelDataRecord* modelRec = _record->Get_Model();
 	assert1(modelRec != nullptr);
 
 	string modelName = modelRec->Get_ModelPath();
@@ -108,8 +108,5 @@ void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
 
 	setAlpha(static_cast<float>(_record->Get_Opacity()) / 255.0f);
 	//setScale(_record.Get_Scale());
-
-	CalculateMatrix();
-	InitLocal();
 }
 

@@ -40,35 +40,33 @@ M2::~M2()
 
 void M2::Render(CM2_Base_Instance* _instance)
 {
-	if (!m_IsContainGeom)
+	if (m_IsContainGeom)
 	{
-		return;
-	}
-
-	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
-	pass->Bind();
-	{
-		pass->setWorld(_instance->getAbsTrans());
-		pass->SetColorDoodad(_instance->getColor());
-
-		/*for (auto& it : m_Skins)
+		CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
+		pass->Bind();
 		{
-			it->Draw(_instance);
-			break;
+			pass->setWorld(_instance->getAbsTrans());
+			pass->SetColorDoodad(_instance->getColor());
+
+			/*for (auto& it : m_Skins)
+			{
+				it->Draw(_instance);
+				break;
+			}*/
+			m_Skins.back()->Draw(_instance);
+		}
+		pass->Unbind();
+
+		/*RenderCollision(_worldMatrix);
+
+		for (auto& it : m_Skins)
+		{
+		it->RenderNormals();
 		}*/
-		m_Skins.back()->Draw(_instance);
 	}
-	pass->Unbind();
 
 	// Ribbons
 	m_Miscellaneous->render(_instance->getAbsTrans());
-
-	/*RenderCollision(_worldMatrix);
-
-	for (auto& it : m_Skins)
-	{
-	it->RenderNormals();
-	}*/
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)
@@ -94,6 +92,14 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 }
 
+void M2::update(double _time, double _dTime)
+{
+	if (m_Miscellaneous)
+	{
+		m_Miscellaneous->update(_time, _dTime);
+	}
+}
+
 void M2::calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
 {
 	if (m_Skeleton)
@@ -110,15 +116,4 @@ void M2::calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 g
 	{
 		m_Miscellaneous->calc(_animationIndex, _time, globalTime, _worldMatrix);
 	}
-}
-
-//
-void M2::updateEmitters(float dt)
-{
-#ifdef MDX_PARTICLES_ENABLE
-	//for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
-	//{
-	//	particleSystems[i].update(dt);
-	//}
-#endif
 }

@@ -16,14 +16,26 @@ public:
 	CM2_Comp_Miscellaneous();
 	virtual ~CM2_Comp_Miscellaneous();
 
+	void update(double _time, double _dTime);
 	void calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat);
 	void render(cmat4 _worldMat);
 
 public:
 	CM2_Part_Attachment* getAttachmentDirect(uint32 _index) const
 	{
-		assert1(_index < static_cast<int16>(m_Attachments.size()));
+		assert1(_index < static_cast<uint32>(m_Attachments.size()));
 		return (m_Attachments[_index]);
+	}
+
+	bool isAttachmentExists(M2_AttachmentType::List _index)
+	{
+		if (_index >= m_AttachmentsLookup.size())
+		{
+			return false;
+		}
+		int16 newIndex = m_AttachmentsLookup[_index];
+
+		return (newIndex != -1) && (newIndex < static_cast<int16>(m_Attachments.size()));
 	}
 
 	CM2_Part_Attachment* getAttachment(M2_AttachmentType::List _index) const
@@ -53,7 +65,7 @@ public:
 
 	CM2_Part_Camera* getCameraDirect(uint32 _index) const
 	{
-		assert1(_index < static_cast<int16>(m_Cameras.size()));
+		assert1(_index < static_cast<uint32>(m_Cameras.size()));
 		return (m_Cameras[_index]);
 	}
 
@@ -81,7 +93,7 @@ private:
 
 	// Particles
 	vector<CM2_RibbonEmitters*>			m_RibbonEmitters;
-	vector<ParticleSystem*>				particleSystems;
+	vector<CM2_ParticleSystem*>				particleSystems;
 
 	bool								m_HasMisc;
 };
