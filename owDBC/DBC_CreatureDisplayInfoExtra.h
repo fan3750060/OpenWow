@@ -26,6 +26,6 @@ __DBC_REF_ID(DBC_ItemDisplayInfo,        Tabard,            18);
 __DBC_REF_ID(DBC_ItemDisplayInfo,        Cape,              19);
 
 __DBC_TVALUE(uint32,                     CanEquip,          20);
-__DBC_STRING(                            Texture,           21);
+__DBC_STRING(                            BakedSkin,         21);
 
 DBC_DEF_END

@@ -77,24 +77,24 @@ struct
 	{ DBC_CharComponent_Sections::FEET,			"FootTexture" }
 };
 
-CItem_VisualData::CItem_VisualData() : 
+CItem_VisualData::CItem_VisualData(Character* _owner) :
 	ItemTemplate()
 {}
 
-CItem_VisualData::CItem_VisualData(uint32 _displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID) :
+/*CItem_VisualData::CItem_VisualData(uint32 _displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID) :
 	ItemTemplate(_displayId, _inventoryType, _enchantAuraID)
-{}
+{}*/
 
-void CItem_VisualData::Load(Character* _character)
+void CItem_VisualData::Load()
 {
 	if (DisplayId == 0 || InventoryType == InventoryType::NON_EQUIP)
 	{
 		return;
 	}
 
-	InitObjectComponents(_character);
+	InitObjectComponents();
 	InitGeosetComponents();
-	InitTextureComponents(_character->Gender);
+	InitTextureComponents();
 }
 
 void CItem_VisualData::Render3D()
@@ -110,7 +110,7 @@ void CItem_VisualData::Render3D()
 	}
 }
 
-void CItem_VisualData::InitObjectComponents(Character* _parent)
+void CItem_VisualData::InitObjectComponents()
 {
 	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
 	assert1(displayInfo != nullptr);
@@ -128,7 +128,7 @@ void CItem_VisualData::InitObjectComponents(Character* _parent)
 		if (InventoryType == InventoryType::HEAD)
 		{
 			char modelPostfix[64];
-			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[_parent->Race]->Get_ClientPrefix(), getGenderLetter(_parent->Gender));
+			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_Owner->Race]->Get_ClientPrefix(), getGenderLetter(m_Owner->Gender));
 
 			int dotPosition = objectFileName.find_last_of('.');
 			assert1(dotPosition != -1);
@@ -144,10 +144,10 @@ void CItem_VisualData::InitObjectComponents(Character* _parent)
 		// Fill data
 		M2* model = LoadObjectModel(InventoryType, objectFileName);
 		R_Texture* texture = LoadObjectTexture(InventoryType, objectTextureName);
-		const CM2_Part_Attachment* attach = _parent->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
+		const CM2_Part_Attachment* attach = m_Owner->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
-		CItem_M2Instance* instance = new CItem_M2Instance(_parent, model, attach);
+		CItem_M2Instance* instance = new CItem_M2Instance(m_Owner, model, attach);
 		instance->setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, texture);
 		
 		m_ObjectComponents.push_back({ instance, texture, attach });
@@ -171,7 +171,7 @@ void CItem_VisualData::InitGeosetComponents()
 	}
 }
 
-void CItem_VisualData::InitTextureComponents(Gender::List _gender)
+void CItem_VisualData::InitTextureComponents()
 {
 	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
 	assert1(displayInfo != nullptr);

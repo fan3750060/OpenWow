@@ -21,7 +21,8 @@ struct
 	{ 9, Race::Draenei }
 };
 
-GameState_CreateCharacter::GameState_CreateCharacter()
+GameState_CreateCharacter::GameState_CreateCharacter() :
+	m_Char(nullptr)
 {}
 
 void GameState_CreateCharacter::CreateBackgroud(Race::List _charRace)
@@ -71,9 +72,9 @@ void GameState_CreateCharacter::UpdateState()
 	DBC_ChrRacesRecord* raceRecord = DBC_ChrRaces[race];
 	assert1(raceRecord != nullptr);
 
-	m_Creat = new Creature();
-	m_Creat->InitFromDisplayInfo(raceRecord->Get_MaleModelID());
-
+	OW_SAFEDELETE(m_Char);
+	m_Char = new Character();
+	m_Char->InitFromDisplayInfoCreating(raceRecord->Get_MaleModelID(), race, Gender::Male);
 
 	CreateBackgroud(race);
 }
@@ -151,7 +152,6 @@ void GameState_CreateCharacter::Update(double _time, double _dTime)
 	relMatrix.translate(attach->getBone()->getPivot());
 
 	if (m_Char) m_Char->setAbsTrans(attach->getBone()->getTransformMatrix() * relMatrix);
-	if (m_Creat) m_Creat->setAbsTrans(attach->getBone()->getTransformMatrix() * relMatrix);
 }
 
 bool GameState_CreateCharacter::PreRender3D()
@@ -174,12 +174,6 @@ void GameState_CreateCharacter::Render3D()
 	{
 		m_Char->PreRender3D();
 		m_Char->Render3D();
-	}
-
-	if (m_Creat)
-	{
-		m_Creat->PreRender3D();
-		m_Creat->Render3D();
 	}
 }
 

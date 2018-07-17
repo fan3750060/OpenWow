@@ -10,6 +10,11 @@
 Character::Character() :
 	Creature()
 {
+	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
+	{
+		m_VisualItems.push_back(new CItem_VisualData(this));
+	}
+
 	setMeshEnabled(MeshIDType::Ears, EarsStyles::Enabled);
 	setMeshEnabled(MeshIDType::Eyeglows, EyeglowsStyles::Racial);
 }
@@ -26,33 +31,10 @@ void Character::InitFromTemplate(const CharacterTemplate& b)
 		CreateCharacterModel();
 	}
 
-	// 3. Items visual data
+	// 3 Refresh
 	RefreshItemVisualData();
-
-	// 4. Creature textures
-	{
-		Character_SkinTextureBaker baker;
-
-		// Default textures
-		setSpecialTexture(SM2_Texture::Type::SKIN, baker.createTexture(this));
-		setSpecialTexture(SM2_Texture::Type::SKIN_EXTRA, Character_SectionWrapper::getSkinExtraTexture(this));
-		setSpecialTexture(SM2_Texture::Type::CHAR_HAIR, Character_SectionWrapper::getHairTexture(this));
-
-		// Cloak
-		CItem_VisualData& item = m_VisualItems[EQUIPMENT_SLOT_BACK];
-		if (item.InventoryType != InventoryType::NON_EQUIP)
-		{
-			assert1(item.getObjectComponents().size() == 1);
-			R_Texture* cloackTexttre = item.getObjectComponents()[0].texture;
-			setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
-		}
-
-		// Geosets
-		setHairGeoset(Character_SectionWrapper::getHairGeoset(this));
-		setFacial1Geoset(Character_SectionWrapper::getFacial1Geoset(this));
-		setFacial2Geoset(Character_SectionWrapper::getFacial2Geoset(this));
-		setFacial3Geoset(Character_SectionWrapper::getFacial3Geoset(this));
-	}
+	RefreshTextures();
+	RefreshMeshIDs();
 }
 
 void Character::InitFromDisplayInfo(uint32 _id)
@@ -65,6 +47,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 
 	// 1. Template
 	{
+		// 1.1 Visual params
 		Race = (Race::List)humanoidRecExtra->Get_Race()->Get_ID();
 		Gender = (Gender::List)humanoidRecExtra->Get_Gender();
 		skin = humanoidRecExtra->Get_SkinColor();
@@ -73,6 +56,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 		hairColor = humanoidRecExtra->Get_HairStyleOrColor();
 		facialStyle = humanoidRecExtra->Get_BeardStyle();
 
+		// 1.2 Items
 		ItemsTemplates[EQUIPMENT_SLOT_HEAD] = ItemTemplate(humanoidRecExtra->Get_Helm(), InventoryType::HEAD, 0);
 		ItemsTemplates[EQUIPMENT_SLOT_SHOULDERS] = ItemTemplate(humanoidRecExtra->Get_Shoulder(), InventoryType::SHOULDERS, 0);
 		ItemsTemplates[EQUIPMENT_SLOT_BODY] = ItemTemplate(humanoidRecExtra->Get_Shirt(), InventoryType::BODY, 0);
@@ -93,58 +77,68 @@ void Character::InitFromDisplayInfo(uint32 _id)
 	}
 
 	// 3. Items
-	RefreshItemVisualData();
-
-	// 2. Character data
-	Race = (Race::List)humanoidRecExtra->Get_Race()->Get_ID();
-	Gender = (Gender::List)humanoidRecExtra->Get_Gender();
-	skin = humanoidRecExtra->Get_SkinColor();
-	face = humanoidRecExtra->Get_FaceType();
-	hairStyle = humanoidRecExtra->Get_HairType();
-	hairColor = humanoidRecExtra->Get_HairStyleOrColor();
-	facialStyle = humanoidRecExtra->Get_BeardStyle();
-
-	// 3. Creature textures
 	{
-		// Default textures
-		string bakedTextureName = humanoidRecExtra->Get_Texture();
-		R_Texture* bakedSkinTexture = nullptr;
-		if (bakedTextureName.empty() || !(CMPQFile::IsFileExists("Textures\\BakedNpcTextures\\" + bakedTextureName)))
-		{
-			Character_SkinTextureBaker baker;
-			bakedSkinTexture = baker.createTexture(this);
+		RefreshItemVisualData();
+	}
 
-			Log::Error("Character[%d]: Missing baked texture for humanoid[%d]. Create own.", rec->Get_ID(), humanoidRecExtra->Get_ID());
-		}
-		else
+	// 4. Creature textures
+	{
+		string bakedTextureName = humanoidRecExtra->Get_BakedSkin();
+		R_Texture* bakedSkinTexture = nullptr;
+		if (!bakedTextureName.empty())
 		{
 			bakedSkinTexture = GetManager<ITexturesManager>()->Add("Textures\\BakedNpcTextures\\" + bakedTextureName);
 		}
-
-		setSpecialTexture(SM2_Texture::Type::SKIN, bakedSkinTexture);
-		setSpecialTexture(SM2_Texture::Type::SKIN_EXTRA, Character_SectionWrapper::getSkinExtraTexture(this));
-		setSpecialTexture(SM2_Texture::Type::CHAR_HAIR, Character_SectionWrapper::getHairTexture(this));
-
-		// Cloak
-		CItem_VisualData& item = m_VisualItems[EQUIPMENT_SLOT_BACK];
-		if (item.InventoryType != InventoryType::NON_EQUIP)
+		else
 		{
-			assert1(item.getObjectComponents().size() == 1);
-			R_Texture* cloackTexttre = item.getObjectComponents()[0].texture;
-			setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
+			Log::Error("Character[%d]: Missing baked texture for humanoid[%d]. Create own.", rec->Get_ID(), humanoidRecExtra->Get_ID());
 		}
-
-		// Geosets
-		setHairGeoset   (Character_SectionWrapper::getHairGeoset   (this));
-		setFacial1Geoset(Character_SectionWrapper::getFacial1Geoset(this));
-		setFacial2Geoset(Character_SectionWrapper::getFacial2Geoset(this));
-		setFacial3Geoset(Character_SectionWrapper::getFacial3Geoset(this));
+	
+		RefreshTextures(bakedSkinTexture);
 	}
+
+	RefreshMeshIDs();
 }
 
-//--
+// Specific for character creation
+void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender::List _gender)
+{
+	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
+	assert1(rec != nullptr);
 
+	DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	assert1(humanoidRecExtra == nullptr);
 
+	// 1. Template
+	{
+		// 1.1 Visual params
+		Race = _race;
+		Gender = _gender;
+
+		// 1.2 Items
+		/*ItemsTemplates[EQUIPMENT_SLOT_HEAD] = ItemTemplate(humanoidRecExtra->Get_Helm(), InventoryType::HEAD, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_SHOULDERS] = ItemTemplate(humanoidRecExtra->Get_Shoulder(), InventoryType::SHOULDERS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_BODY] = ItemTemplate(humanoidRecExtra->Get_Shirt(), InventoryType::BODY, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_CHEST] = ItemTemplate(humanoidRecExtra->Get_Chest(), InventoryType::CHEST, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_WAIST] = ItemTemplate(humanoidRecExtra->Get_Belt(), InventoryType::WAIST, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_LEGS] = ItemTemplate(humanoidRecExtra->Get_Legs(), InventoryType::LEGS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_FEET] = ItemTemplate(humanoidRecExtra->Get_Boots(), InventoryType::FEET, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_WRISTS] = ItemTemplate(humanoidRecExtra->Get_Wrist(), InventoryType::WRISTS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_HANDS] = ItemTemplate(humanoidRecExtra->Get_Gloves(), InventoryType::HANDS, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_TABARD] = ItemTemplate(humanoidRecExtra->Get_Tabard(), InventoryType::TABARD, 0);
+		ItemsTemplates[EQUIPMENT_SLOT_BACK] = ItemTemplate(humanoidRecExtra->Get_Cape(), InventoryType::CLOAK, 0);*/
+	}
+
+	// 2. Load model
+	{
+		CreateCreatureModel(rec);
+	}
+
+	// 3 Refresh
+	RefreshItemVisualData();
+	RefreshTextures();
+	RefreshMeshIDs();
+}
 
 //--
 
@@ -159,7 +153,7 @@ void Character::Render3D()
 			continue;
 		}
 
-		m_VisualItems[slot].Render3D();
+		m_VisualItems[slot]->Render3D();
 	}
 }
 
@@ -187,8 +181,8 @@ void Character::RefreshItemVisualData()
 	// 3. Items visual data
 	for (uint32 i = 0; i < INVENTORY_SLOT_BAG_END; i++)
 	{
-		m_VisualItems[i].TemplateSet(ItemsTemplates[i]);
-		m_VisualItems[i].Load(this);
+		m_VisualItems[i]->TemplateSet(ItemsTemplates[i]);
+		m_VisualItems[i]->Load();
 
 		if (i == EQUIPMENT_SLOT_HEAD)
 		{
@@ -211,10 +205,39 @@ void Character::RefreshItemVisualData()
 			}
 		}
 
-		for (auto& geoset : m_VisualItems[i].getGeosetComponents())
+		for (auto& geoset : m_VisualItems[i]->getGeosetComponents())
 		{
 			setMeshEnabled(geoset.mesh, geoset.getMeshID());
 		}
 	}
 }
 
+void Character::RefreshTextures(R_Texture * _skin)
+{
+	if (_skin == nullptr)
+	{
+		Character_SkinTextureBaker baker;
+		_skin = baker.createTexture(this);
+	}
+
+	setSpecialTexture(SM2_Texture::Type::SKIN, _skin);
+	setSpecialTexture(SM2_Texture::Type::SKIN_EXTRA, Character_SectionWrapper::getSkinExtraTexture(this));
+	setSpecialTexture(SM2_Texture::Type::CHAR_HAIR, Character_SectionWrapper::getHairTexture(this));
+
+	// Cloak
+	const CItem_VisualData* item = m_VisualItems[EQUIPMENT_SLOT_BACK];
+	if (item->InventoryType != InventoryType::NON_EQUIP)
+	{
+		assert1(item->getObjectComponents().size() == 1);
+		R_Texture* cloackTexttre = item->getObjectComponents()[0].texture;
+		setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
+	}
+}
+
+void Character::RefreshMeshIDs()
+{
+	setHairGeoset   (Character_SectionWrapper::getHairGeoset(this));
+	setFacial1Geoset(Character_SectionWrapper::getFacial1Geoset(this));
+	setFacial2Geoset(Character_SectionWrapper::getFacial2Geoset(this));
+	setFacial3Geoset(Character_SectionWrapper::getFacial3Geoset(this));
+}

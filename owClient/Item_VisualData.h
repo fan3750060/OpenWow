@@ -28,10 +28,10 @@ struct GeosetComponent
 class CItem_VisualData : public ItemTemplate
 {
 public:
-	CItem_VisualData();
-	CItem_VisualData(uint32	_displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID);
+	CItem_VisualData(Character* _owner);
+	//CItem_VisualData(uint32	_displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID);
 
-	void Load(Character* _character);
+	void Load();
 
 	const vector<ObjectComponent>&  getObjectComponents() const { return m_ObjectComponents; }
 	const vector<GeosetComponent>&  getGeosetComponents() const { return m_GeosetComponents; }
@@ -40,9 +40,9 @@ public:
 	void Render3D();
 
 private:
-	void InitObjectComponents(Character* _parent);
+	void InitObjectComponents();
 	void InitGeosetComponents();
-	void InitTextureComponents(Gender::List _gender);
+	void InitTextureComponents();
 
 	M2*        LoadObjectModel   (InventoryType::List _objectType, string _modelName);
 	R_Texture* LoadObjectTexture (InventoryType::List _objectType, string _textureName);
@@ -58,4 +58,6 @@ private:
 	vector<GeosetComponent>  m_GeosetComponents;
 	SharedTexturePtr         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
+private: // PARENT
+	Character* m_Owner;
 };

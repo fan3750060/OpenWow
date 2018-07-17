@@ -70,6 +70,7 @@ void CharacterTemplate::TemplateSet(const CharacterTemplate & _o)
 	PetInfoId = _o.PetInfoId;
 	PetLevel = _o.PetLevel;
 	PetFamilyId = _o.PetFamilyId;
+
 	// ItemsTemplates
 	for (int i = 0; i < INVENTORY_SLOT_BAG_END; i++)
 	{

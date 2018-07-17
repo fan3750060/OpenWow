@@ -41,6 +41,5 @@ public:
 
 private:
 	SharedPtr<CM2_Base_Instance> m_BackgroudModel;
-	SharedPtr<Character> m_Char;
-	SharedPtr<Creature> m_Creat;
+	Character* m_Char;
 };
