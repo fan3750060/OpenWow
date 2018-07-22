@@ -2,9 +2,15 @@
 
 #include "Opcodes.h"
 
+class InPacketBuilder
+{
+public:
+
+};
+
 struct InPacket
 {
+	uint32		dataSize;
 	Opcodes		opcode;
-	uint32		size;
 	ByteBuffer	data;
 };

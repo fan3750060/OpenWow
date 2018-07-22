@@ -12,16 +12,11 @@ __interface IByteBuffer
 
 	void seek(uint64 _bufferOffsetAbsolute);
 	void seekRelative(uint64 _bufferOffsetRelative);
-	string readLine();
-	void readBytes(void* _destination, uint64 _size);
+	void readLine(string* _string);
+	void readBytes(void* _destination, uint64 _size = 1);
+	void readString(string* _string);
 };
 
-
-__interface IByteBufferOutput
-{
-	const uint8* getData() const;
-	uint32 getSize() const;
-};
 
 struct IFile : public IByteBuffer, public IRefItem
 {

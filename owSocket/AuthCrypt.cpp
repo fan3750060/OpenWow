@@ -58,6 +58,7 @@ void AuthCrypt::DecryptRecv(uint8 *data, size_t len)
 		return;
 	}
 
+	std::lock_guard<std::mutex> lg(m_LockDecrypt);
     _clientDecrypt.UpdateData(len, data);
 }
 
@@ -68,5 +69,6 @@ void AuthCrypt::EncryptSend(uint8 *data, size_t len)
 		return;
 	}
 
+	std::lock_guard<std::mutex> lg(m_LockEncrypt);
     _serverEncrypt.UpdateData(len, data);
 }

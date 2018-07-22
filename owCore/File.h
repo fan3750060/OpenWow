@@ -60,15 +60,20 @@ public:
 		 m_FilesManager->Guard();
 		 m_ByteBuffer.seekRelative(_bufferOffsetRelative); 
 	 }
-	 string readLine() override 
+	 void readLine(string* _string) override
 	 { 
 		 m_FilesManager->Guard();
-		 return m_ByteBuffer.readLine(); 
+		 m_ByteBuffer.readLine(_string);
 	 }
 	 void readBytes(void* _destination, uint64_t _size) override 
 	 { 
 		 m_FilesManager->Guard();
 		 m_ByteBuffer.readBytes(_destination, _size); 
+	 }
+	 void readString(string* _string) override
+	 {
+		 m_FilesManager->Guard();
+		 m_ByteBuffer.readString(_string);
 	 }
 
 public:

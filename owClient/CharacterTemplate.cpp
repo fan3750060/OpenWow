@@ -184,7 +184,7 @@ void CharacterTemplate::TemplateFillDefaultPaladin()
 	ItemsTemplates[12] = ItemTemplate(64254, (InventoryType::List) 12, 0);
 	ItemsTemplates[13] = ItemTemplate(29947, (InventoryType::List) 12, 0);
 	ItemsTemplates[14] = ItemTemplate(61403, InventoryType::CLOAK, 0);
-	ItemsTemplates[15] = ItemTemplate(/*63876*/65153, (InventoryType::List) 17, /*178*/165);
+	ItemsTemplates[15] = ItemTemplate(63876/*65153*/, (InventoryType::List) 17, 178/*165*/);
 	ItemsTemplates[16] = ItemTemplate((uint32)0, InventoryType::NON_EQUIP, 0);
 	ItemsTemplates[17] = ItemTemplate(34960, (InventoryType::List) 28, 0);
 	ItemsTemplates[18] = ItemTemplate((uint32)0, InventoryType::NON_EQUIP, 0);

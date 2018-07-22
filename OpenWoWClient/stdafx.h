@@ -34,5 +34,8 @@
 #include <owGameWMO.h>
 #pragma comment(lib, "owGameWMO.lib")
 
+#include <owSocket.h>
+#pragma comment(lib, "owSocket.lib")
+
 #include <owClient.h>
 #pragma comment(lib, "owClient.lib")

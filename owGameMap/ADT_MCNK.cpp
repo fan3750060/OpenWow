@@ -405,7 +405,7 @@ void ADT_MCNK::Render3D()
 
 		pass->Bind();
 		{
-			pass->SetIsNortrend(false/*m_ParentADT->m_Header.flags.IsNortrend*/);
+			pass->SetIsNortrend(true/*m_ParentADT->m_Header.flags.IsNortrend*/);
 			pass->SetIsMCCVExists(m_QualitySettings.draw_map_mccv && header.flags.has_mccv);
 			pass->SetLayersCount(header.nLayers);
 

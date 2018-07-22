@@ -73,7 +73,7 @@ R_Texture* Character_SkinTextureBaker::createTexture(Character* _character)
 
 	// 3. Apply items texture components
 	{
-		for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
+		/*for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
 		{
 			for (uint32 comp = 0; comp < DBC_CharComponent_Sections::ITEMS_COUNT; comp++)
 			{
@@ -85,7 +85,7 @@ R_Texture* Character_SkinTextureBaker::createTexture(Character* _character)
 
 				FillPixels((DBC_CharComponent_Sections::List) comp, itemComponentTexture);
 			}
-		}
+		}*/
 	}
 
 	// 4. Final

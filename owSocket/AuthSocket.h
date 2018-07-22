@@ -14,14 +14,18 @@ public:
 	CAuthSocket(CAuthWorldController* _world);
 	~CAuthSocket();
 
-	void SendData(const IByteBufferOutput& _bb) override;
+	void Stop();
+
 	void SendData(const IByteBuffer& _bb) override;
 	void SendData(const uint8* _data, uint32 _count) override;
 
+	// Thread
+	void AuthThread(std::future<void> futureObj);
+	
 	// Handlers
 	void InitHandlers();
-	void OnDataReceive(ByteBuffer _buf);
-	void ProcessHandler(eAuthCmd _handler, ByteBuffer _buffer);
+	void OnDataReceive(ByteBuffer& _buf);
+	void ProcessHandler(eAuthCmd _handler, ByteBuffer& _buffer);
 
 	// Client
 	void C_SendLogonChallenge();
@@ -34,6 +38,10 @@ public:
 private:
 	CAuthWorldController* m_World;
 	CSocketBase* socketBase;
+
+	// Thread
+	std::promise<void>			m_ThreadPromise;
+	std::thread					m_Thread;
 
 	std::unordered_map<eAuthCmd, HandlerFunc> m_Handlers;
 

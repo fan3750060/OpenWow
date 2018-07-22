@@ -1,6 +1,6 @@
 #pragma once
 
-struct AuthProof_C
+struct AuthProof_C : public ISendable
 {
 	AuthProof_C(uint8* _A, uint8* _MClient)
 	{
@@ -9,11 +9,11 @@ struct AuthProof_C
 		memcpy(M1, _MClient, SHA_DIGEST_LENGTH);
 	}
 
-	void Send(ISocket* _socket)
+	void Send(ISocket* _socket) override
 	{
 		uint8 crc[20];
 
-		ByteBufferOutput bb;
+		ByteBuffer bb;
 		bb.Write(cmd);
 		bb.Write(A, 32);
 		bb.Write(M1, SHA_DIGEST_LENGTH);

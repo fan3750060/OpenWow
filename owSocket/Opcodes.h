@@ -22,6 +22,7 @@
 
 enum Opcodes : uint16
 {
+	NONE											= 0x000,
     CMSG_BOOTME                                     = 0x001,
     CMSG_DBLOOKUP                                   = 0x002,
     SMSG_DBLOOKUP                                   = 0x003,
@@ -1332,7 +1333,9 @@ enum Opcodes : uint16
     SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT1         = 0x51C,
     SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT2         = 0x51D,
     SMSG_MULTIPLE_MOVES                             = 0x51E, // uncompressed version of SMSG_COMPRESSED_MOVES
-    NUM_MSG_TYPES                                   = 0x51F
+    NUM_MSG_TYPES                                   = 0x51F,
+
+	COUNT = 0x520,
 };
 
 #endif

@@ -21,7 +21,8 @@ void CMinimapProvider::Init()
 
 	while (!m_File->isEof())
 	{
-		string curStr = m_File->readLine();
+		string curStr;
+		m_File->readLine(&curStr);
 
 		if (curStr.substr(0, 4) == "dir:")
 		{

@@ -1,6 +1,6 @@
 #pragma once
 
-struct AuthChallenge_C
+struct AuthChallenge_C : public ISendable
 {
 	AuthChallenge_C(string _username, uint32 _ip) :
 		cmd(AUTH_LOGON_CHALLENGE),
@@ -13,9 +13,9 @@ struct AuthChallenge_C
 		build = 12340;
 	}
 
-	void Send(ISocket* _socket)
+	void Send(ISocket* _socket) override
 	{
-		ByteBufferOutput bb;
+		ByteBuffer bb;
 		bb.Write(cmd);
 		bb.Write((uint8)6);
 		bb.Write((uint8)(username.size() + 30));

@@ -14,24 +14,44 @@ CAuthSocket::CAuthSocket(CAuthWorldController* _world) :
 
 CAuthSocket::~CAuthSocket()
 {
+	Stop();
+
+	Log::Info("[AuthSocket]: Deleted.");
+}
+
+void CAuthSocket::Stop()
+{
+	m_ThreadPromise.set_value();
+	if (m_Thread.joinable()) m_Thread.join();
+
+	Log::Info("[AuthSocket]: All threads stopped.");
+
 	delete socketBase;
 }
 
 //--
 
-void CAuthSocket::SendData(const IByteBufferOutput& _bb)
-{
-	socketBase->SendData(_bb.getData(), _bb.getSize());
-}
-
 void CAuthSocket::SendData(const IByteBuffer& _bb)
 {
 	socketBase->SendData(_bb.getData(), _bb.getSize());
 }
-
 void CAuthSocket::SendData(const uint8* _data, uint32 _count)
 {
 	socketBase->SendData(_data, _count);
+}
+
+
+void CAuthSocket::AuthThread(std::future<void> futureObj)
+{
+	while (futureObj.wait_for(std::chrono::milliseconds(0)) == std::future_status::timeout)
+	{
+		if (socketBase->getReadCache()->isReady())
+		{
+			OnDataReceive(socketBase->getReadCache()->Pop());
+		}
+	}
+
+	Log::Info("[AuthSocket]: Exit thread");
 }
 
 void CAuthSocket::InitHandlers()
@@ -40,19 +60,23 @@ void CAuthSocket::InitHandlers()
 	m_Handlers[AUTH_LOGON_PROOF] = &CAuthSocket::S_LoginProof;
 	m_Handlers[REALM_LIST] = &CAuthSocket::S_Realmlist;
 
-	socketBase->setOnReceiveCallback(FUNCTION_CLASS_WA_Builder(CAuthSocket, this, OnDataReceive, ByteBuffer));
+	// Thread
+	std::future<void> futureObj = m_ThreadPromise.get_future();
+	m_Thread = std::thread(&CAuthSocket::AuthThread, this, std::move(futureObj));
+	m_Thread.detach();
 }
 
-void CAuthSocket::OnDataReceive(ByteBuffer _buf)
+void CAuthSocket::OnDataReceive(ByteBuffer& _buf)
 {
 	eAuthCmd currHandler;
 	_buf.readBytes(&currHandler);
-	Log::Info("Handler [0x%X]", currHandler);
+
+	//Log::Info("Handler [0x%X]", currHandler);
 
 	ProcessHandler(currHandler, _buf);
 }
 
-void CAuthSocket::ProcessHandler(eAuthCmd _handler, ByteBuffer _buffer)
+void CAuthSocket::ProcessHandler(eAuthCmd _handler, ByteBuffer& _buffer)
 {
 	std::unordered_map<eAuthCmd, HandlerFunc>::iterator handler = m_Handlers.find(_handler);
 	if (handler != m_Handlers.end())
@@ -294,7 +318,7 @@ bool CAuthSocket::S_LoginProof(ByteBuffer& _buff)
 	Log::Green("Successfully logined!!!");
 
 
-	ByteBufferOutput bb2;
+	ByteBuffer bb2;
 	bb2.Write((uint8)REALM_LIST);
 	bb2.Write((uint32)0);
 	SendData(bb2.getData(), bb2.getSize());

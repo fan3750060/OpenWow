@@ -4,18 +4,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{d0033b79-fd0f-4221-80fa-9a9bedd64d33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HTTP">
-      <UniqueIdentifier>{ccfbe22b-606e-4725-8b1c-0088e0f60dca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HTTP\Authentification">
-      <UniqueIdentifier>{3364f293-36ca-480a-bc97-c5ec3f68631a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HTTP\Authentification\Handlers">
-      <UniqueIdentifier>{d2347f52-2bb8-47c4-8e22-3725e0a2f6e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HTTP\World">
-      <UniqueIdentifier>{c8ec6c2e-39ff-48cf-91ec-6dd4d91d9bd6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Character">
       <UniqueIdentifier>{184a7fc6-825a-4df8-a20c-a8b5d2bed81a}</UniqueIdentifier>
     </Filter>
@@ -36,38 +24,11 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="AuthCodes.cpp">
-      <Filter>HTTP\Authentification</Filter>
-    </ClCompile>
-    <ClCompile Include="AuthSocket.cpp">
-      <Filter>HTTP\Authentification</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldSocket.cpp">
-      <Filter>HTTP\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Opcodes.cpp">
-      <Filter>HTTP\World</Filter>
-    </ClCompile>
-    <ClCompile Include="AuthCrypt.cpp">
-      <Filter>HTTP\World</Filter>
-    </ClCompile>
-    <ClCompile Include="InPacket.cpp">
-      <Filter>HTTP\World</Filter>
-    </ClCompile>
-    <ClCompile Include="OutPacket.cpp">
-      <Filter>HTTP\World</Filter>
-    </ClCompile>
-    <ClCompile Include="SocketBase.cpp">
-      <Filter>HTTP</Filter>
-    </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="Creature.cpp">
       <Filter>Creature</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldHandlers.cpp">
-      <Filter>HTTP\World</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>Character\Items</Filter>
@@ -96,8 +57,6 @@
     <ClCompile Include="Character_SkinTextureBaker.cpp">
       <Filter>Character\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="AuthWorldController.cpp" />
-    <ClCompile Include="RealmInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -106,44 +65,8 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="AuthCodes.h">
-      <Filter>HTTP\Authentification</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthSocket.h">
-      <Filter>HTTP\Authentification</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldSocket.h">
-      <Filter>HTTP\World</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthProof_C.h">
-      <Filter>HTTP\Authentification\Handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthProof_S.h">
-      <Filter>HTTP\Authentification\Handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthChallenge_S.h">
-      <Filter>HTTP\Authentification\Handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthChallenge_C.h">
-      <Filter>HTTP\Authentification\Handlers</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared\owClient.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Opcodes.h">
-      <Filter>HTTP\World</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthCrypt.h">
-      <Filter>HTTP\World</Filter>
-    </ClInclude>
-    <ClInclude Include="OutPacket.h">
-      <Filter>HTTP\World</Filter>
-    </ClInclude>
-    <ClInclude Include="InPacket.h">
-      <Filter>HTTP\World</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketBase.h">
-      <Filter>HTTP</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Character</Filter>
@@ -153,9 +76,6 @@
     </ClInclude>
     <ClInclude Include="Creature.h">
       <Filter>Creature</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldHandlers.h">
-      <Filter>HTTP\World</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>Character\Items</Filter>
@@ -190,7 +110,5 @@
     <ClInclude Include="Character_SkinTextureBaker.h">
       <Filter>Character\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="AuthWorldController.h" />
-    <ClInclude Include="RealmInfo.h" />
   </ItemGroup>
 </Project>

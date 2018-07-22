@@ -32,7 +32,10 @@ class AuthCrypt
 
     private:
         ARC4 _clientDecrypt;
+		std::mutex m_LockDecrypt;
         ARC4 _serverEncrypt;
+		std::mutex m_LockEncrypt;
+
         bool _initialized;
 };
 #endif

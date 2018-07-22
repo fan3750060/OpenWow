@@ -13,21 +13,31 @@ class CWorldSocket
 {
 	typedef bool (CWorldSocket::* HandlerFunc)(ByteBuffer&);
 public:
-	CWorldSocket(CAuthWorldController* _world, RealmInfo* _realm);
+	CWorldSocket(CAuthWorldController* _world);
 	~CWorldSocket();
 
 	void SendData(Opcodes _opcode);
-	void SendData(Opcodes _opcode, ByteBufferOutput& _bb);
+	void SendData(Opcodes _opcode, ByteBuffer& _bb);
 	void SendData(const uint8* _data, uint32 _count);
 
+	// Thread
+	void WorldThread(std::future<void> futureObj);
+
 	// Handlers
+	void Create(RealmInfo* _realm);
 	void InitHandlers();
 	void OnDataReceive(ByteBuffer _buf);
+	void AddHandler(Opcodes _opcode, Function_WA<ByteBuffer&>* _func);
 	void ProcessHandler(Opcodes _handler, ByteBuffer _buffer);
 
-	bool S_AuthChallenge(ByteBuffer& _buff);
-	bool S_AuthResponse(ByteBuffer& _buff);
-	bool S_CharEnum(ByteBuffer& _buff);
+	// Build packet
+	InPacket* currPacket;
+	void Packet1(uint16 _command, uint32 _size);
+	void Packet2(ByteBuffer& _buf);
+
+	void S_AuthChallenge(ByteBuffer& _buff);
+	void S_AuthResponse(ByteBuffer& _buff);
+	//void S_CharEnum(ByteBuffer& _buff);
 
 	//--
 	BigNumber getKey() const { return Key; }
@@ -38,8 +48,11 @@ private:
 	CSocketBase*								socketBase;
 	AuthCrypt									cryptUtils;
 
-	std::unordered_map<Opcodes, HandlerFunc>	m_Handlers;
-	std::queue<InPacket>						m_Packets;
+	// Thread
+	std::promise<void>							m_ThreadPromise;
+	std::thread									m_Thread;
+
+	std::unordered_map<Opcodes, Function_WA<ByteBuffer&>*>	m_Handlers;
 
 	RealmInfo*									m_Realm;
 

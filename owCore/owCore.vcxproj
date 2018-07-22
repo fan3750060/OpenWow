@@ -15,7 +15,6 @@
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="BigNumber.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
-    <ClCompile Include="ByteBufferOutput.cpp" />
     <ClCompile Include="DebugOutputConsole.cpp" />
     <ClCompile Include="DebugOutputLog.cpp" />
     <ClCompile Include="ConsoleCommand.cpp" />
@@ -62,7 +61,6 @@
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="BigNumber.h" />
     <ClInclude Include="BoundingBox.h" />
-    <ClInclude Include="ByteBufferOutput.h" />
     <ClInclude Include="DebugOutputConsole.h" />
     <ClInclude Include="DebugOutputLog.h" />
     <ClInclude Include="HMACSHA1.h" />

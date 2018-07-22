@@ -22,6 +22,9 @@ public:
 	cstring getPassword() const { return m_Password; }
 	BigNumber* getKey() { return &m_Key; }
 
+	CAuthSocket* getAuthSocket() const { return m_AuthSocket; }
+	CWorldSocket* getWorldSocket() const { return m_WorldSocket; }
+
 private:
 	string				m_Host;
 	string				m_Port;

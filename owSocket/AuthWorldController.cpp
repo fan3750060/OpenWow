@@ -12,6 +12,7 @@ CAuthWorldController::CAuthWorldController()
 	m_Password = "123456789";
 
 	m_AuthSocket = new CAuthSocket(this);
+	m_WorldSocket = new CWorldSocket(this);
 }
 
 void CAuthWorldController::StartAuth()
@@ -23,12 +24,11 @@ void CAuthWorldController::StartAuth()
 void CAuthWorldController::OnSuccessConnect(BigNumber Key)
 {
 	m_Key = Key;
+
 	delete m_AuthSocket;
 
-	Sleep(500); // TODO
-
 	RealmInfo* currRealm = &(m_Realms[0]);
-	m_WorldSocket = new CWorldSocket(this, currRealm);
+	m_WorldSocket->Create(currRealm);
 	m_WorldSocket->InitHandlers();
 }
 

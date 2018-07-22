@@ -52,7 +52,7 @@ void CWMO_Base_Instance::Update(double _time, double _dTime)
 
 }
 
-//#define WMO_DISABLE_PORTALS
+#define WMO_DISABLE_PORTALS
 
 bool CWMO_Base_Instance::PreRender3D()
 {

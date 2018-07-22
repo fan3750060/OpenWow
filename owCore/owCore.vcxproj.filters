@@ -186,9 +186,6 @@
     <ClCompile Include="DebugOutputLog.cpp">
       <Filter>Log\DebugOutput</Filter>
     </ClCompile>
-    <ClCompile Include="ByteBufferOutput.cpp">
-      <Filter>Files\Common</Filter>
-    </ClCompile>
     <ClCompile Include="ARC4.cpp">
       <Filter>Common\Cryptography</Filter>
     </ClCompile>
@@ -379,9 +376,6 @@
     </ClInclude>
     <ClInclude Include="DebugOutputLog.h">
       <Filter>Log\DebugOutput</Filter>
-    </ClInclude>
-    <ClInclude Include="ByteBufferOutput.h">
-      <Filter>Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="ARC4.h">
       <Filter>Common\Cryptography</Filter>

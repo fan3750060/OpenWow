@@ -17,7 +17,8 @@ string ProcessInclude(UniquePtr<IFile> f)
 
 	while (!f->isEof())
 	{
-		string line = f->readLine();
+		string line;
+		f->readLine(&line);
 
 		// Skip empty lines
 		if (line.length() == 0)
