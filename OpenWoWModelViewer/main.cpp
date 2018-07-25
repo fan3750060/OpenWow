@@ -47,8 +47,6 @@ int main(int argumentCount, char* arguments[])
 
 		CFilesManager filesManager;
 
-		UIMgr uiMgrEx;
-
 		CEngine engine;
 		engine.Init(new OpenGLAdapter_GLFW());
 		engine.SetArguments(argumentCount, arguments);

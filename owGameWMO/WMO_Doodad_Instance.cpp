@@ -41,7 +41,7 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, c
 
 CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
 {
-	Log::Info("ADT_MDX Deleted");
+	//Log::Info("ADT_MDX Deleted");
 }
 
 bool CWMO_Doodad_Instance::PreRender3D()

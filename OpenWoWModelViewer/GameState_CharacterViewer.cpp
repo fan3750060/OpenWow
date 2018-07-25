@@ -197,22 +197,24 @@ void GameState_CharacterViewer::PostRender3D()
 
 void GameState_CharacterViewer::RenderUI()
 {
-	_Render->RenderText
+	m_UIMgr->RenderText
 	(
 		vec2(5, m_VideoSettings.windowSizeY - 44),
 		"CamPos: [" + 
 		to_string(_Render->getCamera()->Position.x) + "], [" +
 		to_string(_Render->getCamera()->Position.y) + "], [" +
-		to_string(_Render->getCamera()->Position.z) + "]"
+		to_string(_Render->getCamera()->Position.z) + "]",
+		COLOR_WHITE
 	);
 	
-	_Render->RenderText
+	m_UIMgr->RenderText
 	(
 		vec2(5, m_VideoSettings.windowSizeY - 22), 
 		"CamRot: [" + 
 		to_string(_Render->getCamera()->Direction.x) + "], [" +
 		to_string(_Render->getCamera()->Direction.y) + "], [" +
-		to_string(_Render->getCamera()->Direction.z) + "]"
+		to_string(_Render->getCamera()->Direction.z) + "]",
+		COLOR_WHITE
 	);
 }
 
