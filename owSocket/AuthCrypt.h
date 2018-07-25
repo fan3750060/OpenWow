@@ -25,17 +25,17 @@ class AuthCrypt
         AuthCrypt();
 
         void Init(BigNumber* K);
-        void DecryptRecv(uint8 *, size_t);
-        void EncryptSend(uint8 *, size_t);
+        void DecryptRecv(uint8*, size_t);
+        void EncryptSend(uint8*, size_t);
 
-        bool IsInitialized() const { return _initialized; }
+        bool IsInitialized() const { return m_Initialized; }
 
     private:
-        ARC4 _clientDecrypt;
-		std::mutex m_LockDecrypt;
-        ARC4 _serverEncrypt;
-		std::mutex m_LockEncrypt;
+        ARC4		m_ClientDecrypt;
+		std::mutex	m_LockDecrypt;
+        ARC4		m_ServerEncrypt;
+		std::mutex	m_LockEncrypt;
 
-        bool _initialized;
+        bool		m_Initialized;
 };
 #endif

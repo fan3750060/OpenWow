@@ -143,36 +143,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 }
 
 TechniquesManager::~TechniquesManager()
-{
-	delete Debug_Pass;
-	delete DebugNormal_Pass;
-
-	// Map
-	delete MCNK_Pass;
-	delete WDL_LowRes_Pass;
-
-	// M2
-	delete M2_Pass;
-	delete M2_RibbonEmitters_Pass;
-
-	// Liquids
-	delete m_Magma;
-	delete m_Water;
-
-	// Others
-	delete Sky_Pass;
-	delete WMO_Pass;
-
-	// Postprocess
-	delete Postprocess_Fog;
-	delete Postprocess_Light_Direction;
-	delete Postprocess_Simple;
-
-	// UI
-	delete UI_Color;
-	delete UI_Font;
-	delete UI_Texture;
-}
+{}
 
 void TechniquesManager::PreRender3D(Camera* _camera, R_RenderBuffer* _rb)
 {

@@ -37,7 +37,7 @@ void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
 		realPos.y = 0.0f; // why they do this???
 
 		CWMO_Liquid_Instance* liquid = new CWMO_Liquid_Instance(_parent, m_WMOLiqiud, realPos, this);
-		// add to scene node is automaticly
+		_parent->addLiquidInstance(liquid);
 	}
 
 	for (auto& index : m_DoodadsPlacementIndexes)
@@ -259,6 +259,8 @@ void WMO_Group::Load()
 			// Buffer
 			VB_Colors = _Render->r.createVertexBuffer(vertexColorsConverted.size() * sizeof(vec4), vertexColorsConverted.data(), false);
 			m_IsMOCVExists = vertexColorsCount > 0;
+
+			delete[] mocv;
 		}
 		else if (strcmp(fourcc, "MLIQ") == 0) // Liquid
 		{

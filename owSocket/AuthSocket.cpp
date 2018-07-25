@@ -319,8 +319,8 @@ bool CAuthSocket::S_LoginProof(ByteBuffer& _buff)
 
 
 	ByteBuffer bb2;
-	bb2.Write((uint8)REALM_LIST);
-	bb2.Write((uint32)0);
+	bb2 << (uint8)REALM_LIST;
+	bb2 << (uint32)0;
 	SendData(bb2.getData(), bb2.getSize());
 
 	return true;

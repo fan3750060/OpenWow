@@ -1,20 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="DBC__Storage.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="DBC__Storage.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DBC__Storage.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="DBC__File.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="DBC_GroundEffectDoodad.h">
       <Filter>DBCs</Filter>
     </ClInclude>
@@ -36,13 +28,7 @@
     <ClInclude Include="DBC_TerrainType.h">
       <Filter>DBCs</Filter>
     </ClInclude>
-    <ClInclude Include="DBC__Forwards.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shared\owDBC.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="DBC_Map_WotLK.h">
@@ -132,6 +118,12 @@
     <ClInclude Include="DBC_ItemVisuals.h">
       <Filter>DBCs\Item</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared\owGameDBC.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC__File.h" />
+    <ClInclude Include="DBC__Forwards.h" />
+    <ClInclude Include="DBC__Storage.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -166,8 +158,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DBC__File.inl">
-      <Filter>Common</Filter>
-    </None>
+    <None Include="DBC__File.inl" />
   </ItemGroup>
 </Project>

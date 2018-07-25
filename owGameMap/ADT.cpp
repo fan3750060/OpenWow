@@ -224,7 +224,8 @@ bool ADT::Load()
 						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
 
 						// Create instance
-						new Liquid_Instance(this, liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						Liquid_Instance* instance = new Liquid_Instance(this, liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						m_LiquidsInstances.push_back(instance);
 					}
 					abuf += sizeof(MH2O_Header);
 				}

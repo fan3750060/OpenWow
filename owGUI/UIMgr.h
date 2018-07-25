@@ -1,5 +1,8 @@
 #pragma once
 
+#include "FontsManager.h"
+#include "Image.h"
+
 #include "UIElement.h"
 
 class UIMgr : public IUIMgr, public IUIMgrEx, public IUpdatable, public IRenderableUI, public IInputListener
@@ -18,6 +21,16 @@ public:
 
 	UIElement* GetFocus() const override { return m_FocusedElement; }
     void SetFocus(UIElement* _element) override;
+
+	void RenderImage(vec2 _pos, Image* _image);
+	void RenderImage(vec2 _pos, Image* _image, vec2 _size);
+
+	void RenderText(vec2 _pos, cstring _string, const Color& _color = COLOR_WHITE) const;
+	void RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color = COLOR_WHITE) const;
+	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color = COLOR_WHITE) const;
+	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color = COLOR_WHITE) const;
+
+	FontsManager* FontsMgr() { return m_FontsMgr; }
 
 	// IUIMgrEx
 	string GetNewName();
@@ -49,4 +62,7 @@ protected:
 
 	vector<UIElement*>  m_ObjectsToDetach;
 	vector<UIElement*>  m_ObjectsToDelete;
+
+private:
+	FontsManager*		m_FontsMgr;
 };

@@ -42,12 +42,13 @@ void WorldRender::RenderPostprocess()
 {
 	_Render->PostprocessSimple();
 
-	/*DirectionalLight light;
-	light.Direction = vec3(_World->Map()->dayNightPhase.dayDir);
+	DirectionalLight light;
+	//light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
+	light.Direction = vec3(0.0f, -0.5f, -0.5f);
 	light.ambient = _World->Map()->getSkyManager()->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->Map()->getSkyManager()->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);*/
+	DSDirectionalLightPass(light);
 
 	if (groupQuality.drawfog)
 	{

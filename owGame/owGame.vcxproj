@@ -11,62 +11,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DBC__Storage.cpp" />
+    <ClCompile Include="LiquidInstance.cpp" />
+    <ClCompile Include="Liquid.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared\owDBC.h" />
-    <ClInclude Include="DBC_AnimationData.h" />
-    <ClInclude Include="DBC_AreaTable.h" />
-    <ClInclude Include="DBC_CharacterFacialHairStyles.h" />
-    <ClInclude Include="DBC_CharComponentTextureLayouts.h" />
-    <ClInclude Include="DBC_CharComponentTextureSections.h" />
-    <ClInclude Include="DBC_CharHairGeosets.h" />
-    <ClInclude Include="DBC_CharSections.h" />
-    <ClInclude Include="DBC_ChrRaces.h" />
-    <ClInclude Include="DBC_CinematicCamera.h" />
-    <ClInclude Include="DBC_CinematicSequences.h" />
-    <ClInclude Include="DBC_CreatureDisplayInfo.h" />
-    <ClInclude Include="DBC_CreatureDisplayInfoExtra.h" />
-    <ClInclude Include="DBC_CreatureModelData.h" />
-    <ClInclude Include="DBC_GroundEffectDoodad.h" />
-    <ClInclude Include="DBC_GroundEffectTexture.h" />
-    <ClInclude Include="DBC_HelmetGeosetVisData.h" />
-    <ClInclude Include="DBC_Item.h" />
-    <ClInclude Include="DBC_ItemBagFamily.h" />
-    <ClInclude Include="DBC_ItemClass.h" />
-    <ClInclude Include="DBC_ItemDisplayInfo.h" />
-    <ClInclude Include="DBC_ItemVisualEffects.h" />
-    <ClInclude Include="DBC_ItemVisuals.h" />
-    <ClInclude Include="DBC_Light.h" />
-    <ClInclude Include="DBC_LightFloatBand.h" />
-    <ClInclude Include="DBC_LightIntBand.h" />
-    <ClInclude Include="DBC_LightParams.h" />
-    <ClInclude Include="DBC_LightSkyBox.h" />
-    <ClInclude Include="DBC_LiquidMaterial.h" />
-    <ClInclude Include="DBC_LiquidType.h" />
-    <ClInclude Include="DBC_LoadingScreen.h" />
-    <ClInclude Include="DBC_Map.h" />
-    <ClInclude Include="DBC_Map_WotLK.h" />
-    <ClInclude Include="DBC_Material.h" />
-    <ClInclude Include="DBC_TerrainType.h" />
-    <ClInclude Include="DBC_WMOAreaTable.h" />
-    <ClInclude Include="DBC_WorldSafeLocs.h" />
-    <ClInclude Include="DBC__File.h" />
-    <ClInclude Include="DBC__Forwards.h" />
-    <ClInclude Include="DBC__Storage.h" />
+    <ClInclude Include="..\shared\owGame.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="LiquidInstance.h" />
+    <ClInclude Include="Liquid.h" />
     <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DBC__File.inl" />
+    <ClInclude Include="WowChunkUtils.h" />
+    <ClInclude Include="WowConsts.h" />
+    <ClInclude Include="WowTime.h" />
+    <ClInclude Include="WowTypes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{10AA0F38-EC1E-44F7-868F-3FE2D187AC7B}</ProjectGuid>
+    <ProjectGuid>{B55BA550-E3B6-4756-AE79-6A5C7D28AEFF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>owDBC</RootNamespace>
+    <RootNamespace>owGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -110,10 +76,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\bin_x64\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -124,12 +95,21 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\bin_x64\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
 </Project>

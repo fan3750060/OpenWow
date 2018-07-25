@@ -19,7 +19,6 @@
 #ifndef _OPCODES_H
 #define _OPCODES_H
 
-
 enum Opcodes : uint16
 {
 	NONE											= 0x000,

@@ -16,6 +16,7 @@ bool GameState_InWorld::Init()
 
 	m_WorldRender = new WorldRender(_World);
 
+	// Test stuff
 	m_TestRenderBuffer = _Render->r.createRenderBuffer(m_VideoSettings.GetWindowSize(), R_TextureFormats::RGBA8, true, 4, 8);
 	m_TestRenderBufferFinal = _Render->r.createRenderBuffer(m_VideoSettings.GetWindowSize(), R_TextureFormats::RGBA8, false, 1, 0);
 	m_TestCamera = new Camera;

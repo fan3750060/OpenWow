@@ -52,7 +52,7 @@ private:
 	R_Texture* m_SpecialTextures[SM2_Texture::Type::COUNT];
 
 	// Animtion
-	CM2_Animator*		m_Animator;
+	SharedPtr<CM2_Animator>		m_Animator;
 	bool				m_NeedRecalcAnimation;
 
 private: // PARENT

@@ -29,5 +29,7 @@ private:
 	uint32 last_t;
 	uint32 _time;
 
+	IUIMgr* m_UIMgr;
+
 	CConsoleOpenGL* openGLConsole;
 };

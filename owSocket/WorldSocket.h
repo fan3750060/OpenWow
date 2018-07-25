@@ -27,6 +27,8 @@ public:
 	void Create(RealmInfo* _realm);
 	void InitHandlers();
 	void OnDataReceive(ByteBuffer _buf);
+
+	// Handlers
 	void AddHandler(Opcodes _opcode, Function_WA<ByteBuffer&>* _func);
 	void ProcessHandler(Opcodes _handler, ByteBuffer _buffer);
 
@@ -37,11 +39,9 @@ public:
 
 	void S_AuthChallenge(ByteBuffer& _buff);
 	void S_AuthResponse(ByteBuffer& _buff);
-	//void S_CharEnum(ByteBuffer& _buff);
 
 	//--
 	BigNumber getKey() const { return Key; }
-
 
 private:
 	CAuthWorldController*						m_World;

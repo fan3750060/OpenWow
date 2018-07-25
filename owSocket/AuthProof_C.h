@@ -14,12 +14,12 @@ struct AuthProof_C : public ISendable
 		uint8 crc[20];
 
 		ByteBuffer bb;
-		bb.Write(cmd);
-		bb.Write(A, 32);
-		bb.Write(M1, SHA_DIGEST_LENGTH);
-		bb.Write(crc, 20);
-		bb.Write((uint8)0);
-		bb.Write((uint8)0);
+		bb << cmd;
+		bb.Append(A, 32);
+		bb.Append(M1, SHA_DIGEST_LENGTH);
+		bb.Append(crc, 20);
+		bb << (uint8)0;
+		bb << (uint8)0;
 		_socket->SendData(bb);
 	}
 

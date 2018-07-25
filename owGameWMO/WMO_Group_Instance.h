@@ -5,6 +5,7 @@
 // FORWARD BEGIN
 class CWMO_Base_Instance;
 class CWMO_Doodad_Instance;
+class CWMO_Liquid_Instance;
 // FORWARD END
 
 class CWMO_Group_Instance : public SceneNode
@@ -18,6 +19,9 @@ public:
 	void addDoodadInstance(CWMO_Doodad_Instance* _doodad) { m_Doodads.push_back(_doodad); }
 	const vector<SharedPtr<CWMO_Doodad_Instance>>& getDoodadsInstances() { return m_Doodads; }
 
+	void addLiquidInstance(CWMO_Liquid_Instance* _liquid) { m_Liquids.push_back(_liquid); }
+	const vector<SharedPtr<CWMO_Liquid_Instance>>& getLiquidInstances() { return m_Liquids; }
+
 	// Disable render
 	bool PreRender3D() override;
 	void Render3D() override;
@@ -29,4 +33,5 @@ public:
 	bool										m_Calculated;
 
 	vector<SharedPtr<CWMO_Doodad_Instance>>		m_Doodads;
+	vector<SharedPtr<CWMO_Liquid_Instance>>     m_Liquids;
 };

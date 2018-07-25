@@ -2,7 +2,7 @@
 
 #include "M2_Types.h"
 
-class CM2_Animation
+class CM2_Animation : public CRefItem
 {
 public:
 	CM2_Animation(const M2* _m2, uint16 _animID, string _name, uint16 indexIntoSeq, const SM2_Sequence& _sequence);

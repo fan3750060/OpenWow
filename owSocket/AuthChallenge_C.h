@@ -16,22 +16,22 @@ struct AuthChallenge_C : public ISendable
 	void Send(ISocket* _socket) override
 	{
 		ByteBuffer bb;
-		bb.Write(cmd);
-		bb.Write((uint8)6);
-		bb.Write((uint8)(username.size() + 30));
-		bb.Write((uint8)0);
+		bb << cmd;
+		bb << (uint8)6;
+		bb << (uint8)(username.size() + 30);
+		bb << (uint8)0;
 
-		bb.Write(gamename, 4);
-		bb.Write(version1);
-		bb.Write(version2);
-		bb.Write(version3);
-		bb.Write(build);
-		bb.Write("68x", 4);
-		bb.Write("niW", 4);
-		bb.Write("URur", 4);
-		bb.Write((uint32)180);
-		bb.Write(ip);
-		bb.Write((uint8)username.size());
+		bb.Append(gamename, 4);
+		bb << version1;
+		bb << version2;
+		bb << version3;
+		bb << build;
+		bb.Append((const uint8*)"68x", 4);
+		bb.Append((const uint8*)"niW", 4);
+		bb.Append((const uint8*)"URur", 4);
+		bb << (uint32)180;
+		bb << ip;
+		bb << (uint8)username.size();
 		bb.Write(username);
 
 		_socket->SendData(bb);

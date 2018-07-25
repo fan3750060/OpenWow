@@ -25,6 +25,11 @@ public:
 		m_Ptr = _other.m_Ptr;
 		AddRef();
 	}
+	/*SharedPtr(SharedPtr&& _other)
+	{
+		m_Ptr = _other.m_Ptr;
+		AddRef();
+	}*/
 	~SharedPtr()
 	{
 		Release();
@@ -46,6 +51,12 @@ public:
 		AddRef();
 		return *this;
 	}
+	/*SharedPtr& operator=(SharedPtr&& _other)
+	{
+		m_Ptr = _other.m_Ptr;
+		AddRef();
+		return *this;
+	}*/
 	SharedPtr& operator=(T* ptr)
 	{
 		Release();

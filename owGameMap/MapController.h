@@ -57,7 +57,7 @@ public: // Getters
 			return false;
 		}
 	
-		int32 currentX = currentTile->m_IndexX;
+		int32 currentX = currentTile->m_IndexX; 
 		int32 currentZ = currentTile->m_IndexZ;
 
 		return (

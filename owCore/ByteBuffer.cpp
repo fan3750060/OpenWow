@@ -10,12 +10,14 @@ ByteBuffer::ByteBuffer() :
 	m_CurrentPosition(0)
 {}
 
-ByteBuffer::ByteBuffer(const ByteBuffer& _other) :
-	m_IsFilled(false),
-	m_IsEOF(true),
-	m_IsAllocated(false),
-	m_CurrentPosition(0)
+ByteBuffer::ByteBuffer(const ByteBuffer& _other)
 {
+	m_IsFilled = false;
+	m_IsEOF = true;
+	m_IsAllocated = false;
+	m_Data.clear();
+	m_CurrentPosition = 0;
+
 	CopyData(_other.getData(), _other.getSize());
 
 	m_IsEOF = _other.m_IsEOF;
@@ -42,10 +44,7 @@ ByteBuffer::ByteBuffer(uint64 _size) :
 
 ByteBuffer::~ByteBuffer()
 {
-	if (!m_IsAllocated)
-	{
-		return;
-	}
+	m_Data.clear();
 }
 
 //--
@@ -105,8 +104,6 @@ void ByteBuffer::SetFilled()
 
 void ByteBuffer::CopyData(const uint8* _data, uint64 _size)
 {
-	std::lock_guard<std::mutex> lg(m_Lock);
-
 	if (!m_IsAllocated)
 	{
 		Allocate(_size);
@@ -117,6 +114,7 @@ void ByteBuffer::CopyData(const uint8* _data, uint64 _size)
 		Log::Error("ByteBuffer[]: Source m_Data size [%d] bigger than m_IsAllocated memory [%d]!", _size, getSize());
 		Log::Error("ByteBuffer[]: Copy part of source m_Data.");
 		_size = getSize();
+		fail1();
 	}
 
 	if (_data != nullptr)
@@ -131,41 +129,21 @@ void ByteBuffer::CopyData(const uint8* _data, uint64 _size)
 void ByteBuffer::seek(uint64 _bufferOffsetAbsolute)
 {
 	assert1(_bufferOffsetAbsolute <= getSize());
-
-	if (_bufferOffsetAbsolute >= getSize())
-	{
-		m_CurrentPosition = getSize();
-		m_IsEOF = true;
-	}
-	else
-	{
-		m_CurrentPosition = _bufferOffsetAbsolute;
-		m_IsEOF = false;
-	}
+	m_CurrentPosition = _bufferOffsetAbsolute;
+	m_IsEOF = m_CurrentPosition >= getSize();
 }
 
 void ByteBuffer::seekRelative(uint64 _bufferOffsetRelative)
 {
 	assert1(m_CurrentPosition + _bufferOffsetRelative <= getSize());
-
-	if (m_CurrentPosition + _bufferOffsetRelative >= getSize())
-	{
-		m_CurrentPosition = getSize();
-		m_IsEOF = true;
-	}
-	else
-	{
-		m_CurrentPosition += _bufferOffsetRelative;
-		m_IsEOF = false;
-	}
+	m_CurrentPosition += _bufferOffsetRelative;
+	m_IsEOF = m_CurrentPosition >= getSize();
 }
 
 //-- READ
 
 void ByteBuffer::readLine(string* _string)
 {
-	std::lock_guard<std::mutex> lg(m_Lock);
-
 	assert1(_string != nullptr);
 
 	if (m_IsEOF)
@@ -199,20 +177,19 @@ void ByteBuffer::readLine(string* _string)
 
 void ByteBuffer::readBytes(void* _destination, uint64 _size)
 {
-	std::lock_guard<std::mutex> lg(m_Lock);
-
 	if (m_IsEOF)
 	{
 		return;
 	}
 
 	uint64 posAfterRead = m_CurrentPosition + _size;
-	if (posAfterRead > getSize())
+	if (posAfterRead >= getSize())
 	{
 		_size = getSize() - m_CurrentPosition;
 		m_IsEOF = true;
 	}
 
+	assert1(_destination != nullptr);
 	std::memcpy(_destination, &(m_Data[m_CurrentPosition]), _size);
 
 	m_CurrentPosition = posAfterRead;
@@ -243,8 +220,6 @@ void ByteBuffer::readString(string* _string)
 
 void ByteBuffer::Append(const uint8* _data, uint64 _size)
 {
-	std::lock_guard<std::mutex> lg(m_Lock);
-
 	assert1(_data != nullptr);
 
 	for (uint64 i = 0; i < _size; i++)
@@ -257,66 +232,6 @@ void ByteBuffer::Append(const uint8* _data, uint64 _size)
 	{
 		m_IsEOF = false;
 	}
-}
-
-void ByteBuffer::Write(int8 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(int16 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(int32 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(int64 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(uint8 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(uint16 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(uint32 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(uint64 _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(float _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(double _data)
-{
-	Append((uint8*)&_data, sizeof(_data));
-}
-
-void ByteBuffer::Write(IByteBuffer& _other)
-{
-	Append(_other.getData(), _other.getSize());
-}
-
-void ByteBuffer::Write(const uint8* _string, uint64 _size)
-{
-	Append(_string, _size);
 }
 
 void ByteBuffer::Write(cstring _string, uint64 _expectedSize)
@@ -333,6 +248,6 @@ void ByteBuffer::WriteDummy(uint64 _size)
 {
 	for (uint64 i = 0; i < _size; i++)
 	{
-		Write((uint8)0x00);
+		m_Data.push_back(0x00);
 	}
 }

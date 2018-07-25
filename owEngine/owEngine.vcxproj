@@ -14,8 +14,6 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
-    <ClCompile Include="LiquidInstance.cpp" />
-    <ClCompile Include="Liquid.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="OpenGLAdapterGLFW.cpp" />
     <ClCompile Include="Perfomance.cpp" />
@@ -32,8 +30,6 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />
-    <ClInclude Include="LiquidInstance.h" />
-    <ClInclude Include="Liquid.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="OpenGLAdapterGLFW.h" />
     <ClInclude Include="Perfomance.h" />
@@ -41,10 +37,6 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="WowChunkUtils.h" />
-    <ClInclude Include="WowConsts.h" />
-    <ClInclude Include="WowTime.h" />
-    <ClInclude Include="WowTypes.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B477451E-B90E-427E-9344-691BCA62D385}</ProjectGuid>

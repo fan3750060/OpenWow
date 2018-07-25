@@ -5,14 +5,13 @@
 #pragma comment(lib, "libmpq.lib")
 #pragma comment(lib, "glfw3.lib")
 
+// CORE
+
 #include <owIntfs.h>
 #pragma comment(lib, "owIntfs.lib")
 
 #include <owCore.h>
 #pragma comment(lib, "owCore.lib")
-
-#include <owDBC.h>
-#pragma comment(lib, "owDBC.lib")
 
 #include <owRender.h>
 #pragma comment(lib, "owRender.lib")
@@ -22,6 +21,14 @@
 
 #include <owEngine.h>
 #pragma comment(lib, "owEngine.lib")
+
+// GAME
+
+#include <owGameDBC.h>
+#pragma comment(lib, "owGameDBC.lib")
+
+#include <owGame.h>
+#pragma comment(lib, "owGame.lib")
 
 #include <owGameM2.h>
 #pragma comment(lib, "owGameM2.lib")

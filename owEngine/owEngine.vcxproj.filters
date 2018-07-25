@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Liquid">
-      <UniqueIdentifier>{6f7eba9b-6a7f-4263-83fd-d00c9258fd96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{d0033b79-fd0f-4221-80fa-9a9bedd64d33}</UniqueIdentifier>
     </Filter>
@@ -18,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Liquid.cpp">
-      <Filter>Liquid</Filter>
-    </ClCompile>
-    <ClCompile Include="LiquidInstance.cpp">
-      <Filter>Liquid</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -53,28 +44,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Liquid.h">
-      <Filter>Liquid</Filter>
-    </ClInclude>
-    <ClInclude Include="WowChunkUtils.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="WowTime.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="LiquidInstance.h">
-      <Filter>Liquid</Filter>
-    </ClInclude>
     <ClInclude Include="common.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="WowConsts.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="WowTypes.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\shared\owEngine.h">

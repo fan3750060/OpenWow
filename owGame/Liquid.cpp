@@ -3,9 +3,6 @@
 // General
 #include "liquid.h"
 
-// Additional
-#include "Perfomance.h"
-
 Liquid::Liquid(uint32 x, uint32 y) :
 	m_TilesX(x),
 	m_TilesY(y),

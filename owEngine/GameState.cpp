@@ -11,6 +11,7 @@ CGameState::CGameState() :
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 	m_Engine = GetManager<IEngine>();
+	m_UIMgr = GetManager<IUIMgr>();
 }
 
 CGameState::~CGameState()

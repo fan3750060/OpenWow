@@ -1,11 +1,5 @@
 #pragma once
 
-#include "TexturesManager.h"
-
-// FORWARD BEGIN
-class R_GeometryInfo;
-// FORWARD END
-
 class Font : public CRefItem
 {
 public:

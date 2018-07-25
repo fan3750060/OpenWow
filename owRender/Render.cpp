@@ -19,7 +19,7 @@ RenderGL::~RenderGL()
 	delete m_RenderBuffer;
 
 	delete m_RenderStorage;
-	delete m_FontsManager;
+	//delete m_FontsManager;
 	delete m_TechniquesManager;
 	delete m_RenderQueue;
 
@@ -40,14 +40,13 @@ void RenderGL::Init(IOpenGLAdapter* _adapter)
 
 	m_RenderStorage = new RenderStorage(&r);
 	m_TexturesManager = new TexturesManager(m_OpenGLAdapter, &r);
-	m_FontsManager = new FontsManager(&r);
 	m_TechniquesManager = new TechniquesManager(&r);
 	m_RenderQueue = new RenderQueue(&r);
 
 	//--
 
 	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA32F, true, 4, 4);
+	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 4);
 
 	// Main game camera
 	m_Camera = new Camera;
@@ -199,42 +198,6 @@ void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 
 #pragma region GUI Part
 
-void RenderGL::RenderImage(vec2 _pos, Image* _image)
-{
-	RenderImage(_pos, _image, _image->GetSize());
-}
-
-void RenderGL::RenderImage(vec2 _pos, Image* _image, vec2 _size)
-{
-	// Transform
-	mat4 worldTransform;
-	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
-
-	// Update buffer
-	vector<vec2> texCoordsQuad;
-	texCoordsQuad.push_back(_image->GetP0());
-	texCoordsQuad.push_back(_image->GetP1());
-	texCoordsQuad.push_back(_image->GetP3());
-	texCoordsQuad.push_back(_image->GetP2());
-	m_RenderStorage->__vbQuadVTDynamic->updateBufferData(4 * sizeof(vec3), 4 * sizeof(vec2), texCoordsQuad.data());
-
-	// Shader
-	m_TechniquesManager->UI_Texture->Bind();
-	m_TechniquesManager->UI_Texture->setProj(m_OrhoMatrix * worldTransform);
-
-	// State
-	r.setTexture(Material::C_DiffuseTextureIndex, _image->GetTexture(), SS_FILTER_BILINEAR | SS_ANISO16 | SS_ADDR_CLAMP, 0);
-	r.setGeometry(m_RenderStorage->__QuadVTDynamic);
-
-	// Draw call
-	r.drawIndexed(0, 6, 0, 4);
-
-	m_TechniquesManager->UI_Texture->Unbind();
-}
-
-//
-
 void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate)
 {
 	RenderTexture(_pos, _texture, _texture->GetSize(), rotate);
@@ -319,60 +282,6 @@ void RenderGL::RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color
 
 //
 
-void RenderGL::RenderText(vec2 _pos, cstring _string, const Color& _color) const
-{
-	RenderText(_pos, _string, TextAlignW::TEXT_ALIGNW_LEFT, TextAlignH::TEXT_ALIGNH_BOTTOM, m_FontsManager->GetMainFont(), _color);
-}
-
-void RenderGL::RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color) const
-{
-	RenderText(_pos, _string, TextAlignW::TEXT_ALIGNW_LEFT, TextAlignH::TEXT_ALIGNH_BOTTOM, _font, _color);
-}
-
-void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color) const
-{
-	RenderText(_pos, _string, _alignW, _alignH, m_FontsManager->GetMainFont(), _color);
-}
-
-void RenderGL::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color) const
-{
-	auto stringWidth = _font->GetStringWidth(_string);
-	auto fontHeight = _font->GetHeight();
-
-	vec2 offset = vec2();
-
-	switch (_alignW)
-	{
-	case TEXT_ALIGNW_LEFT:
-		offset.x = 0;
-		break;
-
-	case TEXT_ALIGNW_CENTER:
-		offset.x = -static_cast<float>(stringWidth / 2);
-		break;
-
-	case TEXT_ALIGNW_RIGHT:
-		offset.x = -static_cast<float>(stringWidth);
-		break;
-	}
-
-	switch (_alignH)
-	{
-	case TEXT_ALIGNH_TOP:
-		offset.y = -static_cast<float>(fontHeight);
-		break;
-
-	case TEXT_ALIGNH_CENTER:
-		offset.y = -static_cast<float>(fontHeight / 2);
-		break;
-
-	case TEXT_ALIGNH_BOTTOM:
-		offset.y = 0;
-		break;
-	}
-
-	_font->Render(_string, _pos + offset, _color);
-}
 
 void RenderGL::RenderQuad()
 {

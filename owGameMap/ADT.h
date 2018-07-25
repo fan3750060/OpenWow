@@ -49,6 +49,7 @@ public:
 	// Instances
 	vector<SharedPtr<ADT_WMO_Instance>>	m_WMOsInstances;
 	vector<SharedPtr<ADT_MDX_Instance>>	m_MDXsInstances;
+	vector<SharedPtr<Liquid_Instance>>	m_LiquidsInstances;
 	vector<SharedPtr<ADT_MCNK>>			m_Chunks;
 
 private: // PARENT

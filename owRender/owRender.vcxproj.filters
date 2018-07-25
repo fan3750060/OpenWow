@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Font.cpp">
-      <Filter>Fonts</Filter>
-    </ClCompile>
     <ClCompile Include="Render.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -12,12 +9,6 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="ConsoleOpenGL.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="RenderDevice.cpp">
       <Filter>RenderCore</Filter>
@@ -30,9 +21,6 @@
     </ClCompile>
     <ClCompile Include="TechniquesManager.cpp">
       <Filter>Techniques</Filter>
-    </ClCompile>
-    <ClCompile Include="FontsManager.cpp">
-      <Filter>Fonts</Filter>
     </ClCompile>
     <ClCompile Include="TexturesManager.cpp">
       <Filter>Textures</Filter>
@@ -78,9 +66,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Font.h">
-      <Filter>Fonts</Filter>
-    </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -89,12 +74,6 @@
     </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsoleOpenGL.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Textures</Filter>
     </ClInclude>
     <ClInclude Include="RenderDevice.h">
       <Filter>RenderCore</Filter>
@@ -125,9 +104,6 @@
     </ClInclude>
     <ClInclude Include="lights_common.h">
       <Filter>Techniques\Postprocess</Filter>
-    </ClInclude>
-    <ClInclude Include="FontsManager.h">
-      <Filter>Fonts</Filter>
     </ClInclude>
     <ClInclude Include="TexturesManager.h">
       <Filter>Textures</Filter>
@@ -232,9 +208,6 @@
   <ItemGroup>
     <Filter Include="Textures">
       <UniqueIdentifier>{6cc0d5a6-0295-4c2b-9463-2f1164bc7b27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fonts">
-      <UniqueIdentifier>{5bcbfcfc-c3c6-4a8e-a1b9-750f8d3379f6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Techniques">
       <UniqueIdentifier>{3b62bcfc-0d63-440b-a018-58f0bb73c48f}</UniqueIdentifier>

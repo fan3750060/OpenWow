@@ -6,6 +6,8 @@
 #define On_Mouse_Leaved(c)       void c::OnMouseLeaved()
 #define On_Mouse_Leaved_V        virtual void OnMouseLeaved() override;
 
+#include "Image.h"
+
 // FORWARD BEGIN
 class UIMgr;
 class UIMgrEx;

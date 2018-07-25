@@ -3,17 +3,13 @@
 // General
 #include "ConsoleOpenGL.h"
 
-// Additional
-#include "FontsManager.h"
-#include "TexturesManager.h"
-#include "Render.h"
-
 CConsoleOpenGL::CConsoleOpenGL() :
 	windowSize(GetSettingsGroup<CGroupVideo>().GetWindowSize()),
-	consoleFont(_Render->FontsMgr()->GetMainFont()),
+	m_UIMgr(GetManager<IUIMgr>()),
 	m_MainConsole(GetManager<IConsole>())
 {
 	m_IsOpened = false;
+	consoleFont = GetManager<IFontsManager>()->GetMainFont();
 	assert1(consoleFont != nullptr);
 	fontHeight = consoleFont->GetHeight();
 	consoleHeight = windowSize.y / 2.0f;
@@ -57,15 +53,15 @@ void CConsoleOpenGL::RenderUI()
 		{
 			break;
 		}
-		_Render->RenderText(textOffset + vec2(0, consoleHeight - (curLine * fontHeight)), _message.text, consoleFont, _message.color);
+		m_UIMgr->RenderText(textOffset + vec2(0, consoleHeight - (curLine * fontHeight)), _message.text, consoleFont, _message.color);
 		curLine++;
 	}
 
 	// Input rectangle
-	_Render->RenderRectangle(vec2(0, consoleHeight), vec2(windowSize.x, fontHeight), COLOR_DARKGRAY);
+	_Render->RenderRectangle(vec2(0.0f, consoleHeight), vec2(windowSize.x, fontHeight), COLOR_DARKGRAY);
 
 	// Input string
-	_Render->RenderText(vec2(0.0f, consoleHeight), ">" + inputString, COLOR_WHITE);
+	m_UIMgr->RenderText(vec2(0.0f, consoleHeight), ">" + inputString, COLOR_WHITE);
 
 	// Helper
 	if (!commandsHelper.empty())
@@ -83,7 +79,7 @@ void CConsoleOpenGL::RenderUI()
 			// Selected
 			if (helperSelected == i)
 			{
-				_Render->RenderText(vec2(0.0f, consoleHeight + i * fontHeight), ">", COLOR_WHITE);
+				m_UIMgr->RenderText(vec2(0.0f, consoleHeight + i * fontHeight), ">", COLOR_WHITE);
 				_Render->RenderRectangleOutline(vec2(0.0f, consoleHeight + i * fontHeight), helperOffset + vec2(commandNameWidth, fontHeight), COLOR_BLUE);
 			}
 
@@ -93,7 +89,7 @@ void CConsoleOpenGL::RenderUI()
 			{
 				line += " [args]";
 			}
-			_Render->RenderText(helperOffset + vec2(0.0f, consoleHeight + i * fontHeight), line, COLOR_WHITE);
+			m_UIMgr->RenderText(helperOffset + vec2(0.0f, consoleHeight + i * fontHeight), line, COLOR_WHITE);
 
 			i++;
 		}

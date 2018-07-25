@@ -70,30 +70,34 @@ void CWorldSocket::SendData(Opcodes _opcode)
 	Opcodes command = (Opcodes)((&reinterpret_cast<uint8&>(_opcode))[1] << 8 | (&reinterpret_cast<uint8&>(_opcode))[0]);
 
 	ByteBuffer finalBuffer;
-	finalBuffer.Write((uint8)0);
-	finalBuffer.Write((uint8)4);
-	finalBuffer.Write((uint32)command);
+	finalBuffer << (uint8)0;
+	finalBuffer << (uint8)4;
+	finalBuffer << (uint32)command;
 	SendData(finalBuffer.getData(), finalBuffer.getSize());
 }
 void CWorldSocket::SendData(Opcodes _opcode, ByteBuffer& _bb)
 {
+	assert1((_bb.getSize() + 4) < UINT16_MAX);
+
 	uint16 size0 = _bb.getSize() + 4 /* HEADER */;
 	uint16 sizeFinal = ((&reinterpret_cast<uint8&>(size0))[0] << 8 | (&reinterpret_cast<uint8&>(size0))[1]);
 	Opcodes command = (Opcodes)((&reinterpret_cast<uint8&>(_opcode))[1] << 8 | (&reinterpret_cast<uint8&>(_opcode))[0]);
 
 	ByteBuffer finalBuffer;
-	finalBuffer.Write(sizeFinal);
-	finalBuffer.Write((uint32)command);
-	finalBuffer.Write(_bb.getData(), _bb.getSize());
+	finalBuffer << sizeFinal;
+	finalBuffer << (uint32)command;
+	finalBuffer << _bb;
 
 	SendData(finalBuffer.getData(), finalBuffer.getSize());
 }
 void CWorldSocket::SendData(const uint8* _data, uint32 _count)
 {
+	assert1(_count < 4096);
+
 	uint8 data2[4096];
 	memcpy(data2, _data, _count);
 
-	cryptUtils.EncryptSend(data2, 6 /* size + header*/);
+	cryptUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
 
 	socketBase->SendData(data2, _count);
 }
@@ -159,8 +163,6 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 		Packet2(_buf);
 	}
 
-
-	uint32 currReader = 0;
 	while (!_buf.isEof())
 	{
 		uint8* data = _buf.getDataFromCurrentEx();
@@ -200,7 +202,7 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 		}
 
 		// DEBUG
-		assert1(command < COUNT);
+		assert1(command < Opcodes::COUNT);
 		Log::Info("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[command].c_str(), command, packetSize - sizeCorrection);
 
 		_buf.seekRelative(sizeCorrection + sizeof(Opcodes));
@@ -250,7 +252,7 @@ void CWorldSocket::Packet2(ByteBuffer& _buf)
 	
 	// Fill data
 	assert1(_buf.getPos() + buffRead <= _buf.getSize());
-	currPacket->data.Write(_buf.getDataFromCurrent(), buffRead);
+	currPacket->data.Append(_buf.getDataFromCurrent(), buffRead);
 	_buf.seekRelative(buffRead);
 	//Log::Info("Packet[%s] readed '%d' of '%d'.", OpcodesNames[currPacket->opcode].c_str(), currPacket->data.getSize(), currPacket->dataSize);
 
@@ -258,6 +260,7 @@ void CWorldSocket::Packet2(ByteBuffer& _buf)
 	if (currPacket->data.getSize() == currPacket->dataSize)
 	{
 		ProcessHandler(currPacket->opcode, currPacket->data);
+
 		OW_SAFEDELETE(currPacket);
 	}
 }
@@ -272,7 +275,7 @@ void CWorldSocket::S_AuthChallenge(ByteBuffer& _buff)
 	uint32 seed; 
 	_buff.readBytes(&seed, 4);
 
-	_buff.seek(32);
+	_buff.seekRelative(24);
 	
 	BigNumber ourSeed;
 	ourSeed.SetRand(4 * 8);
@@ -289,16 +292,16 @@ void CWorldSocket::S_AuthChallenge(ByteBuffer& _buff)
 	uSHA.UpdateBigNumbers(m_World->getKey(), nullptr);
 	uSHA.Finalize();
 
+	//------------------
 	ByteBuffer bb;
-	bb.Write((uint32)12345);
+	bb << (uint32)12345;
 	bb.WriteDummy(4);
-	bb.Write((const uint8*)upperUsername.c_str(), upperUsername.size() + 1);
+	bb << upperUsername;
 	bb.WriteDummy(4);
-	bb.Write(ourSeed.AsByteArray(4).get(), 4);
+	bb.Append(ourSeed.AsByteArray(4).get(), 4);
 	bb.WriteDummy(20);
-	bb.Write(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
+	bb.Append(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
 	bb.WriteDummy(4);
-
 	SendData(CMSG_AUTH_SESSION, bb);
 
 	// Start encription from here
@@ -336,9 +339,9 @@ void CWorldSocket::S_AuthResponse(ByteBuffer& _buff)
 	}
 	else if (detail == CommandDetail::AuthQueue)
 	{
-		Log::Warn("You in queue!!!");
+		Log::Warn("You in queue!");
 	}
-	else
+	else if (detail == CommandDetail::AuthFailure)
 	{
 		Log::Warn("Auth failed");
 	}

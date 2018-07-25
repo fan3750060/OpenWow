@@ -5,7 +5,8 @@
 
 Perfomance* _Perfomance;
 
-Perfomance::Perfomance()
+Perfomance::Perfomance() :
+	m_UIMgr(GetManager<IUIMgr>())
 {
 	FrameBegin();
 }
@@ -50,7 +51,7 @@ void Perfomance::Render(cvec2 _pos)
 	{
 		if (PerfomanceMessages[i].what != PERF_DELIM)
 		{
-			_Render->RenderText(
+			m_UIMgr->RenderText(
 				point,
 				PerfomanceMessages[i].descr +
 				string(": t[")
@@ -61,12 +62,13 @@ void Perfomance::Render(cvec2 _pos)
 					PerfomanceMessages[i].showInc ? "], c["
 					+
 					_Perfomance->GetInc(PerfomanceMessages[i].what) + "]" : "]"
-					)
+				), 
+				COLOR_WHITE
 			);
 		}
 
 		point.y += diff;
 	}
 
-	_Render->RenderText(point, "SUMMA: " + _Perfomance->Sum());
+	m_UIMgr->RenderText(point, "SUMMA: " + _Perfomance->Sum(), COLOR_WHITE);
 }

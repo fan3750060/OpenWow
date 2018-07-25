@@ -2,7 +2,6 @@
 
 #include "Camera.h"
 #include "RenderDevice.h"
-#include "FontsManager.h"
 #include "TexturesManager.h"
 #include "TechniquesManager.h"
 #include "RenderStorage.h"
@@ -24,7 +23,6 @@ public:
 	void Set3D() override;
 	
 
-
 	//------------------
 	// 3D Part
 	//------------------
@@ -44,20 +42,12 @@ public:
 	// GUI Part
 	//------------------
 
-	void RenderImage(vec2 _pos, Image* _image) override;
-	void RenderImage(vec2 _pos, Image* _image, vec2 _size) override;
-
-    void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate = false) override;
+	void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate = false) override;
     void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate = false) override;
 	void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, float rotate) override;
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
-
-	void RenderText(vec2 _pos, cstring _string, const Color& _color = COLOR_WHITE) const;
-	void RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color = COLOR_WHITE) const;
-	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color = COLOR_WHITE) const;
-	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color = COLOR_WHITE) const;
 
 	void RenderQuad();
     void RenderQuadVT();
@@ -73,7 +63,6 @@ public: // Getters
 	IOpenGLAdapter* getAdapter() { return m_OpenGLAdapter; }
 	RenderStorage* getRenderStorage() { return m_RenderStorage; }
 	TexturesManager* TexturesMgr() { return m_TexturesManager; }
-	FontsManager* FontsMgr() { return m_FontsManager; }
 	TechniquesManager* getTechniquesMgr() { return m_TechniquesManager; }
 
 	void PushToQueue(RenderDrawCall _call) { m_RenderQueue->PushCall(_call); }
@@ -92,7 +81,6 @@ private:
 	IOpenGLAdapter*				m_OpenGLAdapter;
 	RenderStorage*				m_RenderStorage;
 	TexturesManager*			m_TexturesManager;
-	FontsManager*				m_FontsManager;
 	TechniquesManager*			m_TechniquesManager;
 	RenderQueue*				m_RenderQueue;
 

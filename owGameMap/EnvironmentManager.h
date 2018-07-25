@@ -32,6 +32,4 @@ public:
 
 	SharedPtr<DayNightCycle> dayNightCycle;
 	DayNightPhase dayNightPhase;
-
-
 };

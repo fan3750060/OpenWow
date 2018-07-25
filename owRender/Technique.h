@@ -6,7 +6,7 @@
 class TechniquesManager;
 // FORWARD END
 
-class Technique
+class Technique : public CRefItem
 {
 	friend TechniquesManager;
 protected:
@@ -44,5 +44,7 @@ protected:
 	SharedPtr<R_Shader>  m_Shader;
 	RenderDevice*		m_RenderDevice;
 };
+
+typedef SharedPtr<Technique> SharedTechPtr;
 
 #include "Technique.inl"

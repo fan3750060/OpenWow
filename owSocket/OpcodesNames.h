@@ -19,7 +19,6 @@
 #ifndef _OPCODESNAMES_H
 #define _OPCODESNAMES_H
 
-
 const string OpcodesNames[] =
 {
 	"NONE",  // 0x000,

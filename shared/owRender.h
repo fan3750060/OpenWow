@@ -4,8 +4,6 @@
 #include "../owRender/Common.h"
 
 // Render
-#include "../owRender/ConsoleOpenGL.h"
-#include "../owRender/FontsManager.h"
 #include "../owRender/Material.h"
 #include "../owRender/Render.h"
 #include "../owRender/RenderStorage.h"

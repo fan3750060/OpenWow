@@ -3,11 +3,6 @@
 // General
 #include "Font.h"
 
-// Additional
-#include "Material.h"
-#include "Render.h"
-#include "TechniquesManager.h"
-
 Font::Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _widthArray, uint32 _height) :
 	m_Texture(_texture),
 	m_Geometry(_fontGeometry),

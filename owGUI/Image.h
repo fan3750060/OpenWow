@@ -1,7 +1,5 @@
 #pragma once
 
-#include "TexturesManager.h"
-
 class Image : public CRefItem
 {
 public:

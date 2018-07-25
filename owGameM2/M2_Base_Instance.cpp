@@ -31,7 +31,6 @@ CM2_Base_Instance::~CM2_Base_Instance()
 {
 	if (m_M2->isAnimated())
 	{
-		OW_SAFEDELETE(m_Animator);
 		_Bindings->UnregisterUpdatableObject(this);
 	}
 }

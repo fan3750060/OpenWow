@@ -18,7 +18,7 @@ void S_CharEnum(ByteBuffer& _buff)
 	}
 
 	ByteBuffer bb;
-	bb.Write((uint64)chars[1].GUID);
+	bb << (uint64)chars[1].GUID;
 	m_authWorldController->getWorldSocket()->SendData(CMSG_PLAYER_LOGIN, bb);
 
 	//Orc

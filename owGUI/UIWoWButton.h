@@ -9,7 +9,4 @@ public:
 	virtual ~UIWowButon();
 
 	void Init(cvec2 _position);
-
-private:
-
 };

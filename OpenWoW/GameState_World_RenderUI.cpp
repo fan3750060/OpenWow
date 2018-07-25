@@ -78,9 +78,9 @@ void GameState_InWorld::RenderUI()
 	//
 
 
-	_Render->RenderText(vec2(5, 20), "Area: [" + areaName + "] [Area id = " + std::to_string(_World->Map()->GetAreaID()) + "]");
-	_Render->RenderText(vec2(5, 40), "Region: [" + regionName + "]");
-	_Render->RenderText(vec2(5, 60), "CURRX: " + to_string(_World->Map()->GetCurrentX()) + ", CURRZ " + to_string(_World->Map()->GetCurrentZ()));
+	m_UIMgr->RenderText(vec2(5, 20), "Area: [" + areaName + "] [Area id = " + std::to_string(_World->Map()->GetAreaID()) + "]", COLOR_WHITE);
+	m_UIMgr->RenderText(vec2(5, 40), "Region: [" + regionName + "]", COLOR_WHITE);
+	m_UIMgr->RenderText(vec2(5, 60), "CURRX: " + to_string(_World->Map()->GetCurrentX()) + ", CURRZ " + to_string(_World->Map()->GetCurrentZ()), COLOR_WHITE);
 
 
 	///
@@ -89,18 +89,18 @@ void GameState_InWorld::RenderUI()
 
 	if (sceneManager->getIntersectedNode() != nullptr)
 	{
-		_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 110), sceneManager->getIntersectedNodeInfo());
+		m_UIMgr->RenderText(vec2(5, m_VideoSettings.windowSizeY - 110), sceneManager->getIntersectedNodeInfo(), COLOR_WHITE);
 	}
 
 	vec3 g = fromRealToGame(_Render->getCamera()->Position);
 
-	_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 88), "REAL CamPos: [" + to_string(_Render->getCamera()->Position.x) + "], [" + to_string(_Render->getCamera()->Position.y) + "], [" + to_string(_Render->getCamera()->Position.z) + "]");
-	_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 66), "CamPos: [" + to_string(g.x) + "], [" + to_string(g.y) + "], [" + to_string(g.z) + "]");
-	_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 44), "CamDir: [" + to_string(_Render->getCamera()->Direction.x) + "], [" + to_string(_Render->getCamera()->Direction.y) + "], [" + to_string(_Render->getCamera()->Direction.z) + "]");
-	_Render->RenderText(vec2(5, m_VideoSettings.windowSizeY - 22), "CamRot: [" + to_string(_Render->getCamera()->Roll) + "], [" + to_string(_Render->getCamera()->Pitch) + "]");
+	m_UIMgr->RenderText(vec2(5, m_VideoSettings.windowSizeY - 88), "REAL CamPos: [" + to_string(_Render->getCamera()->Position.x) + "], [" + to_string(_Render->getCamera()->Position.y) + "], [" + to_string(_Render->getCamera()->Position.z) + "]", COLOR_WHITE);
+	m_UIMgr->RenderText(vec2(5, m_VideoSettings.windowSizeY - 66), "CamPos: [" + to_string(g.x) + "], [" + to_string(g.y) + "], [" + to_string(g.z) + "]", COLOR_WHITE);
+	m_UIMgr->RenderText(vec2(5, m_VideoSettings.windowSizeY - 44), "CamDir: [" + to_string(_Render->getCamera()->Direction.x) + "], [" + to_string(_Render->getCamera()->Direction.y) + "], [" + to_string(_Render->getCamera()->Direction.z) + "]", COLOR_WHITE);
+	m_UIMgr->RenderText(vec2(5, m_VideoSettings.windowSizeY - 22), "CamRot: [" + to_string(_Render->getCamera()->Roll) + "], [" + to_string(_Render->getCamera()->Pitch) + "]", COLOR_WHITE);
 
 	// Time
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 150, 0), "TIME [" + to_string(_World->Map()->getTime()->GetHour()) + "." + to_string(_World->Map()->getTime()->GetMinute()) + "]");
+	m_UIMgr->RenderText(vec2(m_VideoSettings.windowSizeX - 150, 0), "TIME [" + to_string(_World->Map()->getTime()->GetHour()) + "." + to_string(_World->Map()->getTime()->GetMinute()) + "]", COLOR_WHITE);
 	char buff[256];
 
 	// Ambient
@@ -132,7 +132,7 @@ void GameState_InWorld::RenderUI()
 		_World->Map()->getSkyManager()->GetFog(LightFogs::LIGHT_FOG_DISTANCE),
 		_World->Map()->getSkyManager()->GetFog(LightFogs::LIGHT_FOG_MULTIPLIER)
 	);
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 80), buff);
+	m_UIMgr->RenderText(vec2(m_VideoSettings.windowSizeX - 400, 80), buff, COLOR_WHITE);
 
 	// Colors
 	float xPos = m_VideoSettings.windowSizeX - 400;
@@ -170,14 +170,14 @@ void GameState_InWorld::RenderUI()
 	for (uint8 i = 0; i < 18; i++)
 	{
 		_Render->RenderRectangle(vec2(xPos, yPos + i * 16), vec2(16.0f, 16.0f), Color(_World->Map()->getSkyManager()->GetColor((LightColors::List)i)));
-		_Render->RenderText(vec2(xPos + 20, yPos + i * 16), names[i]);
+		m_UIMgr->RenderText(vec2(xPos + 20, yPos + i * 16), names[i], COLOR_WHITE);
 	}
 
 	sprintf_s(buff, "Buffer memory [%s]", _Render->r.getBufferMemStr().c_str());
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
+	m_UIMgr->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff, COLOR_WHITE);
 
 	sprintf_s(buff, "R_Texture memory [%s]", _Render->r.getTextureMemStr().c_str());
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
+	m_UIMgr->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff, COLOR_WHITE);
 
 	/*if (_World->Map()->dir != nullptr)
 	{

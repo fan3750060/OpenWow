@@ -10,7 +10,7 @@ public:
 
 	Font* Add(cstring _fontFileName, uint32 _fontSize);
 
-	Font* GetMainFont() const { return mainFont; }
+	Font* GetMainFont() const override { return mainFont; }
 
 	// CRefManager1Dim
 	Font* CreateAction(cstring name) override;

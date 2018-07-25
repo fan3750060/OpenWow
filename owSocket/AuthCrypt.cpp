@@ -22,8 +22,8 @@
 #include "AuthCrypt.h"
 
 AuthCrypt::AuthCrypt() :
-    _clientDecrypt(SHA_DIGEST_LENGTH), _serverEncrypt(SHA_DIGEST_LENGTH),
-    _initialized(false)
+    m_ClientDecrypt(SHA_DIGEST_LENGTH), m_ServerEncrypt(SHA_DIGEST_LENGTH),
+    m_Initialized(false)
 { }
 
 void AuthCrypt::Init(BigNumber* K)
@@ -36,39 +36,39 @@ void AuthCrypt::Init(BigNumber* K)
     HmacHash clientDecryptHmac(SEED_KEY_SIZE, (uint8*)ServerDecryptionKey);
     uint8 *decryptHash = clientDecryptHmac.ComputeHash(K);
 
-    _clientDecrypt.Init(decryptHash);
-    _serverEncrypt.Init(encryptHash);
+    m_ClientDecrypt.Init(decryptHash);
+    m_ServerEncrypt.Init(encryptHash);
 
     // Drop first 1024 bytes, as WoW uses ARC4-drop1024.
     uint8 syncBuf[1024];
 
     memset(syncBuf, 0, 1024);
-    _serverEncrypt.UpdateData(1024, syncBuf);
+    m_ServerEncrypt.UpdateData(1024, syncBuf);
 
     memset(syncBuf, 0, 1024);
-    _clientDecrypt.UpdateData(1024, syncBuf);
+    m_ClientDecrypt.UpdateData(1024, syncBuf);
 
-    _initialized = true;
+    m_Initialized = true;
 }
 
 void AuthCrypt::DecryptRecv(uint8 *data, size_t len)
 {
-	if (!_initialized)
+	if (!m_Initialized)
 	{
 		return;
 	}
 
 	std::lock_guard<std::mutex> lg(m_LockDecrypt);
-    _clientDecrypt.UpdateData(len, data);
+    m_ClientDecrypt.UpdateData(len, data);
 }
 
 void AuthCrypt::EncryptSend(uint8 *data, size_t len)
 {
-	if (!_initialized)
+	if (!m_Initialized)
 	{
 		return;
 	}
 
 	std::lock_guard<std::mutex> lg(m_LockEncrypt);
-    _serverEncrypt.UpdateData(len, data);
+    m_ServerEncrypt.UpdateData(len, data);
 }

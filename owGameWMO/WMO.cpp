@@ -60,8 +60,8 @@ bool WMO::Load()
 		return false;
 	}
 
-	char* groupsNames;
-	char* skyboxFilename;
+	char* groupsNames = nullptr;
+	char* skyboxFilename = nullptr;
 
 	char fourcc[5];
 	uint32 size;
@@ -254,6 +254,9 @@ bool WMO::Load()
 
 		f->seek(nextpos);
 	}
+
+	if (groupsNames) delete[] groupsNames;
+	if (skyboxFilename) delete[] skyboxFilename;
 
 	// Create portal controller
 	if (m_Portals.size() > 0)

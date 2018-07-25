@@ -38,6 +38,7 @@ struct EarsStyles
 		Enabled
 	};
 };
+
 //17**
 struct EyeglowsStyles
 {

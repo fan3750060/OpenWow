@@ -41,36 +41,36 @@ public:
 	void PreRender3D(Camera* _camera, R_RenderBuffer* _rb);
 
 	// Debug
-	CDebug_GeometryPass* Debug_Pass;
-	CDebug_Normals* DebugNormal_Pass;
+	SharedPtr<CDebug_GeometryPass> Debug_Pass;
+	SharedPtr<CDebug_Normals> DebugNormal_Pass;
 
 	// Map
-	CMCNK_Pass* MCNK_Pass;
-	//CMCNK_Divided_Pass* MCNK_Divided_Pass[4];
-	CWDL_LowRes_Pass* WDL_LowRes_Pass;
+	SharedPtr<CMCNK_Pass> MCNK_Pass;
+	//CMCNK_Divided_Pass> MCNK_Divided_Pass[4];
+	SharedPtr<CWDL_LowRes_Pass> WDL_LowRes_Pass;
 
 	// M2
-	CM2_Pass* M2_Pass;
-	CM2_RibbonEmitters_Pass* M2_RibbonEmitters_Pass;
-	CM2_Particle_Pass* M2_Particles_Pass;
+	SharedPtr<CM2_Pass> M2_Pass;
+	SharedPtr<CM2_RibbonEmitters_Pass> M2_RibbonEmitters_Pass;
+	SharedPtr<CM2_Particle_Pass> M2_Particles_Pass;
 
 	// Liquids
-	CMagma_Pass* m_Magma;
-	CWater_Pass* m_Water;
+	SharedPtr<CMagma_Pass> m_Magma;
+	SharedPtr<CWater_Pass> m_Water;
 
 	// Others
-	CSky_GeometryPass* Sky_Pass;
-	CWMO_GeomertyPass* WMO_Pass;
+	SharedPtr<CSky_GeometryPass> Sky_Pass;
+	SharedPtr<CWMO_GeomertyPass> WMO_Pass;
 
 	// Postprocess
-	CPOST_Fog* Postprocess_Fog;
-	CPOST_DirectionalLight* Postprocess_Light_Direction;
-	CPOST_Simple* Postprocess_Simple;
+	SharedPtr<CPOST_Fog> Postprocess_Fog;
+	SharedPtr<CPOST_DirectionalLight> Postprocess_Light_Direction;
+	SharedPtr<CPOST_Simple> Postprocess_Simple;
 
 	// UI
-	CUI_Color* UI_Color;
-	CUI_Font* UI_Font;
-	CUI_Texture* UI_Texture;
+	SharedPtr<CUI_Color> UI_Color;
+	SharedPtr<CUI_Font> UI_Font;
+	SharedPtr<CUI_Texture> UI_Texture;
 
 private:
 	vector<GeometryBase*>		m_GeomTechniques;

@@ -3,6 +3,9 @@
 //---------------------------------------------------------//
 //--                    Common                           --//
 //---------------------------------------------------------//
+#include "../owGUI/FontsManager.h"
+#include "../owGUI/ConsoleOpenGL.h"
+
 #include "../owGUI/UIMgr.h"
 #include "../owGUI/UIFile.h"
 

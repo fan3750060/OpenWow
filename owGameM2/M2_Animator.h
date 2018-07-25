@@ -3,7 +3,7 @@
 #include "M2_Types.h"
 #include "M2_Animation.h"
 
-class CM2_Animator
+class CM2_Animator : public CRefItem
 {
 public:
 	CM2_Animator(const M2* _m2);
@@ -24,7 +24,7 @@ public:
 
 private:
 	const M2*					m_M2;
-	map<uint16, CM2_Animation*>	m_Animations;
+	map<uint16, SharedPtr<CM2_Animation>>	m_Animations;
 	const CM2_Animation*		m_CurrentAnimation;
 	bool						m_IsLoop;
 	bool						m_IsPlayed;

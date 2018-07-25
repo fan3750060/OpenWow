@@ -59,7 +59,7 @@ void UIScrollBar::OnRenderUI()
 		_Render->RenderRectangleOutline(GetPosition() + begunokPoint, begunokSize);
 	}
 
-	_Render->RenderImage(GetPosition() + begunokPoint, begunokImage, begunokSize);
+	mUIMgr->RenderImage(GetPosition() + begunokPoint, begunokImage, begunokSize);
 }
 
 void UIScrollBar::OnMouseMoved(cvec2 _mousePos)

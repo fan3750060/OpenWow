@@ -9,7 +9,7 @@ public:
 
     void Render_DEBUG(cvec3 _playerPos);
 
-private:
+public:
 	float dayIntensity;
 	vec3 dayColor;
 	vec3 dayDir;

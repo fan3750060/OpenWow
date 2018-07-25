@@ -14,6 +14,8 @@ struct ConsoleMessage
 
 //
 
+#include "Font.h"
+
 class CConsoleOpenGL : public IInputListener, public CDebugOutput
 {
 	typedef vector<ConsoleMessage> ConsoleMessages;
@@ -58,5 +60,6 @@ private:
 	vec2 helperOffset;
 	int helperSelected;
 
+	IUIMgr*   m_UIMgr;
 	IConsole* m_MainConsole;
 };

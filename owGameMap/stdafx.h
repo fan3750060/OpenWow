@@ -1,11 +1,9 @@
 #pragma once
 
-#include <owIntfs.h>
-#include <owCore.h>
-#include <owDBC.h>
-#include <owRender.h>
-#include <owGUI.h>
-#include <owEngine.h>
+#include <_owGeneral.h>
+
+#include <owGameDBC.h>
+#include <owGame.h>
 #include <owGameM2.h>
 #include <owGameWMO.h>
 

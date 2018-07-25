@@ -33,7 +33,7 @@ UIElement::UIElement(IUIMgr* _uimgr, uint32 _DeepAdding) :
     m_TextAlignW = TextAlignW::TEXT_ALIGNW_LEFT;
     m_TextAlignH = TextAlignH::TEXT_ALIGNH_CENTER;
 
-    m_Font = _Render->FontsMgr()->GetMainFont();
+    m_Font = GetManager<IFontsManager>()->GetMainFont();
     if (m_Font == nullptr)
     {
         m_TextOffset = vec2(0.0f, 0.0f);
@@ -177,10 +177,10 @@ void UIElement::OnRenderUI()
     {
         if (m_Image)
         {
-            _Render->RenderImage(GetPosition(), m_Image, m_Size);
+			mUIMgr->RenderImage(GetPosition(), m_Image, m_Size);
 			if (m_SecondImage)
 			{
-				_Render->RenderImage(GetPosition(), m_SecondImage, m_Size);
+				mUIMgr->RenderImage(GetPosition(), m_SecondImage, m_Size);
 			}
         }
         else if (m_Texture)
@@ -196,7 +196,7 @@ void UIElement::OnRenderUI()
     // Render text
     if (m_IsTextEnable)
     {
-        _Render->RenderText(GetPosition() + m_TextOffset, m_Text, m_TextAlignW, m_TextAlignH, m_Font);
+		mUIMgr->RenderText(GetPosition() + m_TextOffset, m_Text, m_TextAlignW, m_TextAlignH, m_Font, COLOR_WHITE);
     }
 }
 

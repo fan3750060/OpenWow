@@ -4,20 +4,30 @@
 class UIElement;
 // FORWARD END
 
-__interface 
+struct 
 	__declspec(uuid("30C0C1B9-6B0B-4D0B-A4DB-8AEB1F1FD6C3"))
 	IUIMgr : public IManager
 {
-	void AttachToRoot(UIElement* _element);
-	void DetachFromRoot(UIElement* _element, bool _checkChilds = false);
+	virtual ~IUIMgr() = 0 {};
 
-	void AttachElementToParent(UIElement* _element, UIElement* _parent);
+	virtual void AttachToRoot(UIElement* _element) = 0;
+	virtual void DetachFromRoot(UIElement* _element, bool _checkChilds = false) = 0;
 
-	UIElement* GetRootElement() const;
-	void SetRootElement(UIElement* _element);
+	virtual void AttachElementToParent(UIElement* _element, UIElement* _parent) = 0;
 
-	UIElement* GetFocus() const;
-	void SetFocus(UIElement* _element);
+	virtual UIElement* GetRootElement() const = 0;
+	virtual void SetRootElement(UIElement* _element) = 0;
+
+	virtual UIElement* GetFocus() const = 0;
+	virtual void SetFocus(UIElement* _element) = 0;
+
+	virtual void RenderImage(vec2 _pos, Image* _image) = 0;
+	virtual void RenderImage(vec2 _pos, Image* _image, vec2 _size) = 0;
+
+	virtual void RenderText(vec2 _pos, cstring _string, const Color& _color) const = 0;
+	virtual void RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color) const = 0;
+	virtual void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color) const = 0;
+	virtual void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color) const = 0;
 };
 
 __interface	IUIMgrEx

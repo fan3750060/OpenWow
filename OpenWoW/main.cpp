@@ -49,8 +49,6 @@ int main(int argumentCount, char* arguments[])
 
 		CFilesManager filesManager;
 
-		UIMgr uiMgrEx;
-
 		OpenGLAdapter_GLFW adapter;
 
 		CEngine engine;

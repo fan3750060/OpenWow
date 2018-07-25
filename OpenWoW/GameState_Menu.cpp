@@ -189,21 +189,21 @@ void GameState_Menu::RenderUI()
 
 		if (_World->Map()->isTileBased())
 		{
-			_Render->RenderText(vec2(400, 0), "Select your starting point");
+			m_UIMgr->RenderText(vec2(400, 0), "Select your starting point", COLOR_WHITE);
 		}
 		else
 		{
-			_Render->RenderText(vec2(400, 360), "Click to enter");
+			m_UIMgr->RenderText(vec2(400, 360), "Click to enter", COLOR_WHITE);
 		}
 	}
 
 	char buff[256];
 
 	sprintf_s(buff, "Buffer memory [%s]", _Render->r.getBufferMemStr().c_str());
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff);
+	m_UIMgr->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 40), buff, COLOR_WHITE);
 
 	sprintf_s(buff, "Texture memory [%s]", _Render->r.getTextureMemStr().c_str());
-	_Render->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff);
+	m_UIMgr->RenderText(vec2(m_VideoSettings.windowSizeX - 400, m_VideoSettings.windowSizeY - 20), buff, COLOR_WHITE);
 }
 
 //

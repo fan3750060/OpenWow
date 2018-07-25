@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_RENDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\Externals\freetype\include;..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
@@ -77,7 +77,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_RENDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\Externals\freetype\include;..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
@@ -94,7 +94,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ConsoleOpenGL.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="OpenGL.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -107,9 +106,6 @@
     <ClCompile Include="RenderQueue.cpp" />
     <ClCompile Include="RenderStates.cpp" />
     <ClCompile Include="RenderStorage.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FontsManager.cpp" />
-    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="R_Buffer.cpp" />
     <ClCompile Include="R_GeometryInfo.cpp" />
@@ -130,7 +126,6 @@
     <ClInclude Include="..\shared\owRender.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="ConsoleOpenGL.h" />
     <ClInclude Include="Debug_GeometryPass.h" />
     <ClInclude Include="Debug_Normals.h" />
     <ClInclude Include="GeometryBase.h" />
@@ -160,9 +155,6 @@
     <ClInclude Include="RenderEnums.h" />
     <ClInclude Include="RenderStorage.h" />
     <ClInclude Include="RenderTypes.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="FontsManager.h" />
-    <ClInclude Include="Image.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="M2_RibbonEmitters_Pass.h" />
     <ClInclude Include="R_Buffer.h" />

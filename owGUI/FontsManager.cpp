@@ -7,9 +7,6 @@
 #include <freetype/config/ftheader.h>
 #include FT_FREETYPE_H
 
-#include "Render.h"
-#include "RenderStorage.h"
-
 FontsManager::FontsManager(RenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice)
 {

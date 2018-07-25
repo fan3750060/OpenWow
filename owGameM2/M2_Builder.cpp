@@ -464,7 +464,7 @@ void CM2_Builder::Step6Misc()
 	// Particle systems
 	if (m_Header.particle_emitters.size > 0)
 	{
-		SM2_Particle* Particles = (SM2_Particle*)(m_F->getData() + m_Header.particle_emitters.offset);
+		/*SM2_Particle* Particles = (SM2_Particle*)(m_F->getData() + m_Header.particle_emitters.offset);
 		for (uint32 i = 0; i < m_Header.particle_emitters.size; i++)
 		{
 			CM2_ParticleSystem* particle = new CM2_ParticleSystem(m_M2, m_F, Particles[i], m_GlobalLoops);
@@ -472,7 +472,7 @@ void CM2_Builder::Step6Misc()
 		}
 
 		// Animated
-		miscellaneous->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;*/
 	}
 
 	m_M2->m_Miscellaneous = miscellaneous;

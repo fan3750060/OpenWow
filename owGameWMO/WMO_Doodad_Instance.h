@@ -8,7 +8,7 @@ class CWMO_Doodad_Instance : public CM2_Base_Instance
 {
 public:
 	CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, const WMO_Group* _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement);
-	~CWMO_Doodad_Instance();
+	virtual ~CWMO_Doodad_Instance();
 
 	void setPortalVisibility(bool _visibility) { m_PortalVis = _visibility; }
 		

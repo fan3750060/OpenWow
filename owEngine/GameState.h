@@ -23,6 +23,8 @@ public:
 protected:
     UIWindow*			m_Window;
 	IEngine*			m_Engine;
+	IUIMgr*             m_UIMgr;
+
 	CGroupQuality&		m_QualitySettings;
 	CGroupVideo&		m_VideoSettings;
 

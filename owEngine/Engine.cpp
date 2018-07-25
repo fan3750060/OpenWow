@@ -22,10 +22,11 @@ CEngine::CEngine() :
 
 CEngine::~CEngine()
 {
-	OW_SAFEDELETE(_Render);
-	OW_SAFEDELETE(_Perfomance);
 	OW_SAFEDELETE(openGLConsole);
-
+	OW_SAFEDELETE(_Perfomance);
+	OW_SAFEDELETE(m_UIMgr);
+	OW_SAFEDELETE(_Render);
+	
 	Log::Green("CEngine[]: Destroy engine.");
 
 	DelManager<IEngine>();
@@ -37,8 +38,9 @@ void CEngine::Init(IOpenGLAdapter* _OpenGLAdapter)
 	_Render->Init(_OpenGLAdapter);
 	_Render->getAdapter()->MakeMainContext();
 
-	_Perfomance = new Perfomance();
+	m_UIMgr = new UIMgr;
 
+	_Perfomance = new Perfomance();
 
 	openGLConsole = new CConsoleOpenGL();
 	

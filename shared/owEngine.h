@@ -10,10 +10,3 @@
 #include "../owEngine/OpenGLAdapterGLFW.h"
 #include "../owEngine/SceneManager.h"
 #include "../owEngine/Perfomance.h"
-
-//---------------------------------------------------------//
-//--               World of warcraft                     --//
-//---------------------------------------------------------//
-
-// Liquid
-#include "../owEngine/LiquidInstance.h"

@@ -11,50 +11,62 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConsoleOpenGL.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FontsManager.cpp" />
-    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="DBC__Storage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UIButton.cpp" />
-    <ClCompile Include="UIButton3t.cpp" />
-    <ClCompile Include="UICheckBox.cpp" />
-    <ClCompile Include="UIElement.cpp" />
-    <ClCompile Include="UIElementInput.cpp" />
-    <ClCompile Include="UIFile.cpp" />
-    <ClCompile Include="UIInput.cpp" />
-    <ClCompile Include="UIMgr.cpp" />
-    <ClCompile Include="UIScrollBar.cpp" />
-    <ClCompile Include="UIWindow.cpp" />
-    <ClCompile Include="UIWoWButton.cpp" />
-    <ClCompile Include="UIWoWWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared\owGUI.h" />
-    <ClInclude Include="ConsoleOpenGL.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="FontsManager.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="UIWoWButton.h" />
-    <ClInclude Include="UIWoWWindow.h" />
+    <ClInclude Include="..\shared\owGameDBC.h" />
+    <ClInclude Include="DBC_AnimationData.h" />
+    <ClInclude Include="DBC_AreaTable.h" />
+    <ClInclude Include="DBC_CharacterFacialHairStyles.h" />
+    <ClInclude Include="DBC_CharComponentTextureLayouts.h" />
+    <ClInclude Include="DBC_CharComponentTextureSections.h" />
+    <ClInclude Include="DBC_CharHairGeosets.h" />
+    <ClInclude Include="DBC_CharSections.h" />
+    <ClInclude Include="DBC_ChrRaces.h" />
+    <ClInclude Include="DBC_CinematicCamera.h" />
+    <ClInclude Include="DBC_CinematicSequences.h" />
+    <ClInclude Include="DBC_CreatureDisplayInfo.h" />
+    <ClInclude Include="DBC_CreatureDisplayInfoExtra.h" />
+    <ClInclude Include="DBC_CreatureModelData.h" />
+    <ClInclude Include="DBC_GroundEffectDoodad.h" />
+    <ClInclude Include="DBC_GroundEffectTexture.h" />
+    <ClInclude Include="DBC_HelmetGeosetVisData.h" />
+    <ClInclude Include="DBC_Item.h" />
+    <ClInclude Include="DBC_ItemBagFamily.h" />
+    <ClInclude Include="DBC_ItemClass.h" />
+    <ClInclude Include="DBC_ItemDisplayInfo.h" />
+    <ClInclude Include="DBC_ItemVisualEffects.h" />
+    <ClInclude Include="DBC_ItemVisuals.h" />
+    <ClInclude Include="DBC_Light.h" />
+    <ClInclude Include="DBC_LightFloatBand.h" />
+    <ClInclude Include="DBC_LightIntBand.h" />
+    <ClInclude Include="DBC_LightParams.h" />
+    <ClInclude Include="DBC_LightSkyBox.h" />
+    <ClInclude Include="DBC_LiquidMaterial.h" />
+    <ClInclude Include="DBC_LiquidType.h" />
+    <ClInclude Include="DBC_LoadingScreen.h" />
+    <ClInclude Include="DBC_Map.h" />
+    <ClInclude Include="DBC_Map_WotLK.h" />
+    <ClInclude Include="DBC_Material.h" />
+    <ClInclude Include="DBC_TerrainType.h" />
+    <ClInclude Include="DBC_WMOAreaTable.h" />
+    <ClInclude Include="DBC_WorldSafeLocs.h" />
+    <ClInclude Include="DBC__File.h" />
+    <ClInclude Include="DBC__Forwards.h" />
+    <ClInclude Include="DBC__Storage.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="UIButton.h" />
-    <ClInclude Include="UIButton3t.h" />
-    <ClInclude Include="UICheckBox.h" />
-    <ClInclude Include="UIElement.h" />
-    <ClInclude Include="UIFile.h" />
-    <ClInclude Include="UIInput.h" />
-    <ClInclude Include="UIMgr.h" />
-    <ClInclude Include="UIScrollBar.h" />
-    <ClInclude Include="UIWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DBC__File.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BD6D5EE4-09D4-45D8-8529-ED8D08EFB56A}</ProjectGuid>
+    <ProjectGuid>{10AA0F38-EC1E-44F7-868F-3FE2D187AC7B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>owGUI</RootNamespace>
+    <RootNamespace>owGameDBC</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -98,7 +110,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\Externals\freetype\include;..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
@@ -112,7 +124,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\Externals\freetype\include;..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>

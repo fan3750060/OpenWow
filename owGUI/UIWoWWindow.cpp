@@ -24,34 +24,34 @@ void UIWoWWindow::OnRenderUI()
     _Render->RenderTexture(GetPosition() + (C_ImgSize / 4.0f), m_Background, GetSize() - (C_ImgSize / 2.0f));
 
     // Top left
-    _Render->RenderImage(GetPosition(), m_Images[IMG_CORNER_TOP_LEFT]);
+    mUIMgr->RenderImage(GetPosition(), m_Images[IMG_CORNER_TOP_LEFT]);
 
     // Top 
-    _Render->RenderImage(GetPosition() + vec2(C_ImgSize, 0.0f),
+	mUIMgr->RenderImage(GetPosition() + vec2(C_ImgSize, 0.0f),
                          m_Images[IMG_TOP],
                          vec2(GetSize().x - 2.0f * C_ImgSize, C_ImgSize));
 
     // Top Right
-    _Render->RenderImage(GetPosition() + vec2(GetSize().x, 0.0f) - vec2(C_ImgSize, 0.0f), m_Images[IMG_CORNER_TOP_RIGHT]);
+	mUIMgr->RenderImage(GetPosition() + vec2(GetSize().x, 0.0f) - vec2(C_ImgSize, 0.0f), m_Images[IMG_CORNER_TOP_RIGHT]);
 
     // Right
-    _Render->RenderImage(GetPosition() + vec2(GetSize().x - C_ImgSize, C_ImgSize),
+	mUIMgr->RenderImage(GetPosition() + vec2(GetSize().x - C_ImgSize, C_ImgSize),
                          m_Images[IMG_RIGHT],
                          vec2(C_ImgSize, GetSize().y - 2.0f * C_ImgSize));
 
     // Bot Right
-    _Render->RenderImage(GetPosition() + GetSize() - C_ImgSize, m_Images[IMG_CORNER_BOT_RIGHT]);
+	mUIMgr->RenderImage(GetPosition() + GetSize() - C_ImgSize, m_Images[IMG_CORNER_BOT_RIGHT]);
 
     // Bot
-    _Render->RenderImage(GetPosition() + vec2(C_ImgSize, GetSize().y - C_ImgSize),
+	mUIMgr->RenderImage(GetPosition() + vec2(C_ImgSize, GetSize().y - C_ImgSize),
                          m_Images[IMG_BOT],
                          vec2(GetSize().x - 2.0f * C_ImgSize, C_ImgSize));
 
     // Bot Left
-    _Render->RenderImage(GetPosition() + vec2(0.0f, GetSize().y) - vec2(0.0f, C_ImgSize), m_Images[IMG_CORNER_BOT_LEFT]);
+	mUIMgr->RenderImage(GetPosition() + vec2(0.0f, GetSize().y) - vec2(0.0f, C_ImgSize), m_Images[IMG_CORNER_BOT_LEFT]);
 
     // Left
-    _Render->RenderImage(GetPosition() + vec2(0.0f, C_ImgSize),
+	mUIMgr->RenderImage(GetPosition() + vec2(0.0f, C_ImgSize),
                          m_Images[IMG_LEFT],
                          vec2(C_ImgSize, GetSize().y - 2.0f * C_ImgSize));
 

@@ -50,6 +50,8 @@ private:
 	double m_Timer[PERF_TIMERS_COUNT];
 	double m_TimerCurrent[PERF_TIMERS_COUNT];
 	uint32 m_DrawCount[PERF_TIMERS_COUNT];
+
+	IUIMgr* m_UIMgr;
 };
 
 extern Perfomance* _Perfomance;

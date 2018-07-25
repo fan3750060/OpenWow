@@ -204,9 +204,10 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
 	{
+		//m_DepthFormat = GL_DEPTH_COMPONENT16;
 		m_DepthFormat = GL_DEPTH_COMPONENT32;
 		Log::Info("Render target depth precision limited to 32 bit");
-		/*SharedPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
+		SharedPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 		if (testBuf32 == nullptr)
 		{
 			m_DepthFormat = GL_DEPTH_COMPONENT24;
@@ -217,7 +218,7 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 				m_DepthFormat = GL_DEPTH_COMPONENT16;
 				Log::Error("Render target depth precision limited to 16 bit");
 			}
-		}*/
+		}
 	}
 
 	resetStates();
@@ -267,7 +268,7 @@ SharedGeomPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint
 	geometry->m_VertexLayout = _vertexLayout;
 	geometry->m_PrimType = primType;
 
-	return geometry;
+	return std::move(geometry);
 }
 
 // Buffers

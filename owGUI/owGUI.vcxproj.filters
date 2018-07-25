@@ -36,6 +36,18 @@
     <ClCompile Include="UIWoWButton.cpp">
       <Filter>WoW</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="FontsManager.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleOpenGL.cpp">
+      <Filter>Fonts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UIButton.h">
@@ -73,6 +85,18 @@
     <ClInclude Include="UIWoWButton.h">
       <Filter>WoW</Filter>
     </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="FontsManager.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleOpenGL.h">
+      <Filter>Fonts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="WoW">
@@ -83,6 +107,9 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{1463fde8-6a34-47d1-9e8d-6a6be31ef61c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fonts">
+      <UniqueIdentifier>{bff8757d-782c-4774-a60d-ee72b70f5867}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -38,6 +38,8 @@ struct
 	IFontsManager : public IRefManager<Font>
 {
 	virtual ~IFontsManager() {};
+
+	virtual Font* GetMainFont() const = 0;
 };
 
 

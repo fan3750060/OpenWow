@@ -3,6 +3,7 @@
 // Include
 #include "WMO_Base_Instance.h"
 #include "WMO_Doodad_Instance.h"
+#include "WMO_Liquid_Instance.h"
 
 // General
 #include "WMO_Group_Instance.h"
