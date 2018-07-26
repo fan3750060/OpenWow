@@ -245,3 +245,23 @@ inline string convertToString(uint32 _bytes)
 
 	return buf;
 }
+
+template<typename T>
+inline void SafeDelete(T& ptr)
+{
+	if (ptr != NULL)
+	{
+		delete ptr;
+		ptr = NULL;
+	}
+}
+
+template<typename T>
+inline void SafeDeleteArray(T& ptr)
+{
+	if (ptr != NULL)
+	{
+		delete[] ptr;
+		ptr = NULL;
+	}
+}

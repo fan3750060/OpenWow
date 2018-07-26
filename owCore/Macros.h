@@ -20,12 +20,6 @@
 #define OW_UNUSED_VAR(a)     ((void)(a))
 #define OW_ZERO_MEM(a)       (memset(a, 0, sizeof(a)));
 #define OW_COUNT_ELEMENTS(a) ((sizeof(a)) / (sizeof(a[0])))
-#define OW_SAFEDELETE(_var)                                 \
-if (_var != nullptr)                                        \
-{                                                           \
-	delete _var;                                            \
-	_var = nullptr;                                         \
-}
 
 #define ERASE_VECTOR(_name)                                 \
 for (auto it = _name.begin(); it != _name.end();)           \
