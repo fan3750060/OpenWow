@@ -194,7 +194,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(vs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Vertex Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = nullptr;
+				SafeDeleteArray(infoLog);
 			}
 
 			glDeleteShader(vs);
@@ -217,7 +217,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(fs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Fragment Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = nullptr;
+				SafeDeleteArray(infoLog);
 			}
 
 			glDeleteShader(vs);
@@ -241,7 +241,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(gs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Geometry Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = nullptr;
+				SafeDeleteArray(infoLog);
 			}
 
 			glDeleteShader(vs);
@@ -266,7 +266,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(tsC, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Tesselation Control Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = nullptr;
+				SafeDeleteArray(infoLog);
 			}
 
 			glDeleteShader(vs);
@@ -292,7 +292,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(tsE, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Tesselation Evaluation Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = nullptr;
+				SafeDeleteArray(infoLog);
 			}
 
 			glDeleteShader(vs);
@@ -319,7 +319,7 @@ uint32 R_Shader::createShaderProgram(const char *vertexShaderSrc, const char *fr
 				infoLog = new char[infologLength];
 				glGetShaderInfoLog(cs, infologLength, &charsWritten, infoLog);
 				m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Compute Shader]\n" + infoLog;
-				delete[] infoLog; infoLog = nullptr;
+				SafeDeleteArray(infoLog);
 			}
 
 			// other shader types should not be present in compute context, but better check
@@ -385,7 +385,7 @@ bool R_Shader::linkShaderProgram()
 		infoLog = new char[infologLength];
 		glGetProgramInfoLog(m_ProgramGLObj, infologLength, &charsWritten, infoLog);
 		m_RenderDevice->m_ShaderLog = m_RenderDevice->m_ShaderLog + "[Linking]\n" + infoLog;
-		delete[] infoLog; infoLog = nullptr;
+		SafeDeleteArray(infoLog);
 	}
 
 	glGetProgramiv(m_ProgramGLObj, GL_LINK_STATUS, &status);

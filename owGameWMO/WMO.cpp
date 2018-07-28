@@ -27,13 +27,13 @@ WMO::~WMO()
 
 	//
 
-	if (m_TexturesNames) delete[] m_TexturesNames;
+	SafeDeleteArray(m_TexturesNames);
 	ERASE_VECTOR(m_Materials);
 	ERASE_VECTOR(m_Groups);
 	ERASE_VECTOR(m_Portals);
 	if (m_PortalController) delete m_PortalController;
 	ERASE_VECTOR(m_Lights);
-	if (m_DoodadsFilenames) delete[] m_DoodadsFilenames;
+	SafeDeleteArray(m_DoodadsFilenames);
 	ERASE_VECTOR(m_Fogs);
 }
 
@@ -152,7 +152,7 @@ bool WMO::Load()
 			vec3* portalVertexes = (vec3*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < portalVertexesCount; i++)
 			{
-				m_PortalVertices.push_back(portalVertexes[i].toXZmY());
+				m_PortalVertices.push_back(Fix_XZmY(portalVertexes[i]));
 			}
 			m_PortalVB = _Render->r.createVertexBuffer(m_PortalVertices.size() * sizeof(vec3), m_PortalVertices.data(), false);
 		}
@@ -182,7 +182,7 @@ bool WMO::Load()
 			vec3* visibleVertexes = (vec3*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < visibleVertexesCount; i++)
 			{
-				m_VisibleBlockVertices.push_back(visibleVertexes[i].toXZmY());
+				m_VisibleBlockVertices.push_back(Fix_XZmY(visibleVertexes[i]));
 			}
 		}
 		else if (strcmp(fourcc, "MOVB") == 0)
@@ -309,8 +309,8 @@ bool WMO::drawSkybox()
 	}
 
 	mat4 worldMatrix;
-	worldMatrix.translate(_Render->getCamera()->Position);
-	worldMatrix.scale(2.0f);
+	worldMatrix = glm::translate(worldMatrix, _Render->getCamera()->Position);
+	worldMatrix = glm::scale(worldMatrix, vec3(2.0f));
 
 	//m_Skybox->Render(worldMatrix, nullptr, vec4(1.0f), 0, 0, 0);
 

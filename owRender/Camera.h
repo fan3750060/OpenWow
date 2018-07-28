@@ -84,9 +84,10 @@ public:
 	CGroupVideo&	m_VideoSettings;
 
 public:
+	float               _fov;
 	float				tan;
 	float				asp;
-	Matrix4f            _viewMat, _projMat;
+	mat4               _viewMat, _projMat;
 	Frustum             _frustum;
 	int					_vpX, _vpY, _vpWidth, _vpHeight;
 

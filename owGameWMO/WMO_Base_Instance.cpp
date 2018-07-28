@@ -24,12 +24,12 @@ void CWMO_Base_Instance::InitTransform()
 {
 	m_Object->CreateInsances(this);
 
-	m_InvWorld = getAbsTrans().inverted();
+	m_InvWorld = glm::inverse(getAbsTrans());
 	if (m_Object->m_PortalController != nullptr)
 	{
 		for (auto& v : m_Object->m_PortalVertices)
 		{
-			m_ConvertedVerts.push_back(getAbsTrans() * v);
+			m_ConvertedVerts.push_back(getAbsTrans() * vec4(v, 0));
 		}
 	}
 }

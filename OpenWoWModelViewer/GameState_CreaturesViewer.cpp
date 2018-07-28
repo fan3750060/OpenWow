@@ -72,7 +72,7 @@ bool GameState_CreaturesViewer::Init()
 		}
 	}
 	_Render->getCamera()->Position = vec3(50, 50, 50);
-	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
+	_Render->getCamera()->setViewMatrix(glm::lookAt(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
 	_Render->getCamera()->SetNeedUpdate();
 
 	ADDCONSOLECOMMAND_CLASS("del_all", GameState_CreaturesViewer, DeleteAll);
@@ -123,8 +123,8 @@ void GameState_CreaturesViewer::Render3D()
 	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 
 	mat4 m;
-	m.translate(0.0f, -5.0f, 0.0f);
-	m.scale(1000.0f);
+	m = glm::translate(m, vec3(0.0f, -5.0f, 0.0f));
+	m = glm::scale(m, vec3(1000.0f));
 
 	_Render->getTechniquesMgr()->Debug_Pass->Bind();
 	_Render->getTechniquesMgr()->Debug_Pass->setWorld(m);

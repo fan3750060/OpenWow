@@ -32,19 +32,19 @@ public:
 
 	void setWorld(cmat4 _world)
 	{
-		m_Shader->setShaderConst(gWorld, CONST_FLOAT44, &_world.x[0]);
+		m_Shader->setShaderConst(gWorld, CONST_FLOAT44, glm::value_ptr(_world));
 	}
 	void setView(cmat4 _view)
 	{
-		m_Shader->setShaderConst(gView, CONST_FLOAT44, &_view.x[0]);
+		m_Shader->setShaderConst(gView, CONST_FLOAT44, glm::value_ptr(_view));
 	}
 	void setProj(cmat4 _proj)
 	{
-		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &_proj.x[0]);
+		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, glm::value_ptr(_proj));
 	}
 	void setProjView(cmat4 _projView)
 	{
-		m_Shader->setShaderConst(gProjView, CONST_FLOAT44, &_projView.x[0]);
+		m_Shader->setShaderConst(gProjView, CONST_FLOAT44, glm::value_ptr(_projView));
 	}
 
 private:

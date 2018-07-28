@@ -15,7 +15,7 @@ Liquid_Instance::Liquid_Instance(SceneNode* _parent, Liquid* _liquidObject, vec3
 		//
 		CalculateMatrix();
 		//
-		BoundingBox bbox(Math::MinFloat, Math::MaxFloat);
+		BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
 		bbox.transform(getAbsTrans());
 		setBounds(bbox);
 	}

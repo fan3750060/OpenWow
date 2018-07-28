@@ -181,8 +181,8 @@ public:
 			}
 			else
 			{
-				float distToCameraLeft = (m_Camera->Position - left->getBounds().getCenter()).length() - left->getBounds().getRadius();
-				float distToCameraRight = (m_Camera->Position - right->getBounds().getCenter()).length() - right->getBounds().getRadius();
+				float distToCameraLeft = glm::length(m_Camera->Position - left->getBounds().getCenter()) - left->getBounds().getRadius();
+				float distToCameraRight = glm::length(m_Camera->Position - right->getBounds().getCenter()) - right->getBounds().getRadius();
 				return distToCameraLeft > distToCameraRight;
 			}
 		}

@@ -16,7 +16,7 @@ CGameState::CGameState() :
 
 CGameState::~CGameState()
 {
-	OW_SAFEDELETE(m_Window);
+	SafeDelete(m_Window);
 }
 
 bool CGameState::Init()

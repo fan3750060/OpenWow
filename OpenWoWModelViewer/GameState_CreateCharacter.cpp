@@ -37,7 +37,7 @@ void GameState_CreateCharacter::CreateBackgroud(Race::List _charRace)
 	sprintf_s(buff, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", raceRecord->Get_ClientFileString(), raceRecord->Get_ClientFileString());
 
 	M2* model = GetManager<IM2Manager>()->Add(buff);
-	model->getMiscellaneous()->getCameraDirect(0)->setup(0, 0);
+	model->getMiscellaneous()->getCameraDirect(0)->setup(vec3(0), 0);
 
 	m_BackgroudModel = new CM2_Base_Instance(nullptr, model);
 }
@@ -68,10 +68,10 @@ void GameState_CreateCharacter::UpdateState()
 
 	m_Char = new Character();
 	m_Char->InitFromTemplate(tempPala);
-	m_Char->setScale(10.0f);
+	m_Char->setScale(vec3(10.0f));
 
 
-	/*OW_SAFEDELETE(m_Char);
+	/*SafeDelete(m_Char);
 	m_Char = new Character();
 	m_Char->InitFromDisplayInfoCreating(raceRecord->Get_MaleModelID(), race, Gender::Male);*/
 
@@ -103,7 +103,7 @@ bool GameState_CreateCharacter::Init()
 	SETBUTTONACTION_ARG(btnNext, GameState_CreateCharacter, this, OnBtnRace, int32, 1);
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
-	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
+	_Render->getCamera()->setViewMatrix(glm::lookAt(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
 	_Render->getCamera()->SetNeedUpdate();
 
 	m_CurrentRace = 0;
@@ -142,13 +142,13 @@ void GameState_CreateCharacter::Update(double _time, double _dTime)
 	if (m_BackgroudModel)
 	{
 		m_BackgroudModel->Update(_time, _dTime);
-		m_BackgroudModel->getM2()->getMiscellaneous()->getCameraDirect(0)->setup(0, 0);
+		m_BackgroudModel->getM2()->getMiscellaneous()->getCameraDirect(0)->setup(vec3(0), 0);
 	}
 
 	CM2_Part_Attachment* attach = m_BackgroudModel->getM2()->getMiscellaneous()->getAttachmentDirect(0);
 
 	mat4 relMatrix;
-	relMatrix.translate(attach->getBone()->getPivot());
+	relMatrix = glm::translate(relMatrix, attach->getBone()->getPivot());
 
 	if (m_Char) m_Char->setAbsTrans(attach->getBone()->getTransformMatrix() * relMatrix);
 }

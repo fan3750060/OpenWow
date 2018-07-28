@@ -17,7 +17,7 @@ CWMO_Part_Portal::CWMO_Part_Portal(const WMO* _parentWMO, const SWMO_PortalDef& 
 	m_Count = _proto.count;
 	assert1(m_Count < 20);
 
-	m_Plane.normal = _proto.plane.normal.toXZmY();
+	m_Plane.normal = Fix_XZmY(_proto.plane.normal);
 	m_Plane.dist = _proto.plane.distance;
 
 	m_Geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_P);
@@ -35,7 +35,7 @@ void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
 		_Render->getTechniquesMgr()->Debug_Pass->setWorld(_worldMatrix);
 
 		vec4 color;
-		if (m_Plane.distToPoint(_worldMatrix.inverted() * _Render->getCamera()->Position) > 0.0f)
+		if (m_Plane.distToPoint(glm::inverse(_worldMatrix) * vec4(_Render->getCamera()->Position, 0)) > 0.0f)
 			color = vec4(0.0f, 1.0f, 0.0f, 0.3f);
 		else
 			color = vec4(1.0f, 0.0f, 0.0f, 0.3f);

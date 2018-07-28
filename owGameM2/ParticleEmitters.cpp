@@ -8,13 +8,14 @@
 
 //Generates the rotation matrix based on spread
 mat4 SpreadMat;
+
 void CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 {
 	int i, j;
 	float a[2], c[2], s[2];
 	mat4	Temp;
 
-	SpreadMat.unit();
+	SpreadMat = mat4();
 
 	a[0] = Random::GenerateRange(-Spread1, Spread1) / 2.0f;
 	a[1] = Random::GenerateRange(-Spread2, Spread2) / 2.0f;
@@ -28,26 +29,27 @@ void CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 		c[i] = cos(a[i]);
 		s[i] = sin(a[i]);
 	}
-	Temp.unit();
-	Temp.c[1][1] = c[0];
-	Temp.c[2][1] = s[0];
-	Temp.c[2][2] = c[0];
-	Temp.c[1][2] = -s[0];
+
+	Temp = mat4();
+	Temp[1][1] = c[0];
+	Temp[2][1] = s[0];
+	Temp[2][2] = c[0];
+	Temp[1][2] = -s[0];
 
 	SpreadMat = SpreadMat*Temp;
 
-	Temp.unit();
-	Temp.c[0][0] = c[1];
-	Temp.c[1][0] = s[1];
-	Temp.c[1][1] = c[1];
-	Temp.c[0][1] = -s[1];
+	Temp = mat4();
+	Temp[0][0] = c[1];
+	Temp[1][0] = s[1];
+	Temp[1][1] = c[1];
+	Temp[0][1] = -s[1];
 
 	SpreadMat = SpreadMat*Temp;
 
 	float Size = abs(c[0])*l + abs(s[0])*w;
 	for (i = 0; i < 3; i++)
 		for (j = 0; j < 3; j++)
-			SpreadMat.c[i][j] *= Size;
+			SpreadMat[i][j] *= Size;
 }
 
 Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2, uint32 _globalTime)
@@ -101,7 +103,7 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 
 	if (m_ParticleSystem->flags == 1041)
 	{ // Trans Halo
-		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w)));
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * vec4((m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w))), 0);
 
 		const float t = Random::GenerateRange(0.0f, Math::TwoPi);
 
@@ -113,54 +115,54 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 		vec3 dir(0.0f, 1.0f, 0.0f);
 		p.dir = dir;
 
-		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var);
+		p.speed = glm::normalize(dir) * spd * Random::GenerateRange(0.0f, var);
 	}
 	else if (m_ParticleSystem->flags == 25 && m_ParticleSystem->m_ParentBone->getParentBoneID() < 1)
 	{ // Weapon Flame
 		p.pos = m_ParticleSystem->m_ParentBone->getPivot() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
-		vec3 dir = mrot * vec3(0.0f, 1.0f, 0.0f);
-		p.dir = dir.normalized();
+		vec3 dir = mrot * vec4(0.0f, 1.0f, 0.0f, 0.0f);
+		p.dir = glm::normalize(dir);
 		//vec3 dir = sys->model->bones[sys->parent->parent].mrot * sys->parent->mrot * vec3(0.0f, 1.0f, 0.0f);
 		//p.speed = dir.Normalize() * spd;
 
 	}
 	else if (m_ParticleSystem->flags == 25 && m_ParticleSystem->m_ParentBone->getParentBoneID() > 0)
 	{ // Weapon with built-in Flame (Avenger lightsaber!)
-		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * vec4((m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w))), 0);
 		vec3 dir = vec3
 		(
-			m_ParticleSystem->m_ParentBone->getTransformMatrix().c[1][0], 
-			m_ParticleSystem->m_ParentBone->getTransformMatrix().c[1][1], 
-			m_ParticleSystem->m_ParentBone->getTransformMatrix().c[1][2]
+			m_ParticleSystem->m_ParentBone->getTransformMatrix()[1][0], 
+			m_ParticleSystem->m_ParentBone->getTransformMatrix()[1][1], 
+			m_ParticleSystem->m_ParentBone->getTransformMatrix()[1][2]
 		) * vec3(0.0f, 1.0f, 0.0f);
-		p.speed = dir.normalized() * spd * Random::GenerateRange(0.0f, var * 2);
+		p.speed = glm::normalize(dir) * spd * Random::GenerateRange(0.0f, var * 2);
 
 	}
 	else if (m_ParticleSystem->flags == 17 && m_ParticleSystem->m_ParentBone->getParentBoneID() < 1)
 	{ // Weapon Glow
 		p.pos = m_ParticleSystem->m_ParentBone->getPivot() * (m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), Random::GenerateRange(-l, l), Random::GenerateRange(-w, w)));
-		vec3 dir = mrot * vec3(0, 1, 0);
-		p.dir = dir.normalized();
+		vec3 dir = mrot * vec4(0, 1, 0, 0);
+		p.dir = glm::normalize(dir);
 	}
 	else
 	{
 		p.pos = m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w));
-		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * p.pos;
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * vec4(p.pos, 0);
 
 		//vec3 dir = mrot * vec3(0,1,0);
-		vec3 dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec3(0, 1, 0);
+		vec3 dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec4(0, 1, 0, 0);
 
 		p.dir = dir;//.Normalize();
 		p.down = vec3(0, -1.0f, 0); // dir * -1.0f;
-		p.speed = dir.normalized() * spd * (1.0f + Random::GenerateRange(-var, var));
+		p.speed = glm::normalize(dir) * spd * (1.0f + Random::GenerateRange(-var, var));
 	}
 
 	if (!m_ParticleSystem->billboard)
 	{
-		p.corners[0] = mrot * vec3(-1, 0, +1);
-		p.corners[1] = mrot * vec3(+1, 0, +1);
-		p.corners[2] = mrot * vec3(+1, 0, -1);
-		p.corners[3] = mrot * vec3(-1, 0, -1);
+		p.corners[0] = mrot * vec4(-1, 0, +1, 0);
+		p.corners[1] = mrot * vec4(+1, 0, +1, 0);
+		p.corners[2] = mrot * vec4(+1, 0, -1, 0);
+		p.corners[3] = mrot * vec4(-1, 0, -1, 0);
 	}
 
 	p.life = 0;
@@ -226,14 +228,14 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		vec3 bdir(w*cosf(t)*1.6, 0.0f, l*sinf(t)*1.6);
 
 		p.pos = m_ParticleSystem->m_Position + bdir;
-		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * p.pos;
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * vec4(p.pos, 0);
 
-		if (bdir.length2() == 0)
+		if (glm::length2(bdir) == 0)
 			p.speed = vec3(0, 0, 0);
 		else
 		{
-			dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * (bdir.normalized());//mrot * vec3(0, 1.0f,0);
-			p.speed = dir.normalized() * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
+			dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec4((glm::normalize(bdir)), 0);//mrot * vec3(0, 1.0f,0);
+			p.speed = glm::normalize(dir) * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
 		}
 
 	}
@@ -242,35 +244,35 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		vec3 bdir;
 		float temp;
 
-		bdir = mrot * vec3(0, 1, 0) * radius;
+		bdir = mrot * vec4(vec3(0, 1, 0) * radius, 0);
 		temp = bdir.z;
 		bdir.z = bdir.y;
 		bdir.y = temp;
 
-		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * m_ParticleSystem->m_Position + bdir;
+		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * vec4(m_ParticleSystem->m_Position + bdir, 0);
 
 
 		//p.pos = sys->pos + bdir;
 		//p.pos = sys->parent->mat * p.pos;
 
 
-		if ((bdir.length2() == 0) && ((m_ParticleSystem->flags & 0x100) != 0x100))
+		if ((glm::length2(bdir) == 0) && ((m_ParticleSystem->flags & 0x100) != 0x100))
 		{
 			p.speed = vec3(0, 0, 0);
-			dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec3(0, 1, 0);
+			dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec4(0, 1, 0, 0);
 		}
 		else
 		{
 			if (m_ParticleSystem->flags & 0x100)
-				dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec3(0, 1, 0);
+				dir = m_ParticleSystem->m_ParentBone->getRotateMatrix() * vec4(0, 1, 0, 0);
 			else
-				dir = bdir.normalized();
+				dir = glm::normalize(bdir);
 
-			p.speed = dir.normalized() * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
+			p.speed = glm::normalize(dir) * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
 		}
 	}
 
-	p.dir = dir.normalized();//mrot * vec3(0, 1.0f,0);
+	p.dir = glm::normalize(dir);//mrot * vec3(0, 1.0f,0);
 	p.down = vec3(0, -1.0f, 0);
 
 	p.life = 0;

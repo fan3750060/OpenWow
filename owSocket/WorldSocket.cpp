@@ -261,7 +261,7 @@ void CWorldSocket::Packet2(ByteBuffer& _buf)
 	{
 		ProcessHandler(currPacket->opcode, currPacket->data);
 
-		OW_SAFEDELETE(currPacket);
+		SafeDelete(currPacket);
 	}
 }
 

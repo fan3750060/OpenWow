@@ -5,7 +5,7 @@
 
 GameState_InWorld::~GameState_InWorld()
 {
-	OW_SAFEDELETE(sceneManager);
+	SafeDelete(sceneManager);
 }
 
 bool GameState_InWorld::Init()
@@ -90,7 +90,7 @@ void GameState_InWorld::Update(double _time, double _dTime)
 
 		_Render->getCamera()->Position = pos;
 		_Render->getCamera()->setupViewParams(fov, m_VideoSettings.aspectRatio, nearP, farP * 10000.0f);
-		_Render->getCamera()->setViewMatrix(mat4::lookAtRH(pos, tar, vec3(0.0f, 1.0f, 0.0f)));
+		_Render->getCamera()->setViewMatrix(glm::lookAt(pos, tar, vec3(0.0f, 1.0f, 0.0f)));
 	}
 }
 

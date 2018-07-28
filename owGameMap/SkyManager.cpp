@@ -108,8 +108,8 @@ bool SkyManager::DEBUG_Render()
 		for (auto& it : skies)
 		{
 			mat4 worldMatrix;
-			worldMatrix.translate(it->m_Position);
-			worldMatrix.scale(it->m_Range.max);
+			worldMatrix = glm::translate(worldMatrix, it->m_Position);
+			worldMatrix = glm::scale(worldMatrix, vec3(it->m_Range.max));
 			pass->setWorld(worldMatrix);
 
 			pass->SetColor4(vec4(1.0f, 1.0f, 0.0f, 0.3f));
@@ -147,7 +147,7 @@ void SkyManager::Render3D()
 	pass->Bind();
 	{
 		mat4 worldMatrix;
-		worldMatrix.translate(_Render->getCamera()->Position);
+		worldMatrix = glm::translate(worldMatrix, _Render->getCamera()->Position);
 		pass->setWorld(worldMatrix);
 
 		_Render->r.setGeometry(__geom);
@@ -216,7 +216,7 @@ void SkyManager::CalculateSkiesWeights(cvec3 pos)
 	for (int i = skies.size() - 2; i >= 0; i--)
 	{
 		Sky* s = skies[i];
-		const float dist = (pos - s->m_Position).length();
+		const float dist = glm::length(pos - s->m_Position);
 
 		if (dist < s->m_Range.min)
 		{

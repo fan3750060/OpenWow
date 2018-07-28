@@ -18,7 +18,7 @@ public:
 
 	void setProj(cmat4 WorldInverse)
 	{
-		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, &WorldInverse.x[0]);
+		m_Shader->setShaderConst(gProjection, CONST_FLOAT44, glm::value_ptr(WorldInverse));
 	}
 
 private:

@@ -27,7 +27,7 @@ MapController::MapController() :
 	{
 		setOpaque(true);
 
-		BoundingBox bbox(Math::MinFloat, Math::MaxFloat);
+		BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
 		setBounds(bbox);
 	}
 
@@ -48,8 +48,8 @@ MapController::MapController() :
 
 MapController::~MapController()
 {
-	OW_SAFEDELETE(m_SkyManager);
-	OW_SAFEDELETE(_MapShared);
+	SafeDelete(m_SkyManager);
+	SafeDelete(_MapShared);
 
 	DelManager<IMapManager>();
 }
@@ -63,12 +63,12 @@ void MapController::MapPreLoad(const DBC_MapRecord& _map)
 
     Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
-	OW_SAFEDELETE(m_WDL);
+	SafeDelete(m_WDL);
 	m_WDL = new WDL(this);
 	m_WDL->Load();
 
 	// Delete if exists
-	OW_SAFEDELETE(m_WDT);
+	SafeDelete(m_WDT);
 	m_WDT = new WDT(this);
 }
 
@@ -76,7 +76,7 @@ void MapController::MapLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Loading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
-	OW_SAFEDELETE(m_SkyManager);
+	SafeDelete(m_SkyManager);
 	m_SkyManager = new SkyManager(this, m_DBC_Map);
 
 	// Load data

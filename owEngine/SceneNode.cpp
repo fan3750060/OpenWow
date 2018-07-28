@@ -36,14 +36,14 @@ bool SceneNode::checkFrustum() const
 bool SceneNode::checkDistance2D(float _distance) const
 {
 	// Check distance to camera
-	float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - getBounds().getCenter().toX0Z()).length() - getBounds().getRadius();
+	float distToCamera2D = glm::length(Fix_X0Z(_Render->getCamera()->Position) - Fix_X0Z(getBounds().getCenter())) - getBounds().getRadius();
 	return distToCamera2D < _distance;
 }
 
 bool SceneNode::checkDistance(float _distance) const
 {
 	// Check distance to camera
-	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length() - getBounds().getRadius();
+	float distToCamera = glm::length(_Render->getCamera()->Position - getBounds().getCenter()) - getBounds().getRadius();
 	return distToCamera < _distance;
 }
 
@@ -51,16 +51,18 @@ void SceneNode::CalculateMatrix(bool _isRotationQuat)
 {
 	m_RelTransform = mat4();
 
-	m_RelTransform.translate(m_Translate);
+	m_RelTransform = glm::translate(m_RelTransform, m_Translate);
 	if (_isRotationQuat)
 	{
-		m_RelTransform *= m_RotateQuat;
+		m_RelTransform *= glm::toMat4(m_RotateQuat);
 	}
 	else
 	{
-		m_RelTransform.rotate(m_Rotate);
+		m_RelTransform = glm::rotate(m_RelTransform, m_Rotate.x, vec3(1, 0, 0));
+		m_RelTransform = glm::rotate(m_RelTransform, m_Rotate.y, vec3(0, 1, 0));
+		m_RelTransform = glm::rotate(m_RelTransform, m_Rotate.z, vec3(0, 0, 1));
 	}
-	m_RelTransform.scale(m_Scale);
+	m_RelTransform = glm::scale(m_RelTransform, m_Scale);
 
 	//--
 

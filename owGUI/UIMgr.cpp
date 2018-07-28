@@ -100,8 +100,8 @@ void UIMgr::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 {
 	// Transform
 	mat4 worldTransform;
-	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
+	worldTransform = glm::translate(worldTransform, vec3(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f));
+	worldTransform = glm::scale(worldTransform, vec3(_size.x / 2.0f, _size.y / 2.0f, 1.0f));
 
 	// Update buffer
 	vector<vec2> texCoordsQuad;

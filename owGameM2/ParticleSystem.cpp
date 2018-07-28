@@ -15,7 +15,7 @@ CM2_ParticleSystem::CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Partic
 	m_CurrentTime(0.0),
 	m_GlobalTime(0.0)
 {
-	m_Position = _proto.Position.toXZmY();
+	m_Position = Fix_XZmY(_proto.Position);
 	m_ParentBone = m_ParentM2->getSkeleton()->getBoneDirect(_proto.bone);
 
 	texture = m_ParentM2->getMaterials()->m_Textures[_proto.texture]->getTexture();
@@ -166,13 +166,13 @@ void CM2_ParticleSystem::update(double _time, double _dTime)
 	for (auto& it = particles.begin(); it != particles.end(); )
 	{
 		Particle &p = *it;
-		p.speed += (p.down * grav * _dTime) - (p.dir * deaccel * _dTime);
+		p.speed += (p.down * float(grav * _dTime)) - (p.dir * float(deaccel * _dTime));
 
 		if (slowdown > 0)
 		{
 			mspeed = expf(-1.0f * slowdown * p.life);
 		}
-		p.pos += (p.speed * mspeed * _dTime);
+		p.pos += (p.speed * float(mspeed * _dTime));
 
 		p.life += _dTime;
 		float rlife = p.life / p.maxlife;
@@ -279,10 +279,10 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 		mat4 VW = _Render->getCamera()->getViewMat() * W;
 
 		// Set vectors default
-		vec3 worldScale = W.extractScale();
-		vRight = vec3(VW.c[0][0], VW.c[1][0], VW.c[2][0]) / worldScale.x;
-		vUp = vec3(VW.c[0][1], VW.c[1][1], VW.c[2][1]) / worldScale.y;
-		//vec3 vForward = vec3(VW.c[0][2], VW.c[1][2], VW.c[2][2]) / worldScale.z;
+		vec3 worldScale = extractScale(W);
+		vRight = vec3(VW[0][0], VW[1][0], VW[2][0]) / worldScale.x;
+		vUp = vec3(VW[0][1], VW[1][1], VW[2][1]) / worldScale.y;
+		//vec3 vForward = vec3(VW[0][2], VW[1][2], VW[2][2]) / worldScale.z;
 		//vRight *= -1.0f;
 	}
 

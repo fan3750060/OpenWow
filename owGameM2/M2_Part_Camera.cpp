@@ -9,8 +9,8 @@ CM2_Part_Camera::CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoop
 	nearclip = _proto.near_clip;
 	farclip = _proto.far_clip;
 
-	m_PositionBase = _proto.position_base.toXZmY();
-	m_TargetBase = _proto.target_position_base.toXZmY();
+	m_PositionBase = Fix_XZmY( _proto.position_base);
+	m_TargetBase = Fix_XZmY(_proto.target_position_base);
 
 	tPos.init(_proto.positions, f, global, Fix_XZmY);
 	tTarget.init(_proto.target_position, f, global, Fix_XZmY);
@@ -46,7 +46,7 @@ void CM2_Part_Camera::setup(cvec3 _startPoint, float rotate)
 
 	_Render->getCamera()->setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
 	_Render->getCamera()->Position = pp;
-	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(pp, tt, u));
+	_Render->getCamera()->setViewMatrix(glm::lookAt(pp, tt, u));
 }
 
 void CM2_Part_Camera::getParams(vec3* _position, vec3* _target, float* _fov, float* _nearPlane, float* _farPlane)

@@ -158,7 +158,7 @@ void CM2_Base_Instance::CalculateMatrix(bool _isRotationQuat)
 		assert1(bone != nullptr);
 
 		mat4 relMatrix;
-		relMatrix.translate(bone->getPivot());
+		relMatrix = glm::translate(relMatrix, bone->getPivot());
 
 		mat4 absMatrix;
 		absMatrix = getParent()->getAbsTrans() * bone->getTransformMatrix() * relMatrix;

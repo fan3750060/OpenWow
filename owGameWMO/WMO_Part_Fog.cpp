@@ -8,7 +8,7 @@ WMO_Part_Fog::WMO_Part_Fog(const SWMO_FogDef& _proto)
 	fogDef = _proto;
 
 	color = vec4(fogDef.fog.color.r, fogDef.fog.color.g, fogDef.fog.color.b, fogDef.fog.color.a);
-	fogDef.position = fogDef.position.toXZmY();
+	fogDef.position = Fix_XZmY(fogDef.position);
 	fogDef.fog.startScalar = fogDef.fog.startScalar * fogDef.fog.end;
 }
 

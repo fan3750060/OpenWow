@@ -150,7 +150,7 @@ struct SM2_TextureWeight
 struct SM2_TextureTransform
 {
 	M2Track<vec3> translation;
-	M2Track<Quaternion> rotation;    // rotation center is texture center (0.5, 0.5)
+	M2Track<quat> rotation;    // rotation center is texture center (0.5, 0.5)
 	M2Track<vec3> scaling;
 };
 

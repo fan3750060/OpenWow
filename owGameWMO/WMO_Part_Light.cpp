@@ -32,6 +32,6 @@ void WMO_Part_Light::setup(uint32 light)
 
 void WMO_Part_Light::Render(cmat4 _world)
 {
-	_Render->DrawSphere(mat4(), _world * m_Position, lightDef.attenStart, fcolor);
-	_Render->DrawSphere(mat4(), _world * m_Position, lightDef.attenEnd, fcolor);
+	_Render->DrawSphere(mat4(), _world * vec4(m_Position, 0), lightDef.attenStart, fcolor);
+	_Render->DrawSphere(mat4(), _world * vec4(m_Position, 0), lightDef.attenEnd, fcolor);
 }

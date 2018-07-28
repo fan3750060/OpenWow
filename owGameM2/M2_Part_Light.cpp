@@ -23,7 +23,7 @@ CM2_Part_Light::CM2_Part_Light(const M2* _parentM2, IFile* f, const SM2_Light& _
 		m_Bone = _parentM2->getSkeleton()->getBoneLookup(_proto.bone);
 	}
 
-	position = _proto.position.toXZmY();
+	position = Fix_XZmY(_proto.position);
 
 	ambColor.init(_proto.ambient_color, f, global);
 	ambIntensity.init(_proto.ambient_intensity, f, global);
@@ -64,11 +64,11 @@ void CM2_Part_Light::setup(uint16 anim, uint32 time, uint32 globalTime)
 	{
 		if (type == SM2_Light::Type::Directional)
 		{
-			positionValue = m_Bone->getTransformMatrix() * position;
+			positionValue = m_Bone->getTransformMatrix() * vec4(position, 0);
 		}
 		else if (type == SM2_Light::Type::Point)
 		{
-			directionValue = m_Bone->getRotateMatrix() * direction;
+			directionValue = m_Bone->getRotateMatrix() * vec4(direction, 0);
 		}		
 	}
 

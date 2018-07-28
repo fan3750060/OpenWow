@@ -22,7 +22,7 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	tcolor(vec4(1.0f))
 {
 	m_Bone = (m_ParentM2->getSkeleton()->getBoneDirect(_proto.boneIndex));
-	posValue = pos = _proto.position.toXZmY();
+	posValue = pos = Fix_XZmY(_proto.position);
 
 	m_Color.init(_proto.colorTrack, f, globals);
 	m_Alpha.init(_proto.alphaTrack, f, globals);
@@ -59,19 +59,19 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 
 void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime, cmat4 _worldMatrix)
 {
-	vec3 ntpos = _worldMatrix * (m_Bone->getTransformMatrix() * pos);
-	vec3 ntup = _worldMatrix * (m_Bone->getTransformMatrix() * (pos + vec3(0, 0, 1.0f)));
+	vec3 ntpos = _worldMatrix * (m_Bone->getTransformMatrix() * vec4(pos, 0));
+	vec3 ntup = _worldMatrix * (m_Bone->getTransformMatrix() * vec4((pos + vec3(0, 0, 1.0f)), 0));
 
 	ntup -= ntpos;
-	ntup = ntup.normalized();
-	float dlen = (ntpos - posValue).length();
+	ntup = glm::normalize(ntup);
+	float dlen = glm::length(ntpos - posValue);
 
 	// move first segment
 	RibbonSegment& first = *segs.begin();
 	if (first.len > m_EdgesLifeTime)
 	{
 		// add new segment
-		first.back = (posValue - ntpos).normalized();
+		first.back = glm::normalize(posValue - ntpos);
 		first.len0 = first.len;
 
 		RibbonSegment newseg;

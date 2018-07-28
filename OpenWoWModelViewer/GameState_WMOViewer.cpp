@@ -47,7 +47,7 @@ bool GameState_WMOViewer::Init()
 	CreateDebugGeom();
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
-	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
+	_Render->getCamera()->setViewMatrix(glm::lookAt(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
 	_Render->getCamera()->SetNeedUpdate();
 
 	m_TestRenderBuffer = _Render->r.createRenderBuffer(m_VideoSettings.GetWindowSize(), R_TextureFormats::RGBA8, true, 4, 0);
@@ -56,8 +56,8 @@ bool GameState_WMOViewer::Init()
 	m_TestCamera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 2000.0f);
 
 	BoundingBox bb;
-	bb.setMin(Math::MinFloat);
-	bb.setMax(Math::MaxFloat);
+	bb.setMin(vec3(Math::MinFloat));
+	bb.setMax(vec3(Math::MaxFloat));
 	bb.calculateCenter();
 
 	SceneNode* root = new SceneNode();

@@ -29,7 +29,7 @@ DayNightPhase::DayNightPhase(IFile* f)
     f->readBytes(&dayDir.y, 4);
     f->seekRelative(4);
     f->readBytes(&dayDir.z, 4);
-	dayDir = dayDir.toXZmY();
+	dayDir = Fix_XZmY(dayDir);
     
     //
     f->seekRelative(4);
@@ -46,7 +46,7 @@ DayNightPhase::DayNightPhase(IFile* f)
     f->readBytes(&nightDir.y, 4);
     f->seekRelative(4);
     f->readBytes(&nightDir.z, 4);
-	nightDir = nightDir.toXZmY();
+	nightDir = Fix_XZmY(nightDir);
 
     //
     f->seekRelative(4);
@@ -131,8 +131,8 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 		// Sun
 		{
 			mat4 worldMatrix;
-			worldMatrix.translate(_playerPos + (-dayDir) * 300.0f);
-			worldMatrix.scale(20);
+			worldMatrix = glm::translate(worldMatrix, _playerPos + (-dayDir) * 300.0f);
+			worldMatrix= glm::scale(worldMatrix, vec3(20));
 
 			_Render->getTechniquesMgr()->Debug_Pass->setWorld(worldMatrix);
 			_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(dayColor, 1.0f));
@@ -144,8 +144,8 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 		// Moon
 		{
 			mat4 worldMatrix;
-			worldMatrix.translate(_playerPos + (-nightDir) * 300.0f);
-			worldMatrix.scale(20);
+			worldMatrix = glm::translate(worldMatrix, _playerPos + (-nightDir) * 300.0f);
+			worldMatrix = glm::scale(worldMatrix, vec3(20));
 
 			_Render->getTechniquesMgr()->Debug_Pass->setWorld(worldMatrix);
 			_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(nightColor, 1.0f));

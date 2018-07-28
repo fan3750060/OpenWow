@@ -109,7 +109,7 @@ private:
 	bool m_IsCalculated;
 
 	M2_Animated<vec3> trans;
-	M2_Animated<Quaternion, M2CompQuat, Quat16ToQuat32> roll;
+	M2_Animated<quat, M2CompQuat, Quat16ToQuat32> roll;
 	M2_Animated<vec3> scale;
 };
 

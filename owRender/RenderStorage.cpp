@@ -111,9 +111,9 @@ void RenderStorage::CreateGeometry()
 		// Subdivide each face into 4 tris by bisecting each edge and push vertices onto unit sphere
 		for (uint32 j = 0, prevNumInds = ni; j < prevNumInds; j += 3)
 		{
-			spVerts[nv++] = ((spVerts[spInds[j + 0]] + spVerts[spInds[j + 1]]) * 0.5f).normalized();
-			spVerts[nv++] = ((spVerts[spInds[j + 1]] + spVerts[spInds[j + 2]]) * 0.5f).normalized();
-			spVerts[nv++] = ((spVerts[spInds[j + 2]] + spVerts[spInds[j + 0]]) * 0.5f).normalized();
+			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 0]] + spVerts[spInds[j + 1]]) * 0.5f));
+			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 1]] + spVerts[spInds[j + 2]]) * 0.5f));
+			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 2]] + spVerts[spInds[j + 0]]) * 0.5f));
 
 			spInds[ni++] = spInds[j + 0];
 			spInds[ni++] = nv - 3;

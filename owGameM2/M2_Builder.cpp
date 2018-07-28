@@ -209,8 +209,8 @@ void CM2_Builder::Step4Vertices()
 		// Convert
 		for (uint32 i = 0; i < m_Header.vertices.size; i++)
 		{
-			m_Vertexes[i].pos = m_Vertexes[i].pos.toXZmY();
-			m_Vertexes[i].normal = m_Vertexes[i].normal.toXZmY();
+			m_Vertexes[i].pos = Fix_XZmY(m_Vertexes[i].pos);
+			m_Vertexes[i].normal = Fix_XZmY(m_Vertexes[i].normal);
 		}
 
 		m_M2->m_IsContainGeom = true;
@@ -535,7 +535,7 @@ void CM2_Builder::Step9Collision()
 
 		for (uint32 i = 0; i < m_Header.collisionVertices.size; i++)
 		{
-			collisionVertices[i] = collisionVertices[i].toXZmY();
+			collisionVertices[i] = Fix_XZmY(collisionVertices[i]);
 		}
 
 		collisonVB = _Render->r.createVertexBuffer(static_cast<uint32>(collisionVertices.size()) * sizeof(vec3), collisionVertices.data(), false);

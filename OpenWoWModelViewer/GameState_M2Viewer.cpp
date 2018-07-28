@@ -43,7 +43,7 @@ void GameState_M2Viewer::OpenFile(const char* _fname)
 
 	M2* m2 = GetManager<IM2Manager>()->Add(path);
 	m2_Model = new CM2_Viewer_Instance(m2);
-	m2_Model->setScale(10.0f);
+	m2_Model->setScale(vec3(10.0f));
 }
 
 bool GameState_M2Viewer::Init()
@@ -69,7 +69,7 @@ bool GameState_M2Viewer::Init()
 		//M2* model = GetManager<IM2Manager>()->Add("PARTICLES\\LootFX.m2");
 		//M2* model = GetManager<IM2Manager>()->Add("Spells\\Enchantments\\RedGlow_High.m2");
 		m2_Model = new CM2_Viewer_Instance(model);
-		m2_Model->setScale(10.0f);
+		m2_Model->setScale(vec3(10.0f));
 	}
 
 	//m_Char = new Character();
@@ -77,7 +77,7 @@ bool GameState_M2Viewer::Init()
 
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
-	_Render->getCamera()->setViewMatrix(mat4::lookAtRH(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
+	_Render->getCamera()->setViewMatrix(glm::lookAt(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));
 	_Render->getCamera()->SetNeedUpdate();
 
 	ADDCONSOLECOMMAND_CLASS_WITHARGS("a_play", GameState_M2Viewer, PlayAnim, uint16);
@@ -139,7 +139,7 @@ bool GameState_M2Viewer::PreRender3D()
 void GameState_M2Viewer::Render3D()
 {
 	mat4 m;
-	m.translate(0.0f, -5.0f, 0.0f);
+	m = glm::translate(m, vec3(0.0f, -5.0f, 0.0f));
 
 	// Debug
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);

@@ -16,8 +16,23 @@ typedef unsigned int uint32;
 typedef long long int64;
 typedef unsigned long long uint64;
 
+// GLM
+#define GLM_FORCE_SWIZZLE
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/random.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/compatibility.hpp>
+#include <glm/gtx/matrix_operation.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/norm.hpp>
+
 // Math types
-class Vec2f;
+/*class Vec2f;
 class Vec3f;
 class Vec4f;
 class Matrix4f;
@@ -32,7 +47,18 @@ typedef const Vec4f& cvec4;
 typedef Matrix4f mat4;
 typedef const Matrix4f& cmat4;
 typedef Quaternion quat;
-typedef const Quaternion& cquat;
+typedef const Quaternion& cquat;*/
+
+typedef glm::vec2 vec2;
+typedef const vec2& cvec2;
+typedef glm::vec3 vec3;
+typedef const vec3& cvec3;
+typedef glm::vec4 vec4;
+typedef const vec4& cvec4;
+typedef glm::mat4x4 mat4;
+typedef const mat4& cmat4;
+typedef glm::quat quat;
+typedef const quat& cquat;
 
 class Color;
 

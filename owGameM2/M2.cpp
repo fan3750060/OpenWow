@@ -27,9 +27,9 @@ M2::M2(cstring name) :
 
 M2::~M2()
 {
-	OW_SAFEDELETE(m_Materials);
-	OW_SAFEDELETE(m_Miscellaneous);
-	OW_SAFEDELETE(m_Skeleton);
+	SafeDelete(m_Materials);
+	SafeDelete(m_Miscellaneous);
+	SafeDelete(m_Skeleton);
 
 
 

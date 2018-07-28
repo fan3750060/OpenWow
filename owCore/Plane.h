@@ -10,8 +10,8 @@ public:
 
 	explicit Plane(const float a, const float b, const float c, const float d)
 	{
-		normal = Vec3f(a, b, c);
-		float invLen = 1.0f / normal.length();
+		normal = vec3(a, b, c);
+		float invLen = 1.0f / glm::length(normal);
 		normal *= invLen;	// Normalize
 		dist = d * invLen;
 	}
@@ -20,9 +20,9 @@ public:
 	{
 		vec3 cb = b - c;
 		vec3 ca = a - c;
-		normal = cb.cross(ca);
-		normal.normalize();
-		dist = -normal.dot(c);
+		normal = glm::cross(cb, ca);
+		normal = glm::normalize(normal);
+		dist = - glm::dot(normal, c);
 	}
 
 	// ----------------
@@ -30,11 +30,11 @@ public:
 	// ----------------
 	float distToPoint(cvec3 v) const
 	{
-		return normal.dot(v) + dist;
+		return glm::dot(normal, v) + dist;
 	}
 
 public:
-	Vec3f normal;
+	vec3 normal;
 	float dist;
 };
 
@@ -45,7 +45,7 @@ inline bool cullBoxByPlanes(const Plane* _planes, uint32 _planesCount, const Bou
 	{
 		cvec3 n = _planes[i].normal;
 
-		Vec3f positive = b.getMin();
+		vec3 positive = b.getMin();
 		if (n.x <= 0) positive.x = b.getMax().x;
 		if (n.y <= 0) positive.y = b.getMax().y;
 		if (n.z <= 0) positive.z = b.getMax().z;

@@ -22,10 +22,10 @@ CEngine::CEngine() :
 
 CEngine::~CEngine()
 {
-	OW_SAFEDELETE(openGLConsole);
-	OW_SAFEDELETE(_Perfomance);
-	OW_SAFEDELETE(m_UIMgr);
-	OW_SAFEDELETE(_Render);
+	SafeDelete(openGLConsole);
+	SafeDelete(_Perfomance);
+	SafeDelete(m_UIMgr);
+	SafeDelete(_Render);
 	
 	Log::Green("CEngine[]: Destroy engine.");
 

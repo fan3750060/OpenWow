@@ -40,7 +40,7 @@ public:
 	//
 
 	vec3 getCorner(uint32 index) const;
-	void transform(const Matrix4f& m);
+	void transform(const mat4& m);
 	bool makeUnion(const BoundingBox& b);
 	bool isPointInside(cvec3 _point) const;
 

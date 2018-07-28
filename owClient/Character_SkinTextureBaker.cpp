@@ -90,7 +90,7 @@ R_Texture* Character_SkinTextureBaker::createTexture(Character* _character)
 
 	// 4. Final
 	bakedSkinTexture->uploadTextureData(0, 0, m_Pixels);
-	delete[] m_Pixels; m_Pixels = nullptr;
+	SafeDeleteArray(m_Pixels);
 
 	return bakedSkinTexture;
 }
@@ -119,7 +119,7 @@ void Character_SkinTextureBaker::FillWithSkin(R_Texture* _skinTexture)
 		}
 	}
 
-	delete[] skinTexturePixels;
+	SafeDeleteArray(skinTexturePixels);
 }
 
 void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, string _name)
@@ -166,5 +166,5 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 		}
 	}
 
-	delete[] texturePixels;
+	SafeDeleteArray(texturePixels);
 }

@@ -86,8 +86,8 @@ void CSceneManager::Intersection(SceneNode * _node)
 		}
 		else if (m_IntersectedNode->getDrawOrder() == _node->getDrawOrder())
 		{
-			float distToOld = (getCamera()->Position - m_IntersectedNode->getBounds().getCenter()).length() - m_IntersectedNode->getBounds().getRadius();
-			float distToNew = (getCamera()->Position - _node->getBounds().getCenter()).length() - _node->getBounds().getRadius();
+			float distToOld = glm::length(getCamera()->Position - m_IntersectedNode->getBounds().getCenter()) - m_IntersectedNode->getBounds().getRadius();
+			float distToNew = glm::length(getCamera()->Position - _node->getBounds().getCenter()) - _node->getBounds().getRadius();
 			//float old = nearestDistToAABB(getCamera()->Position, m_IntersectedNode->getBounds().Min, m_IntersectedNode->getBounds().Max);
 			//float neww = nearestDistToAABB(getCamera()->Position, _node->getBounds().Min, _node->getBounds().Max);
 			if (m_IntersectedNode->getBounds().isPointInside(_node->getBounds().getCenter()))

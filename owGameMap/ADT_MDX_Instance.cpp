@@ -13,12 +13,12 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 		// Translate
 		setTranslate(_placementInfo.position, false);
 		// Rotate
-		vec3 rotate = _placementInfo.rotation.toRad();
+		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
-		setRotate(vec3(rotate.z, rotate.y, rotate.x));
+		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);
 		// Scale
-		setScale(static_cast<float>(_placementInfo.scale) / 1024.0f);
+		setScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f), false);
 
 		CalculateMatrix();
 	}
@@ -43,10 +43,10 @@ bool ADT_MDX_Instance::PreRender3D()
 	}
 
 	// Check distance to camera
-	if (!checkDistance2D(m_QualitySettings.ADT_MDX_Distance))
-	{
-		return false;
-	}
+	//if (!checkDistance2D(m_QualitySettings.ADT_MDX_Distance))
+	//{
+	//	return false;
+	//}
 
 	if (!CM2_Base_Instance::PreRender3D())
 	{

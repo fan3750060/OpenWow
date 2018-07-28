@@ -15,7 +15,7 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		// Translate
 		setTranslate(_placementInfo.position, false);
 		// Rotate
-		vec3 rotate = _placementInfo.rotation.toRad();
+		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - Math::PiHalf;
 		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);

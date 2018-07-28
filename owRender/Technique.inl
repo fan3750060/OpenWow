@@ -90,5 +90,5 @@ inline void Technique::setMat4(const char* name, cmat4 mat) const
 
 inline void Technique::setMat4(int32 _loc, cmat4 mat) const
 {
-	m_Shader->setShaderConst(_loc, CONST_FLOAT44, &mat.x[0]);
+	m_Shader->setShaderConst(_loc, CONST_FLOAT44, glm::value_ptr(mat));
 }

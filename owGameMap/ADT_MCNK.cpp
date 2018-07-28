@@ -396,7 +396,7 @@ void ADT_MCNK::Render3D()
 		return;
 	}
 
-	float distToCamera3D = (_Render->getCamera()->Position - getBounds().getCenter()).length() - getBounds().getRadius();
+	float distToCamera3D = glm::length(_Render->getCamera()->Position - getBounds().getCenter()) - getBounds().getRadius();
 	bool isDefaultGeom = distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low;
 
 	PERF_START(PERF_MAP);

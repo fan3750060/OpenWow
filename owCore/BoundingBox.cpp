@@ -24,8 +24,8 @@ void BoundingBox::set(cvec3 _min, cvec3 _max, bool _needConvert)
 	// Fix bounding box
 	if (_needConvert)
 	{
-		m_Min = m_Min.toXZmY();
-		m_Max = m_Max.toXZmY();
+		m_Min = Fix_XZmY(m_Min);
+		m_Max = Fix_XZmY(m_Max);
 		std::swap(m_Min.z, m_Max.z);
 	}
 
@@ -38,7 +38,7 @@ void BoundingBox::calculate(const vec3* _verts, uint32 _count, bool _needConvert
 {
 	for (uint32 i = 0; i < _count; i++)
 	{
-		vec3 v = (_needConvert) ? (_verts[i].toXZmY()) : _verts[i];
+		vec3 v = (_needConvert) ? (Fix_XZmY(_verts[i])) : _verts[i];
 
 		if (v.x < m_Min.x) m_Min.x = v.x;
 		if (v.y < m_Min.y) m_Min.y = v.y;
@@ -55,7 +55,7 @@ void BoundingBox::calculate(const vec3* _verts, uint32 _count, bool _needConvert
 void BoundingBox::calculateCenter()
 {
 	m_Center = (m_Min + m_Max) * 0.5f;
-	m_Radius = (m_Max - m_Center).length();
+	m_Radius = glm::length(m_Max - m_Center);
 	m_IsCenterCalc = true;
 }
 
@@ -95,7 +95,7 @@ vec3 BoundingBox::getCorner(uint32 index) const
 	}
 }
 
-void BoundingBox::transform(const Matrix4f& m)
+void BoundingBox::transform(const mat4& m)
 {
 	// Efficient algorithm for transforming an AABB, taken from Graphics Gems
 
@@ -106,13 +106,13 @@ void BoundingBox::transform(const Matrix4f& m)
 
 	for (uint32 i = 0; i < 3; ++i)
 	{
-		minB[i] = m.c[3][i];
-		maxB[i] = m.c[3][i];
+		minB[i] = m[3][i];
+		maxB[i] = m[3][i];
 
 		for (uint32 j = 0; j < 3; ++j)
 		{
-			float x = minA[j] * m.c[j][i];
-			float y = maxA[j] * m.c[j][i];
+			float x = minA[j] * m[j][i];
+			float y = maxA[j] * m[j][i];
 			minB[i] += minf(x, y);
 			maxB[i] += maxf(x, y);
 		}
@@ -122,7 +122,7 @@ void BoundingBox::transform(const Matrix4f& m)
 	m_Max = vec3(maxB[0], maxB[1], maxB[2]);
 
 	assert1(m_IsCenterCalc);
-	m_Center = m * m_Center;
+	m_Center = m * vec4(m_Center, 0);
 }
 
 bool BoundingBox::makeUnion(const BoundingBox& b)

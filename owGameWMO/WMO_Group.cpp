@@ -33,7 +33,7 @@ void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
 {
 	if (m_WMOLiqiud.getPtr() != nullptr)
 	{
-		vec3 realPos = m_LiquidHeader.pos.toXZmY();
+		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
 		CWMO_Liquid_Instance* liquid = new CWMO_Liquid_Instance(_parent, m_WMOLiqiud, realPos, this);
@@ -145,7 +145,7 @@ void WMO_Group::Load()
 			// Convert
 			for (uint32 i = 0; i < vertexesCount; i++)
 			{
-				vertexes[i] = vertexes[i].toXZmY();
+				vertexes[i] = Fix_XZmY(vertexes[i]);
 			}
 			// Buffer
 			VB_Vertexes = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec3), vertexes, false);
@@ -162,7 +162,7 @@ void WMO_Group::Load()
 			// Convert
 			for (uint32 i = 0; i < normalsCount; i++)
 			{
-				normals[i] = normals[i].toXZmY();
+				normals[i] = Fix_XZmY(normals[i]);
 			}
 			// Buffer
 			VB_Normals = _Render->r.createVertexBuffer(normalsCount * sizeof(vec3), normals, false);

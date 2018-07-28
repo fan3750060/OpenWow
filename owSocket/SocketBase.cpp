@@ -225,7 +225,7 @@ void CSocketBase::SocketWriteThread(std::future<void> _future)
 
 void CSocketBase::setOnReceiveCallback(Function_WA<ByteBuffer>* _onDataReceive)
 {
-	OW_SAFEDELETE(m_OnDataReceive);
+	SafeDelete(m_OnDataReceive);
 	m_OnDataReceive = _onDataReceive;
 }
 bool CSocketBase::isReceiveCallbackCorrect()

@@ -91,16 +91,16 @@ void Camera::Update(double _time, double _dTime)
 		front.y = sin(degToRad(Pitch));                       // z
 		front.z = sin(degToRad(Roll)) * cos(degToRad(Pitch)); // x
 
-		Direction = front.normalized();
+		Direction = glm::normalize(front);
 	}
 
-	Direction = Direction.normalized();
+	Direction = glm::normalize(Direction);
 
 	// Also re-calculate the Right and Up vector
-	CameraRight = Direction.cross(Vec3f(0.0f, 1.0f, 0.0f)).normalized();  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	CameraUp = CameraRight.cross(Direction);
+	CameraRight = glm::normalize(glm::cross(Direction,vec3(0.0f, 1.0f, 0.0f)));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	CameraUp = glm::cross(CameraRight, Direction);
 
-	_viewMat = Matrix4f::lookAtRH(Position, Position + Direction, CameraUp);
+	_viewMat = glm::lookAt(Position, Position + Direction, CameraUp);
 
 	// View matrix
 	//setTransform(Position, vec3(Pitch, Roll, 0.0), vec3(1.0f, 1.0f, 1.0f));
@@ -238,6 +238,7 @@ void Camera::setupViewportSize(float x, float y, float w, float h)
 
 void Camera::setupViewParams(float fov, float aspect, float nearPlane, float farPlane)
 {
+	_fov = fov;
 	tan = tanf(fov / 2.0f);
 	asp = aspect;
 
@@ -260,7 +261,7 @@ void Camera::setupViewParams(float fov, float aspect, float nearPlane, float far
 
 void Camera::setProjectionMatrix(float* projMat)
 {
-	memcpy(_projMat.x, projMat, 16 * sizeof(float));
+	memcpy(glm::value_ptr(_projMat), projMat, 16 * sizeof(float));
 	_manualProjMat = true;
 }
 
@@ -271,11 +272,11 @@ void Camera::onPostUpdate()
 	{
 		if (!_orthographic)
 		{
-			_projMat = Matrix4f::PerspectiveMat(_frustLeft, _frustRight, _frustBottom, _frustTop, _frustNear, _frustFar);
+			_projMat = glm::perspective(_fov, asp, _frustNear, _frustFar);
 		}
 		else
 		{
-			_projMat = Matrix4f::OrthoMat(_frustLeft, _frustRight, _frustBottom, _frustTop, _frustNear, _frustFar);
+			_projMat = glm::ortho(_frustLeft, _frustRight, _frustBottom, _frustTop);
 		}
 	}
 
@@ -291,8 +292,8 @@ void Camera::CreateRenderable()
 	float fh = _frustFar * tan;
 	float fw = fh * asp;
 
-	vec3 nc = _frustNear;
-	vec3 fc = _frustFar;
+	vec3 nc (_frustNear);
+	vec3 fc (_frustFar);
 
 	// compute the 4 corners of the frustum on the near plane
 	vec3 ntl = nc + CameraUp * nh - CameraRight * nw;

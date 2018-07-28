@@ -45,7 +45,7 @@ void RenderGL::Init(IOpenGLAdapter* _adapter)
 
 	//--
 
-	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
+	m_OrhoMatrix = glm::ortho(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 4);
 
 	// Main game camera
@@ -110,7 +110,7 @@ void RenderGL::PostprocessSimple()
 void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 {
 	mat4 world;
-	world.translate(_pos);
+	world = glm::translate(world, _pos);
 
 	r.setCullMode(R_CullMode::RS_CULL_BACK);
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
@@ -131,8 +131,8 @@ void RenderGL::DrawCube(cvec3 _pos, vec4 _color)
 void RenderGL::DrawSphere(cmat4 _world, cvec3 _pos, float _radius, vec4 _color)
 {
 	mat4 world;
-	world.translate(_pos);
-	world.scale(_radius);
+	world = glm::translate(world, _pos);
+	world = glm::scale(world, vec3(_radius));
 
 	world *= _world;
 
@@ -154,8 +154,7 @@ void RenderGL::DrawSphere(cmat4 _world, cvec3 _pos, float _radius, vec4 _color)
 
 void RenderGL::DrawGeo(cvec3 _pos, vec4 _color)
 {
-	mat4 world;
-	world.translate(_pos);
+	mat4 world = glm::translate(_pos);
 
 	r.setCullMode(R_CullMode::RS_CULL_BACK);
 	r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
@@ -176,8 +175,8 @@ void RenderGL::DrawGeo(cvec3 _pos, vec4 _color)
 void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 {
 	mat4 world;
-	world.translate(_box.getMin());
-	world.scale(_box.getMax() - _box.getMin());
+	world = glm::translate(world, _box.getMin());
+	world = glm::scale(world, _box.getMax() - _box.getMin());
 
 	r.setGeometry(m_RenderStorage->_cubeGeo);
 
@@ -207,12 +206,12 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool ro
 {
 	// Transform
 	mat4 worldTransform;
-	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.1f);
+	worldTransform = glm::translate(worldTransform, vec3(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.1f));
 	if (rotate)
 	{
-		worldTransform.rotate(vec3(0.0f, Math::Pi, 0.0f)); // FIXME
+		worldTransform = glm::rotate(worldTransform, Math::Pi, vec3(0, 1, 0));// FIXME
 	}
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
+	worldTransform = glm::scale(worldTransform, vec3(_size.x / 2.0f, _size.y / 2.0f, 0.0f));
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();
@@ -232,9 +231,9 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture * _texture, vec2 _size, float 
 {
 	// Transform
 	mat4 worldTransform;
-	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
-	worldTransform.rotate(vec3(0.0f, 0.0f, rotate));
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 1.0f);
+	worldTransform = glm::translate(worldTransform, vec3(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f));
+	worldTransform = glm::rotate(worldTransform, rotate, vec3(0.0f, 0.0f, 1.0f));
+	worldTransform = glm::scale(worldTransform, vec3(_size.x / 2.0f, _size.y / 2.0f, 1.0f));
 
 	// Shader
 	m_TechniquesManager->UI_Texture->Bind();
@@ -256,8 +255,8 @@ void RenderGL::RenderRectangle(vec2 _pos, vec2 _size, const Color& _color)
 {
 	// Transform
 	mat4 worldTransform;
-	worldTransform.translate(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f);
-	worldTransform.scale(_size.x / 2.0f, _size.y / 2.0f, 0.0f);
+	worldTransform = glm::translate(worldTransform, vec3(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.0f));
+	worldTransform = glm::scale(worldTransform, vec3(_size.x / 2.0f, _size.y / 2.0f, 1.0f));
 
 	// Shader
 	m_TechniquesManager->UI_Color->Bind();
@@ -312,7 +311,7 @@ void RenderGL::OnWindowResized(uint32 _width, uint32 _height)
 	r.setViewport(0, 0, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 
 	// Projection matix
-	m_OrhoMatrix = Matrix4f::OrthoMat(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
+	m_OrhoMatrix = glm::ortho(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
 }
 
 

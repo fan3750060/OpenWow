@@ -27,8 +27,8 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, M2* _mdxObject, c
 	// Scene node params
 	{
 		// Convert
-		setTranslate(_placement.position.toXZmY(), false);
-		setRotateQuat(Quaternion(-_placement.orientation.z, _placement.orientation.x, _placement.orientation.y, _placement.orientation.w), false);
+		setTranslate(Fix_XZmY(_placement.position), false);
+		setRotateQuat(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y), false);
 		setScale(vec3(_placement.scale, -_placement.scale, -_placement.scale), false);
 		//
 		CalculateMatrix(true);
@@ -52,11 +52,11 @@ bool CWMO_Doodad_Instance::PreRender3D()
 	}
 
 	// Check distance to camera
-	float distToCamera = (_Render->getCamera()->Position - getBounds().getCenter()).length() - getBounds().getRadius();
-	if (distToCamera > m_QualitySettings.WMO_MODD_Distance)
-	{
-		return false;
-	}
+	//float distToCamera = glm::length(_Render->getCamera()->Position - getBounds().getCenter()) - getBounds().getRadius();
+	//if (distToCamera > m_QualitySettings.WMO_MODD_Distance)
+	//{
+	//	return false;
+	//}
 
 	// Frustrum culling
 	if (!CM2_Base_Instance::PreRender3D())

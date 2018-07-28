@@ -11,9 +11,9 @@ inline T interpolate(const float r, const T& v1, const T& v2)
 
 // "linear" interpolation for quaternions should be slerp by default
 template<>
-inline Quaternion interpolate<Quaternion>(const float r, cquat v1, cquat v2)
+inline quat interpolate<quat>(const float r, cquat v1, cquat v2)
 {
-	return v1.slerp(v2, r);
+	return glm::slerp(v1, v2, r);
 }
 
 template<class T>
@@ -71,13 +71,13 @@ public:
 class Quat16ToQuat32
 {
 public:
-	static const Quaternion conv(const M2CompQuat t)
+	static const quat conv(const M2CompQuat t)
 	{
-		return Quaternion(
+		return quat(
+			float(t.w > 0 ? t.w - 32767i16 : t.w + 32767i16) / 32767.0f,
 			float(t.x > 0 ? t.x - 32767i16 : t.x + 32767i16) / 32767.0f,
 			float(t.y > 0 ? t.y - 32767i16 : t.y + 32767i16) / 32767.0f,
-			float(t.z > 0 ? t.z - 32767i16 : t.z + 32767i16) / 32767.0f,
-			float(t.w > 0 ? t.w - 32767i16 : t.w + 32767i16) / 32767.0f);
+			float(t.z > 0 ? t.z - 32767i16 : t.z + 32767i16) / 32767.0f);
 	}
 };
 

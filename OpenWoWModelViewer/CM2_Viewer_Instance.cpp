@@ -8,7 +8,7 @@ CM2_Viewer_Instance::CM2_Viewer_Instance(M2 * _object) :
 {
 	// Scene node params
 	{
-		setScale(10.0f);
+		setScale(vec3(10.0f));
 
 		CalculateMatrix();
 	}
