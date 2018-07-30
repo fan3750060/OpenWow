@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{590C7C79-AE16-4DB2-B61C-BB7B25B76B42}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>owRenderNew</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin_x64\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin_x64\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_RENDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;..\owRenderNew\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_RENDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;..\owRenderNew\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
+      <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="DX11\BlendStateDX11.cpp" />
+    <ClCompile Include="DX11\BufferDX11.cpp" />
+    <ClCompile Include="DX11\ConstantBufferDX11.cpp" />
+    <ClCompile Include="DX11\DepthStencilStateDX11.cpp" />
+    <ClCompile Include="DX11\MeshDX11.cpp" />
+    <ClCompile Include="DX11\PipelineStateDX11.cpp" />
+    <ClCompile Include="DX11\QueryDX11.cpp" />
+    <ClCompile Include="DX11\RasterizerStateDX11.cpp" />
+    <ClCompile Include="DX11\RenderDeviceDX11.cpp" />
+    <ClCompile Include="DX11\RenderTargetDX11.cpp" />
+    <ClCompile Include="DX11\RenderWindowDX11.cpp" />
+    <ClCompile Include="DX11\SamplerStateDX11.cpp" />
+    <ClCompile Include="DX11\SceneDX11.cpp" />
+    <ClCompile Include="DX11\ShaderDX11.cpp" />
+    <ClCompile Include="DX11\ShaderParameterDX11.cpp" />
+    <ClCompile Include="DX11\StructuredBufferDX11.cpp" />
+    <ClCompile Include="DX11\TextureDX11.cpp" />
+    <ClCompile Include="EngineTime.cpp" />
+    <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="HighResolutionTimer.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ProgressWindow.cpp" />
+    <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="RenderDevice.cpp" />
+    <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
+    <ClCompile Include="ShaderParameter.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\shared\owRenderNew.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="BlendState.h" />
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="BufferBinding.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="ClearFlags.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="CPUAccess.h" />
+    <ClInclude Include="DepthStencilState.h" />
+    <ClInclude Include="DX11\BlendStateDX11.h" />
+    <ClInclude Include="DX11\BufferDX11.h" />
+    <ClInclude Include="DX11\ConstantBufferDX11.h" />
+    <ClInclude Include="DX11\DepthStencilStateDX11.h" />
+    <ClInclude Include="DX11\MeshDX11.h" />
+    <ClInclude Include="DX11\PipelineStateDX11.h" />
+    <ClInclude Include="DX11\QueryDX11.h" />
+    <ClInclude Include="DX11\RasterizerStateDX11.h" />
+    <ClInclude Include="DX11\RenderDeviceDX11.h" />
+    <ClInclude Include="DX11\RenderTargetDX11.h" />
+    <ClInclude Include="DX11\RenderWindowDX11.h" />
+    <ClInclude Include="DX11\SamplerStateDX11.h" />
+    <ClInclude Include="DX11\SceneDX11.h" />
+    <ClInclude Include="DX11\ShaderDX11.h" />
+    <ClInclude Include="DX11\ShaderParameterDX11.h" />
+    <ClInclude Include="DX11\StructuredBufferDX11.h" />
+    <ClInclude Include="DX11\TextureDX11.h" />
+    <ClInclude Include="EngineTime.h" />
+    <ClInclude Include="Events.h" />
+    <ClInclude Include="Graphics.h" />
+    <ClInclude Include="HighResolutionTimer.h" />
+    <ClInclude Include="KeyCodes.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="PipelineState.h" />
+    <ClInclude Include="Pixel.h" />
+    <ClInclude Include="ProgressWindow.h" />
+    <ClInclude Include="Query.h" />
+    <ClInclude Include="RasterizerState.h" />
+    <ClInclude Include="Ray.h" />
+    <ClInclude Include="RaycastHit.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="RenderDevice.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="RenderWindow.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SamplerState.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SceneNode.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderParameter.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StructuredBuffer.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="ThreadSafeQueue.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Viewport.h" />
+    <ClInclude Include="Visitor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ConstantBuffer.inl" />
+    <None Include="RenderDevice.inl" />
+    <None Include="ShaderParameter.inl" />
+    <None Include="StructuredBuffer.inl" />
+    <None Include="Texture.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
