@@ -1,14 +1,9 @@
 #pragma once
 
-class CDebugOutput : public CRefItem, public IDebugOutput
+class CDebugOutput : public IDebugOutput
 {
 public:
 	virtual ~CDebugOutput()	{}
-
-	// IRefItem
-	void AddRef() { CRefItem::AddRef(); }
-	void Release() { CRefItem::Release(); }
-	uint32 GetRefsCount() const { return CRefItem::GetRefsCount(); }
 
 	// IDebugOutput
 	void PushMessage(cstring _message, IDebugOutput::DebugMessageType _type) override;

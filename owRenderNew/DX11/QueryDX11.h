@@ -18,10 +18,10 @@ public:
 protected:
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
 
-	typedef std::vector< Microsoft::WRL::ComPtr<ID3D11Query> > QueryBuffer;
+	typedef std::vector< ATL::CComPtr<ID3D11Query> > QueryBuffer;
 	QueryBuffer m_DisjointQueries;
 	// For timer queries, we need 2 sets of buffered queries.
 	QueryBuffer m_Queries[2];

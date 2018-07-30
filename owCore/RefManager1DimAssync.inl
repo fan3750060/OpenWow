@@ -20,13 +20,13 @@ CRefManager1DimAssync<T>::~CRefManager1DimAssync()
 {
 	for (auto it = objects.begin(); it != objects.end(); )
 	{
-		T* item = it->second;
+		SharedTexturePtr item = it->second;
 		string name = GetNameByItem(item);
 
 		this->DeleteAction(name);
-		delete item;
+		//delete item;
 		it = objects.erase(it);
-		item = nullptr;
+		//item = nullptr;
 	}
 
 #ifndef DISABLE_ASSYNC
@@ -39,9 +39,9 @@ CRefManager1DimAssync<T>::~CRefManager1DimAssync()
 }
 
 template <class T>
-inline T* CRefManager1DimAssync<T>::Add(cstring name)
+inline shared_ptr<T> CRefManager1DimAssync<T>::Add(cstring name)
 {
-	T* item = GetItemByName(name);
+	SharedTexturePtr item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		return item;
@@ -79,20 +79,20 @@ bool CRefManager1DimAssync<T>::Exists(cstring name) const
 template <class T>
 inline void CRefManager1DimAssync<T>::Delete(cstring name)
 {
-	T* item = GetItemByName(name);
+	shared_ptr<T> item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		auto it = objects.find(name);
 
 		this->DeleteAction(name);
-		delete item;
+		//delete item;
 		objects.erase(name);
-		item = nullptr;
+		//item = nullptr;
 	}
 }
 
 template <class T>
-inline void CRefManager1DimAssync<T>::Delete(T* item)
+inline void CRefManager1DimAssync<T>::Delete(shared_ptr<T> item)
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -104,12 +104,12 @@ inline void CRefManager1DimAssync<T>::Delete(T* item)
 	}
 
 	// If not found
-	delete item;
-	item = nullptr;
+	//delete item;
+	//item = nullptr;
 }
 
 template <class T>
-inline T* CRefManager1DimAssync<T>::GetItemByName(cstring name) const
+inline shared_ptr<T> CRefManager1DimAssync<T>::GetItemByName(cstring name) const
 {
 	auto name_item = objects.find(name);
 	if (name_item != objects.end())
@@ -121,7 +121,7 @@ inline T* CRefManager1DimAssync<T>::GetItemByName(cstring name) const
 }
 
 template <class T>
-inline std::string CRefManager1DimAssync<T>::GetNameByItem(T* item) const
+inline std::string CRefManager1DimAssync<T>::GetNameByItem(shared_ptr<T> item) const
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -142,21 +142,21 @@ inline void CRefManager1DimAssync<T>::PrintAllInfo()
 	uint32 refsCnt = 0;
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
-		refsCnt += it->second->GetRefsCount();
-		Log::Info("Item (%d) [%s]", it->second->GetRefsCount(), it->first.c_str());
+		refsCnt += it->second.use_count();
+		Log::Info("Item (%d) [%s]", it->second.use_count(), it->first.c_str());
 	}
 
 	Log::Info("Item's count [%d], items refs [%d]", objects.size(), refsCnt);
 }
 
 template<class T>
-inline T* CRefManager1DimAssync<T>::CreateAction(cstring name)
+inline shared_ptr<T> CRefManager1DimAssync<T>::CreateAction(cstring name)
 {
 	return NULL;
 }
 
 template<class T>
-inline void CRefManager1DimAssync<T>::LoadAction(string name, T*& item)
+inline void CRefManager1DimAssync<T>::LoadAction(string name, shared_ptr<T>& item)
 {
 }
 

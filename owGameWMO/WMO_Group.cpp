@@ -12,7 +12,7 @@
 #include "WMO_Liquid_Instance.h"
 #include "WMO_Fixes.h"
 
-WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _groupName, IFile* _groupFile) :
+WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _groupName, std::shared_ptr<IFile> _groupFile) :
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
 	m_GroupIndex(_groupIndex),
@@ -29,14 +29,14 @@ WMO_Group::~WMO_Group()
 	ERASE_VECTOR(m_CollisionNodes);
 }
 
-void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
+void WMO_Group::CreateInsances(std::shared_ptr<CWMO_Group_Instance> _parent) const
 {
-	if (m_WMOLiqiud.getPtr() != nullptr)
+	if (m_WMOLiqiud != nullptr)
 	{
 		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
-		CWMO_Liquid_Instance* liquid = new CWMO_Liquid_Instance(_parent, m_WMOLiqiud, realPos, this);
+		std::shared_ptr<CWMO_Liquid_Instance> liquid = make_shared<CWMO_Liquid_Instance>(_parent.operator->(), m_WMOLiqiud.operator->(), realPos, this);
 		_parent->addLiquidInstance(liquid);
 	}
 
@@ -44,11 +44,11 @@ void WMO_Group::CreateInsances(CWMO_Group_Instance* _parent) const
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
 
-		SharedPtr<M2> mdx = (M2*)GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
-		CWMO_Doodad_Instance* instance = nullptr;
+		SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
+		std::shared_ptr<CWMO_Doodad_Instance> instance = nullptr;
 		if (mdx)
 		{
-			instance = new CWMO_Doodad_Instance(_parent, mdx, this, index, placement);
+			instance = make_shared<CWMO_Doodad_Instance>(_parent.operator->(), mdx, this, index, placement);
 			// add to scene node is automaticly
 		}
 		_parent->addDoodadInstance(instance);
@@ -292,8 +292,8 @@ void WMO_Group::Load()
 				}
 			}
 
-			m_WMOLiqiud = new CWMO_Liquid(m_LiquidHeader.A, m_LiquidHeader.B);
-			m_WMOLiqiud->CreateFromWMO(m_F, m_ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
+			m_WMOLiqiud = make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
+			m_WMOLiqiud->CreateFromWMO(m_F.operator->(), m_ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
 
 		}
 		else
@@ -309,7 +309,6 @@ void WMO_Group::Load()
 		m_CollisionNodes.push_back(collisionNode);
 	}
 
-	delete m_F;
 	m_F = nullptr;
 
 	// Create geom
@@ -378,7 +377,7 @@ void WMO_Group::Render(cmat4 _world) const
 {
 	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
 	{
-		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass;
+		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
 		pass->Bind();
 		{
 			pass->setWorld(_world);

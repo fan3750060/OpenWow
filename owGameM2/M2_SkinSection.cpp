@@ -19,8 +19,8 @@ CM2_SkinSection::CM2_SkinSection(M2* _model, const uint16 _index, const SM2_Skin
 
 void CM2_SkinSection::CreateGeometry(vector<SM2_Vertex>& _vertexes, vector<uint16>& _indexes)
 {
-	R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
-	R_Buffer* __ib = _Render->r.createIndexBuffer(static_cast<uint32>(_indexes.size()) * sizeof(uint16), _indexes.data(), false);
+	SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
+	SharedBufferPtr __ib = _Render->r.createIndexBuffer(static_cast<uint32>(_indexes.size()) * sizeof(uint16), _indexes.data(), false);
 
 	// Begin geometry
 	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PBNT2);
@@ -36,7 +36,7 @@ void CM2_SkinSection::CreateGeometry(vector<SM2_Vertex>& _vertexes, vector<uint1
 
 void CM2_SkinSection::Draw(RenderState* _state, CM2_Base_Instance* _instance)
 {
-	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
+	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 
 	CM2_Comp_Skeleton* skeleton = m_ParentM2->getSkeleton();
 

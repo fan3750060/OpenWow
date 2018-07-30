@@ -3,7 +3,6 @@
  * A texture class for loading and using textures in shaders.
  */
 
-#include "Object.h"
 #include "Shader.h"
 #include "ShaderParameter.h"
 #include "ClearFlags.h"
@@ -136,7 +135,7 @@ public:
 	 * For 1D and 2D textures, this function will always return the texture
 	 * itself.
 	 */
-	virtual std::shared_ptr<Texture> GetSlice(unsigned int slice) const = 0;
+	virtual std::shared_ptr<Texture> GetSlice(uint32 slice) const = 0;
 
 	// Get the width of the textures in texels.
 	virtual uint16_t GetWidth() const = 0;

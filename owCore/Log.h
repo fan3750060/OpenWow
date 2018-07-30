@@ -4,6 +4,7 @@
 class Log;
 // FORWARD END
 
+
 class CLog : public ILog
 {
 	friend class Log;

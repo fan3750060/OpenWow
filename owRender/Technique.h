@@ -6,7 +6,7 @@
 class TechniquesManager;
 // FORWARD END
 
-class Technique : public CRefItem
+class Technique
 {
 	friend TechniquesManager;
 protected:
@@ -41,10 +41,10 @@ protected:
     inline void setMat4(int32 _loc, cmat4 mat) const;
 
 protected:
-	SharedPtr<R_Shader>  m_Shader;
+	std::shared_ptr<R_Shader>  m_Shader;
 	RenderDevice*		m_RenderDevice;
 };
 
-typedef SharedPtr<Technique> SharedTechPtr;
+typedef std::shared_ptr<Technique> SharedTechPtr;
 
 #include "Technique.inl"

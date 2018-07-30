@@ -20,7 +20,7 @@ void WDL::CreateInsances(MapController* _parent)
 	string fileName = m_MapController->getFilenameT() + ".wdl";
 
 	// Low-resolution tiles
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
 	{
 		Log::Info("World[%s]: WDL: Error opening.", fileName.c_str());
@@ -80,7 +80,7 @@ void WDL::CreateInsances(MapController* _parent)
 				}
 
 				// Vertex buffer
-				R_Buffer* __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data(), false);
+				SharedBufferPtr __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data(), false);
 
 				//
 
@@ -89,7 +89,7 @@ void WDL::CreateInsances(MapController* _parent)
 				__geom->finishCreatingGeometry();
 
 
-				m_LowResilutionTiles.push_back(new CWDL_LowResTile(_parent, i, j, __geom));
+				m_LowResilutionTiles.push_back(make_shared<CWDL_LowResTile>(_parent, i, j, __geom));
 			}
 		}
 	}
@@ -101,7 +101,7 @@ void WDL::CreateInsances(MapController* _parent)
 		const string name = m_LowResolutionWMOsNames[it.nameIndex];
 
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
-		m_LowResolutionWMOs.push_back(new ADT_WMO_Instance(_parent, wmo, it));
+		m_LowResolutionWMOs.push_back(make_shared<ADT_WMO_Instance>(_parent, wmo, it));
 	}
 }
 
@@ -109,7 +109,7 @@ void WDL::Load()
 {
 	string fileName = m_MapController->getFilenameT() + ".wdl";
 
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
 	{
 		Log::Info("World[%s]: WDL: Error opening.", fileName.c_str());

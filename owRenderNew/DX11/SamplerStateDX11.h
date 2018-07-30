@@ -45,9 +45,9 @@ protected:
 	D3D11_COMPARISON_FUNC TranslateComparisonFunction(CompareFunc compareFunc) const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_pSamplerState;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11SamplerState> m_pSamplerState;
 
 	MinFilter m_MinFilter;
 	MagFilter m_MagFilter;
@@ -60,7 +60,7 @@ private:
 	float       m_fMinLOD;
 	float       m_fMaxLOD;
 
-	vec4   m_BorderColor;
+	vec4		m_BorderColor;
 
 	bool        m_bIsAnisotropicFilteringEnabled;
 	uint8_t     m_AnisotropicFiltering;

@@ -105,7 +105,7 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 	{ // Trans Halo
 		p.pos = m_ParticleSystem->m_ParentBone->getTransformMatrix() * vec4((m_ParticleSystem->m_Position + vec3(Random::GenerateRange(-l, l), 0, Random::GenerateRange(-w, w))), 0);
 
-		const float t = Random::GenerateRange(0.0f, Math::TwoPi);
+		const float t = Random::GenerateRange(0.0f, glm::two_pi<float>());
 
 		p.pos = vec3(0.0f, m_ParticleSystem->m_Position.y + 0.15f, m_ParticleSystem->m_Position.z) + vec3(cos(t) / 8, 0.0f, sin(t) / 8); // Need to manually correct for the halo - why?
 
@@ -189,7 +189,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	// Spread should never be zero for sphere particles ?
 	float t = 0;
 	if (spr == 0)
-		t = Random::GenerateRange(-Math::Pi, Math::Pi);
+		t = Random::GenerateRange(-glm::pi<float>(), glm::pi<float>());
 	else
 		t = Random::GenerateRange(-spr, spr);
 

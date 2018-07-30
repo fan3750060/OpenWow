@@ -8,8 +8,6 @@ class ShaderParameterDX11;
 class ShaderDX11 : public Shader
 {
 public:
-	typedef Shader base;
-
 	ShaderDX11(ID3D11Device2* pDevice);
 	virtual ~ShaderDX11();
 
@@ -43,19 +41,19 @@ protected:
 
 private:
 	ShaderType	m_ShaderType;
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
 
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_pVertexShader;
-	Microsoft::WRL::ComPtr<ID3D11HullShader> m_pHullShader;
-	Microsoft::WRL::ComPtr<ID3D11DomainShader> m_pDomainShader;
-	Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_pGeometryShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;
-	Microsoft::WRL::ComPtr<ID3D11ComputeShader> m_pComputeShader;
+	ATL::CComPtr<ID3D11VertexShader> m_pVertexShader;
+	ATL::CComPtr<ID3D11HullShader> m_pHullShader;
+	ATL::CComPtr<ID3D11DomainShader> m_pDomainShader;
+	ATL::CComPtr<ID3D11GeometryShader> m_pGeometryShader;
+	ATL::CComPtr<ID3D11PixelShader> m_pPixelShader;
+	ATL::CComPtr<ID3D11ComputeShader> m_pComputeShader;
 
-	Microsoft::WRL::ComPtr<ID3DBlob> m_pShaderBlob;
+	ATL::CComPtr<ID3DBlob> m_pShaderBlob;
 
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_pInputLayout;
+	ATL::CComPtr<ID3D11InputLayout> m_pInputLayout;
 
 	typedef std::map<std::string, std::shared_ptr<ShaderParameterDX11> > ParameterMap;
 	ParameterMap m_ShaderParameters;

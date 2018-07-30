@@ -72,7 +72,7 @@ RenderTarget* RenderPipeline::findRenderTarget(const string &id) const
 
 bool RenderPipeline::getRenderTargetData(cstring target, int bufIndex, int *width, int *height, int *compCount, void *dataBuffer, int bufferSize) const
 {
-	R_RenderBuffer* rbObj = 0;
+	std::shared_ptr<R_RenderBuffer> rbObj = 0;
 	if (target != "")
 	{
 		RenderTarget* rt = findRenderTarget(target);
@@ -130,8 +130,8 @@ void RenderPipeline::releaseRenderTargets()
 		RenderTarget& rt = _renderTargets[i];
 		if (rt.rendBuf)
 		{
-			delete rt.rendBuf;
-			rt.rendBuf = nullptr;
+			//delete rt.rendBuf;
+			//rt.rendBuf = nullptr;
 		}
 	}
 }

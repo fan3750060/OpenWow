@@ -5,7 +5,6 @@
 
 Camera::Camera()
 	: m_Translate(0)
-	, m_PivotDistance(0)
 	, m_bViewDirty(true)
 	, m_bViewProjectionInverseDirty(true)
 {}
@@ -187,18 +186,6 @@ void Camera::SetRotate(const glm::quat& rot)
 	m_bViewDirty = true;
 }
 
-void Camera::SetPivotDistance(float pivotDistance)
-{
-	// Make sure pivot distance is always positive.
-	m_PivotDistance = glm::max(pivotDistance, 0.0f);
-	m_bViewDirty = true;
-}
-
-float Camera::GetPivotDistance() const
-{
-	return m_PivotDistance;
-}
-
 vec3 Camera::GetPivotPoint() const
 {
 	// The camera actually pivots around its "translation" point.
@@ -227,9 +214,8 @@ void Camera::UpdateViewMatrix()
 	{
 		mat4 translateMatrix = glm::translate(m_Translate);
 		mat4 rotationMatrix = glm::toMat4(m_Rotate);
-		mat4 pivotMatrix = glm::translate(vec3(0, 0, m_PivotDistance));
 
-		m_ViewMatrix = glm::inverse(translateMatrix * rotationMatrix * pivotMatrix);
+		m_ViewMatrix = glm::inverse(translateMatrix * rotationMatrix);
 
 		m_bViewProjectionInverseDirty = true;
 		m_bViewDirty = false;
@@ -327,6 +313,7 @@ vec3 Camera::ProjectOntoUnitSphere(glm::ivec2 screenPos)
 	// The y-coordinate has to be inverted so that +1 is the top of the unit sphere
 	// and -1 is the bottom of the unit sphere.
 	y = -(screenPos.y / radius);
+	z = 0.0f;
 
 	float length_sqr = (x * x) + (y * y);
 
@@ -336,9 +323,9 @@ vec3 Camera::ProjectOntoUnitSphere(glm::ivec2 screenPos)
 		float invLength = glm::inversesqrt(length_sqr);
 
 		// Return the normalized point that is closest to the outside of the unit sphere.
-		x *= invLength;
-		y *= invLength;
-		z = 0.0f;
+		//x *= invLength;
+		//y *= invLength;
+		//z = 0.0f;
 	}
 	else
 	{
@@ -350,10 +337,10 @@ vec3 Camera::ProjectOntoUnitSphere(glm::ivec2 screenPos)
 		// sphere points towards the viewer. If we are in the Unit sphere, we
 		// want to project the point to the inside of the sphere and in this case
 		// the z-axis we want to project on points away from the viewer (-z).
-		if (m_PivotDistance <= 0.0f)
-		{
+		//if (m_PivotDistance <= 0.0f)
+		//{
 			z = -z;
-		}
+		//}
 	}
 
 	return vec3(x, y, z);
@@ -361,35 +348,16 @@ vec3 Camera::ProjectOntoUnitSphere(glm::ivec2 screenPos)
 
 void Camera::OnMousePressed(MouseButtonEventArgs& e)
 {
-	m_PreviousPoint = ProjectOntoUnitSphere(glm::ivec2(e.X, e.Y));
+	_p = glm::ivec2(e.X, e.Y);
 }
 
 void Camera::OnMouseMoved(MouseMotionEventArgs& e)
 {
-	vec3 currentPoint = ProjectOntoUnitSphere(glm::ivec2(e.X, e.Y));
+	//vec3 currentPoint = ProjectOntoUnitSphere(glm::ivec2(e.X, e.Y));
 
-	AddRotation(glm::quat(currentPoint, m_PreviousPoint));
+	//AddRotation(glm::quat(currentPoint, m_PreviousPoint));
+	AddYaw((e.X - _p.x) / 15.0f);
+	AddPitch((e.Y - _p.y) / 15.0f);
 
-	//// Compute the axis of rotation.
-	//vec3 axis = glm::cross( currentPoint, m_PreviousPoint );
-
-	//float length_sqr = glm::length2( axis );
-
-	//// If the rotation axis is too short, don't rotate.
-	//if ( length_sqr > 0.0f )
-	//{
-	//    // Normalize the axis of rotation
-	//    //axis *= glm::inversesqrt( length_sqr );
-
-	//    // The dot product between the two vectors gives the angle of rotation.
-	//    float dotProduct = glm::dot( m_PreviousPoint, currentPoint );
-	//    if ( dotProduct <= 1 && dotProduct >= -1 )
-	//    {
-	//        // Add the resulting rotation to our current rotation
-	//        glm::quat deltaRotate = glm::angleAxis( glm::acos( dotProduct ), glm::normalize(axis) );
-	//        AddRotation( deltaRotate );
-	//    }
-	//}
-
-	m_PreviousPoint = currentPoint;
+	_p.xy = glm::vec2(e.X, e.Y);
 }

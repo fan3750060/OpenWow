@@ -13,10 +13,6 @@ namespace Math
 	const float MinFloat = 1.175494351e-38F;
 	const float MaxFloat = 3.402823466e+38F;
 
-	const float Pi = 3.141592654f;
-	const float TwoPi = 6.283185307f;
-	const float PiHalf = 1.570796327f;
-
 	const float Epsilon = 0.000001f;
 	const float Epsilon100 = 0.0001f;
 	const float Epsilon10000 = 0.01f;
@@ -32,16 +28,6 @@ namespace Math
 // -------------------------------------------------------------------------------------------------
 // General
 // -------------------------------------------------------------------------------------------------
-
-static inline float degToRad(float f)
-{
-	return f * 0.017453293f;
-}
-
-static inline float radToDeg(float f)
-{
-	return f * 57.29577951f;
-}
 
 static inline float clamp(float f, float min, float max)
 {

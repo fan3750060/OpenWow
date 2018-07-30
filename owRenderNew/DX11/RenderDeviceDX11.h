@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RenderDevice.h>
+#include "..\\RenderDevice.h"
 
 class Application;
 class Material;
@@ -10,17 +10,18 @@ class RenderDeviceDX11 : public RenderDevice
 public:
 	typedef RenderDevice base;
 
-	RenderDeviceDX11(Application& app);
+	RenderDeviceDX11();
 	virtual ~RenderDeviceDX11();
 
 	virtual cstring GetDeviceName() const;
 
 	// Inherited from RenderDevice
-	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, unsigned int count, unsigned int stride);
-	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, unsigned int count, unsigned int stride);
-	virtual std::shared_ptr<Buffer> CreateUIntIndexBuffer(const unsigned int* data, unsigned int count);
+	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 stride);
+	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 stride);
+	virtual std::shared_ptr<Buffer> CreateUInt16IndexBuffer(const uint16* data, uint32 count);
+	virtual std::shared_ptr<Buffer> CreateUInt32IndexBuffer(const uint32* data, uint32 count);
 	virtual std::shared_ptr<ConstantBuffer> CreateConstantBuffer(const void* data, size_t size);
-	virtual std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(void* data, unsigned int count, unsigned int stride, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false);
+	virtual std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false);
 
 	virtual void DestroyBuffer(std::shared_ptr<Buffer> buffer);
 	virtual void DestroyVertexBuffer(std::shared_ptr<Buffer> buffer);
@@ -31,17 +32,15 @@ public:
 	virtual std::shared_ptr<Shader> CreateShader();
 	virtual void DestroyShader(std::shared_ptr<Shader> shader);
 
-	virtual std::shared_ptr<Scene> CreateScene();
-	virtual std::shared_ptr<Scene> CreatePlane(float size, cvec3 N = vec3(0, 1, 0));
-	virtual std::shared_ptr<Scene> CreateScreenQuad(float left = -1.0f, float right = 1.0f, float bottom = -1.0f, float top = 1.0f, float z = 0.0f);
-	virtual std::shared_ptr<Scene> CreateSphere(float radius, float tesselation = 4);
-	virtual std::shared_ptr<Scene> CreateCube(float size);
-	virtual std::shared_ptr<Scene> CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis = vec3(0, 1, 0));
-	virtual std::shared_ptr<Scene> CreateCone(float baseRadius, float height);
-	virtual std::shared_ptr<Scene> CreateArrow(cvec3 tail = vec3(0, 0, 0), cvec3 head = vec3(0, 0, 1), float radius = 0.05f);
-	virtual std::shared_ptr<Scene> CreateAxis(float radius = 0.05f, float length = 0.5f);
-	virtual void DestroyScene(std::shared_ptr<Scene> scene);
-
+	virtual std::shared_ptr<Mesh> CreatePlane(float size, cvec3 N = vec3(0, 1, 0));
+	virtual std::shared_ptr<Mesh> CreateScreenQuad(float left = -1.0f, float right = 1.0f, float bottom = -1.0f, float top = 1.0f, float z = 0.0f);
+	virtual std::shared_ptr<Mesh> CreateSphere(float radius, float tesselation = 4);
+	virtual std::shared_ptr<Mesh> CreateCube(float size);
+	virtual std::shared_ptr<Mesh> CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis = vec3(0, 1, 0));
+	virtual std::shared_ptr<Mesh> CreateCone(float baseRadius, float height);
+	virtual std::shared_ptr<Mesh> CreateArrow(cvec3 tail = vec3(0, 0, 0), cvec3 head = vec3(0, 0, 1), float radius = 0.05f);
+	virtual std::shared_ptr<Mesh> CreateAxis(float radius = 0.05f, float length = 0.5f);
+	
 	virtual std::shared_ptr<Mesh> CreateMesh();
 	virtual void DestroyMesh(std::shared_ptr<Mesh> mesh);
 
@@ -60,7 +59,6 @@ public:
 	virtual std::shared_ptr<Query> CreateQuery(Query::QueryType queryType = Query::QueryType::Timer, uint8_t numBuffers = 3);
 	virtual void DestoryQuery(std::shared_ptr<Query> query);
 
-	// Create a render target
 	virtual std::shared_ptr<RenderTarget> CreateRenderTarget();
 	virtual void DestroyRenderTarget(std::shared_ptr<RenderTarget> renderTarget);
 
@@ -72,22 +70,19 @@ public:
 
 	virtual std::shared_ptr<PipelineState> CreatePipelineState();
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline);
+	virtual std::shared_ptr<PipelineState> GetDefaultPipeline() const;
 
 	// Specific to RenderDeviceDX11
-	Microsoft::WRL::ComPtr<ID3D11Device2> GetDevice() const;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> GetDeviceContext() const;
+	ATL::CComPtr<ID3D11Device2> GetDevice() const;
+	ATL::CComPtr<ID3D11DeviceContext2> GetDeviceContext() const;
 
 protected:
-	virtual void CreateDevice(HINSTANCE hInstance);
-
-	// Called when the application is initialized.
-	virtual void OnInitialize(EventArgs& e);
-	virtual void OnLoadingProgress(ProgressEventArgs& e);
+	virtual void CreateDevice();
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11Debug> m_pDebugLayer;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11Debug> m_pDebugLayer;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
 
 	// The name of the graphics device used for rendering.
 	std::string m_DeviceName;

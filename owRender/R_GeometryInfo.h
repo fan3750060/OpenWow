@@ -31,16 +31,17 @@ struct R_VertexBufferSlot
 class RenderDevice;
 // FORWARD END
 
-class R_GeometryInfo : public CRefItem
+class R_GeometryInfo
 {
 public:
 	R_GeometryInfo(RenderDevice* _RenderDevice);
+	R_GeometryInfo(const R_GeometryInfo& _other);
 	virtual ~R_GeometryInfo();
 
 	//
 
-	void setGeomVertexParams(R_Buffer* _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm = false);
-	void setGeomIndexParams(R_Buffer* _indBuf, R_IndexFormat _format);
+	void setGeomVertexParams(SharedBufferPtr _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm = false);
+	void setGeomIndexParams(SharedBufferPtr _indBuf, R_IndexFormat _format);
 	void finishCreatingGeometry();
 
 public:
@@ -56,4 +57,4 @@ protected:
 	RenderDevice*				m_RenderDevice;
 };
 
-typedef SharedPtr<R_GeometryInfo> SharedGeomPtr;
+typedef shared_ptr<R_GeometryInfo> SharedGeomPtr;

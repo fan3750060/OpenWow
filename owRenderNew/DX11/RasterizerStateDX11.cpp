@@ -314,7 +314,7 @@ bool RasterizerStateDX11::TranslateFrontFace(FrontFace frontFace) const
 std::vector<D3D11_RECT> RasterizerStateDX11::TranslateRects(const std::vector<Rect>& rects) const
 {
 	std::vector<D3D11_RECT> result(rects.size());
-	for (unsigned int i = 0; i < rects.size(); i++)
+	for (uint32 i = 0; i < rects.size(); i++)
 	{
 		D3D11_RECT& d3dRect = result[i];
 		const Rect& rect = rects[i];
@@ -331,7 +331,7 @@ std::vector<D3D11_RECT> RasterizerStateDX11::TranslateRects(const std::vector<Re
 std::vector<D3D11_VIEWPORT> RasterizerStateDX11::TranslateViewports(const std::vector<Viewport>& viewports) const
 {
 	std::vector<D3D11_VIEWPORT> result(viewports.size());
-	for (unsigned int i = 0; i < viewports.size(); i++)
+	for (uint32 i = 0; i < viewports.size(); i++)
 	{
 		D3D11_VIEWPORT& d3dViewport = result[i];
 		const Viewport& viewport = viewports[i];
@@ -389,5 +389,5 @@ void RasterizerStateDX11::Bind()
 
 	m_pDeviceContext->RSSetViewports((UINT)m_d3dViewports.size(), m_d3dViewports.data());
 	m_pDeviceContext->RSSetScissorRects((UINT)m_d3dRects.size(), m_d3dRects.data());
-	m_pDeviceContext->RSSetState(m_pRasterizerState.Get());
+	m_pDeviceContext->RSSetState(m_pRasterizerState);
 }

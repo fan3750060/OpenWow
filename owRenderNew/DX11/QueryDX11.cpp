@@ -70,12 +70,12 @@ void QueryDX11::Begin(int64_t frame)
 	{
 		if (m_QueryType == QueryType::Timer)
 		{
-			m_pDeviceContext->Begin(m_DisjointQueries[buffer].Get());
-			m_pDeviceContext->End(m_Queries[0][buffer].Get());
+			m_pDeviceContext->Begin(m_DisjointQueries[buffer]);
+			m_pDeviceContext->End(m_Queries[0][buffer]);
 		}
 		else
 		{
-			m_pDeviceContext->Begin(m_Queries[0][buffer].Get());
+			m_pDeviceContext->Begin(m_Queries[0][buffer]);
 		}
 	}
 }
@@ -87,12 +87,12 @@ void QueryDX11::End(int64_t frame)
 	{
 		if (m_QueryType == QueryType::Timer)
 		{
-			m_pDeviceContext->End(m_Queries[1][buffer].Get());
-			m_pDeviceContext->End(m_DisjointQueries[buffer].Get());
+			m_pDeviceContext->End(m_Queries[1][buffer]);
+			m_pDeviceContext->End(m_DisjointQueries[buffer]);
 		}
 		else
 		{
-			m_pDeviceContext->End(m_Queries[0][buffer].Get());
+			m_pDeviceContext->End(m_Queries[0][buffer]);
 		}
 	}
 
@@ -107,11 +107,11 @@ bool QueryDX11::QueryResultAvailable(int64_t frame)
 	{
 		if (m_QueryType == QueryType::Timer)
 		{
-			result = (m_pDeviceContext->GetData(m_DisjointQueries[buffer].Get(), nullptr, 0, 0) == S_OK);
+			result = (m_pDeviceContext->GetData(m_DisjointQueries[buffer], nullptr, 0, 0) == S_OK);
 		}
 		else
 		{
-			result = (m_pDeviceContext->GetData(m_Queries[0][buffer].Get(), nullptr, 0, 0) == S_OK);
+			result = (m_pDeviceContext->GetData(m_Queries[0][buffer], nullptr, 0, 0) == S_OK);
 		}
 	}
 
@@ -127,17 +127,17 @@ Query::QueryResult QueryDX11::GetQueryResult(int64_t frame)
 	{
 		if (m_QueryType == QueryType::Timer)
 		{
-			while (m_pDeviceContext->GetData(m_DisjointQueries[buffer].Get(), nullptr, 0, 0) == S_FALSE)
+			while (m_pDeviceContext->GetData(m_DisjointQueries[buffer], nullptr, 0, 0) == S_FALSE)
 			{
 				Sleep(1L);
 			}
 			D3D11_QUERY_DATA_TIMESTAMP_DISJOINT timeStampDisjoint;
-			m_pDeviceContext->GetData(m_DisjointQueries[buffer].Get(), &timeStampDisjoint, sizeof(D3D11_QUERY_DATA_TIMESTAMP_DISJOINT), 0);
+			m_pDeviceContext->GetData(m_DisjointQueries[buffer], &timeStampDisjoint, sizeof(D3D11_QUERY_DATA_TIMESTAMP_DISJOINT), 0);
 			if (timeStampDisjoint.Disjoint == FALSE)
 			{
 				UINT64 beginTime, endTime;
-				if (m_pDeviceContext->GetData(m_Queries[0][buffer].Get(), &beginTime, sizeof(UINT64), 0) == S_OK &&
-					m_pDeviceContext->GetData(m_Queries[1][buffer].Get(), &endTime, sizeof(UINT64), 0) == S_OK)
+				if (m_pDeviceContext->GetData(m_Queries[0][buffer], &beginTime, sizeof(UINT64), 0) == S_OK &&
+					m_pDeviceContext->GetData(m_Queries[1][buffer], &endTime, sizeof(UINT64), 0) == S_OK)
 				{
 					result.ElapsedTime = (endTime - beginTime) / double(timeStampDisjoint.Frequency);
 					result.IsValid = true;
@@ -147,7 +147,7 @@ Query::QueryResult QueryDX11::GetQueryResult(int64_t frame)
 		else
 		{
 			// Wait for the results to become available.
-			while (m_pDeviceContext->GetData(m_Queries[0][buffer].Get(), nullptr, 0, 0))
+			while (m_pDeviceContext->GetData(m_Queries[0][buffer], nullptr, 0, 0))
 			{
 				Sleep(1L);
 			}
@@ -157,7 +157,7 @@ Query::QueryResult QueryDX11::GetQueryResult(int64_t frame)
 			case QueryType::CountSamples:
 			{
 				UINT64 numSamples = 0;
-				if (m_pDeviceContext->GetData(m_Queries[0][buffer].Get(), &numSamples, sizeof(UINT64), 0) == S_OK)
+				if (m_pDeviceContext->GetData(m_Queries[0][buffer], &numSamples, sizeof(UINT64), 0) == S_OK)
 				{
 					result.NumSamples = numSamples;
 					result.IsValid = true;
@@ -167,7 +167,7 @@ Query::QueryResult QueryDX11::GetQueryResult(int64_t frame)
 			case Query::QueryType::CountSamplesPredicate:
 			{
 				BOOL anySamples = FALSE;
-				if (m_pDeviceContext->GetData(m_Queries[0][buffer].Get(), &anySamples, sizeof(UINT64), 0) == S_OK)
+				if (m_pDeviceContext->GetData(m_Queries[0][buffer], &anySamples, sizeof(UINT64), 0) == S_OK)
 				{
 					result.AnySamples = anySamples == TRUE;
 					result.IsValid = true;
@@ -178,7 +178,7 @@ Query::QueryResult QueryDX11::GetQueryResult(int64_t frame)
 			case Query::QueryType::CountTransformFeedbackPrimitives:
 			{
 				D3D11_QUERY_DATA_SO_STATISTICS streamOutStats = {};
-				if (m_pDeviceContext->GetData(m_Queries[0][buffer].Get(), &streamOutStats, sizeof(D3D11_QUERY_DATA_SO_STATISTICS), 0) == S_OK)
+				if (m_pDeviceContext->GetData(m_Queries[0][buffer], &streamOutStats, sizeof(D3D11_QUERY_DATA_SO_STATISTICS), 0) == S_OK)
 				{
 					result.PrimitivesGenerated = result.TransformFeedbackPrimitives = streamOutStats.NumPrimitivesWritten;
 					result.IsValid = true;

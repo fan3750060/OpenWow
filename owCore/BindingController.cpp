@@ -19,7 +19,7 @@ CBindingController::~CBindingController()
 	delete m_Renderable3DObjectCollection;
 	delete m_RenderableUIObjectCollection;
 	delete m_UpdatableObjectCollection;
-	OutputDebugString(L"CBindingController destroyed.\n");
+	OutputDebugString("CBindingController destroyed.\n");
 }
 
 void CBindingController::RegisterInputListener(IInputListener* _object, uint8 _priority)

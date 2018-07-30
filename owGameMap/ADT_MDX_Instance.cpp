@@ -3,7 +3,7 @@
 // General
 #include "ADT_MDX_Instance.h"
 
-ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDXDef& _placementInfo) :
+ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, const ADT_MDXDef& _placementInfo) :
 	CM2_Base_Instance(_parent, _mdxObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;
@@ -15,7 +15,7 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT
 		// Rotate
 		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
-		rotate.y = rotate.y - Math::PiHalf;
+		rotate.y = rotate.y - glm::half_pi<float>();
 		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);
 		// Scale
 		setScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f), false);

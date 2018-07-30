@@ -1,10 +1,10 @@
 #pragma once
 
-class Timer
+class OLDTimer
 {
 public:
 
-	Timer() : _elapsedTime(0), _startTime(0), _enabled(false)
+	OLDTimer() : _elapsedTime(0), _startTime(0), _enabled(false)
 	{
 		// Find first available CPU
 		DWORD_PTR procMask, sysMask;

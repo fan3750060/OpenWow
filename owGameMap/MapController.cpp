@@ -282,7 +282,7 @@ uint32 MapController::GetAreaID()
 		return UINT32_MAX;
 	}
 
-    ADT_MCNK* curChunk = curTile->getChunk(chunkX, chunkZ);
+	std::shared_ptr<ADT_MCNK> curChunk = curTile->getChunk(chunkX, chunkZ);
 	if (curChunk == nullptr)
 	{
 		return UINT32_MAX;

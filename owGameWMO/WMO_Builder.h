@@ -17,5 +17,5 @@ public:
 
 private:
 	WMO*			m_WMO;
-	IFile*			m_F;
+	std::shared_ptr<IFile>			m_F;
 };

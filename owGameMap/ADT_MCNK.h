@@ -32,14 +32,14 @@ public:
 	static void BindUniforms(Technique* _techique);
 
 public:
-	SharedPtr<IFile> m_File;
+	IFile* m_File;
 	ADT_MCNK_Header header;
 
 	ADT_MCNK_MCLY mcly[4];
 	SharedTexturePtr m_DiffuseTextures[4];
 	SharedTexturePtr m_SpecularTextures[4];
 
-	SharedPtr<Liquid_Instance> m_LiquidInstance;
+	std::shared_ptr<Liquid_Instance> m_LiquidInstance;
 
 	SharedTexturePtr m_BlendRBGShadowATexture;
 

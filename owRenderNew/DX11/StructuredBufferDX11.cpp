@@ -75,7 +75,7 @@ StructuredBufferDX11::StructuredBufferDX11(ID3D11Device2* pDevice, UINT bindFlag
 		srvDesc.Buffer.FirstElement = 0;
 		srvDesc.Buffer.NumElements = m_uiCount;
 
-		if (FAILED(m_pDevice->CreateShaderResourceView(m_pBuffer.Get(), &srvDesc, &m_pSRV)))
+		if (FAILED(m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV)))
 		{
 			Log::Error("Failed to create shader resource view.");
 			return;
@@ -91,7 +91,7 @@ StructuredBufferDX11::StructuredBufferDX11(ID3D11Device2* pDevice, UINT bindFlag
 		uavDesc.Buffer.NumElements = m_uiCount;
 		uavDesc.Buffer.Flags = 0;
 
-		if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pBuffer.Get(), &uavDesc, &m_pUAV)))
+		if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV)))
 		{
 			Log::Error("Failed to create unordered access view.");
 			return;
@@ -104,7 +104,7 @@ StructuredBufferDX11::StructuredBufferDX11(ID3D11Device2* pDevice, UINT bindFlag
 StructuredBufferDX11::~StructuredBufferDX11()
 {}
 
-bool StructuredBufferDX11::Bind(unsigned int ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+bool StructuredBufferDX11::Bind(uint32 ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	assert(m_pDeviceContext);
 
@@ -116,7 +116,7 @@ bool StructuredBufferDX11::Bind(unsigned int ID, Shader::ShaderType shaderType, 
 
 	if (parameterType == ShaderParameter::Type::Buffer && m_pSRV)
 	{
-		ID3D11ShaderResourceView* srv[] = { m_pSRV.Get() };
+		ID3D11ShaderResourceView* srv[] = { m_pSRV };
 
 		switch (shaderType)
 		{
@@ -142,7 +142,7 @@ bool StructuredBufferDX11::Bind(unsigned int ID, Shader::ShaderType shaderType, 
 	}
 	else if (parameterType == ShaderParameter::Type::RWBuffer && m_pUAV)
 	{
-		ID3D11UnorderedAccessView* uav[] = { m_pUAV.Get() };
+		ID3D11UnorderedAccessView* uav[] = { m_pUAV };
 		switch (shaderType)
 		{
 		case Shader::ComputeShader:
@@ -154,7 +154,7 @@ bool StructuredBufferDX11::Bind(unsigned int ID, Shader::ShaderType shaderType, 
 	return true;
 }
 
-void StructuredBufferDX11::UnBind(unsigned int ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void StructuredBufferDX11::UnBind(uint32 ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	ID3D11UnorderedAccessView* uav[] = { nullptr };
 	ID3D11ShaderResourceView* srv[] = { nullptr };
@@ -211,7 +211,7 @@ void StructuredBufferDX11::Commit()
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		// Copy the contents of the data buffer to the GPU.
 
-		if (FAILED(m_pDeviceContext->Map(m_pBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+		if (FAILED(m_pDeviceContext->Map(m_pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 		{
 			Log::Error("Failed to map subresource.");
 		}
@@ -219,7 +219,7 @@ void StructuredBufferDX11::Commit()
 		size_t sizeInBytes = m_Data.size();
 		memcpy_s(mappedResource.pData, sizeInBytes, m_Data.data(), sizeInBytes);
 
-		m_pDeviceContext->Unmap(m_pBuffer.Get(), 0);
+		m_pDeviceContext->Unmap(m_pBuffer, 0);
 
 		m_bIsDirty = false;
 	}
@@ -238,7 +238,7 @@ void StructuredBufferDX11::Copy(std::shared_ptr<StructuredBuffer> other)
 	if (srcBuffer && srcBuffer.get() != this &&
 		m_uiCount * m_uiStride == srcBuffer->m_uiCount * srcBuffer->m_uiStride)
 	{
-		m_pDeviceContext->CopyResource(m_pBuffer.Get(), srcBuffer->m_pBuffer.Get());
+		m_pDeviceContext->CopyResource(m_pBuffer, srcBuffer->m_pBuffer);
 	}
 	else
 	{
@@ -250,14 +250,14 @@ void StructuredBufferDX11::Copy(std::shared_ptr<StructuredBuffer> other)
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 		// Copy the texture data from the buffer resource
-		if (FAILED(m_pDeviceContext->Map(m_pBuffer.Get(), 0, D3D11_MAP_READ, 0, &mappedResource)))
+		if (FAILED(m_pDeviceContext->Map(m_pBuffer, 0, D3D11_MAP_READ, 0, &mappedResource)))
 		{
 			Log::Error("Failed to map texture resource for reading.");
 		}
 
 		memcpy_s(m_Data.data(), m_Data.size(), mappedResource.pData, m_Data.size());
 
-		m_pDeviceContext->Unmap(m_pBuffer.Get(), 0);
+		m_pDeviceContext->Unmap(m_pBuffer, 0);
 	}
 }
 
@@ -271,7 +271,7 @@ void StructuredBufferDX11::Clear()
 	if (m_pUAV)
 	{
 		FLOAT clearColor[4] = { 0, 0, 0, 0 };
-		m_pDeviceContext->ClearUnorderedAccessViewFloat(m_pUAV.Get(), clearColor);
+		m_pDeviceContext->ClearUnorderedAccessViewFloat(m_pUAV, clearColor);
 	}
 }
 
@@ -280,12 +280,12 @@ Buffer::BufferType StructuredBufferDX11::GetType() const
 	return Buffer::StructuredBuffer;
 }
 
-unsigned int StructuredBufferDX11::GetElementCount() const
+uint32 StructuredBufferDX11::GetElementCount() const
 {
 	return m_uiCount;
 }
 
 ID3D11UnorderedAccessView* StructuredBufferDX11::GetUnorderedAccessView() const
 {
-	return m_pUAV.Get();
+	return m_pUAV;
 }

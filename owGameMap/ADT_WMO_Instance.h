@@ -20,7 +20,7 @@ struct ADT_MODF
 class ADT_WMO_Instance : public CWMO_Base_Instance
 {
 public:
-	ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo);
+	ADT_WMO_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo);
 	virtual ~ADT_WMO_Instance();
 
 	// ISceneNode

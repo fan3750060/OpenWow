@@ -15,7 +15,7 @@
 class CWMO_Base_Instance;
 // FORWARD END
 
-class WMO : public CRefItem
+class WMO
 {
 	friend CWMO_Part_Portal;
 public:
@@ -36,7 +36,7 @@ public:
 
 	bool useAmbColor() const { return !(m_Header.flags.skip_base_color); }
 
-	M2* getSkybox() { return m_Skybox; }
+	SmartM2Ptr getSkybox() { return m_Skybox; }
 #pragma endregion
 
 public:
@@ -87,11 +87,4 @@ public:
 	// MCVP chunk (optional)	
 };
 
-struct WMODeleter
-{
-	void operator()(WMO* p)
-	{
-		GetManager<IWMOManager>()->Delete(p);
-	}
-};
-typedef SharedPtr<WMO, WMODeleter> SmartWMOPtr;
+typedef std::shared_ptr<WMO> SmartWMOPtr;

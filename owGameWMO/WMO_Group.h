@@ -15,13 +15,13 @@ class CWMO_Group_Instance;
 class CWMO_Doodad_Instance;
 // FORWARD END
 
-class WMO_Group : public CRefItem
+class WMO_Group
 {
 public:
-	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, string _groupName, IFile* _groupFile);
+	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, string _groupName, std::shared_ptr<IFile> _groupFile);
 	virtual ~WMO_Group();
 
-	void CreateInsances(CWMO_Group_Instance* _parent) const;
+	void CreateInsances(std::shared_ptr<CWMO_Group_Instance> _parent) const;
 
 	uint32 to_wmo_liquid(int x);
 
@@ -35,7 +35,7 @@ public:
 	const string							m_GroupName;
 	const string							m_GroupDescription;
 	const uint32							m_GroupIndex;
-	IFile*									m_F;
+	std::shared_ptr<IFile>					m_F;
 	SWMO_Group_HeaderDef					m_Header;
 	BoundingBox								m_Bounds;
 
@@ -71,7 +71,7 @@ public:
 
 	//-- Liquid --//
 	SWMO_Group_MLIQDef						m_LiquidHeader;
-	SharedPtr<CWMO_Liquid>					m_WMOLiqiud;
+	std::shared_ptr<CWMO_Liquid>					m_WMOLiqiud;
 
 	//--
 	const WMO*								m_ParentWMO;

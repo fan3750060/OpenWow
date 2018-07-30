@@ -7,25 +7,23 @@ template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data);
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data);
-//template<>
-//const Buffer* RenderDevice::CreateVertexBuffer< std::vector< aiVector3D > >( const std::vector< aiVector3D >& data );
 
 // Template specializations for index buffers.
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer< std::vector<unsigned int> >(const std::vector<unsigned int>& data);
+std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer< std::vector<uint32> >(const std::vector<uint32>& data);
 
 // Non-specialized template methods.
 template< typename T >
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer(const T& data)
 {
-	BOOST_STATIC_ASSERT_MSG(false, "This function must be specialized.");
+	static_assert(false, "This function must be specialized.");
 	return NULL;
 }
 
 template<typename T>
 std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer(const T& data)
 {
-	BOOST_STATIC_ASSERT_MSG(false, "This function must be specialized.");
+	static_assert(false, "This function must be specialized.");
 	return NULL;
 }
 
@@ -40,5 +38,5 @@ std::shared_ptr<StructuredBuffer> RenderDevice::CreateStructuredBuffer(const std
 {
 	size_t stride = sizeof(T);
 	size_t numElements = data.size();
-	return CreateStructuredBuffer((void*)data.data(), (unsigned int)numElements, (unsigned int)stride, cpuAccess, gpuWrite);
+	return CreateStructuredBuffer((void*)data.data(), (uint32)numElements, (uint32)stride, cpuAccess, gpuWrite);
 }

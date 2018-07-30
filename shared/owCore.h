@@ -10,9 +10,6 @@
 #include "../owCore/SHA1.h"
 
 // Ref manager Sync
-#include "../owCore/RefItem.h"
-#include "../owCore/SmartPtr.h"
-#include "../owCore/UniquePtr.h"
 #include "../owCore/RefManager1Dim.h"
 #include "../owCore/RefManager1DimAssync.h"
 
@@ -36,3 +33,4 @@
 #include "../owCore/BaseManager.h"
 #include "../owCore/BindingController.h"
 #include "../owCore/Settings.h"
+#include "../owCore/Object.h"

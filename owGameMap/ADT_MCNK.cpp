@@ -58,9 +58,9 @@ bool ADT_MCNK::Load()
 		setBounds(bbox);
 	}
 
-	R_Buffer* verticesBuffer = nullptr;
-	R_Buffer* normalsBuffer = nullptr;
-	R_Buffer* mccvBuffer = nullptr;
+	SharedBufferPtr verticesBuffer = nullptr;
+	SharedBufferPtr normalsBuffer = nullptr;
+	SharedBufferPtr mccvBuffer = nullptr;
 
 	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
@@ -264,10 +264,10 @@ bool ADT_MCNK::Load()
 			CRange height;
 			m_File->readBytes(&height, 8);
 
-			CADT_Liquid* m_Liquid = new CADT_Liquid(8, 8);
+			std::shared_ptr<CADT_Liquid> m_Liquid = make_shared<CADT_Liquid>(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = new Liquid_Instance(this, m_Liquid, vec3(getTranslate().x, 0.0f, getTranslate().z));
+			m_LiquidInstance = make_shared<Liquid_Instance>(this, m_Liquid.operator->(), vec3(getTranslate().x, 0.0f, getTranslate().z));
 		}
 	}
 
@@ -401,7 +401,7 @@ void ADT_MCNK::Render3D()
 
 	PERF_START(PERF_MAP);
 	{
-		CMCNK_Pass* pass = _Render->getTechniquesMgr()->MCNK_Pass;
+		CMCNK_Pass* pass = _Render->getTechniquesMgr()->MCNK_Pass.operator->();
 
 		pass->Bind();
 		{
@@ -475,7 +475,7 @@ void ADT_MCNK::RenderNormals()
 		return;
 	}*/
 
-	CDebug_Normals* pass = _Render->getTechniquesMgr()->DebugNormal_Pass;
+	CDebug_Normals* pass = _Render->getTechniquesMgr()->DebugNormal_Pass.operator->();
 
 	pass->Bind();
 	{

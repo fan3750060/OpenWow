@@ -21,8 +21,8 @@ void WDT::CreateInsances(SceneNode* _parent)
 	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
 	if (!m_GlobalWMOName.empty())
 	{
-		WMO* wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
-		m_GlobalWMO = new ADT_WMO_Instance(_parent, wmo, m_GlobalWMOPlacementInfo);
+		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
+		m_GlobalWMO = make_shared<ADT_WMO_Instance>(_parent, wmo, m_GlobalWMOPlacementInfo);
 	}
 }
 
@@ -30,7 +30,7 @@ void WDT::Load()
 {
 	string fileName = m_MapController->getFilenameT() + ".wdt";
 
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
 	{
 		Log::Info("Map[%s]: WDT: Error opening.", fileName.c_str());

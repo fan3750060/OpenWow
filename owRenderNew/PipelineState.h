@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Object.h"
-
 #include "Shader.h"
 #include "BlendState.h"
 #include "RasterizerState.h"

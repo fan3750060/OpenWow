@@ -5,12 +5,12 @@
 class CM2_Base_Instance : public SceneNode
 {
 public:
-	CM2_Base_Instance(SceneNode* _parent, M2* _m2Object = nullptr);
+	CM2_Base_Instance(SceneNode* _parent, SmartM2Ptr _m2Object = nullptr);
 	virtual ~CM2_Base_Instance();
 
 	// CM2_Base_Instance
-	void setM2(M2* _model);
-	M2* getM2() const { return m_M2; }
+	void setM2(SmartM2Ptr _model);
+	SmartM2Ptr getM2() const { return m_M2; }
 
 	void Attach(const CM2_Part_Attachment* _attachment);
 	void Detach();
@@ -24,11 +24,11 @@ public:
 	// Mesh & textures provider
 	virtual bool isMeshEnabled(uint32 _index) const;
 	void setSpecialTexture(SM2_Texture::Type _type, cstring _textureName);
-	void setSpecialTexture(SM2_Texture::Type _type, R_Texture* _texture);
-	R_Texture* getSpecialTexture(SM2_Texture::Type _type) const;
+	void setSpecialTexture(SM2_Texture::Type _type, SharedTexturePtr _texture);
+	SharedTexturePtr getSpecialTexture(SM2_Texture::Type _type) const;
 
 	// Animations
-	CM2_Animator* getAnimator() { return m_Animator; }
+	std::shared_ptr<CM2_Animator> getAnimator() { return m_Animator; }
 	double m_Time;  // TODO: Delete me!!!
 	double m_DTime; // TODO: Delete me!!!
 
@@ -49,10 +49,10 @@ private:
 	float				m_Alpha;
 
 	// Mesh & Replaces textures
-	R_Texture* m_SpecialTextures[SM2_Texture::Type::COUNT];
+	SharedTexturePtr m_SpecialTextures[SM2_Texture::Type::COUNT];
 
 	// Animtion
-	SharedPtr<CM2_Animator>		m_Animator;
+	std::shared_ptr<CM2_Animator>		m_Animator;
 	bool				m_NeedRecalcAnimation;
 
 private: // PARENT

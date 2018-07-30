@@ -41,40 +41,40 @@ public:
 	void PreRender3D(Camera* _camera, R_RenderBuffer* _rb);
 
 	// Debug
-	SharedPtr<CDebug_GeometryPass> Debug_Pass;
-	SharedPtr<CDebug_Normals> DebugNormal_Pass;
+	std::shared_ptr<CDebug_GeometryPass> Debug_Pass;
+	std::shared_ptr<CDebug_Normals> DebugNormal_Pass;
 
 	// Map
-	SharedPtr<CMCNK_Pass> MCNK_Pass;
+	std::shared_ptr<CMCNK_Pass> MCNK_Pass;
 	//CMCNK_Divided_Pass> MCNK_Divided_Pass[4];
-	SharedPtr<CWDL_LowRes_Pass> WDL_LowRes_Pass;
+	std::shared_ptr<CWDL_LowRes_Pass> WDL_LowRes_Pass;
 
 	// M2
-	SharedPtr<CM2_Pass> M2_Pass;
-	SharedPtr<CM2_RibbonEmitters_Pass> M2_RibbonEmitters_Pass;
-	SharedPtr<CM2_Particle_Pass> M2_Particles_Pass;
+	std::shared_ptr<CM2_Pass> M2_Pass;
+	std::shared_ptr<CM2_RibbonEmitters_Pass> M2_RibbonEmitters_Pass;
+	std::shared_ptr<CM2_Particle_Pass> M2_Particles_Pass;
 
 	// Liquids
-	SharedPtr<CMagma_Pass> m_Magma;
-	SharedPtr<CWater_Pass> m_Water;
+	std::shared_ptr<CMagma_Pass> m_Magma;
+	std::shared_ptr<CWater_Pass> m_Water;
 
 	// Others
-	SharedPtr<CSky_GeometryPass> Sky_Pass;
-	SharedPtr<CWMO_GeomertyPass> WMO_Pass;
+	std::shared_ptr<CSky_GeometryPass> Sky_Pass;
+	std::shared_ptr<CWMO_GeomertyPass> WMO_Pass;
 
 	// Postprocess
-	SharedPtr<CPOST_Fog> Postprocess_Fog;
-	SharedPtr<CPOST_DirectionalLight> Postprocess_Light_Direction;
-	SharedPtr<CPOST_Simple> Postprocess_Simple;
+	std::shared_ptr<CPOST_Fog> Postprocess_Fog;
+	std::shared_ptr<CPOST_DirectionalLight> Postprocess_Light_Direction;
+	std::shared_ptr<CPOST_Simple> Postprocess_Simple;
 
 	// UI
-	SharedPtr<CUI_Color> UI_Color;
-	SharedPtr<CUI_Font> UI_Font;
-	SharedPtr<CUI_Texture> UI_Texture;
+	std::shared_ptr<CUI_Color> UI_Color;
+	std::shared_ptr<CUI_Font> UI_Font;
+	std::shared_ptr<CUI_Texture> UI_Texture;
 
 private:
-	vector<GeometryBase*>		m_GeomTechniques;
-	vector<PostprocessBase*>	m_PostTechniques;
+	vector<std::shared_ptr<GeometryBase>>		m_GeomTechniques;
+	vector<std::shared_ptr<PostprocessBase>>	m_PostTechniques;
 
 	RenderDevice*				m_RenderDevice;
 	const CGroupVideo&			m_VideoSettings;

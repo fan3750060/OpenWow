@@ -15,14 +15,14 @@ FontsManager::FontsManager(RenderDevice* _RenderDevice)
 	AddManager<IFontsManager>(this);
 }
 
-Font* FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
+SharedFontPtr FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 {
 	return CRefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
 }
 
 //
 
-Font* FontsManager::CreateAction(cstring _nameAndSize)
+SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 {
 	uint32_t _delimIndex = static_cast<uint32>(_nameAndSize.find_last_of("__"));
 	if (_delimIndex == -1)
@@ -34,7 +34,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	string fontFileName = _nameAndSize.substr(0, _delimIndex - 1);
 	uint32 fontSize = Utils::ToType<uint32>(_nameAndSize.substr(_delimIndex + 1));
 
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(fontFileName);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fontFileName);
 	if (f == nullptr)
 	{
 		Log::Fatal("FontsManager[%s]: Error while loading font.", f->Path_Name().c_str());
@@ -168,7 +168,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 	}
 
 
-    R_Buffer* __vb = m_RenderDevice->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
+    SharedBufferPtr __vb = m_RenderDevice->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
 
 	//
 
@@ -188,7 +188,7 @@ Font* FontsManager::CreateAction(cstring _nameAndSize)
 
 	//
 
-	Font* font = new Font(texture, __geom, charWidth, charHeight);
+	SharedFontPtr font = make_shared<Font>(texture, __geom, charWidth, charHeight);
 
 	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f->Path_Name().c_str(), fontSize);
 

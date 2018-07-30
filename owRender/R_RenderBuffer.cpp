@@ -55,16 +55,16 @@ R_RenderBuffer::~R_RenderBuffer()
 	m_FBMultiSampledGLObj = 0;
 }
 
-R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height, R_TextureFormats::List _format, bool _depth, uint32 _numColBufs, uint32 _samples)
+void R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height, R_TextureFormats::List _format, bool _depth, uint32 _numColBufs, uint32 _samples)
 {
 	if ((_format == R_TextureFormats::RGBA16F || _format == R_TextureFormats::RGBA32F) && !GetSettingsGroup<CGroupRenderCaps>().texFloat)
 	{
-		return 0;
+		return;
 	}
 
 	if (_numColBufs > R_RenderBuffer::MaxColorAttachmentCount)
 	{
-		return 0;
+		return;
 	}
 
 	// Get samples
@@ -199,10 +199,10 @@ R_RenderBuffer* R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height
 	if (!valid)
 	{
 		delete this;
-		return nullptr;
+		return;
 	}
 
-	return this;
+	return;
 }
 
 void R_RenderBuffer::getRenderBufferDimensions(int *width, int *height)
@@ -211,7 +211,7 @@ void R_RenderBuffer::getRenderBufferDimensions(int *width, int *height)
 	*height = m_Height;
 }
 
-R_Texture* R_RenderBuffer::getRenderBufferTex(uint32 _bufIndex)
+SharedTexturePtr R_RenderBuffer::getRenderBufferTex(uint32 _bufIndex)
 {
 	if (_bufIndex < R_RenderBuffer::MaxColorAttachmentCount)
 	{

@@ -2,7 +2,7 @@
 
 #include "WMO_Headers.h"
 
-class WMO_Part_Fog : public CRefItem
+class WMO_Part_Fog
 {
 public:
 	WMO_Part_Fog(const SWMO_FogDef& _proto);

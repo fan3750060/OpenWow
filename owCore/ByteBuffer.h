@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RefItem.h"
 #include <mutex>
 
 static_assert(sizeof(size_t) == sizeof(uint64), "Size of 'size_t' isn't equal 'uint64_t'");

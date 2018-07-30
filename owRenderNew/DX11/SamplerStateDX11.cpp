@@ -273,7 +273,7 @@ void SamplerStateDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderPa
 		m_bIsDirty = false;
 	}
 
-	ID3D11SamplerState* pSamplers[] = { m_pSamplerState.Get() };
+	ID3D11SamplerState* pSamplers[] = { m_pSamplerState };
 
 	switch (shaderType)
 	{

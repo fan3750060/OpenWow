@@ -26,9 +26,9 @@ public:
 	void RenderImage(vec2 _pos, Image* _image, vec2 _size);
 
 	void RenderText(vec2 _pos, cstring _string, const Color& _color = COLOR_WHITE) const;
-	void RenderText(vec2 _pos, cstring _string, Font* _font, const Color& _color = COLOR_WHITE) const;
+	void RenderText(vec2 _pos, cstring _string, SharedFontPtr _font, const Color& _color = COLOR_WHITE) const;
 	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color = COLOR_WHITE) const;
-	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, Font* _font, const Color& _color = COLOR_WHITE) const;
+	void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, SharedFontPtr _font, const Color& _color = COLOR_WHITE) const;
 
 	FontsManager* FontsMgr() { return m_FontsMgr; }
 

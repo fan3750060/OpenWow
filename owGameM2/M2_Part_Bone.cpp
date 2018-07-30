@@ -6,7 +6,7 @@
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles) :
+CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<std::shared_ptr<IFile>>* animfiles) :
 	m_ParentBone(nullptr)
 {
 	m_GameBoneId = _proto.key_bone_id;

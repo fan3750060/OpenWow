@@ -45,10 +45,10 @@ private:
     UIElement* m_MinimapUI;
 	UIElement* m_LoadingScreenUI;
 
-	vector<SharedPtr<UIWowButon>> m_Buttons;
+	vector<std::shared_ptr<UIWowButon>> m_Buttons;
 
 	Commands cmd;
 
 	void randBackground();
-	SharedPtr<CM2_Base_Instance> m_BackgroudModel;
+	std::shared_ptr<CM2_Base_Instance> m_BackgroudModel;
 };

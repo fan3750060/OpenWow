@@ -10,12 +10,12 @@ public:
 
 public:
 	
-	void SetDiffuseTexture(R_Texture* _DiffuseTexture)
+	void SetDiffuseTexture(SharedTexturePtr _DiffuseTexture)
 	{
 		m_DiffuseTexture = _DiffuseTexture;
 	}
 
-	void SetSpecularTexture(R_Texture* _SpecularTexture)
+	void SetSpecularTexture(SharedTexturePtr _SpecularTexture)
 	{
 		m_SpecularTexture = _SpecularTexture;
 	}
@@ -46,8 +46,8 @@ private:
 	vec4 m_SpecularColor;
 
 	// Textures
-	R_Texture* m_DiffuseTexture;  
-    R_Texture* m_SpecularTexture;
+	SharedTexturePtr m_DiffuseTexture;  
+	SharedTexturePtr m_SpecularTexture;
 
 	// Render Modes
 	bool m_IsTwoSided;

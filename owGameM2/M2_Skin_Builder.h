@@ -40,7 +40,7 @@ public:
 private:
 	SM2_SkinProfile			m_SkinProfile;
 	CM2_Skin*				m_Skin;
-	SharedPtr<IFile>		m_F;
+	IFile*					m_F;
 
 	//
 

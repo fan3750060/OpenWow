@@ -31,13 +31,13 @@ ShaderDX11::~ShaderDX11()
 
 void ShaderDX11::Destroy()
 {
-	m_pPixelShader.Reset();
-	m_pDomainShader.Reset();
-	m_pHullShader.Reset();
-	m_pGeometryShader.Reset();
-	m_pVertexShader.Reset();
-	m_pComputeShader.Reset();
-	m_pInputLayout.Reset();
+	m_pPixelShader.Release();
+	m_pDomainShader.Release();
+	m_pHullShader.Release();
+	m_pGeometryShader.Release();
+	m_pVertexShader.Release();
+	m_pComputeShader.Release();
+	m_pInputLayout.Release();
 
 	m_ShaderParameters.clear();
 	m_InputSemantics.clear();
@@ -157,8 +157,8 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cst
 {
 	HRESULT hr;
 	{
-		Microsoft::WRL::ComPtr<ID3DBlob> pShaderBlob;
-		Microsoft::WRL::ComPtr<ID3DBlob> pErrorBlob;
+		ATL::CComPtr<ID3DBlob> pShaderBlob;
+		ATL::CComPtr<ID3DBlob> pErrorBlob;
 
 		std::string _profile = profile;
 		if (profile == "latest")
@@ -213,7 +213,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cst
 		{
 			if (pErrorBlob)
 			{
-				OutputDebugStringA(static_cast<char*>(pErrorBlob->GetBufferPointer()));
+				OutputDebugString(static_cast<char*>(pErrorBlob->GetBufferPointer()));
 				Log::Error(static_cast<char*>(pErrorBlob->GetBufferPointer()));
 			}
 			return false;
@@ -263,8 +263,8 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cst
 
 	// Reflect the parameters from the shader.
 	// Inspired by: http://members.gamedev.net/JasonZ/Heiroglyph/D3D11ShaderReflection.pdf
-	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pReflector;
-	hr = D3DReflect(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, &pReflector);
+	ATL::CComPtr<ID3D11ShaderReflection> pReflector;
+	hr = D3DReflect(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflector);
 
 	if (FAILED(hr))
 	{
@@ -370,24 +370,20 @@ bool ShaderDX11::LoadShaderFromFile(ShaderType shaderType, cstring fileName, con
 {
 	bool result = false;
 
-	//fs::path filePath( fileName );
-	//if ( fs::exists( filePath ) && fs::is_regular_file( filePath ) )
 	{
-		// Store data necessary to reload the shader if it changes on disc.
-		m_ShaderFileName = fileName;
-		m_ShaderMacros = shaderMacros;
-		m_EntryPoint = entryPoint;
-		m_Profile = profile;
+		std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
 
-		std::ifstream inputFile(fileName);
-		std::string source((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
+		string data = "";
+		while (!file->isEof())
+		{
+			string line;
+			file->readLine(&line);
 
-		result = LoadShaderFromString(shaderType, source, fileName, shaderMacros, entryPoint, profile);
+			data += line + '\n';
+		}
+
+		result = LoadShaderFromString(shaderType, data, fileName, shaderMacros, entryPoint, profile);
 	}
-	//else
-   // {
-	//    Log::Error( "Failed to load shader." );
-	//}
 
 	return result;
 }
@@ -430,28 +426,28 @@ void ShaderDX11::Bind()
 
 	if (m_pVertexShader)
 	{
-		m_pDeviceContext->IASetInputLayout(m_pInputLayout.Get());
-		m_pDeviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
+		m_pDeviceContext->IASetInputLayout(m_pInputLayout);
+		m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
 	}
 	else if (m_pHullShader)
 	{
-		m_pDeviceContext->HSSetShader(m_pHullShader.Get(), nullptr, 0);
+		m_pDeviceContext->HSSetShader(m_pHullShader, nullptr, 0);
 	}
 	else if (m_pDomainShader)
 	{
-		m_pDeviceContext->DSSetShader(m_pDomainShader.Get(), nullptr, 0);
+		m_pDeviceContext->DSSetShader(m_pDomainShader, nullptr, 0);
 	}
 	else if (m_pGeometryShader)
 	{
-		m_pDeviceContext->GSSetShader(m_pGeometryShader.Get(), nullptr, 0);
+		m_pDeviceContext->GSSetShader(m_pGeometryShader, nullptr, 0);
 	}
 	else if (m_pPixelShader)
 	{
-		m_pDeviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+		m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
 	}
 	else if (m_pComputeShader)
 	{
-		m_pDeviceContext->CSSetShader(m_pComputeShader.Get(), nullptr, 0);
+		m_pDeviceContext->CSSetShader(m_pComputeShader, nullptr, 0);
 	}
 }
 

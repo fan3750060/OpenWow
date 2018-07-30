@@ -13,15 +13,26 @@ R_TextureBuffer::R_TextureBuffer(RenderDevice* _RenderDevice) :
 	m_RenderDevice(_RenderDevice)
 {}
 
+R_TextureBuffer::R_TextureBuffer(const R_TextureBuffer & _other)
+{
+	if (this != &_other)
+	{
+		m_Buffer = _other.m_Buffer;
+		m_GLFmt = _other.m_GLFmt;
+		m_GLTexID = _other.m_GLTexID;
+		m_RenderDevice = _other.m_RenderDevice;
+	}
+}
+
 R_TextureBuffer::~R_TextureBuffer()
 {
 	glDeleteTextures(1, &m_GLTexID);
 }
 
-R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List _format, uint32 _bufSize, const void* _data, bool _isDynamic)
+void R_TextureBuffer::createTextureBuffer(R_TextureFormats::List _format, uint32 _bufSize, const void* _data, bool _isDynamic)
 {
-	m_Buffer = new R_Buffer(m_RenderDevice);
-	m_Buffer = m_Buffer->createBuffer(GL_TEXTURE_BUFFER, _bufSize, _data, _isDynamic);
+	m_Buffer = make_shared<R_Buffer>(m_RenderDevice);
+	m_Buffer->createBuffer(GL_TEXTURE_BUFFER, _bufSize, _data, _isDynamic);
 
 	glGenTextures(1, &m_GLTexID);
 	glActiveTexture(GL_TEXTURE15);
@@ -57,6 +68,4 @@ R_TextureBuffer* R_TextureBuffer::createTextureBuffer(R_TextureFormats::List _fo
 	{
 		glBindTexture(m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_Type, m_RenderDevice->m_State.m_TextureSlot[15].m_Texture->m_GLObj);
 	}
-
-	return this;
 }

@@ -371,11 +371,11 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 
 	// Vertex buffer
 	assert1(vertices.data() != nullptr);
-	R_Buffer* __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
+	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
 
 	// Index buffer
 	assert1(m_Indices.data() != nullptr);
-	R_Buffer* __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
+	SharedBufferPtr __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
 
 	// Geometry
 	SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
@@ -387,7 +387,7 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 
 	m_State.setGeometry(__geom);
 
-	CM2_Particle_Pass* pass = _Render->getTechniquesMgr()->M2_Particles_Pass;
+	CM2_Particle_Pass* pass = _Render->getTechniquesMgr()->M2_Particles_Pass.operator->();
 	pass->Bind();
 	{
 		pass->setWorld(_worldMatrix);

@@ -18,10 +18,10 @@ struct IRefManager : public IManager
 {	
 	virtual ~IRefManager() {};
 
-	virtual T* Add(cstring name) = 0;
+	virtual shared_ptr<T> Add(cstring name) = 0;
 	virtual bool Exists(cstring name) const = 0;
 	virtual void Delete(cstring name) = 0;
-	virtual void Delete(T* item) = 0;
+	virtual void Delete(shared_ptr<T> item) = 0;
 };
 
 
@@ -39,7 +39,7 @@ struct
 {
 	virtual ~IFontsManager() {};
 
-	virtual Font* GetMainFont() const = 0;
+	virtual shared_ptr<Font> GetMainFont() const = 0;
 };
 
 

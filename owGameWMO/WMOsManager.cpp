@@ -11,14 +11,14 @@ WMOsManager::WMOsManager(IOpenGLAdapter* _adapter) :
 	ADDCONSOLECOMMAND_CLASS("wmo_info", WMOsManager, PrintAllInfo);
 }
 
-WMO* WMOsManager::CreateAction(cstring name)
+SmartWMOPtr WMOsManager::CreateAction(cstring name)
 {
-	WMO* _wmo = new WMO(name);
+	SmartWMOPtr _wmo = make_shared<WMO>(name);
 	LoadAction(name, _wmo);
 	return _wmo;
 }
 
-void WMOsManager::LoadAction(string name, WMO*& item)
+void WMOsManager::LoadAction(string name, SmartWMOPtr& item)
 {
 	if (!item->Load())
 	{

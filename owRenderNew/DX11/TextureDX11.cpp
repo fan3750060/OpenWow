@@ -6,6 +6,27 @@
 // General
 #include "TextureDX11.h"
 
+// Additional
+#include "DDSLib.h"
+
+#include __PACK_BEGIN
+struct BLPHeader
+{
+	uint8 magic[4];
+	uint32 type;
+
+	uint8 compression;  // Compression: 1 for uncompressed, 2 for DXTC, 3 (cataclysm) for plain A8R8G8B8 m_DiffuseTextures
+	uint8 alpha_depth;  // Alpha channel bit depth: 0, 1, 4 or 8
+	uint8 alpha_type;   // 0, 1, 7, or 8
+	uint8 has_mips;     // 0 = no mips, 1 = has mips
+
+	uint32 width;
+	uint32 height;
+	uint32 mipOffsets[16];
+	uint32 mipSizes[16];
+};
+#include __PACK_END
+
 static void ReportAndThrowTextureFormatError(const Texture::TextureFormat& format, cstring file, int line, cstring function, cstring message)
 {
 	std::stringstream ss;
@@ -70,9 +91,8 @@ static void ReportAndThrowTextureFormatError(const Texture::TextureFormat& forma
 	ss << "StencilBits: " << (int32_t)format.StencilBits << std::endl;
 	ss << "Num Samples: " << (int32_t)format.NumSamples << std::endl;
 
-	ReportErrorAndThrow(file, line, function, ss.str());
+	Log::Fatal("%s", ss.str().c_str());
 }
-
 #define ReportTextureFormatError( fmt, msg ) ReportAndThrowTextureFormatError( (fmt), __FILE__, __LINE__, __FUNCTION__, (msg) )
 
 TextureDX11::TextureDX11(ID3D11Device2* pDevice)
@@ -393,245 +413,361 @@ TextureDX11::~TextureDX11()
 
 bool TextureDX11::LoadTexture2D(cstring fileName)
 {
-	/* fs::path filePath( fileName );
-	 if ( !fs::exists( filePath ) || !fs::is_regular_file( filePath ) )
-	 {
-		 Log::Error( "Could not load texture: " + filePath.string() );
-		 return false;
-	 }
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 
-	 m_TextureFileName = fileName;
-	 m_DependencyTracker = DependencyTracker( fileName );
-	 // Try to load the dependency file for the texture asset.
-	 if ( !m_DependencyTracker.Load() )
-	 {
-		 // If loading failed, likely, the dependency tracker file
-		 // does not exist. Save the default dependency tracker.
-		 m_DependencyTracker.Save();
-	 }
+	// Try to determine the file type from the image file.
+	/*FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeU(filePath.c_str());
+	if (fif == FIF_UNKNOWN)
+	{
+		fif = FreeImage_GetFIFFromFilenameU(filePath.c_str());
+	}
 
-	 m_DependencyTracker.SetLastLoadTime();
+	if (fif == FIF_UNKNOWN || !FreeImage_FIFSupportsReading(fif))
+	{
+		Log::Error("Unknow file format: " + filePath.string());
+		return false;
+	}
 
-	 // Try to determine the file type from the image file.
-	 FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeU( filePath.c_str() );
-	 if ( fif == FIF_UNKNOWN )
-	 {
-		 fif = FreeImage_GetFIFFromFilenameU( filePath.c_str() );
-	 }
+	FIBITMAP* dib = FreeImage_LoadU(fif, filePath.c_str());
+	if (dib == nullptr || FreeImage_HasPixels(dib) == FALSE)
+	{
+		Log::Error("Failed to load image: " + filePath.string());
+		return false;
+	}
 
-	 if ( fif == FIF_UNKNOWN || !FreeImage_FIFSupportsReading( fif ) )
-	 {
-		 Log::Error( "Unknow file format: " + filePath.string() );
-		 return false;
-	 }
+	//// Check to see if we need to flip the image
+	//for ( int model = 0; model < FIMD_EXIF_RAW + 1; model++ )
+	//{
+	//    PrintMetaData( (FREE_IMAGE_MDMODEL)model, dib );
+	//}
 
-	 FIBITMAP* dib = FreeImage_LoadU( fif, filePath.c_str() );
-	 if ( dib == nullptr || FreeImage_HasPixels( dib ) == FALSE )
-	 {
-		 Log::Error( "Failed to load image: " + filePath.string() );
-		 return false;
-	 }
+	m_BPP = FreeImage_GetBPP(dib);
+	FREE_IMAGE_TYPE imageType = FreeImage_GetImageType(dib);
 
-	 //// Check to see if we need to flip the image
-	 //for ( int model = 0; model < FIMD_EXIF_RAW + 1; model++ )
-	 //{
-	 //    PrintMetaData( (FREE_IMAGE_MDMODEL)model, dib );
-	 //}
+	// Check to see if the texture has an alpha channel.
+	m_bIsTransparent = (FreeImage_IsTransparent(dib) == TRUE);
 
-	 m_BPP = FreeImage_GetBPP( dib );
-	 FREE_IMAGE_TYPE imageType = FreeImage_GetImageType( dib );
+	switch (m_BPP)
+	{
+	case 8:
+	{
+		switch (imageType)
+		{
+		case FIT_BITMAP:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R8_UNORM;
+		}
+		break;
+		default:
+		{
+			Log::Error("Unknown image format.");
+		}
+		break;
+		}
+	}
+	break;
+	case 16:
+	{
+		switch (imageType)
+		{
+		case FIT_BITMAP:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R8G8_UNORM;
+		}
+		break;
+		case FIT_UINT16:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R16_UINT;
+		}
+		break;
+		case FIT_INT16:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R16_SINT;
+		}
+		break;
+		default:
+		{
+			Log::Error("Unknown image format.");
+		}
+		break;
+		}
+	}
+	break;
+	case 32:
+	{
+		switch (imageType)
+		{
+		case FIT_BITMAP:
+		{
+#if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
+			m_TextureResourceFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+#else
+			m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+#endif
+		}
+		break;
+		case FIT_FLOAT:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R32_FLOAT;
+		}
+		break;
+		case FIT_INT32:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R32_SINT;
+		}
+		break;
+		case FIT_UINT32:
+		{
+			m_TextureResourceFormat = DXGI_FORMAT_R32_UINT;
+		}
+		break;
+		default:
+		{
+			Log::Error("Unknown image format.");
+		}
+		break;
+		}
+	}
+	break;
+	default:
+	{
+		FIBITMAP* dib32 = FreeImage_ConvertTo32Bits(dib);
 
-	 // Check to see if the texture has an alpha channel.
-	 m_bIsTransparent = ( FreeImage_IsTransparent( dib ) == TRUE );
+		// Unload the original image.
+		FreeImage_Unload(dib);
 
-	 switch ( m_BPP )
-	 {
-	 case 8:
-	 {
-		 switch ( imageType )
-		 {
-		 case FIT_BITMAP:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R8_UNORM;
-		 }
-		 break;
-		 default:
-		 {
-			 Log::Error( "Unknown image format." );
-		 }
-		 break;
-		 }
-	 }
-	 break;
-	 case 16:
-	 {
-		 switch ( imageType )
-		 {
-		 case FIT_BITMAP:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R8G8_UNORM;
-		 }
-		 break;
-		 case FIT_UINT16:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R16_UINT;
-		 }
-		 break;
-		 case FIT_INT16:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R16_SINT;
-		 }
-		 break;
-		 default:
-		 {
-			 Log::Error( "Unknown image format." );
-		 }
-		 break;
-		 }
-	 }
-	 break;
-	 case 32:
-	 {
-		 switch ( imageType )
-		 {
-		 case FIT_BITMAP:
-		 {
- #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
-			 m_TextureResourceFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
- #else
-			 m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
- #endif
-		 }
-		 break;
-		 case FIT_FLOAT:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R32_FLOAT;
-		 }
-		 break;
-		 case FIT_INT32:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R32_SINT;
-		 }
-		 break;
-		 case FIT_UINT32:
-		 {
-			 m_TextureResourceFormat = DXGI_FORMAT_R32_UINT;
-		 }
-		 break;
-		 default:
-		 {
-			 Log::Error( "Unknown image format." );
-		 }
-		 break;
-		 }
-	 }
-	 break;
-	 default:
-	 {
-		 FIBITMAP* dib32 = FreeImage_ConvertTo32Bits( dib );
+		dib = dib32;
 
-		 // Unload the original image.
-		 FreeImage_Unload( dib );
+		// Update pixel bit depth (should be 32 now if it wasn't before).
+		m_BPP = FreeImage_GetBPP(dib);
 
-		 dib = dib32;
+#if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
+		m_TextureResourceFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+#else
+		m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+#endif
+	}
+	break;
+	}*/
 
-		 // Update pixel bit depth (should be 32 now if it wasn't before).
-		 m_BPP = FreeImage_GetBPP( dib );
+	// Read data
+	BLPHeader header;
+	f->readBytes(&header, sizeof(BLPHeader));
 
- #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
-		 m_TextureResourceFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
- #else
-		 m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
- #endif
-	 }
-	 break;
-	 }
+	//if (header.width & (header.width - 1)) return;
+	//if (header.height & (header.height - 1)) return;
 
-	 m_TextureDimension = Texture::Dimension::Texture2D;
-	 m_TextureWidth = FreeImage_GetWidth( dib );
-	 m_TextureHeight = FreeImage_GetHeight( dib );
-	 m_NumSlices = 1;
-	 m_Pitch = FreeImage_GetPitch( dib );
+	assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
+	assert1(header.type == 1);
 
-	 m_ShaderResourceViewFormat = m_RenderTargetViewFormat = m_TextureResourceFormat;
-	 m_SampleDesc = GetSupportedSampleCount( m_TextureResourceFormat, 1 );
+	uint8 mipmax = /*header.has_mips ? 16 : */1;
+	bool hasalpha = (header.alpha_depth != 0);
+	void* resultBuff = nullptr;
 
-	 if ( FAILED( m_pDevice->CheckFormatSupport( m_TextureResourceFormat, &m_TextureResourceFormatSupport ) ) )
-	 {
-		 Log::Error( "Failed to query format support." );
-	 }
-	 if ( ( m_TextureResourceFormatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D ) == 0 )
-	 {
-		 ReportTextureFormatError( m_TextureFormat, "Unsupported texture format for 2D textures." );
-		 return false;
-	 }
+	switch (header.compression)
+	{
+	case 1:
+	{
+		uint32 pal[256];
+		f->readBytes(pal, 1024);
 
-	 m_ShaderResourceViewFormatSupport = m_RenderTargetViewFormatSupport = m_TextureResourceFormatSupport;
+		uint8* buf = new uint8[header.mipSizes[0]];
+		uint32* buf2 = new uint32[header.width * header.height];
+		uint32* p;
+		uint8* c;
+		uint8* a;
+		// _texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
 
-	 // Can mipmaps be automatically generated for this texture format?
-	 m_bGenerateMipmaps = !m_bDynamic && ( m_ShaderResourceViewFormatSupport & D3D11_FORMAT_SUPPORT_MIP_AUTOGEN ) != 0;
+		for (int i = 0; i < mipmax; i++)
+		{
+			if (header.mipOffsets[i] && header.mipSizes[i])
+			{
+				f->seek(header.mipOffsets[i]);
+				f->readBytes(buf, header.mipSizes[i]);
 
-	 // Load the texture data into a GPU texture.
-	 D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+				int cnt = 0;
+				p = buf2;
+				c = buf;
+				a = buf + header.width * header.height;
+				for (uint32 y = 0; y < header.height; y++)
+				{
+					for (uint32 x = 0; x < header.width; x++)
+					{
+						uint32 k = pal[*c++];
+						k = ((k & 0x00FF0000) >> 16) | ((k & 0x0000FF00)) | ((k & 0x000000FF) << 16);
+						int alpha;
 
-	 textureDesc.Width = m_TextureWidth;
-	 textureDesc.Height = m_TextureHeight;
-	 textureDesc.MipLevels = m_bGenerateMipmaps ? 0 : 1;
-	 textureDesc.ArraySize = m_NumSlices;
-	 textureDesc.Format = m_TextureResourceFormat;
-	 textureDesc.SampleDesc.Count = 1;
-	 textureDesc.SampleDesc.Quality = 0;
-	 textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	 if ( ( m_ShaderResourceViewFormatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE ) != 0 )
-	 {
-		 textureDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
-	 }
-	 if ( ( m_RenderTargetViewFormatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET ) != 0 )
-	 {
-		 textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
-	 }
-	 textureDesc.CPUAccessFlags = 0;
-	 textureDesc.MiscFlags = m_bGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
+						if (header.alpha_depth == 8)
+						{
+							alpha = (*a++);
+						}
+						else if (header.alpha_depth == 1)
+						{
+							alpha = (*a & (1 << cnt++)) ? 0xff : 0;
+							if (cnt == 8)
+							{
+								cnt = 0;
+								a++;
+							}
+						}
+						else if (header.alpha_depth == 0)
+						{
+							alpha = 0xff;
+						}
 
-	 BYTE* textureData = FreeImage_GetBits( dib );
 
-	 D3D11_SUBRESOURCE_DATA subresourceData;
-	 subresourceData.pSysMem = textureData;
-	 subresourceData.SysMemPitch = m_Pitch;
-	 subresourceData.SysMemSlicePitch = 0;
+						k |= alpha << 24;
+						*p++ = k;
+					}
+				}
 
-	 if ( FAILED( m_pDevice->CreateTexture2D( &textureDesc, m_bGenerateMipmaps ? nullptr : &subresourceData, &m_pTexture2D ) ) )
-	 {
-		 Log::Error( "Failed to create texture." );
-		 return false;
-	 }
+				// _texture->uploadTextureData(0, i, buf2);
+				resultBuff = buf2;
+			}
+			else
+			{
+				break;
+			}
+		}
 
-	 // Create a Shader resource view for the texture.
-	 D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc;
+		//delete[] buf2;
+		//delete[] buf;
+	}
+	break;
+	case 2:
+	{
+		//_texture->createTexture(R_TextureTypes::Tex2D, , header.height, 1, format, header.has_mips, false, true, false);
 
-	 resourceViewDesc.Format = m_ShaderResourceViewFormat;
-	 resourceViewDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
-	 resourceViewDesc.Texture2D.MipLevels = m_bGenerateMipmaps ? -1 : 1;
-	 resourceViewDesc.Texture2D.MostDetailedMip = 0;
+		/*uint8* buf = new uint8[header.mipSizes[0]];
+		for (uint8 i = 0; i < mipmax; i++)
+		{
+			if (header.mipOffsets[i])
+			{
+				assert1(header.mipSizes[i] > 0);
 
-	 if ( FAILED( m_pDevice->CreateShaderResourceView( m_pTexture2D.Get(), &resourceViewDesc, &m_pShaderResourceView ) ) )
-	 {
-		 Log::Error( "Failed to create texture resource view." );
-		 return false;
-	 }
+				f->seek(header.mipOffsets[i]);
+				f->readBytes(buf, header.mipSizes[i]);
+			}
+			else
+			{
+				break;
+			}
+		}*/
 
-	 // From DirectXTK (28/05/2015) @see https://directxtk.codeplex.com/
-	 if ( m_bGenerateMipmaps )
-	 {
-		 m_pDeviceContext->UpdateSubresource( m_pTexture2D.Get(), 0, nullptr, textureData, m_Pitch, 0 );
-		 m_pDeviceContext->GenerateMips( m_pShaderResourceView.Get() );
-	 }
+		// Read
+		uint8* buf = new uint8[header.mipSizes[0]];
+		assert1(header.mipSizes[0] > 0);
+		f->seek(header.mipOffsets[0]);
+		f->readBytes(buf, header.mipSizes[0]);
 
-	 m_bIsDirty = false;
+		// Convert
+		uint8* bufConv = nullptr;
+		if (header.alpha_type == 0) // DXT1
+		{
+			uint32 size = header.width * header.height * 4;
+			bufConv = new uint8[size];
+			DDSDecompressDXT1(buf, header.width, header.height, bufConv);
+		}
+		else if (header.alpha_type == 1) // DXT3
+		{
+			uint32 size = header.width * header.height * 4;
+			bufConv = new uint8[size * 4];
+			DDSDecompressDXT3(buf, header.width, header.height, bufConv);
+		}
+		else if (header.alpha_type == 7) // DXT5
+		{
+			uint32 size = header.width * header.height * 4;
+			bufConv = new uint8[size * 4];
+			DDSDecompressDXT5(buf, header.width, header.height, bufConv);
+		}
 
-	 // Unload the texture (it should now be on the GPU anyways).
-	 FreeImage_Unload( dib );
-	 */
+		resultBuff = bufConv;
+
+		delete[] buf;
+	}
+	break;
+	}
+
+	m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_TextureDimension = Texture::Dimension::Texture2D;
+	m_TextureWidth = header.width;
+	m_TextureHeight = header.height;
+	m_BPP = 4;
+	m_bIsTransparent = FALSE;
+	m_NumSlices = 1;
+	m_Pitch = (m_TextureWidth) * m_BPP;
+
+	m_ShaderResourceViewFormat = m_RenderTargetViewFormat = m_TextureResourceFormat;
+	m_SampleDesc = GetSupportedSampleCount(m_TextureResourceFormat, 1);
+
+	if (FAILED(m_pDevice->CheckFormatSupport(m_TextureResourceFormat, &m_TextureResourceFormatSupport)))
+	{
+		Log::Error("Failed to query format support.");
+	}
+
+	if ((m_TextureResourceFormatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) == 0)
+	{
+		ReportTextureFormatError(m_TextureFormat, "Unsupported texture format for 2D textures.");
+		return false;
+	}
+
+	m_ShaderResourceViewFormatSupport = m_RenderTargetViewFormatSupport = m_TextureResourceFormatSupport;
+
+	// Can mipmaps be automatically generated for this texture format?
+	m_bGenerateMipmaps = !m_bDynamic && (m_ShaderResourceViewFormatSupport & D3D11_FORMAT_SUPPORT_MIP_AUTOGEN) != 0;
+
+	// Load the texture data into a GPU texture.
+	D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+	textureDesc.Width = m_TextureWidth;
+	textureDesc.Height = m_TextureHeight;
+	textureDesc.MipLevels = m_bGenerateMipmaps ? 0 : 1;
+	textureDesc.ArraySize = m_NumSlices;
+	textureDesc.Format = m_TextureResourceFormat;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	if ((m_ShaderResourceViewFormatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0)
+	{
+		textureDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+	}
+	if ((m_RenderTargetViewFormatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0)
+	{
+		textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+	}
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = m_bGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
+
+	// Subresource
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	subresourceData.pSysMem = resultBuff;
+	subresourceData.SysMemPitch = m_Pitch;
+	subresourceData.SysMemSlicePitch = 0;
+	if (FAILED(m_pDevice->CreateTexture2D(&textureDesc, m_bGenerateMipmaps ? nullptr : &subresourceData, &m_pTexture2D)))
+	{
+		Log::Error("Failed to create texture.");
+		return false;
+	}
+
+	// Create a Shader resource view for the texture.
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc;
+	resourceViewDesc.Format = m_ShaderResourceViewFormat;
+	resourceViewDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
+	resourceViewDesc.Texture2D.MipLevels = m_bGenerateMipmaps ? -1 : 1;
+	resourceViewDesc.Texture2D.MostDetailedMip = 0;
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, &resourceViewDesc, &m_pShaderResourceView)))
+	{
+		Log::Error("Failed to create texture resource view.");
+		return false;
+	}
+
+	// From DirectXTK (28/05/2015) @see https://directxtk.codeplex.com/
+	if (m_bGenerateMipmaps)
+	{
+		m_pDeviceContext->UpdateSubresource(m_pTexture2D, 0, nullptr, resultBuff, m_Pitch, 0);
+		m_pDeviceContext->GenerateMips(m_pShaderResourceView);
+	}
+
+	m_bIsDirty = false;
 
 	return true;
 }
@@ -688,7 +824,7 @@ void TextureDX11::GenerateMipMaps()
 {
 	if (m_bGenerateMipmaps && m_pShaderResourceView)
 	{
-		m_pDeviceContext->GenerateMips(m_pShaderResourceView.Get());
+		m_pDeviceContext->GenerateMips(m_pShaderResourceView);
 	}
 }
 
@@ -697,7 +833,7 @@ std::shared_ptr<Texture> TextureDX11::GetFace(CubeFace face) const
 	return std::static_pointer_cast<Texture>(std::const_pointer_cast<TextureDX11>(shared_from_this()));
 }
 
-std::shared_ptr<Texture> TextureDX11::GetSlice(unsigned int slice) const
+std::shared_ptr<Texture> TextureDX11::GetSlice(uint32 slice) const
 {
 	return std::static_pointer_cast<Texture>(std::const_pointer_cast<TextureDX11>(shared_from_this()));
 }
@@ -731,11 +867,11 @@ void TextureDX11::Resize1D(uint16_t width)
 {
 	if (m_TextureWidth != width)
 	{
-		m_pTexture1D.Reset();
-		m_pShaderResourceView.Reset();
-		m_pRenderTargetView.Reset();
-		m_pDepthStencilView.Reset();
-		m_pUnorderedAccessView.Reset();
+		m_pTexture1D.Release();
+		m_pShaderResourceView.Release();
+		m_pRenderTargetView.Release();
+		m_pDepthStencilView.Release();
+		m_pUnorderedAccessView.Release();
 
 		m_TextureWidth = glm::max<uint16_t>(width, 1);
 
@@ -807,7 +943,7 @@ void TextureDX11::Resize1D(uint16_t width)
 				depthStencilViewDesc.Texture1D.MipSlice = 0;
 			}
 
-			if (FAILED(m_pDevice->CreateDepthStencilView(m_pTexture1D.Get(), &depthStencilViewDesc, &m_pDepthStencilView)))
+			if (FAILED(m_pDevice->CreateDepthStencilView(m_pTexture1D, &depthStencilViewDesc, &m_pDepthStencilView)))
 			{
 				Log::Error("Failed to create depth/stencil view.");
 			}
@@ -834,13 +970,13 @@ void TextureDX11::Resize1D(uint16_t width)
 				resourceViewDesc.Texture1D.MostDetailedMip = 0;
 			}
 
-			if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture1D.Get(), &resourceViewDesc, &m_pShaderResourceView)))
+			if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture1D, &resourceViewDesc, &m_pShaderResourceView)))
 			{
 				Log::Error("Failed to create shader resource view.");
 			}
 			else if (m_bGenerateMipmaps)
 			{
-				m_pDeviceContext->GenerateMips(m_pShaderResourceView.Get());
+				m_pDeviceContext->GenerateMips(m_pShaderResourceView);
 			}
 		}
 
@@ -863,7 +999,7 @@ void TextureDX11::Resize1D(uint16_t width)
 				renderTargetViewDesc.Texture1D.MipSlice = 0;
 			}
 
-			if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture1D.Get(), &renderTargetViewDesc, &m_pRenderTargetView)))
+			if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture1D, &renderTargetViewDesc, &m_pRenderTargetView)))
 			{
 				Log::Error("Failed to create render target view.");
 			}
@@ -890,7 +1026,7 @@ void TextureDX11::Resize1D(uint16_t width)
 				unorderedAccessViewDesc.Texture2D.MipSlice = 0;
 			}
 
-			if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pTexture1D.Get(), &unorderedAccessViewDesc, &m_pUnorderedAccessView)))
+			if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pTexture1D, &unorderedAccessViewDesc, &m_pUnorderedAccessView)))
 			{
 				Log::Error("Failed to create unordered access view.");
 			}
@@ -906,11 +1042,11 @@ void TextureDX11::Resize2D(uint16_t width, uint16_t height)
 	if (m_TextureWidth != width || m_TextureHeight != height)
 	{
 		// Release resource before resizing
-		m_pTexture2D.Reset();
-		m_pRenderTargetView.Reset();
-		m_pDepthStencilView.Reset();
-		m_pShaderResourceView.Reset();
-		m_pUnorderedAccessView.Reset();
+		m_pTexture2D.Release();
+		m_pRenderTargetView.Release();
+		m_pDepthStencilView.Release();
+		m_pShaderResourceView.Release();
+		m_pUnorderedAccessView.Release();
 
 		m_TextureWidth = glm::max<uint16_t>(width, 1);
 		m_TextureHeight = glm::max<uint16_t>(height, 1);
@@ -1003,7 +1139,7 @@ void TextureDX11::Resize2D(uint16_t width, uint16_t height)
 				}
 			}
 
-			if (FAILED(m_pDevice->CreateDepthStencilView(m_pTexture2D.Get(), &depthStencilViewDesc, &m_pDepthStencilView)))
+			if (FAILED(m_pDevice->CreateDepthStencilView(m_pTexture2D, &depthStencilViewDesc, &m_pDepthStencilView)))
 			{
 				Log::Error("Failed to create depth/stencil view.");
 			}
@@ -1046,13 +1182,13 @@ void TextureDX11::Resize2D(uint16_t width, uint16_t height)
 				}
 			}
 
-			if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D.Get(), &resourceViewDesc, &m_pShaderResourceView)))
+			if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, &resourceViewDesc, &m_pShaderResourceView)))
 			{
 				Log::Error("Failed to create texture resource view.");
 			}
 			else if (m_bGenerateMipmaps)
 			{
-				m_pDeviceContext->GenerateMips(m_pShaderResourceView.Get());
+				m_pDeviceContext->GenerateMips(m_pShaderResourceView);
 			}
 		}
 
@@ -1092,7 +1228,7 @@ void TextureDX11::Resize2D(uint16_t width, uint16_t height)
 				}
 			}
 
-			if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture2D.Get(), &renderTargetViewDesc, &m_pRenderTargetView)))
+			if (FAILED(m_pDevice->CreateRenderTargetView(m_pTexture2D, &renderTargetViewDesc, &m_pRenderTargetView)))
 			{
 				Log::Error("Failed to create render target view.");
 			}
@@ -1120,7 +1256,7 @@ void TextureDX11::Resize2D(uint16_t width, uint16_t height)
 				unorderedAccessViewDesc.Texture2D.MipSlice = 0;
 			}
 
-			if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pTexture2D.Get(), &unorderedAccessViewDesc, &m_pUnorderedAccessView)))
+			if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pTexture2D, &unorderedAccessViewDesc, &m_pUnorderedAccessView)))
 			{
 				Log::Error("Failed to create unordered access view.");
 			}
@@ -1176,7 +1312,7 @@ void TextureDX11::Plot(glm::ivec2 coord, const uint8_t* pixel, size_t size)
 	uint32_t stride = m_TextureWidth * bytesPerPixel;
 	uint32_t index = (coord.s * bytesPerPixel) + (coord.t * stride);
 
-	for (unsigned int i = 0; i < size; ++i)
+	for (uint32 i = 0; i < size; ++i)
 	{
 		m_Buffer[index + i] = *(pixel + i);
 	}
@@ -1209,15 +1345,15 @@ void TextureDX11::Copy(std::shared_ptr<Texture> other)
 			{
 			case Dimension::Texture1D:
 			case Dimension::Texture1DArray:
-				m_pDeviceContext->CopyResource(m_pTexture1D.Get(), srcTexture->m_pTexture1D.Get());
+				m_pDeviceContext->CopyResource(m_pTexture1D, srcTexture->m_pTexture1D);
 				break;
 			case Texture::Dimension::Texture2D:
 			case Texture::Dimension::Texture2DArray:
-				m_pDeviceContext->CopyResource(m_pTexture2D.Get(), srcTexture->m_pTexture2D.Get());
+				m_pDeviceContext->CopyResource(m_pTexture2D, srcTexture->m_pTexture2D);
 				break;
 			case Texture::Dimension::Texture3D:
 			case Texture::Dimension::TextureCube:
-				m_pDeviceContext->CopyResource(m_pTexture3D.Get(), srcTexture->m_pTexture3D.Get());
+				m_pDeviceContext->CopyResource(m_pTexture3D, srcTexture->m_pTexture3D);
 				break;
 			}
 		}
@@ -1232,14 +1368,14 @@ void TextureDX11::Copy(std::shared_ptr<Texture> other)
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 		// Copy the texture data from the texture resource
-		if (FAILED(m_pDeviceContext->Map(m_pTexture2D.Get(), 0, D3D11_MAP_READ, 0, &mappedResource)))
+		if (FAILED(m_pDeviceContext->Map(m_pTexture2D, 0, D3D11_MAP_READ, 0, &mappedResource)))
 		{
 			Log::Error("Failed to map texture resource for reading.");
 		}
 
 		memcpy_s(m_Buffer.data(), m_Buffer.size(), mappedResource.pData, m_Buffer.size());
 
-		m_pDeviceContext->Unmap(m_pTexture2D.Get(), 0);
+		m_pDeviceContext->Unmap(m_pTexture2D, 0);
 	}
 }
 
@@ -1247,7 +1383,7 @@ void TextureDX11::Clear(ClearFlags clearFlags, cvec4 color, float depth, uint8_t
 {
 	if (m_pRenderTargetView && ((int)clearFlags & (int)ClearFlags::Color) != 0)
 	{
-		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), glm::value_ptr(color));
+		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, glm::value_ptr(color));
 	}
 
 	{
@@ -1256,7 +1392,7 @@ void TextureDX11::Clear(ClearFlags clearFlags, cvec4 color, float depth, uint8_t
 		flags |= ((int)clearFlags & (int)ClearFlags::Stencil) != 0 ? D3D11_CLEAR_STENCIL : 0;
 		if (m_pDepthStencilView && flags > 0)
 		{
-			m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.Get(), flags, depth, stencil);
+			m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, flags, depth, stencil);
 		}
 	}
 }
@@ -1270,7 +1406,7 @@ void TextureDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParamet
 			D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 			// Copy the texture data to the texture resource
-			HRESULT hr = m_pDeviceContext->Map(m_pTexture2D.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+			HRESULT hr = m_pDeviceContext->Map(m_pTexture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 			if (FAILED(hr))
 			{
 				Log::Error("Failed to map texture resource for writing.");
@@ -1278,18 +1414,18 @@ void TextureDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParamet
 
 			memcpy_s(mappedResource.pData, m_Buffer.size(), m_Buffer.data(), m_Buffer.size());
 
-			m_pDeviceContext->Unmap(m_pTexture2D.Get(), 0);
+			m_pDeviceContext->Unmap(m_pTexture2D, 0);
 
 			if (m_bGenerateMipmaps)
 			{
-				m_pDeviceContext->GenerateMips(m_pShaderResourceView.Get());
+				m_pDeviceContext->GenerateMips(m_pShaderResourceView);
 			}
 		}
 		m_bIsDirty = false;
 	}
 
-	ID3D11ShaderResourceView* srv[] = { m_pShaderResourceView.Get() };
-	ID3D11UnorderedAccessView* uav[] = { m_pUnorderedAccessView.Get() };
+	ID3D11ShaderResourceView* srv[] = { m_pShaderResourceView };
+	ID3D11UnorderedAccessView* uav[] = { m_pUnorderedAccessView };
 
 	if (parameterType == ShaderParameter::Type::Texture && m_pShaderResourceView)
 	{
@@ -2957,15 +3093,15 @@ ID3D11Resource* TextureDX11::GetTextureResource() const
 	{
 	case Texture::Dimension::Texture1D:
 	case Texture::Dimension::Texture1DArray:
-		resource = m_pTexture1D.Get();
+		resource = m_pTexture1D;
 		break;
 	case Texture::Dimension::Texture2D:
 	case Texture::Dimension::Texture2DArray:
-		resource = m_pTexture2D.Get();
+		resource = m_pTexture2D;
 		break;
 	case Texture::Dimension::Texture3D:
 	case Texture::Dimension::TextureCube:
-		resource = m_pTexture3D.Get();
+		resource = m_pTexture3D;
 		break;
 	}
 
@@ -2974,21 +3110,21 @@ ID3D11Resource* TextureDX11::GetTextureResource() const
 
 ID3D11ShaderResourceView* TextureDX11::GetShaderResourceView() const
 {
-	return m_pShaderResourceView.Get();
+	return m_pShaderResourceView;
 }
 
 ID3D11DepthStencilView* TextureDX11::GetDepthStencilView() const
 {
-	return m_pDepthStencilView.Get();
+	return m_pDepthStencilView;
 }
 
 ID3D11RenderTargetView* TextureDX11::GetRenderTargetView() const
 {
-	return m_pRenderTargetView.Get();
+	return m_pRenderTargetView;
 }
 
 ID3D11UnorderedAccessView* TextureDX11::GetUnorderedAccessView() const
 {
-	return m_pUnorderedAccessView.Get();
+	return m_pUnorderedAccessView;
 }
 

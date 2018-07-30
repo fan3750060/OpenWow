@@ -42,9 +42,9 @@ public:
 	// GUI Part
 	//------------------
 
-	void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate = false) override;
-    void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate = false) override;
-	void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, float rotate) override;
+	void RenderTexture(vec2 _pos, SharedTexturePtr _texture, bool rotate = false);
+    void RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, bool rotate = false);
+	void RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, float rotate);
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
@@ -72,7 +72,7 @@ private:
 
 public:
 	RenderDevice				r;
-	R_RenderBuffer*				m_RenderBuffer;
+	std::shared_ptr<R_RenderBuffer>				m_RenderBuffer;
 
 private:
 	mat4						m_OrhoMatrix;

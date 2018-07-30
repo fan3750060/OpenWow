@@ -9,7 +9,7 @@ public:
 	~CFilesManager();
 
 	// IFilesManager
-	IFile* Open(cstring _fileName) override;
+	std::shared_ptr<IFile> Open(cstring _fileName) override;
 	void Lock() override;
 	void Unlock() override;
 	void Guard() override;

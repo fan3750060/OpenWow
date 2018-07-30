@@ -18,7 +18,7 @@ enum LightParamsNames
 class SkyManager;
 // FORWARD END
 
-class Sky : public CRefItem
+class Sky
 {
 	friend class SkyManager;
 public: // TYPES

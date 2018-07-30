@@ -1,13 +1,14 @@
 #include <stdafx.h>
 
+// Inlcude base
 #include "Material.h"
 #include "Events.h"
-#include "Visitor.h"
-
+// Include render
 #include "BufferDX11.h"
 #include "ShaderDX11.h"
 #include "PipelineStateDX11.h"
 
+// General
 #include "MeshDX11.h"
 
 MeshDX11::MeshDX11(ID3D11Device2* pDevice)
@@ -114,7 +115,7 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 
 }
 
-void MeshDX11::Accept(Visitor& visitor)
+void MeshDX11::Accept(IVisitor& visitor)
 {
 	visitor.Visit(*this);
 }

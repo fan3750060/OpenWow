@@ -100,7 +100,7 @@ bool SkyManager::DEBUG_Render()
 {
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
-	CDebug_GeometryPass* pass = _Render->getTechniquesMgr()->Debug_Pass;
+	CDebug_GeometryPass* pass = _Render->getTechniquesMgr()->Debug_Pass.operator->();
 	pass->Bind();
 	{
 		_Render->r.setGeometry(_Render->getRenderStorage()->_sphereGeo);
@@ -143,7 +143,7 @@ void SkyManager::Render3D()
 	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
-	CSky_GeometryPass* pass = _Render->getTechniquesMgr()->Sky_Pass;
+	CSky_GeometryPass* pass = _Render->getTechniquesMgr()->Sky_Pass.operator->();
 	pass->Bind();
 	{
 		mat4 worldMatrix;
@@ -174,9 +174,9 @@ void SkyManager::InitBuffer()
 	{
 		for (uint32 i = 0; i < C_SkycolorsCount; i++)
 		{
-			basepos1[i] = basepos2[i] = vec3(cosf(degToRad(C_SkyAngles[i])), sinf(degToRad(C_SkyAngles[i])), 0.0f) * C_SkyRadius;
-			rotate(0, 0, &basepos1[i].x, &basepos1[i].z, Math::TwoPi / C_SkySegmentsCount * (h + 0));
-			rotate(0, 0, &basepos2[i].x, &basepos2[i].z, Math::TwoPi / C_SkySegmentsCount * (h + 1));
+			basepos1[i] = basepos2[i] = vec3(cosf(glm::radians(C_SkyAngles[i])), sinf(glm::radians(C_SkyAngles[i])), 0.0f) * C_SkyRadius;
+			rotate(0, 0, &basepos1[i].x, &basepos1[i].z, glm::two_pi<float>() / C_SkySegmentsCount * (h + 0));
+			rotate(0, 0, &basepos2[i].x, &basepos2[i].z, glm::two_pi<float>() / C_SkySegmentsCount * (h + 1));
 		}
 
 		for (uint32 v = 0; v < C_SkycolorsCount - 1; v++)
@@ -194,7 +194,7 @@ void SkyManager::InitBuffer()
 
 
 	// Vertex buffer
-	R_Buffer* vertexBuffer = _Render->r.createVertexBuffer(vertices.size() * sizeof(vec3), vertices.data(), false);
+	SharedBufferPtr vertexBuffer = _Render->r.createVertexBuffer(vertices.size() * sizeof(vec3), vertices.data(), false);
 
 	// Colors buffer
 	colorsBuffer = _Render->r.createVertexBuffer(vertices.size() * sizeof(vec4), nullptr, true);

@@ -21,7 +21,7 @@ bool WorldRender::PreRender3D()
 	ADT_WMO_Instance::reset();
 	ADT_MDX_Instance::reset();
 
-	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
+	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer.operator->());
 
 	return true;
 }
@@ -35,20 +35,20 @@ void WorldRender::PostRender3D()
 {
 	_Render->UnbindRBs();
 
-	RenderPostprocess();
+	//RenderPostprocess();
 }
 
 void WorldRender::RenderPostprocess()
 {
 	_Render->PostprocessSimple();
 
-	DirectionalLight light;
+	/*DirectionalLight light;
 	//light.Direction = vec3(_World->EnvM()->dayNightPhase.dayDir);
 	light.Direction = vec3(0.0f, -0.5f, -0.5f);
 	light.ambient = _World->Map()->getSkyManager()->GetColor(LightColors::LIGHT_COLOR_GLOBAL_AMBIENT);
 	light.diffuse = _World->Map()->getSkyManager()->GetColor(LightColors::LIGHT_COLOR_GLOBAL_DIFFUSE);
 	light.specular = vec3(1.0f, 1.0f, 1.0f);
-	DSDirectionalLightPass(light);
+	DSDirectionalLightPass(light);*/
 
 	if (groupQuality.drawfog)
 	{

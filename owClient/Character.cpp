@@ -84,7 +84,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 	// 4. Creature textures
 	{
 		string bakedTextureName = humanoidRecExtra->Get_BakedSkin();
-		R_Texture* bakedSkinTexture = nullptr;
+		SharedTexturePtr bakedSkinTexture = nullptr;
 		if (!bakedTextureName.empty())
 		{
 			bakedSkinTexture = GetManager<ITexturesManager>()->Add("Textures\\BakedNpcTextures\\" + bakedTextureName);
@@ -165,7 +165,7 @@ void Character::CreateCharacterModel()
 	string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
 	string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
 
-	M2* model = GetManager<IM2Manager>()->Add(fullModelName);
+	SmartM2Ptr model = GetManager<IM2Manager>()->Add(fullModelName);
 	assert1(model != nullptr);
 
 	setM2(model);
@@ -207,7 +207,7 @@ void Character::RefreshItemVisualData()
 	}
 }
 
-void Character::RefreshTextures(R_Texture * _skin)
+void Character::RefreshTextures(SharedTexturePtr _skin)
 {
 	if (_skin == nullptr)
 	{
@@ -224,7 +224,7 @@ void Character::RefreshTextures(R_Texture * _skin)
 	if (item->InventoryType != InventoryType::NON_EQUIP)
 	{
 		assert1(item->getObjectComponents().size() == 1);
-		R_Texture* cloackTexttre = item->getObjectComponents()[0].texture;
+		SharedTexturePtr cloackTexttre = item->getObjectComponents()[0].texture;
 		setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
 	}
 }

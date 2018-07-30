@@ -7,7 +7,7 @@ class MapController;
 class CWDL_LowResTile : public SceneNode
 {
 public:
-	CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 _indexZ, R_GeometryInfo* _geom);
+	CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 _indexZ, SharedGeomPtr _geom);
 
 	// ISceneNode
 	string getObjectInfo() const override { return "@WDL_LOWRES@"; }

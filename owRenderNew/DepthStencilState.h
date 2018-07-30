@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Object.h"
-
 class DepthStencilState : public Object
 {
 public:

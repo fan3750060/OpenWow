@@ -3,7 +3,7 @@
 // General
 #include "M2_Base_Instance.h"
 
-CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, M2* _m2Object) :
+CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, SmartM2Ptr _m2Object) :
 	SceneNode(_parent),
 	m_M2(nullptr),
 	m_Attached(nullptr),
@@ -47,7 +47,7 @@ void CM2_Base_Instance::Detach()
 	m_Attached = nullptr;
 }
 
-void CM2_Base_Instance::setM2(M2* _model)
+void CM2_Base_Instance::setM2(SmartM2Ptr _model)
 {
 	assert1(m_M2 == nullptr);
 	assert1(_model != nullptr);
@@ -64,17 +64,17 @@ bool CM2_Base_Instance::isMeshEnabled(uint32 _index) const
 }
 void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, cstring _textureName)
 {
-	R_Texture* texture = GetManager<ITexturesManager>()->Add(_textureName);
+	SharedTexturePtr texture = GetManager<ITexturesManager>()->Add(_textureName);
 	setSpecialTexture(_type, texture);
 }
-void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, R_Texture* _texture)
+void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, SharedTexturePtr _texture)
 {
 	if (_texture != nullptr)
 	{
 		m_SpecialTextures[_type] = _texture;
 	}
 }
-R_Texture* CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type _type) const
+SharedTexturePtr CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type _type) const
 {
 	assert1(_type < SM2_Texture::Type::COUNT);
 	return m_SpecialTextures[_type];
@@ -145,7 +145,7 @@ void CM2_Base_Instance::InitLocal()
 	// Create animator
 	if (m_M2->isAnimated())
 	{
-		m_Animator = new CM2_Animator(m_M2);
+		m_Animator = make_shared<CM2_Animator>(m_M2.operator->());
 		_Bindings->RegisterUpdatableObject(this);
 	}
 }

@@ -16,13 +16,27 @@ R_GeometryInfo::R_GeometryInfo(RenderDevice* _RenderDevice) :
 	m_AtrribsBinded(false),
 	m_RenderDevice(_RenderDevice)
 {}
+R_GeometryInfo::R_GeometryInfo(const R_GeometryInfo & _other)
+{
+	if (this != &_other)
+	{
+		m_VertexBufInfo = _other.m_VertexBufInfo;
+		m_VAOGLObj = _other.m_VAOGLObj;
+		m_IndexBuffer = _other.m_IndexBuffer;
+		m_PrimType = _other.m_PrimType;
+		m_VertexLayout = _other.m_VertexLayout;
+		m_IndexBufferFormat = _other.m_IndexBufferFormat;
+		m_AtrribsBinded = _other.m_AtrribsBinded;
+		m_RenderDevice = _other.m_RenderDevice;
+	}
+}
 R_GeometryInfo::~R_GeometryInfo()
 {
 	glDeleteVertexArrays(1, &m_VAOGLObj);
 	glBindVertexArray(0);
 }
 
-void R_GeometryInfo::setGeomVertexParams(R_Buffer* _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm)
+void R_GeometryInfo::setGeomVertexParams(SharedBufferPtr _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm)
 {
 	R_VertexBufferSlot attribInfo;
 	attribInfo.m_VertexBuffer = _vbo;
@@ -34,7 +48,7 @@ void R_GeometryInfo::setGeomVertexParams(R_Buffer* _vbo, R_DataType _type, uint3
 	m_VertexBufInfo.push_back(attribInfo);
 }
 
-void R_GeometryInfo::setGeomIndexParams(R_Buffer* _indBuf, R_IndexFormat _format)
+void R_GeometryInfo::setGeomIndexParams(SharedBufferPtr _indBuf, R_IndexFormat _format)
 {
 	m_IndexBuffer = _indBuf;
 	m_IndexBufferFormat = _format;
@@ -60,7 +74,7 @@ void R_GeometryInfo::finishCreatingGeometry()
 		R_VertexLayoutAttrib& attrib = vl.attribs[i];
 		const R_VertexBufferSlot& vbSlot = m_VertexBufInfo[attrib.vbSlot];
 
-		R_Buffer* buf = m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer;
+		SharedBufferPtr buf = m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer;
 		assert1(buf->m_GLObj && buf->m_Type == GL_ARRAY_BUFFER || buf->m_Type == GL_SHADER_STORAGE_BUFFER); // special case for compute buffer
 
 		glBindBuffer(GL_ARRAY_BUFFER, buf->m_GLObj);

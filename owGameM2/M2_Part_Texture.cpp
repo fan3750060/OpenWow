@@ -39,7 +39,7 @@ void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance*
 
 	if (isTextureSpecial())
 	{
-		R_Texture* texture = _instance->getSpecialTexture(m_SpecialType);
+		SharedTexturePtr texture = _instance->getSpecialTexture(m_SpecialType);
 		if (texture != nullptr)
 		{
 			_state->setTexture(_slot, texture, sampler, 0);

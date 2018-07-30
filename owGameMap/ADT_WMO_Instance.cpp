@@ -3,7 +3,7 @@
 // General
 #include "ADT_WMO_Instance.h"
 
-ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF& _placementInfo) :
+ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo) :
 	CWMO_Base_Instance(_parent, _wmoObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;
@@ -17,7 +17,7 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, WMO* _wmoObject, ADT_MODF
 		// Rotate
 		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
-		rotate.y = rotate.y - Math::PiHalf;
+		rotate.y = rotate.y - glm::half_pi<float>();
 		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);
 		// Matrix
 		CalculateMatrix();

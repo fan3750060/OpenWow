@@ -16,6 +16,7 @@
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="OpenGLAdapterGLFW.cpp" />
+    <ClCompile Include="OpenGLAdapter_Native.cpp" />
     <ClCompile Include="Perfomance.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneNode.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="OpenGLAdapterGLFW.h" />
+    <ClInclude Include="OpenGLAdapter_Native.h" />
     <ClInclude Include="Perfomance.h" />
     <ClInclude Include="RenderingBlend.h" />
     <ClInclude Include="SceneManager.h" />
@@ -49,14 +51,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -86,7 +88,8 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -107,7 +110,8 @@
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
     <Link>

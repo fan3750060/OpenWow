@@ -201,6 +201,15 @@
     <ClCompile Include="BigNumber.cpp">
       <Filter>Common\Cryptography</Filter>
     </ClCompile>
+    <ClCompile Include="NEW_Random.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>Common\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Objects bindings</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
@@ -317,17 +326,8 @@
     <ClInclude Include="MathCommon.h">
       <Filter>Common\Math</Filter>
     </ClInclude>
-    <ClInclude Include="UniquePtr.h">
-      <Filter>RefManager</Filter>
-    </ClInclude>
-    <ClInclude Include="SmartPtr.h">
-      <Filter>RefManager</Filter>
-    </ClInclude>
     <ClInclude Include="BaseManager.h">
       <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="RefItem.h">
-      <Filter>RefManager</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleCommand.h">
       <Filter>Log\Console</Filter>
@@ -391,6 +391,15 @@
     </ClInclude>
     <ClInclude Include="BigNumber.h">
       <Filter>Common\Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="NEW_Random.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Common\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Objects bindings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

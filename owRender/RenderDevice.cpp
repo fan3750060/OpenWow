@@ -105,7 +105,7 @@ RenderDevice::RenderDevice() :
 	_doubleBuffered = false;
 
 	// add default geometry for resetting
-	m_DefaultGeometry = new R_GeometryInfo(this);
+	m_DefaultGeometry = make_shared<R_GeometryInfo>(this);
 	m_DefaultGeometry->m_AtrribsBinded = true;
 
 	m_State.m_CurrentGeometry = m_DefaultGeometry;
@@ -169,11 +169,11 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 	}
 
 	// Debug output
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(glDebugOutput, nullptr);
-//#endif
+#endif
 
 	// Set capabilities
 	m_DeviceCapsSettings.texFloat = true;
@@ -207,12 +207,12 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 		//m_DepthFormat = GL_DEPTH_COMPONENT16;
 		m_DepthFormat = GL_DEPTH_COMPONENT32;
 		Log::Info("Render target depth precision limited to 32 bit");
-		SharedPtr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
+		std::shared_ptr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 		if (testBuf32 == nullptr)
 		{
 			m_DepthFormat = GL_DEPTH_COMPONENT24;
 			Log::Warn("Render target depth precision limited to 24 bit");
-			SharedPtr<R_RenderBuffer> testBuf24 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
+			std::shared_ptr<R_RenderBuffer> testBuf24 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 			if (testBuf24 == nullptr)
 			{
 				m_DepthFormat = GL_DEPTH_COMPONENT16;
@@ -259,7 +259,7 @@ void RenderDevice::beginRendering()
 
 SharedGeomPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
 {
-	SharedGeomPtr geometry = new R_GeometryInfo(this);
+	SharedGeomPtr geometry = make_shared<R_GeometryInfo>(this);
 	
 	uint32 geometryGLObj;
 	glGenVertexArrays(1, &geometryGLObj);
@@ -273,38 +273,38 @@ SharedGeomPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint
 
 // Buffers
 
-R_Buffer* RenderDevice::createVertexBuffer(uint32 size, const void *data, bool _isDynamic)
+SharedBufferPtr RenderDevice::createVertexBuffer(uint32 size, const void *data, bool _isDynamic)
 {
-	R_Buffer* buf = new R_Buffer(this);
+	SharedBufferPtr buf = make_shared<R_Buffer>(this);
 	buf->createVertexBuffer(size, data, _isDynamic);
 	return buf;
 }
 
-R_Buffer* RenderDevice::createIndexBuffer(uint32 size, const void *data, bool _isDynamic)
+SharedBufferPtr RenderDevice::createIndexBuffer(uint32 size, const void *data, bool _isDynamic)
 {
-	R_Buffer* buf = new R_Buffer(this);
+	SharedBufferPtr buf = make_shared<R_Buffer>(this);
 	buf->createIndexBuffer(size, data, _isDynamic);
 	return buf;
 }
 
-R_Buffer* RenderDevice::createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic)
+SharedBufferPtr RenderDevice::createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic)
 {
 	if (m_DeviceCapsSettings.computeShaders)
 	{
-		R_Buffer* buf = new R_Buffer(this);
+		SharedBufferPtr buf = make_shared<R_Buffer>(this);
 		buf->createShaderStorageBuffer(size, data, _isDynamic);
 		return buf;
 	}
 	else
 	{
 		Log::Error("Shader storage buffers are not supported on this OpenGL 4 device.");
-		return 0;
+		return nullptr;
 	}
 }
 
-R_TextureBuffer* RenderDevice::createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic)
+SharedTextureBufferPtr RenderDevice::createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic)
 {
-	R_TextureBuffer* buf = new R_TextureBuffer(this);
+	SharedTextureBufferPtr buf = make_shared<R_TextureBuffer>(this);
 	buf->createTextureBuffer(format, bufSize, data, _isDynamic);
 	checkError();
 	return buf;
@@ -312,9 +312,9 @@ R_TextureBuffer* RenderDevice::createTextureBuffer(R_TextureFormats::List format
 
 // Texturesm
 
-R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB)
+SharedTexturePtr RenderDevice::createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB)
 {
-	R_Texture* tex = new R_Texture("<empty>", this);
+	SharedTexturePtr tex = make_shared<R_Texture>("<empty>", this);
 	tex->createTexture(type, width, height, depth, format, hasMips, genMips, compress, sRGB);
 	checkError();
 	return tex;
@@ -322,9 +322,9 @@ R_Texture* RenderDevice::createTexture(R_TextureTypes::List type, int width, int
 
 // Shaders
 
-R_Shader* RenderDevice::createShader(cstring _name, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc, const char* tessControlShaderSrc, const char* tessEvaluationShaderSrc, const char* computeShaderSrc)
+std::shared_ptr<R_Shader> RenderDevice::createShader(cstring _name, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc, const char* tessControlShaderSrc, const char* tessEvaluationShaderSrc, const char* computeShaderSrc)
 {
-	R_Shader* shader = new R_Shader(this, _name);
+	std::shared_ptr<R_Shader> shader = make_shared<R_Shader>(this, _name);
 	shader->createShader(vertexShaderSrc, fragmentShaderSrc, geometryShaderSrc, tessControlShaderSrc, tessEvaluationShaderSrc, computeShaderSrc);
 	checkError();
 	return shader;
@@ -332,15 +332,15 @@ R_Shader* RenderDevice::createShader(cstring _name, const char* vertexShaderSrc,
 
 // Renderbuffers
 
-R_RenderBuffer* RenderDevice::createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
+std::shared_ptr<R_RenderBuffer> RenderDevice::createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
 {
-	R_RenderBuffer* m_RenderBuffer = new R_RenderBuffer(this);
+	std::shared_ptr<R_RenderBuffer> m_RenderBuffer = make_shared<R_RenderBuffer>(this);
 	m_RenderBuffer->createRenderBuffer(width, height, format, depth, numColBufs, samples);
 	checkError();
 	return m_RenderBuffer;
 }
 
-R_RenderBuffer* RenderDevice::createRenderBuffer(vec2 _size, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
+std::shared_ptr<R_RenderBuffer> RenderDevice::createRenderBuffer(vec2 _size, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples)
 {
 	return createRenderBuffer(static_cast<uint32>(_size.x), static_cast<uint32>(_size.y), format, depth, numColBufs, samples);
 }
@@ -431,7 +431,7 @@ void RenderDevice::commitStates(RenderState* _newStsate, uint32 filter)
 					continue;
 				}
 
-				R_Texture*& tex = _newStsate->m_TextureSlot[i].m_Texture;
+				SharedTexturePtr& tex = _newStsate->m_TextureSlot[i].m_Texture;
 				uint32 access[3] = { GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE };
 
 				glBindImageTexture(i, tex->m_GLObj, 0, false, 0, access[_newStsate->m_TextureSlot[i].usage - 1], tex->m_GLFmt);
@@ -441,14 +441,14 @@ void RenderDevice::commitStates(RenderState* _newStsate, uint32 filter)
 			}
 			else if (_newStsate->m_TextureSlot[i].m_Texture != nullptr)
 			{
-				R_Texture*& tex = _newStsate->m_TextureSlot[i].m_Texture;
+				SharedTexturePtr& tex = _newStsate->m_TextureSlot[i].m_Texture;
 				glBindTexture(tex->m_Type, tex->m_GLObj);
 
 				// Apply sampler state
 				if (tex->m_SamplerState != _newStsate->m_TextureSlot[i].m_SamplerState)
 				{
 					tex->m_SamplerState = _newStsate->m_TextureSlot[i].m_SamplerState;
-					applySamplerState(tex);
+					applySamplerState(tex.operator->());
 				}
 			}
 			else

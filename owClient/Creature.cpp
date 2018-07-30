@@ -101,7 +101,7 @@ void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
 	assert1(modelRec != nullptr);
 
 	string modelName = modelRec->Get_ModelPath();
-	M2* m2 = GetManager<IM2Manager>()->Add(modelName);
+	SmartM2Ptr m2 = GetManager<IM2Manager>()->Add(modelName);
 	assert1(m2 != nullptr);
 
 	setM2(m2);

@@ -8,19 +8,19 @@
 class CWMO_Base_Instance : public SceneNode
 {
 public:
-	CWMO_Base_Instance(SceneNode* _parent, WMO* _wmoObject);
+	CWMO_Base_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject);
 	virtual ~CWMO_Base_Instance();
 
 	// WMO_Base_Instance
-	WMO* getObject() { return m_Object; }
+	SmartWMOPtr getObject() { return m_Object; }
 	void InitTransform();
 	void EmptyTransformAndBounds();
 
-	void AddGroupInstance(CWMO_Group_Instance* _group) { m_GroupInstances.push_back(_group); }
-	vector<SharedPtr<CWMO_Group_Instance>>& getGroupInstances() { return m_GroupInstances; }
+	void AddGroupInstance(std::shared_ptr<CWMO_Group_Instance> _group) { m_GroupInstances.push_back(_group); }
+	vector<std::shared_ptr<CWMO_Group_Instance>>& getGroupInstances() { return m_GroupInstances; }
 
-	void AddOutdoorGroupInstance(CWMO_Group_Instance* _group) { m_OutdoorGroupInstances.push_back(_group); }
-	vector<SharedPtr<CWMO_Group_Instance>>& getGroupOutdoorInstances() { return m_OutdoorGroupInstances; }
+	void AddOutdoorGroupInstance(std::shared_ptr<CWMO_Group_Instance> _group) { m_OutdoorGroupInstances.push_back(_group); }
+	vector<std::shared_ptr<CWMO_Group_Instance>>& getGroupOutdoorInstances() { return m_OutdoorGroupInstances; }
 
 	cmat4 getInvWorld() const { return m_InvWorld; }
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
@@ -42,6 +42,6 @@ protected:
 	mat4									m_InvWorld;
 	vector<vec3>							m_ConvertedVerts;
 	
-	vector<SharedPtr<CWMO_Group_Instance>>	m_GroupInstances;
-	vector<SharedPtr<CWMO_Group_Instance>>	m_OutdoorGroupInstances;
+	vector<std::shared_ptr<CWMO_Group_Instance>>	m_GroupInstances;
+	vector<std::shared_ptr<CWMO_Group_Instance>>	m_OutdoorGroupInstances;
 };

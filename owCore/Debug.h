@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _DEBUG
-#define _CRTDBG_MAP_ALLOC
+/*#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
 
@@ -10,6 +10,7 @@
 // Compile options needed: /Zi /D_DEBUG /MLd
 
 #define new MYDEBUG_NEW
+*/
 #endif
 
 namespace StaticAssert
@@ -56,7 +57,7 @@ inline void FatalMessageBox(const char* _title, const char* _message, ...)
 
 //
 
-#define ASSERTS_ENABLED
+//#define ASSERTS_ENABLED
 
 #ifdef ASSERTS_ENABLED
 

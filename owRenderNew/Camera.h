@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Object.h"
 #include "Ray.h"
 #include "Events.h"
 #include "Viewport.h"
@@ -65,11 +64,6 @@ public:
 	void SetRotate(cvec3 rotate);
 	void SetRotate(const glm::quat& rot);
 
-	// If the pivot distance > 0 then the camera will rotate around a pivot point
-	// that is pivotDistance along the lookAt vector of the camera.
-	void SetPivotDistance(float pivotDistance);
-	float GetPivotDistance() const;
-
 	// Get the camera's pivot point in world space
 	vec3 GetPivotPoint() const;
 
@@ -118,9 +112,7 @@ protected:
 	vec3   m_Translate;
 	glm::quat   m_Rotate;
 
-	// Used for arcball camera
-	vec3   m_PreviousPoint;
-	float       m_PivotDistance;
+	vec2 _p;
 
 	// View matrix
 	mat4   m_ViewMatrix;

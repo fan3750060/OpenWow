@@ -16,7 +16,6 @@ RenderGL::RenderGL() :
 RenderGL::~RenderGL()
 {
 	delete m_Camera;
-	delete m_RenderBuffer;
 
 	delete m_RenderStorage;
 	//delete m_FontsManager;
@@ -46,11 +45,11 @@ void RenderGL::Init(IOpenGLAdapter* _adapter)
 	//--
 
 	m_OrhoMatrix = glm::ortho(0.0f, m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, 0.0f, -1.0f, 1.0f);
-	m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA16F, true, 4, 4);
+	//m_RenderBuffer = r.createRenderBuffer(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY, R_TextureFormats::RGBA16F, true, 1, 4);
 
 	// Main game camera
 	m_Camera = new Camera;
-	m_Camera->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
+	m_Camera->setupViewParams(glm::pi<float>() / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
 	m_Camera->CreateRenderable();
 }
 
@@ -77,18 +76,18 @@ void RenderGL::Set3D()
 
 void RenderGL::BindRBs()
 {
-	m_RenderBuffer->setRenderBuffer();
+	//m_RenderBuffer->setRenderBuffer();
 	r.clear();
 }
 
 void RenderGL::UnbindRBs()
 {
-	m_RenderBuffer->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
+	/*m_RenderBuffer->resetRenderBuffer(); // HACK!!!! MOVE RESET TO RenderDevice
 	for (uint32 i = 0; i < 4; i++)
 	{
 		r.setTexture(i, m_RenderBuffer->getRenderBufferTex(i), SS_FILTER_POINT | SS_ADDR_CLAMP, 0);
 	}
-	r.clear();
+	r.clear();*/
 }
 
 void RenderGL::PostprocessSimple()
@@ -197,19 +196,19 @@ void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 
 #pragma region GUI Part
 
-void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate)
+void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, bool rotate)
 {
 	RenderTexture(_pos, _texture, _texture->GetSize(), rotate);
 }
 
-void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate)
+void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, bool rotate)
 {
 	// Transform
 	mat4 worldTransform;
 	worldTransform = glm::translate(worldTransform, vec3(_pos.x + _size.x / 2.0f, _pos.y + _size.y / 2.0f, 0.1f));
 	if (rotate)
 	{
-		worldTransform = glm::rotate(worldTransform, Math::Pi, vec3(0, 1, 0));// FIXME
+		worldTransform = glm::rotate(worldTransform, glm::pi<float>(), vec3(0, 1, 0));// FIXME
 	}
 	worldTransform = glm::scale(worldTransform, vec3(_size.x / 2.0f, _size.y / 2.0f, 0.0f));
 
@@ -227,7 +226,7 @@ void RenderGL::RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool ro
 	m_TechniquesManager->UI_Texture->Unbind();
 }
 
-void RenderGL::RenderTexture(vec2 _pos, R_Texture * _texture, vec2 _size, float rotate)
+void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, float rotate)
 {
 	// Transform
 	mat4 worldTransform;

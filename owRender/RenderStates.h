@@ -21,12 +21,12 @@ struct RenderState
 		m_ScissorHeight = height;
 		m_StatePendingMask |= PM_SCISSOR;
 	}
-	void setGeometry(R_GeometryInfo* geoIndex)
+	void setGeometry(SharedGeomPtr geoIndex)
 	{
 		m_CurrentGeometry = geoIndex;
 		m_StatePendingMask |= PM_GEOMETRY;
 	}
-	void setTexture(uint32 slot, R_Texture* texObj, uint16 samplerState, uint16 usage)
+	void setTexture(uint32 slot, SharedTexturePtr texObj, uint16 samplerState, uint16 usage)
 	{
 		assert1(slot < 16);
 		m_TextureSlot[slot] = R_TexSlot(texObj, samplerState, usage);
@@ -183,7 +183,7 @@ struct RenderState
 
 	int							m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight;
 	int							m_ScissorX, m_ScissorY, m_ScissorWidth, m_ScissorHeight;
-	R_GeometryInfo*				m_CurrentGeometry;
+	SharedGeomPtr				m_CurrentGeometry;
 	R_TexSlot					m_TextureSlot[16];
 	R_DrawBarriers				m_MemoryBarriers;
 

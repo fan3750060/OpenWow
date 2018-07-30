@@ -29,3 +29,4 @@
 #include "../owIntfs/Settings.h"
 #include "../owIntfs/SkyManager.h"
 #include "../owIntfs/UIManager.h"
+#include "../owIntfs/Visitor.h"

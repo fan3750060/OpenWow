@@ -42,7 +42,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 {
 	if (m_IsContainGeom)
 	{
-		CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
+		CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 		pass->Bind();
 		{
 			pass->setWorld(_instance->getAbsTrans());

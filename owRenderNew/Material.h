@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Object.h"
-
 class RenderDevice;
 class Shader;
 class Texture;
@@ -12,8 +10,6 @@ class ConstantBuffer;
 class Material : public Object
 {
 public:
-	typedef Object base;
-
 	// These are the texture slots that will be used to bind the material's textures
 	// to the shader. Make sure you use the same texture slots in your own shaders.
 	enum class TextureType

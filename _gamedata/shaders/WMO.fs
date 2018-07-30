@@ -10,6 +10,7 @@ in struct VSOutput
 	vec2 TexCoord0;
 	vec2 TexCoord1;
 } VSout;
+out vec4 color;
 
 // Uniforms
 uniform sampler2D gColorMap0;

@@ -42,6 +42,9 @@
     <ClCompile Include="OpenGLAdapterGLFW.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGLAdapter_Native.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -78,6 +81,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="OpenGLAdapterGLFW.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLAdapter_Native.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,7 @@ public:
 	void set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const;
 
 	// Common texture
-	R_Texture* getTexture() const { return m_Texture; }
+	SharedTexturePtr getTexture() const { return m_Texture; }
 	// Special texture
 	bool isTextureSpecial() const { return (m_SpecialType != SM2_Texture::Type::NONE); }
 	SM2_Texture::Type getSpecialTextureType() const { return m_SpecialType; }

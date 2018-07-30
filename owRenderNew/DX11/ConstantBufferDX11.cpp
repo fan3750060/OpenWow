@@ -33,7 +33,7 @@ void ConstantBufferDX11::Set(const void* data, size_t size)
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-	if (FAILED(m_pDeviceContext->Map(m_pBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	if (FAILED(m_pDeviceContext->Map(m_pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
 		Log::Error("Failed to map constant buffer.");
 		return;
@@ -41,7 +41,7 @@ void ConstantBufferDX11::Set(const void* data, size_t size)
 
 	memcpy(mappedResource.pData, data, m_BufferSize);
 
-	m_pDeviceContext->Unmap(m_pBuffer.Get(), 0);
+	m_pDeviceContext->Unmap(m_pBuffer, 0);
 }
 
 void ConstantBufferDX11::Copy(std::shared_ptr<ConstantBuffer> other)
@@ -51,7 +51,7 @@ void ConstantBufferDX11::Copy(std::shared_ptr<ConstantBuffer> other)
 	if (srcBuffer && srcBuffer.get() != this &&
 		m_BufferSize == srcBuffer->m_BufferSize)
 	{
-		m_pDeviceContext->CopyResource(m_pBuffer.Get(), srcBuffer->m_pBuffer.Get());
+		m_pDeviceContext->CopyResource(m_pBuffer, srcBuffer->m_pBuffer);
 	}
 	else
 	{
@@ -64,11 +64,11 @@ void ConstantBufferDX11::Copy(std::shared_ptr<Buffer> other)
 	Copy(std::dynamic_pointer_cast<ConstantBuffer>(other));
 }
 
-bool ConstantBufferDX11::Bind(unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+bool ConstantBufferDX11::Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	bool result = true;
 
-	ID3D11Buffer* pBuffers[] = { m_pBuffer.Get() };
+	ID3D11Buffer* pBuffers[] = { m_pBuffer };
 
 	switch (shaderType)
 	{
@@ -98,7 +98,7 @@ bool ConstantBufferDX11::Bind(unsigned int id, Shader::ShaderType shaderType, Sh
 	return result;
 }
 
-void ConstantBufferDX11::UnBind(unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void ConstantBufferDX11::UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	ID3D11Buffer* pBuffers[] = { nullptr };
 

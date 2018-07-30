@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-// Inlcudes
-#include "RefItem.h"
-
 // General
 #include "RefManager1DimAssync.h"
 

@@ -32,7 +32,6 @@
     <ClInclude Include="Networking.h" />
     <ClInclude Include="OpenGLAdapter.h" />
     <ClInclude Include="Perfomance.h" />
-    <ClInclude Include="Refs.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="RenderDevice.h" />
     <ClInclude Include="Scene.h" />
@@ -41,6 +40,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{69AEC773-3240-4644-A049-ABABD643DBEC}</ProjectGuid>
@@ -50,17 +50,17 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Utility</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -90,7 +90,8 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>..\shared;..\Externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -106,7 +107,8 @@
       <AdditionalIncludeDirectories>..\shared;..\Externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>

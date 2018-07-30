@@ -35,9 +35,9 @@ Character_SkinTextureBaker::Character_SkinTextureBaker()
 	}
 }
 
-R_Texture* Character_SkinTextureBaker::createTexture(Character* _character)
+SharedTexturePtr Character_SkinTextureBaker::createTexture(Character* _character)
 {
-	R_Texture* bakedSkinTexture = _Render->r.createTexture
+	SharedTexturePtr bakedSkinTexture = _Render->r.createTexture
 	(
 		R_TextureTypes::Tex2D,
 		SkinTextureWidth,
@@ -95,7 +95,7 @@ R_Texture* Character_SkinTextureBaker::createTexture(Character* _character)
 	return bakedSkinTexture;
 }
 
-void Character_SkinTextureBaker::FillWithSkin(R_Texture* _skinTexture)
+void Character_SkinTextureBaker::FillWithSkin(SharedTexturePtr _skinTexture)
 {
 	assert1(_skinTexture != nullptr);
 	assert1(_skinTexture->m_Width == (SkinTextureWidth / 2) || _skinTexture->m_Width == SkinTextureWidth);
@@ -133,7 +133,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 	FillPixels(_type, texture);
 }
 
-void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, R_Texture* _compTexture)
+void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, SharedTexturePtr _compTexture)
 {
 	if (_compTexture == nullptr)
 	{

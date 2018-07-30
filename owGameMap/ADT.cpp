@@ -58,7 +58,7 @@ bool ADT::Load()
 	char filename[256];
 	sprintf_s(filename, "%s_%d_%d.adt", m_MapController->getFilenameT().c_str(), m_IndexX, m_IndexZ);
 
-	SharedPtr<IFile> f = GetManager<IFilesManager>()->Open(filename);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(filename);
 	uint32_t startPos = f->getPos() + 20;
 	
 	// MVER + size (8)
@@ -97,7 +97,7 @@ bool ADT::Load()
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 
-		SharedPtr<ADT_TextureInfo> textureInfo = new ADT_TextureInfo();
+		std::shared_ptr<ADT_TextureInfo> textureInfo = make_shared<ADT_TextureInfo>();
 		textureInfo->textureName = _string;
 
 		m_Textures.push_back(textureInfo);
@@ -221,10 +221,10 @@ bool ADT::Load()
 					if (mh2o_Header->layersCount > 0)
 					{
 						CADT_Liquid* liquid = new CADT_Liquid(8, 8);
-						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
+						liquid->CreateFromTerrainMH2O(f.operator->(), mh2o_Header);
 
 						// Create instance
-						Liquid_Instance* instance = new Liquid_Instance(this, liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						std::shared_ptr<Liquid_Instance> instance = make_shared<Liquid_Instance>(this, liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
 						m_LiquidsInstances.push_back(instance);
 					}
 					abuf += sizeof(MH2O_Header);
@@ -258,7 +258,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
 
-		SharedPtr<ADT_MCNK> chunk = new ADT_MCNK(m_MapController, this, f);
+		std::shared_ptr<ADT_MCNK> chunk = make_shared<ADT_MCNK>(m_MapController, this, f.operator->());
 		chunk->Load();
 		m_Chunks.push_back(chunk);
 
@@ -271,10 +271,10 @@ bool ADT::Load()
 
 	for (auto& it : m_WMOsPlacementInfo)
 	{
-		WMO* wmo = (WMO*)GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
+		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
 		{
-			ADT_WMO_Instance* inst = new ADT_WMO_Instance(this, wmo, it);
+			std::shared_ptr<ADT_WMO_Instance> inst = make_shared<ADT_WMO_Instance>(this, wmo, it);
 			m_WMOsInstances.push_back(inst);
 
 			BoundingBox bbox = getBounds();
@@ -287,10 +287,10 @@ bool ADT::Load()
 
 	for (auto& it : m_MDXsPlacementInfo)
 	{
-		M2* mdx = (M2*)GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
+		SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
-			ADT_MDX_Instance* inst = new ADT_MDX_Instance(this, mdx, it);
+			std::shared_ptr<ADT_MDX_Instance> inst = make_shared<ADT_MDX_Instance>(this, mdx, it);
 			m_MDXsInstances.push_back(inst);
 
 			BoundingBox bbox = getBounds();

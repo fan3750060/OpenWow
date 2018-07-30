@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Refs.h"
-
 struct 
 	__declspec(uuid("DBB1D38E-CE3F-4C05-8625-313BFC524C5A"))
-	IDebugOutput : public IRefItem
+	IDebugOutput
 {
 	enum DebugMessageType
 	{

@@ -7,7 +7,6 @@ Graphics* g_pGrahics = NULL;
 // DirectX stuff
 ID3D11Device2* device = nullptr;
 
-
 Graphics& Graphics::Instance()
 {
 	assert( g_pGrahics != NULL );

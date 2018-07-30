@@ -13,7 +13,7 @@ public:
 	void Render3D() override;
 
 private:
-	SharedPtr<Liquid>	m_Object;
+	Liquid*	m_Object;
 
 	//--
 	CGroupQuality&		m_QualitySettings;

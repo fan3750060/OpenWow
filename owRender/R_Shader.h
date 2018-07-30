@@ -4,7 +4,7 @@
 class RenderDevice;
 // FORWARD END
 
-class R_Shader : public CRefItem
+class R_Shader
 {
 public:
 	R_Shader(RenderDevice* _RenderDevice, cstring _name);

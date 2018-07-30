@@ -1,17 +1,17 @@
 #pragma once
 
-class Font : public CRefItem
+class Font 
 {
 public:
-	Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _widthArray, uint32 _height);
+	Font(SharedTexturePtr _texture, SharedGeomPtr _fontGeometry, vector<uint32> _widthArray, uint32 _height);
 	~Font();
 
 	void Render(cstring _string, vec2 _offset, const Color& _color) const;
 
 	// Getters
 	uint32 GetStringWidth(cstring _string) const;
-	R_Texture* getTexture() const { return m_Texture; }
-	R_GeometryInfo* getGeometry() const { return m_Geometry; }
+	SharedTexturePtr getTexture() const { return m_Texture; }
+	SharedGeomPtr getGeometry() const { return m_Geometry; }
 	uint32 GetHeight() const { return m_Height; }
 
 public:
@@ -25,7 +25,7 @@ private:
 	uint32			m_Height;
 };
 
-struct FontDeleter
+/*struct FontDeleter
 {
 	void operator()(Font* p)
 	{
@@ -35,5 +35,5 @@ struct FontDeleter
 			fontManager->Delete(p);
 		}
 	}
-};
-typedef SharedPtr<Font, FontDeleter> SharedFontPtr;
+};*/
+typedef std::shared_ptr<Font> SharedFontPtr;

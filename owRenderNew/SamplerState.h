@@ -2,7 +2,6 @@
 /**
  * Texture Sampler State. Defines how a texture is sampled in a shader.
  */
-#include "Object.h"
 #include "Shader.h"
 #include "ShaderParameter.h"
 

@@ -4,7 +4,7 @@
 class RenderDevice;
 // FORWARD END
 
-class R_RenderBuffer : public CRefItem
+class R_RenderBuffer
 {
 	static const uint32 MaxColorAttachmentCount = 4;
 
@@ -14,8 +14,8 @@ public:
 
 	//
 
-	R_RenderBuffer* createRenderBuffer(uint32 _width, uint32 _height, R_TextureFormats::List _format, bool _depth, uint32 _numColBufs, uint32 _samples);
-	R_Texture* getRenderBufferTex(uint32 bufIndex);
+	void createRenderBuffer(uint32 _width, uint32 _height, R_TextureFormats::List _format, bool _depth, uint32 _numColBufs, uint32 _samples);
+	SharedTexturePtr getRenderBufferTex(uint32 bufIndex);
 	void setRenderBuffer();
 	void resetRenderBuffer();
 	bool getRenderBufferData(int _bufIndex, int* _width, int* _height, int* _compCount, void* _dataBuffer, int _bufferSize);

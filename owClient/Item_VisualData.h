@@ -34,7 +34,7 @@ public:
 
 	const vector<ObjectComponent>&  getObjectComponents() const { return m_ObjectComponents; }
 	const vector<GeosetComponent>&  getGeosetComponents() const { return m_GeosetComponents; }
-	R_Texture*                      getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
+	SharedTexturePtr                getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
 
 	void Render3D();
 
@@ -43,9 +43,9 @@ private:
 	void InitGeosetComponents();
 	void InitTextureComponents();
 
-	M2*        LoadObjectModel   (InventoryType::List _objectType, string _modelName);
-	R_Texture* LoadObjectTexture (InventoryType::List _objectType, string _textureName);
-	R_Texture* LoadSkinTexture   (DBC_CharComponent_Sections::List _type, string _textureName);
+	SmartM2Ptr        LoadObjectModel   (InventoryType::List _objectType, string _modelName);
+	SharedTexturePtr LoadObjectTexture (InventoryType::List _objectType, string _textureName);
+	SharedTexturePtr LoadSkinTexture   (DBC_CharComponent_Sections::List _type, string _textureName);
 	
 	// Helpers
 	string getTextureComponentName(DBC_CharComponent_Sections::List _type, string _textureName, Gender::List _gender);

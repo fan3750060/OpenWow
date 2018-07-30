@@ -13,7 +13,7 @@ public:
 	// Always returns BufferType::ConstantBuffer
 	virtual BufferType GetType() const;
 	// Constant buffers only have 1 element.
-	virtual unsigned int GetElementCount() const;
+	virtual uint32 GetElementCount() const;
 
 	// Copy the contents of a buffer to this one.
 	// Buffers must be the same size.

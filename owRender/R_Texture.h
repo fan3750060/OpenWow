@@ -4,26 +4,28 @@
 class RenderDevice;
 // FORWARD END
 
-class R_Texture : public CRefItem
+class R_Texture
 {
 public:
 	R_Texture(cstring _name, RenderDevice* _renderDevice);
 	virtual ~R_Texture();
 
-	void FillDataBy(R_Texture* _other)
+	R_Texture& Fill(const R_Texture& _other)
 	{
-		m_GLObj = _other->m_GLObj;
-		m_GLFmt = _other->m_GLFmt;
-		m_Type = _other->m_Type;
-		m_Format = _other->m_Format;
-		m_Width = _other->m_Width;
-		m_Height = _other->m_Height;
-		m_Depth = _other->m_Depth;
-		m_MemSize = _other->m_MemSize;
-		m_SamplerState = _other->m_SamplerState;
-		m_IssRGB = _other->m_IssRGB;
-		m_HasMips = _other->m_HasMips;
-		m_GenMips = _other->m_GenMips;
+		m_GLObj = _other.m_GLObj;
+		m_GLFmt = _other.m_GLFmt;
+		m_Type = _other.m_Type;
+		m_Format = _other.m_Format;
+		m_Width = _other.m_Width;
+		m_Height = _other.m_Height;
+		m_Depth = _other.m_Depth;
+		m_MemSize = _other.m_MemSize;
+		m_SamplerState = _other.m_SamplerState;
+		m_IssRGB = _other.m_IssRGB;
+		m_HasMips = _other.m_HasMips;
+		m_GenMips = _other.m_GenMips;
+
+		return *this;
 	}
 
 	R_Texture* createTexture(R_TextureTypes::List _type, int _width, int _height, int _depth, R_TextureFormats::List _format, bool _hasMips, bool _genMips, bool _compress, bool _sRGB);
@@ -53,9 +55,9 @@ private:
 	RenderDevice*			m_RenderDevice;
 };
 
-struct R_TextureDeleter
+/*struct R_TextureDeleter
 {
-	void operator()(R_Texture* p)
+	void operator()(SharedTexturePtr p)
 	{
 		ITexturesManager* textManager = GetManager<ITexturesManager>();
 		if (textManager != nullptr)
@@ -64,8 +66,22 @@ struct R_TextureDeleter
 			return;
 		}
 
-		delete p;
-		p = nullptr;
+		//delete p;
+		//p = nullptr;
 	}
 };
-typedef SharedPtr<R_Texture, R_TextureDeleter> SharedTexturePtr;
+
+void R_TextureDeleter2(SharedTexturePtr _texture)
+{
+	ITexturesManager* textManager = GetManager<ITexturesManager>();
+	if (textManager != nullptr)
+	{
+		textManager->Delete(_texture);
+		return;
+	}
+
+	//delete _texture;
+	//_texture = nullptr;
+}*/
+
+typedef shared_ptr<R_Texture> SharedTexturePtr;

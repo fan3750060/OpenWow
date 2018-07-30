@@ -36,7 +36,7 @@ public: // Getters
 
 	bool isUncompressedAlpha() const { return m_WDT->getFlags()->Flag_8bitMCAL; }
 	bool isTileBased() const { return m_WDT->MapHasTiles(); }
-	const ADT_WMO_Instance* getGlobalInstance() const { return m_WDT->GetGlobalWMOInstance(); }
+	const std::shared_ptr<ADT_WMO_Instance> getGlobalInstance() const { return m_WDT->GetGlobalWMOInstance(); }
 
 	int GetCurrentX() const { return m_CurrentTileX; }
 	int GetCurrentZ() const { return m_CurrentTileZ; }
@@ -44,7 +44,7 @@ public: // Getters
 	void SetOutOfBounds(bool _value) { m_IsOnInvalidTile = _value; }
 	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
 	
-	R_Texture* getMinimap() const { return m_WDL->getMinimap(); }
+	SharedTexturePtr getMinimap() const { return m_WDL->getMinimap(); }
 	const SkyManager* getSkyManager() const { return m_SkyManager; }
 	const WowTime* getTime() const { return &m_GameTime; }
 

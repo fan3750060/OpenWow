@@ -6,7 +6,7 @@
 // General
 #include "WDL_LowResTile.h"
 
-CWDL_LowResTile::CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 _indexZ, R_GeometryInfo* _geom) :
+CWDL_LowResTile::CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 _indexZ, SharedGeomPtr _geom) :
 	SceneNode(_parent),
 	m_MapController(_parent),
 	m_IndexX(_indexX),
@@ -52,7 +52,7 @@ void CWDL_LowResTile::Render3D()
 {
 	PERF_START(PERF_MAP_LOWRESOLUTION);
 	{
-		CWDL_LowRes_Pass* pass = _Render->getTechniquesMgr()->WDL_LowRes_Pass;
+		CWDL_LowRes_Pass* pass = _Render->getTechniquesMgr()->WDL_LowRes_Pass.operator->();
 		pass->Bind();
 		{
 			pass->setColor(m_MapController->getSkyManager()->GetColor(LightColors::LIGHT_COLOR_FOG));

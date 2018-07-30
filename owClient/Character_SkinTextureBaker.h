@@ -18,12 +18,12 @@ class Character_SkinTextureBaker
 public:
 	Character_SkinTextureBaker();
 
-	R_Texture* createTexture(Character* _character);
+	SharedTexturePtr createTexture(Character* _character);
 
 private:
-	void FillWithSkin(R_Texture* _texture);
+	void FillWithSkin(SharedTexturePtr _texture);
 	void FillPixels(DBC_CharComponent_Sections::List _type, string _name);
-	void FillPixels(DBC_CharComponent_Sections::List _type, R_Texture* _texture);
+	void FillPixels(DBC_CharComponent_Sections::List _type, SharedTexturePtr _texture);
 
 private:
 	struct PixelData

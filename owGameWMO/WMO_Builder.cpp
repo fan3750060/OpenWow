@@ -16,7 +16,6 @@ CWMO_Builder::CWMO_Builder(WMO* _model) :
 
 CWMO_Builder::~CWMO_Builder()
 {
-	if (m_F != nullptr)	delete m_F;
 }
 
 void CWMO_Builder::Load()

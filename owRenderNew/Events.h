@@ -4,7 +4,6 @@
 #include <boost/function.hpp>
 #include <boost/signals2.hpp>
 
-#include "Object.h"
 #include "KeyCodes.h"
 
 class Camera;
@@ -60,9 +59,6 @@ private:
 	mutable Callbacks   m_Callbacks;
 };
 
-
-
-// Base class for all event args
 class EventArgs
 {
 public:
@@ -73,8 +69,8 @@ public:
 	// The object that invoked the event
 	const Object& Caller;
 };
-// Standard event type
 typedef Delegate<EventArgs> Event;
+
 
 class WindowCloseEventArgs : EventArgs
 {
@@ -94,6 +90,7 @@ public:
 };
 typedef Delegate<WindowCloseEventArgs> WindowCloseEvent;
 
+
 class KeyEventArgs : public EventArgs
 {
 public:
@@ -104,7 +101,7 @@ public:
 	};
 
 	typedef EventArgs base;
-	KeyEventArgs(const Object& caller, KeyCode key, unsigned int c, KeyState state, bool control, bool shift, bool alt)
+	KeyEventArgs(const Object& caller, KeyCode key, uint32 c, KeyState state, bool control, bool shift, bool alt)
 		: base(caller)
 		, Key(key)
 		, Char(c)
@@ -115,13 +112,15 @@ public:
 	{}
 
 	KeyCode         Key;    // The Key Code that was pressed or released.
-	unsigned int    Char;   // The 32-bit character code that was pressed. This value will be 0 if it is a non-printable character.
+	uint32    Char;   // The 32-bit character code that was pressed. This value will be 0 if it is a non-printable character.
 	KeyState        State;  // Was the key pressed or released?
 	bool            Control;// Is the Control modifier pressed
 	bool            Shift;  // Is the Shift modifier pressed
 	bool            Alt;    // Is the Alt modifier pressed
 };
 typedef Delegate<KeyEventArgs> KeyboardEvent;
+
+
 
 class MouseMotionEventArgs : public EventArgs
 {
@@ -151,6 +150,8 @@ public:
 
 };
 typedef Delegate<MouseMotionEventArgs> MouseMotionEvent;
+
+
 
 class MouseButtonEventArgs : public EventArgs
 {
@@ -195,6 +196,8 @@ public:
 };
 typedef Delegate<MouseButtonEventArgs> MouseButtonEvent;
 
+
+
 class MouseWheelEventArgs : public EventArgs
 {
 public:
@@ -224,6 +227,8 @@ public:
 };
 typedef Delegate<MouseWheelEventArgs> MouseWheelEvent;
 
+
+
 class ResizeEventArgs : public EventArgs
 {
 public:
@@ -234,13 +239,12 @@ public:
 		, Height(height)
 	{}
 
-	// The new width of the window
 	int Width;
-	// The new height of the window.
 	int Height;
-
 };
 typedef Delegate<ResizeEventArgs> ResizeEvent;
+
+
 
 class UpdateEventArgs : public EventArgs
 {
@@ -256,6 +260,8 @@ public:
 	float TotalTime;
 };
 typedef Delegate<UpdateEventArgs> UpdateEvent;
+
+
 
 class RenderEventArgs : public EventArgs
 {
@@ -278,6 +284,8 @@ public:
 };
 typedef Delegate<RenderEventArgs> RenderEvent;
 
+
+
 class UserEventArgs : public EventArgs
 {
 public:
@@ -294,24 +302,3 @@ public:
 	void*   Data2;
 };
 typedef Delegate<UserEventArgs> UserEvent;
-
-class ProgressEventArgs : public EventArgs
-{
-public:
-	typedef EventArgs base;
-
-	ProgressEventArgs(const Object& caller, cstring fileName, float progress, bool cancel = false)
-		: base(caller)
-		, FileName(fileName)
-		, Progress(progress)
-		, Cancel(cancel)
-	{}
-
-	// The file that is being loaded.
-	std::string FileName;
-	// The progress of the loading process.
-	float Progress;
-	// Set to TRUE to cancel loading.
-	bool Cancel;
-};
-typedef Delegate<ProgressEventArgs> ProgressEvent;

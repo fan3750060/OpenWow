@@ -23,7 +23,7 @@ struct ADT_MHDR
 	uint8 unk1[16];
 };
 
-struct ADT_TextureInfo : public CRefItem
+struct ADT_TextureInfo
 {
 	ADT_TextureInfo() :
 		diffuseTexture(nullptr),

@@ -7,6 +7,7 @@
 #include "../owEngine/Engine.h"
 #include "../owEngine/GameStateManager.h"
 #include "../owEngine/Loader.h"
+#include "../owEngine/OpenGLAdapter_Native.h"
 #include "../owEngine/OpenGLAdapterGLFW.h"
 #include "../owEngine/SceneManager.h"
 #include "../owEngine/Perfomance.h"

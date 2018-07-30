@@ -11,7 +11,6 @@ struct MinimapDir
 {
 	MinimapDir()
 	{
-		memset(textures, 0x00, sizeof(R_Texture*) * C_TilesInMap * C_TilesInMap);
 	}
 
 	void Load();
@@ -19,7 +18,7 @@ struct MinimapDir
 
 	string						name;
 	vector<MinimapData_Map*>	data;
-	R_Texture*					textures[C_TilesInMap][C_TilesInMap];
+	SharedTexturePtr			textures[C_TilesInMap][C_TilesInMap];
 };
 
 class CMinimapProvider
@@ -34,7 +33,7 @@ public:
 	MinimapDir* getMinimap(string _name);
 
 private:
-	UniquePtr<IFile> m_File;
+	std::shared_ptr<IFile> m_File;
 
 	vector<MinimapDir*> m_Minimaps;
 	const CGroupVideo& m_GroupVideo;

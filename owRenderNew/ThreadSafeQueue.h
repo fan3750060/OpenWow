@@ -42,7 +42,7 @@ public:
 			nMaxCount,	// max count
 			NULL);		// anonymous
 	}
-	
+
 	~CThreadSafeQueue()
 	{
 		::CloseHandle(m_hSemaphore);
@@ -51,10 +51,10 @@ public:
 
 	void push(C& c)
 	{
-//		CComCritSecLock<CComAutoCriticalSection> lock( m_Crit, true );
-        MutexLock lock( m_Crit );
+		//		CComCritSecLock<CComAutoCriticalSection> lock( m_Crit, true );
+		MutexLock lock(m_Crit);
 
-		push_back( c );
+		push_back(c);
 		lock.unlock();
 
 		if (!::ReleaseSemaphore(m_hSemaphore, 1, NULL))
@@ -70,8 +70,8 @@ public:
 
 	bool pop(C& c)
 	{
-//		CComCritSecLock<CComAutoCriticalSection> lock( m_Crit, true );
-        MutexLock lock( m_Crit );
+		//		CComCritSecLock<CComAutoCriticalSection> lock( m_Crit, true );
+		MutexLock lock(m_Crit);
 
 		// If the user calls pop() more than once after the
 		// semaphore is signaled, then the semaphore count will
@@ -92,10 +92,10 @@ public:
 	// If overflow, use this to clear the queue.
 	void clear()
 	{
-//		CComCritSecLock<CComAutoCriticalSection> lock( m_Crit, true );
-        MutexLock lock( m_Crit );
+		//		CComCritSecLock<CComAutoCriticalSection> lock( m_Crit, true );
+		MutexLock lock(m_Crit);
 
-		for (DWORD i=0; i<size(); i++)
+		for (DWORD i = 0; i < size(); i++)
 			WaitForSingleObject(m_hSemaphore, 0);
 
 		__super::clear();
@@ -112,9 +112,9 @@ public:
 
 protected:
 	HANDLE m_hSemaphore;
-//	CComAutoCriticalSection m_Crit;
-    typedef std::unique_lock<std::mutex> MutexLock;
-    std::mutex m_Crit;
+	//	CComAutoCriticalSection m_Crit;
+	typedef std::unique_lock<std::mutex> MutexLock;
+	std::mutex m_Crit;
 
 	bool m_bOverflow;
 };

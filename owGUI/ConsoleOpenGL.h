@@ -41,7 +41,7 @@ protected:
 
 private:
 	vec2 windowSize;
-	Font* consoleFont;
+	SharedFontPtr consoleFont;
 
 	bool m_IsOpened;
 	

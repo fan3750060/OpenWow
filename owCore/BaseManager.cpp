@@ -14,7 +14,7 @@ CBaseManager::CBaseManager() :
 
 CBaseManager::~CBaseManager()
 {
-	OutputDebugString(L"CBaseManager destroyed.\n");
+	OutputDebugString("CBaseManager destroyed.\n");
 }
 
 void CBaseManager::RegisterManager(GUID _type, IManager* _manager)

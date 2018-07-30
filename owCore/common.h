@@ -11,12 +11,10 @@ using namespace std;
 #include "Debug.h"
 #include "Macros.h"
 
-#include "RefItem.h"
-#include "SmartPtr.h"
-
 // Primitives
 #include "Math.h"
 #include "BoundingBox.h"
+#include "BoundingSphere.h"
 #include "Frustrum.h"
 #include "Plane.h"
 
@@ -29,6 +27,7 @@ using namespace std;
 
 // Utils
 #include "Random.h"
+#include "NEW_Random.h"
 #include "Utils.h"
 #include "Log.h"
 #include "Input.h"

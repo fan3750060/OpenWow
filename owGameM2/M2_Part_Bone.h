@@ -60,7 +60,7 @@ struct M2_GameBoneType
 class CM2_Part_Bone
 {
 public:
-	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<IFile*>* animfiles);
+	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<std::shared_ptr<IFile>>* animfiles);
 
 	void setParentBone(const CM2_Comp_Skeleton* _skeleton);
 	uint16 getSubmesh() const { return submesh; };

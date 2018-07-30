@@ -33,7 +33,7 @@ private:
 
 	// Refreshers
 	void RefreshItemVisualData();
-	void RefreshTextures(R_Texture* _skin = nullptr);
+	void RefreshTextures(SharedTexturePtr _skin = nullptr);
 	void RefreshMeshIDs();
 
 private:

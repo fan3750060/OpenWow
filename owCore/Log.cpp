@@ -29,7 +29,7 @@ CLog::~CLog()
 
 	DeleteCriticalSection(&debugCS);
 
-	OutputDebugString(L"Log destroyed.\n");
+	OutputDebugString("Log destroyed.\n");
 }
 
 //--

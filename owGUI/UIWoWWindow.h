@@ -12,7 +12,7 @@ public:
     void OnRenderUI() override;
 
 private:
-    R_Texture*  m_Background;
+	SharedTexturePtr  m_Background;
     Image*    m_Images[8];
     enum Images
     {

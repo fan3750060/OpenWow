@@ -29,9 +29,9 @@ protected:
 	D3D11_DEPTH_STENCIL_DESC TranslateDepthStencilState(const DepthMode& depthMode, const StencilMode& stencilMode) const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
 
 	DepthMode m_DepthMode;
 	StencilMode m_StencilMode;

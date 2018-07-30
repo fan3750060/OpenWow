@@ -18,7 +18,7 @@ class CM2_Builder;
 class CM2_Skin_Builder;
 // FORWARD END
 
-class M2 : public CRefItem
+class M2
 {
 	friend class CM2_Builder;
 	friend class CM2_Skin_Builder;
@@ -92,11 +92,11 @@ private: // Static and Consts
 };
 
 
-struct M2Deleter
+/*struct M2Deleter
 {
 	void operator()(M2* p)
 	{
 		GetManager<IM2Manager>()->Delete(p);
 	}
-};
-typedef SharedPtr<M2, M2Deleter> SmartM2Ptr;
+};*/
+typedef std::shared_ptr<M2> SmartM2Ptr;

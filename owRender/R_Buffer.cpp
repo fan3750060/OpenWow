@@ -15,6 +15,17 @@ R_Buffer::R_Buffer(RenderDevice* _RenderDevice) :
 	m_IsDynamic(true),
 	m_RenderDevice(_RenderDevice)
 {}
+R_Buffer::R_Buffer(const R_Buffer & _other)
+{
+	if (this != &_other)
+	{
+		m_Type = _other.m_Type;
+		m_GLObj = _other.m_GLObj;
+		m_Size = _other.m_Size;
+		m_IsDynamic = _other.m_IsDynamic;
+		m_RenderDevice = _other.m_RenderDevice;
+	}
+}
 
 R_Buffer::~R_Buffer()
 {
@@ -22,7 +33,7 @@ R_Buffer::~R_Buffer()
 	m_RenderDevice->m_BufferMem -= m_Size;
 }
 
-R_Buffer* R_Buffer::createBuffer(uint32 _bufType, uint32 _size, const void* _data, bool _isDynamic)
+void R_Buffer::createBuffer(uint32 _bufType, uint32 _size, const void* _data, bool _isDynamic)
 {
 	m_Type = _bufType;
 	m_Size = _size;
@@ -35,20 +46,19 @@ R_Buffer* R_Buffer::createBuffer(uint32 _bufType, uint32 _size, const void* _dat
 	glBindBuffer(m_Type, 0);
 
 	m_RenderDevice->m_BufferMem += _size;
-	return this;
 }
 
-R_Buffer* R_Buffer::createVertexBuffer(uint32 _size, const void* _data, bool _isDynamic)
+void R_Buffer::createVertexBuffer(uint32 _size, const void* _data, bool _isDynamic)
 {
 	return createBuffer(GL_ARRAY_BUFFER, _size, _data, _isDynamic);
 }
 
-R_Buffer* R_Buffer::createIndexBuffer(uint32 _size, const void* _data, bool _isDynamic)
+void R_Buffer::createIndexBuffer(uint32 _size, const void* _data, bool _isDynamic)
 {
 	return createBuffer(GL_ELEMENT_ARRAY_BUFFER, _size, _data, _isDynamic);
 }
 
-R_Buffer* R_Buffer::createShaderStorageBuffer(uint32 _size, const void* _data, bool _isDynamic)
+void R_Buffer::createShaderStorageBuffer(uint32 _size, const void* _data, bool _isDynamic)
 {
 	if (GetSettingsGroup<CGroupRenderCaps>().computeShaders)
 	{
@@ -57,7 +67,6 @@ R_Buffer* R_Buffer::createShaderStorageBuffer(uint32 _size, const void* _data, b
 	else
 	{
 		Log::Error("Shader storage buffers are not supported on this OpenGL 4 device.");
-		return 0;
 	}
 }
 

@@ -47,7 +47,7 @@ struct R_TexSlot
 		m_SamplerState(0),
 		usage(0)
 	{}
-	R_TexSlot(R_Texture* _texture, uint32 _samplerState, uint32 _usage) :
+	R_TexSlot(SharedTexturePtr _texture, uint32 _samplerState, uint32 _usage) :
 		m_Texture(_texture),
 		m_SamplerState(_samplerState),
 		usage(_usage)
@@ -55,7 +55,7 @@ struct R_TexSlot
 
 	//
 
-    R_Texture*  m_Texture;
+	SharedTexturePtr  m_Texture;
 	uint32      m_SamplerState;
 	uint32      usage;
 };

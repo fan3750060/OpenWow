@@ -3,7 +3,7 @@
 // General
 #include "WMO_Base_Instance.h"
 
-CWMO_Base_Instance::CWMO_Base_Instance(SceneNode* _parent, WMO* _wmoObject) :
+CWMO_Base_Instance::CWMO_Base_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject) :
 	SceneNode(_parent),
 	m_Object(_wmoObject)
 {

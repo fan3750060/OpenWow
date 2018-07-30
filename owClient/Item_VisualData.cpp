@@ -137,14 +137,14 @@ void CItem_VisualData::InitObjectComponents()
 		}
 		else if (InventoryType == InventoryType::CLOAK)
 		{
-			R_Texture* texture = LoadObjectTexture(InventoryType, objectTextureName);
+			SharedTexturePtr texture = LoadObjectTexture(InventoryType, objectTextureName);
 			m_ObjectComponents.push_back({ nullptr, texture, nullptr });
 			continue;
 		}
 
 		// Fill data
-		M2* model = LoadObjectModel(InventoryType, objectFileName);
-		R_Texture* itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
+		SmartM2Ptr model = LoadObjectModel(InventoryType, objectFileName);
+		SharedTexturePtr itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
 		const CM2_Part_Attachment* itemObjectAttach = m_ParentCharacter->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
@@ -170,9 +170,9 @@ void CItem_VisualData::InitObjectComponents()
 					continue;
 				}
 
-				M2* visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
+				SmartM2Ptr visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
 
-				CM2_Base_Instance* visInstance = new CM2_Base_Instance(itemObjectInstance, visModel);
+				std::shared_ptr<CM2_Base_Instance> visInstance = make_shared<CM2_Base_Instance>(itemObjectInstance, visModel);
 				const CM2_Part_Attachment* visAttach = nullptr;
 
 				if (itemObjectInstance->getM2()->getMiscellaneous()->isAttachmentExists((M2_AttachmentType::List)j))
@@ -223,22 +223,22 @@ void CItem_VisualData::InitTextureComponents()
 			continue;
 		}
 
-		R_Texture* textureComponent = LoadSkinTexture(ItemTextureComponents[i].list, textureComponentName);
+		SharedTexturePtr textureComponent = LoadSkinTexture(ItemTextureComponents[i].list, textureComponentName);
 		m_TextureComponents[i] = textureComponent;
 	}
 }
 
-M2* CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, string _modelName)
+SmartM2Ptr CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, string _modelName)
 {
 	return GetManager<IM2Manager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _modelName);
 }
 
-R_Texture* CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, string _textureName)
+SharedTexturePtr CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, string _textureName)
 {
 	return GetManager<ITexturesManager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _textureName + ".blp");
 }
 
-R_Texture* CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, string _textureName)
+SharedTexturePtr CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, string _textureName)
 {
 	string universalTexture = getTextureComponentName(_type, _textureName, Gender::None);
 	string maleTexture = getTextureComponentName(_type, _textureName, Gender::Male);

@@ -1,22 +1,21 @@
 #pragma once
 
-#pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "freetype28.lib")
 #pragma comment(lib, "libmpq.lib")
-#pragma comment(lib, "glfw3.lib")
 
 #include <owIntfs.h>
+#pragma comment(lib, "owIntfs.lib")
 
 #include <owCore.h>
 #pragma comment(lib, "owCore.lib")
 
-#include <owRender.h>
+#include <owRenderNew.h>
 #pragma comment(lib, "owRender.lib")
 
-#include <owGUI.h>
-#pragma comment(lib, "owGUI.lib")
+/*#include <owGUI.h>
+#pragma comment(lib, "owGUI.lib")*/
 
-#include <owEngine.h>
+#include <owEngineNew.h>
 #pragma comment(lib, "owEngine.lib")
 
 // GAME

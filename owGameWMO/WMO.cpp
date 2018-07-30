@@ -41,7 +41,7 @@ void WMO::CreateInsances(CWMO_Base_Instance* _parent)
 {
 	for (auto& it : m_Groups)
 	{
-		CWMO_Group_Instance* groupInstance = new CWMO_Group_Instance(_parent, it);
+		std::shared_ptr<CWMO_Group_Instance> groupInstance = make_shared<CWMO_Group_Instance>(_parent, it);
 		_parent->AddGroupInstance(groupInstance);
 		if (it->m_Header.flags.IS_OUTDOOR)
 		{
@@ -54,7 +54,7 @@ void WMO::CreateInsances(CWMO_Base_Instance* _parent)
 
 bool WMO::Load()
 {
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(m_FileName);
 	if (f == nullptr)
 	{
 		return false;
@@ -123,7 +123,7 @@ bool WMO::Load()
 
 				char fname[256];
 				sprintf_s(fname, "%s_%03d.wmo", temp, i);
-				IFile* groupFile = GetManager<IFilesManager>()->Open(fname); // It delete later
+				std::shared_ptr<IFile> groupFile = GetManager<IFilesManager>()->Open(fname); // It delete later
 
 				string groupName = groupFile->Name();
 				if (groupInfos[i].nameoffset > 0)

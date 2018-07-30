@@ -15,6 +15,7 @@
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="BigNumber.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="DebugOutputConsole.cpp" />
     <ClCompile Include="DebugOutputLog.cpp" />
     <ClCompile Include="ConsoleCommand.cpp" />
@@ -37,6 +38,8 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="MPQArchiveManager.cpp" />
     <ClCompile Include="MPQFile.cpp" />
+    <ClCompile Include="NEW_Random.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="OpenSSLCrypto.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Random.cpp" />
@@ -61,6 +64,7 @@
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="BigNumber.h" />
     <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="DebugOutputConsole.h" />
     <ClInclude Include="DebugOutputLog.h" />
     <ClInclude Include="HMACSHA1.h" />
@@ -96,11 +100,12 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="MPQArchiveManager.h" />
     <ClInclude Include="MPQFile.h" />
+    <ClInclude Include="NEW_Random.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="OpenSSLCrypto.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Random.h" />
-    <ClInclude Include="RefItem.h" />
     <ClInclude Include="RefManager1Dim.h" />
     <ClInclude Include="RefManager1DimAssync.h" />
     <ClInclude Include="RefManager2Dim.h" />
@@ -109,10 +114,8 @@
     <ClInclude Include="RenderableUIObjectCollection.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SHA1.h" />
-    <ClInclude Include="SmartPtr.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="UniquePtr.h" />
     <ClInclude Include="UpdatableObjectCollection.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vec2f.h" />
@@ -136,14 +139,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -173,7 +176,8 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_CORE_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -189,7 +193,8 @@
       <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <TreatSpecificWarningsAsErrors>4263;4264</TreatSpecificWarningsAsErrors>
+      <TreatSpecificWarningsAsErrors>
+      </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>

@@ -17,7 +17,7 @@ void Frustum::buildCustomFrustrum(const Plane* _planes, uint32 _planesCount)
 
 void Frustum::buildViewFrustum(const mat4 &transMat, float fov, float aspect, float nearPlane, float farPlane)
 {
-	float ymax = nearPlane * tanf(degToRad(fov / 2));
+	float ymax = nearPlane * tanf(glm::radians(fov / 2));
 	float xmax = ymax * aspect;
 
 	buildViewFrustum(transMat, -xmax, xmax, -ymax, ymax, nearPlane, farPlane);

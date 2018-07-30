@@ -6,7 +6,7 @@
 class WMO;
 // FORWARD END
 
-class WMO_Part_Material : public CRefItem
+class WMO_Part_Material
 {
 public:
 	WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialDef& _proto);

@@ -35,7 +35,7 @@ CM2_Manager::~CM2_Manager()
 
 //
 
-M2* CM2_Manager::CreateAction(cstring name)
+SmartM2Ptr CM2_Manager::CreateAction(cstring name)
 {
 	string newName = Utils::ToLower(name);
 	if (newName.find("orgrimmarsmokeemitter.mdx") != -1 ||
@@ -44,12 +44,12 @@ M2* CM2_Manager::CreateAction(cstring name)
 		return nullptr;
 	}
 
-	M2* model = new M2(name);
+	SmartM2Ptr model = make_shared<M2>(name);
 
 	CM2_Builder builder(model);
 	if (!builder.Load())
 	{
-		delete model;
+		//delete model;
 		return m_DefaultModel;
 	}
 

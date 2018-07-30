@@ -18,7 +18,7 @@ struct ADT_MDXDef
 class ADT_MDX_Instance : public CM2_Base_Instance
 {
 public:
-	ADT_MDX_Instance(SceneNode* _parent, M2* _mdxObject, const ADT_MDXDef& _placementInfo);
+	ADT_MDX_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, const ADT_MDXDef& _placementInfo);
 	virtual ~ADT_MDX_Instance();
 
 	// ISceneNode

@@ -16,7 +16,7 @@ public:
 	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ);
 	virtual ~ADT();
 
-	ADT_MCNK* getChunk(int32 x, int32 z)
+	std::shared_ptr<ADT_MCNK> getChunk(int32 x, int32 z)
 	{
 		if (x < 0 || x >= C_ChunksInTile || z < 0 || z >= C_ChunksInTile)
 		{
@@ -44,13 +44,13 @@ public:
 	const int							m_IndexX, m_IndexZ;
 	ADT_MHDR							m_Header;
 
-	vector<SharedPtr<ADT_TextureInfo>>	m_Textures;
+	vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
 
 	// Instances
-	vector<SharedPtr<ADT_WMO_Instance>>	m_WMOsInstances;
-	vector<SharedPtr<ADT_MDX_Instance>>	m_MDXsInstances;
-	vector<SharedPtr<Liquid_Instance>>	m_LiquidsInstances;
-	vector<SharedPtr<ADT_MCNK>>			m_Chunks;
+	vector<std::shared_ptr<ADT_WMO_Instance>>	m_WMOsInstances;
+	vector<std::shared_ptr<ADT_MDX_Instance>>	m_MDXsInstances;
+	vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
+	vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
 
 private: // PARENT
 	MapController*						m_MapController;

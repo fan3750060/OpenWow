@@ -34,25 +34,25 @@ public:
 	SharedGeomPtr beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
 
 	// Buffers
-	R_Buffer* createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
-	R_Buffer* createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
-	R_Buffer* createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
-	R_TextureBuffer* createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
+	SharedBufferPtr createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	SharedBufferPtr createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	SharedBufferPtr createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	SharedTextureBufferPtr createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
 	uint32 getBufferMem() const { return m_BufferMem; }
 	string getBufferMemStr() const { return convertToString(m_BufferMem); }
 
 	// Textures
-	R_Texture* createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
+	SharedTexturePtr createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
 	uint32 getTextureMem() const { return m_TextureMem; }
 	string getTextureMemStr() const { return convertToString(m_TextureMem); }
 
 	// Shaders
-	R_Shader* createShader(cstring _name, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
+	std::shared_ptr<R_Shader> createShader(cstring _name, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
 	string getShaderLog() const { return m_ShaderLog; }
 
 	// Renderbuffers
-	R_RenderBuffer* createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
-	R_RenderBuffer* createRenderBuffer(vec2 _size, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
+	std::shared_ptr<R_RenderBuffer> createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
+	std::shared_ptr<R_RenderBuffer> createRenderBuffer(vec2 _size, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
 
 	// Queries
 	uint32 createOcclusionQuery();
@@ -75,11 +75,11 @@ public:
 	{
 		m_State.setScissorRect(x, y, width, height);
 	}
-	void setGeometry(R_GeometryInfo* geoIndex)
+	void setGeometry(SharedGeomPtr geoIndex)
 	{
 		m_State.setGeometry(geoIndex);
 	}
-	void setTexture(uint32 slot, R_Texture* texObj, uint16 samplerState, uint16 usage)
+	void setTexture(uint32 slot, SharedTexturePtr texObj, uint16 samplerState, uint16 usage)
 	{
 		m_State.setTexture(slot, texObj, samplerState, usage);
 	}

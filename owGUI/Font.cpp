@@ -3,7 +3,7 @@
 // General
 #include "Font.h"
 
-Font::Font(R_Texture* _texture, R_GeometryInfo* _fontGeometry, vector<uint32> _widthArray, uint32 _height) :
+Font::Font(SharedTexturePtr _texture, SharedGeomPtr _fontGeometry, vector<uint32> _widthArray, uint32 _height) :
 	m_Texture(_texture),
 	m_Geometry(_fontGeometry),
 	m_WidthArray(_widthArray),
@@ -17,7 +17,7 @@ Font::~Font()
 
 void Font::Render(cstring _string, vec2 _offset, const Color& _color) const
 {
-	CUI_Font* pass = _Render->getTechniquesMgr()->UI_Font;
+	CUI_Font* pass = _Render->getTechniquesMgr()->UI_Font.operator->();
 	pass->Bind();
 	{
 		pass->setProj(_Render->getOrthoMatrix());

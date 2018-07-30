@@ -79,14 +79,14 @@ TexturesManager::~TexturesManager()
 
 //
 
-R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
+void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, SharedTexturePtr _texture)
 {
     // Read data
     BLPHeader header;
     f->readBytes(&header, sizeof(BLPHeader));
 
-	if (header.width & (header.width - 1)) return nullptr;
-	if (header.height & (header.height - 1)) return nullptr;
+	if (header.width & (header.width - 1)) return;
+	if (header.height & (header.height - 1)) return;
 
     assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
     assert1(header.type == 1);
@@ -211,25 +211,23 @@ R_Texture* TexturesManager::LoadBLPTexture(IFile* f, R_Texture* _texture)
     }
 
 	_Render->r.checkError();
-
-    return _texture;
 }
 
 // Protected
 
-R_Texture* TexturesManager::CreateAction(cstring _name)
+SharedTexturePtr TexturesManager::CreateAction(cstring _name)
 {
-	R_Texture* _texture = new R_Texture(_name, m_RenderDevice);
-	_texture->FillDataBy(DefaultTexture());
+	SharedTexturePtr _texture = make_shared<R_Texture>(_name, m_RenderDevice);
+	_texture->Fill(DefaultTexture().operator*());
 
 	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", _name.c_str(), _texture->GetSize().x, _texture->GetSize().y);
 
 	return _texture;
 }
 
-void TexturesManager::LoadAction(string name, R_Texture*& item)
+void TexturesManager::LoadAction(string name, SharedTexturePtr& item)
 {
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open(name);
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(name);
 	if (f == nullptr)
 	{
 		Log::Error("TexturesManager[%s]: Error while open texture.", name.c_str());

@@ -33,7 +33,7 @@ void CM2_Part_Camera::calc(uint32 time, uint32 globalTime)
 
 	if (tRoll.uses(0))
 	{
-		rollResult = tRoll.getValue(0, time, globalTime) / (Math::Pi * 180.0f);
+		rollResult = tRoll.getValue(0, time, globalTime) / (glm::pi<float>() * 180.0f);
 	}
 }
 

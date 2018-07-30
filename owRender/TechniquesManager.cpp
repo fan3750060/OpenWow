@@ -13,15 +13,15 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 {
 	// Debug
 
-	Debug_Pass = new CDebug_GeometryPass(m_RenderDevice);
+	Debug_Pass = make_shared<CDebug_GeometryPass>(m_RenderDevice);
 	m_GeomTechniques.push_back(Debug_Pass);
 
-	DebugNormal_Pass = new CDebug_Normals(m_RenderDevice);
+	DebugNormal_Pass = make_shared<CDebug_Normals>(m_RenderDevice);
 	m_GeomTechniques.push_back(DebugNormal_Pass);
 
 	// Map
 
-	MCNK_Pass = new CMCNK_Pass(m_RenderDevice);
+	MCNK_Pass = make_shared<CMCNK_Pass>(m_RenderDevice);
 	MCNK_Pass->Bind();
 	for (uint8 i = 0; i < 4; i++)
 	{
@@ -34,7 +34,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 
 	/*for (uint8 i = 0; i < 4; i ++)
 	{
-		MCNK_Divided_Pass[i] = new CMCNK_Divided_Pass(m_RenderDevice, i);
+		MCNK_Divided_Pass[i] = make_shared<CMCNK_Divided_Pass(m_RenderDevice, i);
 		MCNK_Divided_Pass[i]->Bind();
 		for (uint8 j = 0; j < i + 1; j++)
 		{
@@ -46,12 +46,12 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 		m_GeomTechniques.push_back(MCNK_Divided_Pass[i]);
 	}*/
 
-	WDL_LowRes_Pass = new CWDL_LowRes_Pass(m_RenderDevice);
+	WDL_LowRes_Pass = make_shared<CWDL_LowRes_Pass>(m_RenderDevice);
 	m_GeomTechniques.push_back(WDL_LowRes_Pass);
 
 	// M2
 
-	M2_Pass = new CM2_Pass(m_RenderDevice);
+	M2_Pass = make_shared<CM2_Pass>(m_RenderDevice);
 	M2_Pass->Bind();
 	M2_Pass->SetDiffuseTexture(0, Material::C_DiffuseTextureIndex + 0);
 	M2_Pass->SetDiffuseTexture(1, Material::C_DiffuseTextureIndex + 1);
@@ -61,7 +61,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 
 	// M2 ribbons
 
-	M2_RibbonEmitters_Pass = new CM2_RibbonEmitters_Pass(m_RenderDevice);
+	M2_RibbonEmitters_Pass = make_shared<CM2_RibbonEmitters_Pass>(m_RenderDevice);
 	M2_RibbonEmitters_Pass->Bind();
 	M2_RibbonEmitters_Pass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	M2_RibbonEmitters_Pass->Unbind();
@@ -69,7 +69,7 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 	
 	// M2 particles
 
-	M2_Particles_Pass = new CM2_Particle_Pass(m_RenderDevice);
+	M2_Particles_Pass = make_shared<CM2_Particle_Pass>(m_RenderDevice);
 	M2_Particles_Pass->Bind();
 	M2_Particles_Pass->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	M2_Particles_Pass->Unbind();
@@ -77,13 +77,13 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 	
 	// Liquids
 
-	m_Magma = new CMagma_Pass(m_RenderDevice);
+	m_Magma = make_shared<CMagma_Pass>(m_RenderDevice);
 	m_Magma->Bind();
 	m_Magma->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	m_Magma->Unbind();
 	m_GeomTechniques.push_back(m_Magma);
 
-	m_Water = new CWater_Pass(m_RenderDevice);
+	m_Water = make_shared<CWater_Pass>(m_RenderDevice);
 	m_Water->Bind();
 	m_Water->SetColorTextureUnit(Material::C_DiffuseTextureIndex);
 	m_Water->SetSpecularTextureUnit(Material::C_SpecularTextureIndex);
@@ -92,12 +92,12 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 
 	// Sky
 
-	Sky_Pass = new CSky_GeometryPass(m_RenderDevice);
+	Sky_Pass = make_shared<CSky_GeometryPass>(m_RenderDevice);
 	m_GeomTechniques.push_back(Sky_Pass);
 
 	// WMO
 
-	WMO_Pass = new CWMO_GeomertyPass(m_RenderDevice);
+	WMO_Pass = make_shared<CWMO_GeomertyPass>(m_RenderDevice);
 	WMO_Pass->Bind();
 	WMO_Pass->SetColorTextureUnit(0, Material::C_DiffuseTextureIndex + 0);
 	WMO_Pass->SetColorTextureUnit(1, Material::C_DiffuseTextureIndex + 1);
@@ -108,20 +108,20 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 
 	// Postprocess
 
-	Postprocess_Light_Direction = new CPOST_DirectionalLight(m_RenderDevice);
+	Postprocess_Light_Direction = make_shared<CPOST_DirectionalLight>(m_RenderDevice);
 	Postprocess_Light_Direction->Bind();
 	Postprocess_Light_Direction->setScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Light_Direction->SetMatSpecularPower(16);
 	Postprocess_Light_Direction->Unbind();
 	m_PostTechniques.push_back(Postprocess_Light_Direction);
 
-	Postprocess_Fog = new CPOST_Fog(m_RenderDevice);
+	Postprocess_Fog = make_shared<CPOST_Fog>(m_RenderDevice);
 	Postprocess_Fog->Bind();
 	Postprocess_Fog->setScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Fog->Unbind();
 	m_PostTechniques.push_back(Postprocess_Fog);
 
-	Postprocess_Simple = new CPOST_Simple(m_RenderDevice);
+	Postprocess_Simple = make_shared<CPOST_Simple>(m_RenderDevice);
 	Postprocess_Simple->Bind();
 	Postprocess_Simple->setScreenSize(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY);
 	Postprocess_Simple->Unbind();
@@ -129,14 +129,14 @@ TechniquesManager::TechniquesManager(RenderDevice* _RenderDevice) :
 
 	// UI
 
-	UI_Color = new CUI_Color(m_RenderDevice);
+	UI_Color = make_shared<CUI_Color>(m_RenderDevice);
 
-	UI_Font = new CUI_Font(m_RenderDevice);
+	UI_Font = make_shared<CUI_Font>(m_RenderDevice);
 	UI_Font->Bind();
 	UI_Font->SetFontTexture(Material::C_DiffuseTextureIndex);
 	UI_Font->Unbind();
 
-	UI_Texture = new CUI_Texture(m_RenderDevice);
+	UI_Texture = make_shared<CUI_Texture>(m_RenderDevice);
 	UI_Texture->Bind();
 	UI_Texture->SetTexture(Material::C_DiffuseTextureIndex);
 	UI_Texture->Unbind();
@@ -154,7 +154,7 @@ void TechniquesManager::PreRender3D(Camera* _camera, R_RenderBuffer* _rb)
 		it->Unbind();
 	}
 
-	int32 width, height;
+	/*int32 width, height;
 	_rb->getRenderBufferDimensions(&width, &height);
 
 	for (auto& it : m_PostTechniques)
@@ -163,5 +163,5 @@ void TechniquesManager::PreRender3D(Camera* _camera, R_RenderBuffer* _rb)
 		it->setCameraPos(_camera->Position);
 		it->setScreenSize(width, height);
 		it->Unbind();
-	}
+	}*/
 }

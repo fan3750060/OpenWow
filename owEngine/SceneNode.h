@@ -1,7 +1,6 @@
 #pragma once
 
 class SceneNode :
-	public CRefItem,
 	public IUpdatable,
 	public IRenderable3D
 {
@@ -46,6 +45,8 @@ public:
 		if (_calculateMatrix) CalculateMatrix();
 	}
 	cvec3 getRotate() const { return m_Rotate; }
+	
+	// Rotate Quaternion
 	void setRotateQuat(cquat _rotate, bool _calculateMatrix = true)
 	{
 		m_RotateQuat = _rotate;

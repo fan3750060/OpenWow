@@ -23,7 +23,7 @@ struct RenderTarget
 	uint32					samples;
 	float					scale;  // Scale factor for FB width and height
 	bool					hasDepthBuf;
-	R_RenderBuffer*			rendBuf;
+	std::shared_ptr<R_RenderBuffer>			rendBuf;
 };
 
 class RenderPipeline

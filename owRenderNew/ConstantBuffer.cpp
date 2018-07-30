@@ -8,7 +8,7 @@ Buffer::BufferType ConstantBuffer::GetType() const
 	return Buffer::ConstantBuffer;
 }
 
-unsigned int ConstantBuffer::GetElementCount() const
+uint32 ConstantBuffer::GetElementCount() const
 {
 	return 1;
 }

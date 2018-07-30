@@ -5,7 +5,7 @@
 
 #pragma region Language
 
-string ProcessInclude(UniquePtr<IFile> f)
+string ProcessInclude(std::shared_ptr<IFile> f)
 {
 	if (f == nullptr)
 	{

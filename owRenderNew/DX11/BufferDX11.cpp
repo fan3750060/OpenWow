@@ -36,11 +36,11 @@ BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data,
 BufferDX11::~BufferDX11()
 {}
 
-bool BufferDX11::Bind(unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+bool BufferDX11::Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	assert(m_pDeviceContext);
 
-	ID3D11Buffer* buffers[] = { m_pBuffer.Get() };
+	ID3D11Buffer* buffers[] = { m_pBuffer };
 	UINT offsets[] = { 0 };
 	UINT strides[] = { m_uiStride };
 
@@ -51,7 +51,7 @@ bool BufferDX11::Bind(unsigned int id, Shader::ShaderType shaderType, ShaderPara
 		m_bIsBound = true;
 		break;
 	case D3D11_BIND_INDEX_BUFFER:
-		m_pDeviceContext->IASetIndexBuffer(m_pBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		m_pDeviceContext->IASetIndexBuffer(m_pBuffer, m_uiStride == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT, 0);
 		m_bIsBound = true;
 		break;
 	default:
@@ -63,7 +63,7 @@ bool BufferDX11::Bind(unsigned int id, Shader::ShaderType shaderType, ShaderPara
 	return true;
 }
 
-void BufferDX11::UnBind(unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void BufferDX11::UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	ID3D11Buffer* buffers[] = { nullptr };
 
@@ -91,7 +91,7 @@ void BufferDX11::Copy(std::shared_ptr<Buffer> other)
 	if (srcBuffer && srcBuffer.get() != this &&
 		m_uiCount * m_uiStride == srcBuffer->m_uiCount * srcBuffer->m_uiStride)
 	{
-		m_pDeviceContext->CopyResource(m_pBuffer.Get(), srcBuffer->m_pBuffer.Get());
+		m_pDeviceContext->CopyResource(m_pBuffer, srcBuffer->m_pBuffer);
 	}
 	else
 	{
@@ -118,7 +118,7 @@ Buffer::BufferType BufferDX11::GetType() const
 	}
 }
 
-unsigned int BufferDX11::GetElementCount() const
+uint32 BufferDX11::GetElementCount() const
 {
 	return m_uiCount;
 }

@@ -53,7 +53,7 @@ void CM2_Animator::PlayAnimation(int16 _id, bool _loop)
 
 	if (_id == -1)
 	{
-		m_CurrentAnimation = m_Animations.begin()->second;
+		m_CurrentAnimation = m_Animations.begin()->second.operator->();
 	}
 	else
 	{
@@ -63,7 +63,7 @@ void CM2_Animator::PlayAnimation(int16 _id, bool _loop)
 			return;
 		}
 
-		m_CurrentAnimation = (m_Animations[_id]);
+		m_CurrentAnimation = (m_Animations[_id].operator->());
 	}
 
 	m_CurrentTime = m_CurrentAnimation->getStart();

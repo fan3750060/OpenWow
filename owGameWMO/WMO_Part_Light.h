@@ -10,7 +10,7 @@ enum LightType
 
 #include "WMO_Headers.h"
 
-class WMO_Part_Light : public CRefItem
+class WMO_Part_Light
 {
 public:
 	WMO_Part_Light(const SWMO_LightDef& _proto);

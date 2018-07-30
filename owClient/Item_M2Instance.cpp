@@ -3,13 +3,13 @@
 // General
 #include "Item_M2Instance.h"
 
-CItem_M2Instance::CItem_M2Instance(CM2_Base_Instance* _parent, M2* _model) :
+CItem_M2Instance::CItem_M2Instance(CM2_Base_Instance* _parent, SmartM2Ptr _model) :
 	CM2_Base_Instance(_parent, _model)
 { 
 
 }
 
-void CItem_M2Instance::AddVisualEffect(CM2_Base_Instance* _visualEffect)
+void CItem_M2Instance::AddVisualEffect(std::shared_ptr<CM2_Base_Instance> _visualEffect)
 {
 	m_VisualEffects.push_back(_visualEffect);
 }

@@ -7,6 +7,7 @@
 #define On_Mouse_Leaved_V        virtual void OnMouseLeaved() override;
 
 #include "Image.h"
+#include "Font.h"
 
 // FORWARD BEGIN
 class UIMgr;
@@ -14,7 +15,7 @@ class UIMgrEx;
 class UIWindow;
 // FORWARD END
 
-class UIElement : public CRefItem
+class UIElement
 {
 	friend UIMgr;
 	friend UIMgrEx;
@@ -25,9 +26,9 @@ public:
 	//
 
 	void Init(cvec2 _position, cvec2 _size, Image* _image, Color _color = COLOR_EMPTY);
-    void Init(cvec2 _position, cvec2 _size, R_Texture* _texture, Color _color = COLOR_EMPTY);
+    void Init(cvec2 _position, cvec2 _size, SharedTexturePtr _texture, Color _color = COLOR_EMPTY);
 
-    void SetTexture(R_Texture* _texture)
+    void SetTexture(SharedTexturePtr _texture)
     {
         m_Texture = _texture;
     }
@@ -73,7 +74,7 @@ public:
 	void SetTextOffset(cvec2 _textOffset) { m_TextOffset = _textOffset; }
 	void SetTextAlignW(TextAlignW _textAlignW) { m_TextAlignW = _textAlignW; }
 	void SetTextAlignH(TextAlignH _textAlignH) { m_TextAlignH = _textAlignH; }
-	void SetTextFont(Font* _font);
+	void SetTextFont(SharedFontPtr _font);
 	string GetText() const { return m_Text; };
 
 	// Common functional
@@ -130,7 +131,7 @@ private:
 protected:
 	bool        m_IsTextEnable;
 	string      m_Text;
-	Font*       m_Font;
+	SharedFontPtr       m_Font;
 	vec2        m_TextOffset;
 	TextAlignW  m_TextAlignW;
 	TextAlignH  m_TextAlignH;

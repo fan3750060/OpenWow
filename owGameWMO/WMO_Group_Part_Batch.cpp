@@ -28,7 +28,7 @@ WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Grou
 
 void WMO_Group_Part_Batch::Render()
 {
-	CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass;
+	CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
 	{
 		pass->SetBlendMode(m_WMOMaterial->getBlendMode());
 

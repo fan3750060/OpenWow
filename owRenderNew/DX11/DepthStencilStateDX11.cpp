@@ -197,5 +197,5 @@ void DepthStencilStateDX11::Bind()
 		m_bDirty = false;
 	}
 
-	m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), m_StencilMode.StencilReference);
+	m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, m_StencilMode.StencilReference);
 }

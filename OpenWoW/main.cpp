@@ -15,8 +15,8 @@
 int main(int argumentCount, char* arguments[])
 {
 #ifdef _DEBUG 
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 	{
 		Random::SetSeed(static_cast<unsigned long>(time(0)));
@@ -49,7 +49,7 @@ int main(int argumentCount, char* arguments[])
 
 		CFilesManager filesManager;
 
-		OpenGLAdapter_GLFW adapter;
+		OpenGLAdapter_Native adapter;
 
 		CEngine engine;
 		engine.Init(&adapter);

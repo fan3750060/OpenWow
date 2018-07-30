@@ -8,7 +8,7 @@ struct BufferBinding
 		: Index(0)
 	{}
 
-	BufferBinding(cstring name, unsigned int index)
+	BufferBinding(cstring name, uint32 index)
 		: Name(name)
 		, Index(index)
 	{}
@@ -27,6 +27,6 @@ struct BufferBinding
 	}
 
 	std::string Name;
-	unsigned int Index;
+	uint32 Index;
 };
 

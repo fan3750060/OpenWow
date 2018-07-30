@@ -35,7 +35,7 @@ void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)
 
 	//--
 
-	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass;
+	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 	{
 		pass->SetShader(newShader);
 		pass->SetBlendMode(m_Material->getBlendMode());

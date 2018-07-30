@@ -8,12 +8,12 @@ class Character_SectionWrapper
 {
 public:
 	// Skin
-	static R_Texture* getSkinTexture(Character* _character);
-	static R_Texture* getSkinExtraTexture(Character* _character);
+	static SharedTexturePtr getSkinTexture(Character* _character);
+	static SharedTexturePtr getSkinExtraTexture(Character* _character);
 
 	// Face
-	static R_Texture* getFaceLowerTexture(Character* _character);
-	static R_Texture* getFaceUpperTexture(Character* _character);
+	static SharedTexturePtr getFaceLowerTexture(Character* _character);
+	static SharedTexturePtr getFaceUpperTexture(Character* _character);
 
 	// FacialHair
 	static string getFacialHairLowerTexture(Character* _character);
@@ -24,9 +24,9 @@ public:
 
 	// Hair
 	static uint32     getHairGeoset(Character* _character);
-	static R_Texture* getHairTexture(Character* _character);
-	static R_Texture* getHairScalpLowerTexture(Character* _character);
-	static R_Texture* getHairScalpUpperTexture(Character* _character);
+	static SharedTexturePtr getHairTexture(Character* _character);
+	static SharedTexturePtr getHairScalpLowerTexture(Character* _character);
+	static SharedTexturePtr getHairScalpUpperTexture(Character* _character);
 
 	// Naked
 	static string getNakedPelvisTexture(Character* _character);

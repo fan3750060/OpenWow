@@ -43,9 +43,6 @@
     <ClInclude Include="OpenGLAdapter.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Refs.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared\owIntfs.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -73,6 +70,9 @@
     <ClInclude Include="Networking.h">
       <Filter>Networking</Filter>
     </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>RenderNew</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -98,6 +98,9 @@
     </Filter>
     <Filter Include="Networking">
       <UniqueIdentifier>{eaf559ac-5eba-4217-99fa-ba2e73a8d6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderNew">
+      <UniqueIdentifier>{98b09ec3-003c-4139-bfc6-71ba4f9d8c85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -93,7 +93,7 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 				continue;
 			}
 
-			bool recurResult = Recur(_localContr, group, _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
+			bool recurResult = Recur(_localContr, group.operator->(), _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
 			if (!recurResult)
 			{
 				continue;
@@ -113,7 +113,7 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 	{
 		for (auto& ogr : _localContr->getGroupOutdoorInstances())
 		{
-			Recur(_localContr, ogr, _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
+			Recur(_localContr, ogr.operator->(), _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
 		}
 	}
 }
@@ -173,7 +173,7 @@ bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_I
 		int32 groupIndex = isPositive ? p->getGrInner() : p->getGrOuter();
 		if (groupIndex >= 0 && groupIndex < _localContr->getGroupInstances().size())
 		{
-			groupInstance = _localContr->getGroupInstances()[groupIndex];
+			groupInstance = _localContr->getGroupInstances()[groupIndex].operator->();
 		}
 
 		Recur

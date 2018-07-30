@@ -16,11 +16,11 @@ public:
 
 	const WMO_Group* getObject() const { return m_Object; }
 
-	void addDoodadInstance(CWMO_Doodad_Instance* _doodad) { m_Doodads.push_back(_doodad); }
-	const vector<SharedPtr<CWMO_Doodad_Instance>>& getDoodadsInstances() { return m_Doodads; }
+	void addDoodadInstance(std::shared_ptr<CWMO_Doodad_Instance> _doodad) { m_Doodads.push_back(_doodad); }
+	const vector<std::shared_ptr<CWMO_Doodad_Instance>>& getDoodadsInstances() { return m_Doodads; }
 
-	void addLiquidInstance(CWMO_Liquid_Instance* _liquid) { m_Liquids.push_back(_liquid); }
-	const vector<SharedPtr<CWMO_Liquid_Instance>>& getLiquidInstances() { return m_Liquids; }
+	void addLiquidInstance(std::shared_ptr<CWMO_Liquid_Instance> _liquid) { m_Liquids.push_back(_liquid); }
+	const vector<std::shared_ptr<CWMO_Liquid_Instance>>& getLiquidInstances() { return m_Liquids; }
 
 	// Disable render
 	bool PreRender3D() override;
@@ -32,6 +32,6 @@ public:
 	bool										m_PortalsVis;
 	bool										m_Calculated;
 
-	vector<SharedPtr<CWMO_Doodad_Instance>>		m_Doodads;
-	vector<SharedPtr<CWMO_Liquid_Instance>>     m_Liquids;
+	vector<std::shared_ptr<CWMO_Doodad_Instance>>		m_Doodads;
+	vector<std::shared_ptr<CWMO_Liquid_Instance>>     m_Liquids;
 };

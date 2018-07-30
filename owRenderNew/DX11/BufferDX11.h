@@ -9,8 +9,8 @@ public:
 	~BufferDX11();
 
 	// Bind the buffer to a particular attribute ID or slot
-	virtual bool Bind(unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
-	virtual void UnBind(unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
+	virtual bool Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
+	virtual void UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
 
 	// Copy the contents of another buffer into this one.
 	// Buffers must be the same size (in bytes).
@@ -19,19 +19,22 @@ public:
 	// Is this an index buffer or an attribute/vertex buffer?
 	virtual BufferType GetType() const;
 	// How many elements does this buffer contain?
-	virtual unsigned int GetElementCount() const;
+	virtual uint32 GetElementCount() const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> m_pBuffer;
+	ATL::CComPtr<ID3D11Buffer> m_pBuffer;
 
 	// The stride of the vertex buffer in bytes.
 	UINT m_uiStride;
+
 	// How this buffer should be bound.
 	UINT m_BindFlags;
+
 	// The number of elements in this buffer.
 	UINT m_uiCount;
+
 	bool m_bIsBound;
 };

@@ -9,8 +9,6 @@
 class TextureDX11 : public Texture, public std::enable_shared_from_this<TextureDX11>
 {
 public:
-	typedef Texture base;
-
 	// Create an empty texture.
 	TextureDX11(ID3D11Device2* pDevice);
 
@@ -33,7 +31,6 @@ public:
 		Cube,   // Required to differentiate between 1D texture array and Cube textures.
 	};
 	TextureDX11(CubeCtor, ID3D11Device2* pDevice, uint16_t size, uint16_t count, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
-
 
 	virtual ~TextureDX11();
 
@@ -68,7 +65,7 @@ public:
 	* For 1D and 2D textures, this function will always return the texture
 	* itself.
 	*/
-	virtual std::shared_ptr<Texture> GetSlice(unsigned int slice) const;
+	virtual std::shared_ptr<Texture> GetSlice(uint32 slice) const;
 
 	// Get the width of the textures in texels.
 	virtual uint16_t GetWidth() const;
@@ -134,8 +131,8 @@ public:
 	// Get the unordered access view so it can be bound to compute shaders and 
 	// pixel shaders as a RWTexture
 	ID3D11UnorderedAccessView* GetUnorderedAccessView() const;
-protected:
 
+protected:
 	virtual void Plot(glm::ivec2 coord, const uint8_t* pixel, size_t size);
 	virtual void FetchPixel(glm::ivec2 coord, uint8_t*& pixel, size_t size);
 
@@ -161,26 +158,31 @@ protected:
 	DXGI_SAMPLE_DESC GetSupportedSampleCount(DXGI_FORMAT format, uint8_t numSamples);
 
 private:
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
 
-	Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
-	Microsoft::WRL::ComPtr<ID3D11Texture1D> m_pTexture1D;
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_pTexture2D;
-	Microsoft::WRL::ComPtr<ID3D11Texture3D> m_pTexture3D;
+	ATL::CComPtr<ID3D11Texture1D> m_pTexture1D;
+	ATL::CComPtr<ID3D11Texture2D> m_pTexture2D;
+	ATL::CComPtr<ID3D11Texture3D> m_pTexture3D;
+
 	// Use this to map the texture to a shader for reading.
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pShaderResourceView;
+	ATL::CComPtr<ID3D11ShaderResourceView> m_pShaderResourceView;
+
 	// Use this to map the texture to a render target for writing.
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
+	ATL::CComPtr<ID3D11RenderTargetView> m_pRenderTargetView;
+
 	// Use this texture as the depth/stencil buffer of a render target.
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
+	ATL::CComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
+
 	// Use this texture as a Unordered Acccess View (RWTexture)
-	Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> m_pUnorderedAccessView;
+	ATL::CComPtr<ID3D11UnorderedAccessView> m_pUnorderedAccessView;
 
 	// 1D, 2D, 3D, or Cube
 	Dimension m_TextureDimension;
 
 	uint16_t m_TextureWidth;
 	uint16_t m_TextureHeight;
+
 	// For CUBE and 3D textures.
 	uint16_t m_NumSlices;
 

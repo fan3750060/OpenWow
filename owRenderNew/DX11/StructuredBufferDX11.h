@@ -6,21 +6,19 @@
 class StructuredBufferDX11 : public StructuredBuffer
 {
 public:
-    typedef StructuredBuffer base;
-
     StructuredBufferDX11( ID3D11Device2* pDevice, UINT bindFlags, const void* data, size_t count, UINT stride, CPUAccess cpuAccess = CPUAccess::None, bool bUAV = false );
     virtual ~StructuredBufferDX11();
 
     // Bind the buffer for rendering.
-    virtual bool Bind( unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType );
+    virtual bool Bind( uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType );
     // Unbind the buffer for rendering.
-    virtual void UnBind( unsigned int id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType );
+    virtual void UnBind( uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType );
 
     // Is this an index buffer or an attribute/vertex buffer?
     virtual BufferType GetType() const;
 
     // How many elements does this buffer contain?
-    virtual unsigned int GetElementCount() const;
+    virtual uint32 GetElementCount() const;
 
     virtual void Copy( std::shared_ptr<StructuredBuffer> other );
 
@@ -37,11 +35,11 @@ protected:
     void Commit();
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11Device2> m_pDevice;
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext2> m_pDeviceContext;
-    Microsoft::WRL::ComPtr<ID3D11Buffer> m_pBuffer;
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pSRV;
-    Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> m_pUAV;
+    ATL::CComPtr<ID3D11Device2> m_pDevice;
+    ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+    ATL::CComPtr<ID3D11Buffer> m_pBuffer;
+    ATL::CComPtr<ID3D11ShaderResourceView> m_pSRV;
+    ATL::CComPtr<ID3D11UnorderedAccessView> m_pUAV;
 
     // The system data buffer.
     typedef std::vector<uint8_t> BufferType;

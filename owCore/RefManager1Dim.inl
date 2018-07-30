@@ -10,20 +10,20 @@ CRefManager1Dim<T>::~CRefManager1Dim()
 {
 	for (auto it = objects.begin(); it != objects.end(); )
 	{
-		T* item = it->second;
+		shared_ptr<T> item = it->second;
 		string name = GetNameByItem(item);
 
 		this->DeleteAction(name);
-		delete item;
+		//delete item;
 		it = objects.erase(it);
-		item = nullptr;
+		//item = nullptr;
 	}
 }
 
 template <class T>
-T* CRefManager1Dim<T>::Add(cstring name)
+shared_ptr<T> CRefManager1Dim<T>::Add(cstring name)
 {
-	T* item = GetItemByName(name);
+	shared_ptr<T> item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		return item;
@@ -47,20 +47,20 @@ bool CRefManager1Dim<T>::Exists(cstring name) const
 template <class T>
 void CRefManager1Dim<T>::Delete(cstring name)
 {
-	T* item = GetItemByName(name);
+	shared_ptr<T> item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		auto it = objects.find(name);
 
 		this->DeleteAction(name);
-		delete item;
+		//delete item;
 		objects.erase(name);
-		item = nullptr;
+		//item = nullptr;
 	}
 }
 
 template <class T>
-void CRefManager1Dim<T>::Delete(T* item)
+void CRefManager1Dim<T>::Delete(shared_ptr<T> item)
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -72,12 +72,12 @@ void CRefManager1Dim<T>::Delete(T* item)
 	}
 
 	// If not found
-	delete item;
-	item = nullptr;
+	//delete item;
+	//item = nullptr;
 }
 
 template <class T>
-T* CRefManager1Dim<T>::GetItemByName(cstring name) const
+shared_ptr<T> CRefManager1Dim<T>::GetItemByName(cstring name) const
 {
 	auto name_item = objects.find(name);
 	if (name_item != objects.end())
@@ -89,7 +89,7 @@ T* CRefManager1Dim<T>::GetItemByName(cstring name) const
 }
 
 template <class T>
-std::string CRefManager1Dim<T>::GetNameByItem(T* item) const
+std::string CRefManager1Dim<T>::GetNameByItem(shared_ptr<T> item) const
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -110,15 +110,15 @@ void CRefManager1Dim<T>::PrintAllInfo()
 	uint32 refsCnt = 0;
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
-		refsCnt += it->second->GetRefsCount();
-		Log::Info("Item (%d) [%s]", it->second->GetRefsCount(), it->first.c_str());
+		refsCnt += it->second.use_count();
+		Log::Info("Item (%d) [%s]", it->second.use_count(), it->first.c_str());
 	}
 
 	Log::Info("Item's count [%d], items refs [%d]", objects.size(), refsCnt);
 }
 
 template<class T>
-inline T* CRefManager1Dim<T>::CreateAction(cstring name)
+inline shared_ptr<T> CRefManager1Dim<T>::CreateAction(cstring name)
 {
 	return NULL;
 }

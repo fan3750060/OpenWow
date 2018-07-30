@@ -43,7 +43,7 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 		_pos = _World->Map()->getGlobalInstance()->getBounds().getCenter();
 	}
 	
-	_Render->getCamera()->setupViewParams(Math::Pi / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
+	_Render->getCamera()->setupViewParams(glm::pi<float>() / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);
 	_Render->getCamera()->Position = _pos;
 	_Render->getCamera()->m_UseDir = false;
 	_Render->getCamera()->SetNeedUpdate();
@@ -68,11 +68,11 @@ bool GameState_Menu::Init()
 	
 
 	m_MinimapUI = new UIElement(GetManager<IUIMgr>(), 100);
-	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), (R_Texture*)nullptr, COLOR_WHITE);
+	m_MinimapUI->Init(vec2(200, 0), vec2(768, 768), nullptr, COLOR_WHITE);
 	m_MinimapUI->Hide();
 
 	m_LoadingScreenUI = new UIElement(GetManager<IUIMgr>(), 150);
-	m_LoadingScreenUI->Init(m_Window->GetPosition(), m_Window->GetSize(), (R_Texture*)nullptr, COLOR_WHITE);
+	m_LoadingScreenUI->Init(m_Window->GetPosition(), m_Window->GetSize(), nullptr, COLOR_WHITE);
 	m_LoadingScreenUI->Hide();
 
 	cmd = CMD_NONE;
@@ -98,14 +98,14 @@ bool GameState_Menu::Init()
 		}
 
 		// Add btn
-		UIWowButon* btn = new UIWowButon(GetManager<IUIMgr>());
+		std::shared_ptr<UIWowButon> btn = make_shared<UIWowButon>(GetManager<IUIMgr>());
 		btn->Init(vec2(100 + 200 * i.Get_Expansion(), currentY[i.Get_Expansion()] += mapsYdelta));
 		btn->AttachTo(m_Window);
 		btn->ShowText();
 		btn->SetText(i.Get_Name().c_str());
 		m_Buttons.push_back(btn);
 
-		SETBUTTONACTION_ARG(btn, GameState_Menu, this, OnBtn, DBC_MapRecord, i);
+		SETBUTTONACTION_ARG(btn.operator->(), GameState_Menu, this, OnBtn, DBC_MapRecord, i);
 	}
 
 	//
@@ -153,7 +153,7 @@ void GameState_Menu::Update(double _time, double _dTime)
 bool GameState_Menu::PreRender3D()
 {
 	_Render->BindRBs();
-	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer);
+	_Render->getTechniquesMgr()->PreRender3D(_Render->getCamera(), _Render->m_RenderBuffer.operator->());
 
 	return true;
 }
@@ -257,8 +257,8 @@ void GameState_Menu::randBackground()
 	char path[256];
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
 
-	M2* mdx = GetManager<IM2Manager>()->Add(path);
+	SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(path);
 	mdx->getMiscellaneous()->getCamera(0)->setup(vec3(0), 0);
 
-	m_BackgroudModel = new CM2_Base_Instance(nullptr, mdx);
+	m_BackgroudModel = make_shared<CM2_Base_Instance>(nullptr, mdx);
 }

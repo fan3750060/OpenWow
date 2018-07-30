@@ -292,7 +292,7 @@ protected:
 
 private:
 	string m_FileName;
-	UniquePtr<IFile> m_File;
+	std::shared_ptr<IFile> m_File;
 };
 
 #include "DBC__File.inl"

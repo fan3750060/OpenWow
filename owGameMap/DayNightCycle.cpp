@@ -5,7 +5,7 @@
 
 DayNightCycle::DayNightCycle()
 {
-	UniquePtr<IFile> f = GetManager<IFilesManager>()->Open("World\\dnc.db");
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open("World\\dnc.db");
 	if (f == nullptr)
 	{
 		Log::Error("DayNightCycle[]: Can't init day-night cycle.");
@@ -33,7 +33,7 @@ DayNightCycle::DayNightCycle()
 
 	while (f->getPos() < d)
 	{
-		DayNightPhase ols(f);
+		DayNightPhase ols(f.operator->());
 		dayNightPhases.push_back(ols);
 	}
 }

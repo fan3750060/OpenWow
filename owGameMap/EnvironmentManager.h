@@ -30,6 +30,6 @@ public:
 	bool m_HasSky;
 
 
-	SharedPtr<DayNightCycle> dayNightCycle;
+	std::shared_ptr<DayNightCycle> dayNightCycle;
 	DayNightPhase dayNightPhase;
 };

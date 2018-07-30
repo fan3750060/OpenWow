@@ -1,6 +1,5 @@
 #include <stdafx.h>
 
-#include "Application.h"
 #include "Material.h"
 
 #include "BufferDX11.h"
@@ -8,25 +7,23 @@
 #include "StructuredBufferDX11.h"
 #include "RenderTargetDX11.h"
 #include "MeshDX11.h"
-#include "SceneDX11.h"
 #include "ShaderDX11.h"
 #include "TextureDX11.h"
 #include "SamplerStateDX11.h"
 #include "PipelineStateDX11.h"
 #include "QueryDX11.h"
 
+// General
 #include "RenderDeviceDX11.h"
 
-using Microsoft::WRL::ComPtr;
-
-RenderDeviceDX11::RenderDeviceDX11(Application& app)
+RenderDeviceDX11::RenderDeviceDX11()
 {
-	CreateDevice(app.GetModuleHandle());
+	CreateDevice();
 
-	app.Initialize += boost::bind(&RenderDeviceDX11::OnInitialize, this, _1);
+	LoadDefaultResources();
 
 	// Initialize AntTweak bar.
-   // TwInit( TW_DIRECT3D11, m_pDevice.Get() );
+   // TwInit( TW_DIRECT3D11, m_pDevice );
 }
 
 RenderDeviceDX11::~RenderDeviceDX11()
@@ -51,7 +48,7 @@ RenderDeviceDX11::~RenderDeviceDX11()
 #endif
 }
 
-void RenderDeviceDX11::CreateDevice(HINSTANCE hInstance)
+void RenderDeviceDX11::CreateDevice()
 {
 	const D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0
@@ -66,19 +63,38 @@ void RenderDeviceDX11::CreateDevice(HINSTANCE hInstance)
 	// is used to create our device and swap chain.
 	D3D_FEATURE_LEVEL featureLevel;
 
-	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pDeviceContext;
+	ATL::CComPtr<ID3D11Device> pDevice;
+	ATL::CComPtr<ID3D11DeviceContext> pDeviceContext;
 
 	// First create a ID3D11Device and ID3D11DeviceContext
-	HRESULT hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE,
-		nullptr, createDeviceFlags, featureLevels, _countof(featureLevels),
-		D3D11_SDK_VERSION, &pDevice, &featureLevel, &pDeviceContext);
+	HRESULT hr = D3D11CreateDevice
+	(
+		nullptr,
+		D3D_DRIVER_TYPE_HARDWARE,
+		nullptr,
+		createDeviceFlags,
+		featureLevels,
+		_countof(featureLevels),
+		D3D11_SDK_VERSION,
+		&pDevice,
+		&featureLevel,
+		&pDeviceContext
+	);
 
 	if (hr == E_INVALIDARG)
 	{
-		hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE,
-			nullptr, createDeviceFlags, &featureLevels[1], _countof(featureLevels) - 1,
-			D3D11_SDK_VERSION, &pDevice, &featureLevel, &pDeviceContext);
+		hr = D3D11CreateDevice
+		(
+			nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr, createDeviceFlags,
+			&featureLevels[1],
+			_countof(featureLevels) - 1,
+			D3D11_SDK_VERSION,
+			&pDevice,
+			&featureLevel,
+			&pDeviceContext
+		);
 	}
 
 	if (FAILED(hr))
@@ -88,7 +104,7 @@ void RenderDeviceDX11::CreateDevice(HINSTANCE hInstance)
 	}
 
 	// Now query for the ID3D11Device2 interface.
-	if (FAILED(pDevice.Get()->QueryInterface<ID3D11Device2>(&m_pDevice)))
+	if (FAILED(pDevice->QueryInterface<ID3D11Device2>(&m_pDevice)))
 	{
 		Log::Error("Failed to create DirectX 11.2 device");
 	}
@@ -96,15 +112,15 @@ void RenderDeviceDX11::CreateDevice(HINSTANCE hInstance)
 	// Now get the immediate device context.
 	m_pDevice->GetImmediateContext2(&m_pDeviceContext);
 
-	if (SUCCEEDED(m_pDevice.Get()->QueryInterface<ID3D11Debug>(&m_pDebugLayer)))
+	if (SUCCEEDED(m_pDevice->QueryInterface<ID3D11Debug>(&m_pDebugLayer)))
 	{
-		ComPtr<ID3D11InfoQueue> d3dInfoQueue;
-		if (SUCCEEDED(m_pDebugLayer.Get()->QueryInterface<ID3D11InfoQueue>(&d3dInfoQueue)))
+		ATL::CComPtr<ID3D11InfoQueue> d3dInfoQueue;
+		if (SUCCEEDED(m_pDebugLayer->QueryInterface<ID3D11InfoQueue>(&d3dInfoQueue)))
 		{
 #if defined(_DEBUG)
 			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, TRUE);
 			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, TRUE);
-			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, TRUE);
+			//d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, TRUE);
 #endif 
 			D3D11_MESSAGE_ID hide[] =
 			{
@@ -121,11 +137,11 @@ void RenderDeviceDX11::CreateDevice(HINSTANCE hInstance)
 	}
 
 	// Query the adapter information.
-	Microsoft::WRL::ComPtr<IDXGIFactory> factory;
-	Microsoft::WRL::ComPtr<IDXGIAdapter> adapter;
+	ATL::CComPtr<IDXGIFactory> factory;
+	ATL::CComPtr<IDXGIAdapter> adapter;
 	DXGI_ADAPTER_DESC adapterDescription = {};
 
-	if (FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), &factory)))
+	if (FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory)))
 	{
 		Log::Error("Failed to create DXGIFactory.");
 	}
@@ -139,7 +155,6 @@ void RenderDeviceDX11::CreateDevice(HINSTANCE hInstance)
 	}
 
 	m_DeviceName = ConvertString(adapterDescription.Description);
-
 }
 
 cstring RenderDeviceDX11::GetDeviceName() const
@@ -147,36 +162,44 @@ cstring RenderDeviceDX11::GetDeviceName() const
 	return m_DeviceName;
 }
 
-Microsoft::WRL::ComPtr<ID3D11Device2> RenderDeviceDX11::GetDevice() const
+ATL::CComPtr<ID3D11Device2> RenderDeviceDX11::GetDevice() const
 {
 	return m_pDevice;
 }
 
-Microsoft::WRL::ComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
+ATL::CComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
 {
 	return m_pDeviceContext;
 }
 
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, unsigned int count, unsigned int stride)
+std::shared_ptr<Buffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice.Get(), D3D11_BIND_VERTEX_BUFFER, data, count, stride);
+	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr <Buffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, unsigned int count, unsigned int stride)
+std::shared_ptr <Buffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice.Get(), D3D11_BIND_VERTEX_BUFFER, data, count, stride);
+	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateUIntIndexBuffer(const unsigned int* data, unsigned int count)
+std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice.Get(), D3D11_BIND_INDEX_BUFFER, data, count, (UINT)sizeof(unsigned int));
+	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, (UINT)sizeof(uint16));
+	m_Buffers.push_back(buffer);
+
+	return buffer;
+}
+
+std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
+{
+	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, (UINT)sizeof(uint32));
 	m_Buffers.push_back(buffer);
 
 	return buffer;
@@ -201,9 +224,11 @@ void RenderDeviceDX11::DestroyIndexBuffer(std::shared_ptr<Buffer> buffer)
 	DestroyBuffer(buffer);
 }
 
+//--
+
 std::shared_ptr<ConstantBuffer> RenderDeviceDX11::CreateConstantBuffer(const void* data, size_t size)
 {
-	std::shared_ptr<ConstantBuffer> buffer = std::make_shared<ConstantBufferDX11>(m_pDevice.Get(), size);
+	std::shared_ptr<ConstantBuffer> buffer = std::make_shared<ConstantBufferDX11>(m_pDevice, size);
 
 	if (data)
 	{
@@ -220,9 +245,11 @@ void RenderDeviceDX11::DestroyConstantBuffer(std::shared_ptr<ConstantBuffer> buf
 	DestroyBuffer(buffer);
 }
 
-std::shared_ptr<StructuredBuffer> RenderDeviceDX11::CreateStructuredBuffer(void* data, unsigned int count, unsigned int stride, CPUAccess cpuAccess, bool gpuWrite)
+//--
+
+std::shared_ptr<StructuredBuffer> RenderDeviceDX11::CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<StructuredBuffer> buffer = std::make_shared<StructuredBufferDX11>(m_pDevice.Get(), 0, data, count, stride, cpuAccess, gpuWrite);
+	std::shared_ptr<StructuredBuffer> buffer = std::make_shared<StructuredBufferDX11>(m_pDevice, 0, data, count, stride, cpuAccess, gpuWrite);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
@@ -233,32 +260,7 @@ void RenderDeviceDX11::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer>
 	DestroyBuffer(buffer);
 }
 
-std::shared_ptr<Mesh> RenderDeviceDX11::CreateMesh()
-{
-	std::shared_ptr<Mesh> mesh = std::make_shared<MeshDX11>(m_pDevice.Get());
-	m_Meshes.push_back(mesh);
-
-	return mesh;
-}
-
-void RenderDeviceDX11::DestroyMesh(std::shared_ptr<Mesh> mesh)
-{
-	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
-	if (iter != m_Meshes.end())
-	{
-		m_Meshes.erase(iter);
-	}
-}
-
-std::shared_ptr<Scene> RenderDeviceDX11::CreateScene()
-{
-	std::shared_ptr<Scene> scene = std::make_shared<SceneDX11>(*this);
-	scene->LoadingProgress += boost::bind(&RenderDeviceDX11::OnLoadingProgress, this, _1);
-
-	m_Scenes.push_back(scene);
-
-	return scene;
-}
+//--
 
 // GLM's own quaternion from two vector constructor does not handle cases 
 // where the vectors may be pointing in opposite directions.
@@ -275,9 +277,9 @@ inline glm::quat RotationFromTwoVectors(cvec3 u, cvec3 v)
 	if (real < 1.e-6f * normUV)
 	{
 		/* If u and v are exactly opposite, rotate 180 degrees
-		 * around an arbitrary orthogonal axis. Axis normalisation
-		 * can happen later, when we normalise the quaternion.
-		 */
+		* around an arbitrary orthogonal axis. Axis normalisation
+		* can happen later, when we normalise the quaternion.
+		*/
 		real = 0.0f;
 		vec = (glm::abs(u.x) > abs(u.z)) ? vec3(-u.y, u.x, 0.0f) : vec3(0.0f, -u.z, u.y);
 	}
@@ -290,68 +292,62 @@ inline glm::quat RotationFromTwoVectors(cvec3 u, cvec3 v)
 	return glm::normalize(glm::quat(real, vec));
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreatePlane(float size, cvec3 N)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreatePlane(float size, cvec3 N)
 {
-	float halfSize = size * 0.5f;
 	vec3 p[4];
-	// Crate the 4 points of the plane aligned to the X,Z plane.
-	// Vertex winding is assuming a right-handed coordinate system 
-	// (counter-clockwise winding order for front-facing polygons)
-	p[0] = vec3(halfSize, 0, halfSize);
-	p[1] = vec3(-halfSize, 0, halfSize);
-	p[2] = vec3(-halfSize, 0, -halfSize);
-	p[3] = vec3(halfSize, 0, -halfSize);
+	p[0] = vec3(1.0f, 0, 1.0f);
+	p[1] = vec3(-1.0f, 0, 1.0f);
+	p[2] = vec3(-1.0f, 0, -1.0f);
+	p[3] = vec3(1.0f, 0, -1.0f);
 
-	// Rotate the plane vertices in the direction of the surface normal.
-	glm::quat rot = RotationFromTwoVectors(vec3(0, 1, 0), N);
+	vec2 t[4];
+	t[0] = vec2(1, 1);
+	t[1] = vec2(0, 1);
+	t[2] = vec2(0, 0);
+	t[3] = vec2(1, 0);
 
-	for (int i = 0; i < 4; i++)
-	{
-		p[i] = rot * p[i];
-	}
+	uint16 i[6];
+	i[0] = 0;
+	i[1] = 1;
+	i[2] = 2;
+	i[3] = 2;
+	i[4] = 3;
+	i[5] = 0;
 
-	// Now create the plane polygon from the transformed vertices.
-	std::shared_ptr<Scene> scene = CreateScene();
+	std::shared_ptr<Mesh> mesh = CreateMesh();
 
-	std::stringstream ss;
+	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)p, 4, sizeof(vec3));
+	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	// Create a white diffuse material for the plane.
-	// f red green blue Kd Ks Shine transmittance indexOfRefraction
-	ss << "f 1 1 1 1 0 0 0 0" << std::endl;
+	std::shared_ptr<Buffer> __tb = CreateFloatVertexBuffer((const float*)t, 4, sizeof(vec2));
+	mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __tb);
 
-	// Create a 4-point polygon
-	ss << "p 4" << std::endl;
-	for (int i = 0; i < 4; i++)
-	{
-		ss << p[i].x << " " << p[i].y << " " << p[i].z << std::endl;
-	}
+	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer(i, 6);
+	mesh->SetIndexBuffer(__ib);
 
-	if (scene->LoadFromString(ss.str(), "nff"))
-	{
-		return scene;
-	}
+	std::shared_ptr<Material> mat = CreateMaterial();
+	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	mesh->SetMaterial(mat);
 
-	// An error occurred while loading the scene.
-	DestroyScene(scene);
-	return nullptr;
+	return mesh;
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreateScreenQuad(float left, float right, float bottom, float top, float z)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateScreenQuad(float left, float right, float bottom, float top, float z)
 {
 	vec3 p[4]; // Vertex position
 	vec3 n[4]; // Vertex normal (required for texture patch polygons)
 	vec2 t[4]; // Texture coordinates
-	// Winding order is assumed to be right-handed. Front-facing polygons have
-	// a counter-clockwise winding order.
-	// Assimp flips the winding order of vertices.. Don't ask me why. To account for this,
-	// the vertices are loaded in reverse order :)
+			   // Winding order is assumed to be right-handed. Front-facing polygons have
+			   // a counter-clockwise winding order.
+			   // Assimp flips the winding order of vertices.. Don't ask me why. To account for this,
+			   // the vertices are loaded in reverse order :)
 	p[0] = vec3(right, bottom, z);   n[0] = vec3(0, 0, 1);    t[0] = vec2(1, 0);
 	p[1] = vec3(left, bottom, z);    n[1] = vec3(0, 0, 1);    t[1] = vec2(0, 0);
 	p[2] = vec3(left, top, z);       n[2] = vec3(0, 0, 1);    t[2] = vec2(0, 1);
 	p[3] = vec3(right, top, z);      n[3] = vec3(0, 0, 1);    t[3] = vec2(1, 1);
 
 	// Now create the quad.
-	std::shared_ptr<Scene> scene = CreateScene();
+	/*std::shared_ptr<Scene> scene = CreateScene();
 
 	std::stringstream ss;
 
@@ -369,63 +365,99 @@ std::shared_ptr<Scene> RenderDeviceDX11::CreateScreenQuad(float left, float righ
 
 	if (scene->LoadFromString(ss.str(), "nff"))
 	{
-		return scene;
+	return scene;
 	}
 
 	// An error occurred while loading the scene.
-	DestroyScene(scene);
+	DestroyScene(scene);*/
 	return nullptr;
 
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreateSphere(float radius, float tesselation)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateSphere(float radius, float tesselation)
 {
-	std::shared_ptr<Scene> scene = CreateScene();
-	std::stringstream ss;
-	// Create a white diffuse material for the sphere.
-	// f red green blue Kd Ks Shine transmittance indexOfRefraction
-	ss << "f 1 1 1 1 0 0 0 0" << std::endl;
+	vec3 spVerts[126] =
+	{  // x, y, z
+		vec3(0.0f, 1.0f, 0.0f),        vec3(0.0f, -1.0f, 0.0f),
+		vec3(-0.707f, 0.0f, 0.707f),   vec3(0.707f, 0.0f, 0.707f),
+		vec3(0.707f, 0.0f, -0.707f),   vec3(-0.707f, 0.0f, -0.707f)
+	};
 
-	// tess tesselation
-	ss << "tess " << tesselation << std::endl;
-	// s x y z radius
-	ss << "s 0 0 0 " << radius << std::endl;
+	uint16 spInds[128 * 3] = {  // Number of faces: (4 ^ iterations) * 8
+		2, 3, 0,   3, 4, 0,   4, 5, 0,   5, 2, 0,   2, 1, 3,   3, 1, 4,   4, 1, 5,   5, 1, 2
+	};
 
-	if (scene->LoadFromString(ss.str(), "nff"))
+	for (uint32 i = 0, nv = 6, ni = 24; i < 2; ++i)  // Two iterations
 	{
-		return scene;
+		// Subdivide each face into 4 tris by bisecting each edge and push vertices onto unit sphere
+		for (uint32 j = 0, prevNumInds = ni; j < prevNumInds; j += 3)
+		{
+			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 0]] + spVerts[spInds[j + 1]]) * 0.5f));
+			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 1]] + spVerts[spInds[j + 2]]) * 0.5f));
+			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 2]] + spVerts[spInds[j + 0]]) * 0.5f));
+
+			spInds[ni++] = spInds[j + 0];
+			spInds[ni++] = nv - 3;
+			spInds[ni++] = nv - 1;
+
+			spInds[ni++] = nv - 3;
+			spInds[ni++] = spInds[j + 1];
+			spInds[ni++] = nv - 2;
+
+			spInds[ni++] = nv - 2;
+			spInds[ni++] = spInds[j + 2];
+			spInds[ni++] = nv - 1;
+
+			spInds[j + 0] = nv - 3;
+			spInds[j + 1] = nv - 2;
+			spInds[j + 2] = nv - 1;
+		}
 	}
 
-	// An error occurred while loading the scene.
-	DestroyScene(scene);
-	return nullptr;
+	std::shared_ptr<Mesh> mesh = CreateMesh();
+
+	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)spVerts, 126, sizeof(vec3));
+	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+
+	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)spInds, 128 * 3);
+	mesh->SetIndexBuffer(__ib);
+
+	std::shared_ptr<Material> mat = CreateMaterial();
+	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	mesh->SetMaterial(mat);
+
+	return mesh;
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreateCube(float size)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateCube(float size)
 {
-	std::shared_ptr<Scene> scene = CreateScene();
-	std::stringstream ss;
+	float cubeVerts[8 * 3] = {  // x, y, z
+		0.f, 0.f, 1.f,   1.f, 0.f, 1.f,   1.f, 1.f, 1.f,   0.f, 1.f, 1.f,
+		0.f, 0.f, 0.f,   1.f, 0.f, 0.f,   1.f, 1.f, 0.f,   0.f, 1.f, 0.f
+	};
+	uint16 cubeInds[36] = {
+		0, 1, 2, 2, 3, 0,   1, 5, 6, 6, 2, 1,   5, 4, 7, 7, 6, 5,
+		4, 0, 3, 3, 7, 4,   3, 2, 6, 6, 7, 3,   4, 5, 1, 1, 0, 4
+	};
 
-	// Create a white diffuse material for the cube.
-	// f red green blue Kd Ks Shine transmittance indexOfRefraction
-	ss << "f 1 1 1 1 0 0 0 0" << std::endl;
+	std::shared_ptr<Mesh> mesh = CreateMesh();
 
-	// hex x y z size
-	ss << "hex 0 0 0 " << size;
+	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)cubeVerts, 8 * 3, sizeof(vec3));
+	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	if (scene->LoadFromString(ss.str(), "nff"))
-	{
-		return scene;
-	}
+	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)cubeInds, 36);
+	mesh->SetIndexBuffer(__ib);
 
-	// An error occurred while loading the scene.
-	DestroyScene(scene);
-	return nullptr;
+	std::shared_ptr<Material> mat = CreateMaterial();
+	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	mesh->SetMaterial(mat);
+
+	return mesh;
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
 {
-	std::shared_ptr<Scene> scene = CreateScene();
+	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
 
 	// Create a white diffuse material for the cylinder.
@@ -442,23 +474,23 @@ std::shared_ptr<Scene> RenderDeviceDX11::CreateCylinder(float baseRadius, float 
 
 	if (scene->LoadFromString(ss.str(), "nff"))
 	{
-		return scene;
+	return scene;
 	}
 
 	// An error occurred while loading the scene.
-	DestroyScene(scene);
+	DestroyScene(scene);*/
 	return nullptr;
 }
 
-std::shared_ptr <Scene> RenderDeviceDX11::CreateCone(float baseRadius, float height)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateCone(float baseRadius, float height)
 {
 	// A cone is just a cylinder with a 0 size apex.
 	return CreateCylinder(baseRadius, 0, height);
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreateArrow(cvec3 tail, cvec3 head, float radius)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateArrow(cvec3 tail, cvec3 head, float radius)
 {
-	std::shared_ptr<Scene> scene = CreateScene();
+	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
 
 	vec3 dir = head - tail;
@@ -485,18 +517,17 @@ std::shared_ptr<Scene> RenderDeviceDX11::CreateArrow(cvec3 tail, cvec3 head, flo
 
 	if (scene->LoadFromString(ss.str(), "nff"))
 	{
-		return scene;
-	}
+	return scene;
+	}*/
 
 	// An error occurred while loading the scene.
-	DestroyScene(scene);
 	return nullptr;
 
 }
 
-std::shared_ptr<Scene> RenderDeviceDX11::CreateAxis(float radius, float length)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateAxis(float radius, float length)
 {
-	std::shared_ptr<Scene> scene = CreateScene();
+	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
 
 	// Create a red material for the +X axis.
@@ -609,27 +640,34 @@ std::shared_ptr<Scene> RenderDeviceDX11::CreateAxis(float radius, float length)
 
 	if (scene->LoadFromString(ss.str(), "nff"))
 	{
-		return scene;
+	return scene;
 	}
 
 	// An error occurred while loading the scene.
-	DestroyScene(scene);
+	*/
 	return nullptr;
-
 }
 
-void RenderDeviceDX11::DestroyScene(std::shared_ptr<Scene> scene)
+std::shared_ptr<Mesh> RenderDeviceDX11::CreateMesh()
 {
-	SceneList::iterator iter = std::find(m_Scenes.begin(), m_Scenes.end(), scene);
-	if (iter != m_Scenes.end())
+	std::shared_ptr<Mesh> mesh = std::make_shared<MeshDX11>(m_pDevice);
+	m_Meshes.push_back(mesh);
+
+	return mesh;
+}
+
+void RenderDeviceDX11::DestroyMesh(std::shared_ptr<Mesh> mesh)
+{
+	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
+	if (iter != m_Meshes.end())
 	{
-		m_Scenes.erase(iter);
+		m_Meshes.erase(iter);
 	}
 }
 
 std::shared_ptr<Shader> RenderDeviceDX11::CreateShader()
 {
-	std::shared_ptr<Shader> pShader = std::make_shared<ShaderDX11>(m_pDevice.Get());
+	std::shared_ptr<Shader> pShader = std::make_shared<ShaderDX11>(m_pDevice);
 	m_Shaders.push_back(pShader);
 
 	return pShader;
@@ -644,6 +682,7 @@ void RenderDeviceDX11::DestroyShader(std::shared_ptr<Shader> shader)
 	}
 }
 
+
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture(cstring fileName)
 {
 	TextureMap::iterator iter = m_TexturesByName.find(fileName);
@@ -652,7 +691,7 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture(cstring fileName)
 		return iter->second;
 	}
 
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice.Get());
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice);
 	texture->LoadTexture2D(fileName);
 
 	m_Textures.push_back(texture);
@@ -669,7 +708,7 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(cstring fileName)
 		return iter->second;
 	}
 
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice.Get());
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice);
 	texture->LoadTextureCube(fileName);
 
 	m_Textures.push_back(texture);
@@ -679,10 +718,9 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(cstring fileName)
 
 }
 
-
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture1D(uint16_t width, uint16_t slices, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice.Get(), width, slices, format, cpuAccess, gpuWrite);
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice, width, slices, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -690,7 +728,7 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture1D(uint16_t width, uint1
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(uint16_t width, uint16_t height, uint16_t slices, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice.Get(), width, height, slices, format, cpuAccess, gpuWrite);
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice, width, height, slices, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -698,7 +736,7 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(uint16_t width, uint1
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture3D(uint16_t width, uint16_t height, uint16_t depth, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(TextureDX11::Tex3d, m_pDevice.Get(), width, height, depth, format, cpuAccess, gpuWrite);
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(TextureDX11::Tex3d, m_pDevice, width, height, depth, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -706,7 +744,7 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture3D(uint16_t width, uint1
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(uint16_t size, uint16_t numCubes, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(TextureDX11::Cube, m_pDevice.Get(), size, numCubes, format, cpuAccess, gpuWrite);
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(TextureDX11::Cube, m_pDevice, size, numCubes, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -714,7 +752,7 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(uint16_t size, uint
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture()
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice.Get());
+	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -740,9 +778,10 @@ void RenderDeviceDX11::DestroyTexture(std::shared_ptr<Texture> texture)
 	}
 }
 
+
 std::shared_ptr<RenderTarget> RenderDeviceDX11::CreateRenderTarget()
 {
-	std::shared_ptr<RenderTargetDX11> renderTarget = std::make_shared<RenderTargetDX11>(m_pDevice.Get());
+	std::shared_ptr<RenderTargetDX11> renderTarget = std::make_shared<RenderTargetDX11>(m_pDevice);
 	m_RenderTargets.push_back(renderTarget);
 
 	return renderTarget;
@@ -757,9 +796,10 @@ void RenderDeviceDX11::DestroyRenderTarget(std::shared_ptr<RenderTarget> renderT
 	}
 }
 
+
 std::shared_ptr<SamplerState> RenderDeviceDX11::CreateSamplerState()
 {
-	std::shared_ptr<SamplerState> sampler = std::make_shared<SamplerStateDX11>(m_pDevice.Get());
+	std::shared_ptr<SamplerState> sampler = std::make_shared<SamplerStateDX11>(m_pDevice);
 	m_Samplers.push_back(sampler);
 
 	return sampler;
@@ -773,6 +813,7 @@ void RenderDeviceDX11::DestroySampler(std::shared_ptr<SamplerState> sampler)
 		m_Samplers.erase(iter);
 	}
 }
+
 
 std::shared_ptr<Material> RenderDeviceDX11::CreateMaterial()
 {
@@ -790,9 +831,10 @@ void RenderDeviceDX11::DestroyMaterial(std::shared_ptr<Material> material)
 	}
 }
 
+
 std::shared_ptr<PipelineState> RenderDeviceDX11::CreatePipelineState()
 {
-	std::shared_ptr<PipelineState> pPipeline = std::make_shared<PipelineStateDX11>(m_pDevice.Get());
+	std::shared_ptr<PipelineState> pPipeline = std::make_shared<PipelineStateDX11>(m_pDevice);
 	m_Pipelines.push_back(pPipeline);
 
 	return pPipeline;
@@ -807,9 +849,15 @@ void RenderDeviceDX11::DestoryPipelineState(std::shared_ptr<PipelineState> pipel
 	}
 }
 
+std::shared_ptr<PipelineState> RenderDeviceDX11::GetDefaultPipeline() const
+{
+	return m_pDefaultPipeline;
+}
+
+
 std::shared_ptr<Query> RenderDeviceDX11::CreateQuery(Query::QueryType queryType, uint8_t numBuffers)
 {
-	std::shared_ptr<Query> query = std::make_shared<QueryDX11>(m_pDevice.Get(), queryType, numBuffers);
+	std::shared_ptr<Query> query = std::make_shared<QueryDX11>(m_pDevice, queryType, numBuffers);
 	m_Queries.push_back(query);
 
 	return query;
@@ -824,36 +872,22 @@ void RenderDeviceDX11::DestoryQuery(std::shared_ptr<Query> query)
 	}
 }
 
-void RenderDeviceDX11::OnInitialize(EventArgs& e)
-{
-	LoadDefaultResources();
-}
-
-void RenderDeviceDX11::OnLoadingProgress(ProgressEventArgs& e)
-{
-	base::OnLoadingProgress(e);
-}
-
 void RenderDeviceDX11::LoadDefaultResources()
 {
 	// Load a default shader
-	std::string defaultShaderSource = GetStringResource(DEFAULT_SHADER, "Shader");
-
 	std::shared_ptr<Shader> pDefaultVertexShader = CreateShader();
-	pDefaultVertexShader->LoadShaderFromString(Shader::VertexShader, defaultShaderSource, "DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "vs_4_0");
+	pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D\\DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "vs_4_0");
 
 	std::shared_ptr<Shader> pDefaultPixelShader = CreateShader();
-	pDefaultPixelShader->LoadShaderFromString(Shader::PixelShader, defaultShaderSource, "DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "ps_4_0");
+	pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D\\DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "ps_4_0");
 
 	// Create a magenta texture if a texture defined in the shader is not bound.
 	m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());
 	m_pDefaultTexture->Clear(ClearFlags::Color, vec4(1, 0, 1, 1));
 
 	m_pDefaultPipeline = CreatePipelineState();
-
 	m_pDefaultPipeline->SetShader(Shader::VertexShader, pDefaultVertexShader);
 	m_pDefaultPipeline->SetShader(Shader::PixelShader, pDefaultPixelShader);
 	// TODO: Default pipeline state must be assigned to a renderwindow
 	// because the RenderWindow has a default render target that must be bound to the pipeline.
-
 }

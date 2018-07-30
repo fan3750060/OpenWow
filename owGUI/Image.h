@@ -1,6 +1,6 @@
 #pragma once
 
-class Image : public CRefItem
+class Image
 {
 public:
 	struct CoordsRotation
@@ -21,7 +21,7 @@ public:
 		m_CoordsCalculated(false)
 	{}
 
-	Image(R_Texture* _texture) :
+	Image(SharedTexturePtr _texture) :
 		m_Texture(_texture),
 		m_Start(vec2()),
 		m_Size(_texture->GetSize())
@@ -30,7 +30,7 @@ public:
 		CalculateCoords();
 	}
 
-	Image(R_Texture* _texture, cvec2 _size) :
+	Image(SharedTexturePtr _texture, cvec2 _size) :
 		m_Texture(_texture),
 		m_Start(vec2()),
 		m_Size(_size)
@@ -39,7 +39,7 @@ public:
 		CalculateCoords();
 	}
 
-	Image(R_Texture* _texture, cvec2 _start, cvec2 _size) :
+	Image(SharedTexturePtr _texture, cvec2 _start, cvec2 _size) :
 		m_Texture(_texture),
 		m_Start(_start),
 		m_Size(_size)
@@ -55,7 +55,7 @@ public:
 
 	//
 
-	R_Texture* GetTexture() { return m_Texture; }
+	SharedTexturePtr GetTexture() { return m_Texture; }
 
 	void SetStart(cvec2 _start)
 	{

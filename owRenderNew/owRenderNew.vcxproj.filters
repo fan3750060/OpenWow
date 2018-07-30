@@ -4,34 +4,13 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="EngineTime.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="ProgressWindow.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneBase.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneNode.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="DX11\BlendStateDX11.cpp">
@@ -70,9 +49,6 @@
     <ClCompile Include="DX11\SamplerStateDX11.cpp">
       <Filter>DX11</Filter>
     </ClCompile>
-    <ClCompile Include="DX11\SceneDX11.cpp">
-      <Filter>DX11</Filter>
-    </ClCompile>
     <ClCompile Include="DX11\ShaderDX11.cpp">
       <Filter>DX11</Filter>
     </ClCompile>
@@ -94,17 +70,23 @@
     <ClCompile Include="Ray.cpp">
       <Filter>Core\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
-      <Filter>Render types\Specific</Filter>
-    </ClCompile>
     <ClCompile Include="RenderDevice.cpp">
-      <Filter>Render types\Specific</Filter>
+      <Filter>Render types</Filter>
     </ClCompile>
     <ClCompile Include="RenderWindow.cpp">
-      <Filter>Render types\Specific</Filter>
+      <Filter>Render types</Filter>
     </ClCompile>
     <ClCompile Include="ShaderParameter.cpp">
-      <Filter>Render types\Specific</Filter>
+      <Filter>Render types</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11_Creator.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>Render types\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSLib.cpp">
+      <Filter>Core\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -117,16 +99,10 @@
     <ClInclude Include="..\shared\owRenderNew.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ClearFlags.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="EngineTime.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
@@ -138,31 +114,10 @@
     <ClInclude Include="Material.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Pixel.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="ProgressWindow.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneBase.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneNode.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="ThreadSafeQueue.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Viewport.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Visitor.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="DX11\BlendStateDX11.h">
@@ -201,9 +156,6 @@
     <ClInclude Include="DX11\SamplerStateDX11.h">
       <Filter>DX11</Filter>
     </ClInclude>
-    <ClInclude Include="DX11\SceneDX11.h">
-      <Filter>DX11</Filter>
-    </ClInclude>
     <ClInclude Include="DX11\ShaderDX11.h">
       <Filter>DX11</Filter>
     </ClInclude>
@@ -216,7 +168,6 @@
     <ClInclude Include="DX11\TextureDX11.h">
       <Filter>DX11</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h">
       <Filter>Core\Misc\Timers</Filter>
     </ClInclude>
@@ -238,59 +189,68 @@
     <ClInclude Include="Rect.h">
       <Filter>Core\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="BlendState.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstantBuffer.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthStencilState.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="Query.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="RasterizerState.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderDevice.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderWindow.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="SamplerState.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderParameter.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="StructuredBuffer.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Render types\Specific</Filter>
-    </ClInclude>
     <ClInclude Include="BufferBinding.h">
       <Filter>Render types</Filter>
     </ClInclude>
     <ClInclude Include="CPUAccess.h">
       <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Query.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDevice.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderWindow.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParameter.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11_Creator.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Render types\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Render types\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>Render types\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Core\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSLib.h">
+      <Filter>Core\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -303,9 +263,6 @@
     <Filter Include="DX11">
       <UniqueIdentifier>{19d8fa45-9c2a-4427-8d77-05e0a0070457}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OpenGL">
-      <UniqueIdentifier>{96272fed-1cbd-4406-96c6-83566990fd54}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Misc">
       <UniqueIdentifier>{d50dc975-5555-4944-afad-24603a237e08}</UniqueIdentifier>
     </Filter>
@@ -315,25 +272,25 @@
     <Filter Include="Render types">
       <UniqueIdentifier>{e4130516-475b-42b6-940c-b2ad68251d5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render types\Specific">
-      <UniqueIdentifier>{399ba293-f4b8-496b-a38e-ac5f11a5cce0}</UniqueIdentifier>
+    <Filter Include="Render types\Buffers">
+      <UniqueIdentifier>{985f9813-a356-44df-b0f3-5d607f624c64}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="RenderDevice.inl">
-      <Filter>Render types\Specific</Filter>
-    </None>
     <None Include="ConstantBuffer.inl">
-      <Filter>Render types\Specific</Filter>
+      <Filter>Render types</Filter>
+    </None>
+    <None Include="RenderDevice.inl">
+      <Filter>Render types</Filter>
     </None>
     <None Include="ShaderParameter.inl">
-      <Filter>Render types\Specific</Filter>
-    </None>
-    <None Include="StructuredBuffer.inl">
-      <Filter>Render types\Specific</Filter>
+      <Filter>Render types</Filter>
     </None>
     <None Include="Texture.inl">
-      <Filter>Render types\Specific</Filter>
+      <Filter>Render types</Filter>
+    </None>
+    <None Include="StructuredBuffer.inl">
+      <Filter>Render types\Buffers</Filter>
     </None>
   </ItemGroup>
 </Project>

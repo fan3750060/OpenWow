@@ -38,8 +38,8 @@ private:
 private:
 	CSceneManager*			sceneManager;
 	Camera*					m_TestCamera;
-	R_RenderBuffer*			m_TestRenderBuffer;
-	R_RenderBuffer*			m_TestRenderBufferFinal;
+	std::shared_ptr<R_RenderBuffer>			m_TestRenderBuffer;
+	std::shared_ptr<R_RenderBuffer>			m_TestRenderBufferFinal;
 
 	CM2_Base_Instance*		m2_Camera;
 	vec3					m_DefPos;

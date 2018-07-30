@@ -1,16 +1,13 @@
 #include "stdafx.h"
 
-#include "Application.h"
-
-
+// General
 #include "RenderWindow.h"
 
-
+// Additional
 #include "Camera.h"
 
-RenderWindow::RenderWindow(Application& app, cstring windowName, int windowWidth, int windowHeight, bool vSync)
-	: m_Application(app)
-	, m_sWindowName(windowName)
+RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync)
+	: m_sWindowName(windowName)
 	, m_iWindowWidth(windowWidth)
 	, m_iWindowHeight(windowHeight)
 	, m_vSync(vSync)
@@ -18,42 +15,27 @@ RenderWindow::RenderWindow(Application& app, cstring windowName, int windowWidth
 	, m_bInClientRect(false)
 	, m_bHasKeyboardFocus(false)
 {
-	// Register initialize/terminate events.
-	m_EventConnections.push_back(app.Initialize += boost::bind(&RenderWindow::OnInitialize, this, _1));
-	m_EventConnections.push_back(app.Terminate += boost::bind(&RenderWindow::OnTerminate, this, _1));
 
-	// Register update/render events.
-	m_EventConnections.push_back(app.Update += boost::bind(&RenderWindow::OnUpdate, this, _1));
 }
 
 RenderWindow::~RenderWindow()
 {
 	// Disconnect events.
-	for (Event::ConnectionType& eventConnection : m_EventConnections)
+	/*for (Event::ConnectionType& eventConnection : m_EventConnections)
 	{
 		eventConnection.disconnect();
-	}
+	}*/
 }
 
-void RenderWindow::ShowWindow()
-{}
-
-void RenderWindow::HideWindow()
-{}
 
 void RenderWindow::CloseWindow()
 {
 	// Disconnect events.
-	for (Event::ConnectionType& eventConnection : m_EventConnections)
+	/*for (Event::ConnectionType& eventConnection : m_EventConnections)
 	{
 		eventConnection.disconnect();
 	}
-	m_EventConnections.clear();
-}
-
-Application& RenderWindow::GetApplication()
-{
-	return m_Application;
+	m_EventConnections.clear();*/
 }
 
 cstring RenderWindow::GetWindowName() const

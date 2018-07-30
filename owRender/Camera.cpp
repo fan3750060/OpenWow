@@ -87,9 +87,9 @@ void Camera::Update(double _time, double _dTime)
 		front.y = sin(degToRad(Pitch));
 		front.z = -(cosf(degToRad(Roll)) * cos(degToRad(Pitch)));*/
 
-		front.x = cos(degToRad(Roll)) * cos(degToRad(Pitch)); // y
-		front.y = sin(degToRad(Pitch));                       // z
-		front.z = sin(degToRad(Roll)) * cos(degToRad(Pitch)); // x
+		front.x = cos(glm::radians(Roll)) * cos(glm::radians(Pitch)); // y
+		front.y = sin(glm::radians(Pitch));                       // z
+		front.z = sin(glm::radians(Roll)) * cos(glm::radians(Pitch)); // x
 
 		Direction = glm::normalize(front);
 	}
@@ -343,7 +343,7 @@ void Camera::CreateRenderable()
 
 
 	// Vertex buffer
-	R_Buffer* __vb = _Render->r.createVertexBuffer(static_cast<uint32>(verts.size()) * sizeof(vec3), verts.data());
+	SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(verts.size()) * sizeof(vec3), verts.data());
 	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 12);
 	__geom->finishCreatingGeometry();

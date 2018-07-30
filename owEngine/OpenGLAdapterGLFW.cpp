@@ -51,7 +51,7 @@ OpenGLAdapter_GLFW::OpenGLAdapter_GLFW()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, openglSettings.minorVersion);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, false);
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+	//glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
 	// Monitor
 
@@ -85,7 +85,7 @@ OpenGLAdapter_GLFW::OpenGLAdapter_GLFW()
 	Log::Print("GLFW[]: Window position [%d, %d]", windowPositionX, windowPositionY);
 
 	glfwMakeContextCurrent(m_Window);
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	// Time
 	glfwSetTime(0.0);

@@ -61,7 +61,7 @@ struct Liquid_Layer
 };
 #include __PACK_END
 
-class Liquid : public CRefItem
+class Liquid
 {
 public:
 	Liquid(uint32 x, uint32 y);

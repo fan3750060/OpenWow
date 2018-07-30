@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Refs.h"
-
 __interface IByteBuffer
 {
 	uint64 getSize() const;
@@ -18,7 +16,7 @@ __interface IByteBuffer
 };
 
 
-struct IFile : public IByteBuffer, public IRefItem
+struct IFile : public IByteBuffer
 {
 	virtual ~IFile() {}
 
@@ -36,7 +34,7 @@ struct
 {
 	virtual ~IFilesManager() {}
 
-	virtual IFile* Open(cstring _fileName) = 0;
+	virtual std::shared_ptr<IFile> Open(cstring _fileName) = 0;
 
 	virtual void Lock() = 0;
 	virtual void Unlock() = 0;

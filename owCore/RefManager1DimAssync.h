@@ -17,28 +17,28 @@ public:
 	CRefManager1DimAssync();
 	~CRefManager1DimAssync();
 
-	T* Add(cstring name);
+	shared_ptr<T> Add(cstring name);
 
 	bool Exists(cstring name) const;
 
 	void Delete(cstring name);
-	void Delete(T* item);
+	void Delete(shared_ptr<T> item);
 
 	// Getters
-	T* GetItemByName(cstring name) const;
-	string GetNameByItem(T* item) const;
+	shared_ptr<T> GetItemByName(cstring name) const;
+	string GetNameByItem(shared_ptr<T> item) const;
 
 	// Console
 	void PrintAllInfo();
 
 public:
-	virtual T* CreateAction(cstring name);
-	virtual void LoadAction(string name, T*& item);
+	virtual shared_ptr<T> CreateAction(cstring name);
+	virtual void LoadAction(string name, shared_ptr<T>& item);
 	virtual bool DeleteAction(cstring name);
 	virtual void MakeContext();
 
 public:
-	map<string, T*> objects;
+	map<string, shared_ptr<T>> objects;
 
 #ifndef DISABLE_ASSYNC
 public:

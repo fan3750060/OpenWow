@@ -6,7 +6,7 @@
 // Additional
 #include "M2_Skin_Builder.h"
 
-CM2_Builder::CM2_Builder(M2* _model) :
+CM2_Builder::CM2_Builder(SmartM2Ptr _model) :
 	m_M2(_model),
 	m_F(nullptr),
 	m_GlobalLoops(nullptr),
@@ -38,7 +38,6 @@ CM2_Builder::CM2_Builder(M2* _model) :
 
 CM2_Builder::~CM2_Builder()
 {
-	if (m_F != nullptr)	delete m_F;
 }
 
 bool CM2_Builder::Load()
@@ -153,7 +152,7 @@ void CM2_Builder::Step3Bones()
 		m_M2Bones = (SM2_Bone*)(m_F->getData() + m_Header.bones.offset);
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			CM2_Part_Bone* bone = new CM2_Part_Bone(m_F, m_M2Bones[i], m_GlobalLoops, &animfiles);
+			CM2_Part_Bone* bone = new CM2_Part_Bone(m_F.operator->(), m_M2Bones[i], m_GlobalLoops, &animfiles);
 			skeleton->m_Bones.push_back(bone);
 		}
 
@@ -186,8 +185,6 @@ void CM2_Builder::Step3Bones()
 
 		assert1(m_Header.gameBonesLookup.size <= M2_GameBoneType::Count);
 	}
-
-	ERASE_VECTOR(animfiles);
 
 	m_M2->m_Skeleton = skeleton;
 
@@ -227,7 +224,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		SM2_Color* m_Colors = (SM2_Color*)(m_F->getData() + m_Header.colors.offset);
 		for (uint32 i = 0; i < m_Header.colors.size; i++)
 		{
-			CM2_Part_Color* color = new CM2_Part_Color(m_F, m_Colors[i], m_GlobalLoops);
+			CM2_Part_Color* color = new CM2_Part_Color(m_F.operator->(), m_Colors[i], m_GlobalLoops);
 			materials->m_Colors.push_back(color);
 
 			// Animated
@@ -257,7 +254,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_Textures = (SM2_Texture*)(m_F->getData() + m_Header.textures.offset);
 		for (uint32 i = 0; i < m_Header.textures.size; i++)
 		{
-			CM2_Part_Texture* texture = new CM2_Part_Texture(m_F, m_Textures[i]);
+			CM2_Part_Texture* texture = new CM2_Part_Texture(m_F.operator->(), m_Textures[i]);
 			materials->m_Textures.push_back(texture);
 		}
 	}
@@ -310,7 +307,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesWeight = (SM2_TextureWeight*)(m_F->getData() + m_Header.textureWeights.offset);
 		for (uint32 i = 0; i < m_Header.textureWeights.size; i++)
 		{
-			CM2_Part_TextureWeight* textureWeight = new CM2_Part_TextureWeight(m_F, m_TexturesWeight[i], m_GlobalLoops);
+			CM2_Part_TextureWeight* textureWeight = new CM2_Part_TextureWeight(m_F.operator->(), m_TexturesWeight[i], m_GlobalLoops);
 			materials->m_TextureWeights.push_back(textureWeight);
 
 			// Animated
@@ -339,7 +336,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesTransform = (SM2_TextureTransform*)(m_F->getData() + m_Header.textureTransforms.offset);
 		for (uint32 i = 0; i < m_Header.textureTransforms.size; i++)
 		{
-			CM2_Part_TextureTransform* textureTransform = new CM2_Part_TextureTransform(m_F, m_TexturesTransform[i], m_GlobalLoops);
+			CM2_Part_TextureTransform* textureTransform = new CM2_Part_TextureTransform(m_F.operator->(), m_TexturesTransform[i], m_GlobalLoops);
 			materials->m_TexturesTransform.push_back(textureTransform);
 
 			// AnimTextures
@@ -377,7 +374,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Attachment* Attachments = (SM2_Attachment*)(m_F->getData() + m_Header.attachments.offset);
 		for (uint32 i = 0; i < m_Header.attachments.size; i++)
 		{
-			CM2_Part_Attachment* attachment = new CM2_Part_Attachment(m_M2, m_F, Attachments[i], m_GlobalLoops);
+			CM2_Part_Attachment* attachment = new CM2_Part_Attachment(m_M2.operator->(), m_F.operator->(), Attachments[i], m_GlobalLoops);
 			miscellaneous->m_Attachments.push_back(attachment);
 		}
 
@@ -401,7 +398,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Event* Events = (SM2_Event*)(m_F->getData() + m_Header.events.offset);
 		for (uint32 i = 0; i < m_Header.events.size; i++)
 		{
-			CM2_Part_Event* event = new CM2_Part_Event(m_M2, m_F, Events[i], m_GlobalLoops);
+			CM2_Part_Event* event = new CM2_Part_Event(m_M2.operator->(), m_F.operator->(), Events[i], m_GlobalLoops);
 			miscellaneous->m_Events.push_back(event);
 		}
 
@@ -415,7 +412,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Light* Lights = (SM2_Light*)(m_F->getData() + m_Header.lights.offset);
 		for (uint32 i = 0; i < m_Header.lights.size; i++)
 		{
-			CM2_Part_Light* light = new CM2_Part_Light(m_M2, m_F, Lights[i], m_GlobalLoops);
+			CM2_Part_Light* light = new CM2_Part_Light(m_M2.operator->(), m_F.operator->(), Lights[i], m_GlobalLoops);
 			miscellaneous->m_Lights.push_back(light);
 		}
 
@@ -429,7 +426,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Camera* Cameras = (SM2_Camera*)(m_F->getData() + m_Header.cameras.offset);
 		for (uint32 i = 0; i < m_Header.cameras.size; i++)
 		{
-			CM2_Part_Camera* camera = new CM2_Part_Camera(m_F, Cameras[i], m_GlobalLoops);
+			CM2_Part_Camera* camera = new CM2_Part_Camera(m_F.operator->(), Cameras[i], m_GlobalLoops);
 			miscellaneous->m_Cameras.push_back(camera);
 		}
 
@@ -453,7 +450,7 @@ void CM2_Builder::Step6Misc()
 		SM2_RibbonEmitter* Ribbons = (SM2_RibbonEmitter*)(m_F->getData() + m_Header.ribbon_emitters.offset);
 		for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
 		{
-			CM2_RibbonEmitters* ribbon = new CM2_RibbonEmitters(m_M2, m_F, Ribbons[i], m_GlobalLoops);
+			CM2_RibbonEmitters* ribbon = new CM2_RibbonEmitters(m_M2.operator->(), m_F.operator->(), Ribbons[i], m_GlobalLoops);
 			miscellaneous->m_RibbonEmitters.push_back(ribbon);
 		}
 
@@ -506,12 +503,12 @@ void CM2_Builder::Step8Skins()
 		char buf[256];
 		sprintf_s(buf, "%s%02d.skin", m_M2->m_FileNameWithoutExt.c_str(), i);
 
-		SharedPtr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
+		std::shared_ptr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
 		assert1(skinFile != nullptr);
 
-		CM2_Skin* skin = new CM2_Skin(m_M2);
+		CM2_Skin* skin = new CM2_Skin(m_M2.operator->());
 
-		CM2_Skin_Builder builder(this, m_M2, skin, skinFile);
+		CM2_Skin_Builder builder(this, m_M2.operator->(), skin, skinFile.operator->());
 		builder.Load();
 
 		m_M2->m_Skins.push_back(skin);
@@ -521,8 +518,8 @@ void CM2_Builder::Step8Skins()
 
 void CM2_Builder::Step9Collision()
 {
-	R_Buffer* collisonVB = nullptr;
-	R_Buffer* collisonIB = nullptr;
+	SharedBufferPtr collisonVB = nullptr;
+	SharedBufferPtr collisonIB = nullptr;
 
 	if (m_Header.collisionVertices.size > 0)
 	{

@@ -22,9 +22,9 @@ struct
 	virtual void PostprocessSimple() = 0;
 
 	// GUI Render
-	virtual void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate) = 0;
-	virtual void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate) = 0;
-	virtual void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, float rotate) = 0;
+	//virtual void RenderTexture(vec2 _pos, R_Texture* _texture, bool rotate) = 0;
+	//virtual void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, bool rotate) = 0;
+	//virtual void RenderTexture(vec2 _pos, R_Texture* _texture, vec2 _size, float rotate) = 0;
 
 	virtual void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color) = 0;
 	virtual void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color) = 0;

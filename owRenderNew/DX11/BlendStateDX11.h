@@ -67,16 +67,15 @@ public:
 	virtual void Bind();
 
 protected:
-
 	D3D11_BLEND TranslateBlendFactor(BlendState::BlendFactor blendFactor) const;
 	D3D11_BLEND_OP TranslateBlendOp(BlendState::BlendOperation blendOperation) const;
 	UINT8 TranslateWriteMask(bool red, bool green, bool blue, bool alpha) const;
 	D3D11_LOGIC_OP TranslateLogicOperator(LogicOperator logicOp) const;
 
 private:
-	Microsoft::WRL::ComPtr< ID3D11Device2 > m_pDevice;
-	Microsoft::WRL::ComPtr< ID3D11DeviceContext2 > m_pDeviceContext;
-	Microsoft::WRL::ComPtr< ID3D11BlendState1 > m_pBlendState;
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D11BlendState1> m_pBlendState;
 
 	typedef std::vector<BlendMode> BlendModeList;
 	// A vector of blend modes. One for each render target view that is bound

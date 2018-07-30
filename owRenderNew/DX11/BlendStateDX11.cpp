@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+// General
 #include "BlendStateDX11.h"
 
 BlendStateDX11::BlendStateDX11(ID3D11Device2* pDevice)
@@ -309,7 +310,7 @@ void BlendStateDX11::Bind()
 
 		blendDesc.AlphaToCoverageEnable = m_bAlphaToCoverageEnabled;
 		blendDesc.IndependentBlendEnable = m_bIndependentBlendEnabled;
-		for (unsigned int i = 0; i < 8 && i < m_BlendModes.size(); i++)
+		for (uint32 i = 0; i < 8 && i < m_BlendModes.size(); i++)
 		{
 			D3D11_RENDER_TARGET_BLEND_DESC1& rtBlendDesc = blendDesc.RenderTarget[i];
 			BlendMode& blendMode = m_BlendModes[i];
@@ -332,6 +333,6 @@ void BlendStateDX11::Bind()
 	}
 
 	// Now activate the blend state:
-	m_pDeviceContext->OMSetBlendState(m_pBlendState.Get(), glm::value_ptr(m_ConstBlendFactor), m_SampleMask);
+	m_pDeviceContext->OMSetBlendState(m_pBlendState, glm::value_ptr(m_ConstBlendFactor), m_SampleMask);
 }
 

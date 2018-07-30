@@ -219,7 +219,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 
 	_Render->r.setGeometry(__geom);
 
-	CM2_RibbonEmitters_Pass* pass = _Render->getTechniquesMgr()->M2_RibbonEmitters_Pass;
+	CM2_RibbonEmitters_Pass* pass = _Render->getTechniquesMgr()->M2_RibbonEmitters_Pass.operator->();
 	pass->Bind();
 	{
 		pass->setWorld(mat4());

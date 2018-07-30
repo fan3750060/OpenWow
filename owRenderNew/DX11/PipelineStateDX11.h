@@ -9,38 +9,38 @@
 class PipelineStateDX11 : public PipelineState
 {
 public:
-    PipelineStateDX11( ID3D11Device2* pDevice );
-    virtual ~PipelineStateDX11();
+	PipelineStateDX11(ID3D11Device2* pDevice);
+	virtual ~PipelineStateDX11();
 
-    virtual void SetShader( Shader::ShaderType type, std::shared_ptr<Shader> pShader );
-    virtual std::shared_ptr<Shader> GetShader( Shader::ShaderType type ) const;
-    virtual const ShaderMap& GetShaders() const;
+	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader);
+	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const;
+	virtual const ShaderMap& GetShaders() const;
 
-    virtual void SetBlendState( const BlendState& blendState );
-    virtual BlendState& GetBlendState();
+	virtual void SetBlendState(const BlendState& blendState);
+	virtual BlendState& GetBlendState();
 
-    virtual void SetRasterizerState( const RasterizerState& rasterizerState );
-    virtual RasterizerState& GetRasterizerState();
+	virtual void SetRasterizerState(const RasterizerState& rasterizerState);
+	virtual RasterizerState& GetRasterizerState();
 
-    virtual void SetDepthStencilState( const DepthStencilState& depthStencilState );
-    virtual DepthStencilState& GetDepthStencilState();
+	virtual void SetDepthStencilState(const DepthStencilState& depthStencilState);
+	virtual DepthStencilState& GetDepthStencilState();
 
-    virtual void SetRenderTarget( std::shared_ptr<RenderTarget> renderTarget );
-    virtual std::shared_ptr<RenderTarget> GetRenderTarget() const;
+	virtual void SetRenderTarget(std::shared_ptr<RenderTarget> renderTarget);
+	virtual std::shared_ptr<RenderTarget> GetRenderTarget() const;
 
-    virtual void Bind();
-    virtual void UnBind();
+	virtual void Bind();
+	virtual void UnBind();
 
 protected:
 
 private:
-    Microsoft::WRL::ComPtr< ID3D11Device2 > m_pDevice;
-    Microsoft::WRL::ComPtr< ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr< ID3D11Device2 > m_pDevice;
+	ATL::CComPtr< ID3D11DeviceContext2> m_pDeviceContext;
 
-    ShaderMap m_Shaders;
+	ShaderMap m_Shaders;
 
-    BlendStateDX11 m_BlendState;
-    RasterizerStateDX11 m_RasterizerState;
-    DepthStencilStateDX11 m_DepthStencilState;
-    std::shared_ptr<RenderTarget> m_RenderTarget;
+	BlendStateDX11 m_BlendState;
+	RasterizerStateDX11 m_RasterizerState;
+	DepthStencilStateDX11 m_DepthStencilState;
+	std::shared_ptr<RenderTarget> m_RenderTarget;
 };

@@ -18,17 +18,17 @@ CFilesManager::~CFilesManager()
 	DelManager<IFilesManager>();
 }
 
-IFile* CFilesManager::Open(cstring _fileName)
+std::shared_ptr<IFile> CFilesManager::Open(cstring _fileName)
 {
-	IFile* file = nullptr;
+	std::shared_ptr<IFile> file = nullptr;
 
 	if (CLocalFile::IsFileExists(_fileName))
 	{
-		file = new CLocalFile(_fileName);
+		file = make_shared<CLocalFile>(_fileName);
 	}
 	else if (CMPQFile::IsFileExists(_fileName))
 	{
-		file = new CMPQFile(_fileName);
+		file = make_shared<CMPQFile>(_fileName);
 	}
 
 	if (file != nullptr)
