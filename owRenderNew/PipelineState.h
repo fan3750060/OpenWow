@@ -23,8 +23,6 @@ public:
 
 	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader) = 0;
 	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const = 0;
-
-	// Get all shaders associates with this pipeline.
 	virtual const ShaderMap& GetShaders() const = 0;
 
 

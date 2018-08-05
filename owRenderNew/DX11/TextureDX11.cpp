@@ -1053,11 +1053,9 @@ void TextureDX11::Resize2D(uint16_t width, uint16_t height)
 
 		// Create texture with the dimensions specified.
 		D3D11_TEXTURE2D_DESC textureDesc = { 0 };
-
 		textureDesc.ArraySize = m_NumSlices;
 		textureDesc.Format = m_TextureResourceFormat;
 		textureDesc.SampleDesc = m_SampleDesc;
-
 		textureDesc.Width = m_TextureWidth;
 		textureDesc.Height = m_TextureHeight;
 		textureDesc.MipLevels = 1;

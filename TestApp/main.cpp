@@ -164,7 +164,7 @@ int main(int argumentCount, char* arguments[])
 
 		std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
 		mat4 world;
-		world = glm::scale(vec3(10.0f));
+		world = glm::scale(vec3(5.0f));
 
 		n1->SetLocalTransform(world);
 		n1->AddMesh(mesh2);
