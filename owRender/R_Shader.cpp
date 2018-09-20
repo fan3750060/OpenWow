@@ -48,6 +48,7 @@ void R_Shader::createShader(const char *vertexShaderSrc, const char *fragmentSha
 		{
 			char name[32];
 			uint32 size, type;
+			// (GLuint program, GLuint index, GLsizei bufSize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
 			glGetActiveAttrib(m_ProgramGLObj, j, 32, nullptr, (int *)&size, &type, name);
 
 			bool attribFound = false;

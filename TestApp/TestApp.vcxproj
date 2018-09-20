@@ -20,6 +20,14 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">
+      <Project>{590c7c79-ae16-4db2-b61c-bb7b25b76b42}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owRenderOpenGL\owRenderOpenGL.vcxproj">
+      <Project>{102dc6f1-cb83-4203-ba24-1c9e812fde4b}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{552A42EB-9115-4D9D-90CA-0938EFF5F664}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

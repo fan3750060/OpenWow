@@ -165,7 +165,7 @@ bool RenderDevice::init(IOpenGLAdapter* _adapter)
 	if (failed)
 	{
 		Log::Error("Failed to init renderer backend (OpenGL %d.%d), retrying with legacy OpenGL 2.1 backend", m_OpenGLSettings.majorVersion, m_OpenGLSettings.minorVersion);
-		return false;
+		//return false;
 	}
 
 	// Debug output

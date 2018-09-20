@@ -55,7 +55,7 @@
     <ProjectGuid>{BD6D5EE4-09D4-45D8-8529-ED8D08EFB56A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>owGUI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

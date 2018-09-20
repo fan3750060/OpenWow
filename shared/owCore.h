@@ -24,7 +24,7 @@
 
 #include "../owCore/DebugOutput.h"
 
-// CLog outputs
+// Log outputs
 
 #include "../owCore/Console.h"
 #include "../owCore/Input.h"
@@ -34,3 +34,6 @@
 #include "../owCore/BindingController.h"
 #include "../owCore/Settings.h"
 #include "../owCore/Object.h"
+
+// Events
+#include "../owCore/Events.h"

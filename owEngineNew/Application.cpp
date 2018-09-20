@@ -6,6 +6,9 @@
 // Additional
 #include "EngineTime.h"
 
+#include "..\\owRenderDX11\\owRenderDX11.h"
+#include "..\\owRenderOpenGL\\owRenderOpenGL.h"
+
 #define RENDER_WINDOW_CLASS_NAME "RenderWindowClass"
 
 float g_GameDeltaTime = 0.0f;
@@ -49,7 +52,7 @@ Application::Application()
 	}
 
 	// Create Render device.
-	m_pRenderDevice = DX11_Creator::CreateRenderDevice();
+	m_pRenderDevice = CreateRenderDeviceOpenGL(_BaseManager);
 
 	gs_pApplicationInstance = this;
 }
@@ -111,7 +114,7 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 		fail1("Failed to create render window.");
 	}
 
-	m_Windows = DX11_Creator::CreateRenderWindow(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+	m_Windows = CreateRenderWindowOpenGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
 	gs_hWindow = hWindow;
 	gs_WindowHandle = m_Windows;
 
@@ -470,6 +473,10 @@ void Application::Stop()
 	PostQuitMessage(0);
 }
 
+//---------------------------------------------------------------
+//-- EVENTS
+//---------------------------------------------------------------
+
 void Application::OnInitialize(EventArgs& e)
 {
 	if (m_bIsInitialized) return;
@@ -477,6 +484,20 @@ void Application::OnInitialize(EventArgs& e)
 	Initialize(e);
 
 	m_bIsInitialized = true;
+}
+
+
+
+void Application::OnUpdate(UpdateEventArgs& e)
+{
+	Update(e);
+}
+
+void Application::OnRender(RenderEventArgs& e)
+{
+	m_Windows->OnPreRender(e);
+	m_Windows->OnRender(e);
+	m_Windows->OnPostRender(e);
 }
 
 void Application::OnTerminate(EventArgs& e)
@@ -502,18 +523,6 @@ void Application::OnTerminated(EventArgs& e)
 	m_bIsInitialized = false;
 
 	Terminated(e);
-}
-
-void Application::OnUpdate(UpdateEventArgs& e)
-{
-	Update(e);
-}
-
-void Application::OnRender(RenderEventArgs& e)
-{
-	m_Windows->OnPreRender(e);
-	m_Windows->OnRender(e);
-	m_Windows->OnPostRender(e);
 }
 
 void Application::OnExit(EventArgs& e)

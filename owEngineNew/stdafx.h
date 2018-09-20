@@ -2,7 +2,6 @@
 
 #include <owIntfs.h>
 #include <owCore.h>
-#include <owRenderNew.h>
+#include <owRenderBase.h>
 
 #include "common.h"
-

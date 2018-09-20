@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <codecvt>
 #include <functional>
 #include <fstream>
 #include <cmath>
@@ -24,6 +25,7 @@ using namespace std;
 #include "FunctionWA.h"
 #include "FunctionSA.h"
 #include "Timer.h"
+#include "HighResolutionTimer.h"
 
 // Utils
 #include "Random.h"

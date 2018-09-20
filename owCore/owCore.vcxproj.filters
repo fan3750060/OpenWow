@@ -37,9 +37,6 @@
     <Filter Include="RefManager\2 Dim">
       <UniqueIdentifier>{e6840d2f-52fd-4393-8f8e-ca1baa389a53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Helpers">
-      <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Objects bindings\Renderable3D">
       <UniqueIdentifier>{eb9a2bbf-09a5-49c2-94f7-4f3c859e58a6}</UniqueIdentifier>
     </Filter>
@@ -76,8 +73,17 @@
     <Filter Include="RefManager\1 Dim Assync">
       <UniqueIdentifier>{d1c95b6f-a767-47df-bed7-b177d7d1e2eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Cryptography">
+    <Filter Include="Timers">
+      <UniqueIdentifier>{4ed86a83-bc26-44a8-8c60-1dbec01ff0c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cryptography">
       <UniqueIdentifier>{69b706e6-dded-4e00-8818-f8bc0b73fffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{3726dda1-960e-4c4a-bda0-7937a163f686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Helpers">
+      <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -106,13 +112,13 @@
       <Filter>Files\INIFile</Filter>
     </ClCompile>
     <ClCompile Include="Random.cpp">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="UtilsConvert.cpp">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Renderable3DObject.cpp">
       <Filter>Objects bindings\Renderable3D</Filter>
@@ -187,28 +193,37 @@
       <Filter>Log\DebugOutput</Filter>
     </ClCompile>
     <ClCompile Include="ARC4.cpp">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="HMACSHA1.cpp">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="OpenSSLCrypto.cpp">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="SHA1.cpp">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="BigNumber.cpp">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="NEW_Random.cpp">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="BoundingSphere.cpp">
       <Filter>Common\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Objects bindings</Filter>
+    </ClCompile>
+    <ClCompile Include="HighResolutionTimer.cpp">
+      <Filter>Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,10 +276,10 @@
       <Filter>RefManager\1 Dim</Filter>
     </ClInclude>
     <ClInclude Include="Random.h">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Renderable3DObject.h">
       <Filter>Objects bindings\Renderable3D</Filter>
@@ -274,9 +289,6 @@
     </ClInclude>
     <ClInclude Include="BindingController.h">
       <Filter>Objects bindings</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="FilesManager.h">
       <Filter>Files</Filter>
@@ -378,28 +390,43 @@
       <Filter>Log\DebugOutput</Filter>
     </ClInclude>
     <ClInclude Include="ARC4.h">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="HMACSHA1.h">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="OpenSSLCrypto.h">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="SHA1.h">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="BigNumber.h">
-      <Filter>Common\Cryptography</Filter>
+      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="NEW_Random.h">
-      <Filter>Helpers</Filter>
+      <Filter>Common\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="BoundingSphere.h">
       <Filter>Common\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Objects bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCodes.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="HighResolutionTimer.h">
+      <Filter>Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer_OLD.h">
+      <Filter>Timers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

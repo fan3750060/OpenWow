@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDevice.cpp">
+      <Filter>Render types</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderWindow.cpp">
+      <Filter>Render types</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderParameter.cpp">
+      <Filter>Render types</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>Render types\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>Render types\Misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearFlags.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Pixel.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadSafeQueue.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferBinding.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="CPUAccess.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Query.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDevice.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderWindow.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderParameter.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Render types</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Render types\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Render types\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="StructuredBuffer.h">
+      <Filter>Render types\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owRenderBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderEvents.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Render types\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Render types\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RaycastHit.h">
+      <Filter>Render types\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Render types\Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{98fc8d94-3730-4821-bb53-d891aea80641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{22381386-e6dc-40d6-9bed-d4f69824554c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render types">
+      <UniqueIdentifier>{e4130516-475b-42b6-940c-b2ad68251d5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render types\Buffers">
+      <UniqueIdentifier>{985f9813-a356-44df-b0f3-5d607f624c64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render types\Misc">
+      <UniqueIdentifier>{d50dc975-5555-4944-afad-24603a237e08}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RenderDevice.inl">
+      <Filter>Render types</Filter>
+    </None>
+    <None Include="ShaderParameter.inl">
+      <Filter>Render types</Filter>
+    </None>
+    <None Include="Texture.inl">
+      <Filter>Render types</Filter>
+    </None>
+    <None Include="StructuredBuffer.inl">
+      <Filter>Render types\Buffers</Filter>
+    </None>
+    <None Include="ConstantBuffer.inl">
+      <Filter>Render types\Buffers</Filter>
+    </None>
+  </ItemGroup>
+</Project>

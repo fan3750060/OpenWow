@@ -11,8 +11,8 @@
 #include <owCore.h>
 #pragma comment(lib, "owCore.lib")
 
-#include <owRenderNew.h>
-#pragma comment(lib, "owRenderNew.lib")
+#include <owRenderBase.h>
+#pragma comment(lib, "owRenderBase.lib")
 
 #include <owEngineNew.h>
 #pragma comment(lib, "owEngineNew.lib")

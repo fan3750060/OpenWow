@@ -10,9 +10,6 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{0251f6f0-b6dd-4750-8035-10a4f2a1a82f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{e75ed785-0ca0-4af8-9dd0-62ec9b81121d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -73,9 +70,6 @@
     </ClInclude>
     <ClInclude Include="Loader.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingBlend.h">
-      <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Perfomance.h">
       <Filter>Engine</Filter>

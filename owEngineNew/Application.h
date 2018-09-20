@@ -11,11 +11,13 @@ public:
 
 	// Run the application
 	virtual int Run();
+
 	// Stop the app from running and close the application window.
 	virtual void Stop();
 
 	// Create a new render Window with the specified dimensions.
 	RenderWindow* CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
+
 	// Get the render device associated with this application.
 	RenderDevice* GetRenderDevice();
 
@@ -46,10 +48,12 @@ protected:
 	virtual void OnInitialize(EventArgs& e);
 
 	virtual void OnUpdate(UpdateEventArgs& e);
+
 	virtual void OnRender(RenderEventArgs& e);
 
 	// The application instance is going to be terminated.
 	virtual void OnTerminate(EventArgs& e);
+
 	// The application instance has been terminated.
 	virtual void OnTerminated(EventArgs& e);
 
@@ -64,7 +68,7 @@ private:
 	bool            m_bIsRunning;
 
 	// Handle to the module.
-	HINSTANCE m_hInstance;
-	RenderDevice* m_pRenderDevice;
-	RenderWindow* m_Windows;
+	HINSTANCE       m_hInstance;
+	RenderDevice*   m_pRenderDevice;
+	RenderWindow*   m_Windows;
 };

@@ -27,5 +27,12 @@ public:
 	void* getProcAddress(const char* _procname) override;
 
 private:
+	
+private:
 	CInput* m_Input;
+
+	Timer_OLD m_timer;
+
+	HWND m_hwnd;
+	HDC m_gldc;
 };

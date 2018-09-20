@@ -3,6 +3,10 @@
 // General
 #include "OpenGLAdapter_Native.h"
 
+CInput* input;
+
+#pragma region OpenGL
+
 typedef HGLRC WINAPI wglCreateContextAttribsARB_type(HDC hdc, HGLRC hShareContext, const int *attribList);
 wglCreateContextAttribsARB_type *wglCreateContextAttribsARB;
 
@@ -16,7 +20,7 @@ wglCreateContextAttribsARB_type *wglCreateContextAttribsARB;
 
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB          0x00000001
 
-typedef BOOL WINAPI wglChoosePixelFormatARB_type(HDC hdc, const int *piAttribIList,	const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
+typedef BOOL WINAPI wglChoosePixelFormatARB_type(HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
 wglChoosePixelFormatARB_type *wglChoosePixelFormatARB;
 
 // See https://www.opengl.org/registry/specs/ARB/wgl_pixel_format.txt for all values
@@ -32,32 +36,25 @@ wglChoosePixelFormatARB_type *wglChoosePixelFormatARB;
 #define WGL_FULL_ACCELERATION_ARB                 0x2027
 #define WGL_TYPE_RGBA_ARB                         0x202B
 
-static void fatal_error(char *msg)
-{
-	MessageBoxA(NULL, msg, "Error", MB_OK | MB_ICONEXCLAMATION);
-	exit(EXIT_FAILURE);
-}
+#pragma endregion
 
 static void init_opengl_extensions(void)
 {
-	// Before we can load extensions, we need a dummy OpenGL context, created using a dummy window.
-	// We use a dummy window because you can only set the pixel format for a window once. For the
-	// real window, we want to use wglChoosePixelFormatARB (so we can potentially specify options
-	// that aren't available in PIXELFORMATDESCRIPTOR), but we can't load and use that before we
-	// have a context.
-	WNDCLASS window_class;
-	window_class.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	window_class.lpfnWndProc = DefWindowProcA;
-	window_class.hInstance = GetModuleHandle(0);
-	window_class.lpszClassName = "Dummy_WGL_djuasiodwa";
+	WNDCLASS renderWindowClass;
+	ZeroMemory(&renderWindowClass, sizeof(WNDCLASS));
+	renderWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	renderWindowClass.lpfnWndProc = &DefWindowProcA;
+	renderWindowClass.hInstance = GetModuleHandle(0);
+	renderWindowClass.lpszMenuName = NULL;
+	renderWindowClass.lpszClassName = "TestRenderClass";
 
-	if (!RegisterClass(&window_class)) {
-		fatal_error("Failed to register dummy OpenGL window.");
+	if (!RegisterClassA(&renderWindowClass)) {
+		fail1("Failed to register dummy OpenGL window.");
 	}
 
-	HWND dummy_window = CreateWindowEx(
+	HWND dummy_window = CreateWindowExA(
 		0,
-		window_class.lpszClassName,
+		renderWindowClass.lpszClassName,
 		"Dummy OpenGL Window",
 		0,
 		CW_USEDEFAULT,
@@ -66,11 +63,11 @@ static void init_opengl_extensions(void)
 		CW_USEDEFAULT,
 		0,
 		0,
-		window_class.hInstance,
+		renderWindowClass.hInstance,
 		0);
 
 	if (!dummy_window) {
-		fatal_error("Failed to create dummy OpenGL window.");
+		fail1("Failed to create dummy OpenGL window.");
 	}
 
 	HDC dummy_dc = GetDC(dummy_window);
@@ -89,21 +86,21 @@ static void init_opengl_extensions(void)
 
 	int pixel_format = ChoosePixelFormat(dummy_dc, &pfd);
 	if (!pixel_format) {
-		fatal_error("Failed to find a suitable pixel format.");
+		fail1("Failed to find a suitable pixel format.");
 	}
 	if (!SetPixelFormat(dummy_dc, pixel_format, &pfd)) {
-		fatal_error("Failed to set the pixel format.");
+		fail1("Failed to set the pixel format.");
 	}
 
 	HGLRC dummy_context = wglCreateContext(dummy_dc);
-	if (!dummy_context) 
+	if (!dummy_context)
 	{
-		fatal_error("Failed to create a dummy OpenGL rendering context.");
+		fail1("Failed to create a dummy OpenGL rendering context.");
 	}
 
-	if (!wglMakeCurrent(dummy_dc, dummy_context)) 
+	if (!wglMakeCurrent(dummy_dc, dummy_context))
 	{
-		fatal_error("Failed to activate dummy OpenGL rendering context.");
+		fail1("Failed to activate dummy OpenGL rendering context.");
 	}
 
 	wglCreateContextAttribsARB = (wglCreateContextAttribsARB_type*)wglGetProcAddress(
@@ -138,94 +135,215 @@ static HGLRC init_opengl(HDC real_dc)
 	UINT num_formats;
 	wglChoosePixelFormatARB(real_dc, pixel_format_attribs, 0, 1, &pixel_format, &num_formats);
 	if (!num_formats) {
-		fatal_error("Failed to set the OpenGL 3.3 pixel format.");
+		fail1("Failed to set the OpenGL 3.3 pixel format.");
 	}
 
 	PIXELFORMATDESCRIPTOR pfd;
 	DescribePixelFormat(real_dc, pixel_format, sizeof(pfd), &pfd);
 	if (!SetPixelFormat(real_dc, pixel_format, &pfd)) {
-		fatal_error("Failed to set the OpenGL 3.3 pixel format.");
+		fail1("Failed to set the OpenGL 3.3 pixel format.");
 	}
 
 	// Specify that we want to create an OpenGL 3.3 core profile context
 	int gl33_attribs[] = {
-		WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
-		WGL_CONTEXT_MINOR_VERSION_ARB, 3,
+		WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
+		WGL_CONTEXT_MINOR_VERSION_ARB, 4,
 		WGL_CONTEXT_PROFILE_MASK_ARB,  WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 		0,
 	};
 
 	HGLRC gl33_context = wglCreateContextAttribsARB(real_dc, 0, gl33_attribs);
-	if (!gl33_context) {
-		fatal_error("Failed to create OpenGL 3.3 context.");
+	if (!gl33_context) 
+	{
+		fail1("Failed to create OpenGL 3.3 context.");
 	}
 
-	if (!wglMakeCurrent(real_dc, gl33_context)) {
-		fatal_error("Failed to activate OpenGL 3.3 rendering context.");
+	if (!wglMakeCurrent(real_dc, gl33_context)) 
+	{
+		fail1("Failed to activate OpenGL 3.3 rendering context.");
 	}
 
 	return gl33_context;
 }
 
-static LRESULT CALLBACK window_callback(HWND window, UINT msg, WPARAM wparam, LPARAM lparam)
+
+// Convert the message ID into a MouseButton ID
+static int32 DecodeMouseButton(UINT messageID)
+{
+	int32 mouseButton = -1;
+	switch (messageID)
+	{
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_LBUTTONDBLCLK:
+	{
+		mouseButton = OW_MOUSE_BUTTON_LEFT;
+	}
+	break;
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_RBUTTONDBLCLK:
+	{
+		mouseButton = OW_MOUSE_BUTTON_RIGHT;
+	}
+	break;
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MBUTTONDBLCLK:
+	{
+		mouseButton = OW_MOUSE_BUTTON_MIDDLE;
+	}
+	break;
+	}
+
+	return mouseButton;
+}
+
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT result = 0;
 
-	switch (msg) {
+	switch (message)
+	{
+	case WM_PAINT:
+	{
+		PAINTSTRUCT paintStruct;
+		HDC hDC = BeginPaint(hwnd, &paintStruct);
+		EndPaint(hwnd, &paintStruct);
+	}
+	break;
+	case WM_MOUSEMOVE:
+	{
+		bool lButton = (wParam & MK_LBUTTON) != 0;
+		bool rButton = (wParam & MK_RBUTTON) != 0;
+		bool mButton = (wParam & MK_MBUTTON) != 0;
+		bool shift = (wParam & MK_SHIFT) != 0;
+		bool control = (wParam & MK_CONTROL) != 0;
+
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
+
+		//MouseMotionEventArgs mouseMotionEventArgs(*gs_WindowHandle, lButton, mButton, rButton, control, shift, x, y);
+		//gs_WindowHandle->OnMouseMoved(mouseMotionEventArgs);
+		input->MousePositionCallback(vec2(x, y));
+	}
+	break;
+
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_MBUTTONDOWN:
+	{
+		bool lButton = (wParam & MK_LBUTTON) != 0;
+		bool rButton = (wParam & MK_RBUTTON) != 0;
+		bool mButton = (wParam & MK_MBUTTON) != 0;
+		bool shift = (wParam & MK_SHIFT) != 0;
+		bool control = (wParam & MK_CONTROL) != 0;
+
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
+
+		//MouseButtonEventArgs mouseButtonEventArgs(*gs_WindowHandle, DecodeMouseButton(message), MouseButtonEventArgs::Pressed, lButton, mButton, rButton, control, shift, x, y);
+		//gs_WindowHandle->OnMouseButtonPressed(mouseButtonEventArgs);
+		
+		input->MouseCallback(DecodeMouseButton(message), OW_PRESS, 0);
+	}
+	break;
+
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONUP:
+	{
+		bool lButton = (wParam & MK_LBUTTON) != 0;
+		bool rButton = (wParam & MK_RBUTTON) != 0;
+		bool mButton = (wParam & MK_MBUTTON) != 0;
+		bool shift = (wParam & MK_SHIFT) != 0;
+		bool control = (wParam & MK_CONTROL) != 0;
+
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
+
+		//MouseButtonEventArgs mouseButtonEventArgs(*gs_WindowHandle, DecodeMouseButton(message), MouseButtonEventArgs::Released, lButton, mButton, rButton, control, shift, x, y);
+		//gs_WindowHandle->OnMouseButtonReleased(mouseButtonEventArgs);
+
+		input->MouseCallback(DecodeMouseButton(message), OW_RELEASE, 0);
+	}
+	break;
+
 	case WM_CLOSE:
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+
 	default:
-		result = DefWindowProcA(window, msg, wparam, lparam);
+		result = DefWindowProc(hwnd, message, wParam, lParam);
 		break;
 	}
 
 	return result;
 }
 
-static HWND create_window(HINSTANCE inst)
-{
-	WNDCLASS window_class;
-	window_class.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	window_class.lpfnWndProc = window_callback;
-	window_class.hInstance = inst;
-	window_class.hCursor = LoadCursor(0, IDC_ARROW);
-	window_class.hbrBackground = 0;
-	window_class.lpszClassName = "WGL_fdjhsklf";
+#define RENDER_WINDOW_CLASS_NAME "RenderWindowClass"
 
-	if (!RegisterClassA(&window_class)) {
-		fatal_error("Failed to register window.");
+static HWND create_window()
+{
+	HINSTANCE hInstance = GetModuleHandle(NULL);
+
+	HINSTANCE hDll;
+	hDll = LoadLibrary("SHELL32.dll");
+
+	// Register a window class for creating our render windows with.
+	WNDCLASSEX renderWindowClass;
+	renderWindowClass.cbSize = sizeof(WNDCLASSEX);
+	renderWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	renderWindowClass.lpfnWndProc = &WndProc;
+	renderWindowClass.cbClsExtra = 0;
+	renderWindowClass.cbWndExtra = 0;
+	renderWindowClass.hInstance = hInstance;
+	renderWindowClass.hIcon = LoadIcon(hDll, MAKEINTRESOURCE(2));
+	renderWindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	renderWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	renderWindowClass.lpszMenuName = NULL;
+	renderWindowClass.lpszClassName = RENDER_WINDOW_CLASS_NAME;
+	renderWindowClass.hIconSm = LoadIcon(hDll, MAKEINTRESOURCE(2));
+
+	if (!RegisterClassEx(&renderWindowClass))
+	{
+		fail1("Failed to register the render window class.");
 	}
 
 	// Specify a desired width and height, then adjust the rect so the window's client area will be
 	// that size.
 	RECT rect;
-	rect.right = 1024;
-	rect.bottom = 576;
+	ZeroMemory(&rect, sizeof(RECT));
+	rect.right = 1280;
+	rect.bottom = 1024;
 
 	DWORD window_style = WS_OVERLAPPEDWINDOW;
 	AdjustWindowRect(&rect, window_style, false);
 
-	HWND window = CreateWindowEx(
+	HWND hWindow = CreateWindowExA(
 		0,
-		window_class.lpszClassName,
+		renderWindowClass.lpszClassName,
 		"OpenGL",
 		window_style,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		rect.right - rect.left,
 		rect.bottom - rect.top,
-		0,
-		0,
-		inst,
-		0);
+		NULL,
+		NULL,
+		hInstance,
+		NULL
+	);
 
-	if (!window) {
-		fatal_error("Failed to create window.");
+	if (!hWindow) 
+	{
+		fail1("Failed to create window.");
 	}
 
-	return window;
+	ShowWindow(hWindow, 1);
+
+	return hWindow;
 }
 
 OpenGLAdapter_Native::OpenGLAdapter_Native()
@@ -233,9 +351,14 @@ OpenGLAdapter_Native::OpenGLAdapter_Native()
 	CGroupVideo& groupVideo = GetSettingsGroup<CGroupVideo>();
 	CGroupOpenGL& openglSettings = GetSettingsGroup<CGroupOpenGL>();
 
-	HWND window = create_window(GetModuleHandle(NULL));
-	HDC gldc = GetDC(window);
-	HGLRC glrc = init_opengl(gldc);
+	m_hwnd = create_window();
+	m_gldc = GetDC(m_hwnd);
+	HGLRC glrc = init_opengl(m_gldc);
+
+	m_Input = new CInput();
+	input = m_Input;
+
+	m_timer.setEnabled(true);
 }
 
 OpenGLAdapter_Native::~OpenGLAdapter_Native()
@@ -244,17 +367,33 @@ OpenGLAdapter_Native::~OpenGLAdapter_Native()
 
 bool OpenGLAdapter_Native::SwapWindowBuffers()
 {
-	return false;
+	MSG msg = { };
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		if (msg.message == WM_QUIT)
+		{
+			//EventArgs eventArgs(*this);
+			//OnExit(eventArgs);
+			return false;
+		}
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	SwapBuffers(m_gldc);
+
+	return true;
 }
 
 double OpenGLAdapter_Native::GetTime()
 {
-	return 0.0;
+	return m_timer.getElapsedTimeMS() * 1000.0f;
 }
 
 CInput * OpenGLAdapter_Native::GetInput()
 {
-	return nullptr;
+	return m_Input;
 }
 
 void OpenGLAdapter_Native::MakeMainContext()
@@ -287,6 +426,12 @@ void OpenGLAdapter_Native::HideCursor()
 
 void OpenGLAdapter_Native::setMousePosition(cvec2 _mousePosition)
 {
+	RECT rc;
+	GetClientRect(m_hwnd, &rc); // get client coords
+	ClientToScreen(m_hwnd, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
+	ClientToScreen(m_hwnd, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
+
+	SetCursorPos(rc.left + _mousePosition.x, rc.top + _mousePosition.y);
 }
 
 int OpenGLAdapter_Native::isExtensionSupported(const char * _extension)
@@ -294,7 +439,19 @@ int OpenGLAdapter_Native::isExtensionSupported(const char * _extension)
 	return 0;
 }
 
-void * OpenGLAdapter_Native::getProcAddress(const char * _procname)
+void* OpenGLAdapter_Native::getProcAddress(const char * _procname)
 {
-	return nullptr;
+	void* p = (void*) wglGetProcAddress(_procname);
+	if (p == (void*) 0x0 ||
+		p == (void*) 0x1 || 
+		p == (void*) 0x2 || 
+		p == (void*) 0x3 || 
+		p == (void*) -1
+		)
+	{
+		HMODULE module = LoadLibraryA("opengl32.dll");
+		p = (void*)GetProcAddress(module, _procname);
+	}
+
+	return p;
 }
