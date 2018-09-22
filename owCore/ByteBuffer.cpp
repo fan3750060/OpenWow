@@ -142,13 +142,13 @@ void ByteBuffer::seekRelative(uint64 _bufferOffsetRelative)
 
 //-- READ
 
-void ByteBuffer::readLine(string* _string)
+bool ByteBuffer::readLine(string* _string)
 {
 	assert1(_string != nullptr);
 
 	if (m_IsEOF)
 	{
-		return;
+		return false;
 	}
 
 	// Find first incorrect symbol
@@ -173,6 +173,7 @@ void ByteBuffer::readLine(string* _string)
 	line = Utils::Trim(line);
 
 	(*_string) = line;
+	return true;
 }
 
 void ByteBuffer::readBytes(void* _destination, uint64 _size)

@@ -27,7 +27,7 @@ void _stdcall glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 	if (id == 131185 || id == 131154) return;
 
 
-	Log::Error("---------------");
+	Log::Error("-----------------------------------------------------");
 	Log::Error("OpenGL Debug message (%d): [%s]", id, message);
 
 	switch (source)
@@ -61,8 +61,9 @@ void _stdcall glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 	case GL_DEBUG_SEVERITY_NOTIFICATION: Log::Error("Severity: notification"); break;
 	}
 
-	//system("pause");
-	//Log::Exit(-1);
+	Log::Error("");
+
+	_ASSERT(false);
 }
 #endif
 
@@ -180,9 +181,9 @@ void RenderDeviceOGL::CreateDevice(HDC _hdc)
 	}
 
 	// Find supported depth format (some old ATI cards only support 16 bit depth for FBOs)
-	/*{
-		m_DepthFormat = GL_DEPTH_COMPONENT32;
-		Log::Info("Render target depth precision limited to 32 bit");
+	{
+		m_DepthFormat = GL_DEPTH_COMPONENT24;
+		/*Log::Info("Render target depth precision limited to 32 bit");
 		std::shared_ptr<R_RenderBuffer> testBuf32 = createRenderBuffer(32, 32, R_TextureFormats::RGBA8, true, 1, 0);
 		if (testBuf32 == nullptr)
 		{
@@ -194,8 +195,8 @@ void RenderDeviceOGL::CreateDevice(HDC _hdc)
 				m_DepthFormat = GL_DEPTH_COMPONENT16;
 				Log::Error("Render target depth precision limited to 16 bit");
 			}
-		}
-	}*/
+		}*/
+	}
 
 	m_DeviceName = std::string(vendor) + std::string(renderer) + std::string(version);
 }
@@ -549,7 +550,7 @@ std::shared_ptr<Texture> RenderDeviceOGL::CreateTexture(cstring fileName)
 		return iter->second;
 	}
 
-	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>();
+	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(this);
 	texture->LoadTexture2D(fileName);
 
 	m_Textures.push_back(texture);
@@ -566,7 +567,7 @@ std::shared_ptr<Texture> RenderDeviceOGL::CreateTextureCube(cstring fileName)
 		return iter->second;
 	}
 
-	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>();
+	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(this);
 	texture->LoadTextureCube(fileName);
 
 	m_Textures.push_back(texture);
@@ -578,7 +579,7 @@ std::shared_ptr<Texture> RenderDeviceOGL::CreateTextureCube(cstring fileName)
 
 std::shared_ptr<Texture> RenderDeviceOGL::CreateTexture2D(uint16_t width, uint16_t height, uint16_t slices, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(width, height, slices, format, cpuAccess, gpuWrite);
+	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(this, width, height, slices, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -586,7 +587,7 @@ std::shared_ptr<Texture> RenderDeviceOGL::CreateTexture2D(uint16_t width, uint16
 
 std::shared_ptr<Texture> RenderDeviceOGL::CreateTextureCube(uint16_t size, uint16_t numCubes, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(size, numCubes, format, cpuAccess, gpuWrite);
+	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(this, size, numCubes, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -594,7 +595,7 @@ std::shared_ptr<Texture> RenderDeviceOGL::CreateTextureCube(uint16_t size, uint1
 
 std::shared_ptr<Texture> RenderDeviceOGL::CreateTexture()
 {
-	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>();
+	std::shared_ptr<Texture> texture = std::make_shared<TextureOGL>(this);
 	m_Textures.push_back(texture);
 
 	return texture;
@@ -706,6 +707,10 @@ uint32 RenderDeviceOGL::GetDefaultRB()
 	return m_RBDefault;
 }
 
+void RenderDeviceOGL::SetDefaultRB(uint32 _obj)
+{
+	m_RBDefault = _obj;
+}
 
 
 
@@ -730,10 +735,10 @@ void RenderDeviceOGL::LoadDefaultResources()
 {
 	// Load a default shader
 	std::shared_ptr<Shader> pDefaultVertexShader = CreateShader();
-	pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D\\DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "vs_4_0");
+	pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders\\M2\\M2.vs", Shader::ShaderMacros(), "VS_main", "vs_4_0");
 
 	std::shared_ptr<Shader> pDefaultPixelShader = CreateShader();
-	pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D\\DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "ps_4_0");
+	pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders\\M2\\M2.fs", Shader::ShaderMacros(), "PS_main", "ps_4_0");
 
 	// Create a magenta texture if a texture defined in the shader is not bound.
 	m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());

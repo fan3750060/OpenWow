@@ -57,7 +57,7 @@ inline void FatalMessageBox(const char* _title, const char* _message, ...)
 
 //
 
-//#define ASSERTS_ENABLED
+#define ASSERTS_ENABLED
 
 #ifdef ASSERTS_ENABLED
 

@@ -48,10 +48,11 @@ void ConstantBufferOGL::Copy(std::shared_ptr<Buffer> other)
 bool ConstantBufferOGL::Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, id, m_GLObj);
-	throw std::exception("Not implemented!");
+
+	return true;
 }
 
 void ConstantBufferOGL::UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
 {
-	throw std::exception("Not implemented!");
+	glBindBufferBase(GL_UNIFORM_BUFFER, id, 0);
 }

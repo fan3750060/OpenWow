@@ -122,7 +122,7 @@ void R_RenderBuffer::createRenderBuffer(uint32 _width, uint32 _height, R_Texture
 			}
 		}
 
-		uint32 buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+		GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
 		glDrawBuffers(_numColBufs, buffers);
 

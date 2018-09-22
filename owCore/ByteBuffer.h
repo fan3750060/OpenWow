@@ -35,7 +35,7 @@ public:
 	void seekRelative(uint64 _bufferOffsetRelative) override;
 
 	// Read
-	void readLine(string* _string) override;
+	bool readLine(string* _string) override;
 	void readBytes(void* _destination, uint64 _size = 1) override;
 	void readString(string* _string) override;
 

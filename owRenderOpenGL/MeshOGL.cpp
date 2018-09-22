@@ -85,6 +85,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 	{
 		// TOOD: Primitive reset?
 		m_pIndexBuffer->Bind(0, Shader::VertexShader, ShaderParameter::Type::Buffer);
+
 		UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
 		glDrawRangeElements
 		(

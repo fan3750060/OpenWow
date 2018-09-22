@@ -12,13 +12,6 @@
 #include "OpenGL.h"
 
 
-#pragma region OpenGL
-
-
-
-#pragma endregion
-
-
 
 RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 	: RenderWindow(windowName, windowWidth, windowHeight, vSync)
@@ -44,10 +37,10 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 
 	// Depth/stencil buffer
 	Texture::TextureFormat depthStencilTextureFormat(
-		Texture::Components::DepthStencil,
+		Texture::Components::Depth,
 		Texture::Type::UnsignedNormalized,
-		1, //m_SampleDesc.Count,
-		0, 0, 0, 0, 24, 8);
+		0, //m_SampleDesc.Count,
+		0, 0, 0, 0, 24, 0);
 	std::shared_ptr<Texture> depthStencilTexture = m_Device->CreateTexture2D(windowWidth2, windowHeight2, 1, depthStencilTextureFormat);
 
 	// Color buffer (Color0)
@@ -61,7 +54,7 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 	std::shared_ptr<Texture> colorTexture = m_Device->CreateTexture2D(windowWidth2, windowHeight2, 1, colorTextureFormat);
 
 	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Color0, colorTexture);
-	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::DepthStencil, depthStencilTexture);
+	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Depth, depthStencilTexture);
 }
 
 RenderWindowOGL::~RenderWindowOGL()
@@ -156,6 +149,12 @@ std::shared_ptr<RenderTarget> RenderWindowOGL::GetRenderTarget()
 
 void RenderWindowOGL::OnPreRender(RenderEventArgs& e)
 {
+	// Get the currently bound frame buffer object to avoid reset to invalid FBO
+	GLint defaultRB = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultRB);
+	OGLCheckError();
+	m_Device->SetDefaultRB(defaultRB);
+
 	if (m_bResizePending)
 	{
 		ResizeSwapChainBuffers(GetWindowWidth(), GetWindowHeight());

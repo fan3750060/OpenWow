@@ -11,7 +11,7 @@ public:
 	virtual ShaderType GetType() const;
 
 	// Shader loading
-	virtual bool LoadShaderFromString(ShaderType type, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
+	//virtual bool LoadShaderFromString(ShaderType type, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 	virtual bool LoadShaderFromFile(ShaderType type, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 
 	//virtual UINT GetConstantBufferIndex( cstring name );
@@ -32,7 +32,7 @@ public:
 	uint32 GetGLObject();
 
 protected:
-
+	bool GetShaderProgramLog(uint32 _obj, std::string * _errMsg);
 	// Destroy the contents of this shader (in case we are loading a new shader).
 	virtual void Destroy();
 

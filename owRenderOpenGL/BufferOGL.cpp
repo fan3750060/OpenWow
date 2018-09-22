@@ -50,7 +50,8 @@ bool BufferOGL::Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::
 		break;
 	}*/
 
-	throw std::exception("Not implemented!");
+	//throw std::exception("Not implemented!");
+	return true;
 }
 
 void BufferOGL::UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
@@ -74,7 +75,7 @@ void BufferOGL::UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter
 		break;
 	}*/
 
-	throw std::exception("Not implemented!");
+	//throw std::exception("Not implemented!");
 }
 
 void BufferOGL::Copy(std::shared_ptr<Buffer> other)

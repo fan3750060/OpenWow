@@ -41,7 +41,7 @@ public:
 	 * To use the latest supported profile, specify "latest" here.
 	 * @return True if the shader was loaded correctly, or False otherwise.
 	 */
-	virtual bool LoadShaderFromString(ShaderType type, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
+	//virtual bool LoadShaderFromString(ShaderType type, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
 
 	/**
 	 * Load a shader from a file.

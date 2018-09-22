@@ -10,7 +10,7 @@ __interface IByteBuffer
 
 	void seek(uint64 _bufferOffsetAbsolute);
 	void seekRelative(uint64 _bufferOffsetRelative);
-	void readLine(string* _string);
+	bool readLine(string* _string);
 	void readBytes(void* _destination, uint64 _size = 1);
 	void readString(string* _string);
 };

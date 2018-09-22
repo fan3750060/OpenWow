@@ -172,7 +172,7 @@ int main(int argumentCount, char* arguments[])
 		std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
 		n2->AddMesh(mesh3);
 
-		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
+		//g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		// CAMERA
 		g_Camera.SetTranslate(vec3(0, 0, 0));
@@ -180,14 +180,14 @@ int main(int argumentCount, char* arguments[])
 		g_Camera.SetViewport(Viewport(0, 0, 1024.0f, 768.0f));
 		g_Camera.SetProjectionRH(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
 
-		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
-		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
+		//g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
+		//g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		// SHADERS
 		std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
-		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
+		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders/Debug/Debug.vs", Shader::ShaderMacros(), "VS_main", "latest");
 		g_pPixelShader = renderDevice->CreateShader();
-		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
+		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders/Debug/Debug.fs", Shader::ShaderMacros(), "PS_main", "latest");
 
 		// SAMPLER
 
@@ -225,7 +225,7 @@ int main(int argumentCount, char* arguments[])
 		// Add a pass to render opaque geometry.
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
 		g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardOpaqueQuery));
-		g_ForwardTechnique.AddPass(std::make_shared<OpaquePass>(g_pScene, g_pOpaquePipeline));
+		//g_ForwardTechnique.AddPass(std::make_shared<OpaquePass>(g_pScene, g_pOpaquePipeline));
 		g_ForwardTechnique.AddPass(std::make_shared<EndQueryPass>(g_pForwardOpaqueQuery));
 		
 		// Add a pass for rendering transparent geometry
@@ -263,7 +263,7 @@ void OnUpdate(UpdateEventArgs& e)
 
 void OnPreRender(RenderEventArgs& e)
 {
-	g_pFrameQuery->Begin(e.FrameCounter);
+	//g_pFrameQuery->Begin(e.FrameCounter);
 
 	g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
 }
@@ -292,7 +292,7 @@ void OnRender(RenderEventArgs& e)
 
 void OnPostRender(RenderEventArgs& e)
 {
-	g_pFrameQuery->End(e.FrameCounter);
+	//g_pFrameQuery->End(e.FrameCounter);
 
 	RenderWindow& renderWindow = dynamic_cast<RenderWindow&>(const_cast<Object&>(e.Caller));
 	renderWindow.Present();
@@ -300,20 +300,20 @@ void OnPostRender(RenderEventArgs& e)
 	// Retrieve GPU timer results.
 	// Don't retrieve the immediate query result, but from the previous frame.
 	// Checking previous frame counters will alleviate GPU stalls.
-	Query::QueryResult frameResult = g_pFrameQuery->GetQueryResult(e.FrameCounter - (g_pFrameQuery->GetBufferCount() - 1));
+	/*Query::QueryResult frameResult = g_pFrameQuery->GetQueryResult(e.FrameCounter - (g_pFrameQuery->GetBufferCount() - 1));
 	if (frameResult.IsValid)
 	{
 		// Frame time in milliseconds
 		g_FrameTime = frameResult.ElapsedTime * 1000.0;
-	}
+	}*/
 
 	switch (g_RenderingTechnique)
 	{
 	case RenderingTechnique::Forward:
 	{
 		// Query results for forward rendering technique.
-		Query::QueryResult forwardOpaqueResult = g_pForwardOpaqueQuery->GetQueryResult(e.FrameCounter - (g_pForwardOpaqueQuery->GetBufferCount() - 1));
-		Query::QueryResult forwardTransparentResult = g_pForwardTransparentQuery->GetQueryResult(e.FrameCounter - (g_pForwardTransparentQuery->GetBufferCount() - 1));
+		//Query::QueryResult forwardOpaqueResult = g_pForwardOpaqueQuery->GetQueryResult(e.FrameCounter - (g_pForwardOpaqueQuery->GetBufferCount() - 1));
+		//Query::QueryResult forwardTransparentResult = g_pForwardTransparentQuery->GetQueryResult(e.FrameCounter - (g_pForwardTransparentQuery->GetBufferCount() - 1));
 
 		/*if (forwardOpaqueResult.IsValid)
 		{

@@ -1,9 +1,13 @@
 #include <stdafx.h>
 
+// Include
+#include "RenderDeviceOGL.h"
+
 // General
 #include "TextureOGL.h"
 
 // Additional
+#include "TextureOGLTranslate.h"
 #include "OpenGL.h"
 
 #include __PACK_BEGIN
@@ -24,7 +28,29 @@ struct BLPHeader
 };
 #include __PACK_END
 
-TextureOGL::TextureOGL()
+/* Format
+GL_RED, 
+GL_RG, 
+GL_RGB, 
+GL_BGR, 
+GL_RGBA,
+GL_BGRA, 
+GL_RED_INTEGER,
+GL_RG_INTEGER, 
+GL_RGB_INTEGER, 
+GL_BGR_INTEGER, 
+GL_RGBA_INTEGER, 
+GL_BGRA_INTEGER,
+GL_STENCIL_INDEX, 
+GL_DEPTH_COMPONENT, 
+GL_DEPTH_STENCIL.
+*/
+
+
+
+
+
+TextureOGL::TextureOGL(RenderDeviceOGL* _device)
 	: m_TextureWidth(0)
 	, m_TextureHeight(0)
 	, m_NumSlices(0)
@@ -41,9 +67,9 @@ TextureOGL::TextureOGL()
 }
 
 // 2D Texture
-TextureOGL::TextureOGL(uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
-	: m_TextureWidth(0)
-	, m_TextureHeight(0)
+TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
+	: m_TextureWidth(width)
+	, m_TextureHeight(height)
 	, m_BPP(0)
 	, m_TextureFormat(format)
 	, m_CPUAccess(cpuAccess)
@@ -60,21 +86,42 @@ TextureOGL::TextureOGL(uint16_t width, uint16_t height, uint16_t slices, const T
 	}
 
 	glGenTextures(1, &m_GLObj);
-	glActiveTexture(GL_TEXTURE15);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_GLObj);
 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 
-	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	/*float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);*/
+
+
+	GLenum internalFormat = TranslateTextureInternalFormat(format);
+	GLenum inputFormat = TranslateTextureInputFormat(format);
+	GLenum inputType = TranslateTextureInputType(format);
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, NULL);
+	OGLCheckError();
 
 	// Sampler state
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
+	//glActiveTexture(GL_TEXTURE0);
 }
 
 // CUBE Texture
-TextureOGL::TextureOGL(uint16_t size, uint16_t count, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
+TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
 {
 	m_TextureDimension = Texture::Dimension::TextureCube;
 

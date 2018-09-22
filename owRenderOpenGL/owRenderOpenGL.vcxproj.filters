@@ -68,6 +68,7 @@
     <ClInclude Include="owRenderOpenGL.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="TextureOGLTranslate.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

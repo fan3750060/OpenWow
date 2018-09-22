@@ -70,6 +70,8 @@ public:
 public:
 	bool IsDoubleBuffered();
 	uint32 GetDefaultRB();
+	void SetDefaultRB(uint32 _obj);
+
 
 public:
 	void CreateDevice(HDC _hdc);

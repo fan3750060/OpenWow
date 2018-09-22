@@ -22,7 +22,10 @@ string RecursionInclude(std::shared_ptr<IFile> f)
 	while (!f->isEof())
 	{
 		string line;
-		f->readLine(&line);
+		if (false == f->readLine(&line))
+		{
+			break;
+		}
 
 		// Skip empty lines
 		if (line.length() == 0)
@@ -96,6 +99,35 @@ ShaderOGL::~ShaderOGL()
 	Destroy();
 }
 
+bool ShaderOGL::GetShaderProgramLog(uint32 _obj, std::string * _errMsg)
+{
+	GLsizei infologLength = 0;
+	glGetProgramiv(_obj, GL_INFO_LOG_LENGTH, &infologLength);
+	if (infologLength > 1)
+	{
+		GLsizei charsWritten = 0;
+		_errMsg->resize(infologLength + 1);
+		glGetProgramInfoLog(_obj, infologLength, &charsWritten, &(*_errMsg)[0]);
+		return false;
+	}
+
+	GLint status;
+
+	glGetProgramiv(_obj, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		return false;
+	}
+
+	glGetProgramiv(_obj, GL_VALIDATE_STATUS, &status);
+	if (status == GL_FALSE)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void ShaderOGL::Destroy()
 {
 	m_ShaderParameters.clear();
@@ -107,258 +139,88 @@ Shader::ShaderType ShaderOGL::GetType() const
 	return m_ShaderType;
 }
 
-bool ShaderOGL::LoadShaderFromString(ShaderType shaderType, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
+bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
-	int infologLength = 0;
-	int charsWritten = 0;
-	char* infoLog = nullptr;
-	int status;
+	std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
 
-	char* sourceCST = new char[2048];
-	strcpy_s(sourceCST, 2048, source.c_str());
+	string fileSource = RecursionInclude(file);
 
-	m_GLShaderProgramm = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &sourceCST);
-	glGetShaderiv(m_GLShaderProgramm, GL_COMPILE_STATUS, &status);
-	if (!status)
+	char* sourceCST = new char[fileSource.size() + 1];
+	strcpy_s(sourceCST, fileSource.size() + 1, fileSource.c_str());
+
+	m_GLShaderProgramm = glCreateShaderProgramv(TranslateShaderType(shaderType), 1, &sourceCST);
+	_ASSERT(m_GLShaderProgramm != 0);
+	OGLCheckError();
+	std::string errMsg;
+	if (false == GetShaderProgramLog(m_GLShaderProgramm, &errMsg))
 	{
-		// Get info
-		glGetShaderiv(m_GLShaderProgramm, GL_INFO_LOG_LENGTH, &infologLength);
-		if (infologLength > 1)
-		{
-			infoLog = new char[infologLength];
-			glGetShaderInfoLog(m_GLShaderProgramm, infologLength, &charsWritten, infoLog);
-
-			SafeDeleteArray(infoLog);
-		}
-
-		glDeleteProgram(m_GLShaderProgramm);
+		fail2(errMsg.c_str());
+		SafeDeleteArray(sourceCST);
 		return false;
 	}
 
-
-
-
-
-	HRESULT hr;
+	GLint attribCount;
+	glGetProgramiv(m_GLShaderProgramm, GL_ACTIVE_ATTRIBUTES, &attribCount);
+	for (GLuint j = 0; j < attribCount; ++j)
 	{
-		/*ATL::CComPtr<ID3DBlob> pShaderBlob;
-		ATL::CComPtr<ID3DBlob> pErrorBlob;
-
-		std::vector<D3D_SHADER_MACRO> macros;
-		for (auto macro : shaderMacros)
-		{
-			// The macro definitions passed to this function only store temporary string objects.
-			// I need to copy the temporary strings into the D3D macro type 
-			// in order for it to persist outside of this for loop.
-			std::string name = macro.first;
-			std::string definition = macro.second;
-
-			char* c_name = new char[name.size() + 1];
-			char* c_definition = new char[definition.size() + 1];
-
-			strncpy_s(c_name, name.size() + 1, name.c_str(), name.size());
-			strncpy_s(c_definition, definition.size() + 1, definition.c_str(), definition.size());
-
-			macros.push_back({ c_name, c_definition });
-		}
-		macros.push_back({ 0, 0 });
-
-
-		UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( _DEBUG )
-		flags |= D3DCOMPILE_DEBUG;
-#endif*/
-
-		// fs::path filePath( sourceFileName );
-		 //std::string sourceFilePath = filePath.string();
-
-		//hr = D3DCompile((LPCVOID)source.c_str(), source.size(), sourceFileName.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint.c_str(), _profile.c_str(), flags, 0, &pShaderBlob, &pErrorBlob);
-
-		// We're done compiling.. Delete the macro definitions.
-		/*for (D3D_SHADER_MACRO macro : macros)
-		{
-			delete[] macro.Name;
-			delete[] macro.Definition;
-		}
-		macros.clear();*/
-
-		/*if (FAILED(hr))
-		{
-			if (pErrorBlob)
-			{
-				OutputDebugString(static_cast<char*>(pErrorBlob->GetBufferPointer()));
-				Log::Error(static_cast<char*>(pErrorBlob->GetBufferPointer()));
-			}
-			return false;
-		}*/
-
-		//m_pShaderBlob = pShaderBlob;
+		char name[32];
+		GLsizei length, size;
+		GLenum type;
+		glGetActiveAttrib(m_GLShaderProgramm, j, 32, &length, &size, &type, name);
+		/* Type
+		GL_FLOAT, GL_FLOAT_VEC2, GL_FLOAT_VEC3, GL_FLOAT_VEC4, 
+		GL_FLOAT_MAT2, GL_FLOAT_MAT3, GL_FLOAT_MAT4, 
+		GL_FLOAT_MAT2x3, GL_FLOAT_MAT2x4, 
+		GL_FLOAT_MAT3x2, GL_FLOAT_MAT3x4, 
+		GL_FLOAT_MAT4x2, GL_FLOAT_MAT4x3,
+		GL_INT, GL_INT_VEC2, GL_INT_VEC3, GL_INT_VEC4, 
+		GL_UNSIGNED_INT, GL_UNSIGNED_INT_VEC2, GL_UNSIGNED_INT_VEC3, GL_UNSIGNED_INT_VEC4, 
+		GL_DOUBLE, GL_DOUBLE_VEC2, GL_DOUBLE_VEC3, GL_DOUBLE_VEC4, 
+		GL_DOUBLE_MAT2, GL_DOUBLE_MAT3, GL_DOUBLE_MAT4, 
+		GL_DOUBLE_MAT2x3, GL_DOUBLE_MAT2x4, 
+		GL_DOUBLE_MAT3x2, GL_DOUBLE_MAT3x4, 
+		GL_DOUBLE_MAT4x2, or GL_DOUBLE_MAT4x3*/
+		OGLCheckError();
+		m_InputSemantics.insert(SemanticMap::value_type(BufferBinding(name, j), j));
 	}
 
-	// After the shader recompiles, try to restore the shader parameters.
-	ParameterMap shaderParameters = m_ShaderParameters;
-
-	// Destroy the last shader as we are now loading a new one.
-	Destroy();
-
-	m_ShaderType = shaderType;
-
-	/*switch (m_ShaderType)
+	GLint uniformsCount;
+	glGetProgramiv(m_GLShaderProgramm, GL_ACTIVE_UNIFORMS, &uniformsCount);
+	for (GLuint j = 0; j < uniformsCount; ++j)
 	{
-	case VertexShader:
-		hr = m_pDevice->CreateVertexShader(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), nullptr, &m_pVertexShader);
-		break;
-	case TessellationControlShader:
-		hr = m_pDevice->CreateHullShader(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), nullptr, &m_pHullShader);
-		break;
-	case TessellationEvaluationShader:
-		hr = m_pDevice->CreateDomainShader(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), nullptr, &m_pDomainShader);
-		break;
-	case GeometryShader:
-		hr = m_pDevice->CreateGeometryShader(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), nullptr, &m_pGeometryShader);
-		break;
-	case PixelShader:
-		hr = m_pDevice->CreatePixelShader(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), nullptr, &m_pPixelShader);
-		break;
-	case ComputeShader:
-		hr = m_pDevice->CreateComputeShader(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), nullptr, &m_pComputeShader);
-		break;
-	default:
-		Log::Error("Invalid shader type.");
-		break;
-	}*/
-
-	/*if (FAILED(hr))
-	{
-		Log::Error("Failed to create shader.");
-		return false;
-	}*/
-
-	// Reflect the parameters from the shader.
-	// Inspired by: http://members.gamedev.net/JasonZ/Heiroglyph/D3D11ShaderReflection.pdf
-	/*ATL::CComPtr<ID3D11ShaderReflection> pReflector;
-	hr = D3DReflect(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-	if (FAILED(hr))
-	{
-		Log::Error("Failed to reflect shader.");
-		return false;
-	}*/
-
-	// Query input parameters and build the input layout
-	/*D3D11_SHADER_DESC shaderDescription;
-	hr = pReflector->GetDesc(&shaderDescription);
-
-	if (FAILED(hr))
-	{
-		Log::Error("Failed to get shader description from shader reflector.");
-		return false;
-	}
-
-	m_InputSemantics.clear();
-
-	UINT numInputParameters = shaderDescription.InputParameters;
-	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
-	for (UINT i = 0; i < numInputParameters; ++i)
-	{
-		D3D11_INPUT_ELEMENT_DESC inputElement;
-		D3D11_SIGNATURE_PARAMETER_DESC parameterSignature;
-
-		pReflector->GetInputParameterDesc(i, &parameterSignature);
-
-		inputElement.SemanticName = parameterSignature.SemanticName;
-		inputElement.SemanticIndex = parameterSignature.SemanticIndex;
-		inputElement.InputSlot = i; // TODO: If using interleaved arrays, then the input slot should be 0.  If using packed arrays, the input slot will vary.
-		inputElement.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-		inputElement.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA; // TODO: Figure out how to deal with per-instance data? .. Don't. Just use structured buffers to store per-instance data and use the SV_InstanceID as an index in the structured buffer.
-		inputElement.InstanceDataStepRate = 0;
-		inputElement.Format = GetDXGIFormat(parameterSignature);
-
-		assert(inputElement.Format != DXGI_FORMAT_UNKNOWN);
-
-		inputElements.push_back(inputElement);
-
-		m_InputSemantics.insert(SemanticMap::value_type(BufferBinding(inputElement.SemanticName, inputElement.SemanticIndex), i));
-	}
-
-	if (inputElements.size() > 0)
-	{
-		hr = m_pDevice->CreateInputLayout(inputElements.data(), (UINT)inputElements.size(), m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), &m_pInputLayout);
-		if (FAILED(hr))
-		{
-			Log::Error("Failed to create input layout.");
-			return false;
-		}
-	}*/
-
-	// Query Resources that are bound to the shader.
-	/*for (UINT i = 0; i < shaderDescription.BoundResources; ++i)
-	{
-		D3D11_SHADER_INPUT_BIND_DESC bindDesc;
-		pReflector->GetResourceBindingDesc(i, &bindDesc);
-		std::string resourceName = bindDesc.Name;
+		char name[32];
+		GLsizei length, size;
+		GLenum type;
+		glGetActiveUniform(m_GLShaderProgramm, j, 32, &length, &size, &type, name);
+		// Types https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetActiveUniform.xhtml
+		OGLCheckError();
 
 		ShaderParameter::Type parameterType = ShaderParameter::Type::Invalid;
-
-		switch (bindDesc.Type)
+		switch (type)
 		{
-		case D3D_SIT_TEXTURE:
+		case GL_IMAGE_2D:
 			parameterType = ShaderParameter::Type::Texture;
 			break;
-		case D3D_SIT_SAMPLER:
+		case GL_SAMPLER_2D:
 			parameterType = ShaderParameter::Type::Sampler;
 			break;
-		case D3D_SIT_CBUFFER:
-		case D3D_SIT_STRUCTURED:
+		case GL_SAMPLER_BUFFER:
+		case GL_IMAGE_BUFFER:
 			parameterType = ShaderParameter::Type::Buffer;
 			break;
-		case D3D_SIT_UAV_RWSTRUCTURED:
-			parameterType = ShaderParameter::Type::RWBuffer;
-			break;
-		case D3D_SIT_UAV_RWTYPED:
-			parameterType = ShaderParameter::Type::RWTexture;
+		default:
+			Log::Warn("Unknown shader parameter [%s] [%s]", name, fileName.c_str());
 			break;
 		}
 
 		// Create an empty shader parameter that should be filled-in by the application.
-		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(resourceName, bindDesc.BindPoint, shaderType, parameterType);
-		m_ShaderParameters.insert(ParameterMap::value_type(resourceName, shaderParameter));
-
-	}*/
-
-	// Now try to restore the original shader parameters (if there were any)
-	/*for (auto shaderParameter : shaderParameters)
-	{
-		ParameterMap::iterator iter = m_ShaderParameters.find(shaderParameter.first);
-		if (iter != m_ShaderParameters.end())
-		{
-			iter->second = shaderParameter.second;
-		}
-	}*/
-
-	return true;
-}
-
-bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
-{
-	bool result = false;
-
-	{
-		std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
-
-		string data = "";
-		while (!file->isEof())
-		{
-			string line;
-			file->readLine(&line);
-
-			data += line + '\n';
-		}
-
-		result = LoadShaderFromString(shaderType, data, fileName, shaderMacros, entryPoint, profile);
+		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(name, j, shaderType, parameterType);
+		m_ShaderParameters.insert(ParameterMap::value_type(name, shaderParameter));
 	}
 
-	return result;
+
+	SafeDeleteArray(sourceCST);
+	return true;
 }
 
 ShaderParameter& ShaderOGL::GetShaderParameterByName(cstring name) const

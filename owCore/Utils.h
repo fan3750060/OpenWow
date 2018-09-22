@@ -284,8 +284,8 @@ inline std::string ConvertString(const std::wstring& wstring)
 // Gets a string resource from the module's resources.
 inline std::string GetStringResource(int ID, cstring type)
 {
-	HMODULE hModule = GetModuleHandle(nullptr);
-	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(ID), type.c_str());
+	HMODULE hModule = GetModuleHandleA(nullptr);
+	HRSRC hResource = FindResourceA(hModule, MAKEINTRESOURCE(ID), type.c_str());
 	if (hResource)
 	{
 		HGLOBAL hResourceData = LoadResource(hModule, hResource);

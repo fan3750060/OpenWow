@@ -1,5 +1,7 @@
 #pragma once
 
+class RenderDeviceOGL;
+
 /**
  * Texture implementation for DX11.
  */
@@ -8,13 +10,13 @@ class TextureOGL : public Texture, public std::enable_shared_from_this<TextureOG
 {
 public:
 	// Create an empty texture.
-	TextureOGL();
+	TextureOGL(RenderDeviceOGL* _device);
 
 	// 2D Texture
-	TextureOGL(uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
+	TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
 
 	// Cube Texture
-	TextureOGL(uint16_t size, uint16_t count,                    const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
+	TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count,                    const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
 
 	virtual ~TextureOGL();
 

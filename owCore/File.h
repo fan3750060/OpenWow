@@ -51,10 +51,10 @@ public:
 		 m_FilesManager->Guard();
 		 m_ByteBuffer.seekRelative(_bufferOffsetRelative); 
 	 }
-	 void readLine(string* _string) override
+	 bool readLine(string* _string) override
 	 { 
 		 m_FilesManager->Guard();
-		 m_ByteBuffer.readLine(_string);
+		 return m_ByteBuffer.readLine(_string);
 	 }
 	 void readBytes(void* _destination, uint64_t _size) override 
 	 { 

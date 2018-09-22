@@ -16,6 +16,7 @@
 #define GLAPIENTRY _stdcall
 #define GLAPIENTRYP _stdcall*
 
+void OGLCheckError();
 HGLRC initOpenGL(HDC real_dc);
 bool initOGLExtensions();
 

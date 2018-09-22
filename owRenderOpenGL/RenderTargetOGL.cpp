@@ -73,11 +73,13 @@ RenderTargetOGL::RenderTargetOGL(RenderDeviceOGL* _device)
 	m_StructuredBuffers.resize(8);
 
 	glGenFramebuffers(1, &m_FBGLObj);
+
+	glDisable(GL_MULTISAMPLE);
 }
 
 RenderTargetOGL::~RenderTargetOGL()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
+	//glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
 
 	if (m_FBGLObj != 0)
 	{
@@ -93,10 +95,17 @@ void RenderTargetOGL::AttachTexture(AttachmentPoint attachment, std::shared_ptr<
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, TranslateAttachmentPoint(attachment), GL_TEXTURE_2D, textureDX11->GetGLObject(), 0);
+	OGLCheckError();
 
-	uint32 buffers[] = { TranslateAttachmentPoint(attachment) };
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
-	glDrawBuffers(1, buffers);
+	if (attachment >= AttachmentPoint::Color0 && attachment <= AttachmentPoint::Color7)
+	{
+		GLenum buffers[] = { TranslateAttachmentPoint(attachment) };
+		glDrawBuffers(1, buffers);
+		OGLCheckError();
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 	// Next time the render target is "bound", check that it is valid.
 	m_bCheckValidity = true;
@@ -189,7 +198,6 @@ void RenderTargetOGL::Bind()
 		if (texture)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
-
 			glBindTexture(GL_TEXTURE_2D, texture->GetGLObject());
 		}
 	}
@@ -201,6 +209,7 @@ void RenderTargetOGL::Bind()
 void RenderTargetOGL::UnBind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
+
 	if (m_RenderDevice->GetDefaultRB() == 0)
 	{
 		if (m_RenderDevice->IsDoubleBuffered())
@@ -212,18 +221,56 @@ void RenderTargetOGL::UnBind()
 
 bool RenderTargetOGL::IsValid() const
 {
+	for (uint8 i = (uint8)AttachmentPoint::Color0; i <= (uint8)AttachmentPoint::Color7; i++)
+	{
+		std::shared_ptr<TextureOGL> texture = m_Textures[i];
+		if (texture)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, texture->GetGLObject());
+		}
+	}
+
+
 	// Check if FBO is complete
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
 
-	uint32 status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
-	if (status != GL_FRAMEBUFFER_COMPLETE)
-	{
-		delete this;
-		return false;
-	}
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-	return true;
+	//glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
+
+	switch (status) 
+	{
+	case GL_FRAMEBUFFER_COMPLETE:
+		return true;
+
+	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+		Log::Error("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+		Log::Error("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+		Log::Error("GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER");
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+		Log::Error("GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER");
+		break;
+	case GL_FRAMEBUFFER_UNSUPPORTED:
+		Log::Error("GL_FRAMEBUFFER_UNSUPPORTED");
+		break;
+	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+		Log::Error("GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE");
+		break;
+	case GL_FRAMEBUFFER_UNDEFINED:
+		Log::Error("GL_FRAMEBUFFER_UNDEFINED");
+		break;
+
+	default:
+		Log::Error("GL_FRAMEBUFFER_UNKNOWN!!!");
+		break;
+	}
+	return false;
 }
 
 
