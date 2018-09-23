@@ -56,11 +56,13 @@ DeferredLightingPass::~DeferredLightingPass()
 
 void DeferredLightingPass::PreRender(RenderEventArgs& e)
 {
+	std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
+
 	// Bind the G-buffer textures to the pixel shader pipeline stage.
-	m_DiffuseTexture->Bind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_SpecularTexture->Bind(1, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_NormalTexture->Bind(2, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_DepthTexture->Bind(3, Shader::PixelShader, ShaderParameter::Type::Texture);
+	m_DiffuseTexture->Bind(0, pShader, ShaderParameter::Type::Texture);
+	m_SpecularTexture->Bind(1, pShader, ShaderParameter::Type::Texture);
+	m_NormalTexture->Bind(2, pShader, ShaderParameter::Type::Texture);
+	m_DepthTexture->Bind(3, pShader, ShaderParameter::Type::Texture);
 }
 
 void DeferredLightingPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
@@ -145,11 +147,13 @@ void DeferredLightingPass::Render(RenderEventArgs& e)
 
 void DeferredLightingPass::PostRender(RenderEventArgs& e)
 {
+	std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
+
 	// Explicitly unbind these textures so they can be used as render target textures.
-	m_DiffuseTexture->UnBind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_SpecularTexture->UnBind(1, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_NormalTexture->UnBind(2, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_DepthTexture->UnBind(3, Shader::PixelShader, ShaderParameter::Type::Texture);
+	m_DiffuseTexture->UnBind(0, pShader, ShaderParameter::Type::Texture);
+	m_SpecularTexture->UnBind(1, pShader, ShaderParameter::Type::Texture);
+	m_NormalTexture->UnBind(2, pShader, ShaderParameter::Type::Texture);
+	m_DepthTexture->UnBind(3, pShader, ShaderParameter::Type::Texture);
 }
 
 // Inherited from Visitor

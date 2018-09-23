@@ -12,7 +12,7 @@ ShaderParameterDX11::ShaderParameterDX11()
 	, m_ParameterType(Type::Invalid)
 {}
 
-ShaderParameterDX11::ShaderParameterDX11(cstring name, UINT slotID, Shader::ShaderType shaderType, Type parameterType)
+ShaderParameterDX11::ShaderParameterDX11(cstring name, UINT slotID, std::shared_ptr<Shader> shaderType, Type parameterType)
 	: m_Name(name)
 	, m_uiSlotID(slotID)
 	, m_ShaderType(shaderType)

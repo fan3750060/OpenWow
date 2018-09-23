@@ -33,8 +33,8 @@ public:
 	virtual void SetMaxAnisotropy(uint8_t maxAnisotropy);
 	virtual uint8_t GetMaxAnisotropy() const;
 
-	virtual void Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
-	virtual void UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
+	virtual void Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
+	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
 protected:
 	D3D11_FILTER TranslateFilter() const;

@@ -57,7 +57,6 @@ public:
 	virtual uint16_t GetHeight() const;
 	virtual uint16_t GetDepth() const;
 	virtual uint8_t GetBPP() const; 	// Get the bits-per-pixel of the texture.
-
 	virtual bool IsTransparent() const; // Check to see if this texture has an alpha channel.
 
 	// Resize the texture to the new dimensions.
@@ -85,15 +84,15 @@ public:
 	/**
 	 * Bind this texture for use by the shaders.
 	 */
-	virtual void Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
+	virtual void Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
 	/**
 	 * Unbind the texture.
 	 */
-	virtual void UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
+	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
 	/**
-	 * Gets the texture associated to this texture
+	 * Gets the OpenGL object associated to this texture
 	 */
 	uint32 GetGLObject();
 
@@ -105,8 +104,8 @@ protected:
 	virtual void ResizeCube(uint16_t size);
 
 private:
-	uint32_t m_TextureType;
-	uint32_t m_GLObj;
+	GLenum m_TextureType;
+	GLuint m_GLObj;
 
 private:
 	// 2D or Cube
@@ -114,9 +113,9 @@ private:
 
 	uint16_t m_TextureWidth;
 	uint16_t m_TextureHeight;
-
-	// For CUBE
-	uint16_t m_NumSlices;
+	uint16_t m_NumSlices; // For CUBE
+	uint8_t m_BPP; // Bits-per pixel
+	bool     m_bIsTransparent;
 
 	// The requested format for the texture type.
 	TextureFormat m_TextureFormat;
@@ -124,17 +123,11 @@ private:
 	CPUAccess m_CPUAccess;
 	bool m_bDynamic; // Set to true if CPU write access is supported.
 	
-	bool m_bUAV; // This resource should be used as a UAV.
-
 	// TRUE if mipmaps are supported on the given texture type.
 	bool m_bGenerateMipmaps;
 
-	uint8_t m_BPP; // Bits-per pixel
-
 	// Number of bytes to next scanline.
 	uint16_t m_Pitch;
-
-	bool     m_bIsTransparent;
 
 	typedef std::vector<uint8_t> ColorBuffer;
 	ColorBuffer m_Buffer;

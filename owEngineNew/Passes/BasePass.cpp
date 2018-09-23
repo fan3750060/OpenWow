@@ -87,7 +87,8 @@ void BasePass::Visit(SceneNode& node)
 		PerObject perObjectData;
 		// Update the constant buffer data for the node.
 		glm::mat4 viewMatrix = camera->GetViewMatrix();
-		perObjectData.ModelView = viewMatrix * node.GetWorldTransfom();
+		perObjectData.Model = node.GetWorldTransfom();
+		perObjectData.ModelView = viewMatrix * perObjectData.Model;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
 
 		// Update the constant buffer data

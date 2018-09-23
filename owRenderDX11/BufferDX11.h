@@ -7,8 +7,8 @@ public:
 	~BufferDX11();
 
 	// Bind the buffer to a particular attribute ID or slot
-	virtual bool Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
-	virtual void UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType);
+	virtual bool Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
+	virtual void UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
 	// Copy the contents of another buffer into this one.
 	// Buffers must be the same size (in bytes).
@@ -18,6 +18,8 @@ public:
 	virtual BufferType GetType() const;
 	// How many elements does this buffer contain?
 	virtual uint32 GetElementCount() const;
+	// Elements stride
+	virtual uint32 GetElementStride() const;
 
 private:
 	ATL::CComPtr<ID3D11Device2> m_pDevice;

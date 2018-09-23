@@ -8,17 +8,21 @@
 // General
 #include "MeshOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
 MeshOGL::MeshOGL()
 	: m_pIndexBuffer(nullptr)
 	, m_pMaterial(nullptr)
 {
+	glGenVertexArrays(1, &m_GLObj);
 }
 
 MeshOGL::~MeshOGL()
-{}
+{
+	if (m_GLObj != 0)
+	{
+		glDeleteVertexArrays(1, &m_GLObj);
+		m_GLObj = 0;
+	}
+}
 
 void MeshOGL::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<Buffer> buffer)
 {
@@ -42,11 +46,9 @@ std::shared_ptr<Material> MeshOGL::GetMaterial() const
 
 void MeshOGL::Render(RenderEventArgs& renderArgs)
 {
-	std::shared_ptr<ShaderOGL> pVS;
+	glBindVertexArray(m_GLObj);
 
-	// Clone this mesh's material in case we want to override the 
-	// shaders in the mesh's default material.
-	//Material material( *m_pMaterial );
+	std::shared_ptr<ShaderOGL> pVS;
 
 	// Use the vertex shader to convert the buffer semantics to slot ID's
 	PipelineState* pipeline = renderArgs.PipelineState;
@@ -58,12 +60,22 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 		{
 			for (BufferMap::value_type buffer : m_VertexBuffers)
 			{
-				BufferBinding binding = buffer.first;
-				if (pVS->HasSemantic(binding))
+				const BufferBinding& binding = pVS->GetSemantic(buffer.first.Name);
+
+				UINT slotID = pVS->GetSlotIDBySemantic(buffer.first.Name);
+				// Bind the vertex buffer to a particular slot ID.
+				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
+
+				// (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
+				glVertexAttribPointer(slotID, binding.GLSize, binding.GLType, false, buffer.second->GetElementStride(), (char*)0);
+
+				if (pVS->HasSemantic(buffer.first.Name))
 				{
-					UINT slotID = pVS->GetSlotIDBySemantic(binding);
-					// Bind the vertex buffer to a particular slot ID.
-					buffer.second->Bind(slotID, Shader::VertexShader, ShaderParameter::Type::Buffer);
+					glEnableVertexAttribArray(binding.Index);
+				}
+				else
+				{
+					glDisableVertexAttribArray(binding.Index);
 				}
 			}
 		}
@@ -77,14 +89,9 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 		}
 	}
 
-	// TODO: The primitive topology should be a parameter.
-	// Or we have to have index buffers/vertex buffers for each primitive type...
-	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	if (m_pIndexBuffer != NULL)
 	{
-		// TOOD: Primitive reset?
-		m_pIndexBuffer->Bind(0, Shader::VertexShader, ShaderParameter::Type::Buffer);
+		m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
 
 		UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
 		glDrawRangeElements
@@ -97,7 +104,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 			(char*)0
 		);
 
-		m_pIndexBuffer->UnBind(0, Shader::VertexShader, ShaderParameter::Type::Buffer);
+		m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
 	}
 	else
 	{
@@ -116,16 +123,16 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 	{
 		for (BufferMap::value_type buffer : m_VertexBuffers)
 		{
-			BufferBinding binding = buffer.first;
-			if (pVS->HasSemantic(binding))
+			if (pVS->HasSemantic(buffer.first.Name))
 			{
-				UINT slotID = pVS->GetSlotIDBySemantic(binding);
+				UINT slotID = pVS->GetSlotIDBySemantic(buffer.first.Name);
 				// Bind the vertex buffer to a particular slot ID.
-				buffer.second->Bind(slotID, Shader::VertexShader, ShaderParameter::Type::Buffer);
+				buffer.second->UnBind(slotID, pVS, ShaderParameter::Type::Buffer);
 			}
 		}
 	}
 
+	glBindVertexArray(0);
 }
 
 void MeshOGL::Accept(IVisitor& visitor)

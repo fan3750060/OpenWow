@@ -431,7 +431,7 @@ int Application::Run()
 
 	m_bIsRunning = true;
 
-	MSG          msg;
+	MSG msg;
 	while (m_bIsRunning)
 	{
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))

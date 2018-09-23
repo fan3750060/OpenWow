@@ -119,6 +119,7 @@
     <ClInclude Include="DepthStencilStateOGL.h" />
     <ClInclude Include="MeshOGL.h" />
     <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="OpenGLTypes.h" />
     <ClInclude Include="owRenderOpenGL.h" />
     <ClInclude Include="PipelineStateOGL.h" />
     <ClInclude Include="QueryOGL.h" />

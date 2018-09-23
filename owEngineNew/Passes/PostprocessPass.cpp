@@ -3,35 +3,37 @@
 // General
 #include "PostprocessPass.h"
 
-PostprocessPass::PostprocessPass( std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline, const glm::mat4& projectionMatrix, std::shared_ptr<Texture> texture )
-    : base( scene, pipeline )
-    , m_ProjectionMatrix( projectionMatrix)
-    , m_Texture( texture )
+PostprocessPass::PostprocessPass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline, const glm::mat4& projectionMatrix, std::shared_ptr<Texture> texture)
+	: base(scene, pipeline)
+	, m_ProjectionMatrix(projectionMatrix)
+	, m_Texture(texture)
 {}
 
-void PostprocessPass::Render( RenderEventArgs& e )
+void PostprocessPass::Render(RenderEventArgs& e)
 {
-    PerObject perObjectData;
-    perObjectData.ModelView = glm::mat4( 1.0f ); // Identity
-    perObjectData.ModelViewProjection = m_ProjectionMatrix;
+	PerObject perObjectData;
+	perObjectData.ModelView = glm::mat4(1.0f); // Identity
+	perObjectData.ModelViewProjection = m_ProjectionMatrix;
 
-    SetPerObjectConstantBufferData( perObjectData );
+	SetPerObjectConstantBufferData(perObjectData);
 
-    if ( m_Texture )
-    {
-        // Bind the texture to be used as the source for the post process pass to slot 0 of the pixel shader.
-        m_Texture->Bind( 0, Shader::PixelShader, ShaderParameter::Type::Texture );
-    }
+	std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
 
-    base::Render( e );
+	if (m_Texture)
+	{
+		// Bind the texture to be used as the source for the post process pass to slot 0 of the pixel shader.
+		m_Texture->Bind(0, pShader, ShaderParameter::Type::Texture);
+	}
 
-    if ( m_Texture )
-    {
-        m_Texture->UnBind( 0, Shader::PixelShader, ShaderParameter::Type::Texture );
-    }
+	base::Render(e);
+
+	if (m_Texture)
+	{
+		m_Texture->UnBind(0, pShader, ShaderParameter::Type::Texture);
+	}
 }
 
-void PostprocessPass::Visit( SceneNode& node )
+void PostprocessPass::Visit(SceneNode& node)
 {
-    // Do nothing in this case
+	// Do nothing in this case
 }

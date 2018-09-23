@@ -40,7 +40,7 @@ CameraMovement g_CameraMovement;
 
 std::shared_ptr<Scene> g_pScene = nullptr;
 
-
+RenderWindow* g_pRenderWindow;
 std::shared_ptr<Query> g_pFrameQuery;
 double g_FrameTime = 0.0;
 
@@ -114,38 +114,34 @@ int main(int argumentCount, char* arguments[])
 
 		HANDLE hProcess = GetCurrentProcess();
 		if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
-		{
 			Log::Info("Process priority class set to HIGH");
-		}
 		else
-		{
 			Log::Error("Can't set process priority class.");
-		}
 
 		CMPQArchiveManager mpqArchiveManager;
 		CFilesManager filesManager;
 
 		Application app;
 
-		RenderWindow* renderWindow = app.CreateRenderWindow("Name", 1024, 768);
+		g_pRenderWindow = app.CreateRenderWindow("Name", 1024, 768);
 
 		// Register initialize/terminate events.
-		app.Initialize += boost::bind(&RenderWindow::OnInitialize, renderWindow, _1);
-		app.Terminate += boost::bind(&RenderWindow::OnTerminate, renderWindow, _1);
-		app.Update += boost::bind(&RenderWindow::OnUpdate, renderWindow, _1);
+		app.Initialize += boost::bind(&RenderWindow::OnInitialize, g_pRenderWindow, _1);
+		app.Terminate += boost::bind(&RenderWindow::OnTerminate, g_pRenderWindow, _1);
+		app.Update += boost::bind(&RenderWindow::OnUpdate, g_pRenderWindow, _1);
 
 
-		renderWindow->ShowWindow();
+		g_pRenderWindow->ShowWindow();
 
-		renderWindow->Update += &OnUpdate;
-		renderWindow->MouseButtonPressed += &OnMouseButtonPressed;
-		renderWindow->MouseButtonReleased += &OnMouseButtonReleased;
-		renderWindow->MouseMoved += &OnMouseMoved;
-		renderWindow->PreRender += &OnPreRender;
-		renderWindow->Render += &OnRender;
-		renderWindow->PostRender += &OnPostRender;
-		renderWindow->KeyPressed += &OnKeyPressed;
-		renderWindow->KeyReleased += &OnKeyReleased;
+		g_pRenderWindow->Update += &OnUpdate;
+		g_pRenderWindow->MouseButtonPressed += &OnMouseButtonPressed;
+		g_pRenderWindow->MouseButtonReleased += &OnMouseButtonReleased;
+		g_pRenderWindow->MouseMoved += &OnMouseMoved;
+		g_pRenderWindow->PreRender += &OnPreRender;
+		g_pRenderWindow->Render += &OnRender;
+		g_pRenderWindow->PostRender += &OnPostRender;
+		g_pRenderWindow->KeyPressed += &OnKeyPressed;
+		g_pRenderWindow->KeyReleased += &OnKeyReleased;
 
 		RenderDevice* renderDevice = app.GetRenderDevice();
 
@@ -154,25 +150,27 @@ int main(int argumentCount, char* arguments[])
 		g_pScene = std::make_shared<SceneBase>();
 
 		std::shared_ptr<Mesh> mesh = renderDevice->CreateSphere(5.0f);
+		mesh->GetMaterial()->SetTexture(Material::TextureType::Normal, tt);
+
 		std::shared_ptr<Mesh> mesh2 = renderDevice->CreatePlane(5.0f);
+		mesh2->GetMaterial()->SetTexture(Material::TextureType::Normal, tt);
+
 		std::shared_ptr<Mesh> mesh3 = renderDevice->CreateCube(5.0f);
-		mesh2->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
+		mesh3->GetMaterial()->SetTexture(Material::TextureType::Normal, tt);
 
 
 		std::shared_ptr<SceneNode> n0 = g_pScene->CreateSceneNode();
+		n0->SetLocalTransform(glm::scale(vec3(1.0f)));
 		n0->AddMesh(mesh);
 
 		std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
-		mat4 world;
-		world = glm::scale(vec3(5.0f));
-
-		n1->SetLocalTransform(world);
+		n1->SetLocalTransform(glm::scale(vec3(5.0f)));
 		n1->AddMesh(mesh2);
 
-		std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
-		n2->AddMesh(mesh3);
+		//std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
+		//n2->AddMesh(mesh3);
 
-		//g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
+		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
 		// CAMERA
 		g_Camera.SetTranslate(vec3(0, 0, 0));
@@ -180,14 +178,19 @@ int main(int argumentCount, char* arguments[])
 		g_Camera.SetViewport(Viewport(0, 0, 1024.0f, 768.0f));
 		g_Camera.SetProjectionRH(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
 
-		//g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
-		//g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
+		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
+		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		// SHADERS
 		std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
-		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders/Debug/Debug.vs", Shader::ShaderMacros(), "VS_main", "latest");
+		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_OGL/Debug/Debug.vs", Shader::ShaderMacros(), "VS_main", "latest");
 		g_pPixelShader = renderDevice->CreateShader();
-		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders/Debug/Debug.fs", Shader::ShaderMacros(), "PS_main", "latest");
+		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_OGL/Debug/Debug.fs", Shader::ShaderMacros(), "PS_main", "latest");
+
+		/*std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
+		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
+		g_pPixelShader = renderDevice->CreateShader();
+		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "latest");*/
 
 		// SAMPLER
 
@@ -209,7 +212,7 @@ int main(int argumentCount, char* arguments[])
 		g_pOpaquePipeline->SetShader(Shader::PixelShader, g_pPixelShader);
 		g_pOpaquePipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
 		//g_pOpaquePipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
-		g_pOpaquePipeline->SetRenderTarget(renderWindow->GetRenderTarget());
+		g_pOpaquePipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
 
 		/*g_pTransparentPipeline = renderDevice->CreatePipelineState();
 		g_pTransparentPipeline->SetShader(Shader::VertexShader, g_pVertexShader);
@@ -223,10 +226,10 @@ int main(int argumentCount, char* arguments[])
 
 
 		// Add a pass to render opaque geometry.
-		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-		g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardOpaqueQuery));
-		//g_ForwardTechnique.AddPass(std::make_shared<OpaquePass>(g_pScene, g_pOpaquePipeline));
-		g_ForwardTechnique.AddPass(std::make_shared<EndQueryPass>(g_pForwardOpaqueQuery));
+		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
+		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardOpaqueQuery));
+		g_ForwardTechnique.AddPass(std::make_shared<OpaquePass>(g_pScene, g_pOpaquePipeline));
+		//g_ForwardTechnique.AddPass(std::make_shared<EndQueryPass>(g_pForwardOpaqueQuery));
 		
 		// Add a pass for rendering transparent geometry
 		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardTransparentQuery));
@@ -263,9 +266,9 @@ void OnUpdate(UpdateEventArgs& e)
 
 void OnPreRender(RenderEventArgs& e)
 {
-	//g_pFrameQuery->Begin(e.FrameCounter);
+	g_pFrameQuery->Begin(e.FrameCounter);
 
-	g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
+	g_pPixelShader->GetShaderParameterByName("NormalTexture").Set(g_LinearRepeatSampler);
 }
 
 void OnRender(RenderEventArgs& e)
@@ -283,6 +286,7 @@ void OnRender(RenderEventArgs& e)
 		break;
 	}
 
+	//Sleep(50);
 
 	// Generate light picking texture
 	// This is only done when the mouse is clicked.
@@ -292,7 +296,7 @@ void OnRender(RenderEventArgs& e)
 
 void OnPostRender(RenderEventArgs& e)
 {
-	//g_pFrameQuery->End(e.FrameCounter);
+	g_pFrameQuery->End(e.FrameCounter);
 
 	RenderWindow& renderWindow = dynamic_cast<RenderWindow&>(const_cast<Object&>(e.Caller));
 	renderWindow.Present();
@@ -300,12 +304,13 @@ void OnPostRender(RenderEventArgs& e)
 	// Retrieve GPU timer results.
 	// Don't retrieve the immediate query result, but from the previous frame.
 	// Checking previous frame counters will alleviate GPU stalls.
-	/*Query::QueryResult frameResult = g_pFrameQuery->GetQueryResult(e.FrameCounter - (g_pFrameQuery->GetBufferCount() - 1));
+	Query::QueryResult frameResult = g_pFrameQuery->GetQueryResult(e.FrameCounter - (g_pFrameQuery->GetBufferCount() - 1));
 	if (frameResult.IsValid)
 	{
 		// Frame time in milliseconds
-		g_FrameTime = frameResult.ElapsedTime * 1000.0;
-	}*/
+		g_FrameTime = frameResult.ElapsedTime / 1000000.0;
+		g_pRenderWindow->SetWindowName(std::to_string(g_FrameTime));
+	}
 
 	switch (g_RenderingTechnique)
 	{

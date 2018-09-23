@@ -19,21 +19,16 @@ class RenderWindow : public Object
 public:
 	typedef Object base;
 
-	// Show this window if it is hidden.
-	virtual void ShowWindow() = 0;
-	// Hide the window. The window will not be destroyed and can be 
-	// shown again using the ShowWindow() function.
-	virtual void HideWindow() = 0;
-
-	// Destroy and close the window.
-	virtual void CloseWindow() = 0;
-
-	cstring GetWindowName() const;
+	virtual void ShowWindow(); // Show this window if it is hidden.
+	virtual void HideWindow(); // Hide the window. The window will not be destroyed and can be  shown again using the ShowWindow() function.
+	virtual void CloseWindow(); // Destroy and close the window.
 
 	int GetWindowWidth() const;
 	int GetWindowHeight() const;
-
 	bool IsVSync() const;
+	HWND GetHWND() const;
+	virtual void SetWindowName(cstring _name);
+	cstring GetWindowName() const;
 
 	// Present the back buffers
 	virtual void Present() = 0;
@@ -108,7 +103,7 @@ protected:
 	friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	// Only the application can create windows.
-	RenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync = false);
+	RenderWindow(cstring windowName, int windowWidth, int windowHeight, HWND _hwnd, bool vSync = false);
 	virtual ~RenderWindow();
 
 	// The application window has received focus
@@ -155,14 +150,11 @@ protected:
 	// The application window has lost mouse focus
 	virtual void OnMouseBlur(EventArgs& e);
 
-
-
 private:
 	int m_iWindowWidth;
 	int m_iWindowHeight;
-
 	bool m_vSync;
-
+	HWND m_hWindow;
 	std::string m_sWindowName;
 
 	// Used to compute relative mouse motion in this window.

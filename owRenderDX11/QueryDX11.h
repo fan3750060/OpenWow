@@ -27,6 +27,6 @@ private:
 	QueryBuffer m_Queries[2];
 
 	QueryType m_QueryType;
-	// How many queries will be used to prevent stalling the GPU.
-	uint8_t m_NumBuffers;
+	
+	uint8_t m_NumBuffers; // How many queries will be used to prevent stalling the GPU.
 };

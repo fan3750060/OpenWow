@@ -39,7 +39,7 @@ Material::~Material()
 void Material::Bind(std::weak_ptr<Shader> wpShader) const
 {
 	std::shared_ptr<Shader> pShader = wpShader.lock();
-	if (!pShader) return;
+	_ASSERT(pShader != NULL);
 
 	if (m_Dirty)
 	{
@@ -56,11 +56,11 @@ void Material::Bind(std::weak_ptr<Shader> wpShader) const
 	for (auto texture : m_Textures)
 	{
 		std::shared_ptr<Texture> pTexture = texture.second;
-		pTexture->Bind((uint32_t)texture.first, pShader->GetType(), ShaderParameter::Type::Texture);
+		pTexture->Bind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
 	}
 
 	// If the shader has a parameter called "Material".
-	ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
+	/*ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
 	if (materialParameter.IsValid())
 	{
 		// Assign this material's constant buffer to it.
@@ -68,7 +68,7 @@ void Material::Bind(std::weak_ptr<Shader> wpShader) const
 		// If the shader parameter is modified, they have to be 
 		// rebound to update the rendering pipeline.
 		materialParameter.Bind();
-	}
+	}*/
 }
 
 cvec4 Material::GetGlobalAmbientColor() const

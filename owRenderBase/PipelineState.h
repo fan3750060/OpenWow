@@ -10,8 +10,6 @@
  * The PipelineState class encompasses pipeline configuration.
  * This includes, shaders, blend states, rasterizer states,
  * and depth/stencil states among other things....
- *
- * // TODO: RenderTargets...
  */
 class PipelineState : public Object
 {

@@ -10,7 +10,7 @@ public:
 	ShaderParameterDX11();
 
 	// Shader resource parameter.
-	ShaderParameterDX11(cstring name, UINT slotID, Shader::ShaderType shaderType, Type parameterType);
+	ShaderParameterDX11(cstring name, UINT slotID, std::shared_ptr<Shader> shaderType, Type parameterType);
 
 	bool IsValid() const;
 
@@ -37,6 +37,6 @@ private:
 	std::weak_ptr<StructuredBuffer> m_pStructuredBuffer;
 
 	UINT m_uiSlotID;
-	Shader::ShaderType m_ShaderType;
+	std::weak_ptr<Shader> m_ShaderType;
 	Type m_ParameterType;
 };

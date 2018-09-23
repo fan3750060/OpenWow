@@ -25,6 +25,7 @@ using namespace std;
 #include "FunctionWA.h"
 #include "FunctionSA.h"
 #include "Timer.h"
+#include "Timer_OLD.h"
 #include "HighResolutionTimer.h"
 
 // Utils

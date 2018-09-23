@@ -11,9 +11,8 @@
 #include "TextureDX11.h"
 
 RenderWindowDX11::RenderWindowDX11(HWND hWnd, RenderDeviceDX11* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
-	: RenderWindow(windowName, windowWidth, windowHeight, vSync)
+	: RenderWindow(windowName, windowWidth, windowHeight, hWnd, vSync)
 	, m_bIsMouseTracking(false)
-	, m_hWindow(hWnd)
 	, m_Device(device)
 	, m_pDevice(m_Device->GetDevice())
 	, m_pDeviceContext(m_Device->GetDeviceContext())
@@ -49,25 +48,6 @@ RenderWindowDX11::~RenderWindowDX11()
 		// Apparently an exception is thrown when you release the swap chain if you don't do this.
 		m_pSwapChain->SetFullscreenState(false, NULL);
 	}
-}
-
-void RenderWindowDX11::ShowWindow()
-{
-	::ShowWindow(m_hWindow, SW_SHOWDEFAULT);
-	// Make sure its the top-level window.
-	::BringWindowToTop(m_hWindow);
-}
-
-void RenderWindowDX11::HideWindow()
-{
-	::ShowWindow(m_hWindow, SW_HIDE);
-}
-
-void RenderWindowDX11::CloseWindow()
-{
-	base::CloseWindow();
-
-	::DestroyWindow(m_hWindow);
 }
 
 // This function was inspired by:
@@ -162,7 +142,7 @@ void RenderWindowDX11::CreateSwapChain()
 	// First create a DXGISwapChain1
 	ATL::CComPtr<IDXGISwapChain1> pSwapChain;
 
-	if (FAILED(factory->CreateSwapChainForHwnd(m_pDevice, m_hWindow, &swapChainDesc, &swapChainFullScreenDesc, nullptr, &pSwapChain)))
+	if (FAILED(factory->CreateSwapChainForHwnd(m_pDevice, GetHWND(), &swapChainDesc, &swapChainFullScreenDesc, nullptr, &pSwapChain)))
 	{
 		Log::Error("Failed to create swap chain.");
 	}
@@ -284,7 +264,7 @@ void RenderWindowDX11::OnMouseMoved(MouseMotionEventArgs& e)
 		TRACKMOUSEEVENT tme;
 		tme.cbSize = sizeof(TRACKMOUSEEVENT);
 		tme.dwFlags = TME_LEAVE;
-		tme.hwndTrack = m_hWindow;
+		tme.hwndTrack = GetHWND();
 		if (TrackMouseEvent(&tme))
 		{
 			m_bIsMouseTracking = true;

@@ -17,6 +17,9 @@ public:
 	virtual void Accept(IVisitor& visitor);
 
 private:
+	uint32 m_GLObj;
+
+private:
 	typedef std::map<BufferBinding, std::shared_ptr<Buffer> > BufferMap;
 	BufferMap m_VertexBuffers;
 	std::shared_ptr<Buffer> m_pIndexBuffer;

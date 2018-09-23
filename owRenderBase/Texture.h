@@ -133,18 +133,11 @@ public:
 	 */
 	virtual std::shared_ptr<Texture> GetSlice(uint32 slice) const = 0;
 
-	// Get the width of the textures in texels.
-	virtual uint16_t GetWidth() const = 0;
-	// Get the height of the texture in texles.
-	virtual uint16_t GetHeight() const = 0;
-	// Get the cube faces for cubemap textures.
-	virtual uint16_t GetDepth() const = 0;
-
-	// Get the bits-per-pixel of the texture.
-	virtual uint8_t GetBPP() const = 0;
-
-	// Check to see if this texture has an alpha channel.
-	virtual bool IsTransparent() const = 0;
+	virtual uint16_t GetWidth() const = 0; // Get the width of the textures in texels.
+	virtual uint16_t GetHeight() const = 0; // Get the height of the texture in texles.
+	virtual uint16_t GetDepth() const = 0; // Get the cube faces for cubemap textures.
+	virtual uint8_t GetBPP() const = 0; // Get the bits-per-pixel of the texture.
+	virtual bool IsTransparent() const = 0; // Check to see if this texture has an alpha channel.
 
 	// Resize the texture to the new dimensions.
 	// Resizing a texture will cause the original texture to be discarded.
@@ -193,12 +186,12 @@ public:
 	/**
 	 * Bind this texture for use by the shaders.
 	 */
-	virtual void Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType) = 0;
+	virtual void Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 
 	/**
 	 * Unbind the texture.
 	 */
-	virtual void UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType) = 0;
+	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 
 protected:
 	virtual void Plot(glm::ivec2 coord, const uint8_t* pixel, size_t size) = 0;

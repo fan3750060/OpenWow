@@ -1058,7 +1058,7 @@ void TextureDX11::Clear(ClearFlags clearFlags, cvec4 color, float depth, uint8_t
 	}
 }
 
-void TextureDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void TextureDX11::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	if (m_bIsDirty)
 	{
@@ -1085,12 +1085,14 @@ void TextureDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParamet
 		m_bIsDirty = false;
 	}
 
+	std::shared_ptr<Shader> pShader = shader.lock();
+	_ASSERT(pShader != NULL);
 	ID3D11ShaderResourceView* srv[] = { m_pShaderResourceView };
 	ID3D11UnorderedAccessView* uav[] = { m_pUnorderedAccessView };
 
 	if (parameterType == ShaderParameter::Type::Texture && m_pShaderResourceView)
 	{
-		switch (shaderType)
+		switch (pShader->GetType())
 		{
 		case Shader::VertexShader:
 			m_pDeviceContext->VSSetShaderResources(ID, 1, srv);
@@ -1114,7 +1116,7 @@ void TextureDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParamet
 	}
 	else if (parameterType == ShaderParameter::Type::RWTexture && m_pUnorderedAccessView)
 	{
-		switch (shaderType)
+		switch (pShader->GetType())
 		{
 		case Shader::ComputeShader:
 			m_pDeviceContext->CSSetUnorderedAccessViews(ID, 1, uav, nullptr);
@@ -1123,14 +1125,17 @@ void TextureDX11::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParamet
 	}
 
 }
-void TextureDX11::UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void TextureDX11::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
+	std::shared_ptr<Shader> pShader = shader.lock();
+	_ASSERT(pShader != NULL);
+
 	ID3D11ShaderResourceView* srv[] = { nullptr };
 	ID3D11UnorderedAccessView* uav[] = { nullptr };
 
 	if (parameterType == ShaderParameter::Type::Texture)
 	{
-		switch (shaderType)
+		switch (pShader->GetType())
 		{
 		case Shader::VertexShader:
 			m_pDeviceContext->VSSetShaderResources(ID, 1, srv);
@@ -1154,7 +1159,7 @@ void TextureDX11::UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParam
 	}
 	else if (parameterType == ShaderParameter::Type::RWTexture)
 	{
-		switch (shaderType)
+		switch (pShader->GetType())
 		{
 		case Shader::ComputeShader:
 			m_pDeviceContext->CSSetUnorderedAccessViews(ID, 1, uav, nullptr);

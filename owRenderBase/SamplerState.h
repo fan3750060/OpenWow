@@ -104,8 +104,8 @@ public:
 	virtual uint8_t GetMaxAnisotropy() const = 0;
 
 	// Bind this sampler state to the ID for a specific shader type.
-	virtual void Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType) = 0;
+	virtual void Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 	// Unbind the sampler state.
-	virtual void UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType) = 0;
+	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 
 };

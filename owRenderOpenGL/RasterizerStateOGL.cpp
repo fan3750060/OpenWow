@@ -1,71 +1,54 @@
 #include <stdafx.h>
 
+// General
 #include "RasterizerStateOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
-GLenum TranslateFillMode(RasterizerState::FillMode fillMode)
+GLenum GLTranslateFillMode(RasterizerState::FillMode fillMode)
 {
-	GLenum result = GL_FILL;
 	switch (fillMode)
 	{
 	case RasterizerState::FillMode::Wireframe:
-		result = GL_LINE;
-		break;
+		return GL_LINE;
+
 	case RasterizerState::FillMode::Solid:
-		result = GL_FILL;
-		break;
-	default:
-		Log::Error("Unknown fill mode.");
-		break;
+		return GL_FILL;
 	}
 
-	return result;
+	std::exception("Unknown fill mode.");
 }
 
-GLenum TranslateCullMode(RasterizerState::CullMode cullMode)
+GLenum GLTranslateCullMode(RasterizerState::CullMode cullMode)
 {
-	GLenum result = GL_BACK;
 	switch (cullMode)
 	{
 	case RasterizerState::CullMode::None:
-		result = GL_NONE;
-		break;
+		return GL_NONE;
+
 	case RasterizerState::CullMode::Front:
-		result = GL_FRONT;
-		break;
+		return GL_FRONT;
+
 	case RasterizerState::CullMode::Back:
-		result = GL_BACK;
-		break;
+		return GL_BACK;
+
 	case RasterizerState::CullMode::FrontAndBack:
-		result = GL_FRONT_AND_BACK;
-		break;
-	default:
-		Log::Error("Unknown cull mode.");
-		break;
+		return GL_FRONT_AND_BACK;
 	}
 
-	return result;
+	std::exception("Unknown cull mode.");
 }
 
-bool TranslateFrontFace(RasterizerState::FrontFace frontFace)
+bool GLTranslateFrontFace(RasterizerState::FrontFace frontFace)
 {
-	bool frontCounterClockwise = true;
 	switch (frontFace)
 	{
 	case RasterizerState::FrontFace::Clockwise:
-		frontCounterClockwise = false;
-		break;
+		return GL_CW;
+
 	case RasterizerState::FrontFace::CounterClockwise:
-		frontCounterClockwise = true;
-		break;
-	default:
-		Log::Error("Unknown front face winding order.");
-		break;
+		return GL_CCW;
 	}
 
-	return frontCounterClockwise;
+	std::exception("Unknown front face winding order.");
 }
 
 RasterizerStateOGL::RasterizerStateOGL()
@@ -319,16 +302,17 @@ bool RasterizerStateOGL::GetConservativeRasterizationEnabled() const
 // Can only be invoked by the pipeline state
 void RasterizerStateOGL::Bind()
 {
-	//if (m_StateDirty)
+	if (m_StateDirty)
 	{
 		// Fill mode
-		glPolygonMode(GL_FRONT_AND_BACK, TranslateFillMode(m_FrontFaceFillMode));
+		glPolygonMode(GL_FRONT_AND_BACK, GLTranslateFillMode(m_FrontFaceFillMode));
 
 		// Cull mode
 		if (m_CullMode != CullMode::None)
 		{
 			glEnable(GL_CULL_FACE);
-			glCullFace(TranslateCullMode(m_CullMode));
+			glCullFace(GLTranslateCullMode(m_CullMode));
+			glFrontFace(GLTranslateFrontFace(m_FrontFace));
 		}
 		else
 		{
@@ -348,26 +332,29 @@ void RasterizerStateOGL::Bind()
 		m_StateDirty = false;
 	}
 
-	//if (m_ScissorRectsDirty)
+	if (m_ScissorRectsDirty)
 	{
-		glScissor(
-			static_cast<GLint>(m_ScissorRects[0].X + 0.5f),
-			static_cast<GLint>(m_ScissorRects[0].Y + 0.5f),
-			static_cast<GLint>(m_ScissorRects[0].Width + 0.5f),
-			static_cast<GLint>(m_ScissorRects[0].Height + 0.5f)
-		);
+		for (size_t i = 0; i < m_ScissorRects.size(); i++)
+		{
+			glScissorIndexed(i,
+				static_cast<GLint>(m_ScissorRects[i].X + 0.5f),
+				static_cast<GLint>(m_ScissorRects[i].Y + 0.5f),
+				static_cast<GLint>(m_ScissorRects[i].Width + 0.5f),
+				static_cast<GLint>(m_ScissorRects[i].Height + 0.5f)
+			);
+		}
 
 		m_ScissorRectsDirty = false;
 	}
 
-	//if (m_ViewportsDirty)
+	if (m_ViewportsDirty)
 	{
-		glViewport(
-			static_cast<GLint>(m_Viewports[0].X + 0.5f),
-			static_cast<GLint>(m_Viewports[0].Y + 0.5f),
-			static_cast<GLint>(m_Viewports[0].Width + 0.5f),
-			static_cast<GLint>(m_Viewports[0].Height + 0.5f)
-		);
+		for (size_t i = 0; i < m_Viewports.size(); i++)
+		{
+			glViewportIndexedf(i, m_Viewports[i].X, m_Viewports[i].Y, m_Viewports[i].Width, m_Viewports[i].Height);
+			glDepthRangeIndexed(i, m_Viewports[i].MinDepth, m_Viewports[i].MaxDepth);
+		}
+
 		m_ViewportsDirty = false;
 	}
 }

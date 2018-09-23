@@ -23,9 +23,8 @@ public:
 			uint64_t NumSamples;                    // Valid for QueryType::CountSamples. Returns the number of samples written by the fragment shader between Query::Begin and Query::End.
 			bool     AnySamples;                    // Valid for QueryType::CountSamplesPredicate. Returns true if any samples were written by the fragment shader between Query::Begin and Query::End.
 		};
-		// Are the results of the query valid?
-		// You should check this before using the value.
-		bool IsValid;
+		
+		bool IsValid; // Are the results of the query valid? You should check this before using the value.
 	};
 
 	/**

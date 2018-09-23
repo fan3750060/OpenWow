@@ -63,7 +63,7 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 				{
 					UINT slotID = pVS->GetSlotIDBySemantic(binding);
 					// Bind the vertex buffer to a particular slot ID.
-					buffer.second->Bind(slotID, Shader::VertexShader, ShaderParameter::Type::Buffer);
+					buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
 				}
 			}
 		}
@@ -84,9 +84,9 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 	if (m_pIndexBuffer != NULL)
 	{
 		// TOOD: Primitive reset?
-		m_pIndexBuffer->Bind(0, Shader::VertexShader, ShaderParameter::Type::Buffer);
+		m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
 		m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
-		m_pIndexBuffer->UnBind(0, Shader::VertexShader, ShaderParameter::Type::Buffer);
+		m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
 	}
 	else
 	{
@@ -105,7 +105,7 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 			{
 				UINT slotID = pVS->GetSlotIDBySemantic(binding);
 				// Bind the vertex buffer to a particular slot ID.
-				buffer.second->Bind(slotID, Shader::VertexShader, ShaderParameter::Type::Buffer);
+				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
 			}
 		}
 	}

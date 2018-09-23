@@ -13,8 +13,7 @@ public:
 	/**
 	* Set a blend mode on a back buffer index.
 	* The maximum number of back buffers that can be simultaneously bound is
-	* specific to the rendering API. For DX11 and DX12, the maximum is 8. In OpenGL,
-	* the minimum required is 8.
+	* specific to the rendering API. For DX11 and DX12, the maximum is 8. In OpenGL, the minimum required is 8.
 	*/
 	virtual void SetBlendMode(const BlendMode& blendMode);
 	virtual void SetBlendModes(const std::vector<BlendMode>& blendModes);

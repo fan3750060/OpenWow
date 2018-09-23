@@ -4,11 +4,10 @@
 
 // Additional
 #include "ShaderOGL.h"
-#include "OpenGL.h"
 
-GLbitfield TranslateShaderBitType(Shader::ShaderType _type)
+GLbitfield GLTranslateShaderBitType(Shader::ShaderType _type)
 {
-	GLbitfield result = GL_VERTEX_SHADER;
+	GLbitfield result = GL_VERTEX_SHADER_BIT;
 	switch (_type)
 	{
 	case Shader::ShaderType::VertexShader:
@@ -57,8 +56,6 @@ void PipelineStateOGL::SetShader(Shader::ShaderType type, std::shared_ptr<Shader
 {
 	std::shared_ptr<ShaderOGL> shaderOGL = std::dynamic_pointer_cast<ShaderOGL>(pShader);
 	m_Shaders[type] = shaderOGL;
-
-	glUseProgramStages(m_GLProgramPipeline, TranslateShaderBitType(type), shaderOGL->GetGLObject());
 }
 
 std::shared_ptr<Shader> PipelineStateOGL::GetShader(Shader::ShaderType type) const
@@ -128,16 +125,16 @@ void PipelineStateOGL::Bind()
 	m_RasterizerState.Bind();
 	m_DepthStencilState.Bind();
 
-	
 	for (auto shader : m_Shaders)
 	{
-		std::shared_ptr<Shader> pShader = shader.second;
+		std::shared_ptr<ShaderOGL> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.second);
 		if (pShader)
 		{
-			//glActiveShaderProgram(m_GLProgramPipeline, )
 			pShader->Bind();
+			glUseProgramStages(m_GLProgramPipeline, GLTranslateShaderBitType(shader.first), pShader->GetGLObject());
 		}
 	}
+
 	glBindProgramPipeline(m_GLProgramPipeline);
 }
 
@@ -150,9 +147,10 @@ void PipelineStateOGL::UnBind()
 
 	for (auto shader : m_Shaders)
 	{
-		std::shared_ptr<Shader> pShader = shader.second;
+		std::shared_ptr<Shader> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.second);
 		if (pShader)
 		{
+			glUseProgramStages(m_GLProgramPipeline, GLTranslateShaderBitType(shader.first), 0);
 			pShader->UnBind();
 		}
 	}

@@ -11,10 +11,6 @@ public:
 	RenderWindowDX11(HWND hWnd, RenderDeviceDX11* device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
 	virtual ~RenderWindowDX11();
 
-	virtual void ShowWindow();
-	virtual void HideWindow();
-	virtual void CloseWindow();
-
 	virtual void Present();
 
 	virtual std::shared_ptr<RenderTarget> GetRenderTarget();
@@ -36,7 +32,6 @@ protected:
 private:
 	bool m_bIsMouseTracking; // Used to capture mouse enter/leave events.
 
-	HWND m_hWindow;
 	RenderDeviceDX11* m_Device;
 
 	// Used to enable multisampling AA

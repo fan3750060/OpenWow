@@ -1,42 +1,31 @@
 #pragma once
 
-// Inspiration for a shader parameter class:
-// http://asawicki.info/news_1529_cconstantbuffer_ctypedconstantbuffer.html
-// Accessed: Feb 18, 2013
-
 class ShaderParameterOGL : public ShaderParameter
 {
 public:
 	ShaderParameterOGL();
-
-	// Shader resource parameter.
-	ShaderParameterOGL(cstring name, UINT slotID, Shader::ShaderType shaderType, Type parameterType);
+	ShaderParameterOGL(cstring name, UINT slotID, std::shared_ptr<Shader> shader, Type parameterType);
 
 	bool IsValid() const;
+	Type GetType() const;
 
-	// Get the type of the stored parameter.
-	virtual Type GetType() const;
-
-	// Bind the shader parameter to a specific slot for the given shader type.
 	virtual void Bind();
 	virtual void UnBind();
 
 protected:
-	virtual void SetConstantBuffer(std::shared_ptr<ConstantBuffer> buffer);
-	virtual void SetTexture(std::shared_ptr<Texture> texture);
-	virtual void SetSampler(std::shared_ptr<SamplerState> sampler);
-	virtual void SetStructuredBuffer(std::shared_ptr<StructuredBuffer> rwBuffer);
+	void SetConstantBuffer(std::shared_ptr<ConstantBuffer> buffer);
+	void SetTexture(std::shared_ptr<Texture> texture);
+	void SetSampler(std::shared_ptr<SamplerState> sampler);
+	void SetStructuredBuffer(std::shared_ptr<StructuredBuffer> rwBuffer);
 
 private:
-	std::string m_Name;
+	std::string                     m_Name;
+	UINT                            m_uiSlotID;
+	std::weak_ptr<Shader>           m_Shader;
+	Type                            m_ParameterType;
 
-	// Shader parameter does not take ownership of these types.
-	std::weak_ptr<ConstantBuffer> m_pConstantBuffer;
-	std::weak_ptr<Texture> m_pTexture;
-	std::weak_ptr<SamplerState> m_pSamplerState;
+	std::weak_ptr<ConstantBuffer>   m_pConstantBuffer;
+	std::weak_ptr<Texture>          m_pTexture;
+	std::weak_ptr<SamplerState>     m_pSamplerState;
 	std::weak_ptr<StructuredBuffer> m_pStructuredBuffer;
-
-	UINT m_uiSlotID;
-	Shader::ShaderType m_ShaderType;
-	Type m_ParameterType;
 };

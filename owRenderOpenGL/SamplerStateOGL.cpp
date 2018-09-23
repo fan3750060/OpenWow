@@ -3,131 +3,106 @@
 // General
 #include "SamplerStateOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
-GLenum TranslateMinMapFilter(SamplerStateOGL::MinFilter _minFilter, SamplerStateOGL::MipFilter _mipFilter)
+GLenum GLTranslateMinMapFilter(SamplerStateOGL::MinFilter _minFilter, SamplerStateOGL::MipFilter _mipFilter)
 {
-	GLenum filter = GL_LINEAR_MIPMAP_LINEAR;
-
 	if (_minFilter == SamplerStateOGL::MinFilter::MinLinear && _mipFilter == SamplerStateOGL::MipFilter::MipLinear)
 	{
-		filter = GL_LINEAR_MIPMAP_LINEAR;
+		return GL_LINEAR_MIPMAP_LINEAR;
 	}
 	else if (_minFilter == SamplerStateOGL::MinFilter::MinLinear && _mipFilter == SamplerStateOGL::MipFilter::MipNearest)
 	{
-		filter = GL_LINEAR_MIPMAP_NEAREST;
+		return GL_LINEAR_MIPMAP_NEAREST;
 	}
 	else if (_minFilter == SamplerStateOGL::MinFilter::MinNearest && _mipFilter == SamplerStateOGL::MipFilter::MipLinear)
 	{
-		filter = GL_NEAREST_MIPMAP_LINEAR;
+		return GL_NEAREST_MIPMAP_LINEAR;
 	}
 	else if (_minFilter == SamplerStateOGL::MinFilter::MinNearest && _mipFilter == SamplerStateOGL::MipFilter::MipNearest)
 	{
-		filter = GL_NEAREST_MIPMAP_NEAREST;
-	}
-	else
-	{
-		Log::Error("Invalid texture filter modes.");
+		return GL_NEAREST_MIPMAP_NEAREST;
 	}
 
-	return filter;
+	std::exception("Invalid sampler MinMapFilter modes.");
 }
 
-GLenum TranslateMagFilter(SamplerStateOGL::MagFilter _magFilter)
+GLenum GLTranslateMagFilter(SamplerStateOGL::MagFilter _magFilter)
 {
-	GLenum filter = GL_LINEAR;
 	if (_magFilter == SamplerStateOGL::MagFilter::MagLinear)
 	{
-		filter = GL_LINEAR;
+		return GL_LINEAR;
 	}
 	else if (_magFilter == SamplerStateOGL::MagFilter::MagLinear)
 	{
-		filter = GL_NEAREST;
-	}
-	else
-	{
-		Log::Error("Invalid texture filter modes.");
+		return GL_NEAREST;
 	}
 
-	return filter;
+	std::exception("Invalid sampler MagFilter modes.");
 }
 
-GLenum TranslateWrapMode(SamplerStateOGL::WrapMode wrapMode)
+GLenum GLTranslateWrapMode(SamplerStateOGL::WrapMode wrapMode)
 {
-	GLenum addressMode = GL_REPEAT;
-
 	switch (wrapMode)
 	{
 	case SamplerStateOGL::WrapMode::Repeat:
-		addressMode = GL_REPEAT;
-		break;
+		return GL_REPEAT;
+
 	case SamplerStateOGL::WrapMode::Clamp:
-		addressMode = GL_CLAMP_TO_EDGE;
-		break;
+		return GL_CLAMP_TO_EDGE;
+
 	case SamplerStateOGL::WrapMode::Mirror:
-		addressMode = GL_MIRRORED_REPEAT;
-		break;
+		return GL_MIRRORED_REPEAT;
+
 	case SamplerStateOGL::WrapMode::Border:
-		addressMode = GL_CLAMP_TO_BORDER;
-		break;
+		return GL_CLAMP_TO_BORDER;
 	}
 
-	return addressMode;
+	std::exception("Invalid sampler WrapMode modes.");
 }
 
-GLenum TranslateCompareMode(SamplerStateOGL::CompareMode mode)
+GLenum GLTranslateCompareMode(SamplerStateOGL::CompareMode mode)
 {
-	GLenum result = SamplerStateOGL::CompareMode::None;
-
-	switch (result)
+	switch (mode)
 	{
 	case SamplerStateOGL::CompareMode::None:
-		result = GL_NONE;
-		break;
+		return GL_NONE;
+
 	case SamplerStateOGL::CompareMode::CompareRefToTexture:
-		result = GL_COMPARE_R_TO_TEXTURE;
-		break;
-	default:
-		Log::Error("Unknown compare mode.");
-		break;
+		return GL_COMPARE_R_TO_TEXTURE;
 	}
 
-	return result;
+	std::exception("Invalid sampler CompareMode modes.");
 }
 
-GLenum TranslateCompareFunction(SamplerStateOGL::CompareFunc compareFunc)
+GLenum GLTranslateCompareFunction(SamplerStateOGL::CompareFunc compareFunc)
 {
-	GLenum compareFuncD3D11 = GL_ALWAYS;
 	switch (compareFunc)
 	{
 	case SamplerStateOGL::CompareFunc::Never:
-		compareFuncD3D11 = GL_NEVER;
-		break;
+		return GL_NEVER;
+
 	case SamplerStateOGL::CompareFunc::Less:
-		compareFuncD3D11 = GL_LESS;
-		break;
+		return GL_LESS;
+
 	case SamplerStateOGL::CompareFunc::Equal:
-		compareFuncD3D11 = GL_EQUAL;
-		break;
+		return GL_EQUAL;
+
 	case SamplerStateOGL::CompareFunc::LessEqual:
-		compareFuncD3D11 = GL_LEQUAL;
-		break;
+		return GL_LEQUAL;
+
 	case SamplerStateOGL::CompareFunc::Greater:
-		compareFuncD3D11 = GL_GREATER;
-		break;
+		return GL_GREATER;
+
 	case SamplerStateOGL::CompareFunc::NotEqual:
-		compareFuncD3D11 = GL_NOTEQUAL;
-		break;
+		return GL_NOTEQUAL;
+
 	case SamplerStateOGL::CompareFunc::GreaterEqual:
-		compareFuncD3D11 = GL_GEQUAL;
-		break;
+		return GL_GEQUAL;
+
 	case SamplerStateOGL::CompareFunc::Always:
-		compareFuncD3D11 = GL_ALWAYS;
-		break;
+		return GL_ALWAYS;
 	}
 
-	return compareFuncD3D11;
+	std::exception("Invalid sampler CompareFunction modes.");
 }
 
 SamplerStateOGL::SamplerStateOGL()
@@ -146,10 +121,17 @@ SamplerStateOGL::SamplerStateOGL()
 	, m_AnisotropicFiltering(1)
 	, m_bIsDirty(true)
 {
+	glGenSamplers(1, &m_GLObj);
 }
 
 SamplerStateOGL::~SamplerStateOGL()
-{}
+{
+	if (m_GLObj != 0)
+	{
+		glDeleteSamplers(1, &m_GLObj);
+		m_GLObj = 0;
+	}
+}
 
 void SamplerStateOGL::SetFilter(MinFilter minFilter, MagFilter magFilter, MipFilter mipFilter)
 {
@@ -259,86 +241,43 @@ uint8_t SamplerStateOGL::GetMaxAnisotropy() const
 	return m_AnisotropicFiltering;
 }
 
-void SamplerStateOGL::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void SamplerStateOGL::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
-	//if (m_bIsDirty)
+	if (m_bIsDirty)
 	{
-		glTexParameteri(ID, GL_TEXTURE_MIN_FILTER, TranslateMinMapFilter(m_MinFilter, m_MipFilter));
-		glTexParameteri(ID, GL_TEXTURE_MAG_FILTER, TranslateMagFilter(m_MagFilter));
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_FILTER, GLTranslateMinMapFilter(m_MinFilter, m_MipFilter));
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_MAG_FILTER, GLTranslateMagFilter(m_MagFilter));
 
-		glTexParameteri(ID, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_AnisotropicFiltering);
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_AnisotropicFiltering);
 
 		// Lod
-		glTexParameterf(ID, GL_TEXTURE_MIN_LOD, m_fMinLOD);
-		glTexParameterf(ID, GL_TEXTURE_MAX_LOD, m_fMaxLOD);
-
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_LOD, m_fMinLOD);
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_MAX_LOD, m_fMaxLOD);
+		//glSamplerParameteri(m_GLObj, GL_TEXTURE_LOD_BIAS, m_fLODBias);
+		
 		// Wrap
-		glTexParameteri(ID, GL_TEXTURE_WRAP_S, TranslateWrapMode(m_WrapModeU));
-		glTexParameteri(ID, GL_TEXTURE_WRAP_T, TranslateWrapMode(m_WrapModeV));
-		glTexParameteri(ID, GL_TEXTURE_WRAP_R, TranslateWrapMode(m_WrapModeW));
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_WRAP_S, GLTranslateWrapMode(m_WrapModeU));
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_WRAP_T, GLTranslateWrapMode(m_WrapModeV));
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_WRAP_R, GLTranslateWrapMode(m_WrapModeW));
 
 		if (m_CompareMode != CompareMode::None)
 		{
-			glTexParameteri(ID, GL_TEXTURE_COMPARE_MODE, TranslateCompareMode(m_CompareMode));
-			glTexParameteri(ID, GL_TEXTURE_COMPARE_FUNC, TranslateCompareFunction(m_CompareFunc));
+			glSamplerParameteri(m_GLObj, GL_TEXTURE_COMPARE_MODE, GLTranslateCompareMode(m_CompareMode));
+			glSamplerParameteri(m_GLObj, GL_TEXTURE_COMPARE_FUNC, GLTranslateCompareFunction(m_CompareFunc));
 		}
 		else
 		{
-			glTexParameteri(ID, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+			glSamplerParameteri(m_GLObj, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 		}
 
 		m_bIsDirty = false;
 	}
 
-	/*ID3D11SamplerState* pSamplers[] = { m_pSamplerState };
-
-	switch (shaderType)
-	{
-	case Shader::VertexShader:
-		m_pDeviceContext->VSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::TessellationControlShader:
-		m_pDeviceContext->HSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::TessellationEvaluationShader:
-		m_pDeviceContext->DSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::GeometryShader:
-		m_pDeviceContext->GSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::PixelShader:
-		m_pDeviceContext->PSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::ComputeShader:
-		m_pDeviceContext->CSSetSamplers(ID, 1, pSamplers);
-		break;
-	}*/
+	glBindSampler(ID, m_GLObj);
 }
 
-void SamplerStateOGL::UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void SamplerStateOGL::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
-	/*ID3D11SamplerState* pSamplers[] = { nullptr };
-
-	switch (shaderType)
-	{
-	case Shader::VertexShader:
-		m_pDeviceContext->VSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::TessellationControlShader:
-		m_pDeviceContext->HSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::TessellationEvaluationShader:
-		m_pDeviceContext->DSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::GeometryShader:
-		m_pDeviceContext->GSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::PixelShader:
-		m_pDeviceContext->PSSetSamplers(ID, 1, pSamplers);
-		break;
-	case Shader::ComputeShader:
-		m_pDeviceContext->CSSetSamplers(ID, 1, pSamplers);
-		break;
-	}*/
+	glBindSampler(ID, 0);
 }
 

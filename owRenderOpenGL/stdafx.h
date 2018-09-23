@@ -9,7 +9,7 @@
 #include <owRenderBase.h>
 #pragma comment(lib, "owRenderBase.lib")
 
-
+#include "OpenGL.h"
 #pragma comment(lib, "opengl32.lib")
 
 #include "common.h"

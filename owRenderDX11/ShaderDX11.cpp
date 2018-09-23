@@ -343,7 +343,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cst
 		}
 
 		// Create an empty shader parameter that should be filled-in by the application.
-		std::shared_ptr<ShaderParameterDX11> shaderParameter = std::make_shared<ShaderParameterDX11>(resourceName, bindDesc.BindPoint, shaderType, parameterType);
+		std::shared_ptr<ShaderParameterDX11> shaderParameter = std::make_shared<ShaderParameterDX11>(resourceName, bindDesc.BindPoint, shared_from_this(), parameterType);
 		m_ShaderParameters.insert(ParameterMap::value_type(resourceName, shaderParameter));
 
 	}

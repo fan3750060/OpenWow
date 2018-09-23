@@ -3,15 +3,12 @@
 // General
 #include "BufferOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
 static const uint32 bufferMappingTypes[3] = { GL_MAP_READ_BIT, GL_MAP_WRITE_BIT, GL_MAP_READ_BIT | GL_MAP_WRITE_BIT };
 
 BufferOGL::BufferOGL(UINT bindFlags, const void* data, size_t count, UINT stride)
-	: m_uiStride(stride)
-	, m_BindFlags(bindFlags)
+	: m_BindFlags(bindFlags)
 	, m_uiCount((UINT)count)
+	, m_uiStride(stride)
 	, m_bIsBound(false)
 {
 	glGenBuffers(1, &m_GLObj);
@@ -23,75 +20,50 @@ BufferOGL::BufferOGL(UINT bindFlags, const void* data, size_t count, UINT stride
 
 BufferOGL::~BufferOGL()
 {
-	glDeleteBuffers(1, &m_GLObj);
+	if (m_GLObj != 0)
+	{
+		glDeleteBuffers(1, &m_GLObj);
+		m_GLObj = 0;
+	}
 }
 
-bool BufferOGL::Bind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+bool BufferOGL::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
-	/*assert(m_pDeviceContext);
+	glBindBuffer(m_BindFlags, m_GLObj);
 
-	ID3D11Buffer* buffers[] = { m_pBuffer };
-	UINT offsets[] = { 0 };
-	UINT strides[] = { m_uiStride };
-
-	switch (m_BindFlags)
-	{
-	case D3D11_BIND_VERTEX_BUFFER:
-		m_pDeviceContext->IASetVertexBuffers(id, 1, buffers, strides, offsets);
-		m_bIsBound = true;
-		break;
-	case D3D11_BIND_INDEX_BUFFER:
-		m_pDeviceContext->IASetIndexBuffer(m_pBuffer, m_uiStride == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT, 0);
-		m_bIsBound = true;
-		break;
-	default:
-		throw std::exception("BufferOGL::Bind: Unimplemented buffer type.");
-		// return false;
-		break;
-	}*/
-
-	//throw std::exception("Not implemented!");
 	return true;
 }
 
-void BufferOGL::UnBind(uint32 id, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void BufferOGL::UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	glBindBuffer(m_BindFlags, 0);
-	/*ID3D11Buffer* buffers[] = { nullptr };
-
-	switch (m_BindFlags)
-	{
-	case D3D11_BIND_VERTEX_BUFFER:
-		m_pDeviceContext->IASetVertexBuffers(id, 1, buffers, nullptr, nullptr);
-		m_bIsBound = true;
-		break;
-	case D3D11_BIND_INDEX_BUFFER:
-		m_pDeviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
-		m_bIsBound = true;
-		break;
-	default:
-		throw std::exception("BufferOGL::Bind: Unimplemented buffer type.");
-		// return false;
-		break;
-	}*/
-
-	//throw std::exception("Not implemented!");
 }
 
 void BufferOGL::Copy(std::shared_ptr<Buffer> other)
 {
-	/*std::shared_ptr<BufferOGL> srcBuffer = std::dynamic_pointer_cast<BufferOGL>(other);
+	std::shared_ptr<BufferOGL> srcBuffer = std::dynamic_pointer_cast<BufferOGL>(other);
+	_ASSERT(srcBuffer->m_GLObj != 0);
 
-	if (srcBuffer && srcBuffer.get() != this &&
-		m_uiCount * m_uiStride == srcBuffer->m_uiCount * srcBuffer->m_uiStride)
+	if (srcBuffer && (srcBuffer.get() != this) && ((m_uiCount * m_uiStride) == (srcBuffer->m_uiCount * srcBuffer->m_uiStride)))
 	{
-		m_pDeviceContext->CopyResource(m_pBuffer, srcBuffer->m_pBuffer);
+		glBindBuffer(GL_COPY_READ_BUFFER, srcBuffer->m_GLObj);
+		{
+			GLint size;
+			glGetBufferParameteriv(GL_COPY_READ_BUFFER, GL_BUFFER_SIZE, &size);
+
+			glBindBuffer(GL_COPY_WRITE_BUFFER, m_GLObj);
+			{
+				glBufferData(GL_COPY_WRITE_BUFFER, size, nullptr, GL_STATIC_DRAW);
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, size);
+			}
+			glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
+		}
+		glBindBuffer(GL_COPY_READ_BUFFER, 0);
 	}
 	else
 	{
-		Log::Error("Source buffer is not compatible with this buffer.");
-	}*/
-	throw std::exception("Not implemented!");
+		std::exception("Source buffer is not compatible with this buffer.");
+	}
 }
 
 Buffer::BufferType BufferOGL::GetType() const
@@ -100,20 +72,25 @@ Buffer::BufferType BufferOGL::GetType() const
 	{
 	case GL_ARRAY_BUFFER:
 		return Buffer::VertexBuffer;
-		break;
 	case GL_ELEMENT_ARRAY_BUFFER:
 		return Buffer::IndexBuffer;
-		break;
-	/*case GL_CONSTA: /-???-/
+	case GL_SHADER_STORAGE_BUFFER:
+		return Buffer::StructuredBuffer;
+	case GL_UNIFORM_BUFFER:
 		return Buffer::ConstantBuffer;
-		break;*/
 	default:
-		return Buffer::Unknown;
-		break;
+		std::exception("Unknown buffer type");
 	}
+
+	return Buffer::Unknown;
 }
 
 uint32 BufferOGL::GetElementCount() const
 {
 	return m_uiCount;
+}
+
+uint32 BufferOGL::GetElementStride() const
+{
+	return m_uiStride;
 }

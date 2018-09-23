@@ -1,11 +1,9 @@
 #include <stdafx.h>
 
+// General
 #include "DepthStencilStateOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
-GLboolean TranslateDepthWriteMask(DepthStencilState::DepthWrite depthWrite)
+GLboolean GLTranslateDepthWriteMask(DepthStencilState::DepthWrite depthWrite)
 {
 	GLboolean result = GL_TRUE;
 
@@ -18,14 +16,13 @@ GLboolean TranslateDepthWriteMask(DepthStencilState::DepthWrite depthWrite)
 		result = GL_FALSE;
 		break;
 	default:
-		Log::Error("Unknown depth write mask.");
-		break;
+		std::exception("Unknown depth write mask.");
 	}
 
 	return result;
 }
 
-GLenum TranslateCompareFunc(DepthStencilState::CompareFunction compareFunc)
+GLenum GLTranslateCompareFunc(DepthStencilState::CompareFunction compareFunc)
 {
 	GLenum result = GL_LESS;
 
@@ -56,8 +53,7 @@ GLenum TranslateCompareFunc(DepthStencilState::CompareFunction compareFunc)
 		result = GL_ALWAYS;
 		break;
 	default:
-		Log::Error("Unknown compare function.");
-		break;
+		std::exception("Unknown depth write mask.");
 	}
 
 	return result;
@@ -181,19 +177,41 @@ void DepthStencilStateOGL::Bind()
 {
 	//if (m_bDirty)
 	{
-		// Depth mode
-		if (m_DepthMode.DepthEnable)
+		
+		// DEPTH
 		{
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(TranslateCompareFunc(m_DepthMode.DepthFunction));
-		}
-		else
-		{
-			glDisable(GL_DEPTH_TEST);
+			// Depth mode
+			if (m_DepthMode.DepthEnable)
+			{
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GLTranslateCompareFunc(m_DepthMode.DepthFunction));
+			}
+			else
+			{
+				glDisable(GL_DEPTH_TEST);
+			}
+
+			// Depth mask
+			glDepthMask(GLTranslateDepthWriteMask(m_DepthMode.DepthWriteMask));
 		}
 
-		// Depth mask
-		glDepthMask(TranslateDepthWriteMask(m_DepthMode.DepthWriteMask));
+		// STENCIL
+		/*{
+			if (m_StencilMode.StencilEnabled)
+			{
+				glEnable(GL_STENCIL_TEST);
+			}
+			else
+			{
+				glDisable(GL_STENCIL_TEST);
+			}
+		//glStencilFunc(GLTranslateCompareFunc(m_StencilMode.));
+
+		// (GLenum face, GLuint mask);
+			//GL_FRONT, GL_BACK, and GL_FRONT_AND_BACK.
+			//glStencilMaskSeparate(GL_FRONT_AND_BACK, m_StencilMode.BackFace.StencilFail)
+		}*/
+		
 
 		m_bDirty = false;
 	}

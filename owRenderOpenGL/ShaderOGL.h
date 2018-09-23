@@ -2,7 +2,7 @@
 
 class ShaderParameterOGL;
 
-class ShaderOGL : public Shader
+class ShaderOGL : public Shader, public std::enable_shared_from_this<ShaderOGL>
 {
 public:
 	ShaderOGL();
@@ -20,8 +20,9 @@ public:
 	//virtual ConstantBuffer* GetConstantBufferByName( cstring name ); 
 
 	// Check to see if this shader supports a given semantic.
-	bool HasSemantic(const BufferBinding& binding) const;
-	UINT GetSlotIDBySemantic(const BufferBinding& binding) const;
+	bool                 HasSemantic(cstring binding) const;
+	const BufferBinding& GetSemantic(cstring binding) const;
+	UINT                 GetSlotIDBySemantic(cstring binding) const;
 
 	virtual void Bind();
 	virtual void UnBind();
@@ -37,7 +38,7 @@ protected:
 	virtual void Destroy();
 
 private:
-	uint32 m_GLShaderProgramm;
+	uint32 m_GLObj;
 
 private:
 	ShaderType	m_ShaderType;

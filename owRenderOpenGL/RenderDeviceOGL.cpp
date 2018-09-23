@@ -15,9 +15,6 @@
 // General
 #include "RenderDeviceOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
 #ifdef _DEBUG
 void _stdcall glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -734,19 +731,19 @@ void RenderDeviceOGL::DestoryQuery(std::shared_ptr<Query> query)
 void RenderDeviceOGL::LoadDefaultResources()
 {
 	// Load a default shader
-	std::shared_ptr<Shader> pDefaultVertexShader = CreateShader();
-	pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders\\M2\\M2.vs", Shader::ShaderMacros(), "VS_main", "vs_4_0");
+	//std::shared_ptr<Shader> pDefaultVertexShader = CreateShader();
+	//pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders\\M2\\M2.vs", Shader::ShaderMacros(), "VS_main", "vs_4_0");
 
-	std::shared_ptr<Shader> pDefaultPixelShader = CreateShader();
-	pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders\\M2\\M2.fs", Shader::ShaderMacros(), "PS_main", "ps_4_0");
+	//std::shared_ptr<Shader> pDefaultPixelShader = CreateShader();
+	//pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders\\M2\\M2.fs", Shader::ShaderMacros(), "PS_main", "ps_4_0");
 
 	// Create a magenta texture if a texture defined in the shader is not bound.
 	m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());
 	m_pDefaultTexture->Clear(ClearFlags::Color, vec4(1, 0, 1, 1));
 
-	m_pDefaultPipeline = CreatePipelineState();
-	m_pDefaultPipeline->SetShader(Shader::VertexShader, pDefaultVertexShader);
-	m_pDefaultPipeline->SetShader(Shader::PixelShader, pDefaultPixelShader);
+	//m_pDefaultPipeline = CreatePipelineState();
+	//m_pDefaultPipeline->SetShader(Shader::VertexShader, pDefaultVertexShader);
+	//m_pDefaultPipeline->SetShader(Shader::PixelShader, pDefaultPixelShader);
 	// TODO: Default pipeline state must be assigned to a renderwindow
 	// because the RenderWindow has a default render target that must be bound to the pipeline.
 }

@@ -8,59 +8,42 @@
 // General
 #include "RenderTargetOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
 GLenum TranslateAttachmentPoint(RenderTarget::AttachmentPoint _attach)
 {
-	GLenum result = GL_COLOR_ATTACHMENT0;
 	switch (_attach)
 	{
 	case RenderTarget::AttachmentPoint::Color0:
-		result = GL_COLOR_ATTACHMENT0;
-		break;
+		return GL_COLOR_ATTACHMENT0;
 
 	case RenderTarget::AttachmentPoint::Color1:
-		result = GL_COLOR_ATTACHMENT1;
-		break;
+		return GL_COLOR_ATTACHMENT1;
 
 	case RenderTarget::AttachmentPoint::Color2:
-		result = GL_COLOR_ATTACHMENT2;
-		break;
+		return GL_COLOR_ATTACHMENT2;
 
 	case RenderTarget::AttachmentPoint::Color3:
-		result = GL_COLOR_ATTACHMENT3;
-		break;
+		return GL_COLOR_ATTACHMENT3;
 
 	case RenderTarget::AttachmentPoint::Color4:
-		result = GL_COLOR_ATTACHMENT4;
-		break;
+		return GL_COLOR_ATTACHMENT4;
 
 	case RenderTarget::AttachmentPoint::Color5:
-		result = GL_COLOR_ATTACHMENT5;
-		break;
+		return GL_COLOR_ATTACHMENT5;
 
 	case RenderTarget::AttachmentPoint::Color6:
-		result = GL_COLOR_ATTACHMENT6;
-		break;
+		return GL_COLOR_ATTACHMENT6;
 
 	case RenderTarget::AttachmentPoint::Color7:
-		result = GL_COLOR_ATTACHMENT7;
-		break;
+		return GL_COLOR_ATTACHMENT7;
 
 	case RenderTarget::AttachmentPoint::Depth:
-		result = GL_DEPTH_ATTACHMENT;
-		break;
+		return GL_DEPTH_ATTACHMENT;
 
 	case RenderTarget::AttachmentPoint::DepthStencil:
-		result = GL_DEPTH_ATTACHMENT;
-		break;
-
-	default:
-		Log::Error("Unknown AttachmentPoint.");
+		return GL_DEPTH_ATTACHMENT | GL_STENCIL_ATTACHMENT;
 	}
 
-	return result;
+	std::exception("Invalid AttachmentPoint.");
 }
 
 RenderTargetOGL::RenderTargetOGL(RenderDeviceOGL* _device)
@@ -72,42 +55,37 @@ RenderTargetOGL::RenderTargetOGL(RenderDeviceOGL* _device)
 	m_Textures.resize((size_t)RenderTarget::AttachmentPoint::NumAttachmentPoints + 1);
 	m_StructuredBuffers.resize(8);
 
-	glGenFramebuffers(1, &m_FBGLObj);
-
-	glDisable(GL_MULTISAMPLE);
+	glGenFramebuffers(1, &m_GLObj);
 }
 
 RenderTargetOGL::~RenderTargetOGL()
 {
-	//glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
-
-	if (m_FBGLObj != 0)
+	if (m_GLObj != 0)
 	{
-		glDeleteFramebuffers(1, &m_FBGLObj);
+		glDeleteFramebuffers(1, &m_GLObj);
 	}
-	m_FBGLObj = 0;
+	m_GLObj = 0;
 }
 
 void RenderTargetOGL::AttachTexture(AttachmentPoint attachment, std::shared_ptr<Texture> texture)
 {
-	std::shared_ptr<TextureOGL> textureDX11 = std::dynamic_pointer_cast<TextureOGL>(texture);
-	m_Textures[(uint8_t)attachment] = textureDX11;
+	std::shared_ptr<TextureOGL> textureOGL = std::dynamic_pointer_cast<TextureOGL>(texture);
+	m_Textures[(uint8_t)attachment] = textureOGL;
 
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, TranslateAttachmentPoint(attachment), GL_TEXTURE_2D, textureDX11->GetGLObject(), 0);
-	OGLCheckError();
-
-	if (attachment >= AttachmentPoint::Color0 && attachment <= AttachmentPoint::Color7)
+	glBindFramebuffer(GL_FRAMEBUFFER, m_GLObj);
 	{
-		GLenum buffers[] = { TranslateAttachmentPoint(attachment) };
-		glDrawBuffers(1, buffers);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, TranslateAttachmentPoint(attachment), GL_TEXTURE_2D, textureOGL->GetGLObject(), 0);
 		OGLCheckError();
+
+		if (attachment >= AttachmentPoint::Color0 && attachment <= AttachmentPoint::Color7)
+		{
+			GLenum buffers[] = { TranslateAttachmentPoint(attachment) };
+			glDrawBuffers(1, buffers);
+			OGLCheckError();
+		}
 	}
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-	// Next time the render target is "bound", check that it is valid.
 	m_bCheckValidity = true;
 }
 
@@ -119,10 +97,65 @@ std::shared_ptr<Texture> RenderTargetOGL::GetTexture(AttachmentPoint attachment)
 
 void RenderTargetOGL::Clear(AttachmentPoint attachment, ClearFlags clearFlags, cvec4 color, float depth, uint8_t stencil)
 {
-	std::shared_ptr<TextureOGL> texture = m_Textures[(uint8_t)attachment];
-	if (texture)
+	GLint currentFB = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFB);
+	assert1(currentFB == m_GLObj);
+
+	uint8 clearFlags8 = (uint8)clearFlags;
+	
+	if (attachment >= AttachmentPoint::Color0 && attachment <= AttachmentPoint::Color7)
 	{
-		texture->Clear(clearFlags, color, depth, stencil);
+		std::shared_ptr<TextureOGL> texture = m_Textures[(uint8)attachment];
+		if (texture == nullptr)
+		{
+			clearFlags8 &= ~((uint8)ClearFlags::Color);
+			return;
+		}
+
+		// Store state of glDrawBuffers
+		GLint prevBuffers[8] = { 0 };
+		for (uint32 i = 0; i <= (uint8_t)AttachmentPoint::Color7; ++i)
+		{
+			glGetIntegerv(GL_DRAW_BUFFER0 + i, &prevBuffers[i]);
+		}
+
+		if (clearFlags8 & (uint8)ClearFlags::Color)
+		{
+			GLenum buffers[] = { TranslateAttachmentPoint(attachment) };
+			glDrawBuffers(1, buffers);
+
+			glClearColor(color.r, color.g, color.b, color.a);
+		}
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Restore state of glDrawBuffers
+		glDrawBuffers(8, (const GLenum *)prevBuffers);
+	}
+	else if (attachment == AttachmentPoint::Depth)
+	{
+		if (clearFlags8 & (uint8)ClearFlags::Depth)
+		{
+			glClearDepth(depth);
+		}
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+	else if (attachment == AttachmentPoint::DepthStencil)
+	{
+		GLbitfield oglClearMask = 0;
+		if (clearFlags8 & (uint8)ClearFlags::Depth)
+		{
+			oglClearMask |= GL_DEPTH_BUFFER_BIT;
+			glClearDepth(depth);
+		}
+		if (clearFlags8 & (uint8)ClearFlags::Stencil)
+		{
+			oglClearMask |= GL_STENCIL_BUFFER_BIT;
+			glClearStencil(stencil);
+		}
+
+		glClear(oglClearMask);
 	}
 }
 
@@ -147,8 +180,8 @@ void RenderTargetOGL::GenerateMipMaps()
 
 void RenderTargetOGL::AttachStructuredBuffer(uint8_t slot, std::shared_ptr<StructuredBuffer> rwBuffer)
 {
-	std::shared_ptr<StructuredBufferOGL> rwbufferDX11 = std::dynamic_pointer_cast<StructuredBufferOGL>(rwBuffer);
-	m_StructuredBuffers[slot] = rwbufferDX11;
+	std::shared_ptr<StructuredBufferOGL> rwbufferOGL = std::dynamic_pointer_cast<StructuredBufferOGL>(rwBuffer);
+	m_StructuredBuffers[slot] = rwbufferOGL;
 
 	// Next time the render target is "bound", check that it is valid.
 	m_bCheckValidity = true;
@@ -160,6 +193,7 @@ std::shared_ptr<StructuredBuffer> RenderTargetOGL::GetStructuredBuffer(uint8_t s
 	{
 		return m_StructuredBuffers[slot];
 	}
+
 	return std::shared_ptr<StructuredBuffer>();
 }
 
@@ -192,58 +226,51 @@ void RenderTargetOGL::Bind()
 		m_bCheckValidity = false;
 	}
 
+	glBindFramebuffer(GL_FRAMEBUFFER, m_GLObj);
+	assert1(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+	
+	GLenum buffers[8] = { };
+	GLsizei buffersCnt = 0;
 	for (uint8_t i = 0; i < 8; i++)
 	{
 		std::shared_ptr<TextureOGL> texture = m_Textures[i];
 		if (texture)
 		{
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, texture->GetGLObject());
+			buffers[i] = TranslateAttachmentPoint((AttachmentPoint)i);
+			buffersCnt++;
 		}
 	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
-	assert1(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+	glDrawBuffers(buffersCnt, buffers);
 }
 
 void RenderTargetOGL::UnBind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
+	assert1(m_RenderDevice->GetDefaultRB() != m_GLObj);
+	assert1(m_RenderDevice->GetDefaultRB() == 0);
 
-	if (m_RenderDevice->GetDefaultRB() == 0)
-	{
-		if (m_RenderDevice->IsDoubleBuffered())
-			glDrawBuffer(GL_BACK_LEFT);
-		else
-			glDrawBuffer(GL_FRONT_LEFT);
-	}
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_GLObj);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
+	glBlitFramebuffer(
+		0, 0, m_Width, m_Height,
+		0, 0, m_Width, m_Height,
+		GL_COLOR_BUFFER_BIT, GL_NEAREST
+	);
+
+	glDrawBuffer(m_RenderDevice->IsDoubleBuffered() ? GL_BACK_LEFT : GL_FRONT_LEFT);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 bool RenderTargetOGL::IsValid() const
 {
-	for (uint8 i = (uint8)AttachmentPoint::Color0; i <= (uint8)AttachmentPoint::Color7; i++)
-	{
-		std::shared_ptr<TextureOGL> texture = m_Textures[i];
-		if (texture)
-		{
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, texture->GetGLObject());
-		}
-	}
-
-
-	// Check if FBO is complete
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBGLObj);
-
+	glBindFramebuffer(GL_FRAMEBUFFER, m_GLObj);
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-	//glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
-
-	switch (status) 
+	switch (status)
 	{
 	case GL_FRAMEBUFFER_COMPLETE:
 		return true;
-
 	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
 		Log::Error("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
 		break;
@@ -265,11 +292,13 @@ bool RenderTargetOGL::IsValid() const
 	case GL_FRAMEBUFFER_UNDEFINED:
 		Log::Error("GL_FRAMEBUFFER_UNDEFINED");
 		break;
-
 	default:
-		Log::Error("GL_FRAMEBUFFER_UNKNOWN!!!");
+		Log::Error("GL_FRAMEBUFFER_UNKNOWN");
 		break;
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());
+
 	return false;
 }
 

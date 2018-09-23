@@ -2,7 +2,7 @@
 
 class ShaderParameterDX11;
 
-class ShaderDX11 : public Shader
+class ShaderDX11 : public Shader, public std::enable_shared_from_this<ShaderDX11>
 {
 public:
 	ShaderDX11(ID3D11Device2* pDevice);

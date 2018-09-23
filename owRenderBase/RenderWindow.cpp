@@ -6,10 +6,11 @@
 // Additional
 #include "Camera.h"
 
-RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync)
+RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight, HWND _hwnd, bool vSync)
 	: m_sWindowName(windowName)
 	, m_iWindowWidth(windowWidth)
 	, m_iWindowHeight(windowHeight)
+	, m_hWindow(_hwnd)
 	, m_vSync(vSync)
 	, m_PreviousMousePosition(0, 0)
 	, m_bInClientRect(false)
@@ -27,21 +28,24 @@ RenderWindow::~RenderWindow()
 	}*/
 }
 
+void RenderWindow::ShowWindow()
+{
+	::ShowWindow(m_hWindow, SW_SHOWDEFAULT);
+	// Make sure its the top-level window.
+	::BringWindowToTop(m_hWindow);
+}
+
+void RenderWindow::HideWindow()
+{
+	::ShowWindow(m_hWindow, SW_HIDE);
+}
 
 void RenderWindow::CloseWindow()
 {
-	// Disconnect events.
-	/*for (Event::ConnectionType& eventConnection : m_EventConnections)
-	{
-		eventConnection.disconnect();
-	}
-	m_EventConnections.clear();*/
+	::DestroyWindow(m_hWindow);
 }
 
-cstring RenderWindow::GetWindowName() const
-{
-	return m_sWindowName;
-}
+
 
 int RenderWindow::GetWindowWidth() const
 {
@@ -56,6 +60,23 @@ int RenderWindow::GetWindowHeight() const
 bool RenderWindow::IsVSync() const
 {
 	return m_vSync;
+}
+
+HWND RenderWindow::GetHWND() const
+{
+	return m_hWindow;
+}
+
+void RenderWindow::SetWindowName(cstring _name)
+{
+	m_sWindowName = _name;
+
+	::SetWindowTextA(m_hWindow, m_sWindowName.c_str());
+}
+
+cstring RenderWindow::GetWindowName() const
+{
+	return m_sWindowName;
 }
 
 void RenderWindow::OnInitialize(EventArgs& e)

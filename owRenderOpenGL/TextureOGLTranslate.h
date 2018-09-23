@@ -14,7 +14,7 @@ struct TextureOGLFormat
 	uint8_t AlphaBits;
 };
 
-TextureOGLFormat FormatsCommonSNORM[] =
+TextureOGLFormat TextureOGLFormatsCommonSNORM[] =
 {
 
 	{ GL_R8_SNORM,		GL_RED,	8, 0, 0, 0},
@@ -26,7 +26,7 @@ TextureOGLFormat FormatsCommonSNORM[] =
 	{ GL_RGBA8_SNORM,	GL_RGBA,8,	8,	8,	8 }
 };
 
-TextureOGLFormat FormatsCommon[] =
+TextureOGLFormat TextureOGLFormatsCommon[] =
 {
 	{ GL_R8,			GL_RED, 8, 0, 0, 0},
 	{ GL_R16,			GL_RED,	16, 0, 0, 0},
@@ -42,7 +42,7 @@ TextureOGLFormat FormatsCommon[] =
 	{ GL_RGBA16,		GL_RGBA,16,	16,	16,	16 }
 };
 
-TextureOGLFormat FormatsFloat[] =
+TextureOGLFormat TextureOGLFormatsFloat[] =
 {
 	{ GL_R16F,			GL_RED, 16, 0, 0, 0},
 	{ GL_RG16F,			GL_RG,	16,	16, 0, 0 },
@@ -55,7 +55,7 @@ TextureOGLFormat FormatsFloat[] =
 	{ GL_RGBA32F,		GL_RGBA,32,	32,	32,	32 }
 };
 
-TextureOGLFormat FormatsInteger[] =
+TextureOGLFormat TextureOGLFormatsInteger[] =
 {
 	{ GL_R8I,			GL_RED,	8, 0, 0, 0 },
 	{ GL_R16I,			GL_RED,	16, 0, 0, 0 },
@@ -71,7 +71,7 @@ TextureOGLFormat FormatsInteger[] =
 	{ GL_RGBA32I,		GL_RGBA,32,	32,	32,	32 }
 };
 
-TextureOGLFormat FormatsUnsignedInteger[] =
+TextureOGLFormat TextureOGLFormatsUnsignedInteger[] =
 {
 	{ GL_R8UI,			GL_RED,	8, 0, 0, 0 },
 	{ GL_R16UI,			GL_RED,	16, 0, 0, 0 },
@@ -154,7 +154,6 @@ static void ReportAndThrowTextureFormatError(const Texture::TextureFormat& forma
 
 	Log::Fatal("%s", ss.str().c_str());
 }
-
 #define ReportTextureFormatError( fmt, msg ) ReportAndThrowTextureFormatError( (fmt), __FILE__, __LINE__, __FUNCTION__, (msg) )
 
 GLenum TranslateTextureInternalFormat(const Texture::TextureFormat& format)
@@ -176,9 +175,7 @@ GLenum TranslateTextureInternalFormat(const Texture::TextureFormat& format)
 				result = GL_R16;
 			}
 			else
-			{
 				ReportTextureFormatError(format, "Unsupported texture format.");
-			}
 			break;
 		case Texture::Type::UnsignedNormalized:
 			if (format.RedBits == 8)
@@ -255,6 +252,7 @@ GLenum TranslateTextureInternalFormat(const Texture::TextureFormat& format)
 			break;
 		}
 		break;
+
 	case Texture::Components::RG:
 		switch (format.Type)
 		{
@@ -353,6 +351,7 @@ GLenum TranslateTextureInternalFormat(const Texture::TextureFormat& format)
 			break;
 		}
 		break;
+
 	case Texture::Components::RGB:
 		switch (format.Type)
 		{
@@ -420,10 +419,9 @@ GLenum TranslateTextureInternalFormat(const Texture::TextureFormat& format)
 				result = GL_RGBA16;
 			}
 			else
-			{
 				ReportTextureFormatError(format, "Unsupported texture format.");
-			}
 			break;
+
 		case Texture::Type::SignedNormalized:
 			if (format.RedBits == 8 && format.GreenBits == 8 && format.BlueBits == 8 && format.AlphaBits == 8)
 			{
@@ -580,30 +578,30 @@ GLenum TranslateTextureInputFormat(const Texture::TextureFormat& format)
 	return result;
 }
 
-/* Type
-GL_UNSIGNED_BYTE,
-GL_BYTE,
-GL_UNSIGNED_SHORT,
-GL_SHORT,
-GL_UNSIGNED_INT,
-GL_INT,
-GL_FLOAT,
-GL_UNSIGNED_BYTE_3_3_2,
-GL_UNSIGNED_BYTE_2_3_3_REV,
-GL_UNSIGNED_SHORT_5_6_5,
-GL_UNSIGNED_SHORT_5_6_5_REV,
-GL_UNSIGNED_SHORT_4_4_4_4,
-GL_UNSIGNED_SHORT_4_4_4_4_REV,
-GL_UNSIGNED_SHORT_5_5_5_1,
-GL_UNSIGNED_SHORT_1_5_5_5_REV,
-GL_UNSIGNED_INT_8_8_8_8,
-GL_UNSIGNED_INT_8_8_8_8_REV,
-GL_UNSIGNED_INT_10_10_10_2,
-GL_UNSIGNED_INT_2_10_10_10_REV
-*/
-
 GLenum TranslateTextureInputType(const Texture::TextureFormat& format)
 {
+	/* Type
+	GL_UNSIGNED_BYTE,
+	GL_BYTE,
+	GL_UNSIGNED_SHORT,
+	GL_SHORT,
+	GL_UNSIGNED_INT,
+	GL_INT,
+	GL_FLOAT,
+	GL_UNSIGNED_BYTE_3_3_2,
+	GL_UNSIGNED_BYTE_2_3_3_REV,
+	GL_UNSIGNED_SHORT_5_6_5,
+	GL_UNSIGNED_SHORT_5_6_5_REV,
+	GL_UNSIGNED_SHORT_4_4_4_4,
+	GL_UNSIGNED_SHORT_4_4_4_4_REV,
+	GL_UNSIGNED_SHORT_5_5_5_1,
+	GL_UNSIGNED_SHORT_1_5_5_5_REV,
+	GL_UNSIGNED_INT_8_8_8_8,
+	GL_UNSIGNED_INT_8_8_8_8_REV,
+	GL_UNSIGNED_INT_10_10_10_2,
+	GL_UNSIGNED_INT_2_10_10_10_REV
+	*/
+
 	GLenum result = 0;
 
 	switch (format.Type)

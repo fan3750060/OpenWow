@@ -36,6 +36,7 @@ protected:
 	{
 		glm::mat4 ModelViewProjection;
 		glm::mat4 ModelView;
+		glm::mat4 Model;
 	};
 
 	void SetRenderEventArgs(RenderEventArgs& e);
@@ -49,8 +50,7 @@ protected:
 	void BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader);
 
 private:
-
-	PerObject * m_PerObjectData;
+	PerObject* m_PerObjectData;
 	std::shared_ptr<ConstantBuffer> m_PerObjectConstantBuffer;
 
 	RenderEventArgs* m_pRenderEventArgs;

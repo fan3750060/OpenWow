@@ -1,13 +1,10 @@
 #include <stdafx.h>
 
-// Additional
+// Include
 #include "ShaderParameterOGL.h"
 
 // General
 #include "ShaderOGL.h"
-
-// Additional
-#include "OpenGL.h"
 
 string RecursionInclude(std::shared_ptr<IFile> f)
 {
@@ -58,7 +55,10 @@ string RecursionInclude(std::shared_ptr<IFile> f)
 // This parameter will be returned if an invalid shader parameter is requested.
 static ShaderParameterOGL gs_InvalidShaderParameter;
 
-GLenum TranslateShaderType(Shader::ShaderType _type)
+// This parameter will be returned if an invalid shader parameter is requested.
+static BufferBinding gs_InvalidBufferBinding;
+
+GLenum GLTranslateShaderType(Shader::ShaderType _type)
 {
 	GLenum result = GL_VERTEX_SHADER;
 	switch (_type)
@@ -88,6 +88,52 @@ GLenum TranslateShaderType(Shader::ShaderType _type)
 	return result;
 }
 
+void GLTranslateAttribType(GLenum _type, GLint _size, GLenum * _newType, GLint * _newSize)
+{
+	/*
+		GL_FLOAT,
+		GL_FLOAT_VEC2, GL_FLOAT_VEC3, GL_FLOAT_VEC4,
+		GL_FLOAT_MAT2, GL_FLOAT_MAT3, GL_FLOAT_MAT4,
+		GL_FLOAT_MAT2x3, GL_FLOAT_MAT2x4,
+		GL_FLOAT_MAT3x2, GL_FLOAT_MAT3x4,
+		GL_FLOAT_MAT4x2, GL_FLOAT_MAT4x3,
+
+		GL_INT,
+		GL_INT_VEC2, GL_INT_VEC3, GL_INT_VEC4,
+
+		GL_UNSIGNED_INT,
+		GL_UNSIGNED_INT_VEC2, GL_UNSIGNED_INT_VEC3, GL_UNSIGNED_INT_VEC4,
+
+		GL_DOUBLE,
+		GL_DOUBLE_VEC2, GL_DOUBLE_VEC3, GL_DOUBLE_VEC4,
+		GL_DOUBLE_MAT2, GL_DOUBLE_MAT3, GL_DOUBLE_MAT4,
+		GL_DOUBLE_MAT2x3, GL_DOUBLE_MAT2x4,
+		GL_DOUBLE_MAT3x2, GL_DOUBLE_MAT3x4,
+		GL_DOUBLE_MAT4x2, or GL_DOUBLE_MAT4x3 
+	*/
+
+	switch (_type)
+	{
+	case GL_FLOAT:
+		(*_newType) = GL_FLOAT;
+		(*_newSize) = _size * 1;
+		break;
+	case GL_FLOAT_VEC2:
+		(*_newType) = GL_FLOAT;
+		(*_newSize) = _size * 2;
+		break;
+	case GL_FLOAT_VEC3:
+		(*_newType) = GL_FLOAT;
+		(*_newSize) = _size * 3;
+		break;
+	case GL_FLOAT_VEC4:
+		(*_newType) = GL_FLOAT;
+		(*_newSize) = _size * 4;
+		break;
+	default:
+		_ASSERT(false);
+	}
+}
 
 ShaderOGL::ShaderOGL()
 	: m_ShaderType(UnknownShaderType)
@@ -112,7 +158,6 @@ bool ShaderOGL::GetShaderProgramLog(uint32 _obj, std::string * _errMsg)
 	}
 
 	GLint status;
-
 	glGetProgramiv(_obj, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE)
 	{
@@ -141,59 +186,57 @@ Shader::ShaderType ShaderOGL::GetType() const
 
 bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
+	m_ShaderType = shaderType;
+
 	std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
-
 	string fileSource = RecursionInclude(file);
+	const GLchar *source = (const GLchar *)fileSource.c_str();
 
-	char* sourceCST = new char[fileSource.size() + 1];
-	strcpy_s(sourceCST, fileSource.size() + 1, fileSource.c_str());
-
-	m_GLShaderProgramm = glCreateShaderProgramv(TranslateShaderType(shaderType), 1, &sourceCST);
-	_ASSERT(m_GLShaderProgramm != 0);
+	m_GLObj = glCreateShaderProgramv(GLTranslateShaderType(shaderType), 1, &source);
+	_ASSERT(m_GLObj != 0);
 	OGLCheckError();
 	std::string errMsg;
-	if (false == GetShaderProgramLog(m_GLShaderProgramm, &errMsg))
+	if (false == GetShaderProgramLog(m_GLObj, &errMsg))
 	{
 		fail2(errMsg.c_str());
-		SafeDeleteArray(sourceCST);
 		return false;
 	}
 
 	GLint attribCount;
-	glGetProgramiv(m_GLShaderProgramm, GL_ACTIVE_ATTRIBUTES, &attribCount);
+	glGetProgramiv(m_GLObj, GL_ACTIVE_ATTRIBUTES, &attribCount);
+
+	GLint attribNameMaxLenght;
+	glGetProgramiv(m_GLObj, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &attribNameMaxLenght);
+
 	for (GLuint j = 0; j < attribCount; ++j)
 	{
 		char name[32];
 		GLsizei length, size;
 		GLenum type;
-		glGetActiveAttrib(m_GLShaderProgramm, j, 32, &length, &size, &type, name);
-		/* Type
-		GL_FLOAT, GL_FLOAT_VEC2, GL_FLOAT_VEC3, GL_FLOAT_VEC4, 
-		GL_FLOAT_MAT2, GL_FLOAT_MAT3, GL_FLOAT_MAT4, 
-		GL_FLOAT_MAT2x3, GL_FLOAT_MAT2x4, 
-		GL_FLOAT_MAT3x2, GL_FLOAT_MAT3x4, 
-		GL_FLOAT_MAT4x2, GL_FLOAT_MAT4x3,
-		GL_INT, GL_INT_VEC2, GL_INT_VEC3, GL_INT_VEC4, 
-		GL_UNSIGNED_INT, GL_UNSIGNED_INT_VEC2, GL_UNSIGNED_INT_VEC3, GL_UNSIGNED_INT_VEC4, 
-		GL_DOUBLE, GL_DOUBLE_VEC2, GL_DOUBLE_VEC3, GL_DOUBLE_VEC4, 
-		GL_DOUBLE_MAT2, GL_DOUBLE_MAT3, GL_DOUBLE_MAT4, 
-		GL_DOUBLE_MAT2x3, GL_DOUBLE_MAT2x4, 
-		GL_DOUBLE_MAT3x2, GL_DOUBLE_MAT3x4, 
-		GL_DOUBLE_MAT4x2, or GL_DOUBLE_MAT4x3*/
+		glGetActiveAttrib(m_GLObj, j, attribNameMaxLenght, &length, &size, &type, name);
+
+		GLenum newType;
+		GLint newSize;
+		GLTranslateAttribType(type, size, &newType, &newSize);
+
 		OGLCheckError();
-		m_InputSemantics.insert(SemanticMap::value_type(BufferBinding(name, j), j));
+		m_InputSemantics.insert(SemanticMap::value_type(BufferBinding(name, j, newType, newSize), j));
 	}
 
 	GLint uniformsCount;
-	glGetProgramiv(m_GLShaderProgramm, GL_ACTIVE_UNIFORMS, &uniformsCount);
+	glGetProgramiv(m_GLObj, GL_ACTIVE_UNIFORMS, &uniformsCount);
+
+	GLint uniformsNameMaxLenght;
+	glGetProgramiv(m_GLObj, GL_ACTIVE_UNIFORM_MAX_LENGTH, &uniformsNameMaxLenght);
+
 	for (GLuint j = 0; j < uniformsCount; ++j)
 	{
 		char name[32];
 		GLsizei length, size;
 		GLenum type;
-		glGetActiveUniform(m_GLShaderProgramm, j, 32, &length, &size, &type, name);
-		// Types https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetActiveUniform.xhtml
+		glGetActiveUniform(m_GLObj, j, uniformsNameMaxLenght, &length, &size, &type, name);
 		OGLCheckError();
+		// Types https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glGetActiveUniform.xhtml
 
 		ShaderParameter::Type parameterType = ShaderParameter::Type::Invalid;
 		switch (type)
@@ -209,17 +252,45 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 			parameterType = ShaderParameter::Type::Buffer;
 			break;
 		default:
-			Log::Warn("Unknown shader parameter [%s] [%s]", name, fileName.c_str());
+			Log::Warn("Unknown shader parameter type [%s] [%s]", name, fileName.c_str());
 			break;
 		}
 
-		// Create an empty shader parameter that should be filled-in by the application.
-		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(name, j, shaderType, parameterType);
+		GLint loc = glGetUniformLocation(m_GLObj, name);
+
+		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(name, loc, shared_from_this(), parameterType);
 		m_ShaderParameters.insert(ParameterMap::value_type(name, shaderParameter));
 	}
 
+	
 
-	SafeDeleteArray(sourceCST);
+	GLint uniformsBlocksCount;
+	glGetProgramiv(m_GLObj, GL_ACTIVE_UNIFORM_BLOCKS, &uniformsBlocksCount);
+
+	GLint uniformsBlocksNameMaxLenght;
+	glGetProgramiv(m_GLObj, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH, &uniformsBlocksNameMaxLenght);
+
+	for (GLuint j = 0; j < uniformsBlocksCount; ++j)
+	{
+		char name[32];
+		GLsizei length;
+
+		//GLint param;
+		// (GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint *params);
+		//glGetActiveUniformBlockiv(m_GLObj, j, GL_UNIFORM_BLOCK_BINDING, &param);
+		//OGLCheckError();
+
+		//glGetActiveUniformBlockiv(m_GLObj, j, GL_UNIFORM_BLOCK_DATA_SIZE, &param);
+		//OGLCheckError();
+
+		// (GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName);
+		glGetActiveUniformBlockName(m_GLObj, j, uniformsBlocksNameMaxLenght, &length, name);
+		OGLCheckError();
+	
+		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(name, j, shared_from_this(), ShaderParameter::Type::Buffer);
+		m_ShaderParameters.insert(ParameterMap::value_type(name, shaderParameter));
+	}
+
 	return true;
 }
 
@@ -231,24 +302,48 @@ ShaderParameter& ShaderOGL::GetShaderParameterByName(cstring name) const
 		return *(iter->second);
 	}
 
+	_ASSERT(false);
 	return gs_InvalidShaderParameter;
 }
 
-bool ShaderOGL::HasSemantic(const BufferBinding& binding) const
+bool ShaderOGL::HasSemantic(cstring binding) const
 {
-	SemanticMap::const_iterator iter = m_InputSemantics.find(binding);
-	return iter != m_InputSemantics.end();
-}
-
-UINT ShaderOGL::GetSlotIDBySemantic(const BufferBinding& binding) const
-{
-	SemanticMap::const_iterator iter = m_InputSemantics.find(binding);
-	if (iter != m_InputSemantics.end())
+	for (auto& it : m_InputSemantics)
 	{
-		return iter->second;
+		if (it.first.Name == binding)
+		{
+			return true;
+		}
 	}
 
-	// Some kind of error code or exception...
+	return false;
+}
+
+const BufferBinding& ShaderOGL::GetSemantic(cstring binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		if (it.first.Name == binding)
+		{
+			return it.first;
+		}
+	}
+
+	_ASSERT(false);
+	return gs_InvalidBufferBinding;
+}
+
+UINT ShaderOGL::GetSlotIDBySemantic(cstring binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		if (it.first.Name == binding)
+		{
+			return it.second;
+		}
+	}
+
+	_ASSERT(false);
 	return (UINT)-1;
 }
 
@@ -258,8 +353,6 @@ void ShaderOGL::Bind()
 	{
 		value.second->Bind();
 	}
-
-	glUseProgram(m_GLShaderProgramm);
 }
 
 void ShaderOGL::UnBind()
@@ -268,8 +361,6 @@ void ShaderOGL::UnBind()
 	{
 		value.second->UnBind();
 	}
-
-	glUseProgram(0);
 }
 
 void ShaderOGL::Dispatch(const glm::uvec3& numGroups)
@@ -279,5 +370,5 @@ void ShaderOGL::Dispatch(const glm::uvec3& numGroups)
 
 uint32 ShaderOGL::GetGLObject()
 {
-	return m_GLShaderProgramm;
+	return m_GLObj;
 }

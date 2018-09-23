@@ -7,8 +7,8 @@
 #include "TextureOGL.h"
 
 // Additional
+#include "ShaderOGL.h"
 #include "TextureOGLTranslate.h"
-#include "OpenGL.h"
 
 #include __PACK_BEGIN
 struct BLPHeader
@@ -28,46 +28,25 @@ struct BLPHeader
 };
 #include __PACK_END
 
-/* Format
-GL_RED, 
-GL_RG, 
-GL_RGB, 
-GL_BGR, 
-GL_RGBA,
-GL_BGRA, 
-GL_RED_INTEGER,
-GL_RG_INTEGER, 
-GL_RGB_INTEGER, 
-GL_BGR_INTEGER, 
-GL_RGBA_INTEGER, 
-GL_BGRA_INTEGER,
-GL_STENCIL_INDEX, 
-GL_DEPTH_COMPONENT, 
-GL_DEPTH_STENCIL.
-*/
-
-
-
-
-
 TextureOGL::TextureOGL(RenderDeviceOGL* _device)
 	: m_TextureWidth(0)
 	, m_TextureHeight(0)
 	, m_NumSlices(0)
 	, m_CPUAccess(CPUAccess::None)
 	, m_bDynamic(false)
-	, m_bUAV(false)
 	, m_bGenerateMipmaps(false)
 	, m_BPP(0)
 	, m_Pitch(0)
 	, m_bIsTransparent(false)
 	, m_bIsDirty(false)
+	, m_TextureType(0)
 {
-
+	glActiveTexture(GL_TEXTURE0);
+	glGenTextures(1, &m_GLObj);
 }
 
 // 2D Texture
-TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
+TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool /*bUAV*/)
 	: m_TextureWidth(width)
 	, m_TextureHeight(height)
 	, m_BPP(0)
@@ -76,6 +55,7 @@ TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height
 	, m_bGenerateMipmaps(false)
 	, m_bIsTransparent(true)
 	, m_bIsDirty(false)
+	, m_TextureType(GL_TEXTURE_2D)
 {
 	m_NumSlices = glm::max<uint16_t>(slices, 1);
 
@@ -87,47 +67,45 @@ TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height
 
 	glGenTextures(1, &m_GLObj);
 	glActiveTexture(GL_TEXTURE0);
+
 	glBindTexture(GL_TEXTURE_2D, m_GLObj);
+	{
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
 
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+		/*float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);*/
 
-	/*float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);*/
+		GLenum internalFormat = TranslateTextureInternalFormat(format);
+		GLenum inputFormat = TranslateTextureInputFormat(format);
+		GLenum inputType = TranslateTextureInputType(format);
 
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, NULL);
+		OGLCheckError();
 
-	GLenum internalFormat = TranslateTextureInternalFormat(format);
-	GLenum inputFormat = TranslateTextureInputFormat(format);
-	GLenum inputType = TranslateTextureInputType(format);
-
-
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, NULL);
-	OGLCheckError();
-
-	// Sampler state
-
+		// Sampler state
+	}
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//glActiveTexture(GL_TEXTURE0);
 }
 
 // CUBE Texture
 TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
 {
 	m_TextureDimension = Texture::Dimension::TextureCube;
-
 	m_TextureWidth = m_TextureHeight = size;
 
 	glGenTextures(1, &m_GLObj);
+
 	glActiveTexture(GL_TEXTURE15);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_GLObj);
 
@@ -140,32 +118,59 @@ TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count, 
 }
 
 TextureOGL::~TextureOGL()
-{}
-
-struct R_TextureFormats
 {
-	enum List
+	if (m_GLObj != 0)
 	{
-		Unknown,
-		RGBA8,
-		DXT1,
-		DXT3,
-		DXT5,
-		RGBA16F,
-		RGBA32F,
-		DEPTH,
-		R32,
-		RG32
-	};
-};
+		glDeleteTextures(1, &m_GLObj);
+		m_GLObj = 0;
+	}
+}
 
 bool TextureOGL::LoadTexture2D(cstring fileName)
 {
+	m_TextureType = GL_TEXTURE_2D;
+	m_TextureWidth = 32;
+	m_TextureHeight = 32;
+	m_bGenerateMipmaps = true;
+
+	glActiveTexture(GL_TEXTURE15);
+	glBindTexture(GL_TEXTURE_2D, m_GLObj);
+
+	GLenum internalFormat = TranslateTextureInternalFormat(m_TextureFormat);
+	GLenum inputFormat = TranslateTextureInputFormat(m_TextureFormat);
+	GLenum inputType = TranslateTextureInputType(m_TextureFormat);
+
+	struct
+	{
+		uint8 r, g, b, a;
+	}  defaultColors[1024];
+	for (uint8 i = 0; i < m_TextureWidth; i++)
+	{
+		for (uint8 j = 0; j < m_TextureHeight; j++)
+		{
+			defaultColors[i * m_TextureWidth + j].r = i * 8;
+			defaultColors[i * m_TextureWidth + j].g = j * 8;
+			defaultColors[i * m_TextureWidth + j].b = ((i + j) % m_TextureWidth) * 8;
+			defaultColors[i * m_TextureWidth + j].a = 255;
+		}
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, defaultColors);
+	OGLCheckError();
+
+	// Sampler state
+
+	GenerateMipMaps();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	return true;
 }
 
 bool TextureOGL::LoadTextureCube(cstring fileName)
 {
+	m_TextureType = GL_TEXTURE_CUBE_MAP;
+
 	return false;
 }
 
@@ -212,14 +217,16 @@ bool TextureOGL::IsTransparent() const
 	return m_bIsTransparent;
 }
 
+// Resize
+
 void TextureOGL::Resize2D(uint16_t width, uint16_t height)
 {
-	throw std::exception("Not implemented!");
+	Log::Error("TextureOGL::Resize2D Not implemented!");
 }
 
 void TextureOGL::ResizeCube(uint16_t size)
 {
-	throw std::exception("Not implemented!");
+	Log::Error("TextureOGL::ResizeCube Not implemented!");
 }
 
 void TextureOGL::Resize(uint16_t width, uint16_t height, uint16_t depth)
@@ -234,16 +241,8 @@ void TextureOGL::Resize(uint16_t width, uint16_t height, uint16_t depth)
 		ResizeCube(width);
 		break;
 	default:
-		Log::Error("Unknown texture dimension.");
-		break;
+		std::exception("Unknown texture dimension.");
 	}
-
-	return;
-}
-
-uint32 TextureOGL::GetGLObject()
-{
-	return m_GLObj;
 }
 
 void TextureOGL::Plot(glm::ivec2 coord, const uint8_t* pixel, size_t size)
@@ -338,7 +337,7 @@ void TextureOGL::Clear(ClearFlags clearFlags, cvec4 color, float depth, uint8_t 
 	}*/
 }
 
-void TextureOGL::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
+void TextureOGL::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	if (m_bIsDirty)
 	{
@@ -365,80 +364,33 @@ void TextureOGL::Bind(uint32_t ID, Shader::ShaderType shaderType, ShaderParamete
 		m_bIsDirty = false;
 	}
 
-	/*ID3D11ShaderResourceView* srv[] = { m_pShaderResourceView };
-	ID3D11UnorderedAccessView* uav[] = { m_pUnorderedAccessView };
+	std::shared_ptr<ShaderOGL> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.lock());
+	_ASSERT(pShader != NULL);
 
-	if (parameterType == ShaderParameter::Type::Texture && m_pShaderResourceView)
+	if (pShader->GetType() != Shader::ShaderType::PixelShader)
 	{
-		switch (shaderType)
-		{
-		case Shader::VertexShader:
-			m_pDeviceContext->VSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::TessellationControlShader:
-			m_pDeviceContext->HSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::TessellationEvaluationShader:
-			m_pDeviceContext->DSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::GeometryShader:
-			m_pDeviceContext->GSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::PixelShader:
-			m_pDeviceContext->PSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::ComputeShader:
-			m_pDeviceContext->CSSetShaderResources(ID, 1, srv);
-			break;
-		}
+		return;
 	}
-	else if (parameterType == ShaderParameter::Type::RWTexture && m_pUnorderedAccessView)
-	{
-		switch (shaderType)
-		{
-		case Shader::ComputeShader:
-			m_pDeviceContext->CSSetUnorderedAccessViews(ID, 1, uav, nullptr);
-			break;
-		}
-	}*/
+
+	glProgramUniform1i(pShader->GetGLObject(), ID, ID);
+
+	glActiveTexture(GL_TEXTURE0 + ID);
+	glBindTexture(m_TextureType, m_GLObj);
 
 }
-void TextureOGL::UnBind(uint32_t ID, Shader::ShaderType shaderType, ShaderParameter::Type parameterType)
-{
-	/*ID3D11ShaderResourceView* srv[] = { nullptr };
-	ID3D11UnorderedAccessView* uav[] = { nullptr };
 
-	if (parameterType == ShaderParameter::Type::Texture)
-	{
-		switch (shaderType)
-		{
-		case Shader::VertexShader:
-			m_pDeviceContext->VSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::TessellationControlShader:
-			m_pDeviceContext->HSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::TessellationEvaluationShader:
-			m_pDeviceContext->DSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::GeometryShader:
-			m_pDeviceContext->GSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::PixelShader:
-			m_pDeviceContext->PSSetShaderResources(ID, 1, srv);
-			break;
-		case Shader::ComputeShader:
-			m_pDeviceContext->CSSetShaderResources(ID, 1, srv);
-			break;
-		}
-	}
-	else if (parameterType == ShaderParameter::Type::RWTexture)
-	{
-		switch (shaderType)
-		{
-		case Shader::ComputeShader:
-			m_pDeviceContext->CSSetUnorderedAccessViews(ID, 1, uav, nullptr);
-			break;
-		}
-	}*/
+void TextureOGL::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
+{
+	std::shared_ptr<ShaderOGL> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.lock());
+	_ASSERT(pShader != NULL);
+
+	glProgramUniform1i(pShader->GetGLObject(), ID, 0);
+
+	glActiveTexture(GL_TEXTURE0 + ID);
+	glBindTexture(m_TextureType, 0);
+}
+
+uint32 TextureOGL::GetGLObject()
+{
+	return m_GLObj;
 }

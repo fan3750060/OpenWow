@@ -3,9 +3,6 @@
 // General
 #include "BlendStateOGL.h"
 
-// Additional
-#include "OpenGL.h"
-
 GLenum TranslateBlendFactor(BlendState::BlendFactor blendFactor)
 {
 	GLenum result = GL_ONE;
@@ -291,7 +288,6 @@ void BlendStateOGL::SetSampleMask(uint32_t sampleMask)
 {
 	m_SampleMask = sampleMask;
 	// No need to set the dirty flag as this value is not used to create the blend state object. It is only used when activating the blend state of the output merger.
-	throw std::exception("Not implemented!");
 }
 
 uint32_t BlendStateOGL::GetSampleMask() const
@@ -330,6 +326,17 @@ void BlendStateOGL::Bind()
 			blendMode.WriteBlue ? GL_TRUE : GL_FALSE, 
 			blendMode.WriteAlpha ? GL_TRUE : GL_FALSE
 		);
+
+		/*if (m_SampleMask != 0)
+		{
+			glEnable(GL_SAMPLE_MASK);
+			glSampleMaski(0, m_SampleMask);
+		}
+		else
+		{
+			glDisable(GL_SAMPLE_MASK);
+		}*/
+
 
 		// Alpha to coverage
 		if (m_bAlphaToCoverageEnabled)

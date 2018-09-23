@@ -9,24 +9,20 @@
 // Additional
 #include "RenderTargetOGL.h"
 #include "TextureOGL.h"
-#include "OpenGL.h"
-
-
 
 RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
-	: RenderWindow(windowName, windowWidth, windowHeight, vSync)
+	: RenderWindow(windowName, windowWidth, windowHeight, hWnd, vSync)
 	, m_bIsMouseTracking(false)
-	, m_hWindow(hWnd)
-	, m_Device(device)
+	, m_RenderDevice(device)
 	, m_bResizePending(false)
 {
 	m_HDC = GetDC(hWnd);
 
-	m_Device->CreateDevice(m_HDC);
-	m_Device->LoadDefaultResources();
+	m_RenderDevice->CreateDevice(m_HDC);
+	m_RenderDevice->LoadDefaultResources();
 
 	// Create a render target for the back buffer and depth/stencil buffers.
-	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetOGL>(m_Device->CreateRenderTarget());
+	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetOGL>(m_RenderDevice->CreateRenderTarget());
 
 	// Create the device and swap chain before the window is shown.
 	UINT windowWidth2 = GetWindowWidth();
@@ -39,9 +35,9 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 	Texture::TextureFormat depthStencilTextureFormat(
 		Texture::Components::Depth,
 		Texture::Type::UnsignedNormalized,
-		0, //m_SampleDesc.Count,
+		1, //m_SampleDesc.Count,
 		0, 0, 0, 0, 24, 0);
-	std::shared_ptr<Texture> depthStencilTexture = m_Device->CreateTexture2D(windowWidth2, windowHeight2, 1, depthStencilTextureFormat);
+	std::shared_ptr<Texture> depthStencilTexture = m_RenderDevice->CreateTexture2D(windowWidth2, windowHeight2, 1, depthStencilTextureFormat);
 
 	// Color buffer (Color0)
 	Texture::TextureFormat colorTextureFormat
@@ -51,7 +47,7 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 		1, //m_SampleDesc.Count,
 		8, 8, 8, 8, 0, 0
 	);
-	std::shared_ptr<Texture> colorTexture = m_Device->CreateTexture2D(windowWidth2, windowHeight2, 1, colorTextureFormat);
+	std::shared_ptr<Texture> colorTexture = m_RenderDevice->CreateTexture2D(windowWidth2, windowHeight2, 1, colorTextureFormat);
 
 	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Color0, colorTexture);
 	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Depth, depthStencilTexture);
@@ -64,25 +60,6 @@ RenderWindowOGL::~RenderWindowOGL()
 		// Apparently an exception is thrown when you release the swap chain if you don't do this.
 		m_pSwapChain->SetFullscreenState(false, NULL);
 	}*/
-}
-
-void RenderWindowOGL::ShowWindow()
-{
-	::ShowWindow(m_hWindow, SW_SHOWDEFAULT);
-	// Make sure its the top-level window.
-	::BringWindowToTop(m_hWindow);
-}
-
-void RenderWindowOGL::HideWindow()
-{
-	::ShowWindow(m_hWindow, SW_HIDE);
-}
-
-void RenderWindowOGL::CloseWindow()
-{
-	base::CloseWindow();
-
-	::DestroyWindow(m_hWindow);
 }
 
 void RenderWindowOGL::ResizeSwapChainBuffers(uint32_t width, uint32_t height)
@@ -106,10 +83,10 @@ void RenderWindowOGL::ResizeSwapChainBuffers(uint32_t width, uint32_t height)
 	if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&m_pBackBuffer)))
 	{
 		Log::Error("Failed to get back buffer pointer from swap chain.");
-	}
+	}*/
 
 	// Resize the render target.
-	m_RenderTarget->Resize(width, height);*/
+	m_RenderTarget->Resize(width, height);
 }
 
 void RenderWindowOGL::Present()
@@ -117,7 +94,7 @@ void RenderWindowOGL::Present()
 	// The application can leave the render targets unbound.
 	// Bind the render window's default render target before 
 	// drawing AntTweakBar.
-	m_RenderTarget->Bind();
+	//m_RenderTarget->Bind();
 
 	// Draw the AntTweakBar
 	//TwDraw();
@@ -139,7 +116,6 @@ void RenderWindowOGL::Present()
 		//m_pSwapChain->Present(0, 0);
 		SwapBuffers(m_HDC);
 	}
-
 }
 
 std::shared_ptr<RenderTarget> RenderWindowOGL::GetRenderTarget()
@@ -153,13 +129,14 @@ void RenderWindowOGL::OnPreRender(RenderEventArgs& e)
 	GLint defaultRB = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultRB);
 	OGLCheckError();
-	m_Device->SetDefaultRB(defaultRB);
+	m_RenderDevice->SetDefaultRB(defaultRB);
 
 	if (m_bResizePending)
 	{
 		ResizeSwapChainBuffers(GetWindowWidth(), GetWindowHeight());
 		m_bResizePending = false;
 	}
+
 	m_RenderTarget->Bind();
 
 	base::OnPreRender(e);
@@ -177,7 +154,7 @@ void RenderWindowOGL::OnMouseMoved(MouseMotionEventArgs& e)
 		TRACKMOUSEEVENT tme;
 		tme.cbSize = sizeof(TRACKMOUSEEVENT);
 		tme.dwFlags = TME_LEAVE;
-		tme.hwndTrack = m_hWindow;
+		tme.hwndTrack = GetHWND();
 		if (TrackMouseEvent(&tme))
 		{
 			m_bIsMouseTracking = true;
