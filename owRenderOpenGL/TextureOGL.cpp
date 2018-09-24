@@ -28,10 +28,25 @@ struct BLPHeader
 };
 #include __PACK_END
 
+
+GLsizei GLTextureCompressedSize(GLenum _format, int _width, int _height, int _depth)
+{
+	switch (_format)
+	{
+	case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+		return std::max(_width / 4, 1) * std::max(_height / 4, 1) * _depth * 8;
+	case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
+	case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
+		return std::max(_width / 4, 1) * std::max(_height / 4, 1) * _depth * 16;
+	default:
+		_ASSERT(false);
+	}
+}
+
 TextureOGL::TextureOGL(RenderDeviceOGL* _device)
 	: m_TextureWidth(0)
 	, m_TextureHeight(0)
-	, m_NumSlices(0)
+	, m_TextureDepth(0)
 	, m_CPUAccess(CPUAccess::None)
 	, m_bDynamic(false)
 	, m_bGenerateMipmaps(false)
@@ -46,7 +61,7 @@ TextureOGL::TextureOGL(RenderDeviceOGL* _device)
 }
 
 // 2D Texture
-TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool /*bUAV*/)
+TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess)
 	: m_TextureWidth(width)
 	, m_TextureHeight(height)
 	, m_BPP(0)
@@ -57,10 +72,10 @@ TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height
 	, m_bIsDirty(false)
 	, m_TextureType(GL_TEXTURE_2D)
 {
-	m_NumSlices = glm::max<uint16_t>(slices, 1);
+	m_TextureDepth = glm::max<uint16_t>(slices, 1);
 
 	m_TextureDimension = Dimension::Texture2D;
-	if (m_NumSlices > 1)
+	if (m_TextureDepth > 1)
 	{
 		m_TextureDimension = Dimension::Texture2DArray;
 	}
@@ -99,7 +114,7 @@ TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height
 }
 
 // CUBE Texture
-TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV)
+TextureOGL::TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count, const TextureFormat& format, CPUAccess cpuAccess)
 {
 	m_TextureDimension = Texture::Dimension::TextureCube;
 	m_TextureWidth = m_TextureHeight = size;
@@ -128,39 +143,152 @@ TextureOGL::~TextureOGL()
 
 bool TextureOGL::LoadTexture2D(cstring fileName)
 {
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
+
+	// Read data
+	BLPHeader header;
+	f->readBytes(&header, sizeof(BLPHeader));
+
+	if (header.width & (header.width - 1)) return false;
+	if (header.height & (header.height - 1)) return false;
+
+	assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
+	assert1(header.type == 1);
+	
 	m_TextureType = GL_TEXTURE_2D;
-	m_TextureWidth = 32;
-	m_TextureHeight = 32;
-	m_bGenerateMipmaps = true;
+	m_TextureWidth = header.width;
+	m_TextureHeight = header.height;
+	m_TextureDepth = 1;
+	m_bGenerateMipmaps = false;
 
 	glActiveTexture(GL_TEXTURE15);
 	glBindTexture(GL_TEXTURE_2D, m_GLObj);
 
-	GLenum internalFormat = TranslateTextureInternalFormat(m_TextureFormat);
-	GLenum inputFormat = TranslateTextureInputFormat(m_TextureFormat);
-	GLenum inputType = TranslateTextureInputType(m_TextureFormat);
+	uint8 mipmax = header.has_mips ? 16 : 1;
+	switch (header.compression)
+	{
+	case 1:
+	{
+		GLenum internalFormat = GL_RGBA8;
+		GLenum inputFormat = GL_RGBA;
+		GLenum inputType = GL_UNSIGNED_BYTE;
 
-	struct
-	{
-		uint8 r, g, b, a;
-	}  defaultColors[1024];
-	for (uint8 i = 0; i < m_TextureWidth; i++)
-	{
-		for (uint8 j = 0; j < m_TextureHeight; j++)
+		unsigned int pal[256];
+		f->readBytes(pal, 1024);
+
+		unsigned char* buf = new unsigned char[header.mipSizes[0]];
+		unsigned int* buf2 = new unsigned int[header.width * header.height];
+		unsigned int* p;
+		unsigned char* c, *a;
+
+		//bool hasalpha = (header.alpha_depth != 0);
+		//_texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
+
+		for (int i = 0; i < mipmax; i++)
 		{
-			defaultColors[i * m_TextureWidth + j].r = i * 8;
-			defaultColors[i * m_TextureWidth + j].g = j * 8;
-			defaultColors[i * m_TextureWidth + j].b = ((i + j) % m_TextureWidth) * 8;
-			defaultColors[i * m_TextureWidth + j].a = 255;
+			if (header.mipOffsets[i] && header.mipSizes[i])
+			{
+				f->seek(header.mipOffsets[i]);
+				f->readBytes(buf, header.mipSizes[i]);
+
+				int cnt = 0;
+				p = buf2;
+				c = buf;
+				a = buf + header.width * header.height;
+				for (uint32 y = 0; y < header.height; y++)
+				{
+					for (uint32 x = 0; x < header.width; x++)
+					{
+						unsigned int k = pal[*c++];
+						k = ((k & 0x00FF0000) >> 16) | ((k & 0x0000FF00)) | ((k & 0x000000FF) << 16);
+						int alpha;
+
+						if (header.alpha_depth == 8)
+						{
+							alpha = (*a++);
+						}
+						else if (header.alpha_depth == 1)
+						{
+							alpha = (*a & (1 << cnt++)) ? 0xff : 0;
+							if (cnt == 8)
+							{
+								cnt = 0;
+								a++;
+							}
+						}
+						else if (header.alpha_depth == 0)
+						{
+							alpha = 0xff;
+						}
+
+
+						k |= alpha << 24;
+						*p++ = k;
+					}
+				}
+
+				glTexImage2D(GL_TEXTURE_2D, i, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, buf);
+				OGLCheckError();
+			}
+			else
+			{
+				break;
+			}
 		}
+
+		delete[] buf2;
+		delete[] buf;
 	}
+	break;
+	case 2:
+	{
+		GLenum internalFormat;
+		GLenum inputFormat = GL_RGBA;
+		GLenum inputType = GL_UNSIGNED_BYTE;
 
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, defaultColors);
-	OGLCheckError();
+		if (header.alpha_type == 0)
+		{
+			internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+		}
+		else if (header.alpha_type == 1)
+		{
+			internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		}
+		else if (header.alpha_type == 7)
+		{
+			internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		}
+		else
+		{
+			_ASSERT(false);
+		}
 
-	// Sampler state
+		//_texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
 
-	GenerateMipMaps();
+		uint8* buf = new uint8[header.mipSizes[0]];
+		for (uint8 i = 0; i < mipmax; i++)
+		{
+			if (header.mipOffsets[i])
+			{
+				assert1(header.mipSizes[i] > 0);
+
+				f->seek(header.mipOffsets[i]);
+				f->readBytes(buf, header.mipSizes[i]);
+
+				uint16 width = std::max(m_TextureWidth >> i, 1), height = std::max(m_TextureHeight >> i, 1);
+				glCompressedTexImage2D(GL_TEXTURE_2D, i, internalFormat, width, height, 0, GLTextureCompressedSize(internalFormat, width, height, m_TextureDepth), buf);
+				OGLCheckError();
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		delete[] buf;
+	}
+	break;
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -204,7 +332,7 @@ uint16_t TextureOGL::GetHeight() const
 
 uint16_t TextureOGL::GetDepth() const
 {
-	return m_NumSlices;
+	return m_TextureDepth;
 }
 
 uint8_t TextureOGL::GetBPP() const

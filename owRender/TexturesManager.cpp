@@ -26,11 +26,6 @@ struct BLPHeader
 
 //
 
-struct __RGBA
-{
-    uint8 r, g, b, a;
-};
-
 TexturesManager::TexturesManager(IOpenGLAdapter* _adapter, RenderDevice* _RenderDevice)	: 
 	m_Adapter(_adapter),
 	m_RenderDevice(_RenderDevice)

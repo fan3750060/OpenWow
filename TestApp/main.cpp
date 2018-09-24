@@ -121,6 +121,10 @@ int main(int argumentCount, char* arguments[])
 		CMPQArchiveManager mpqArchiveManager;
 		CFilesManager filesManager;
 
+
+
+
+
 		Application app;
 
 		g_pRenderWindow = app.CreateRenderWindow("Name", 1024, 768);
@@ -145,30 +149,49 @@ int main(int argumentCount, char* arguments[])
 
 		RenderDevice* renderDevice = app.GetRenderDevice();
 
-		std::shared_ptr<Texture> tt = renderDevice->CreateTexture("Textures\\Minimap\\00e1cf872b32bc88dd2a0e2f47b72890.blp");
+
+		renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
+		renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
+		renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
+		renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
+
+		renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
+		renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
+		renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
+		//renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
+		
+
+		std::shared_ptr<Texture> tt = renderDevice->CreateTexture2D("TILESET\\Barrens\\BarrensBaseBush.blp");
 		
 		g_pScene = std::make_shared<SceneBase>();
 
-		std::shared_ptr<Mesh> mesh = renderDevice->CreateSphere(5.0f);
-		mesh->GetMaterial()->SetTexture(Material::TextureType::Normal, tt);
+		std::shared_ptr<Mesh> mesh1 = renderDevice->CreateSphere();
+		mesh1->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
 
-		std::shared_ptr<Mesh> mesh2 = renderDevice->CreatePlane(5.0f);
-		mesh2->GetMaterial()->SetTexture(Material::TextureType::Normal, tt);
+		std::shared_ptr<Mesh> mesh2 = renderDevice->CreatePlane();
+		mesh2->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
 
-		std::shared_ptr<Mesh> mesh3 = renderDevice->CreateCube(5.0f);
-		mesh3->GetMaterial()->SetTexture(Material::TextureType::Normal, tt);
+		std::shared_ptr<Mesh> mesh3 = renderDevice->CreateCube();
+		mesh3->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
 
-
-		std::shared_ptr<SceneNode> n0 = g_pScene->CreateSceneNode();
-		n0->SetLocalTransform(glm::scale(vec3(1.0f)));
-		n0->AddMesh(mesh);
+		std::shared_ptr<Mesh> mesh4 = renderDevice->CreateCone();
+		mesh4->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
 
 		std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
-		n1->SetLocalTransform(glm::scale(vec3(5.0f)));
-		n1->AddMesh(mesh2);
+		n1->SetLocalTransform(glm::translate(vec3(-10.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n1->AddMesh(mesh1);
 
-		//std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
-		//n2->AddMesh(mesh3);
+		std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
+		n2->SetLocalTransform(glm::translate(vec3(-5.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n2->AddMesh(mesh2);
+
+		std::shared_ptr<SceneNode> n3 = g_pScene->CreateSceneNode();
+		n3->SetLocalTransform(glm::translate(vec3(0.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n3->AddMesh(mesh3);
+
+		std::shared_ptr<SceneNode> n4 = g_pScene->CreateSceneNode();
+		n4->SetLocalTransform(glm::translate(vec3(5.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n4->AddMesh(mesh4);
 
 		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
@@ -182,21 +205,24 @@ int main(int argumentCount, char* arguments[])
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		// SHADERS
+#ifdef  IS_DX11
+		std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
+		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
+		g_pPixelShader = renderDevice->CreateShader();
+		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
+#else
 		std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
 		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_OGL/Debug/Debug.vs", Shader::ShaderMacros(), "VS_main", "latest");
 		g_pPixelShader = renderDevice->CreateShader();
 		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_OGL/Debug/Debug.fs", Shader::ShaderMacros(), "PS_main", "latest");
-
-		/*std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
-		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
-		g_pPixelShader = renderDevice->CreateShader();
-		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "latest");*/
+#endif
 
 		// SAMPLER
 
 		// Create samplers
 		g_LinearRepeatSampler = renderDevice->CreateSamplerState();
 		g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+		g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
 
 		g_LinearClampSampler = renderDevice->CreateSamplerState();
 		g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
@@ -254,8 +280,8 @@ int main(int argumentCount, char* arguments[])
 
 void OnUpdate(UpdateEventArgs& e)
 {
-	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 3 : 2;
-	float rotateMultiplier = (g_CameraMovement.RotateFaster) ? 3 : 2;
+	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 5 : 2;
+	float rotateMultiplier = (g_CameraMovement.RotateFaster) ? 5 : 2;
 
 	g_Camera.TranslateX((g_CameraMovement.Right - g_CameraMovement.Left) * e.ElapsedTime * moveMultiplier);
 	g_Camera.TranslateY((g_CameraMovement.Up - g_CameraMovement.Down) * e.ElapsedTime * moveMultiplier);
@@ -268,7 +294,11 @@ void OnPreRender(RenderEventArgs& e)
 {
 	g_pFrameQuery->Begin(e.FrameCounter);
 
-	g_pPixelShader->GetShaderParameterByName("NormalTexture").Set(g_LinearRepeatSampler);
+#ifdef  IS_DX11
+	g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
+#else
+	g_pPixelShader->GetShaderParameterByName("DiffuseTexture").Set(g_LinearRepeatSampler);
+#endif
 }
 
 void OnRender(RenderEventArgs& e)
@@ -308,7 +338,11 @@ void OnPostRender(RenderEventArgs& e)
 	if (frameResult.IsValid)
 	{
 		// Frame time in milliseconds
+#ifdef  IS_DX11
+		g_FrameTime = frameResult.ElapsedTime * 1000.0;
+#else
 		g_FrameTime = frameResult.ElapsedTime / 1000000.0;
+#endif
 		g_pRenderWindow->SetWindowName(std::to_string(g_FrameTime));
 	}
 
@@ -370,6 +404,11 @@ void OnKeyPressed(KeyEventArgs& e)
 		g_CameraMovement.Up = 1.0f;
 	}
 	break;
+	case KeyCode::ShiftKey:
+	{
+		g_CameraMovement.TranslateFaster = true;
+		g_CameraMovement.RotateFaster = true;
+	}
 	}
 
 }

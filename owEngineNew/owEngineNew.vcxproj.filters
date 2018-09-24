@@ -16,6 +16,9 @@
     <Filter Include="Passes\Base">
       <UniqueIdentifier>{d276b478-70d8-4918-a392-4493565fde9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TextureLoaders">
+      <UniqueIdentifier>{df5d4a0c-9523-4190-a4c5-a2d7dac88eaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -90,6 +93,12 @@
     </ClCompile>
     <ClCompile Include="Passes\BasePass.cpp">
       <Filter>Passes\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoadersStorage.cpp">
+      <Filter>TextureLoaders</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>TextureLoaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +186,12 @@
     </ClInclude>
     <ClInclude Include="Passes\RenderPass.h">
       <Filter>Passes\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoadersStorage.h">
+      <Filter>TextureLoaders</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>TextureLoaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

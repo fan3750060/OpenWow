@@ -28,20 +28,11 @@ public:
 
 	virtual std::shared_ptr<Shader> CreateShader();
 	virtual void DestroyShader(std::shared_ptr<Shader> shader);
-
-	virtual std::shared_ptr<Mesh> CreatePlane(float size, cvec3 N = vec3(0, 1, 0));
-	virtual std::shared_ptr<Mesh> CreateScreenQuad(float left = -1.0f, float right = 1.0f, float bottom = -1.0f, float top = 1.0f, float z = 0.0f);
-	virtual std::shared_ptr<Mesh> CreateSphere(float radius, float tesselation = 4);
-	virtual std::shared_ptr<Mesh> CreateCube(float size);
-	virtual std::shared_ptr<Mesh> CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis = vec3(0, 1, 0));
-	virtual std::shared_ptr<Mesh> CreateCone(float baseRadius, float height);
-	virtual std::shared_ptr<Mesh> CreateArrow(cvec3 tail = vec3(0, 0, 0), cvec3 head = vec3(0, 0, 1), float radius = 0.05f);
-	virtual std::shared_ptr<Mesh> CreateAxis(float radius = 0.05f, float length = 0.5f);
 	
 	virtual std::shared_ptr<Mesh> CreateMesh();
 	virtual void DestroyMesh(std::shared_ptr<Mesh> mesh);
 
-	virtual std::shared_ptr<Texture> CreateTexture(cstring fileName);
+	virtual std::shared_ptr<Texture> CreateTexture2D(cstring fileName);
 	virtual std::shared_ptr<Texture> CreateTextureCube(cstring fileName);
 
 	virtual std::shared_ptr<Texture> CreateTexture2D(uint16_t width, uint16_t height, uint16_t slices = 1, const Texture::TextureFormat& format = Texture::TextureFormat(), CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false);

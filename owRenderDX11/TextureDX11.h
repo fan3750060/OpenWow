@@ -123,19 +123,6 @@ protected:
 	virtual void Resize2D(uint16_t width, uint16_t height);
 	virtual void ResizeCube(uint16_t size);
 
-
-	DXGI_FORMAT TranslateFormat(const TextureFormat& format);
-
-	DXGI_FORMAT GetTextureFormat(DXGI_FORMAT format);
-	DXGI_FORMAT GetDSVFormat(DXGI_FORMAT format);
-	DXGI_FORMAT GetSRVFormat(DXGI_FORMAT format);
-	DXGI_FORMAT GetRTVFormat(DXGI_FORMAT format);
-	DXGI_FORMAT GetUAVFormat(DXGI_FORMAT format);
-
-	uint8_t GetBPP(DXGI_FORMAT format);
-
-	TextureFormat TranslateFormat(DXGI_FORMAT format, uint8_t numSamples);
-
 	// Try to choose the best multi-sampling quality level that is supported for the given format.
 	DXGI_SAMPLE_DESC GetSupportedSampleCount(DXGI_FORMAT format, uint8_t numSamples);
 
@@ -160,13 +147,10 @@ private:
 
 	// 1D, 2D, 3D, or Cube
 	Dimension m_TextureDimension;
-
 	uint16_t m_TextureWidth;
 	uint16_t m_TextureHeight;
-
 	// For CUBE and 3D textures.
 	uint16_t m_NumSlices;
-
 	// The requested format for the texture type.
 	TextureFormat m_TextureFormat;
 
@@ -192,8 +176,8 @@ private:
 	DXGI_SAMPLE_DESC m_SampleDesc;
 	// TRUE if mipmaps are supported on the given texture type.
 	bool m_bGenerateMipmaps;
-
-	uint8_t m_BPP; // Bits-per pixel
+	// Bits-per pixel
+	uint8_t m_BPP; 
 
 	// Number of bytes to next scanline.
 	uint16_t m_Pitch;

@@ -3,7 +3,21 @@
 // General
 #include "SamplerStateOGL.h"
 
-GLenum GLTranslateMinMapFilter(SamplerStateOGL::MinFilter _minFilter, SamplerStateOGL::MipFilter _mipFilter)
+GLenum GLTranslateMinFilter(SamplerStateOGL::MinFilter _minFilter)
+{
+	if (_minFilter == SamplerStateOGL::MinFilter::MinLinear)
+	{
+		return GL_LINEAR;
+	}
+	else if (_minFilter == SamplerStateOGL::MinFilter::MinNearest)
+	{
+		return GL_NEAREST;
+	}
+
+	std::exception("Invalid sampler GLTranslateMinFilter modes.");
+}
+
+GLenum GLTranslateMinMipFilter(SamplerStateOGL::MinFilter _minFilter, SamplerStateOGL::MipFilter _mipFilter)
 {
 	if (_minFilter == SamplerStateOGL::MinFilter::MinLinear && _mipFilter == SamplerStateOGL::MipFilter::MipLinear)
 	{
@@ -245,7 +259,8 @@ void SamplerStateOGL::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderPara
 {
 	if (m_bIsDirty)
 	{
-		glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_FILTER, GLTranslateMinMapFilter(m_MinFilter, m_MipFilter));
+		glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_FILTER, GLTranslateMinFilter(m_MinFilter));
+		//glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_FILTER, GLTranslateMinMipFilter(m_MinFilter, m_MipFilter));
 		glSamplerParameteri(m_GLObj, GL_TEXTURE_MAG_FILTER, GLTranslateMagFilter(m_MagFilter));
 
 		glSamplerParameteri(m_GLObj, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_AnisotropicFiltering);

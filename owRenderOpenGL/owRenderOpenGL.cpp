@@ -9,13 +9,13 @@
 
 CBaseManager* _BaseManager = nullptr;
 
-RenderDevice* CreateRenderDeviceOpenGL(CBaseManager* _baseManager)
+RenderDevice* CreateRenderDeviceOGL(CBaseManager* _baseManager)
 {
 	_BaseManager = _baseManager;
 	return new RenderDeviceOGL();
 }
 
-RenderWindow* CreateRenderWindowOpenGL(HWND hWnd, RenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
+RenderWindow* CreateRenderWindowOGL(HWND hWnd, RenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
 	RenderDeviceOGL* pDevice = dynamic_cast<RenderDeviceOGL*>(device);
 	_ASSERT(pDevice != NULL);

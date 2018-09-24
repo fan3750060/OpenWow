@@ -51,8 +51,11 @@ Application::Application()
 		fail1("Failed to register the render window class.");
 	}
 
-	// Create Render device.
-	m_pRenderDevice = CreateRenderDeviceOpenGL(_BaseManager);
+#ifdef  IS_DX11
+	m_pRenderDevice = CreateRenderDeviceDX11(_BaseManager);
+#else
+	m_pRenderDevice = CreateRenderDeviceOGL(_BaseManager);
+#endif
 
 	gs_pApplicationInstance = this;
 }
@@ -114,7 +117,12 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 		fail1("Failed to create render window.");
 	}
 
-	m_Windows = CreateRenderWindowOpenGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+#ifdef  IS_DX11
+	m_Windows = CreateRenderWindowDX11(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+#else
+	m_Windows = CreateRenderWindowOGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+#endif
+
 	gs_hWindow = hWindow;
 	gs_WindowHandle = m_Windows;
 
@@ -132,7 +140,7 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 
 RenderDevice* Application::GetRenderDevice()
 {
-	assert(m_pRenderDevice);
+	_ASSERT(m_pRenderDevice);
 	return m_pRenderDevice;
 }
 

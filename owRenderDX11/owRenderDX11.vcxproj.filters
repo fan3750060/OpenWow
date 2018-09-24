@@ -88,6 +88,7 @@
     <ClInclude Include="SamplerStateDX11.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
+    <ClInclude Include="TextureDX11Translate.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

@@ -133,6 +133,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StructuredBufferDX11.h" />
     <ClInclude Include="TextureDX11.h" />
+    <ClInclude Include="TextureDX11Translate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

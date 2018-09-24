@@ -13,10 +13,10 @@ public:
 	TextureOGL(RenderDeviceOGL* _device);
 
 	// 2D Texture
-	TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
+	TextureOGL(RenderDeviceOGL* _device, uint16_t width, uint16_t height, uint16_t slices, const TextureFormat& format, CPUAccess cpuAccess);
 
 	// Cube Texture
-	TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count,                    const TextureFormat& format, CPUAccess cpuAccess, bool bUAV = false);
+	TextureOGL(RenderDeviceOGL* _device, uint16_t size, uint16_t count,                    const TextureFormat& format, CPUAccess cpuAccess);
 
 	virtual ~TextureOGL();
 
@@ -110,13 +110,13 @@ private:
 private:
 	// 2D or Cube
 	Dimension m_TextureDimension;
-
 	uint16_t m_TextureWidth;
 	uint16_t m_TextureHeight;
-	uint16_t m_NumSlices; // For CUBE
-	uint8_t m_BPP; // Bits-per pixel
-	bool     m_bIsTransparent;
-
+	// For CUBE textures.
+	uint16_t m_TextureDepth;
+	// Bits-per pixel
+	uint8_t m_BPP;
+	bool    m_bIsTransparent;
 	// The requested format for the texture type.
 	TextureFormat m_TextureFormat;
 

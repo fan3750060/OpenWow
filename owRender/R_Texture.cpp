@@ -176,7 +176,7 @@ void R_Texture::uploadTextureData(int _slice, int _mipLevel, const void* _pixels
 		if (compressed)
 			glCompressedTexImage2D(target, _mipLevel, m_GLFmt, width, height, 0, calcTextureSize(m_Format, width, height, 1), _pixels);
 		else
-			glTexImage2D(target, _mipLevel, m_GLFmt, width, height, 0, inputFormat, inputType, _pixels);
+			glTexImage2D(          target, _mipLevel, m_GLFmt, width, height, 0, inputFormat, inputType,                      _pixels);
 	}
 	else if (m_Type == textureTypes[R_TextureTypes::Tex3D])
 	{
