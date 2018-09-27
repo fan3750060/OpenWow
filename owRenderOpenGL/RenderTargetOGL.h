@@ -28,7 +28,7 @@ public:
 	virtual bool IsValid() const;
 
 private:
-	uint32 m_GLObj;
+	GLuint m_GLObj;
 
 private:
 	typedef std::vector< std::shared_ptr<TextureOGL> > TextureList;

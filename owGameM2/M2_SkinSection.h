@@ -25,7 +25,7 @@ private:
 	const uint16			m_Index;
 	const SM2_SkinSection	m_Proto;
 
-	SharedGeomPtr __geom;
+	SharedMeshPtr __geom;
 
 private: // PARENT
 	M2* m_ParentM2;

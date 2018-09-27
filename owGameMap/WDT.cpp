@@ -6,9 +6,11 @@
 // General
 #include "WDT.h"
 
-WDT::WDT(MapController* _mapController) :
+WDT::WDT(std::weak_ptr<MapController> _mapController) :
 	m_IsTileBased(false),
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	m_GlobalWMO(nullptr),
+#endif
 	m_MapController(_mapController)
 {}
 
@@ -16,19 +18,24 @@ WDT::~WDT()
 {
 }
 
-void WDT::CreateInsances(SceneNode* _parent)
+void WDT::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
 	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
 	if (!m_GlobalWMOName.empty())
 	{
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
 		m_GlobalWMO = make_shared<ADT_WMO_Instance>(_parent, wmo, m_GlobalWMOPlacementInfo);
+#endif
 	}
 }
 
 void WDT::Load()
 {
-	string fileName = m_MapController->getFilenameT() + ".wdt";
+	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	_ASSERT(mapController != NULL);
+
+	string fileName = mapController->getFilenameT() + ".wdt";
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
@@ -55,7 +62,7 @@ void WDT::Load()
 		{
 			uint32 version;
 			f->readBytes(&version, 4);
-			assert1(version == 18);
+			_ASSERT(version == 18);
 		}
 		else if (strcmp(fourcc, "MPHD") == 0)
 		{
@@ -89,8 +96,8 @@ void WDT::Load()
 		}
 		else if (strcmp(fourcc, "MODF") == 0)
 		{
-			assert1(m_Flag.Flag_GlobalWMO);
-			assert1((size / sizeof(ADT_MODF)) == 1);
+			_ASSERT(m_Flag.Flag_GlobalWMO);
+			_ASSERT((size / sizeof(ADT_MODF)) == 1);
 			f->readBytes(&m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
 		}
 		else
@@ -101,5 +108,5 @@ void WDT::Load()
 		f->seek(nextpos);
 	}
 
-	assert1(m_IsTileBased || m_GlobalWMOName.size() > 0);
+	_ASSERT(m_IsTileBased || m_GlobalWMOName.size() > 0);
 }

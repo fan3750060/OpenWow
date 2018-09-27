@@ -75,7 +75,7 @@ public:
     }
     inline void SetBones(vector<mat4>& _bones)
     {
-		assert1(_bones.size() > 0);
+		_ASSERT(_bones.size() > 0);
         m_Shader->setShaderConst(gBones, CONST_FLOAT44, _bones.data(), static_cast<uint32>(_bones.size()));
     }
 	inline void SetBonesStartIndex(int _index)

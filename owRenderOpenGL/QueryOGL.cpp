@@ -16,7 +16,7 @@ GLenum GLTranslateQueryType(Query::QueryType _type)
 #ifdef _DEBUG
 		return GL_ANY_SAMPLES_PASSED;
 #else
-		return GL_ANY_SAMPLES_PASSED_CONSERVATIVE
+		return GL_ANY_SAMPLES_PASSED_CONSERVATIVE;
 #endif
 	case Query::QueryType::CountPrimitives:
 		return GL_PRIMITIVES_GENERATED;

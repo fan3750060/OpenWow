@@ -40,10 +40,10 @@ void Character::InitFromTemplate(const CharacterTemplate& b)
 void Character::InitFromDisplayInfo(uint32 _id)
 {
 	const DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
-	assert1(rec != nullptr);
+	_ASSERT(rec != nullptr);
 
 	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
-	assert1(humanoidRecExtra != nullptr);
+	_ASSERT(humanoidRecExtra != nullptr);
 
 	// 1. Template
 	{
@@ -104,10 +104,10 @@ void Character::InitFromDisplayInfo(uint32 _id)
 void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender::List _gender)
 {
 	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
-	assert1(rec != nullptr);
+	_ASSERT(rec != nullptr);
 
 	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
-	assert1(humanoidRecExtra == nullptr);
+	_ASSERT(humanoidRecExtra == nullptr);
 
 	// 1. Template
 	{
@@ -166,7 +166,7 @@ void Character::CreateCharacterModel()
 	string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
 
 	SmartM2Ptr model = GetManager<IM2Manager>()->Add(fullModelName);
-	assert1(model != nullptr);
+	_ASSERT(model != nullptr);
 
 	setM2(model);
 }
@@ -223,7 +223,7 @@ void Character::RefreshTextures(SharedTexturePtr _skin)
 	const CItem_VisualData* item = m_VisualItems[EQUIPMENT_SLOT_BACK];
 	if (item->InventoryType != InventoryType::NON_EQUIP)
 	{
-		assert1(item->getObjectComponents().size() == 1);
+		_ASSERT(item->getObjectComponents().size() == 1);
 		SharedTexturePtr cloackTexttre = item->getObjectComponents()[0].texture;
 		setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
 	}

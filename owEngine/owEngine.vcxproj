@@ -17,7 +17,6 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="OpenGLAdapterGLFW.cpp" />
     <ClCompile Include="OpenGLAdapter_Native.cpp" />
-    <ClCompile Include="Perfomance.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -34,7 +33,6 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="OpenGLAdapterGLFW.h" />
     <ClInclude Include="OpenGLAdapter_Native.h" />
-    <ClInclude Include="Perfomance.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="stdafx.h" />

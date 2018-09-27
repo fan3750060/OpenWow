@@ -48,6 +48,6 @@ void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance*
 		return;
 	}
 
-	assert1(getTexture());
+	_ASSERT(getTexture());
 	_state->setTexture(_slot, getTexture(), sampler, 0);
 }

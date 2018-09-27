@@ -54,10 +54,8 @@ struct Liquid_Layer
 	// Render
 	void InitTextures();
 
-	SharedGeomPtr				m_Geometry;
-	uint32						m_VerticesCnt;
-	uint32						m_IndicesCnt;
-	vector<SharedTexturePtr>		m_Textures;
+	std::shared_ptr<Mesh>                    m_Mesh;
+	std::vector<std::shared_ptr<Texture>>    m_Textures;
 };
 #include __PACK_END
 

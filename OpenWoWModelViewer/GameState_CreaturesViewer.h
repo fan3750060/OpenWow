@@ -36,7 +36,7 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-	SharedGeomPtr m_DebugGeom;
+	SharedMeshPtr m_DebugGeom;
 
 	static const uint32 cnt = 20;
 	Creature* m_Char[cnt * cnt];

@@ -103,7 +103,6 @@
     <ClCompile Include="RenderWindowOGL.cpp" />
     <ClCompile Include="SamplerStateOGL.cpp" />
     <ClCompile Include="ShaderOGL.cpp" />
-    <ClCompile Include="ShaderParameterOGL.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -129,7 +128,6 @@
     <ClInclude Include="RenderWindowOGL.h" />
     <ClInclude Include="SamplerStateOGL.h" />
     <ClInclude Include="ShaderOGL.h" />
-    <ClInclude Include="ShaderParameterOGL.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StructuredBufferOGL.h" />
     <ClInclude Include="TextureOGL.h" />

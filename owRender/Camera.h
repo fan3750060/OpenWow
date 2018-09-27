@@ -96,5 +96,5 @@ public:
 
 	bool                _orthographic;  // Perspective or orthographic frustum?
 	bool                _manualProjMat; // Projection matrix manually set?
-	SharedGeomPtr		__geom;
+	SharedMeshPtr		__geom;
 };

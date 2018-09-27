@@ -26,7 +26,7 @@ void ConstantBufferOGL::Set(const void* data, size_t size)
 	glBindBuffer(GL_UNIFORM_BUFFER, m_GLObj);
 	{
 		GLvoid* p = glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
-		memcpy(p, data, size);
+		memcpy_s(p, size, data, size);
 		glUnmapBuffer(GL_UNIFORM_BUFFER);
 	}
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);

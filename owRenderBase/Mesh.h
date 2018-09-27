@@ -21,3 +21,5 @@ public:
 
 	virtual void Accept(IVisitor& visitor) = 0;
 };
+
+typedef std::shared_ptr<Mesh> SharedMeshPtr;

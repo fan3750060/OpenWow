@@ -3,6 +3,12 @@
 // General
 #include "SceneNode.h"
 
+/*SceneNode::SceneNode(std::weak_ptr<SceneNode> _parent)
+	: m_Name("SceneNode")
+{
+	SetParent(_parent);
+}*/
+
 SceneNode::SceneNode(cmat4 localTransform)
 	: m_LocalTransform(localTransform)
 	, m_Name("SceneNode")
@@ -69,6 +75,25 @@ mat4 SceneNode::GetParentWorldTransform() const
 	return parentTransform;
 }
 
+void SceneNode::CalculateLocalTransform(bool _isRotationQuat)
+{
+	m_LocalTransform = mat4();
+
+	m_LocalTransform = glm::translate(m_LocalTransform, m_Translate);
+	if (_isRotationQuat)
+	{
+		m_LocalTransform *= glm::toMat4(m_RotateQuat);
+	}
+	else
+	{
+		m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.x, vec3(1, 0, 0));
+		m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.y, vec3(0, 1, 0));
+		m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.z, vec3(0, 0, 1));
+	}
+	m_LocalTransform = glm::scale(m_LocalTransform, m_Scale);
+	m_InverseTransform = glm::inverse(m_LocalTransform);
+}
+
 void SceneNode::AddChild(std::shared_ptr<SceneNode> pNode)
 {
 	if (pNode)
@@ -126,7 +151,7 @@ void SceneNode::SetParent(std::weak_ptr<SceneNode> wpNode)
 	// half-way through this function!
 	// Technically self deletion shouldn't occur because the thing invoking this function
 	// should have a shared_ptr to it.
-	std::shared_ptr<SceneNode> me = shared_from_this();
+	//std::shared_ptr<SceneNode> me = shared_from_this();
 
 	if (std::shared_ptr<SceneNode> parent = wpNode.lock())
 	{

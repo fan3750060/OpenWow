@@ -4,16 +4,12 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="DDSLib.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="MeshDX11.cpp" />
     <ClCompile Include="QueryDX11.cpp" />
     <ClCompile Include="RenderDeviceDX11.cpp" />
     <ClCompile Include="RenderTargetDX11.cpp" />
     <ClCompile Include="RenderWindowDX11.cpp" />
     <ClCompile Include="ShaderDX11.cpp" />
-    <ClCompile Include="ShaderParameterDX11.cpp" />
     <ClCompile Include="TextureDX11.cpp" />
     <ClCompile Include="owRenderDX11.cpp">
       <Filter>Common</Filter>
@@ -50,16 +46,12 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="DDSLib.h">
-      <Filter>Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="MeshDX11.h" />
     <ClInclude Include="QueryDX11.h" />
     <ClInclude Include="RenderDeviceDX11.h" />
     <ClInclude Include="RenderTargetDX11.h" />
     <ClInclude Include="RenderWindowDX11.h" />
     <ClInclude Include="ShaderDX11.h" />
-    <ClInclude Include="ShaderParameterDX11.h" />
     <ClInclude Include="TextureDX11.h" />
     <ClInclude Include="BufferDX11.h">
       <Filter>Buffers</Filter>
@@ -93,9 +85,6 @@
   <ItemGroup>
     <Filter Include="Common">
       <UniqueIdentifier>{98fc8d94-3730-4821-bb53-d891aea80641}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Helpers">
-      <UniqueIdentifier>{77d28040-ce71-438e-8ac7-7fd4febf10e7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Buffers">
       <UniqueIdentifier>{442800ef-12e7-44be-bb3c-374071446c94}</UniqueIdentifier>

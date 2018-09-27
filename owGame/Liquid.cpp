@@ -17,14 +17,14 @@ Liquid::Liquid(uint32 x, uint32 y) :
 
 void Liquid::Render(cmat4 _worldMatrix)
 {
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+	/*_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setDepthTest(true);
 	_Render->r.setDepthMask(true);
 
 	for (auto& layer : m_WaterLayers)
 	{
-		_Render->r.setGeometry(layer.m_Geometry);
+		_Render->r.setGeometry(layer.m_Mesh);
 
 		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 		{
@@ -37,7 +37,7 @@ void Liquid::Render(cmat4 _worldMatrix)
 			_Render->getTechniquesMgr()->m_Magma->setWorld(_worldMatrix);
 		}
 
-		uint32_t texidx = (uint32_t)(/*_World->EnvM()->animtime*/ 0.0f / 60.0f) % layer.m_Textures.size();
+		uint32_t texidx = (uint32_t)(_World->EnvM()->animtime 0.0f / 60.0f) % layer.m_Textures.size();
 		_Render->r.setTexture(Material::C_DiffuseTextureIndex, layer.m_Textures[texidx], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 
 		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
@@ -59,7 +59,6 @@ void Liquid::Render(cmat4 _worldMatrix)
 		}
 
 		_Render->r.drawIndexed(0, layer.m_IndicesCnt, 0, layer.m_VerticesCnt, nullptr, false);
-		PERF_INC(PERF_MAP_CHUNK_MH20);
 
 		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 		{
@@ -69,7 +68,7 @@ void Liquid::Render(cmat4 _worldMatrix)
 		{
 			_Render->getTechniquesMgr()->m_Magma->Unbind();
 		}
-	}
+	}*/
 }
 //--
 
@@ -287,22 +286,32 @@ void Liquid::createBuffer()
 			}
 		}
 
+
+		std::shared_ptr<Buffer> __vb = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)mh2oVertices.data(), mh2oVertices.size(), sizeof(SLiquidVertexData));
+
+		std::shared_ptr<Buffer> __ib = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer(m_Indices.data(), m_Indices.size());
+
+		std::shared_ptr<Mesh>  __mesh = Application::Get().GetRenderDevice()->CreateMesh();
+		__mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+		__mesh->SetIndexBuffer(__ib);
+
+		//__mesh->SetMaterial()
 		// Vertex buffer
-		SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
+		/*SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
 		layer.m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
-		assert1(layer.m_VerticesCnt > 0);
+		_ASSERT(layer.m_VerticesCnt > 0);
 
 		// Index bufer
 		SharedBufferPtr __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
 		layer.m_IndicesCnt = static_cast<uint32>(m_Indices.size());
-		assert1(layer.m_IndicesCnt > 0);
+		_ASSERT(layer.m_IndicesCnt > 0);
 
 		// Geometry
-		layer.m_Geometry = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
-		layer.m_Geometry->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
-		layer.m_Geometry->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
-		layer.m_Geometry->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-		layer.m_Geometry->finishCreatingGeometry();
+		layer.m_Mesh = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
+		layer.m_Mesh->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
+		layer.m_Mesh->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
+		layer.m_Mesh->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
+		layer.m_Mesh->finishCreatingGeometry();*/
 	}
 }
 
@@ -314,7 +323,7 @@ void Liquid_Layer::InitTextures()
 	for (int i = 1; i <= 30; i++)
 	{
 		sprintf_s(buf, baseName.c_str(), i);
-		SharedTexturePtr texture = _Render->TexturesMgr()->Add(buf);
+		std::shared_ptr<Texture> texture = Application::Get().GetRenderDevice()->CreateTexture2D(buf);
 		m_Textures.push_back(texture);
 	}
 }

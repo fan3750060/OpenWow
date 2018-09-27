@@ -48,7 +48,7 @@ CM2_ParticleSystem::CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Partic
 	m_State.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_ONE);
 	m_State.setCullMode(R_CullMode::RS_CULL_BACK);
 	m_State.setDepthMask(false);
-	assert1(texture != nullptr);
+	_ASSERT(texture != nullptr);
 	m_State.setTexture(Material::C_DiffuseTextureIndex, texture, 0, 0);
 
 
@@ -370,15 +370,15 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 	}
 
 	// Vertex buffer
-	assert1(vertices.data() != nullptr);
+	_ASSERT(vertices.data() != nullptr);
 	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
 
 	// Index buffer
-	assert1(m_Indices.data() != nullptr);
+	_ASSERT(m_Indices.data() != nullptr);
 	SharedBufferPtr __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
 
 	// Geometry
-	SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
+	SharedMeshPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(ParticleVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(ParticleVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 28, sizeof(ParticleVertex));

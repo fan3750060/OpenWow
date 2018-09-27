@@ -19,7 +19,7 @@ void CInput::setOnFileDropperCallback(Function_WA<const char*>* _onDrop)
 		delete m_OnFileDropped;
 	}
 
-	assert1(_onDrop);
+	_ASSERT(_onDrop);
 	m_OnFileDropped = _onDrop;
 }
 
@@ -69,6 +69,6 @@ void CInput::CharCallback(uint32 _char)
 
 void CInput::DropFilesCallback(int _count, const char** _fnames)
 {
-	assert1(_count > 0);
+	_ASSERT(_count > 0);
 	m_OnFileDropped->operator()(_fnames[0]);
 }

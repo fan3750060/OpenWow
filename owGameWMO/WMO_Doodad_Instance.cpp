@@ -75,8 +75,6 @@ void CWMO_Doodad_Instance::Render3D()
 	}
 
 	CM2_Base_Instance::Render3D();
-
-	PERF_INC(PERF_MAP_MODELS_WMOs_DOODADS);
 }
 
 

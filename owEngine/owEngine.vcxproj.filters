@@ -33,9 +33,6 @@
     <ClCompile Include="Loader.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Perfomance.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="OpenGLAdapterGLFW.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Loader.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Perfomance.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="OpenGLAdapterGLFW.h">

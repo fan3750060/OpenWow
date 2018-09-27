@@ -37,7 +37,7 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-	SharedGeomPtr m_DebugGeom;
+	SharedMeshPtr m_DebugGeom;
 
 	SharedPtr<Character> m_Char[10];
 

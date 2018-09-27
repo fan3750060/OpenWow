@@ -26,7 +26,7 @@ public:
 		m_Start(vec2()),
 		m_Size(_texture->GetSize())
 	{
-		assert1((m_Texture != nullptr) && (m_Size != vec2()));
+		_ASSERT((m_Texture != nullptr) && (m_Size != vec2()));
 		CalculateCoords();
 	}
 
@@ -35,7 +35,7 @@ public:
 		m_Start(vec2()),
 		m_Size(_size)
 	{
-		assert1((m_Texture != nullptr) && (m_Size != vec2()));
+		_ASSERT((m_Texture != nullptr) && (m_Size != vec2()));
 		CalculateCoords();
 	}
 
@@ -44,7 +44,7 @@ public:
 		m_Start(_start),
 		m_Size(_size)
 	{
-		assert1((m_Texture != nullptr) && (m_Size != vec2()));
+		_ASSERT((m_Texture != nullptr) && (m_Size != vec2()));
 		CalculateCoords();
 	}
 

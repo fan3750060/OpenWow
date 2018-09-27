@@ -8,10 +8,10 @@
 
 CM2_Part_Attachment::CM2_Part_Attachment(const M2* _parentM2, IFile* f, const SM2_Attachment& _proto, cGlobalLoopSeq global)
 {
-	//assert1(_proto.id < M2_AttachmentType::Count);
+	//_ASSERT(_proto.id < M2_AttachmentType::Count);
 	m_Type = (M2_AttachmentType::List)_proto.id;
 	m_Bone = _parentM2->getSkeleton()->getBoneDirect(_proto.bone);
-	assert1(m_Bone != nullptr);
+	_ASSERT(m_Bone != nullptr);
 	m_Position = _proto.position;
 	m_IsAnimateAttached.init(_proto.animate_attached, f, global);
 }

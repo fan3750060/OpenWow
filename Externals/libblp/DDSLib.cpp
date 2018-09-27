@@ -26,7 +26,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Modified by: John Steele November 2005
 ----------------------------------------------------------------------------- */
-#include "stdafx.h"
 
 // General
 #include "ddslib.h"
@@ -296,7 +295,6 @@ ddsColor_t;
 DDSGetColorBlockColors()
 extracts colors from a dds color block
 */
-
 static void DDSGetColorBlockColors(ddsColorBlock_t *block, ddsColor_t colors[4])
 {
 	unsigned short		word;
@@ -385,8 +383,6 @@ static void DDSGetColorBlockColors(ddsColorBlock_t *block, ddsColor_t colors[4])
 	}
 }
 
-
-
 /*
 DDSDecodeColorBlock()
 decodes a dds color block
@@ -442,8 +438,6 @@ static void DDSDecodeColorBlock(unsigned int *pixel, ddsColorBlock_t *block, int
 	}
 }
 
-
-
 /*
 DDSDecodeAlphaExplicit()
 decodes a dds explicit alpha block
@@ -479,8 +473,6 @@ static void DDSDecodeAlphaExplicit(unsigned int *pixel, ddsAlphaBlockExplicit_t 
 		}
 	}
 }
-
-
 
 /*
 DDSDecodeAlpha3BitLinear()
@@ -591,14 +583,11 @@ static void DDSDecodeAlpha3BitLinear(unsigned int *pixel, ddsAlphaBlock3BitLinea
 	}
 }
 
-
-
 /*
 DDSDecompressDXT1()
 decompresses a dxt1 format texture
 */
-
-int DDSDecompressDXT1(unsigned char *src, int width, int height, unsigned char *dest)
+void DDSDecompressDXT1(unsigned char *src, int width, int height, unsigned char *dest)
 {
 	int				x, y, xBlocks, yBlocks;
 	unsigned int	*pixel;
@@ -624,18 +613,13 @@ int DDSDecompressDXT1(unsigned char *src, int width, int height, unsigned char *
 			DDSDecodeColorBlock(pixel, block, width, (unsigned int*)colors);
 		}
 	}
-
-	/* return ok */
-	return 0;
 }
-
-
 
 /*
 DDSDecompressDXT3()
 decompresses a dxt3 format texture
 */
-int DDSDecompressDXT3(unsigned char *src, int width, int height, unsigned char *dest)
+void DDSDecompressDXT3(unsigned char *src, int width, int height, unsigned char *dest)
 {
 	int						x, y, xBlocks, yBlocks;
 	unsigned int			*pixel, alphaZero;
@@ -679,18 +663,13 @@ int DDSDecompressDXT3(unsigned char *src, int width, int height, unsigned char *
 			DDSDecodeAlphaExplicit(pixel, alphaBlock, width, alphaZero);
 		}
 	}
-
-	/* return ok */
-	return 0;
 }
-
-
 
 /*
 DDSDecompressDXT5()
 decompresses a dxt5 format texture
 */
-int DDSDecompressDXT5(unsigned char *src, int width, int height, unsigned char *dest)
+void DDSDecompressDXT5(unsigned char *src, int width, int height, unsigned char *dest)
 {
 	int							x, y, xBlocks, yBlocks;
 	unsigned int				*pixel, alphaZero;
@@ -734,7 +713,4 @@ int DDSDecompressDXT5(unsigned char *src, int width, int height, unsigned char *
 			DDSDecodeAlpha3BitLinear(pixel, alphaBlock, width, alphaZero);
 		}
 	}
-
-	/* return ok */
-	return 0;
 }

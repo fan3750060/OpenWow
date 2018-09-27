@@ -443,7 +443,7 @@ void RenderDeviceOGL::DestroySampler(std::shared_ptr<SamplerState> sampler)
 
 std::shared_ptr<Material> RenderDeviceOGL::CreateMaterial()
 {
-	std::shared_ptr<Material> pMaterial = std::make_shared<Material>(*this);
+	std::shared_ptr<Material> pMaterial = std::make_shared<Material>(this);
 	m_Materials.push_back(pMaterial);
 	return pMaterial;
 }
@@ -455,6 +455,11 @@ void RenderDeviceOGL::DestroyMaterial(std::shared_ptr<Material> material)
 	{
 		m_Materials.erase(iter);
 	}
+}
+
+std::shared_ptr<Material> RenderDeviceOGL::GetDefaultMaterial() const
+{
+	return m_pDefaultMaterial;
 }
 
 
@@ -525,8 +530,11 @@ void RenderDeviceOGL::LoadDefaultResources()
 	//pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders\\M2\\M2.fs", Shader::ShaderMacros(), "PS_main", "ps_4_0");
 
 	// Create a magenta texture if a texture defined in the shader is not bound.
-	m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());
-	m_pDefaultTexture->Clear(ClearFlags::Color, vec4(1, 0, 1, 1));
+	m_pDefaultTexture = CreateTexture2D("Textures\\ShaneCube.blp");
+	//m_pDefaultTexture->Clear(ClearFlags::Color, vec4(1, 0, 1, 1));
+
+	m_pDefaultMaterial = CreateMaterial();
+	m_pDefaultMaterial->SetTexture(Material::TextureType::Diffuse, m_pDefaultTexture);
 
 	//m_pDefaultPipeline = CreatePipelineState();
 	//m_pDefaultPipeline->SetShader(Shader::VertexShader, pDefaultVertexShader);

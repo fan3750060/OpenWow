@@ -10,4 +10,3 @@
 #include "../owEngine/OpenGLAdapter_Native.h"
 #include "../owEngine/OpenGLAdapterGLFW.h"
 #include "../owEngine/SceneManager.h"
-#include "../owEngine/Perfomance.h"

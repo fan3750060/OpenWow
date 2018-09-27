@@ -96,9 +96,6 @@ void RenderWindowOGL::Present()
 	// drawing AntTweakBar.
 	//m_RenderTarget->Bind();
 
-	// Draw the AntTweakBar
-	//TwDraw();
-
 	// Copy the render target's color buffer to the swap chain's back buffer.
 	std::shared_ptr<TextureOGL> colorBuffer = std::dynamic_pointer_cast<TextureOGL>(m_RenderTarget->GetTexture(RenderTarget::AttachmentPoint::Color0));
 	if (colorBuffer)

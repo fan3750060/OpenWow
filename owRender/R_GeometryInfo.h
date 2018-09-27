@@ -57,4 +57,4 @@ protected:
 	RenderDevice*				m_RenderDevice;
 };
 
-typedef shared_ptr<R_GeometryInfo> SharedGeomPtr;
+typedef shared_ptr<R_GeometryInfo> SharedMeshPtr;

@@ -42,7 +42,7 @@ public:
 
 private:
 	UniquePtr<CM2_Base_Instance> m2_Model;
-	SharedGeomPtr m_DebugGeom;
+	SharedMeshPtr m_DebugGeom;
 	Character* m_Char;
 
 	CM2_Base_Instance*		m2_Camera;

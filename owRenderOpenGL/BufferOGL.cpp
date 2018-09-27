@@ -12,7 +12,7 @@ BufferOGL::BufferOGL(UINT bindFlags, const void* data, size_t count, UINT stride
 	, m_bIsBound(false)
 {
 	glGenBuffers(1, &m_GLObj);
-	assert1(m_GLObj != 0);
+	_ASSERT(m_GLObj != 0);
 	glBindBuffer(m_BindFlags, m_GLObj);
 	glBufferData(m_BindFlags, count * stride, data, /*_isDynamic ? */GL_DYNAMIC_DRAW/* : GL_STATIC_DRAW*/);
 	glBindBuffer(m_BindFlags, 0);

@@ -32,11 +32,11 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 	{
 		uint16_t* TexturesList = (uint16_t*)(f->getData() + _proto.textureIndices.offset);
 		// just use the first texture for now; most models I've checked only had one
-		assert1(_proto.textureIndices.size > 0);
+		_ASSERT(_proto.textureIndices.size > 0);
 		m_Texture = m_ParentM2->getMaterials()->m_Textures[TexturesList[0]]->getTexture();
 
 		uint16_t* MaterialsList = (uint16_t*)(f->getData() + _proto.materialIndices.offset);
-		assert1(_proto.materialIndices.size > 0);
+		_ASSERT(_proto.materialIndices.size > 0);
 		m_Material = (m_ParentM2->getMaterials()->GetMaterial(MaterialsList[0]));
 	}
 
@@ -206,7 +206,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
-	SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_PT);
+	SharedMeshPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(RibbonVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(RibbonVertex));
 	__geom->finishCreatingGeometry();

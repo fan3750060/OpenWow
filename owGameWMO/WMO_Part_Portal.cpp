@@ -15,7 +15,7 @@ CWMO_Part_Portal::CWMO_Part_Portal(const WMO* _parentWMO, const SWMO_PortalDef& 
 {
 	m_StartVertex = _proto.startVertex;
 	m_Count = _proto.count;
-	assert1(m_Count < 20);
+	_ASSERT(m_Count < 20);
 
 	m_Plane.normal = Fix_XZmY(_proto.plane.normal);
 	m_Plane.dist = _proto.plane.distance;

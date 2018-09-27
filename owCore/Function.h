@@ -19,7 +19,7 @@ protected:
 public:
 	virtual void operator()()
 	{
-        assert1(m_FuncPtr != nullptr);
+        _ASSERT(m_FuncPtr != nullptr);
 
 		(*m_FuncPtr)();
 	}
@@ -48,8 +48,8 @@ protected:
 public:
 	virtual void operator()() override
 	{
-        assert1(m_ClassInstancePtr != nullptr);
-        assert1(m_ClassMethodPtr != nullptr);
+        _ASSERT(m_ClassInstancePtr != nullptr);
+        _ASSERT(m_ClassMethodPtr != nullptr);
 
 		(m_ClassInstancePtr->*m_ClassMethodPtr)();
 	}

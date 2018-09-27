@@ -27,7 +27,7 @@ public:
 
     virtual void operator()(ARGTYPE _procArgs)
     {
-        assert1(m_FuncWithArgumentPtr != nullptr);
+        _ASSERT(m_FuncWithArgumentPtr != nullptr);
 
         (*m_FuncWithArgumentPtr)(_procArgs);
     }    
@@ -61,8 +61,8 @@ public:
 
 	virtual void operator()(ARGTYPE _procArgs) override
 	{
-        assert1(m_ClassInstancePtr != nullptr);
-        assert1(m_ClassMethodWithArgumentPtr != nullptr);
+        _ASSERT(m_ClassInstancePtr != nullptr);
+        _ASSERT(m_ClassMethodWithArgumentPtr != nullptr);
 
 		(m_ClassInstancePtr->*m_ClassMethodWithArgumentPtr)(_procArgs);
 	}
@@ -75,5 +75,5 @@ protected:
 //
 
 #define FUNCTION_WA_CALL(funcInstance, argType, argValue) \
-assert1(dynamic_cast<Function_WA<argType>*>(funcInstance)); \
+_ASSERT(dynamic_cast<Function_WA<argType>*>(funcInstance)); \
 (dynamic_cast<Function_WA<argType>*>(funcInstance))->operator()(argValue)

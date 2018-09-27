@@ -15,6 +15,8 @@ struct ADT_MDXDef
     } flags;
 };
 
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
+
 class ADT_MDX_Instance : public CM2_Base_Instance
 {
 public:
@@ -36,3 +38,5 @@ public:	// Static
 private:
 	static std::set<uint32> m_AlreadyDraw;
 };
+
+#endif

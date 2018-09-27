@@ -9,7 +9,7 @@
 // General
 #include "Material.h"
 
-Material::Material(RenderDevice& renderDevice)
+Material::Material(RenderDevice* renderDevice)
 	: m_RenderDevice(renderDevice)
 	, m_Dirty(false)
 {
@@ -18,14 +18,14 @@ Material::Material(RenderDevice& renderDevice)
 	*m_pProperties = MaterialProperties();
 
 	// Initialize the constant buffer.
-	m_pConstantBuffer = m_RenderDevice.CreateConstantBuffer(*m_pProperties);
+	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
 }
 
 Material::~Material()
 {
 	if (m_pConstantBuffer)
 	{
-		m_RenderDevice.DestroyConstantBuffer(m_pConstantBuffer);
+		m_RenderDevice->DestroyConstantBuffer(m_pConstantBuffer);
 		m_pConstantBuffer.reset();
 	}
 

@@ -1,10 +1,5 @@
 #pragma once
 
-// FORWARD BEGIN
-class Log;
-// FORWARD END
-
-
 class CLog : public ILog
 {
 	friend class Log;

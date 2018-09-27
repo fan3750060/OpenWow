@@ -16,7 +16,7 @@ StructuredBufferOGL::StructuredBufferOGL(UINT bindFlags, const void* data, size_
 	size_t numBytes = m_uiCount * m_uiStride;
 
 	glGenBuffers(1, &m_GLObj);
-	assert1(m_GLObj != 0);
+	_ASSERT(m_GLObj != 0);
 	glBindBuffer(m_BindFlags, m_GLObj);
 	{
 		if (data)

@@ -21,9 +21,8 @@ struct ADT_MCIN
 
 #include __PACK_END
 
-ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ) :
-	SceneNode(_mapController),
-	m_MapController(_mapController),
+ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ) :
+	m_MapController(std::dynamic_pointer_cast<MapController>(_mapController.lock())),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
@@ -42,10 +41,10 @@ ADT::ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ) :
 		setBounds(bbox);
 	}
 
-	setOpaque(true);
+	/*setOpaque(true);
 	setDrawOrder(20);
 	setDebugColor(vec4(0.0f, 0.3f, 0.3f, 0.3f));
-	setSelectable();
+	setSelectable();*/
 }
 
 ADT::~ADT()
@@ -55,8 +54,11 @@ ADT::~ADT()
 
 bool ADT::Load()
 {
+	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	_ASSERT(mapController != NULL);
+
 	char filename[256];
-	sprintf_s(filename, "%s_%d_%d.adt", m_MapController->getFilenameT().c_str(), m_IndexX, m_IndexZ);
+	sprintf_s(filename, "%s_%d_%d.adt", mapController->getFilenameT().c_str(), m_IndexX, m_IndexZ);
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(filename);
 	uint32_t startPos = f->getPos() + 20;
@@ -66,7 +68,7 @@ bool ADT::Load()
 	{
 		uint32 version;
 		f->readBytes(&version, 4);
-		assert1(version == 18);
+		_ASSERT(version == 18);
 	}
 
 	// MHDR + size (8)
@@ -84,7 +86,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(ADT_MCIN);
-		assert1(count == C_ChunksInTileGlobal);
+		_ASSERT(count == C_ChunksInTileGlobal);
 		memcpy(chunks, f->getDataFromCurrent(), sizeof(ADT_MCIN) * count);
 	}
 
@@ -130,7 +132,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(uint32);
-		assert1(count == m_MDXsNames.size());
+		_ASSERT(count == m_MDXsNames.size());
 		for (uint32_t i = 0; i < count; i++)
 		{
 			uint32 offset;
@@ -161,7 +163,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(uint32);
-		assert1(count == m_WMOsNames.size());
+		_ASSERT(count == m_WMOsNames.size());
 		for (uint32_t i = 0; i < count; i++)
 		{
 			uint32 offset;
@@ -210,7 +212,7 @@ bool ADT::Load()
 			f->seekRelative(4);
 			uint32_t size;
 			f->readBytes(&size, sizeof(uint32_t));
-			assert1(size > 0);
+			_ASSERT(size > 0);
 
 			const uint8* abuf = f->getDataFromCurrent();
 			for (uint32 i = 0; i < C_ChunksInTile; i++)
@@ -224,7 +226,8 @@ bool ADT::Load()
 						liquid->CreateFromTerrainMH2O(f.operator->(), mh2o_Header);
 
 						// Create instance
-						std::shared_ptr<Liquid_Instance> instance = make_shared<Liquid_Instance>(this, liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						std::shared_ptr<Liquid_Instance> instance = make_shared<Liquid_Instance>(weak_from_this(), liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						instance->SetParent(weak_from_this());
 						m_LiquidsInstances.push_back(instance);
 					}
 					abuf += sizeof(MH2O_Header);
@@ -238,12 +241,12 @@ bool ADT::Load()
 	for (auto& it : m_Textures)
 	{
 		// PreLoad diffuse texture
-		it->diffuseTexture = _Render->TexturesMgr()->Add(it->textureName);
+		it->diffuseTexture = Application::Get().GetRenderDevice()->CreateTexture2D(it->textureName);
 
 		// PreLoad specular texture
 		string specularTextureName = it->textureName;
 		specularTextureName = specularTextureName.insert(specularTextureName.length() - 4, "_s");
-		it->specularTexture = _Render->TexturesMgr()->Add(specularTextureName);
+		it->specularTexture = Application::Get().GetRenderDevice()->CreateTexture2D(specularTextureName);
 	}
 
 	//-- Load Chunks ---------------------------------------------------------------------
@@ -256,10 +259,11 @@ bool ADT::Load()
 		f->seekRelative(4); // MCNK
 		uint32_t size;
 		f->readBytes(&size, sizeof(uint32_t));
-		assert1(size + 8 == chunks[i].size);
+		_ASSERT(size + 8 == chunks[i].size);
 
-		std::shared_ptr<ADT_MCNK> chunk = make_shared<ADT_MCNK>(m_MapController, this, f.operator->());
+		std::shared_ptr<ADT_MCNK> chunk = make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f.operator->());
 		chunk->Load();
+		chunk->SetParent(m_MapController);
 		m_Chunks.push_back(chunk);
 
 		BoundingBox bbox = getBounds();
@@ -268,7 +272,7 @@ bool ADT::Load()
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
-
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	for (auto& it : m_WMOsPlacementInfo)
 	{
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
@@ -298,7 +302,7 @@ bool ADT::Load()
 			setBounds(bbox);
 		}
 	}
-
+#endif
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
@@ -313,16 +317,19 @@ bool ADT::Delete()
 
 bool ADT::PreRender3D()
 {
-	if (!m_MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	_ASSERT(mapController != NULL);
+
+	if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
 	{
 		return false;
 	}
 
 	// Check frustrum
-	if (!checkFrustum())
-	{
-		return false;
-	}
+	//if (!checkFrustum())
+	//{
+	//	return false;
+	//}
 
 	return true;
 }

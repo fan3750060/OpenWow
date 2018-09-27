@@ -5,7 +5,6 @@
 
 // Additional
 #include "GameStateManager.h"
-#include "Perfomance.h"
 
 CEngine::CEngine() : 
 	m_IsNeedExit(false),
@@ -23,7 +22,6 @@ CEngine::CEngine() :
 CEngine::~CEngine()
 {
 	SafeDelete(openGLConsole);
-	SafeDelete(_Perfomance);
 	SafeDelete(m_UIMgr);
 	SafeDelete(_Render);
 	
@@ -39,8 +37,6 @@ void CEngine::Init(IOpenGLAdapter* _OpenGLAdapter)
 	_Render->getAdapter()->MakeMainContext();
 
 	m_UIMgr = new UIMgr;
-
-	_Perfomance = new Perfomance();
 
 	openGLConsole = new CConsoleOpenGL();
 	
@@ -66,8 +62,6 @@ bool CEngine::Tick()
 	double dTime = static_cast<double>(_time);
 	double dDtTime = static_cast<double>(dt);
 
-	_Perfomance->FrameBegin();
-
 	//GetManager<ILoader>()->LoadAll();
 	//GetManager<ILoader>()->DeleteAll();
 
@@ -80,7 +74,7 @@ bool CEngine::Tick()
     //------------------------------------------------
 	//-- Update
     //------------------------------------------------
-	_Bindings->m_UpdatableObjectCollection->Update(_Perfomance, _Render->getAdapter()->GetInput(), dTime, dDtTime);
+	_Bindings->m_UpdatableObjectCollection->Update(nullptr, _Render->getAdapter()->GetInput(), dTime, dDtTime);
 
 	_Render->r.beginRendering();
 	_Render->r.clear();
@@ -89,7 +83,7 @@ bool CEngine::Tick()
     //-- Render3D
     //------------------------------------------------
 	_Render->Set3D();
-	_Bindings->m_Renderable3DObjectCollection->Render3D(_Perfomance);
+	_Bindings->m_Renderable3DObjectCollection->Render3D(nullptr);
 
     //------------------------------------------------
     //-- RenderUI
@@ -97,9 +91,6 @@ bool CEngine::Tick()
 	_Render->Set2D();
 	_Bindings->m_RenderableUIObjectCollection->RenderUI();
 
-	// Perfomance render
-	_Perfomance->FrameEnd();
-	_Perfomance->Render(vec2(5, 100));
 	openGLConsole->RenderUI();
 
 	//

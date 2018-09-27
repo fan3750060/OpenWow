@@ -9,7 +9,6 @@ public:
 	void Restore();
 
 public:
-	
 	void SetDiffuseTexture(SharedTexturePtr _DiffuseTexture)
 	{
 		m_DiffuseTexture = _DiffuseTexture;

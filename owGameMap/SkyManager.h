@@ -39,8 +39,7 @@ private:
 	SkyParams m_Interpolated;
 
 	SharedBufferPtr colorsBuffer;
-	SharedGeomPtr __geom;
-	uint32 __vertsSize;
+	SharedMeshPtr __geom;
 
 	vector<Sky*> skies;
 

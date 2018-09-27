@@ -6,7 +6,7 @@
 // General
 #include "WDL.h"
 
-WDL::WDL(MapController* _mapController) :
+WDL::WDL(std::weak_ptr<MapController> _mapController) :
 	m_MapController(_mapController),
 	m_Minimap(nullptr)
 {}
@@ -15,9 +15,12 @@ WDL::~WDL()
 {
 }
 
-void WDL::CreateInsances(MapController* _parent)
+void WDL::CreateInsances(std::weak_ptr<MapController> _parent)
 {
-	string fileName = m_MapController->getFilenameT() + ".wdl";
+	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	_ASSERT(mapController != NULL);
+
+	string fileName = mapController->getFilenameT() + ".wdl";
 
 	// Low-resolution tiles
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
@@ -79,21 +82,31 @@ void WDL::CreateInsances(MapController* _parent)
 					}
 				}
 
+				
+
 				// Vertex buffer
-				SharedBufferPtr __vb = _Render->r.createVertexBuffer(vecrtices.size() * sizeof(vec3), vecrtices.data(), false);
+				SharedBufferPtr __vb = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vecrtices.data(), vecrtices.size(), sizeof(vec3));
 
 				//
 
-				SharedGeomPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
-				__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-				__geom->finishCreatingGeometry();
+				SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
+				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+				__geom->SetMaterial(Application::Get().GetRenderDevice()->GetDefaultMaterial());
+				
 
+				//_Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
+				//__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
+				//__geom->finishCreatingGeometry();
 
-				m_LowResilutionTiles.push_back(make_shared<CWDL_LowResTile>(_parent, i, j, __geom));
+				std::shared_ptr<CWDL_LowResTile> lowResTile = make_shared<CWDL_LowResTile>(_parent, i, j, __geom);
+				lowResTile->SetParent(_parent);
+				lowResTile->AddMesh(__geom);
+				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
 	}
 
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	// Load low-resolution WMOs
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
 	for (auto it : m_LowResolutionWMOsPlacementInfo)
@@ -103,11 +116,15 @@ void WDL::CreateInsances(MapController* _parent)
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
 		m_LowResolutionWMOs.push_back(make_shared<ADT_WMO_Instance>(_parent, wmo, it));
 	}
+#endif
 }
 
 void WDL::Load()
 {
-	string fileName = m_MapController->getFilenameT() + ".wdl";
+	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	_ASSERT(mapController != NULL);
+
+	string fileName = mapController->getFilenameT() + ".wdl";
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
@@ -264,7 +281,7 @@ void WDL::Load()
 	}
 
 	// Finish minimap
-	m_Minimap = _Render->r.createTexture(R_TextureTypes::Tex2D, 512, 512, 1, R_TextureFormats::RGBA8, false, false, false, false);
-	m_Minimap->uploadTextureData(0, 0, texbuf);
-	delete[] texbuf;
+	//m_Minimap = _Render->r.createTexture(R_TextureTypes::Tex2D, 512, 512, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	//m_Minimap->uploadTextureData(0, 0, texbuf);
+	//delete[] texbuf;
 }

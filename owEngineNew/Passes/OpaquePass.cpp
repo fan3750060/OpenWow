@@ -15,7 +15,7 @@ void OpaquePass::Visit(Mesh& mesh)
 {
 	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
 
-	if (pMaterial && !pMaterial->IsTransparent())
+	if (pMaterial /*&& !pMaterial->IsTransparent()*/)
 	{
 		mesh.Render(GetRenderEventArgs());
 	}

@@ -20,9 +20,9 @@ void RenderQueue::ProcessDrawCalls()
 {
 	for (auto& call : m_DrawCalls)
 	{
-		assert1(call.renderState != nullptr);
-		assert1(call.technique != nullptr);
-		assert1(call.bindUniformsFunc != nullptr);
+		_ASSERT(call.renderState != nullptr);
+		_ASSERT(call.technique != nullptr);
+		_ASSERT(call.bindUniformsFunc != nullptr);
 
 		call.technique->Bind();
 		call.bindUniformsFunc(call.technique);

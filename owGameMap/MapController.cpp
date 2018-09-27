@@ -25,7 +25,7 @@ MapController::MapController() :
 
 	// Scene node
 	{
-		setOpaque(true);
+		//setOpaque(true);
 
 		BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
 		setBounds(bbox);
@@ -64,12 +64,12 @@ void MapController::MapPreLoad(const DBC_MapRecord& _map)
     Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	SafeDelete(m_WDL);
-	m_WDL = new WDL(this);
+	m_WDL = new WDL(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 	m_WDL->Load();
 
 	// Delete if exists
 	SafeDelete(m_WDT);
-	m_WDT = new WDT(this);
+	m_WDT = new WDT(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 }
 
 void MapController::MapLoad()
@@ -88,8 +88,8 @@ void MapController::MapPostLoad()
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	// Create all instances
-	m_WDT->CreateInsances(this);
-	m_WDL->CreateInsances(this);
+	m_WDT->CreateInsances(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
+	m_WDL->CreateInsances(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 }
 
 void MapController::Unload()
@@ -101,7 +101,7 @@ void MapController::Unload()
     {
         if (m_ADTCache[i] != nullptr)
         {
-            delete m_ADTCache[i];
+            //delete m_ADTCache[i];
 			m_ADTCache[i] = nullptr;
         }
     }
@@ -124,7 +124,7 @@ void MapController::Update()
 		m_GameTime.Tick();
 	}
 
-    bool loading = false;
+    /*bool loading = false;
     int enteredTileX, enteredTileZ;
     int midTile = static_cast<uint32>(C_RenderedTiles / 2);
     if (m_Current[midTile][midTile] != nullptr || m_IsOnInvalidTile)
@@ -151,7 +151,7 @@ void MapController::Update()
             enteredTileX = enteredTileZ = -1;
             loading = false;
         }
-    }
+    }*/
 }
 
 //--
@@ -176,7 +176,7 @@ void MapController::EnterMap(int32 x, int32 z)
     }
 }
 
-ADT* MapController::LoadTile(int32 x, int32 z)
+std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
 {
     if (IsBadTileIndex(x, z))
     {
@@ -226,13 +226,14 @@ ADT* MapController::LoadTile(int32 x, int32 z)
 
         // maxidx is the winner (loser)
 		//GetManager<ILoader>()->AddToDeleteQueue(m_ADTCache[maxidx]);
-        delete m_ADTCache[maxidx];
+        //delete m_ADTCache[maxidx];
         m_ADTCache[maxidx] = nullptr;
         firstnull = maxidx;
     }
 
     // Create new tile
-    m_ADTCache[firstnull] = new ADT(this, x, z);
+    m_ADTCache[firstnull] = make_shared<ADT>(shared_from_this(), x, z);
+	m_ADTCache[firstnull]->SetParent(weak_from_this());
 	m_ADTCache[firstnull]->Load();
 	//GetManager<ILoader>()->AddToLoadQueue(m_ADTCache[firstnull]);
     return m_ADTCache[firstnull];
@@ -244,7 +245,7 @@ void MapController::ClearCache()
     {
         if (m_ADTCache[i] != nullptr && !IsTileInCurrent(m_ADTCache[i]))
         {
-            delete m_ADTCache[i];
+            //delete m_ADTCache[i];
             m_ADTCache[i] = nullptr;
         }
     }
@@ -257,7 +258,7 @@ uint32 MapController::GetAreaID()
 		return UINT32_MAX;
 	}
 
-	int32 tileX = (int)(_Render->getCamera()->Position.x / C_TileSize);
+	/*int32 tileX = (int)(_Render->getCamera()->Position.x / C_TileSize);
 	int32 tileZ = (int)(_Render->getCamera()->Position.z / C_TileSize);
 
 	int32 chunkX = (int)(fmod(_Render->getCamera()->Position.x, C_TileSize) / C_ChunkSize);
@@ -289,9 +290,11 @@ uint32 MapController::GetAreaID()
 	}
 
     return curChunk->header.areaid;
+	*/
+	return UINT32_MAX;
 }
 
-bool MapController::IsTileInCurrent(ADT* _mapTile)
+bool MapController::IsTileInCurrent(std::shared_ptr<ADT> _mapTile)
 {
     for (int i = 0; i < C_RenderedTiles; i++)
         for (int j = 0; j < C_RenderedTiles; j++)

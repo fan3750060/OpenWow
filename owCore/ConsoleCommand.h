@@ -39,7 +39,7 @@ public:
 		if (Utils::TryParse(typeid(ARGTYPE), _args, &value))
 		{
 			Function_WA<ARGTYPE>* funcWA = dynamic_cast<Function_WA<ARGTYPE>*>(m_Function);
-			assert1(funcWA != nullptr);
+			_ASSERT(funcWA != nullptr);
 
 			funcWA->operator()(ARGTYPE(value));
 		}

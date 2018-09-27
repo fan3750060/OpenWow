@@ -19,6 +19,12 @@
     <Filter Include="TextureLoaders">
       <UniqueIdentifier>{df5d4a0c-9523-4190-a4c5-a2d7dac88eaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Passes\Query">
+      <UniqueIdentifier>{315a420d-5e16-49f7-83c7-a3ccb81dfa2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{88d506bc-0b85-4937-9d87-6d1479c5df24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -39,9 +45,6 @@
     <ClCompile Include="SceneNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Passes\BeginQueryPass.cpp">
-      <Filter>Passes</Filter>
-    </ClCompile>
     <ClCompile Include="Passes\ClearRenderTargetPass.cpp">
       <Filter>Passes</Filter>
     </ClCompile>
@@ -55,9 +58,6 @@
       <Filter>Passes</Filter>
     </ClCompile>
     <ClCompile Include="Passes\DispatchPass.cpp">
-      <Filter>Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\EndQueryPass.cpp">
       <Filter>Passes</Filter>
     </ClCompile>
     <ClCompile Include="Passes\GenerateMipMapsPass.cpp">
@@ -100,6 +100,12 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>TextureLoaders</Filter>
     </ClCompile>
+    <ClCompile Include="Passes\BeginQueryPass.cpp">
+      <Filter>Passes\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\EndQueryPass.cpp">
+      <Filter>Passes\Query</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -129,9 +135,6 @@
     <ClInclude Include="SceneNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Passes\BeginQueryPass.h">
-      <Filter>Passes</Filter>
-    </ClInclude>
     <ClInclude Include="Passes\ClearRenderTargetPass.h">
       <Filter>Passes</Filter>
     </ClInclude>
@@ -145,9 +148,6 @@
       <Filter>Passes</Filter>
     </ClInclude>
     <ClInclude Include="Passes\DispatchPass.h">
-      <Filter>Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\EndQueryPass.h">
       <Filter>Passes</Filter>
     </ClInclude>
     <ClInclude Include="Passes\GenerateMipMapsPass.h">
@@ -192,6 +192,12 @@
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>TextureLoaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\BeginQueryPass.h">
+      <Filter>Passes\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\EndQueryPass.h">
+      <Filter>Passes\Query</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

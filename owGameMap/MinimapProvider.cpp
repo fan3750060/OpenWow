@@ -46,7 +46,7 @@ void CMinimapProvider::Init()
 		{
 			MinimapData_Map* minimapData = new MinimapData_Map;
 			int tabIndex = curStr.find('\t');
-			assert1(tabIndex != -1);
+			_ASSERT(tabIndex != -1);
 
 			string beforeTab = curStr.substr(0, tabIndex);
 			sscanf_s
@@ -78,18 +78,18 @@ MinimapDir* CMinimapProvider::getMinimap(string _name)
 
 void MinimapDir::Load()
 {
-	for (auto& it : data)
+	/*for (auto& it : data)
 	{
 		textures[it->X_Coord][it->Y_Coord] = GetManager<ITexturesManager>()->Add("textures\\Minimap\\" + it->filename);
 		delete it;
 		it = nullptr;
 	}
-	data.clear();
+	data.clear();*/
 }
 
 void MinimapDir::Render(cvec3 _pos)
 {
-	int8 _x = _pos.x / C_TileSize;
+	/*int8 _x = _pos.x / C_TileSize;
 	int8 _z = _pos.z / C_TileSize;
 
 	vec2 startPos = vec2(1280 - C_MinimapSize.x, 0);
@@ -132,13 +132,13 @@ void MinimapDir::Render(cvec3 _pos)
 			(
 				startPos + vec2(i * oneTextureSize.x, j * oneTextureSize.y) - correctPoint,
 				textures[XC][ZC],
-				oneTextureSize/*,
-				degToRad(_Render->getCamera()->Roll)*/
+				oneTextureSize
+				//,				degToRad(_Render->getCamera()->Roll)
 			);
 		}
 	}
 	_Render->RenderRectangle(startPos + oneTextureSize * 1.5f, vec2(5.0f, 5.0f));
 
 
-	_Render->r.setScissorTest(false);
+	_Render->r.setScissorTest(false);*/
 }

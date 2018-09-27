@@ -1,20 +1,13 @@
 #include <stdafx.h>
 
-// Additional
-#include "ShaderParameterDX11.h"
-
 // General
 #include "ShaderDX11.h"
-
-// This parameter will be returned if an invalid shader parameter is requested.
-static ShaderParameterDX11 gs_InvalidShaderParameter;
 
 // Forward declarations
 DXGI_FORMAT GetDXGIFormat(const D3D11_SIGNATURE_PARAMETER_DESC& paramDesc);
 
 ShaderDX11::ShaderDX11(ID3D11Device2* pDevice)
-	: m_ShaderType(UnknownShaderType)
-	, m_pDevice(pDevice)
+	: m_pDevice(pDevice)
 {
 	m_pDevice->GetImmediateContext2(&m_pDeviceContext);
 }
@@ -37,12 +30,6 @@ void ShaderDX11::Destroy()
 	m_ShaderParameters.clear();
 	m_InputSemantics.clear();
 }
-
-Shader::ShaderType ShaderDX11::GetType() const
-{
-	return m_ShaderType;
-}
-
 
 std::string ShaderDX11::GetLatestProfile(ShaderType type)
 {
@@ -148,7 +135,7 @@ std::string ShaderDX11::GetLatestProfile(ShaderType type)
 	return "";
 }
 
-bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
+bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
 	HRESULT hr;
 	{
@@ -300,7 +287,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cst
 
 		inputElements.push_back(inputElement);
 
-		m_InputSemantics.insert(SemanticMap::value_type(BufferBinding(inputElement.SemanticName, inputElement.SemanticIndex), i));
+		m_InputSemantics.insert(SemanticMap::value_type(InputSemantic(inputElement.SemanticName, inputElement.SemanticIndex), i));
 	}
 
 	if (inputElements.size() > 0)
@@ -343,7 +330,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring source, cst
 		}
 
 		// Create an empty shader parameter that should be filled-in by the application.
-		std::shared_ptr<ShaderParameterDX11> shaderParameter = std::make_shared<ShaderParameterDX11>(resourceName, bindDesc.BindPoint, shared_from_this(), parameterType);
+		std::shared_ptr<ShaderParameter> shaderParameter = std::make_shared<ShaderParameter>(resourceName, bindDesc.BindPoint, shared_from_this(), parameterType);
 		m_ShaderParameters.insert(ParameterMap::value_type(resourceName, shaderParameter));
 
 	}
@@ -377,39 +364,10 @@ bool ShaderDX11::LoadShaderFromFile(ShaderType shaderType, cstring fileName, con
 			data += line + '\n';
 		}
 
-		result = LoadShaderFromString(shaderType, data, fileName, shaderMacros, entryPoint, profile);
+		result = LoadShaderFromString(shaderType, fileName, data, shaderMacros, entryPoint, profile);
 	}
 
 	return result;
-}
-
-ShaderParameter& ShaderDX11::GetShaderParameterByName(cstring name) const
-{
-	ParameterMap::const_iterator iter = m_ShaderParameters.find(name);
-	if (iter != m_ShaderParameters.end())
-	{
-		return *(iter->second);
-	}
-
-	return gs_InvalidShaderParameter;
-}
-
-bool ShaderDX11::HasSemantic(const BufferBinding& binding) const
-{
-	SemanticMap::const_iterator iter = m_InputSemantics.find(binding);
-	return iter != m_InputSemantics.end();
-}
-
-UINT ShaderDX11::GetSlotIDBySemantic(const BufferBinding& binding) const
-{
-	SemanticMap::const_iterator iter = m_InputSemantics.find(binding);
-	if (iter != m_InputSemantics.end())
-	{
-		return iter->second;
-	}
-
-	// Some kind of error code or exception...
-	return (UINT)-1;
 }
 
 void ShaderDX11::Bind()

@@ -37,5 +37,5 @@ private:
 	int32					m_GrInner;
 	int32					m_GrOuter;
 
-	SharedGeomPtr			m_Geom;
+	SharedMeshPtr			m_Geom;
 };

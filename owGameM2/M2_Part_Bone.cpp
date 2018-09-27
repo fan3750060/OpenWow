@@ -59,7 +59,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 
 			if (m_ParentBone != nullptr)
 			{
-				assert1(m_ParentBone->IsCalculated());
+				_ASSERT(m_ParentBone->IsCalculated());
 				m_RotationMatrix = m_ParentBone->m_RotationMatrix * glm::toMat4(q);
 			}
 			else
@@ -78,7 +78,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 
 	if (m_ParentBone != nullptr)
 	{
-		assert1(m_ParentBone->IsCalculated());
+		_ASSERT(m_ParentBone->IsCalculated());
 		m_TransformMatrix = m_ParentBone->getTransformMatrix() * m;
 	}
 	else

@@ -61,7 +61,7 @@ void SkyManager::Calculate(uint32 _time)
 		return;
 	}
 
-	CalculateSkiesWeights(_Render->getCamera()->Position);
+	//CalculateSkiesWeights(_Render->getCamera()->Position);
 
 	// interpolation
 	m_Interpolated.Clear();
@@ -90,15 +90,16 @@ void SkyManager::Calculate(uint32 _time)
 			colors.push_back(vec4(m_Interpolated.m_Colors[C_Skycolors[v]], 0.0f));
 		}
 	}
+
 	// Fill buffer with color
-	colorsBuffer->updateBufferData(0, colors.size() * sizeof(vec4), colors.data());
+	//colorsBuffer->updateBufferData(0, colors.size() * sizeof(vec4), colors.data());
 }
 
 
 
 bool SkyManager::DEBUG_Render()
 {
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	/*_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	CDebug_GeometryPass* pass = _Render->getTechniquesMgr()->Debug_Pass.operator->();
 	pass->Bind();
@@ -120,7 +121,7 @@ bool SkyManager::DEBUG_Render()
 	pass->Unbind();
 
 
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
 
 	return false;
 }
@@ -139,7 +140,7 @@ bool SkyManager::PreRender3D()
 
 void SkyManager::Render3D()
 {
-	_Render->r.setDepthTest(false);
+	/*_Render->r.setDepthTest(false);
 	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 
@@ -157,7 +158,7 @@ void SkyManager::Render3D()
 
 	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setDepthTest(true);
+	_Render->r.setDepthTest(true);*/
 
 	//DEBUG_Render();
 }
@@ -190,20 +191,22 @@ void SkyManager::InitBuffer()
 			vertices.push_back(basepos1[v]);
 		}
 	}
-	__vertsSize = vertices.size();
-
 
 	// Vertex buffer
-	SharedBufferPtr vertexBuffer = _Render->r.createVertexBuffer(vertices.size() * sizeof(vec3), vertices.data(), false);
+	SharedBufferPtr vertexBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertices.data(), vertices.size(), sizeof(vec3));
 
 	// Colors buffer
-	colorsBuffer = _Render->r.createVertexBuffer(vertices.size() * sizeof(vec4), nullptr, true);
+	colorsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));
 
 	// Geometry
-	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PC);
-	__geom->setGeomVertexParams(vertexBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geom->setGeomVertexParams(colorsBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geom->finishCreatingGeometry();
+	__geom = Application::Get().GetRenderDevice()->CreateMesh();
+	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), vertexBuffer);
+	__geom->AddVertexBuffer(BufferBinding("COLOR", 1), colorsBuffer);
+
+	//__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PC);
+	//__geom->setGeomVertexParams(vertexBuffer, R_DataType::T_FLOAT, 0, 0);
+	//__geom->setGeomVertexParams(colorsBuffer, R_DataType::T_FLOAT, 0, 0);
+	//__geom->finishCreatingGeometry();
 
 	_Bindings->RegisterRenderable3DObject(this, 15);
 }
@@ -211,7 +214,7 @@ void SkyManager::InitBuffer()
 void SkyManager::CalculateSkiesWeights(cvec3 pos)
 {
 	skies.back()->m_Wight = 1.0f;
-	assert1(skies.back()->m_IsGlobalSky);
+	_ASSERT(skies.back()->m_IsGlobalSky);
 
 	for (int i = skies.size() - 2; i >= 0; i--)
 	{

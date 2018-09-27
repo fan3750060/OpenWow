@@ -5,39 +5,8 @@
 
 // Additional
 #include "TextureDX11Translate.h"
-#include "DDSLib.h"
-
-#include __PACK_BEGIN
-struct BLPHeader
-{
-	uint8 magic[4];
-	uint32 type;
-
-	uint8 compression;  // Compression: 1 for uncompressed, 2 for DXTC, 3 (cataclysm) for plain A8R8G8B8 m_DiffuseTextures
-	uint8 alpha_depth;  // Alpha channel bit depth: 0, 1, 4 or 8
-	uint8 alpha_type;   // 0, 1, 7, or 8
-	uint8 has_mips;     // 0 = no mips, 1 = has mips
-
-	uint32 width;
-	uint32 height;
-	uint32 mipOffsets[16];
-	uint32 mipSizes[16];
-};
-#include __PACK_END
-
-/*UINT DX11TextureCompressedSize(GLenum _format, int _width, int _height, int _depth)
-{
-	switch (_format)
-	{
-	case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-		return std::max(_width / 4, 1) * std::max(_height / 4, 1) * _depth * 8;
-	case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-	case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-		return std::max(_width / 4, 1) * std::max(_height / 4, 1) * _depth * 16;
-	default:
-		_ASSERT(false);
-	}
-}*/
+#include <libblp/libblp.h>
+#pragma comment(lib, "libblp.lib")
 
 TextureDX11::TextureDX11(ID3D11Device2* pDevice)
 	: m_pDevice(pDevice)
@@ -214,8 +183,6 @@ TextureDX11::~TextureDX11()
 
 bool TextureDX11::LoadTexture2D(cstring fileName)
 {
-	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
-
 	// Try to determine the file type from the image file.
 	/*FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeU(filePath.c_str());
 	if (fif == FIF_UNKNOWN)
@@ -351,149 +318,19 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 	break;
 	}*/
 
-	// Read data
-	BLPHeader header;
-	f->readBytes(&header, sizeof(BLPHeader));
+	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 
-	//if (header.width & (header.width - 1)) return;
-	//if (header.height & (header.height - 1)) return;
-
-	assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
-	assert1(header.type == 1);
-
-	uint8 mipmax = /*header.has_mips ? 16 : */1;
-	bool hasalpha = (header.alpha_depth != 0);
-	void* resultBuff = nullptr;
-
-	switch (header.compression)
-	{
-	case 1:
-	{
-		uint32 pal[256];
-		f->readBytes(pal, 1024);
-
-		uint8* buf = new uint8[header.mipSizes[0]];
-		uint32* buf2 = new uint32[header.width * header.height];
-		uint32* p;
-		uint8* c;
-		uint8* a;
-		// _texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
-
-		for (int i = 0; i < mipmax; i++)
-		{
-			if (header.mipOffsets[i] && header.mipSizes[i])
-			{
-				f->seek(header.mipOffsets[i]);
-				f->readBytes(buf, header.mipSizes[i]);
-
-				int cnt = 0;
-				p = buf2;
-				c = buf;
-				a = buf + header.width * header.height;
-				for (uint32 y = 0; y < header.height; y++)
-				{
-					for (uint32 x = 0; x < header.width; x++)
-					{
-						uint32 k = pal[*c++];
-						k = ((k & 0x00FF0000) >> 16) | ((k & 0x0000FF00)) | ((k & 0x000000FF) << 16);
-						int alpha;
-
-						if (header.alpha_depth == 8)
-						{
-							alpha = (*a++);
-						}
-						else if (header.alpha_depth == 1)
-						{
-							alpha = (*a & (1 << cnt++)) ? 0xff : 0;
-							if (cnt == 8)
-							{
-								cnt = 0;
-								a++;
-							}
-						}
-						else if (header.alpha_depth == 0)
-						{
-							alpha = 0xff;
-						}
-
-
-						k |= alpha << 24;
-						*p++ = k;
-					}
-				}
-
-				// _texture->uploadTextureData(0, i, buf2);
-				resultBuff = buf2;
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		//delete[] buf2;
-		//delete[] buf;
-	}
-	break;
-	case 2:
-	{
-		//_texture->createTexture(R_TextureTypes::Tex2D, , header.height, 1, format, header.has_mips, false, true, false);
-
-		/*uint8* buf = new uint8[header.mipSizes[0]];
-		for (uint8 i = 0; i < mipmax; i++)
-		{
-			if (header.mipOffsets[i])
-			{
-				assert1(header.mipSizes[i] > 0);
-
-				f->seek(header.mipOffsets[i]);
-				f->readBytes(buf, header.mipSizes[i]);
-			}
-			else
-			{
-				break;
-			}
-		}*/
-
-		// Read
-		uint8* buf = new uint8[header.mipSizes[0]];
-		assert1(header.mipSizes[0] > 0);
-		f->seek(header.mipOffsets[0]);
-		f->readBytes(buf, header.mipSizes[0]);
-
-		// Convert
-		uint32 size = header.width * header.height * 4;
-		uint8* outputBuffer = new uint8[size * 4];
-		if (header.alpha_type == 0) // DXT1
-		{
-			DDSDecompressDXT1(buf, header.width, header.height, outputBuffer);
-		}
-		else if (header.alpha_type == 1) // DXT3
-		{
-			DDSDecompressDXT3(buf, header.width, header.height, outputBuffer);
-		}
-		else if (header.alpha_type == 7) // DXT5
-		{
-			DDSDecompressDXT5(buf, header.width, header.height, outputBuffer);
-		}
-
-		resultBuff = outputBuffer;
-
-		delete[] buf;
-	}
-	break;
-	default:
-		_ASSERT(false); // "Pure" texture
-	}
+	LIBBLP_PixelView blpView;
+	LIBBLP_Load(f->getData(), f->getSize(), &blpView);
 
 	m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 	m_TextureDimension = Texture::Dimension::Texture2D;
-	m_TextureWidth = header.width;
-	m_TextureHeight = header.height;
-	m_BPP = 4 /*32*/;
+	m_TextureWidth = blpView.MipWidth[0];
+	m_TextureHeight = blpView.MipHeight[0];
+	m_BPP = 4;
 	m_bIsTransparent = FALSE;
 	m_NumSlices = 1;
-	m_Pitch = (m_TextureWidth) * m_BPP;
+	m_Pitch = (m_TextureWidth) * 4;
 
 	m_ShaderResourceViewFormat = m_RenderTargetViewFormat = m_TextureResourceFormat;
 	m_SampleDesc = GetSupportedSampleCount(m_TextureResourceFormat, 1);
@@ -537,7 +374,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 
 	// Subresource
 	D3D11_SUBRESOURCE_DATA subresourceData;
-	subresourceData.pSysMem = resultBuff;
+	subresourceData.pSysMem = blpView.MipData[0];
 	subresourceData.SysMemPitch = m_Pitch;
 	subresourceData.SysMemSlicePitch = 0;
 	if (FAILED(m_pDevice->CreateTexture2D(&textureDesc, m_bGenerateMipmaps ? nullptr : &subresourceData, &m_pTexture2D)))
@@ -561,7 +398,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 	// From DirectXTK (28/05/2015) @see https://directxtk.codeplex.com/
 	if (m_bGenerateMipmaps)
 	{
-		m_pDeviceContext->UpdateSubresource(m_pTexture2D, 0, nullptr, resultBuff, m_Pitch, 0);
+		m_pDeviceContext->UpdateSubresource(m_pTexture2D, 0, nullptr, blpView.MipData[0], m_Pitch, 0);
 		m_pDeviceContext->GenerateMips(m_pShaderResourceView);
 	}
 

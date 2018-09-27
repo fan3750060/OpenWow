@@ -120,7 +120,7 @@ DayNightPhase::DayNightPhase(DayNightPhase* a, DayNightPhase* b, float r)
 
 void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 {
-	_Render->r.setDepthTest(false);
+	/*_Render->r.setDepthTest(false);
 
 
     _Render->getTechniquesMgr()->Debug_Pass->Bind();
@@ -153,5 +153,5 @@ void DayNightPhase::Render_DEBUG(cvec3 _playerPos)
 			_Render->r.drawIndexed(0, 128 * 3, 0, 126);
 		}
 	}
-	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
+	_Render->getTechniquesMgr()->Debug_Pass->Unbind();*/
 }

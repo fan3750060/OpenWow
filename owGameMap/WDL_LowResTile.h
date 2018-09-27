@@ -7,21 +7,20 @@ class MapController;
 class CWDL_LowResTile : public SceneNode
 {
 public:
-	CWDL_LowResTile(MapController* _parent, uint32 _indexX, uint32 _indexZ, SharedGeomPtr _geom);
+	CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, SharedMeshPtr _geom);
 
 	// ISceneNode
-	string getObjectInfo() const override { return "@WDL_LOWRES@"; }
+	//string getObjectInfo() const override { return "@WDL_LOWRES@"; }
 
 	// IRenderable3D
-	bool PreRender3D() override;
-	void Render3D() override;
+	bool PreRender3D();
+	void Render3D();
 
 private:
 	const int				m_IndexX, m_IndexZ;
 
-	RenderState				m_State;
-	SharedGeomPtr			m_Geom;
+	SharedMeshPtr			m_Geom;
 
 private: // PARENT
-	const MapController*	m_MapController;
+	const std::weak_ptr<MapController> m_MapController;
 };

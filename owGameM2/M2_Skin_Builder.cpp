@@ -36,7 +36,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 	SM2_SkinSection*	t_sections			= (SM2_SkinSection*)	(m_F->getData() + m_SkinProfile.submeshes.offset);
 	SM2_SkinBatch*		t_Batches			= (SM2_SkinBatch*)		(m_F->getData() + m_SkinProfile.batches.offset);
 
-	assert1(m_SkinProfile.vertices.size == m_SkinProfile.bones.size);
+	_ASSERT(m_SkinProfile.vertices.size == m_SkinProfile.bones.size);
 
 	for (uint32 sectionIndex = 0; sectionIndex < m_SkinProfile.submeshes.size; sectionIndex++)
 	{
@@ -51,7 +51,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 			{
 				uint8 boneIndex = t_bonesIndexes[vert].index[bone];
 				newVertex.bone_indices[bone] = boneIndex;
-				assert1(boneIndex < section.boneCount);
+				_ASSERT(boneIndex < section.boneCount);
 			}
 			vertexes.push_back(newVertex);
 		}
@@ -60,8 +60,8 @@ void CM2_Skin_Builder::Step1LoadProfile()
 		for (uint16 ind = section.indexStart; ind < section.indexStart + section.indexCount; ind++)
 		{
 			uint16 index = t_indexesIndexes[ind];
-			assert1(index >= section.vertexStart);
-			assert1(index < section.vertexStart + section.vertexCount);
+			_ASSERT(index >= section.vertexStart);
+			_ASSERT(index < section.vertexStart + section.vertexCount);
 			indexes.push_back(index - section.vertexStart);
 		}
 
@@ -78,7 +78,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 	}
 
 	uint32	t_bonesMax = m_SkinProfile.boneCountMax;
-	//assert1(t_bonesMax == 256);
+	//_ASSERT(t_bonesMax == 256);
 	//Log::Warn("t_bonesMax = %d", t_bonesMax);
 }
 

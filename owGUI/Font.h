@@ -3,7 +3,7 @@
 class Font 
 {
 public:
-	Font(SharedTexturePtr _texture, SharedGeomPtr _fontGeometry, vector<uint32> _widthArray, uint32 _height);
+	Font(SharedTexturePtr _texture, SharedMeshPtr _fontGeometry, vector<uint32> _widthArray, uint32 _height);
 	~Font();
 
 	void Render(cstring _string, vec2 _offset, const Color& _color) const;
@@ -11,7 +11,7 @@ public:
 	// Getters
 	uint32 GetStringWidth(cstring _string) const;
 	SharedTexturePtr getTexture() const { return m_Texture; }
-	SharedGeomPtr getGeometry() const { return m_Geometry; }
+	SharedMeshPtr getGeometry() const { return m_Geometry; }
 	uint32 GetHeight() const { return m_Height; }
 
 public:
@@ -20,7 +20,7 @@ public:
 
 private:
 	SharedTexturePtr	m_Texture;
-	SharedGeomPtr	m_Geometry;
+	SharedMeshPtr	m_Geometry;
 	vector<uint32>	m_WidthArray;
 	uint32			m_Height;
 };

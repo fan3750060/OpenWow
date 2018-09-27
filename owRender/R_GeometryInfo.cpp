@@ -61,7 +61,7 @@ void R_GeometryInfo::finishCreatingGeometry()
 	// bind index buffer, if present
 	if (m_IndexBuffer)
 	{
-		assert1(m_IndexBuffer->m_GLObj > 0);
+		_ASSERT(m_IndexBuffer->m_GLObj > 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer->m_GLObj);
 	}
 
@@ -75,7 +75,7 @@ void R_GeometryInfo::finishCreatingGeometry()
 		const R_VertexBufferSlot& vbSlot = m_VertexBufInfo[attrib.vbSlot];
 
 		SharedBufferPtr buf = m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer;
-		assert1(buf->m_GLObj && buf->m_Type == GL_ARRAY_BUFFER || buf->m_Type == GL_SHADER_STORAGE_BUFFER); // special case for compute buffer
+		_ASSERT(buf->m_GLObj && buf->m_Type == GL_ARRAY_BUFFER || buf->m_Type == GL_SHADER_STORAGE_BUFFER); // special case for compute buffer
 
 		glBindBuffer(GL_ARRAY_BUFFER, buf->m_GLObj);
 		glVertexAttribPointer(i, attrib.size, dataTypes[vbSlot.m_VertexBufferDataType], vbSlot.m_NeedNorm, vbSlot.m_Stride, (char*)0 + vbSlot.m_Offset + attrib.offset);

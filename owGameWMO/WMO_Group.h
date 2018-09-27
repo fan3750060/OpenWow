@@ -42,7 +42,7 @@ public:
 	vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
-	SharedGeomPtr							__geom;
+	SharedMeshPtr							__geom;
 
 public:
 	//-- Triangles --//

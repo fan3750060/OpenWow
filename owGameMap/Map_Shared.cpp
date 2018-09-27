@@ -35,7 +35,7 @@ CMapShared::CMapShared()
 			*dtc++ = vec2(tx, ty);
 		}
 	}
-	BufferTextureCoordDetail = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec2), detailTextureCoord, false);
+	BufferTextureCoordDetail = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)detailTextureCoord, C_MapBufferSize, sizeof(vec2));
 
 	// init texture coordinates for alpha map:
 	vec2 alphaTextureCoord[C_MapBufferSize];
@@ -54,7 +54,7 @@ CMapShared::CMapShared()
 			*atc++ = vec2(tx, ty);
 		}
 	}
-	BufferTextureCoordAlpha = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec2), alphaTextureCoord, false);
+	BufferTextureCoordAlpha = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)alphaTextureCoord, C_MapBufferSize, sizeof(vec2));
 }
 
 string CMapShared::getMapFolder(const DBC_MapRecord& _map)

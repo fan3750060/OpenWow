@@ -10,6 +10,7 @@ class SceneNode : public Object, public std::enable_shared_from_this<SceneNode>
 public:
 	typedef Object base;
 
+	//explicit SceneNode(std::weak_ptr<SceneNode> _parent);
 	explicit SceneNode(cmat4 localTransform = mat4(1.0f));
 	virtual ~SceneNode();
 
@@ -18,6 +19,26 @@ public:
 	 */
 	cstring GetName() const;
 	void SetName(cstring name);
+
+	// Translate
+	void setTranslate(cvec3 _translate, bool _calculateMatrix = true) { if (m_Translate == _translate) return; m_Translate = _translate; if (_calculateMatrix) CalculateLocalTransform(); }
+	cvec3 getTranslate() const { return m_Translate; }
+
+	// Rotate
+	void setRotate(cvec3 _rotate, bool _calculateMatrix = true) { if (m_Rotate == _rotate) return; m_Rotate = _rotate; if (_calculateMatrix) CalculateLocalTransform(); }
+	cvec3 getRotate() const { return m_Rotate; }
+
+	// Rotate Quaternion
+	void setRotateQuat(cquat _rotate, bool _calculateMatrix = true) { m_RotateQuat = _rotate; if (_calculateMatrix) CalculateLocalTransform(true); }
+	cquat getRotateQuat() const { return m_RotateQuat; }
+
+	// Scale
+	void setScale(cvec3 _scale, bool _calculateMatrix = true) { if (m_Scale == _scale) return; m_Scale = _scale; if (_calculateMatrix) CalculateLocalTransform(); }
+	cvec3 getScale() const { return m_Scale; }
+
+	// Bounds
+	void setBounds(BoundingBox _bbox) { m_Bounds = _bbox; }
+	cbbox getBounds() const { return m_Bounds; }
 
 	/**
 	 * Gets the scene node's local transform (relative to it's parent world transform).
@@ -76,18 +97,24 @@ public:
 
 protected:
 	mat4 GetParentWorldTransform() const;
+	virtual void CalculateLocalTransform(bool _isRotationQuat = false);
 
 private:
 	typedef std::vector< std::shared_ptr<SceneNode> > NodeList;
 	typedef std::multimap< std::string, std::shared_ptr<SceneNode> > NodeNameMap;
 	typedef std::vector< std::shared_ptr<Mesh> > MeshList;
 
-	std::string m_Name;
+	std::string         m_Name;
 
 	// Transforms node from parent's space to world space for rendering.
-	mat4 m_LocalTransform;
+	mat4                m_LocalTransform;
+	vec3                m_Translate;
+	vec3				m_Rotate;
+	quat				m_RotateQuat;
+	vec3                m_Scale;
+	BoundingBox         m_Bounds;
 	// This is the inverse of the local -> world transform.
-	mat4 m_InverseTransform;
+	mat4                m_InverseTransform;
 
 	std::weak_ptr<SceneNode> m_pParentNode;
 	NodeList m_Children;

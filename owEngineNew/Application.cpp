@@ -212,9 +212,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		case WM_PAINT:
 		{
 			PAINTSTRUCT paintStruct;
-			HDC hDC;
-
-			hDC = BeginPaint(hwnd, &paintStruct);
+			HDC hDC = BeginPaint(hwnd, &paintStruct);
 			EndPaint(hwnd, &paintStruct);
 		}
 		break;
@@ -407,10 +405,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		}
 		break;
 		default:
-		{
 			return DefWindowProc(hwnd, message, wParam, lParam);
-		}
-		break;
 		}
 	}
 	else
@@ -420,10 +415,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		case WM_CREATE:
 			break;
 		default:
-		{
 			return DefWindowProc(hwnd, message, wParam, lParam);
-		}
-		break;
 		}
 
 	}
@@ -475,9 +467,6 @@ int Application::Run()
 
 void Application::Stop()
 {
-	// Request to stop the application.
-	// Push a quit event on to the event queue to ensure
-	// events are processed in the correct order.
 	PostQuitMessage(0);
 }
 
@@ -493,8 +482,6 @@ void Application::OnInitialize(EventArgs& e)
 
 	m_bIsInitialized = true;
 }
-
-
 
 void Application::OnUpdate(UpdateEventArgs& e)
 {
@@ -512,22 +499,11 @@ void Application::OnTerminate(EventArgs& e)
 {
 	Terminate(e);
 
-	// I had to move this block of code from the destructor to  here 
-	// due to a bug in the Visual Studio 2013 runtime (msvc12).
-	// This bug is resolved in Visual Studio 2015 runtime (msvc14).
-	// A std::thread::join would hang indefinently if the join occurs
-	// after main exits. Since the application can be statically declared
-	// in global scope, it's destruction would occur during destruction of 
-	// statically declared variables (after main exits) and causing the join
-	// method to hang indefinently.
-	// See: https://connect.microsoft.com/VisualStudio/feedback/details/747145
-
-	//TODO delete m_Windows
+	//delete m_Windows;
 }
 
 void Application::OnTerminated(EventArgs& e)
 {
-
 	m_bIsInitialized = false;
 
 	Terminated(e);
@@ -545,7 +521,6 @@ void Application::OnExit(EventArgs& e)
 	m_bIsRunning = false;
 }
 
-// A user event was generated
 void Application::OnUserEvent(UserEventArgs& e)
 {
 	UserEvent(e);

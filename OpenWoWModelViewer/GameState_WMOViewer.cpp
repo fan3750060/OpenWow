@@ -25,7 +25,7 @@ void GameState_WMOViewer::OpenFile(const char* _fname)
 {
 	string path = _fname;
 	int pos = path.find("ExData");
-	assert1(pos != -1);
+	_ASSERT(pos != -1);
 	path = path.substr(pos + 7);
 
 	WMO* wmo = GetManager<IWMOManager>()->Add(path);

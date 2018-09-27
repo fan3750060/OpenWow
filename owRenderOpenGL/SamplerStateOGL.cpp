@@ -257,7 +257,7 @@ uint8_t SamplerStateOGL::GetMaxAnisotropy() const
 
 void SamplerStateOGL::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
-	if (m_bIsDirty)
+	//if (m_bIsDirty)
 	{
 		glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_FILTER, GLTranslateMinFilter(m_MinFilter));
 		//glSamplerParameteri(m_GLObj, GL_TEXTURE_MIN_FILTER, GLTranslateMinMipFilter(m_MinFilter, m_MipFilter));

@@ -10,7 +10,7 @@ CConsoleOpenGL::CConsoleOpenGL() :
 {
 	m_IsOpened = false;
 	consoleFont = GetManager<IFontsManager>()->GetMainFont();
-	assert1(consoleFont != nullptr);
+	_ASSERT(consoleFont != nullptr);
 	fontHeight = consoleFont->GetHeight();
 	consoleHeight = windowSize.y / 2.0f;
 	linesInConsole = consoleHeight / fontHeight;

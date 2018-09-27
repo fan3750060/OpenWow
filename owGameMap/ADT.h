@@ -13,7 +13,7 @@ class MapController;
 class ADT : public SceneNode, public ILoadable
 {
 public:
-	ADT(MapController* _mapController, uint32 _intexX, uint32 _intexZ);
+	ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ);
 	virtual ~ADT();
 
 	std::shared_ptr<ADT_MCNK> getChunk(int32 x, int32 z)
@@ -27,8 +27,8 @@ public:
 	}
 
 	// ISceneNode
-	string getObjectInfo() const override { return "@ADT@" + to_string(m_IndexX) + ":" + to_string(m_IndexZ); }
-	void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
+	//string getObjectInfo() const override { return "@ADT@" + to_string(m_IndexX) + ":" + to_string(m_IndexZ); }
+	//void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
 
 	// ILoadableObject
 	bool Load() override;
@@ -37,8 +37,8 @@ public:
 	bool isLoaded() const { return true; }
 
 	// IRenderable3D
-	bool PreRender3D() override;
-	void Render3D() override;
+	bool PreRender3D();
+	void Render3D();
 
 public:
 	const int							m_IndexX, m_IndexZ;
@@ -47,12 +47,14 @@ public:
 	vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
 
 	// Instances
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	vector<std::shared_ptr<ADT_WMO_Instance>>	m_WMOsInstances;
 	vector<std::shared_ptr<ADT_MDX_Instance>>	m_MDXsInstances;
+#endif
 	vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
 	vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
 
 private: // PARENT
-	MapController*						m_MapController;
-	CGroupQuality&						m_QualitySettings;
+	const std::weak_ptr<MapController>			m_MapController;
+	CGroupQuality&								m_QualitySettings;
 };

@@ -114,7 +114,7 @@ void CItem_VisualData::Render3D()
 void CItem_VisualData::InitObjectComponents()
 {
 	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
-	assert1(displayInfo != nullptr);
+	_ASSERT(displayInfo != nullptr);
 
 	for (uint32 i = 0; i < ItemObjectComponents[InventoryType].count; i++)
 	{
@@ -132,7 +132,7 @@ void CItem_VisualData::InitObjectComponents()
 			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_ParentCharacter->Race]->Get_ClientPrefix(), getGenderLetter(m_ParentCharacter->Gender));
 
 			int dotPosition = objectFileName.find_last_of('.');
-			assert1(dotPosition != -1);
+			_ASSERT(dotPosition != -1);
 			objectFileName.insert(dotPosition, modelPostfix);
 		}
 		else if (InventoryType == InventoryType::CLOAK)
@@ -196,7 +196,7 @@ void CItem_VisualData::InitObjectComponents()
 void CItem_VisualData::InitGeosetComponents()
 {
 	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
-	assert1(displayInfo != nullptr);
+	_ASSERT(displayInfo != nullptr);
 
 	for (uint32 j = 0; j < 3; j++)
 	{
@@ -213,7 +213,7 @@ void CItem_VisualData::InitGeosetComponents()
 void CItem_VisualData::InitTextureComponents()
 {
 	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
-	assert1(displayInfo != nullptr);
+	_ASSERT(displayInfo != nullptr);
 
 	for (uint32 i = 0; i < DBC_CharComponent_Sections::ITEMS_COUNT; i++)
 	{

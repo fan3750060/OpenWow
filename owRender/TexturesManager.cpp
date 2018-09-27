@@ -83,8 +83,8 @@ void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, SharedTexturePtr 
 	if (header.width & (header.width - 1)) return;
 	if (header.height & (header.height - 1)) return;
 
-    assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
-    assert1(header.type == 1);
+    _ASSERT(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
+    _ASSERT(header.type == 1);
 
     uint8 mipmax = header.has_mips ? 16 : 1;
 
@@ -116,7 +116,7 @@ void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, SharedTexturePtr 
         {
             if (header.mipOffsets[i])
             {
-                assert1(header.mipSizes[i] > 0);
+                _ASSERT(header.mipSizes[i] > 0);
 
                 f->seek(header.mipOffsets[i]);
                 f->readBytes(buf, header.mipSizes[i]);
@@ -201,7 +201,7 @@ void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, SharedTexturePtr 
     }
     else
     {
-        Log::Warn("R_Texture[%s]: compression=[%d]", f->Path_Name().c_str(), header.compression);
+        Log::Warn("R_Texture[%s]: colorEncoding=[%d]", f->Path_Name().c_str(), header.compression);
         //fail1();
     }
 

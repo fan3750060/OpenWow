@@ -3,6 +3,7 @@
 // Additional
 #include <ctime>
 
+
 Camera g_Camera;
 glm::vec2 g_PreviousMousePosition;
 
@@ -64,6 +65,7 @@ void OnUpdate(UpdateEventArgs& e);
 void OnMouseButtonPressed(MouseButtonEventArgs& e);
 void OnMouseButtonReleased(MouseButtonEventArgs& e);
 void OnMouseMoved(MouseMotionEventArgs& e);
+void OnMouseWheel(MouseWheelEventArgs& e);
 
 void OnPreRender(RenderEventArgs& e);
 void OnRender(RenderEventArgs& e);
@@ -141,6 +143,7 @@ int main(int argumentCount, char* arguments[])
 		g_pRenderWindow->MouseButtonPressed += &OnMouseButtonPressed;
 		g_pRenderWindow->MouseButtonReleased += &OnMouseButtonReleased;
 		g_pRenderWindow->MouseMoved += &OnMouseMoved;
+		g_pRenderWindow->MouseWheel += &OnMouseWheel;
 		g_pRenderWindow->PreRender += &OnPreRender;
 		g_pRenderWindow->Render += &OnRender;
 		g_pRenderWindow->PostRender += &OnPostRender;
@@ -150,34 +153,42 @@ int main(int argumentCount, char* arguments[])
 		RenderDevice* renderDevice = app.GetRenderDevice();
 
 
-		renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
-		renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
-		renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
-		renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
+		//std::shared_ptr<Texture> t0 = renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
+		//std::shared_ptr<Texture> t1 = renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
+		//std::shared_ptr<Texture> t2 = renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
+		std::shared_ptr<Texture> t3 = renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
 
-		renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
-		renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
-		renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
-		//renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
+		std::shared_ptr<Texture> t0 = renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
+		std::shared_ptr<Texture> t1 = renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
+		std::shared_ptr<Texture> t2 = renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
+
+		std::shared_ptr<Texture> t30 = renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
 		
 
-		std::shared_ptr<Texture> tt = renderDevice->CreateTexture2D("TILESET\\Barrens\\BarrensBaseBush.blp");
+		renderDevice->CreateTexture2D("TILESET\\Barrens\\BarrensBaseBush.blp");
 		
-		g_pScene = std::make_shared<SceneBase>();
-
-		std::shared_ptr<Mesh> mesh1 = renderDevice->CreateSphere();
-		mesh1->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
+		std::shared_ptr<Mesh> mesh1 = renderDevice->CreatePlane();
+		mesh1->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t0); // DXT1
 
 		std::shared_ptr<Mesh> mesh2 = renderDevice->CreatePlane();
-		mesh2->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
+		mesh2->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t1); // DXT1A
 
-		std::shared_ptr<Mesh> mesh3 = renderDevice->CreateCube();
-		mesh3->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
+		std::shared_ptr<Mesh> mesh3 = renderDevice->CreatePlane();
+		mesh3->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t2); // DXT3
 
-		std::shared_ptr<Mesh> mesh4 = renderDevice->CreateCone();
-		mesh4->GetMaterial()->SetTexture(Material::TextureType::Diffuse, tt);
+		std::shared_ptr<Mesh> mesh4 = renderDevice->CreatePlane();
+		mesh4->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t3); // DXT5
 
-		std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
+
+
+
+
+		std::shared_ptr<Mesh> mesh5 = renderDevice->CreatePlane();
+		mesh5->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t30);
+
+		g_pScene = std::make_shared<SceneBase>();
+
+		/*std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
 		n1->SetLocalTransform(glm::translate(vec3(-10.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
 		n1->AddMesh(mesh1);
 
@@ -193,13 +204,31 @@ int main(int argumentCount, char* arguments[])
 		n4->SetLocalTransform(glm::translate(vec3(5.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
 		n4->AddMesh(mesh4);
 
+		std::shared_ptr<SceneNode> n5 = g_pScene->CreateSceneNode();
+		n5->SetLocalTransform(glm::translate(vec3(10.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n5->AddMesh(mesh5);*/
+
+		OpenDBs();
+
+		std::shared_ptr<MapController> contr = std::make_shared<MapController>();
+		contr->SetParent(g_pScene->GetRootNode());
+
+		contr->MapPreLoad(*DBC_Map[1]);
+		contr->MapLoad();
+		contr->MapPostLoad();
+
+		contr->EnterMap(30, 30);
+
+
+		Viewport viewPort(0, 0, 1024.0f, 768.0f);
+
 		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
 		// CAMERA
-		g_Camera.SetTranslate(vec3(0, 0, 0));
+		g_Camera.SetTranslate(vec3(30 * C_TileSize, 200, 30 * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
-		g_Camera.SetViewport(Viewport(0, 0, 1024.0f, 768.0f));
-		g_Camera.SetProjectionRH(45.0f, 1024.0f / 768.0f, 0.1f, 1000.0f);
+		g_Camera.SetViewport(viewPort);
+		g_Camera.SetProjectionRH(45.0f, 1024.0f / 768.0f, 0.1f, 10000.0f);
 
 		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
@@ -229,16 +258,20 @@ int main(int argumentCount, char* arguments[])
 		g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
 
 		// STATES
-		BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
+		BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
+		DepthStencilState::DepthMode enableDepthWrites(true, DepthStencilState::DepthWrite::Enable);
 		DepthStencilState::DepthMode disableDepthWrites(true, DepthStencilState::DepthWrite::Disable);
 
 		// PIPELINES
 		g_pOpaquePipeline = renderDevice->CreatePipelineState();
 		g_pOpaquePipeline->SetShader(Shader::VertexShader, g_pVertexShader);
 		g_pOpaquePipeline->SetShader(Shader::PixelShader, g_pPixelShader);
+		g_pOpaquePipeline->GetBlendState().SetBlendMode(alphaBlending);
+		g_pOpaquePipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 		g_pOpaquePipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
-		//g_pOpaquePipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
+		g_pOpaquePipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
 		g_pOpaquePipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
+		g_pOpaquePipeline->GetRasterizerState().SetViewport(viewPort);
 
 		/*g_pTransparentPipeline = renderDevice->CreatePipelineState();
 		g_pTransparentPipeline->SetShader(Shader::VertexShader, g_pVertexShader);
@@ -280,14 +313,14 @@ int main(int argumentCount, char* arguments[])
 
 void OnUpdate(UpdateEventArgs& e)
 {
-	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 5 : 2;
-	float rotateMultiplier = (g_CameraMovement.RotateFaster) ? 5 : 2;
+	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 300 : 2;
+	float rotateMultiplier = (g_CameraMovement.RotateFaster) ? 300 : 2;
 
 	g_Camera.TranslateX((g_CameraMovement.Right - g_CameraMovement.Left) * e.ElapsedTime * moveMultiplier);
 	g_Camera.TranslateY((g_CameraMovement.Up - g_CameraMovement.Down) * e.ElapsedTime * moveMultiplier);
 	g_Camera.TranslateZ((g_CameraMovement.Back - g_CameraMovement.Forward) * e.ElapsedTime * moveMultiplier);
-	g_Camera.AddPitch(g_CameraMovement.Pitch * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::Local);
-	g_Camera.AddYaw(g_CameraMovement.Yaw * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::World);
+	//g_Camera.AddPitch(g_CameraMovement.Pitch * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::Local);
+	//g_Camera.AddYaw(g_CameraMovement.Yaw * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::World);
 }
 
 void OnPreRender(RenderEventArgs& e)
@@ -305,9 +338,6 @@ void OnRender(RenderEventArgs& e)
 {
 	// Render the scene from the perspective of this camera.
 	e.Camera = &g_Camera;
-
-	g_pOpaquePipeline->GetRasterizerState().SetViewport(Viewport(0, 0, 1024.0f, 768.0f));
-	//g_pTransparentPipeline->GetRasterizerState().SetViewport(Viewport(0, 0, 1024.0f, 768.0f));
 
 	switch (g_RenderingTechnique)
 	{
@@ -475,6 +505,8 @@ void OnMouseButtonPressed(MouseButtonEventArgs& e)
 
 void OnMouseButtonReleased(MouseButtonEventArgs& e)
 {
+	//g_Camera.OnMouseReleased(e);
+
 	glm::vec2 currentMousePosition = glm::vec2(e.X, e.Y);
 	float offset = glm::distance(g_PreviousMousePosition, currentMousePosition);
 }
@@ -485,4 +517,11 @@ void OnMouseMoved(MouseMotionEventArgs& e)
 	{
 		g_Camera.OnMouseMoved(e);
 	}
+}
+
+void OnMouseWheel(MouseWheelEventArgs& e)
+{
+	//float fPivot = g_Camera.GetPivotDistance();
+	//fPivot -= e.WheelDelta * (g_CameraMovement.TranslateFaster ? 1.0f : 0.1f);
+	//g_Camera.SetPivotDistance(fPivot);
 }

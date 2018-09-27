@@ -3,6 +3,8 @@
 // General
 #include "ADT_MDX_Instance.h"
 
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
+
 ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, const ADT_MDXDef& _placementInfo) :
 	CM2_Base_Instance(_parent, _mdxObject)
 {
@@ -66,8 +68,6 @@ void ADT_MDX_Instance::Render3D()
 	}
 
 	CM2_Base_Instance::Render3D();
-
-	PERF_INC(PERF_MAP_MODELS_MDXs);
 }
 
 //
@@ -76,3 +76,6 @@ void ADT_MDX_Instance::reset()
 {
 	m_AlreadyDraw.clear();
 }
+
+
+#endif

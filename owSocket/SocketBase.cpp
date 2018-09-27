@@ -166,7 +166,7 @@ void CSocketBase::SocketReadThread(std::future<void> _future)
 			m_SocketObjBusy.lock();
 			int32 currentSize = recv(m_SocketObj, receiveBuffer, receiveBufferSize, 0);
 			m_SocketObjBusy.unlock();
-			assert1(currentSize < SOCKETBASE_MAXBUFFERSIZE);
+			_ASSERT(currentSize < SOCKETBASE_MAXBUFFERSIZE);
 
 			if (currentSize > 0)
 			{
@@ -234,7 +234,7 @@ bool CSocketBase::isReceiveCallbackCorrect()
 }
 void CSocketBase::callOnReceiveCallback(uint8* _data, uint32 _size)
 {
-	assert1(m_OnDataReceive != nullptr);
+	_ASSERT(m_OnDataReceive != nullptr);
 
 	ByteBuffer byteBuffer;
 	byteBuffer.CopyData(_data, _size);
@@ -268,7 +268,7 @@ ByteBuffer SocketCache::Pop()
 {
 	std::lock_guard<std::mutex> lg(m_CacheLock);
 
-	assert1(!m_Cache.empty());
+	_ASSERT(!m_Cache.empty());
 
 	Packet& bb = m_Cache.front();
 	ByteBuffer buf =  bb.getData();

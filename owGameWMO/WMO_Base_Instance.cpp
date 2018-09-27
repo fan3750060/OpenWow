@@ -7,7 +7,7 @@ CWMO_Base_Instance::CWMO_Base_Instance(SceneNode* _parent, SmartWMOPtr _wmoObjec
 	SceneNode(_parent),
 	m_Object(_wmoObject)
 {
-	assert1(m_Object);
+	_ASSERT(m_Object);
 
 	setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
 	setSelectable();

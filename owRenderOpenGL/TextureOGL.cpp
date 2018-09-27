@@ -10,38 +10,8 @@
 #include "ShaderOGL.h"
 #include "TextureOGLTranslate.h"
 
-#include __PACK_BEGIN
-struct BLPHeader
-{
-	uint8 magic[4];
-	uint32 type;
-
-	uint8 compression;  // Compression: 1 for uncompressed, 2 for DXTC, 3 (cataclysm) for plain A8R8G8B8 m_DiffuseTextures
-	uint8 alpha_depth;  // Alpha channel bit depth: 0, 1, 4 or 8
-	uint8 alpha_type;   // 0, 1, 7, or 8
-	uint8 has_mips;     // 0 = no mips, 1 = has mips
-
-	uint32 width;
-	uint32 height;
-	uint32 mipOffsets[16];
-	uint32 mipSizes[16];
-};
-#include __PACK_END
-
-
-GLsizei GLTextureCompressedSize(GLenum _format, int _width, int _height, int _depth)
-{
-	switch (_format)
-	{
-	case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-		return std::max(_width / 4, 1) * std::max(_height / 4, 1) * _depth * 8;
-	case GL_COMPRESSED_RGBA_S3TC_DXT3_EXT:
-	case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
-		return std::max(_width / 4, 1) * std::max(_height / 4, 1) * _depth * 16;
-	default:
-		_ASSERT(false);
-	}
-}
+#include <libblp/libblp.h>
+#pragma comment(lib, "libblp.lib")
 
 TextureOGL::TextureOGL(RenderDeviceOGL* _device)
 	: m_TextureWidth(0)
@@ -145,152 +115,27 @@ bool TextureOGL::LoadTexture2D(cstring fileName)
 {
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 
-	// Read data
-	BLPHeader header;
-	f->readBytes(&header, sizeof(BLPHeader));
+	LIBBLP_PixelView blpView;
+	LIBBLP_Load(f->getData(), f->getSize(), &blpView);
 
-	if (header.width & (header.width - 1)) return false;
-	if (header.height & (header.height - 1)) return false;
-
-	assert1(header.magic[0] == 'B' && header.magic[1] == 'L' && header.magic[2] == 'P' && header.magic[3] == '2');
-	assert1(header.type == 1);
-	
 	m_TextureType = GL_TEXTURE_2D;
-	m_TextureWidth = header.width;
-	m_TextureHeight = header.height;
+	m_TextureWidth = blpView.MipWidth[0];
+	m_TextureHeight = blpView.MipHeight[0];
 	m_TextureDepth = 1;
 	m_bGenerateMipmaps = false;
 
 	glActiveTexture(GL_TEXTURE15);
-	glBindTexture(GL_TEXTURE_2D, m_GLObj);
+	glBindTexture(m_TextureType, m_GLObj);
 
-	uint8 mipmax = header.has_mips ? 16 : 1;
-	switch (header.compression)
+	for (uint8 i = 0; i < blpView.MipCount; i++)
 	{
-	case 1:
-	{
-		GLenum internalFormat = GL_RGBA8;
-		GLenum inputFormat = GL_RGBA;
-		GLenum inputType = GL_UNSIGNED_BYTE;
-
-		unsigned int pal[256];
-		f->readBytes(pal, 1024);
-
-		unsigned char* buf = new unsigned char[header.mipSizes[0]];
-		unsigned int* buf2 = new unsigned int[header.width * header.height];
-		unsigned int* p;
-		unsigned char* c, *a;
-
-		//bool hasalpha = (header.alpha_depth != 0);
-		//_texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, R_TextureFormats::RGBA8, header.has_mips, false, false, false);
-
-		for (int i = 0; i < mipmax; i++)
-		{
-			if (header.mipOffsets[i] && header.mipSizes[i])
-			{
-				f->seek(header.mipOffsets[i]);
-				f->readBytes(buf, header.mipSizes[i]);
-
-				int cnt = 0;
-				p = buf2;
-				c = buf;
-				a = buf + header.width * header.height;
-				for (uint32 y = 0; y < header.height; y++)
-				{
-					for (uint32 x = 0; x < header.width; x++)
-					{
-						unsigned int k = pal[*c++];
-						k = ((k & 0x00FF0000) >> 16) | ((k & 0x0000FF00)) | ((k & 0x000000FF) << 16);
-						int alpha;
-
-						if (header.alpha_depth == 8)
-						{
-							alpha = (*a++);
-						}
-						else if (header.alpha_depth == 1)
-						{
-							alpha = (*a & (1 << cnt++)) ? 0xff : 0;
-							if (cnt == 8)
-							{
-								cnt = 0;
-								a++;
-							}
-						}
-						else if (header.alpha_depth == 0)
-						{
-							alpha = 0xff;
-						}
-
-
-						k |= alpha << 24;
-						*p++ = k;
-					}
-				}
-
-				glTexImage2D(GL_TEXTURE_2D, i, internalFormat, m_TextureWidth, m_TextureHeight, 0, inputFormat, inputType, buf);
-				OGLCheckError();
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		delete[] buf2;
-		delete[] buf;
-	}
-	break;
-	case 2:
-	{
-		GLenum internalFormat;
-		GLenum inputFormat = GL_RGBA;
-		GLenum inputType = GL_UNSIGNED_BYTE;
-
-		if (header.alpha_type == 0)
-		{
-			internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-		}
-		else if (header.alpha_type == 1)
-		{
-			internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-		}
-		else if (header.alpha_type == 7)
-		{
-			internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-		}
-		else
-		{
-			_ASSERT(false);
-		}
-
-		//_texture->createTexture(R_TextureTypes::Tex2D, header.width, header.height, 1, format, header.has_mips, false, true, false);
-
-		uint8* buf = new uint8[header.mipSizes[0]];
-		for (uint8 i = 0; i < mipmax; i++)
-		{
-			if (header.mipOffsets[i])
-			{
-				assert1(header.mipSizes[i] > 0);
-
-				f->seek(header.mipOffsets[i]);
-				f->readBytes(buf, header.mipSizes[i]);
-
-				uint16 width = std::max(m_TextureWidth >> i, 1), height = std::max(m_TextureHeight >> i, 1);
-				glCompressedTexImage2D(GL_TEXTURE_2D, i, internalFormat, width, height, 0, GLTextureCompressedSize(internalFormat, width, height, m_TextureDepth), buf);
-				OGLCheckError();
-			}
-			else
-			{
-				break;
-			}
-		}
-
-		delete[] buf;
-	}
-	break;
+		glTexImage2D(m_TextureType, i, GL_RGBA8, blpView.MipWidth[i], blpView.MipHeight[i], 0, GL_RGBA, GL_UNSIGNED_BYTE, blpView.MipData[i]);
+		OGLCheckError();
 	}
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glGenerateMipmap(m_TextureType);
+
+	glBindTexture(m_TextureType, 0);
 
 	return true;
 }

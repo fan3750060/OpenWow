@@ -3,7 +3,7 @@
 // General
 #include "M2_Base_Instance.h"
 
-CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, SmartM2Ptr _m2Object) :
+CM2_Base_Instance::CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartM2Ptr _m2Object) :
 	SceneNode(_parent),
 	m_M2(nullptr),
 	m_Attached(nullptr),
@@ -16,7 +16,7 @@ CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, SmartM2Ptr _m2Object) :
 {
 	for (uint8 i = 0; i < SM2_Texture::Type::COUNT; i++)
 	{
-		m_SpecialTextures[i] = _Render->TexturesMgr()->DefaultTexture();
+		m_SpecialTextures[i] = Application::Get().GetRenderDevice()->GetDefaultTexture();
 	}
 
 	if (_m2Object != nullptr)
@@ -24,14 +24,14 @@ CM2_Base_Instance::CM2_Base_Instance(SceneNode* _parent, SmartM2Ptr _m2Object) :
 		setM2(_m2Object);
 	}
 
-	setDrawOrder(21);
+	//setDrawOrder(21);
 }
 
 CM2_Base_Instance::~CM2_Base_Instance()
 {
 	if (m_M2->isAnimated())
 	{
-		_Bindings->UnregisterUpdatableObject(this);
+		//_Bindings->UnregisterUpdatableObject(this);
 	}
 }
 
@@ -39,7 +39,7 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 void CM2_Base_Instance::Attach(const CM2_Part_Attachment* _attachment)
 {
-	assert1(_attachment != nullptr);
+	_ASSERT(_attachment != nullptr);
 	m_Attached = _attachment;
 }
 void CM2_Base_Instance::Detach()
@@ -49,12 +49,12 @@ void CM2_Base_Instance::Detach()
 
 void CM2_Base_Instance::setM2(SmartM2Ptr _model)
 {
-	assert1(m_M2 == nullptr);
-	assert1(_model != nullptr);
+	_ASSERT(m_M2 == nullptr);
+	_ASSERT(_model != nullptr);
 	m_M2 = _model;
 
 	InitLocal();
-	CalculateMatrix();
+	CalculateLocalTransform();
 }
 
 // Mesh & textures provider
@@ -64,7 +64,7 @@ bool CM2_Base_Instance::isMeshEnabled(uint32 _index) const
 }
 void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, cstring _textureName)
 {
-	SharedTexturePtr texture = GetManager<ITexturesManager>()->Add(_textureName);
+	SharedTexturePtr texture = Application::Get().GetRenderDevice()->CreateTexture2D(_textureName);
 	setSpecialTexture(_type, texture);
 }
 void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, SharedTexturePtr _texture)
@@ -76,7 +76,7 @@ void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, SharedTexture
 }
 SharedTexturePtr CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type _type) const
 {
-	assert1(_type < SM2_Texture::Type::COUNT);
+	_ASSERT(_type < SM2_Texture::Type::COUNT);
 	return m_SpecialTextures[_type];
 }
 
@@ -95,10 +95,10 @@ void CM2_Base_Instance::Update(double _time, double _dTime)
 // IRenderable3D
 bool CM2_Base_Instance::PreRender3D()
 {
-	if (!checkFrustum())
-	{
-		return false;
-	}
+	//if (!checkFrustum())
+	//{
+	//	return false;
+	//}
 
 	return true;
 }
@@ -107,7 +107,7 @@ void CM2_Base_Instance::Render3D()
 {
 	if (m_Attached != nullptr)
 	{
-		CalculateMatrix();
+		CalculateLocalTransform();
 	}
 
 	if (m_M2->isAnimated())
@@ -122,7 +122,7 @@ void CM2_Base_Instance::Render3D()
 		{*/
 		//if (!m_NeedRecalcAnimation)
 		//{
-		m_M2->calc(m_Animator->getSequenceIndex(), getAbsTrans(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
+		m_M2->calc(m_Animator->getSequenceIndex(), GetWorldTransfom(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
 		//	m_NeedRecalcAnimation = true;
 		//}
 		//}
@@ -146,34 +146,34 @@ void CM2_Base_Instance::InitLocal()
 	if (m_M2->isAnimated())
 	{
 		m_Animator = make_shared<CM2_Animator>(m_M2.operator->());
-		_Bindings->RegisterUpdatableObject(this);
+		//_Bindings->RegisterUpdatableObject(this);
 	}
 }
 
-void CM2_Base_Instance::CalculateMatrix(bool _isRotationQuat)
+void CM2_Base_Instance::CalculateLocalTransform(bool _isRotationQuat)
 {
 	if (m_Attached != nullptr)
 	{
 		const CM2_Part_Bone* bone = m_Attached->getBone();
-		assert1(bone != nullptr);
+		_ASSERT(bone != nullptr);
 
 		mat4 relMatrix;
 		relMatrix = glm::translate(relMatrix, bone->getPivot());
 
 		mat4 absMatrix;
-		absMatrix = getParent()->getAbsTrans() * bone->getTransformMatrix() * relMatrix;
-		setAbsTrans(absMatrix);
+		absMatrix = GetParentWorldTransform() * bone->getTransformMatrix() * relMatrix;
+		SetWorldTransform(absMatrix);
 
 		BoundingBox bbox = m_M2->m_Bounds;
-		bbox.transform(getAbsTrans());
+		bbox.transform(GetWorldTransfom());
 		setBounds(bbox);
 
 		return;
 	}
 
-	SceneNode::CalculateMatrix(_isRotationQuat);
+	SceneNode::CalculateLocalTransform(_isRotationQuat);
 
 	BoundingBox bbox = m_M2->m_Bounds;
-	bbox.transform(getAbsTrans());
+	bbox.transform(GetWorldTransfom());
 	setBounds(bbox);
 }

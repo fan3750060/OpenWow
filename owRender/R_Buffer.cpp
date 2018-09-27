@@ -40,7 +40,7 @@ void R_Buffer::createBuffer(uint32 _bufType, uint32 _size, const void* _data, bo
 	m_IsDynamic = _isDynamic;
 
 	glGenBuffers(1, &m_GLObj);
-	assert1(m_GLObj != 0);
+	_ASSERT(m_GLObj != 0);
 	glBindBuffer(m_Type, m_GLObj);
 	glBufferData(m_Type, _size, _data, _isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 	glBindBuffer(m_Type, 0);
@@ -72,8 +72,8 @@ void R_Buffer::createShaderStorageBuffer(uint32 _size, const void* _data, bool _
 
 void R_Buffer::updateBufferData(uint32 _offset, uint32 _size, const void* _data)
 {
-	assert1(m_IsDynamic);
-	assert1(_offset + _size <= m_Size);
+	_ASSERT(m_IsDynamic);
+	_ASSERT(_offset + _size <= m_Size);
 
 	glBindBuffer(m_Type, m_GLObj);
 
@@ -89,8 +89,8 @@ void R_Buffer::updateBufferData(uint32 _offset, uint32 _size, const void* _data)
 
 void* R_Buffer::mapBuffer(uint32 _offset, uint32 _size, R_BufferMappingTypes _mapType)
 {
-	assert1(m_IsDynamic);
-	assert1(_offset + _size <= m_Size);
+	_ASSERT(m_IsDynamic);
+	_ASSERT(_offset + _size <= m_Size);
 
 	glBindBuffer(m_Type, m_GLObj);
 
@@ -104,7 +104,7 @@ void* R_Buffer::mapBuffer(uint32 _offset, uint32 _size, R_BufferMappingTypes _ma
 
 void R_Buffer::unmapBuffer()
 {
-	assert1(m_IsDynamic);
+	_ASSERT(m_IsDynamic);
 
 	// multiple buffers can be mapped at the same time, so bind the one that needs to be unmapped
 	glBindBuffer(m_Type, m_GLObj);

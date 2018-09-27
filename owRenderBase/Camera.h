@@ -18,8 +18,7 @@ public:
 	Camera();
 	virtual ~Camera() {};
 
-	// TODO: Viewports belong in the rasterizer state.. not the camera.
-	// Set view port parameters
+	// TODO: Viewports belong in the rasterizer state.. not the camera. Set view port parameters
 	void SetViewport(const Viewport& viewport);
 	const Viewport& GetViewport() const;
 
@@ -33,14 +32,11 @@ public:
 	// Set an orthographic projection using screen space coordinates.
 	void SetOrthographic(float left, float right, float top, float bottom);
 
-	// Add this pitch (rotation about the X-axis) in degrees
-	// to the current camera's pitch 
+	// Add this pitch (rotation about the X-axis) in degrees to the current camera's pitch 
 	void AddPitch(float fPitch, Space space = Space::Local);
-	// Add this yaw (rotation about the Y-axis) in degrees
-	// to the current camera's yaw
+	// Add this yaw (rotation about the Y-axis) in degrees to the current camera's yaw
 	void AddYaw(float fYaw, Space space = Space::Local);
-	// Add this roll (rotation about the Z-axis) in degrees 
-	// to the current camera's roll
+	// Add this roll (rotation about the Z-axis) in degrees to the current camera's roll
 	void AddRoll(float fRoll, Space space = Space::Local);
 
 	// Set Euler angles (in degrees)
@@ -64,6 +60,11 @@ public:
 	void SetRotate(cvec3 rotate);
 	void SetRotate(const glm::quat& rot);
 
+	// If the pivot distance > 0 then the camera will rotate around a pivot point
+	// that is pivotDistance along the lookAt vector of the camera.
+	void SetPivotDistance(float pivotDistance);
+	float GetPivotDistance() const;
+
 	// Get the camera's pivot point in world space
 	vec3 GetPivotPoint() const;
 
@@ -74,26 +75,24 @@ public:
 	vec3 GetEulerAngles() const;
 
 	// Directly set the view matrix
-	void        SetViewMatrix(cmat4 viewMatrix);
-	mat4   GetViewMatrix() const;
+	void SetViewMatrix(cmat4 viewMatrix);
+	mat4 GetViewMatrix() const;
 
 	// Directly set the projection matrix
-	void        SetProjectionMatrix(cmat4 projectionMatrix);
-	mat4   GetProjectionMatrix() const;
+	void SetProjectionMatrix(cmat4 projectionMatrix);
+	mat4 GetProjectionMatrix() const;
 
 	// Get the view projection inverse matrix (useful for picking)
-	mat4	GetViewProjectionInverseMatrix() const;
+	mat4 GetViewProjectionInverseMatrix() const;
 
 	// Converts a screen point to a ray in world space.
-	Ray			ScreenPointToRay(cvec2 screenPoint) const;
+	Ray	ScreenPointToRay(cvec2 screenPoint) const;
 
-	// For arcball camera, call this function with client-space coordinates
-	// when the mouse is clicked on the screen.
+	// For arcball camera, call this function with client-space coordinates when the mouse is clicked on the screen.
 	void OnMousePressed(MouseButtonEventArgs& e);
 	void OnMouseMoved(MouseMotionEventArgs& e);
 
 protected:
-
 	vec3 ProjectOntoUnitSphere(glm::ivec2 screenPos);
 
 	virtual void UpdateViewMatrix();
@@ -109,23 +108,22 @@ protected:
 	float       m_fFar;
 
 	// World space parameters
-	vec3   m_Translate;
+	vec3        m_Translate;
 	glm::quat   m_Rotate;
 
-	vec2 _p;
+	// Used for arcball camera
+	glm::vec3   m_PreviousPoint;
+	float       m_PivotDistance;
 
 	// View matrix
-	mat4   m_ViewMatrix;
+	mat4        m_ViewMatrix;
 	// Projection matrix.
-	mat4   m_ProjectionMatrix;
+	mat4        m_ProjectionMatrix;
 
-	mat4	m_ViewProjectionInverse;
+	mat4	    m_ViewProjectionInverse;
 
 	// True if the view matrix needs to be updated.
 	bool        m_bViewDirty;
 	// True if the view projection inverse matrix needs to be updated.
 	bool		m_bViewProjectionInverseDirty;
-
-private:
-
 };

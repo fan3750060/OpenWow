@@ -1,6 +1,9 @@
 #pragma once
 
-#include <_owGeneral.h>
+#include <owIntfs.h>
+#include <owCore.h>
+#include <owRenderBase.h>
+#include <owEngineNew.h>
 
 #include <owGameDBC.h>
 

@@ -30,10 +30,10 @@ string ProcessInclude(std::shared_ptr<IFile> f)
 		if (line[0] == '#' && line[1] == 'i' && line[2] == 'n' && line[3] == 'c' && line[4] == 'l')
 		{
 			uint32_t firstBracketPosition = line.find('"');
-            assert1(firstBracketPosition != string::npos);
+            _ASSERT(firstBracketPosition != string::npos);
 
 			uint32_t lastBracketPosition = line.find_last_of('"');
-			assert1(firstBracketPosition != lastBracketPosition);
+			_ASSERT(firstBracketPosition != lastBracketPosition);
 
 			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
 			CFile::FixFilePath(inludeFileName);

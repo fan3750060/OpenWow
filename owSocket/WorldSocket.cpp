@@ -77,7 +77,7 @@ void CWorldSocket::SendData(Opcodes _opcode)
 }
 void CWorldSocket::SendData(Opcodes _opcode, ByteBuffer& _bb)
 {
-	assert1((_bb.getSize() + 4) < UINT16_MAX);
+	_ASSERT((_bb.getSize() + 4) < UINT16_MAX);
 
 	uint16 size0 = _bb.getSize() + 4 /* HEADER */;
 	uint16 sizeFinal = ((&reinterpret_cast<uint8&>(size0))[0] << 8 | (&reinterpret_cast<uint8&>(size0))[1]);
@@ -92,7 +92,7 @@ void CWorldSocket::SendData(Opcodes _opcode, ByteBuffer& _bb)
 }
 void CWorldSocket::SendData(const uint8* _data, uint32 _count)
 {
-	assert1(_count < 4096);
+	_ASSERT(_count < 4096);
 
 	uint8 data2[4096];
 	memcpy(data2, _data, _count);
@@ -202,7 +202,7 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 		}
 
 		// DEBUG
-		assert1(command < Opcodes::COUNT);
+		_ASSERT(command < Opcodes::COUNT);
 		Log::Info("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[command].c_str(), command, packetSize - sizeCorrection);
 
 		_buf.seekRelative(sizeCorrection + sizeof(Opcodes));
@@ -214,7 +214,7 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 
 void CWorldSocket::AddHandler(Opcodes _opcode, Function_WA<ByteBuffer&>* _func)
 {
-	assert1(_func != nullptr);
+	_ASSERT(_func != nullptr);
 	m_Handlers.insert(make_pair(_opcode, _func));
 }
 
@@ -251,7 +251,7 @@ void CWorldSocket::Packet2(ByteBuffer& _buf)
 	}
 	
 	// Fill data
-	assert1(_buf.getPos() + buffRead <= _buf.getSize());
+	_ASSERT(_buf.getPos() + buffRead <= _buf.getSize());
 	currPacket->data.Append(_buf.getDataFromCurrent(), buffRead);
 	_buf.seekRelative(buffRead);
 	//Log::Info("Packet[%s] readed '%d' of '%d'.", OpcodesNames[currPacket->opcode].c_str(), currPacket->data.getSize(), currPacket->dataSize);

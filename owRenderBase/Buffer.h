@@ -34,3 +34,5 @@ public:
 	// Elements stride
 	virtual uint32 GetElementStride() const = 0;
 };
+
+typedef std::shared_ptr<Buffer> SharedBufferPtr;

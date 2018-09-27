@@ -12,8 +12,6 @@ BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data,
 	, m_bIsBound(false)
 {
 	D3D11_BUFFER_DESC bufferDesc;
-	D3D11_SUBRESOURCE_DATA resourceData;
-
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.BindFlags = bindFlags;
 	bufferDesc.ByteWidth = m_uiStride * m_uiCount;
@@ -21,6 +19,7 @@ BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data,
 	bufferDesc.MiscFlags = 0;
 	bufferDesc.StructureByteStride = 0;
 
+	D3D11_SUBRESOURCE_DATA resourceData;
 	resourceData.pSysMem = data;
 	resourceData.SysMemPitch = 0;
 	resourceData.SysMemSlicePitch = 0;
@@ -55,9 +54,7 @@ bool BufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::
 		m_bIsBound = true;
 		break;
 	default:
-		throw std::exception("BufferDX11::Bind: Unimplemented buffer type.");
-		// return false;
-		break;
+		_ASSERT(false);
 	}
 
 	return true;

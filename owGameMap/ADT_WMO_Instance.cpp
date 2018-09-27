@@ -3,6 +3,8 @@
 // General
 #include "ADT_WMO_Instance.h"
 
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
+
 ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo) :
 	CWMO_Base_Instance(_parent, _wmoObject)
 {
@@ -56,7 +58,6 @@ bool ADT_WMO_Instance::PreRender3D()
 void ADT_WMO_Instance::Render3D()
 {
 	CWMO_Base_Instance::Render3D();
-	PERF_INC(PERF_MAP_MODELS_WMOs);
 }
 
 //
@@ -66,3 +67,5 @@ void ADT_WMO_Instance::reset()
 	m_AlreadyDraw.clear();
 }
 set<uint32> ADT_WMO_Instance::m_AlreadyDraw;
+
+#endif

@@ -16,3 +16,12 @@
 
 #include <owEngineNew.h>
 #pragma comment(lib, "owEngineNew.lib")
+
+#include <owGameDBC.h>
+#pragma comment(lib, "owGameDBC.lib")
+
+#include <owGame.h>
+#pragma comment(lib, "owGame.lib")
+
+#include <owGameMap.h>
+#pragma comment(lib, "owGameMap.lib")

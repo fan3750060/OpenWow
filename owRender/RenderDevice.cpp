@@ -257,9 +257,9 @@ void RenderDevice::beginRendering()
 
 // Geometry
 
-SharedGeomPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
+SharedMeshPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
 {
-	SharedGeomPtr geometry = make_shared<R_GeometryInfo>(this);
+	SharedMeshPtr geometry = make_shared<R_GeometryInfo>(this);
 	
 	uint32 geometryGLObj;
 	glGenVertexArrays(1, &geometryGLObj);
@@ -606,8 +606,8 @@ void RenderDevice::draw(uint32 firstVert, uint32 numVerts, RenderState* _state)
 
 	commitStates(_state);
 	{
-		assert1(_state->m_CurrentGeometry != nullptr);
-		assert1(_state->m_CurrentGeometry != m_DefaultGeometry);
+		_ASSERT(_state->m_CurrentGeometry != nullptr);
+		_ASSERT(_state->m_CurrentGeometry != m_DefaultGeometry);
 		glDrawArrays
 		(
 			primitiveTypes[(uint32)_state->m_CurrentGeometry->m_PrimType],
@@ -630,8 +630,8 @@ void RenderDevice::drawIndexed(uint32 firstIndex, uint32 numIndices, uint32 firs
 	{
 		firstIndex *= (_state->m_CurrentGeometry->m_IndexBufferFormat == R_IndexFormat::IDXFMT_32) ? 4u : 2u;
 
-		assert1(_state->m_CurrentGeometry != nullptr);
-		assert1(_state->m_CurrentGeometry != m_DefaultGeometry);
+		_ASSERT(_state->m_CurrentGeometry != nullptr);
+		_ASSERT(_state->m_CurrentGeometry != m_DefaultGeometry);
 		glDrawRangeElements
 		(
 			primitiveTypes[(uint32)_state->m_CurrentGeometry->m_PrimType],
@@ -655,11 +655,11 @@ void RenderDevice::drawIndexed(uint32 firstIndex, uint32 numIndices, uint32 firs
 void RenderDevice::checkError()
 {
 	uint32 error = glGetError();
-	assert1(error != GL_INVALID_ENUM);
-	assert1(error != GL_INVALID_VALUE);
-	assert1(error != GL_INVALID_OPERATION);
-	assert1(error != GL_OUT_OF_MEMORY);
-	assert1(error != GL_STACK_OVERFLOW && error != GL_STACK_UNDERFLOW);
+	_ASSERT(error != GL_INVALID_ENUM);
+	_ASSERT(error != GL_INVALID_VALUE);
+	_ASSERT(error != GL_INVALID_OPERATION);
+	_ASSERT(error != GL_OUT_OF_MEMORY);
+	_ASSERT(error != GL_STACK_OVERFLOW && error != GL_STACK_UNDERFLOW);
 }
 
 void RenderDevice::applySamplerState(R_Texture* tex)

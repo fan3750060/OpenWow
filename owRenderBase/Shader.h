@@ -1,7 +1,9 @@
 #pragma once
 
 class ShaderParameter;
+struct BufferBinding;
 class ConstantBuffer;
+#include "InputSemantic.h"
 
 class Shader : public Object
 {
@@ -19,10 +21,12 @@ public:
 		ComputeShader,
 	};
 
+	Shader();
+
 	/**
 	 * What type of shader is this?
 	 */
-	virtual ShaderType GetType() const = 0;
+	virtual ShaderType GetType() const;
 
 	/**
 	 * A shader macro consists of a macro name and a definition.
@@ -41,7 +45,7 @@ public:
 	 * To use the latest supported profile, specify "latest" here.
 	 * @return True if the shader was loaded correctly, or False otherwise.
 	 */
-	//virtual bool LoadShaderFromString(ShaderType type, cstring source, cstring sourceFileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
+	virtual bool LoadShaderFromString(ShaderType type, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
 
 	/**
 	 * Load a shader from a file.
@@ -61,22 +65,18 @@ public:
 	 * is not found in the shader, then this function will return an invalid shader parameter.
 	 * You can check for validity using the ShaderParameter::IsValid method.
 	 */
-	virtual ShaderParameter& GetShaderParameterByName(cstring name) const = 0;
+	virtual ShaderParameter& GetShaderParameterByName(cstring name) const;
+	
 	// Get a parameter defined in the shader by its name by using in index operator.
 	virtual ShaderParameter& operator[](cstring name) const
 	{
 		return GetShaderParameterByName(name);
 	}
 
-	//   /**
-	//    * Gets a pointer to a constant buffer defined in the shader.
-	//    */
-	//   virtual ConstantBuffer* GetConstantBufferByName( cstring name ) = 0;
-
-	   /**
-		* Gets the index (register slot) of a constant buffer defined in this shader.
-		*/
-		//virtual UINT GetConstantBufferIndex( cstring name ) = 0;
+	// Check to see if this shader supports a given semantic.
+	virtual bool                 HasSemantic(cstring binding) const;
+	virtual const InputSemantic& GetSemantic(cstring binding) const;
+	virtual UINT                 GetSemanticSlot(cstring binding) const;
 
 	/**
 	 * Bind this shader for use in the rendering pipeline.
@@ -94,4 +94,14 @@ public:
 	 * TODO: Refactor this into a Command (and CommandBuffer).
 	 */
 	virtual void Dispatch(const glm::uvec3& numGroups) = 0;
+
+protected:
+	ShaderType	m_ShaderType;
+
+	typedef std::map<std::string, std::shared_ptr<ShaderParameter> > ParameterMap;
+	ParameterMap m_ShaderParameters;
+
+	// A map to convert a vertex attribute semantic to a slot.
+	typedef std::map<InputSemantic, UINT> SemanticMap;
+	SemanticMap m_InputSemantics;
 };

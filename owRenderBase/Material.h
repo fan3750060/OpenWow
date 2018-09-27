@@ -24,7 +24,7 @@ public:
 		Opacity = 7,
 	};
 
-	Material(RenderDevice& renderDevice);
+	Material(RenderDevice* renderDevice);
 	virtual ~Material();
 
 	virtual void Bind(std::weak_ptr<Shader> pShader) const;
@@ -140,7 +140,7 @@ private:
 	// for the material properties.
 	MaterialProperties* m_pProperties;
 
-	RenderDevice& m_RenderDevice;
+	RenderDevice* m_RenderDevice;
 
 	// Constant buffer that stores material properties.
 	// This material owns this constant buffer and will delete it 

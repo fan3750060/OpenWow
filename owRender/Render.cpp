@@ -27,7 +27,7 @@ RenderGL::~RenderGL()
 
 void RenderGL::Init(IOpenGLAdapter* _adapter)
 {
-	assert1(_adapter != nullptr);
+	_ASSERT(_adapter != nullptr);
 	m_OpenGLAdapter = _adapter;
 
 	//--

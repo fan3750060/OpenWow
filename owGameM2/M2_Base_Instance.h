@@ -5,7 +5,7 @@
 class CM2_Base_Instance : public SceneNode
 {
 public:
-	CM2_Base_Instance(SceneNode* _parent, SmartM2Ptr _m2Object = nullptr);
+	CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartM2Ptr _m2Object = nullptr);
 	virtual ~CM2_Base_Instance();
 
 	// CM2_Base_Instance
@@ -33,15 +33,15 @@ public:
 	double m_DTime; // TODO: Delete me!!!
 
 	// IUpdatable
-	void Update(double _time, double _dTime) override;
+	void Update(double _time, double _dTime);
 
 	// IRenderable3D
-	bool PreRender3D() override;
-	void Render3D() override;
+	bool PreRender3D();
+	void Render3D();
 
 protected:
 	void InitLocal();
-	virtual void CalculateMatrix(bool _isRotationQuat = false) override;
+	virtual void CalculateLocalTransform(bool _isRotationQuat = false) override;
 
 private:
 	// Color & Alpha

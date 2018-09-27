@@ -21,14 +21,14 @@ struct RenderState
 		m_ScissorHeight = height;
 		m_StatePendingMask |= PM_SCISSOR;
 	}
-	void setGeometry(SharedGeomPtr geoIndex)
+	void setGeometry(SharedMeshPtr geoIndex)
 	{
 		m_CurrentGeometry = geoIndex;
 		m_StatePendingMask |= PM_GEOMETRY;
 	}
 	void setTexture(uint32 slot, SharedTexturePtr texObj, uint16 samplerState, uint16 usage)
 	{
-		assert1(slot < 16);
+		_ASSERT(slot < 16);
 		m_TextureSlot[slot] = R_TexSlot(texObj, samplerState, usage);
 		m_StatePendingMask |= PM_TEXTURES;
 	}
@@ -39,7 +39,7 @@ struct RenderState
 	}
 	void setStorageBuffer(uint8 slot, R_Buffer* bufObj)
 	{
-		//assert1(slot < _maxComputeBufferAttachments && m_StorageBufs.size() < _maxComputeBufferAttachments);
+		//_ASSERT(slot < _maxComputeBufferAttachments && m_StorageBufs.size() < _maxComputeBufferAttachments);
 
 		R_Buffer* buf = bufObj;
 		m_StorageBufs.push_back(R_ShaderStorage(slot, buf->m_GLObj));
@@ -183,7 +183,7 @@ struct RenderState
 
 	int							m_ViewportX, m_ViewportY, m_ViewportWidth, m_ViewportHeight;
 	int							m_ScissorX, m_ScissorY, m_ScissorWidth, m_ScissorHeight;
-	SharedGeomPtr				m_CurrentGeometry;
+	SharedMeshPtr				m_CurrentGeometry;
 	R_TexSlot					m_TextureSlot[16];
 	R_DrawBarriers				m_MemoryBarriers;
 

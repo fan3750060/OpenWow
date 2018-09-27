@@ -14,7 +14,7 @@ class WMO_Group_Part_Batch
 public:
 	WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Group* _parentGroup, const SWMO_Group_BatchDef& _proto);
 
-	void setGeom(SharedGeomPtr _geom) { m_State.setGeometry(_geom); }
+	void setGeom(SharedMeshPtr _geom) { m_State.setGeometry(_geom); }
 	uint32 getBlendMode() const { return m_WMOMaterial->getBlendMode(); }
 
 	void Render();

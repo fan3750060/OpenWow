@@ -1,8 +1,5 @@
 #include <stdafx.h>
 
-// Include
-#include "ShaderParameterOGL.h"
-
 // General
 #include "ShaderOGL.h"
 
@@ -34,10 +31,10 @@ string RecursionInclude(std::shared_ptr<IFile> f)
 		if (line[0] == '#' && line[1] == 'i' && line[2] == 'n' && line[3] == 'c' && line[4] == 'l')
 		{
 			size_t firstBracketPosition = line.find('"');
-			assert1(firstBracketPosition != string::npos);
+			_ASSERT(firstBracketPosition != string::npos);
 
 			size_t lastBracketPosition = line.find_last_of('"');
-			assert1(firstBracketPosition != lastBracketPosition);
+			_ASSERT(firstBracketPosition != lastBracketPosition);
 
 			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
 			CFile::FixFilePath(inludeFileName);
@@ -53,39 +50,27 @@ string RecursionInclude(std::shared_ptr<IFile> f)
 }
 
 // This parameter will be returned if an invalid shader parameter is requested.
-static ShaderParameterOGL gs_InvalidShaderParameter;
-
-// This parameter will be returned if an invalid shader parameter is requested.
-static BufferBinding gs_InvalidBufferBinding;
+static ShaderParameter gs_InvalidShaderParameter;
 
 GLenum GLTranslateShaderType(Shader::ShaderType _type)
 {
-	GLenum result = GL_VERTEX_SHADER;
 	switch (_type)
 	{
 	case Shader::ShaderType::VertexShader:
-		result = GL_VERTEX_SHADER;
-		break;
+		return GL_VERTEX_SHADER;
 	case Shader::ShaderType::PixelShader:
-		result = GL_FRAGMENT_SHADER;
-		break;
+		return GL_FRAGMENT_SHADER;
 	case Shader::ShaderType::GeometryShader:
-		result = GL_GEOMETRY_SHADER;
-		break;
+		return GL_GEOMETRY_SHADER;
 	case Shader::ShaderType::TessellationControlShader:
-		result = GL_TESS_CONTROL_SHADER;
-		break;
+		return GL_TESS_CONTROL_SHADER;
 	case Shader::ShaderType::TessellationEvaluationShader:
-		result = GL_TESS_EVALUATION_SHADER;
-		break;
+		return GL_TESS_EVALUATION_SHADER;
 	case Shader::ShaderType::ComputeShader:
-		result = GL_COMPUTE_SHADER;
-		break;
+		return GL_COMPUTE_SHADER;
 	default:
-		Log::Error("Unknown blend factor.");
+		_ASSERT(false);
 	}
-
-	return result;
 }
 
 void GLTranslateAttribType(GLenum _type, GLint _size, GLenum * _newType, GLint * _newSize)
@@ -136,7 +121,6 @@ void GLTranslateAttribType(GLenum _type, GLint _size, GLenum * _newType, GLint *
 }
 
 ShaderOGL::ShaderOGL()
-	: m_ShaderType(UnknownShaderType)
 {
 }
 
@@ -145,7 +129,7 @@ ShaderOGL::~ShaderOGL()
 	Destroy();
 }
 
-bool ShaderOGL::GetShaderProgramLog(uint32 _obj, std::string * _errMsg)
+bool ShaderOGL::GetShaderProgramLog(GLuint _obj, std::string * _errMsg)
 {
 	GLsizei infologLength = 0;
 	glGetProgramiv(_obj, GL_INFO_LOG_LENGTH, &infologLength);
@@ -179,14 +163,20 @@ void ShaderOGL::Destroy()
 	m_InputSemantics.clear();
 }
 
-Shader::ShaderType ShaderOGL::GetType() const
+
+
+bool ShaderOGL::LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros & shaderMacros, cstring entryPoint, cstring profile)
 {
-	return m_ShaderType;
+	m_ShaderType = shaderType;
+	m_ShaderFileName = sourceFileName;
+
+	return false;
 }
 
 bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
 	m_ShaderType = shaderType;
+	m_ShaderFileName = fileName;
 
 	std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
 	string fileSource = RecursionInclude(file);
@@ -220,7 +210,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 		GLTranslateAttribType(type, size, &newType, &newSize);
 
 		OGLCheckError();
-		m_InputSemantics.insert(SemanticMap::value_type(BufferBinding(name, j, newType, newSize), j));
+		m_InputSemantics.insert(SemanticMap::value_type(InputSemantic(name, j, newType, newSize), j));
 	}
 
 	GLint uniformsCount;
@@ -258,7 +248,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 
 		GLint loc = glGetUniformLocation(m_GLObj, name);
 
-		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(name, loc, shared_from_this(), parameterType);
+		std::shared_ptr<ShaderParameter> shaderParameter = std::make_shared<ShaderParameter>(name, loc, shared_from_this(), parameterType);
 		m_ShaderParameters.insert(ParameterMap::value_type(name, shaderParameter));
 	}
 
@@ -287,64 +277,11 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 		glGetActiveUniformBlockName(m_GLObj, j, uniformsBlocksNameMaxLenght, &length, name);
 		OGLCheckError();
 	
-		std::shared_ptr<ShaderParameterOGL> shaderParameter = std::make_shared<ShaderParameterOGL>(name, j, shared_from_this(), ShaderParameter::Type::Buffer);
+		std::shared_ptr<ShaderParameter> shaderParameter = std::make_shared<ShaderParameter>(name, j, shared_from_this(), ShaderParameter::Type::Buffer);
 		m_ShaderParameters.insert(ParameterMap::value_type(name, shaderParameter));
 	}
 
 	return true;
-}
-
-ShaderParameter& ShaderOGL::GetShaderParameterByName(cstring name) const
-{
-	ParameterMap::const_iterator iter = m_ShaderParameters.find(name);
-	if (iter != m_ShaderParameters.end())
-	{
-		return *(iter->second);
-	}
-
-	_ASSERT(false);
-	return gs_InvalidShaderParameter;
-}
-
-bool ShaderOGL::HasSemantic(cstring binding) const
-{
-	for (auto& it : m_InputSemantics)
-	{
-		if (it.first.Name == binding)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-const BufferBinding& ShaderOGL::GetSemantic(cstring binding) const
-{
-	for (auto& it : m_InputSemantics)
-	{
-		if (it.first.Name == binding)
-		{
-			return it.first;
-		}
-	}
-
-	_ASSERT(false);
-	return gs_InvalidBufferBinding;
-}
-
-UINT ShaderOGL::GetSlotIDBySemantic(cstring binding) const
-{
-	for (auto& it : m_InputSemantics)
-	{
-		if (it.first.Name == binding)
-		{
-			return it.second;
-		}
-	}
-
-	_ASSERT(false);
-	return (UINT)-1;
 }
 
 void ShaderOGL::Bind()

@@ -36,17 +36,18 @@ class WDT
 {
 	friend MapController;
 public:
-	WDT(MapController* _mapController);
+	WDT(std::weak_ptr<MapController> _mapController);
 	virtual ~WDT();
 
-	void CreateInsances(SceneNode* _parent);
+	void CreateInsances(std::weak_ptr<SceneNode> _parent);
 	void Load();
 
 	const WDT_MPHD_Flags* getFlags() const { return &m_Flag; }
 	bool MapHasTiles() { return m_IsTileBased; }
 	bool MapHasGlobalWMO() { return !m_GlobalWMOName.empty(); }
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	const std::shared_ptr<ADT_WMO_Instance> GetGlobalWMOInstance() const { return m_GlobalWMO; }
-
+#endif
 
 
 private:
@@ -57,8 +58,10 @@ private:
 private:
 	string								m_GlobalWMOName;
 	ADT_MODF							m_GlobalWMOPlacementInfo;
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	std::shared_ptr<ADT_WMO_Instance>	m_GlobalWMO;
+#endif
 
 private: // PARENT
-	const MapController*				m_MapController;
+	const std::weak_ptr<MapController>  m_MapController;
 };

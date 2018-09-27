@@ -33,10 +33,10 @@ CWMO_PortalsController::CWMO_PortalsController(const WMO* _parentWMO) :
 
 void CWMO_PortalsController::GetPolyFrustum(const vec3* poly, uint32 num_verts, Frustum* _frustum, vec3 eye, bool _isPositive)
 {
-	assert1(_frustum != nullptr);
+	_ASSERT(_frustum != nullptr);
 
 	Plane _portalPlanes[15];
-	assert1(num_verts < 15);
+	_ASSERT(num_verts < 15);
 
 	for (uint32 i = 0; i < num_verts; i++)
 	{
@@ -106,7 +106,7 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 		}
 	}
 
-	//assert1(insideOneAtLeast || !(m_ParentWMO->m_OutdoorGroups.empty()));
+	//_ASSERT(insideOneAtLeast || !(m_ParentWMO->m_OutdoorGroups.empty()));
 
 	// If we outside WMO, then get outdorr group
 	//if (!insideIndoor)

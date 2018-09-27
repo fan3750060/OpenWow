@@ -21,17 +21,11 @@ RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight
 
 RenderWindow::~RenderWindow()
 {
-	// Disconnect events.
-	/*for (Event::ConnectionType& eventConnection : m_EventConnections)
-	{
-		eventConnection.disconnect();
-	}*/
 }
 
 void RenderWindow::ShowWindow()
 {
 	::ShowWindow(m_hWindow, SW_SHOWDEFAULT);
-	// Make sure its the top-level window.
 	::BringWindowToTop(m_hWindow);
 }
 
@@ -43,6 +37,16 @@ void RenderWindow::HideWindow()
 void RenderWindow::CloseWindow()
 {
 	::DestroyWindow(m_hWindow);
+}
+
+void RenderWindow::SetMousePosition(vec2 _position)
+{
+	RECT rc;
+	GetClientRect(m_hWindow, &rc); // get client coords
+	ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
+	ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
+
+	SetCursorPos(rc.left + _position.x, rc.top + _position.y);
 }
 
 
@@ -126,21 +130,6 @@ void RenderWindow::OnExpose(EventArgs& e)
 {
 	Expose(e);
 }
-
-// Normalize a value in the range [min - max]
-template<typename T, typename U>
-inline T normalizeRange(U x, U min, U max)
-{
-	return T(x - min) / T(max - min);
-}
-
-// Shift and bias a value into another range.
-template<typename T, typename U>
-inline T shiftBias(U x, U shift, U bias)
-{
-	return T(x * bias) + T(shift);
-}
-
 
 void RenderWindow::OnUpdate(UpdateEventArgs& e)
 {

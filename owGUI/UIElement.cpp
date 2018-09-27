@@ -160,7 +160,7 @@ void UIElement::SetText(cstring _text)
 
 void UIElement::SetTextFont(SharedFontPtr _font)
 {
-    assert1(_font);
+    _ASSERT(_font);
 
     m_Font = _font;
 }

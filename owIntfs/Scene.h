@@ -1,7 +1,7 @@
 #pragma once
 
 // FORWARD BEGIN
-class Camera;
+/*class Camera;
 class SceneNode;
 // FORWARD END
 
@@ -15,4 +15,4 @@ __interface
 	Camera* getCamera();
 	void setFrustrumCamera(Camera* _camera);
 	Camera* getFrustrumCamera();
-};
+};*/

@@ -64,7 +64,7 @@ public:
 		// Calculate ip and port
 
 		int32 pos = Addres.find(':');
-		assert1(pos != -1);
+		_ASSERT(pos != -1);
 		m_IPAddres = Addres.substr(0, pos);
 		m_Port = Addres.substr(pos + 1);
 	}

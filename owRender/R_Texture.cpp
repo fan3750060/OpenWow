@@ -60,7 +60,7 @@ R_Texture::~R_Texture()
 
 R_Texture* R_Texture::createTexture(R_TextureTypes::List _type, int _width, int _height, int _depth, R_TextureFormats::List _format, bool _hasMips, bool _genMips, bool _compress, bool _sRGB)
 {
-	assert1(_depth > 0);
+	_ASSERT(_depth > 0);
 
 	if (!GetSettingsGroup<CGroupRenderCaps>().texNPOT)
 	{

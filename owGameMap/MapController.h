@@ -20,12 +20,12 @@ public:
 
 	//
 	void EnterMap(int32 x, int32 z);
-	ADT* LoadTile(int32 x, int32 z);
+	std::shared_ptr<ADT> LoadTile(int32 x, int32 z);
 	void ClearCache();
 	uint32 GetAreaID();
 
 	// ISceneNode
-	string getObjectInfo() const override { return "@MapController@"; }
+	//string getObjectInfo() const override { return "@MapController@"; }
 
 	// IMapManager
 	void Update() override;
@@ -36,8 +36,9 @@ public: // Getters
 
 	bool isUncompressedAlpha() const { return m_WDT->getFlags()->Flag_8bitMCAL; }
 	bool isTileBased() const { return m_WDT->MapHasTiles(); }
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	const std::shared_ptr<ADT_WMO_Instance> getGlobalInstance() const { return m_WDT->GetGlobalWMOInstance(); }
-
+#endif // GAME_MAP_INCLUDE_WMO_AND_M2
 	int GetCurrentX() const { return m_CurrentTileX; }
 	int GetCurrentZ() const { return m_CurrentTileZ; }
 
@@ -51,7 +52,7 @@ public: // Getters
 	bool getTileIsCurrent(int x, int z) const
 	{
 		int midTile = static_cast<uint32>(C_RenderedTiles / 2);
-		ADT* currentTile = m_Current[midTile][midTile];
+		std::shared_ptr<ADT> currentTile = m_Current[midTile][midTile];
 		if (currentTile == nullptr)
 		{
 			return false;
@@ -69,14 +70,14 @@ public: // Getters
 	}
 
 private:
-	bool IsTileInCurrent(ADT* _mapTile);
+	bool IsTileInCurrent(std::shared_ptr<ADT> _mapTile);
 
 private:
 	string					m_MapFilenameT;
 	DBC_MapRecord			m_DBC_Map;
 
-	ADT*					m_ADTCache[C_TilesCacheSize];
-	ADT*					m_Current[C_RenderedTiles][C_RenderedTiles];
+	std::shared_ptr<ADT>	m_ADTCache[C_TilesCacheSize];
+	std::shared_ptr<ADT>	m_Current[C_RenderedTiles][C_RenderedTiles];
 	int32					m_CurrentTileX, m_CurrentTileZ;
 	bool					m_IsOnInvalidTile;
 

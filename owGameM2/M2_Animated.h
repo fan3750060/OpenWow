@@ -35,11 +35,11 @@ public:
 		m_GlobalSec = _globalSec;
 		if (m_GlobalSeqIndex != -1)
 		{
-			assert1(_globalSec);
+			_ASSERT(_globalSec);
 		}
 
 		// Checks
-		assert1(b.timestamps.size == b.values.size);
+		_ASSERT(b.timestamps.size == b.values.size);
 		m_Count = b.timestamps.size;
 		if (b.timestamps.size == 0)	return;
 
@@ -76,13 +76,13 @@ public:
 			}
 
 
-			assert1(times != nullptr);
+			_ASSERT(times != nullptr);
 			for (uint32 i = 0; i < pHeadTimes[j].size; i++)
 			{
 				m_Times[j].push_back(times[i]);
 			}
 
-			assert1(keys != nullptr);
+			_ASSERT(keys != nullptr);
 			for (uint32 i = 0; i < pHeadKeys[j].size; i++)
 			{
 				switch (m_Type)

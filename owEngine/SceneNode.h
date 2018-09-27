@@ -13,7 +13,7 @@ public:
 	const SceneNode* getParent() { return m_Parent; }
 	void addChild(SceneNode* _child)
 	{
-		assert1(std::find(m_Childs.begin(), m_Childs.end(), this) == m_Childs.end());
+		_ASSERT(std::find(m_Childs.begin(), m_Childs.end(), this) == m_Childs.end());
 		m_Childs.push_back(_child);
 	}
 	void removeChild(SceneNode* _child)
@@ -23,7 +23,7 @@ public:
 			return;
 		}
 
-		assert1(std::find(m_Childs.begin(), m_Childs.end(), _child) != m_Childs.end());
+		_ASSERT(std::find(m_Childs.begin(), m_Childs.end(), _child) != m_Childs.end());
 		m_Childs.erase(std::remove(m_Childs.begin(), m_Childs.end(), _child), m_Childs.end());
 	}
 	vector<SceneNode*>& getChilds() { return m_Childs; }

@@ -22,7 +22,7 @@ public:
 public:
 	CM2_Part_Bone* getBoneDirect(uint32 _index) const
 	{
-		assert1(_index < static_cast<uint32>(m_Bones.size()));
+		_ASSERT(_index < static_cast<uint32>(m_Bones.size()));
 		return (m_Bones[_index]);
 	}
 	bool isLookupBoneCorrect(uint32 _index) const
@@ -38,8 +38,8 @@ public:
 			return nullptr;
 		}
 		int16 newIndex = m_BonesLookup[_index];
-		assert1(newIndex != -1);
-		assert1(newIndex < static_cast<int16>(m_Bones.size()));
+		_ASSERT(newIndex != -1);
+		_ASSERT(newIndex < static_cast<int16>(m_Bones.size()));
 		return (m_Bones[newIndex]);
 	}
 	const CM2_Part_Bone* getGameBone(M2_GameBoneType::List _type) const
@@ -50,8 +50,8 @@ public:
 			return nullptr;
 		}
 		int16 newIndex = m_GameBonesLookup[_type];
-		assert1(newIndex != -1);
-		assert1(newIndex < static_cast<int16>(m_Bones.size()));
+		_ASSERT(newIndex != -1);
+		_ASSERT(newIndex < static_cast<int16>(m_Bones.size()));
 		return (m_Bones[newIndex]);
 	}
 

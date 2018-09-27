@@ -10,14 +10,14 @@ class MapController;
 class ADT_MCNK : public SceneNode, public ILoadable
 {
 public:
-	ADT_MCNK(MapController* _mapController, ADT* _parentTile, IFile* _file);
+	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, IFile* _file);
 	virtual ~ADT_MCNK();
 
 	void RenderNormals();
 
 	// ISceneNode
-	string getObjectInfo() const override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
-	void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
+	//string getObjectInfo() const override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
+	//void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
 
 	// ILoadable
 	bool Load() override;
@@ -26,10 +26,10 @@ public:
 	bool isLoaded() const { return true; } // TODO FIXME
 
 	// IRenderable
-	bool PreRender3D() override;
-	void Render3D() override;
+	bool PreRender3D();
+	void Render3D();
 
-	static void BindUniforms(Technique* _techique);
+	//static void BindUniforms(Technique* _techique);
 
 public:
 	IFile* m_File;
@@ -44,23 +44,19 @@ public:
 	SharedTexturePtr m_BlendRBGShadowATexture;
 
 
-	SharedGeomPtr __geomDebugNormals;
+	SharedMeshPtr __geomDebugNormals;
 
 	// Qulity
-	RenderDrawCall m_HighCall;
-	RenderState m_StateHigh;
 	SharedBufferPtr __ibHigh;
 	uint16  m_IndexesCountHigh;
-	SharedGeomPtr __geomHigh;
+	SharedMeshPtr __geomHigh;
 
-	RenderDrawCall m_DefaultCall;
-	RenderState m_StateDefault;
 	SharedBufferPtr __ibDefault;
 	uint16  m_IndexesCountDefault;
-	SharedGeomPtr __geomDefault;
+	SharedMeshPtr __geomDefault;
 
 private: // PARENT
-	const MapController*				m_MapController;
-	const ADT*							m_ParentADT;
+	const std::weak_ptr<MapController>	m_MapController;
+	const std::weak_ptr<ADT>			m_ParentADT;
 	CGroupQuality&						m_QualitySettings;
 };

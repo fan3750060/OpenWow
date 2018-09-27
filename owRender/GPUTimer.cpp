@@ -21,7 +21,7 @@ GPUTimer::~GPUTimer()
 
 void GPUTimer::beginQuery(uint32 frameID)
 {
-	assert1(!_activeQuery);
+	_ASSERT(!_activeQuery);
 
 	if (_queryFrame != frameID)
 	{

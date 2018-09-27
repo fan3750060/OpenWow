@@ -59,9 +59,9 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 			for (BufferMap::value_type buffer : m_VertexBuffers)
 			{
 				BufferBinding binding = buffer.first;
-				if (pVS->HasSemantic(binding))
+				if (pVS->HasSemantic(binding.Name))
 				{
-					UINT slotID = pVS->GetSlotIDBySemantic(binding);
+					UINT slotID = pVS->GetSemanticSlot(binding.Name);
 					// Bind the vertex buffer to a particular slot ID.
 					buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
 				}
@@ -101,9 +101,9 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 		for (BufferMap::value_type buffer : m_VertexBuffers)
 		{
 			BufferBinding binding = buffer.first;
-			if (pVS->HasSemantic(binding))
+			if (pVS->HasSemantic(binding.Name))
 			{
-				UINT slotID = pVS->GetSlotIDBySemantic(binding);
+				UINT slotID = pVS->GetSemanticSlot(binding.Name);
 				// Bind the vertex buffer to a particular slot ID.
 				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
 			}

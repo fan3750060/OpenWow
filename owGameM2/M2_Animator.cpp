@@ -38,7 +38,7 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 		//Log::Warn("Animation [%d] '%s'", record->Get_ID(), record->Get_Name());
 	}
 
-	assert1(m_Animations.size() > 0);
+	_ASSERT(m_Animations.size() > 0);
 	PlayAnimation();
 }
 
@@ -127,6 +127,6 @@ void CM2_Animator::setOnEndFunction(Function* _onEnd)
 		delete m_OnAnimationEnded;
 	}
 
-	assert1(_onEnd);
+	_ASSERT(_onEnd);
 	m_OnAnimationEnded = _onEnd;
 }

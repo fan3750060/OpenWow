@@ -53,6 +53,7 @@ public:
 
 	virtual std::shared_ptr<Material> CreateMaterial();
 	virtual void DestroyMaterial(std::shared_ptr<Material> Material);
+	virtual std::shared_ptr<Material> GetDefaultMaterial() const;
 
 	virtual std::shared_ptr<PipelineState> CreatePipelineState();
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline);
@@ -88,17 +89,17 @@ private:
 	TextureList m_Textures;
 	typedef std::map< std::string, std::shared_ptr<Texture> > TextureMap;
 	TextureMap m_TexturesByName;
+	std::shared_ptr<Texture> m_pDefaultTexture;
 
 	typedef std::vector< std::shared_ptr<RenderTarget> > RenderTargetList;
 	RenderTargetList m_RenderTargets;
-
-	std::shared_ptr<Texture> m_pDefaultTexture;
 
 	typedef std::vector< std::shared_ptr<SamplerState> > SamplerList;
 	SamplerList m_Samplers;
 
 	typedef std::vector< std::shared_ptr<Material> > MaterialList;
 	MaterialList m_Materials;
+	std::shared_ptr<Material> m_pDefaultMaterial;
 
 	typedef std::vector< std::shared_ptr<PipelineState> > PipelineList;
 	PipelineList m_Pipelines;

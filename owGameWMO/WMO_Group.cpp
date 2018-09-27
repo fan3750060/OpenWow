@@ -104,7 +104,7 @@ void WMO_Group::Load()
 		{
 			uint32 version;
 			m_F->readBytes(&version, 4);
-			assert1(version == 17);
+			_ASSERT(version == 17);
 		}
 		else if (strcmp(fourcc, "MOGP") == 0)
 		{
@@ -113,7 +113,7 @@ void WMO_Group::Load()
 
 			m_F->readBytes(&m_Header, sizeof(SWMO_Group_HeaderDef));
 
-			assert1(m_Header.flags.HAS_3_MOTV == 0);
+			_ASSERT(m_Header.flags.HAS_3_MOTV == 0);
 
 			// Bounds
 			m_Bounds.set(m_Header.boundingBox.min, m_Header.boundingBox.max, true);
@@ -129,7 +129,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOVI") == 0) // Indices
 		{
-			assert1(IB_Default == nullptr);
+			_ASSERT(IB_Default == nullptr);
 			uint32 indicesCount = size / sizeof(uint16);
 			uint16* indices = (uint16*)m_F->getDataFromCurrent();
 			// Buffer
@@ -139,7 +139,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOVT") == 0) // Vertices chunk.
 		{
-			assert1(VB_Vertexes == nullptr);
+			_ASSERT(VB_Vertexes == nullptr);
 			uint32 vertexesCount = size / sizeof(vec3);
 			vec3* vertexes = (vec3*)m_F->getDataFromCurrent();
 			// Convert
@@ -156,7 +156,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MONR") == 0) // Normals
 		{
-			assert1(VB_Normals == nullptr);
+			_ASSERT(VB_Normals == nullptr);
 			uint32 normalsCount = size / sizeof(vec3);
 			vec3* normals = (vec3*)m_F->getDataFromCurrent();
 			// Convert
@@ -193,7 +193,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOLR") == 0) // Light references
 		{
-			assert1(m_Header.flags.HAS_LIGHTS);
+			_ASSERT(m_Header.flags.HAS_LIGHTS);
 			uint32 lightsIndexesCount = size / sizeof(uint16);
 			uint16* lightsIndexes = (uint16*)m_F->getDataFromCurrent();
 			for (uint32 i = 0; i < lightsIndexesCount; i++)
@@ -203,7 +203,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MODR") == 0) // Doodad references
 		{
-			assert1(m_Header.flags.HAS_DOODADS);
+			_ASSERT(m_Header.flags.HAS_DOODADS);
 			uint32 doodadsIndexesCount = size / sizeof(uint16);
 			uint16* doodadsIndexes = (uint16*)m_F->getDataFromCurrent();
 			for (uint32 i = 0; i < doodadsIndexesCount; i++)
@@ -214,7 +214,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOBN") == 0)
 		{
-			assert1(m_Header.flags.HAS_COLLISION);
+			_ASSERT(m_Header.flags.HAS_COLLISION);
 
 			collisionCount = size / sizeof(SWMO_Group_MOBNDef);
 			collisions = (SWMO_Group_MOBNDef*)m_F->getDataFromCurrent();
@@ -234,7 +234,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOCV") == 0) // Vertex colors
 		{
-			assert1(m_Header.flags.HAS_VERTEX_COLORS);
+			_ASSERT(m_Header.flags.HAS_VERTEX_COLORS);
 			uint32 vertexColorsCount = size / sizeof(CBgra);
 			CBgra* vertexColors = (CBgra*)m_F->getDataFromCurrent();
 			mocv = new C4Vec[vertexColorsCount];
@@ -375,7 +375,6 @@ void WMO_Group::initLighting()
 
 void WMO_Group::Render(cmat4 _world) const
 {
-	PERF_START(PERF_MAP_MODELS_WMOs_GEOMETRY);
 	{
 		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
 		pass->Bind();
@@ -396,7 +395,6 @@ void WMO_Group::Render(cmat4 _world) const
 		}
 		pass->Unbind();
 	}
-	PERF_STOP(PERF_MAP_MODELS_WMOs_GEOMETRY);
 
 	//RenderCollision(_world);
 }

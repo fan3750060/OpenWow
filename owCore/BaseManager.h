@@ -19,7 +19,7 @@ public:
 	SBaseManagerPhases GetPhase() override;
 
 private:
-	map<GUID, IManager*> m_Managers;
+	std::map<GUID, IManager*> m_Managers;
 	SBaseManagerPhases m_CurrentPhase;
 };
 

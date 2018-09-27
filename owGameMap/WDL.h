@@ -10,10 +10,10 @@ class MapController;
 class WDL
 {
 public:
-	WDL(MapController* _mapController);
+	WDL(std::weak_ptr<MapController> _mapController);
 	virtual ~WDL();
 
-	void CreateInsances(MapController* _parent);
+	void CreateInsances(std::weak_ptr<MapController> _parent);
 	void Load();
 
 	SharedTexturePtr getMinimap() { return m_Minimap; }
@@ -24,8 +24,10 @@ private:
 	vector<std::shared_ptr<CWDL_LowResTile>>	m_LowResilutionTiles;
 	vector<string>						m_LowResolutionWMOsNames;
 	vector<ADT_MODF>					m_LowResolutionWMOsPlacementInfo;
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	vector<std::shared_ptr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
+#endif
 
 private: // PARENT
-	const MapController*				m_MapController;
+	const std::weak_ptr<MapController>  m_MapController;
 };

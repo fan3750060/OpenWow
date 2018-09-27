@@ -1,3 +1,4 @@
 #pragma once
 
-#include <_owGeneral.h>
+#include <owIntfs.h>
+#include <owCore.h>

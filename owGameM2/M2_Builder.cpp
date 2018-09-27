@@ -71,13 +71,13 @@ void CM2_Builder::Step1Header()
 	memcpy(&m_Header, m_F->getData(), sizeof(SM2_Header));
 
 	// 1 Magic is 'MD20'
-	//assert1(m_Header.magic == "MD20");
+	//_ASSERT(m_Header.magic == "MD20");
 
 	// 2 Version is ???
 #if (VERSION == VERSION_Vanila)
-	assert1(m_Header.version == 256);
+	_ASSERT(m_Header.version == 256);
 #elif (VERSION == VERSION_WotLK)
-	assert1(m_Header.version == 264)
+	_ASSERT(m_Header.version == 264);
 #endif
 
 
@@ -183,7 +183,7 @@ void CM2_Builder::Step3Bones()
 			skeleton->m_GameBonesLookup.push_back(GameBonesLookup[i]);
 		}
 
-		assert1(m_Header.gameBonesLookup.size <= M2_GameBoneType::Count);
+		_ASSERT(m_Header.gameBonesLookup.size <= M2_GameBoneType::Count);
 	}
 
 	m_M2->m_Skeleton = skeleton;
@@ -249,7 +249,7 @@ void CM2_Builder::Step5ColorAndTextures()
 	// 3.1 Textures
 	if (m_Header.textures.size > 0)
 	{
-		assert1(m_Header.textures.size <= m_M2->C_TexturesMaxCount);
+		_ASSERT(m_Header.textures.size <= m_M2->C_TexturesMaxCount);
 
 		m_Textures = (SM2_Texture*)(m_F->getData() + m_Header.textures.offset);
 		for (uint32 i = 0; i < m_Header.textures.size; i++)
@@ -299,7 +299,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		}
 	}
 
-	//assert1(m_Header.textures.size == m_Header.texturesLookup.size);
+	//_ASSERT(m_Header.textures.size == m_Header.texturesLookup.size);
 
 	// 4.1 Textures weights
 	if (m_Header.textureWeights.size > 0)
@@ -328,7 +328,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		}
 	}
 
-	//assert1(m_Header.textureWeights.size == m_Header.textureWeightsLookup.size);
+	//_ASSERT(m_Header.textureWeights.size == m_Header.textureWeightsLookup.size);
 
 	// 5.1 Textures transform
 	if (m_Header.textureTransforms.size > 0)
@@ -359,7 +359,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		}
 	}
 
-	//assert1(m_Header.textureTransforms.size == m_Header.textureTransformsLookup.size);
+	//_ASSERT(m_Header.textureTransforms.size == m_Header.textureTransformsLookup.size);
 
 	m_M2->m_Materials = materials;
 }
@@ -484,7 +484,7 @@ void CM2_Builder::Step8Skins()
 	}
 
 #if (VERSION == VERSION_Vanila)
-	assert1(m_Header.skin_profiles.size > 0);
+	_ASSERT(m_Header.skin_profiles.size > 0);
 	if (m_Header.skin_profiles.size > 0)
 	{
 		m_Skins = (SM2_SkinProfile*)(m_F->getData() + m_Header.skin_profiles.offset);
@@ -497,14 +497,14 @@ void CM2_Builder::Step8Skins()
 		}
 	}
 #elif (VERSION == VERSION_WotLK)
-	assert1(m_Header.num_skin_profiles > 0);
+	_ASSERT(m_Header.num_skin_profiles > 0);
 	for (uint32 i = 0; i < 1/*m_Header.num_skin_profiles*/; i++)
 	{
 		char buf[256];
 		sprintf_s(buf, "%s%02d.skin", m_M2->m_FileNameWithoutExt.c_str(), i);
 
 		std::shared_ptr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
-		assert1(skinFile != nullptr);
+		_ASSERT(skinFile != nullptr);
 
 		CM2_Skin* skin = new CM2_Skin(m_M2.operator->());
 

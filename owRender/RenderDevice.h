@@ -31,7 +31,7 @@ public:
 	void beginRendering();
 
 	// Geometry
-	SharedGeomPtr beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
+	SharedMeshPtr beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
 
 	// Buffers
 	SharedBufferPtr createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
@@ -75,7 +75,7 @@ public:
 	{
 		m_State.setScissorRect(x, y, width, height);
 	}
-	void setGeometry(SharedGeomPtr geoIndex)
+	void setGeometry(SharedMeshPtr geoIndex)
 	{
 		m_State.setGeometry(geoIndex);
 	}
@@ -249,7 +249,7 @@ private:
 	
 
 
-	SharedGeomPtr				m_DefaultGeometry;
+	SharedMeshPtr				m_DefaultGeometry;
 
 
 	//------------------------------------------------------------------------------------
