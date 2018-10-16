@@ -4,8 +4,6 @@
 #include "MapController.h"
 
 MapController::MapController() :
-	m_WDT(nullptr),
-	m_WDL(nullptr),
 	m_SkyManager(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
@@ -20,8 +18,6 @@ MapController::MapController() :
 	}
 
     ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
-
-	AddManager<IMapManager>(this);
 
 	// Scene node
 	{
@@ -48,10 +44,7 @@ MapController::MapController() :
 
 MapController::~MapController()
 {
-	SafeDelete(m_SkyManager);
 	SafeDelete(_MapShared);
-
-	DelManager<IMapManager>();
 }
 
 // --
@@ -63,21 +56,21 @@ void MapController::MapPreLoad(const DBC_MapRecord& _map)
 
     Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
-	SafeDelete(m_WDL);
-	m_WDL = new WDL(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
+	m_WDL.reset();
+	m_WDL = std::make_shared<WDL>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 	m_WDL->Load();
 
 	// Delete if exists
-	SafeDelete(m_WDT);
-	m_WDT = new WDT(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
+	m_WDT.reset();
+	m_WDT = std::make_shared<WDT>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 }
 
 void MapController::MapLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Loading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
-	SafeDelete(m_SkyManager);
-	m_SkyManager = new SkyManager(this, m_DBC_Map);
+	m_SkyManager.reset();
+	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()), m_DBC_Map);
 
 	// Load data
 	m_WDT->Load();
@@ -88,21 +81,21 @@ void MapController::MapPostLoad()
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	// Create all instances
-	m_WDT->CreateInsances(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
-	m_WDL->CreateInsances(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
+	m_WDT->CreateInsances(weak_from_this());
+	m_WDL->CreateInsances(weak_from_this());
 }
 
 void MapController::Unload()
 {
-	if (m_WDL) delete m_WDL;
-	if (m_WDT) delete m_WDT;
+	m_WDL.reset();
+	m_WDT.reset();
 
     for (int i = 0; i < C_TilesCacheSize; i++)
     {
         if (m_ADTCache[i] != nullptr)
         {
             //delete m_ADTCache[i];
-			m_ADTCache[i] = nullptr;
+			m_ADTCache[i].reset();
         }
     }
 
@@ -110,7 +103,7 @@ void MapController::Unload()
 	{
 		for (int j = 0; j < C_RenderedTiles; j++)
 		{
-			m_Current[i][j] = nullptr;
+			m_Current[i][j].reset();
 		}
 	}
 }

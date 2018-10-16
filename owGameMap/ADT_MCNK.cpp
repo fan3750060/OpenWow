@@ -17,7 +17,6 @@ ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<AD
 	m_ParentADT(_parentTile),
 	m_File(_file),
 	m_BlendRBGShadowATexture(0),
-	m_IndexesCountHigh(0),
 	m_LiquidInstance(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
@@ -86,9 +85,12 @@ bool ADT_MCNK::Load()
 			int8 z;
 		};
 
-		int24 normals_INT24[C_MapBufferSize];
+		/*int24 normals_INT24[C_MapBufferSize];
 		memset(normals_INT24, 0x00, sizeof(int24) * C_MapBufferSize);
-		int24* t_normals_INT24 = normals_INT24;
+		int24* t_normals_INT24 = normals_INT24;*/
+
+		vec3 tempNormals[C_MapBufferSize];
+		vec3* ttn = tempNormals;
 
 		for (int j = 0; j < 17; j++)
 		{
@@ -97,14 +99,14 @@ bool ADT_MCNK::Load()
 				int24 nor;
 				m_File->readBytes(&nor, sizeof(int24));
 
-				//*ttn++ = vec3(-(float)nor.y / 127.0f, (float)nor.z / 127.0f, -(float)nor.x / 127.0f);
-				*t_normals_INT24++ = nor;
+				*ttn++ = vec3(-(float)nor.y / 127.0f, (float)nor.z / 127.0f, -(float)nor.x / 127.0f);
+				//*t_normals_INT24++ = nor;
 			}
 		}
 
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
-
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(int24), normals_INT24, false);
+		normalsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)tempNormals, C_MapBufferSize, sizeof(vec3));
 	}
 
 	// Heights
@@ -259,8 +261,8 @@ bool ADT_MCNK::Load()
 			}
 		}
 	}
-	//m_BlendRBGShadowATexture = _Render->r.createTexture(R_TextureTypes::Tex2D, 64, 64, 1, R_TextureFormats::RGBA8, false, false, false, false);
-	//m_BlendRBGShadowATexture->uploadTextureData(0, 0, blendbuf);
+	m_BlendRBGShadowATexture = Application::Get().GetRenderDevice()->CreateTexture();
+	m_BlendRBGShadowATexture->LoadTextureCustom(64, 64, blendbuf);
 
 	// Liquids
 	m_File->seek(startPos + header.ofsLiquid);
@@ -308,8 +310,7 @@ bool ADT_MCNK::Load()
 	}
 
 	{ // Geom High
-		vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
-		m_IndexesCountHigh = mapArrayHigh.size();
+		/*vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
 		__ibHigh = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)mapArrayHigh.data(), mapArrayHigh.size());
 
 		__geomHigh = Application::Get().GetRenderDevice()->CreateMesh();
@@ -318,7 +319,7 @@ bool ADT_MCNK::Load()
 		__geomHigh->SetMaterial(Application::Get().GetRenderDevice()->GetDefaultMaterial());
 
 
-		AddMesh(__geomHigh);
+		AddMesh(__geomHigh);*/
 
 		/*__geomHigh = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomHigh->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
@@ -330,12 +331,23 @@ bool ADT_MCNK::Load()
 		__geomHigh->finishCreatingGeometry();*/
 	}
 
-	{ // Geom Default
-		/*vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
-		m_IndexesCountDefault = mapArrayDefault.size();
-		__ibDefault = _Render->r.createIndexBuffer(mapArrayDefault.size() * sizeof(uint16), mapArrayDefault.data(), false);
+	// Material
+	std::shared_ptr<Texture> t30 = Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
+	std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(Application::Get().GetRenderDevice());
+	mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
 
-		__geomDefault = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
+	{ // Geom Default
+		vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
+		__ibDefault = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)mapArrayDefault.data(), mapArrayDefault.size());
+
+		__geomDefault = Application::Get().GetRenderDevice()->CreateMesh();
+		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
+		__geomDefault->SetIndexBuffer(__ibDefault);
+		__geomDefault->SetMaterial(mat);
+
+		AddMesh(__geomDefault);
+
+		/*__geomDefault = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
 		__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
 		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
 		__geomDefault->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);

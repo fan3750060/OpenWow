@@ -24,46 +24,38 @@ ShaderParameter::ShaderParameter(cstring name, UINT slotID, std::shared_ptr<Shad
 
 //--
 
-template<>
-void ShaderParameter::Set<ConstantBuffer>(std::shared_ptr<ConstantBuffer> value)
+template<> void ShaderParameter::Set<ConstantBuffer>(std::shared_ptr<ConstantBuffer> value)
 {
 	SetConstantBuffer(value);
 }
-template<>
-void ShaderParameter::Set<Texture>(std::shared_ptr<Texture> value)
+template<> void ShaderParameter::Set<Texture>(std::shared_ptr<Texture> value)
 {
 	SetTexture(value);
 }
-template<>
-void ShaderParameter::Set<SamplerState>(std::shared_ptr<SamplerState> value)
+template<> void ShaderParameter::Set<SamplerState>(std::shared_ptr<SamplerState> value)
 {
 	SetSampler(value);
 }
-template<>
-void ShaderParameter::Set<StructuredBuffer>(std::shared_ptr<StructuredBuffer> value)
+template<> void ShaderParameter::Set<StructuredBuffer>(std::shared_ptr<StructuredBuffer> value)
 {
 	SetStructuredBuffer(value);
 }
 
 //--
 
-template<>
-std::shared_ptr<ConstantBuffer> ShaderParameter::Get<ConstantBuffer>() const
+template<> std::shared_ptr<ConstantBuffer> ShaderParameter::Get<ConstantBuffer>() const
 {
 	return m_pConstantBuffer.lock();
 }
-template<>
-std::shared_ptr<Texture> ShaderParameter::Get<Texture>() const
+template<> std::shared_ptr<Texture> ShaderParameter::Get<Texture>() const
 {
 	return m_pTexture.lock();
 }
-template<>
-std::shared_ptr<SamplerState> ShaderParameter::Get<SamplerState>() const
+template<> std::shared_ptr<SamplerState> ShaderParameter::Get<SamplerState>() const
 {
 	return m_pSamplerState.lock();
 }
-template<>
-std::shared_ptr <StructuredBuffer> ShaderParameter::Get<StructuredBuffer>() const
+template<> std::shared_ptr <StructuredBuffer> ShaderParameter::Get<StructuredBuffer>() const
 {
 	return m_pStructuredBuffer.lock();
 }

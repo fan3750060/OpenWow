@@ -22,6 +22,8 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _i
 		//setDrawOrder(19);
 	}
 
+	AddMesh(m_Geom);
+
 	// State
 	//m_State.setDepthTest(false);
 	//m_State.setDepthMask(false);
@@ -29,7 +31,7 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _i
 	//m_State.setGeometry(m_Geom);
 }
 
-bool CWDL_LowResTile::PreRender3D()
+void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs)
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
@@ -44,20 +46,8 @@ bool CWDL_LowResTile::PreRender3D()
 
 	if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
 	{
-		return false;
+		return;
 	}
 
-	return true;
-}
-
-void CWDL_LowResTile::Render3D()
-{
-		/*CWDL_LowRes_Pass* pass = _Render->getTechniquesMgr()->WDL_LowRes_Pass.operator->();
-		pass->Bind();
-		{
-			pass->setColor(m_MapController->getSkyManager()->GetColor(LightColors::LIGHT_COLOR_FOG));
-
-			_Render->r.draw(0, 16 * 16 * 12, &m_State);
-		}
-		pass->Unbind();*/
+	SceneNode::Render(renderEventArgs);
 }

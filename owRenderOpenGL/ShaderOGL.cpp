@@ -198,7 +198,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 	GLint attribNameMaxLenght;
 	glGetProgramiv(m_GLObj, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &attribNameMaxLenght);
 
-	for (GLuint j = 0; j < attribCount; ++j)
+	for (GLint j = 0; j < attribCount; ++j)
 	{
 		char name[32];
 		GLsizei length, size;
@@ -219,7 +219,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 	GLint uniformsNameMaxLenght;
 	glGetProgramiv(m_GLObj, GL_ACTIVE_UNIFORM_MAX_LENGTH, &uniformsNameMaxLenght);
 
-	for (GLuint j = 0; j < uniformsCount; ++j)
+	for (GLint j = 0; j < uniformsCount; ++j)
 	{
 		char name[32];
 		GLsizei length, size;
@@ -260,7 +260,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 	GLint uniformsBlocksNameMaxLenght;
 	glGetProgramiv(m_GLObj, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH, &uniformsBlocksNameMaxLenght);
 
-	for (GLuint j = 0; j < uniformsBlocksCount; ++j)
+	for (GLint j = 0; j < uniformsBlocksCount; ++j)
 	{
 		char name[32];
 		GLsizei length;

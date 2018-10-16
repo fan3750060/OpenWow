@@ -8,7 +8,11 @@
 #include "../owRenderBase/ShaderParameter.h"
 #include "../owRenderBase/Texture.h"
 #include "../owRenderBase/SamplerState.h"
+
 #include "../owRenderBase/Material.h"
+#include "../owRenderBase/MaterialDebug.h"
+#include "../owRenderBase/MaterialBase.h"
+
 #include "../owRenderBase/Light.h"
 #include "../owRenderBase/Mesh.h"
 #include "../owRenderBase/ConstantBuffer.h"

@@ -10,6 +10,7 @@
 
 MeshOGL::MeshOGL()
 	: m_pIndexBuffer(nullptr)
+	, m_PrimitiveTopology(GL_TRIANGLES)
 	, m_pMaterial(nullptr)
 	, m_bIsDirty(false)
 {
@@ -37,6 +38,30 @@ void MeshOGL::SetIndexBuffer(std::shared_ptr<Buffer> buffer)
 	m_bIsDirty = true;
 }
 
+void MeshOGL::SetPrimitiveTopology(PrimitiveTopology _topology)
+{
+	switch (_topology)
+	{
+	case PrimitiveTopology::PointList:
+		m_PrimitiveTopology = GL_POINTS;
+		break;
+	case PrimitiveTopology::LineList:
+		m_PrimitiveTopology = GL_LINES;
+		break;
+	case PrimitiveTopology::LineStrip:
+		m_PrimitiveTopology = GL_LINE_STRIP;
+		break;
+	case PrimitiveTopology::TriangleList:
+		m_PrimitiveTopology = GL_TRIANGLES;
+		break;
+	case PrimitiveTopology::TriangleStrip:
+		m_PrimitiveTopology = GL_TRIANGLE_STRIP;
+		break;
+	default:
+		_ASSERT(false);
+	}
+}
+
 void MeshOGL::SetMaterial(std::shared_ptr<Material> material)
 {
 	m_pMaterial = material;
@@ -56,7 +81,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 
 		if (m_bIsDirty)
 		{
-			ResolveDirty(pVS);
+			Commit(pVS);
 			m_bIsDirty = false;
 		}
 
@@ -68,6 +93,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 			}
 		}
 	}
+	_ASSERT(m_bIsDirty != true);
 
 	glBindVertexArray(m_GLObj);
 	{
@@ -76,7 +102,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 			UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
 			glDrawRangeElements
 			(
-				GL_TRIANGLES,
+				m_PrimitiveTopology,
 				0,
 				vertexCount,
 				m_pIndexBuffer->GetElementCount(),
@@ -89,7 +115,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs)
 			UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
 			glDrawArrays
 			(
-				GL_TRIANGLES,
+				m_PrimitiveTopology,
 				0,
 				vertexCount
 			);
@@ -103,7 +129,7 @@ void MeshOGL::Accept(IVisitor& visitor)
 	visitor.Visit(*this);
 }
 
-void MeshOGL::ResolveDirty(std::weak_ptr<ShaderOGL> _shader)
+void MeshOGL::Commit(std::weak_ptr<ShaderOGL> _shader)
 {
 	std::shared_ptr<ShaderOGL> pVS = _shader.lock();
 

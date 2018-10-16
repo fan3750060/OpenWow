@@ -16,11 +16,9 @@ struct BufferBinding
 	{
 		if (Name < rhs.Name) return true;
 		if (Name > rhs.Name) return false;
-		// Names are equal...
 
 		if (Index < rhs.Index) return true;
 		if (Index > rhs.Index) return false;
-		// Indexes are equal...
 
 		return false;
 	}

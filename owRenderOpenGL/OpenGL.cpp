@@ -617,7 +617,7 @@ void initWGLExtensions()
 
 	if (!RegisterClassA(&renderWindowClass)) 
 	{
-		fail1("Failed to register dummy OpenGL window.");
+		fail1();
 	}
 
 	HWND dummy_window = CreateWindowExA(

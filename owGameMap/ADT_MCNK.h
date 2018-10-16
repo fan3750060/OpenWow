@@ -48,11 +48,9 @@ public:
 
 	// Qulity
 	SharedBufferPtr __ibHigh;
-	uint16  m_IndexesCountHigh;
 	SharedMeshPtr __geomHigh;
 
 	SharedBufferPtr __ibDefault;
-	uint16  m_IndexesCountDefault;
 	SharedMeshPtr __geomDefault;
 
 private: // PARENT

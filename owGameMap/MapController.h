@@ -7,7 +7,7 @@
 #include "WDL.h"
 #include "MinimapProvider.h"
 
-class MapController : public SceneNode, public IMapManager
+class MapController : public SceneNode
 {
 public:
 	MapController();
@@ -24,11 +24,7 @@ public:
 	void ClearCache();
 	uint32 GetAreaID();
 
-	// ISceneNode
-	//string getObjectInfo() const override { return "@MapController@"; }
-
-	// IMapManager
-	void Update() override;
+	void Update();
 
 public: // Getters
 	string getFilenameT() const { return m_MapFilenameT; }
@@ -46,7 +42,7 @@ public: // Getters
 	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
 	
 	SharedTexturePtr getMinimap() const { return m_WDL->getMinimap(); }
-	const SkyManager* getSkyManager() const { return m_SkyManager; }
+	const std::shared_ptr<SkyManager> getSkyManager() const { return m_SkyManager; }
 	const WowTime* getTime() const { return &m_GameTime; }
 
 	bool getTileIsCurrent(int x, int z) const
@@ -81,9 +77,9 @@ private:
 	int32					m_CurrentTileX, m_CurrentTileZ;
 	bool					m_IsOnInvalidTile;
 
-	WDT*					m_WDT;
-	WDL*					m_WDL;
-	SkyManager*				m_SkyManager;
+	std::shared_ptr<WDT>	m_WDT;
+	std::shared_ptr<WDL>	m_WDL;
+	std::shared_ptr<SkyManager> m_SkyManager;
 	WowTime					m_GameTime;
 
 	// Minimap

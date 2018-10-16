@@ -64,7 +64,6 @@ TextureDX11::TextureDX11(ID3D11Device2* pDevice, uint16_t width, uint16_t height
 
 	// Translate back to original format (for best match format).
 	m_TextureFormat = DX11TranslateFormat(dxgiFormat, format.NumSamples);
-
 	// Convert Depth/Stencil formats to typeless texture resource formats.
 	m_TextureResourceFormat = DX11GetTextureFormat(dxgiFormat);
 	// Convert typeless formats to Depth/Stencil view formats.
@@ -181,143 +180,94 @@ TextureDX11::TextureDX11(ID3D11Device2* pDevice, uint16_t size, uint16_t count, 
 TextureDX11::~TextureDX11()
 {}
 
+bool TextureDX11::LoadTextureCustom(uint16_t width, uint16_t height, void * pixels)
+{
+	m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_TextureDimension = Texture::Dimension::Texture2D;
+	m_TextureWidth = width;
+	m_TextureHeight = height;
+	m_BPP = 4;
+	m_bIsTransparent = FALSE;
+	m_NumSlices = 1;
+	m_Pitch = (m_TextureWidth) * 4;
+
+	m_ShaderResourceViewFormat = m_RenderTargetViewFormat = m_TextureResourceFormat;
+	m_SampleDesc = GetSupportedSampleCount(m_TextureResourceFormat, 1);
+
+	if (FAILED(m_pDevice->CheckFormatSupport(m_TextureResourceFormat, &m_TextureResourceFormatSupport)))
+	{
+		Log::Error("Failed to query format support.");
+	}
+
+	if ((m_TextureResourceFormatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) == 0)
+	{
+		ReportTextureFormatError(m_TextureFormat, "Unsupported texture format for 2D textures.");
+		return false;
+	}
+
+	m_ShaderResourceViewFormatSupport = m_RenderTargetViewFormatSupport = m_TextureResourceFormatSupport;
+
+	// Can mipmaps be automatically generated for this texture format?
+	m_bGenerateMipmaps = !m_bDynamic && (m_ShaderResourceViewFormatSupport & D3D11_FORMAT_SUPPORT_MIP_AUTOGEN) != 0;
+
+	// Load the texture data into a GPU texture.
+	D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+	textureDesc.Width = m_TextureWidth;
+	textureDesc.Height = m_TextureHeight;
+	textureDesc.MipLevels = m_bGenerateMipmaps ? 0 : 1;
+	textureDesc.ArraySize = m_NumSlices;
+	textureDesc.Format = m_TextureResourceFormat;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	if ((m_ShaderResourceViewFormatSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0)
+	{
+		textureDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+	}
+	if ((m_RenderTargetViewFormatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0)
+	{
+		textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+	}
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = m_bGenerateMipmaps ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
+
+	// Subresource
+	D3D11_SUBRESOURCE_DATA subresourceData;
+	subresourceData.pSysMem = pixels;
+	subresourceData.SysMemPitch = m_Pitch;
+	subresourceData.SysMemSlicePitch = 0;
+	if (FAILED(m_pDevice->CreateTexture2D(&textureDesc, m_bGenerateMipmaps ? nullptr : &subresourceData, &m_pTexture2D)))
+	{
+		Log::Error("Failed to create texture.");
+		return false;
+	}
+
+	// Create a Shader resource view for the texture.
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc;
+	resourceViewDesc.Format = m_ShaderResourceViewFormat;
+	resourceViewDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
+	resourceViewDesc.Texture2D.MipLevels = m_bGenerateMipmaps ? -1 : 1;
+	resourceViewDesc.Texture2D.MostDetailedMip = 0;
+	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, &resourceViewDesc, &m_pShaderResourceView)))
+	{
+		Log::Error("Failed to create texture resource view.");
+		return false;
+	}
+
+	// From DirectXTK (28/05/2015) @see https://directxtk.codeplex.com/
+	if (m_bGenerateMipmaps)
+	{
+		m_pDeviceContext->UpdateSubresource(m_pTexture2D, 0, nullptr, pixels, m_Pitch, 0);
+		m_pDeviceContext->GenerateMips(m_pShaderResourceView);
+	}
+
+	m_bIsDirty = false;
+
+	return true;
+}
+
 bool TextureDX11::LoadTexture2D(cstring fileName)
 {
-	// Try to determine the file type from the image file.
-	/*FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeU(filePath.c_str());
-	if (fif == FIF_UNKNOWN)
-	{
-		fif = FreeImage_GetFIFFromFilenameU(filePath.c_str());
-	}
-
-	if (fif == FIF_UNKNOWN || !FreeImage_FIFSupportsReading(fif))
-	{
-		Log::Error("Unknow file format: " + filePath.string());
-		return false;
-	}
-
-	FIBITMAP* dib = FreeImage_LoadU(fif, filePath.c_str());
-	if (dib == nullptr || FreeImage_HasPixels(dib) == FALSE)
-	{
-		Log::Error("Failed to load image: " + filePath.string());
-		return false;
-	}
-
-	//// Check to see if we need to flip the image
-	//for ( int model = 0; model < FIMD_EXIF_RAW + 1; model++ )
-	//{
-	//    PrintMetaData( (FREE_IMAGE_MDMODEL)model, dib );
-	//}
-
-	m_BPP = FreeImage_GetBPP(dib);
-	FREE_IMAGE_TYPE imageType = FreeImage_GetImageType(dib);
-
-	// Check to see if the texture has an alpha channel.
-	m_bIsTransparent = (FreeImage_IsTransparent(dib) == TRUE);
-
-	switch (m_BPP)
-	{
-	case 8:
-	{
-		switch (imageType)
-		{
-		case FIT_BITMAP:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R8_UNORM;
-		}
-		break;
-		default:
-		{
-			Log::Error("Unknown image format.");
-		}
-		break;
-		}
-	}
-	break;
-	case 16:
-	{
-		switch (imageType)
-		{
-		case FIT_BITMAP:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R8G8_UNORM;
-		}
-		break;
-		case FIT_UINT16:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R16_UINT;
-		}
-		break;
-		case FIT_INT16:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R16_SINT;
-		}
-		break;
-		default:
-		{
-			Log::Error("Unknown image format.");
-		}
-		break;
-		}
-	}
-	break;
-	case 32:
-	{
-		switch (imageType)
-		{
-		case FIT_BITMAP:
-		{
-#if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
-			m_TextureResourceFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-#else
-			m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-#endif
-		}
-		break;
-		case FIT_FLOAT:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R32_FLOAT;
-		}
-		break;
-		case FIT_INT32:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R32_SINT;
-		}
-		break;
-		case FIT_UINT32:
-		{
-			m_TextureResourceFormat = DXGI_FORMAT_R32_UINT;
-		}
-		break;
-		default:
-		{
-			Log::Error("Unknown image format.");
-		}
-		break;
-		}
-	}
-	break;
-	default:
-	{
-		FIBITMAP* dib32 = FreeImage_ConvertTo32Bits(dib);
-
-		// Unload the original image.
-		FreeImage_Unload(dib);
-
-		dib = dib32;
-
-		// Update pixel bit depth (should be 32 now if it wasn't before).
-		m_BPP = FreeImage_GetBPP(dib);
-
-#if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
-		m_TextureResourceFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-#else
-		m_TextureResourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-#endif
-	}
-	break;
-	}*/
-
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 
 	LIBBLP_PixelView blpView;

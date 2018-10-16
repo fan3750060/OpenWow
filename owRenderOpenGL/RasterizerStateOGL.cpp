@@ -37,7 +37,7 @@ GLenum GLTranslateCullMode(RasterizerState::CullMode cullMode)
 	std::exception("Unknown cull mode.");
 }
 
-bool GLTranslateFrontFace(RasterizerState::FrontFace frontFace)
+GLenum GLTranslateFrontFace(RasterizerState::FrontFace frontFace)
 {
 	switch (frontFace)
 	{

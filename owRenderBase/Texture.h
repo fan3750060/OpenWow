@@ -101,6 +101,11 @@ public:
 	};
 
 	/**
+	 * Load a 2D custom texture
+	 */
+	virtual bool LoadTextureCustom(uint16_t width, uint16_t height, void* pixels) = 0;
+
+	/**
 	 * Load a 2D texture from a file path.
 	 */
 	virtual bool LoadTexture2D(cstring fileName) = 0;

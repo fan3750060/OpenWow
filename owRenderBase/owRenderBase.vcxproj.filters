@@ -18,7 +18,13 @@
       <Filter>Types &amp; Enums</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types &amp; Enums\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialBase.cpp">
+      <Filter>Types &amp; Enums\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialDebug.cpp">
+      <Filter>Types &amp; Enums\Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +93,6 @@
     <ClInclude Include="Light.h">
       <Filter>Types &amp; Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Types &amp; Enums</Filter>
-    </ClInclude>
     <ClInclude Include="Pixel.h">
       <Filter>Types &amp; Enums</Filter>
     </ClInclude>
@@ -104,6 +107,18 @@
     </ClInclude>
     <ClInclude Include="InputSemantic.h">
       <Filter>Types &amp; Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveTopology.h">
+      <Filter>Types &amp; Enums\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Types &amp; Enums\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialBase.h">
+      <Filter>Types &amp; Enums\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialDebug.h">
+      <Filter>Types &amp; Enums\Materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +136,9 @@
     </Filter>
     <Filter Include="Types &amp; Enums\Enums">
       <UniqueIdentifier>{57c74fbd-55e5-4070-b317-6527bbe4b296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types &amp; Enums\Materials">
+      <UniqueIdentifier>{440872ae-1af9-47f9-827d-8bad426aa57a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

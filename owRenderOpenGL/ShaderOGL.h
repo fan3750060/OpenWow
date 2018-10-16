@@ -35,5 +35,4 @@ private:
 
 	typedef std::unique_lock<std::recursive_mutex> MutexLock;
 	std::recursive_mutex m_Mutex;
-
 };

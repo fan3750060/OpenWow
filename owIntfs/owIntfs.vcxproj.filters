@@ -49,9 +49,6 @@
     <ClInclude Include="SkyManager.h">
       <Filter>Game\Wow</Filter>
     </ClInclude>
-    <ClInclude Include="MapManager.h">
-      <Filter>Game\Wow</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -63,9 +60,6 @@
     </ClInclude>
     <ClInclude Include="UIManager.h">
       <Filter>GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Perfomance.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Networking.h">
       <Filter>Networking</Filter>

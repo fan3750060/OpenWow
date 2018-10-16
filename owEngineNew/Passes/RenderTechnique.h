@@ -11,21 +11,21 @@
 class RenderTechnique : public Object
 {
 public:
-    RenderTechnique();
-    virtual ~RenderTechnique();
+	RenderTechnique();
+	virtual ~RenderTechnique();
 
-    // Add a pass to the technique. The ID of the added pass is returned
-    // and can be used to retrieve the pass later.
-    virtual unsigned int AddPass( std::shared_ptr<RenderPass> pass );
-    virtual std::shared_ptr<RenderPass> GetPass( unsigned int ID ) const;
+	// Add a pass to the technique. The ID of the added pass is returned
+	// and can be used to retrieve the pass later.
+	virtual unsigned int AddPass(std::shared_ptr<RenderPass> pass);
+	virtual std::shared_ptr<RenderPass> GetPass(unsigned int ID) const;
 
-    // Render the scene using the passes that have been configured.
-    virtual void Render( RenderEventArgs& renderEventArgs );
+	// Render the scene using the passes that have been configured.
+	virtual void Render(RenderEventArgs& renderEventArgs);
 
 protected:
 
 private:
-    typedef std::vector< std::shared_ptr<RenderPass> > RenderPassList;
-    RenderPassList m_Passes;
-    
+	typedef std::vector< std::shared_ptr<RenderPass> > RenderPassList;
+	RenderPassList m_Passes;
+
 };

@@ -14,7 +14,7 @@ const float  C_SkyAngles[] = { 90.0f,                          30.0f,           
 const uint32 C_Skycolors[] = { LightColors::LIGHT_COLOR_SKY_0, LightColors::LIGHT_COLOR_SKY_1, LightColors::LIGHT_COLOR_SKY_2, LightColors::LIGHT_COLOR_SKY_3, LightColors::LIGHT_COLOR_SKY_4, LightColors::LIGHT_COLOR_FOG, LightColors::LIGHT_COLOR_FOG };
 const uint32 C_SkycolorsCount = 7;
 
-SkyManager::SkyManager(MapController* _mapController, DBC_MapRecord _mapRecord) :
+SkyManager::SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord) :
 	m_MapController(_mapController)
 {
 	for (auto& it : DBC_Light)
@@ -133,7 +133,7 @@ bool SkyManager::PreRender3D()
 		return false;
 	}
 
-	Calculate(m_MapController->getTime()->GetTime());
+	Calculate(m_MapController.lock()->getTime()->GetTime());
 
 	return true;
 }
@@ -196,12 +196,12 @@ void SkyManager::InitBuffer()
 	SharedBufferPtr vertexBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertices.data(), vertices.size(), sizeof(vec3));
 
 	// Colors buffer
-	colorsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));
+	//colorsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));
 
 	// Geometry
 	__geom = Application::Get().GetRenderDevice()->CreateMesh();
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), vertexBuffer);
-	__geom->AddVertexBuffer(BufferBinding("COLOR", 1), colorsBuffer);
+	//__geom->AddVertexBuffer(BufferBinding("COLOR", 1), colorsBuffer);
 
 	//__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PC);
 	//__geom->setGeomVertexParams(vertexBuffer, R_DataType::T_FLOAT, 0, 0);

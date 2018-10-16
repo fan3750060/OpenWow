@@ -92,7 +92,7 @@ int LIBBLP_Load(const uint8_t* inputBuffer, uint32_t inputBufferSize, LIBBLP_Pix
 
 			uint8_t* indexInPalleteColor = indexInPalleteBuffer;
 			int alphaBitCntr = 0;
-			uint8_t* indexInPalleteAlpha = &indexInPalleteBuffer[0] + header.width * header.height;
+			uint8_t* indexInPalleteAlpha = &indexInPalleteBuffer[0] + mipWidth * mipHeight;
 
 			for (uint32_t y = 0; y < mipWidth; y++)
 			{

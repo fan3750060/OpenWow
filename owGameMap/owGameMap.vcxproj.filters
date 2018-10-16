@@ -19,6 +19,9 @@
     <Filter Include="Map\Skies">
       <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map\Shaders">
+      <UniqueIdentifier>{90029abd-62c9-4ac3-9ca5-fdb3d6656f36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map_Shared.cpp">
@@ -32,9 +35,6 @@
     </ClCompile>
     <ClCompile Include="ADT_MDX_Instance.cpp">
       <Filter>Map\Instances</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT.cpp">
-      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="WDL.cpp">
       <Filter>Map</Filter>
@@ -74,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="SkyParams.cpp">
       <Filter>Map\Skies</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,5 +148,10 @@
     <None Include="Sky.inl">
       <Filter>Map\Skies</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\_gamedata\shaders_D3D\Map\MapChunk.hlsl">
+      <Filter>Map\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

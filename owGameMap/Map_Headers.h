@@ -25,14 +25,7 @@ struct ADT_MHDR
 
 struct ADT_TextureInfo
 {
-	ADT_TextureInfo() :
-		diffuseTexture(nullptr),
-		specularTexture(nullptr)
-	{}
-
-	//
-
-	string textureName;
+	string           textureName;
 	SharedTexturePtr diffuseTexture;
 	SharedTexturePtr specularTexture;
 };

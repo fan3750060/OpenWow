@@ -1,8 +1,10 @@
 #pragma once
 
+// FORWARD BEGIN
 class Scene;
 class SceneNode;
 class Mesh;
+// FORWARD END
 
 struct IVisitor
 {

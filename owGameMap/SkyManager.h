@@ -9,7 +9,7 @@ class MapController;
 class SkyManager : public CRenderable3DObject, public ISkyManager
 {
 public:
-	SkyManager(MapController* _mapController, DBC_MapRecord _mapRecord);
+	SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord);
 	virtual ~SkyManager();
 
 public:
@@ -38,12 +38,12 @@ private:
 private:
 	SkyParams m_Interpolated;
 
-	SharedBufferPtr colorsBuffer;
+	std::shared_ptr<Buffer> colorsBuffer;
 	SharedMeshPtr __geom;
 
 	vector<Sky*> skies;
 
 private: // PARENT
-	MapController* m_MapController;
+	std::weak_ptr<MapController> m_MapController;
 };
 

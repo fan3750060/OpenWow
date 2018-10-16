@@ -75,13 +75,6 @@ void OnKeyPressed(KeyEventArgs& e);
 void OnKeyReleased(KeyEventArgs& e);
 
 // Techique
-enum class RenderingTechnique
-{
-	Forward,
-	Deferred,
-	ForwardPlus
-};
-RenderingTechnique g_RenderingTechnique = RenderingTechnique::Forward;
 RenderTechnique g_ForwardTechnique;
 
 std::shared_ptr<Query> g_pForwardOpaqueQuery;
@@ -163,49 +156,45 @@ int main(int argumentCount, char* arguments[])
 		std::shared_ptr<Texture> t2 = renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
 
 		std::shared_ptr<Texture> t30 = renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
-		
+
 
 		renderDevice->CreateTexture2D("TILESET\\Barrens\\BarrensBaseBush.blp");
-		
-		std::shared_ptr<Mesh> mesh1 = renderDevice->CreatePlane();
-		mesh1->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t0); // DXT1
 
-		std::shared_ptr<Mesh> mesh2 = renderDevice->CreatePlane();
-		mesh2->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t1); // DXT1A
+		// Material
+		std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(renderDevice);
+		mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
 
+		std::shared_ptr<Mesh> mesh1 = renderDevice->CreateSphere();
+		mesh1->SetMaterial(mat);
+		std::shared_ptr<Mesh> mesh2 = renderDevice->CreateCube();
+		mesh2->SetMaterial(mat);
 		std::shared_ptr<Mesh> mesh3 = renderDevice->CreatePlane();
-		mesh3->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t2); // DXT3
-
+		mesh3->SetMaterial(mat);
 		std::shared_ptr<Mesh> mesh4 = renderDevice->CreatePlane();
-		mesh4->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t3); // DXT5
-
-
-
-
-
+		mesh4->SetMaterial(mat);
 		std::shared_ptr<Mesh> mesh5 = renderDevice->CreatePlane();
-		mesh5->GetMaterial()->SetTexture(Material::TextureType::Diffuse, t30);
+		mesh5->SetMaterial(mat);
 
 		g_pScene = std::make_shared<SceneBase>();
 
 		/*std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
-		n1->SetLocalTransform(glm::translate(vec3(-10.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n1->SetLocalTransform(glm::translate(vec3(-100.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
 		n1->AddMesh(mesh1);
 
 		std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
-		n2->SetLocalTransform(glm::translate(vec3(-5.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n2->SetLocalTransform(glm::translate(vec3(-50.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
 		n2->AddMesh(mesh2);
 
 		std::shared_ptr<SceneNode> n3 = g_pScene->CreateSceneNode();
-		n3->SetLocalTransform(glm::translate(vec3(0.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n3->SetLocalTransform(glm::translate(vec3(0.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
 		n3->AddMesh(mesh3);
 
 		std::shared_ptr<SceneNode> n4 = g_pScene->CreateSceneNode();
-		n4->SetLocalTransform(glm::translate(vec3(5.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n4->SetLocalTransform(glm::translate(vec3(50.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
 		n4->AddMesh(mesh4);
 
 		std::shared_ptr<SceneNode> n5 = g_pScene->CreateSceneNode();
-		n5->SetLocalTransform(glm::translate(vec3(10.0f, 0.0f, 0.0f)) * glm::scale(vec3(1.0f)));
+		n5->SetLocalTransform(glm::translate(vec3(100.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
 		n5->AddMesh(mesh5);*/
 
 		OpenDBs();
@@ -225,6 +214,7 @@ int main(int argumentCount, char* arguments[])
 		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
 		// CAMERA
+		g_Camera.SetTranslate(vec3(0, 0, 0));
 		g_Camera.SetTranslate(vec3(30 * C_TileSize, 200, 30 * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
 		g_Camera.SetViewport(viewPort);
@@ -289,7 +279,7 @@ int main(int argumentCount, char* arguments[])
 		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardOpaqueQuery));
 		g_ForwardTechnique.AddPass(std::make_shared<OpaquePass>(g_pScene, g_pOpaquePipeline));
 		//g_ForwardTechnique.AddPass(std::make_shared<EndQueryPass>(g_pForwardOpaqueQuery));
-		
+
 		// Add a pass for rendering transparent geometry
 		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardTransparentQuery));
 		//g_ForwardTechnique.AddPass(std::make_shared<TransparentPass>(g_pScene, g_pTransparentPipeline));
@@ -339,12 +329,7 @@ void OnRender(RenderEventArgs& e)
 	// Render the scene from the perspective of this camera.
 	e.Camera = &g_Camera;
 
-	switch (g_RenderingTechnique)
-	{
-	case RenderingTechnique::Forward:
-		g_ForwardTechnique.Render(e);
-		break;
-	}
+	g_ForwardTechnique.Render(e);
 
 	//Sleep(50);
 
@@ -376,26 +361,18 @@ void OnPostRender(RenderEventArgs& e)
 		g_pRenderWindow->SetWindowName(std::to_string(g_FrameTime));
 	}
 
-	switch (g_RenderingTechnique)
-	{
-	case RenderingTechnique::Forward:
-	{
-		// Query results for forward rendering technique.
-		//Query::QueryResult forwardOpaqueResult = g_pForwardOpaqueQuery->GetQueryResult(e.FrameCounter - (g_pForwardOpaqueQuery->GetBufferCount() - 1));
-		//Query::QueryResult forwardTransparentResult = g_pForwardTransparentQuery->GetQueryResult(e.FrameCounter - (g_pForwardTransparentQuery->GetBufferCount() - 1));
+	// Query results for forward rendering technique.
+	//Query::QueryResult forwardOpaqueResult = g_pForwardOpaqueQuery->GetQueryResult(e.FrameCounter - (g_pForwardOpaqueQuery->GetBufferCount() - 1));
+	//Query::QueryResult forwardTransparentResult = g_pForwardTransparentQuery->GetQueryResult(e.FrameCounter - (g_pForwardTransparentQuery->GetBufferCount() - 1));
 
-		/*if (forwardOpaqueResult.IsValid)
-		{
-			g_ForwardOpaqueStatistic.Sample(forwardOpaqueResult.ElapsedTime * 1000.0);
-		}
-		if (forwardTransparentResult.IsValid)
-		{
-			g_ForwardTransparentStatistic.Sample(forwardTransparentResult.ElapsedTime * 1000.0);
-		}*/
+	/*if (forwardOpaqueResult.IsValid)
+	{
+		g_ForwardOpaqueStatistic.Sample(forwardOpaqueResult.ElapsedTime * 1000.0);
 	}
-	break;
-	}
-
+	if (forwardTransparentResult.IsValid)
+	{
+		g_ForwardTransparentStatistic.Sample(forwardTransparentResult.ElapsedTime * 1000.0);
+	}*/
 }
 
 //--------------------------------------------

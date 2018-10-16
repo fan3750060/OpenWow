@@ -66,9 +66,9 @@ std::shared_ptr<Mesh> RenderDevice::CreatePlane(cvec3 N)
 	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer(i, 6);
 	mesh->SetIndexBuffer(__ib);
 
-	std::shared_ptr<Material> mat = CreateMaterial();
-	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	mesh->SetMaterial(mat);
+	//std::shared_ptr<Material> mat = CreateMaterial();
+	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	//mesh->SetMaterial(mat);
 
 	return mesh;
 }
@@ -99,9 +99,9 @@ std::shared_ptr<Mesh> RenderDevice::CreateScreenQuad(float left, float right, fl
 	std::shared_ptr<Buffer> __nb = CreateFloatVertexBuffer((const float*)n, 4, sizeof(vec3));
 	mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), __nb);
 
-	std::shared_ptr<Material> mat = CreateMaterial();
-	mat->SetDiffuseColor(vec4(1, 1, 1, 1));
-	mesh->SetMaterial(mat);
+	//std::shared_ptr<Material> mat = CreateMaterial();
+	//mat->SetDiffuseColor(vec4(1, 1, 1, 1));
+	//mesh->SetMaterial(mat);
 
 	return mesh;
 }
@@ -154,9 +154,9 @@ std::shared_ptr<Mesh> RenderDevice::CreateSphere()
 	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)spInds, 128 * 3);
 	mesh->SetIndexBuffer(__ib);
 
-	std::shared_ptr<Material> mat = CreateMaterial();
-	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	mesh->SetMaterial(mat);
+	//std::shared_ptr<Material> mat = CreateMaterial();
+	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	//mesh->SetMaterial(mat);
 
 	return mesh;
 }
@@ -180,9 +180,9 @@ std::shared_ptr<Mesh> RenderDevice::CreateCube()
 	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)cubeInds, 36);
 	mesh->SetIndexBuffer(__ib);
 
-	std::shared_ptr<Material> mat = CreateMaterial();
-	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	mesh->SetMaterial(mat);
+	//std::shared_ptr<Material> mat = CreateMaterial();
+	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	//mesh->SetMaterial(mat);
 
 	return mesh;
 }
@@ -238,9 +238,9 @@ std::shared_ptr<Mesh> RenderDevice::CreateCone()
 	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)coneInds, 22 * 3);
 	mesh->SetIndexBuffer(__ib);
 
-	std::shared_ptr<Material> mat = CreateMaterial();
-	mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	mesh->SetMaterial(mat);
+	//std::shared_ptr<Material> mat = CreateMaterial();
+	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
+	//mesh->SetMaterial(mat);
 
 	return mesh;
 }

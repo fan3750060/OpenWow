@@ -72,14 +72,15 @@ bool ADT::Load()
 	}
 
 	// MHDR + size (8)
+	ADT_MHDR header;
 	f->seekRelative(8);
 	{
-		f->readBytes(&m_Header, sizeof(ADT_MHDR));
+		f->readBytes(&header, sizeof(ADT_MHDR));
 	}
 
 	// Chunks info
 	ADT_MCIN chunks[256];
-	f->seek(startPos + m_Header.MCIN);
+	f->seek(startPos + header.MCIN);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -91,7 +92,7 @@ bool ADT::Load()
 	}
 
 	// TextureInfo
-	f->seek(startPos + m_Header.MTEX);
+	f->seek(startPos + header.MTEX);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -104,14 +105,12 @@ bool ADT::Load()
 
 		m_Textures.push_back(textureInfo);
 
-		//Log::Info("ADT[]: Texture [%s] added", textureInfo->textureName.c_str());
-
 		WOWCHUNK_READ_STRINGS_END
 	}
 
 	// M2 names
 	vector<string> m_MDXsNames;
-	f->seek(startPos + m_Header.MMDX);
+	f->seek(startPos + header.MMDX);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -125,7 +124,7 @@ bool ADT::Load()
 
 	// M2 Offsets
 	vector<uint32> m_MDXsOffsets;
-	f->seek(startPos + m_Header.MMID);
+	f->seek(startPos + header.MMID);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -143,7 +142,7 @@ bool ADT::Load()
 
 	// WMO Names
 	vector<string> m_WMOsNames;
-	f->seek(startPos + m_Header.MWMO);
+	f->seek(startPos + header.MWMO);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -156,7 +155,7 @@ bool ADT::Load()
 
 	// WMO Offsets
 	vector<uint32> m_WMOsOffsets;
-	f->seek(startPos + m_Header.MWID);
+	f->seek(startPos + header.MWID);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -174,7 +173,7 @@ bool ADT::Load()
 
 	// M2 PlacementInfo
 	vector<ADT_MDXDef> m_MDXsPlacementInfo;
-	f->seek(startPos + m_Header.MDDF);
+	f->seek(startPos + header.MDDF);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -190,7 +189,7 @@ bool ADT::Load()
 
 	// WMO PlacementInfo
 	vector<ADT_MODF> m_WMOsPlacementInfo;
-	f->seek(startPos + m_Header.MODF);
+	f->seek(startPos + header.MODF);
 	{
 		f->seekRelative(4);
 		uint32_t size;
@@ -205,9 +204,9 @@ bool ADT::Load()
 	}
 
 	// Liquids
-	if (m_Header.MH20 != 0)
+	if (header.MH20 != 0)
 	{
-		f->seek(startPos + m_Header.MH20);
+		f->seek(startPos + header.MH20);
 		{
 			f->seekRelative(4);
 			uint32_t size;
@@ -315,14 +314,15 @@ bool ADT::Delete()
 	return true;
 }
 
-bool ADT::PreRender3D()
+void ADT::Render(RenderEventArgs& renderEventArgs)
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
 
+	PipelineState* state = renderEventArgs.PipelineState;
 	if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
 	{
-		return false;
+		return;
 	}
 
 	// Check frustrum
@@ -331,10 +331,5 @@ bool ADT::PreRender3D()
 	//	return false;
 	//}
 
-	return true;
-}
-
-void ADT::Render3D()
-{
-	//_Render->DrawBoundingBox(m_Bounds);
+	SceneNode::Render(renderEventArgs);
 }

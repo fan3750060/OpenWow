@@ -15,7 +15,9 @@ WDL::~WDL()
 {
 }
 
-void WDL::CreateInsances(std::weak_ptr<MapController> _parent)
+//--
+
+void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
@@ -29,6 +31,11 @@ void WDL::CreateInsances(std::weak_ptr<MapController> _parent)
 		Log::Info("World[%s]: WDL: Error opening.", fileName.c_str());
 		return;
 	}
+
+	// Material
+	std::shared_ptr<Texture> t30 = Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
+	std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(Application::Get().GetRenderDevice());
+	mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
 
 	// Heightmap
 	vec3 lowres[17][17];
@@ -91,16 +98,10 @@ void WDL::CreateInsances(std::weak_ptr<MapController> _parent)
 
 				SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
-				__geom->SetMaterial(Application::Get().GetRenderDevice()->GetDefaultMaterial());
+				__geom->SetMaterial(mat);
 				
-
-				//_Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
-				//__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 0);
-				//__geom->finishCreatingGeometry();
-
-				std::shared_ptr<CWDL_LowResTile> lowResTile = make_shared<CWDL_LowResTile>(_parent, i, j, __geom);
+				std::shared_ptr<CWDL_LowResTile> lowResTile = make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
 				lowResTile->SetParent(_parent);
-				lowResTile->AddMesh(__geom);
 				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
@@ -159,7 +160,6 @@ void WDL::Load()
 		else if (strncmp(fourcc, "MWMO", 4) == 0) // Filenames for WMO that appear in the low resolution map. Zero terminated strings.
 		{
 			WOWCHUNK_READ_STRINGS_BEGIN
-
 				m_LowResolutionWMOsNames.push_back(_string);
 			WOWCHUNK_READ_STRINGS_END;
 		}

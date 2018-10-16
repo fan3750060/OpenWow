@@ -53,8 +53,9 @@ void LightsPass::Render( RenderEventArgs& e )
         // Selected lights should appear more opaque.
         alpha = light.m_Selected ? 0.9f : alpha;
 
-        m_LightMaterial->SetDiffuseColor( light.m_Color );
-        m_LightMaterial->SetOpacity( alpha );
+		// TODO
+        //m_LightMaterial->SetDiffuseColor( light.m_Color );
+        //m_LightMaterial->SetOpacity( alpha );
 
         switch ( light.m_Type )
         {

@@ -20,7 +20,7 @@ void CUpdatableObjectCollection::UnregisterObject(IUpdatable * _uiObject)
 	m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 }
 
-void CUpdatableObjectCollection::Update(IPerfomance* _perfomance, CInput* _input, double _time, double _dTime)
+void CUpdatableObjectCollection::Update(CInput* _input, double _time, double _dTime)
 {
 	_BaseManager->SetPhase(Phase_Input);
 	for (auto& it : m_Objects)

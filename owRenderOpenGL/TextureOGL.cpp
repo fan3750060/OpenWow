@@ -111,6 +111,27 @@ TextureOGL::~TextureOGL()
 	}
 }
 
+bool TextureOGL::LoadTextureCustom(uint16_t width, uint16_t height, void * pixels)
+{
+	m_TextureType = GL_TEXTURE_2D;
+	m_TextureWidth = width;
+	m_TextureHeight = height;
+	m_TextureDepth = 1;
+	m_bGenerateMipmaps = false;
+
+	glActiveTexture(GL_TEXTURE15);
+	glBindTexture(m_TextureType, m_GLObj);
+
+	glTexImage2D(m_TextureType, 0, GL_RGBA8, m_TextureWidth, m_TextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	OGLCheckError();
+
+	//glGenerateMipmap(m_TextureType);
+
+	glBindTexture(m_TextureType, 0);
+
+	return true;
+}
+
 bool TextureOGL::LoadTexture2D(cstring fileName)
 {
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);

@@ -26,23 +26,18 @@ public:
 		return m_Chunks[x * C_ChunksInTile + z];
 	}
 
-	// ISceneNode
-	//string getObjectInfo() const override { return "@ADT@" + to_string(m_IndexX) + ":" + to_string(m_IndexZ); }
-	//void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
-
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
 	void setLoaded() {}
 	bool isLoaded() const { return true; }
 
-	// IRenderable3D
-	bool PreRender3D();
-	void Render3D();
+	// SceneNode
+	void Render(RenderEventArgs& renderEventArgs) override;
 
 public:
-	const int							m_IndexX, m_IndexZ;
-	ADT_MHDR							m_Header;
+	const int                                   m_IndexX, m_IndexZ;
+	
 
 	vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
 

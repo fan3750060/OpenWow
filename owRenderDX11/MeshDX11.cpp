@@ -11,6 +11,7 @@
 MeshDX11::MeshDX11(ID3D11Device2* pDevice)
 	: m_pDevice(pDevice)
 	, m_pIndexBuffer(nullptr)
+	, m_PrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 	, m_pMaterial(nullptr)
 	, m_pDeviceContext(nullptr)
 {
@@ -30,6 +31,28 @@ void MeshDX11::SetIndexBuffer(std::shared_ptr<Buffer> buffer)
 	m_pIndexBuffer = buffer;
 }
 
+void MeshDX11::SetPrimitiveTopology(PrimitiveTopology _topology)
+{
+	switch (_topology)
+	{
+	case PrimitiveTopology::PointList:
+		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+		break;
+	case PrimitiveTopology::LineList:
+		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		break;
+	case PrimitiveTopology::LineStrip:
+		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+		break;
+	case PrimitiveTopology::TriangleList:
+		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		break;
+	case PrimitiveTopology::TriangleStrip:
+		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		break;
+	}
+}
+
 void MeshDX11::SetMaterial(std::shared_ptr<Material> material)
 {
 	m_pMaterial = material;
@@ -43,10 +66,6 @@ std::shared_ptr<Material> MeshDX11::GetMaterial() const
 void MeshDX11::Render(RenderEventArgs& renderArgs)
 {
 	std::shared_ptr<ShaderDX11> pVS;
-
-	// Clone this mesh's material in case we want to override the 
-	// shaders in the mesh's default material.
-	//Material material( *m_pMaterial );
 
 	// Use the vertex shader to convert the buffer semantics to slot ID's
 	PipelineState* pipeline = renderArgs.PipelineState;
@@ -77,9 +96,7 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 		}
 	}
 
-	// TODO: The primitive topology should be a parameter.
-	// Or we have to have index buffers/vertex buffers for each primitive type...
-	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_pDeviceContext->IASetPrimitiveTopology(m_PrimitiveTopology);
 
 	if (m_pIndexBuffer != NULL)
 	{
@@ -109,7 +126,6 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 			}
 		}
 	}
-
 }
 
 void MeshDX11::Accept(IVisitor& visitor)
