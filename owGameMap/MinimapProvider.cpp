@@ -21,7 +21,7 @@ void CMinimapProvider::Init()
 
 	while (!m_File->isEof())
 	{
-		string curStr;
+		std::string curStr;
 		m_File->readLine(&curStr);
 
 		if (curStr.substr(0, 4) == "dir:")
@@ -48,7 +48,7 @@ void CMinimapProvider::Init()
 			int tabIndex = curStr.find('\t');
 			_ASSERT(tabIndex != -1);
 
-			string beforeTab = curStr.substr(0, tabIndex);
+			std::string beforeTab = curStr.substr(0, tabIndex);
 			sscanf_s
 			(
 				(beforeTab.c_str()), 
@@ -63,7 +63,7 @@ void CMinimapProvider::Init()
 	}
 }
 
-MinimapDir* CMinimapProvider::getMinimap(string _name)
+MinimapDir* CMinimapProvider::getMinimap(std::string _name)
 {
 	for (auto& it : m_Minimaps)
 	{

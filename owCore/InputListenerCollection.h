@@ -57,5 +57,5 @@ public:
 	bool OnCharInput(uint32 _char) override;
 
 private:
-    vector<CInputListener> m_Objects;
+	std::vector<CInputListener> m_Objects;
 };

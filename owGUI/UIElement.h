@@ -36,7 +36,7 @@ public:
 	// Name functional
 
 	void SetName(cstring _newName);
-	inline string GetName() const { return m_Name; }
+	inline std::string GetName() const { return m_Name; }
 
 	// Childs & parent functional
 
@@ -75,7 +75,7 @@ public:
 	void SetTextAlignW(TextAlignW _textAlignW) { m_TextAlignW = _textAlignW; }
 	void SetTextAlignH(TextAlignH _textAlignH) { m_TextAlignH = _textAlignH; }
 	void SetTextFont(SharedFontPtr _font);
-	string GetText() const { return m_Text; };
+	std::string GetText() const { return m_Text; };
 
 	// Common functional
 
@@ -116,7 +116,7 @@ protected:
 	Color       m_Color;
 
 private:
-	string      m_Name;
+	std::string      m_Name;
     uint32      m_Deep;
     uint32      m_DeepAdding;
     UIElement*  m_Parent;
@@ -130,7 +130,7 @@ private:
 
 protected:
 	bool        m_IsTextEnable;
-	string      m_Text;
+	std::string      m_Text;
 	SharedFontPtr       m_Font;
 	vec2        m_TextOffset;
 	TextAlignW  m_TextAlignW;

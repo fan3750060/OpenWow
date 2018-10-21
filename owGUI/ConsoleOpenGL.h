@@ -8,7 +8,7 @@ struct ConsoleMessage
 		color = _color;
 	}
 
-	string text;
+	std::string text;
 	Color color;
 };
 
@@ -37,7 +37,7 @@ public:
 
 protected:
 	// CDebugOutput
-	void Print(string _messageFmt, CDebugOutput::DebugMessageType _type);
+	void Print(std::string _messageFmt, CDebugOutput::DebugMessageType _type);
 
 private:
 	vec2 windowSize;
@@ -53,7 +53,7 @@ private:
 	int lineOffset;
 
 	ConsoleMessages messages;
-	string inputString;
+	std::string inputString;
 
 	// Help commands
 	vector<IConsoleCommand*> commandsHelper;

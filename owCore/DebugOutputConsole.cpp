@@ -18,7 +18,7 @@ DebugOutput_ConsoleWindows::~DebugOutput_ConsoleWindows()
 
 //
 
-void DebugOutput_ConsoleWindows::Print(string _messageFmt, CDebugOutput::DebugMessageType _type)
+void DebugOutput_ConsoleWindows::Print(std::string _messageFmt, CDebugOutput::DebugMessageType _type)
 {
 	// Set color
 	unsigned short color;

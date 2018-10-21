@@ -4,7 +4,7 @@ class Utils
 {
 public:
     // Convert
-    static   string ToString(const type_info& type, void* value);
+    static   std::string ToString(const type_info& type, void* value);
 
     // Common types
     template <typename T>
@@ -13,38 +13,38 @@ public:
     static   bool ToBool(cstring _string);
 
     // My types
-    static  vec2 ToPoint(string& _string);
-    static  vec3 ToVector3(string& _string);
-    static  Color ToColorFromName(string& _string);
-    static  Color ToColorFromRGB(string& _string);
-    static  Color ToColorFromRGBA(string& _string);
-    static  TextAlignW ToTextAlignW(string& _string);
-    static  TextAlignH ToTextAlignH(string& _string);
-    static  InputMode ToInputMode(string& _string);
+    static  vec2 ToPoint(std::string& _string);
+    static  vec3 ToVector3(std::string& _string);
+    static  Color ToColorFromName(std::string& _string);
+    static  Color ToColorFromRGB(std::string& _string);
+    static  Color ToColorFromRGBA(std::string& _string);
+    static  TextAlignW ToTextAlignW(std::string& _string);
+    static  TextAlignH ToTextAlignH(std::string& _string);
+    static  InputMode ToInputMode(std::string& _string);
 
     // Parse
-    static   string ParseSectionName(string& _string);
-    static   string ParseSectionAndIncludeName(string& _string, string& _includeSectionName);
-    static   void ParseKeyPair(string& _string, string& key, string& val);
+    static   std::string ParseSectionName(std::string& _string);
+    static   std::string ParseSectionAndIncludeName(std::string& _string, std::string& _includeSectionName);
+    static   void ParseKeyPair(std::string& _string, std::string& key, std::string& val);
 
     static   bool TryParse(const type_info& type, cstring _string, void* output);
 
     // String
-    static   string Trim(string& _string, cstring delimiters = " \f\n\r\t\v");
-    static   string TrimLeft(string& _string, cstring delimiters = " \f\n\r\t\v");
-    static   string TrimRight(string& _string, cstring delimiters = " \f\n\r\t\v");
+    static   std::string Trim(std::string& _string, cstring delimiters = " \f\n\r\t\v");
+    static   std::string TrimLeft(std::string& _string, cstring delimiters = " \f\n\r\t\v");
+    static   std::string TrimRight(std::string& _string, cstring delimiters = " \f\n\r\t\v");
 
-    static   string ToLower(cstring _string);
-	static   string ToUpper(cstring _string);
+    static   std::string ToLower(cstring _string);
+	static   std::string ToUpper(cstring _string);
 
-    static   int popFirstInt(string& _string, char separator = 0);
-    static   double popFirstDouble(string& _string, char separator = 0);
-    static   float popFirstFloat(string& _string, char separator = 0);
+    static   int popFirstInt(std::string& _string, char separator = 0);
+    static   double popFirstDouble(std::string& _string, char separator = 0);
+    static   float popFirstFloat(std::string& _string, char separator = 0);
 
-    static   string GetFirstSubString(string& _string, char separator = 0);
-    static   string getNextToken(cstring _string, uint32_t& cursor, char separator);
-    static   string stripCarriageReturn(cstring line);
-    static   string getLine(ifstream& infile);
+    static   std::string GetFirstSubString(std::string& _string, char separator = 0);
+    static   std::string getNextToken(cstring _string, uint32_t& cursor, char separator);
+    static   std::string stripCarriageReturn(cstring line);
+    static   std::string getLine(ifstream& infile);
 
     static   bool PointInRectangle(const vec2 _point, const vec2 _rectStart, const vec2 _rectEnd);
 };
@@ -133,9 +133,9 @@ static vec3 rotateV(cvec3 v, float theta)
 
 
 
-inline string Utf8_to_cp1251(const char *str)
+inline std::string Utf8_to_cp1251(const char *str)
 {
-	string res;
+	std::string res;
 
 	int result_u = MultiByteToWideChar(CP_UTF8, 0, str, -1, 0, 0);
 	if (!result_u)
@@ -171,9 +171,9 @@ inline string Utf8_to_cp1251(const char *str)
 }
 
 
-inline string cp1251_to_utf8(const char *str)
+inline std::string cp1251_to_utf8(const char *str)
 {
-	string res;
+	std::string res;
 	int result_u = MultiByteToWideChar(1251, 0, str, -1, 0, 0);
 	if (!result_u)
 	{
@@ -208,7 +208,7 @@ inline string cp1251_to_utf8(const char *str)
 	return res;
 }
 
-inline string convertToString(uint32 _bytes)
+inline std::string convertToString(uint32 _bytes)
 {
 	uint32 p = 0;
 	uint32 first = 0;
@@ -225,7 +225,7 @@ inline string convertToString(uint32 _bytes)
 		p++;
 	}
 
-	string buf;
+	std::string buf;
 	buf += to_string(first) + "," + to_string(second); // bytes
 	switch (p)
 	{
@@ -267,21 +267,21 @@ inline void SafeDeleteArray(T& ptr)
 }
 
 
-// Convert a multi-byte character string (UTF-8) to a wide (UTF-16) encoded string.
-inline std::wstring ConvertString(cstring string)
+// Convert a multi-byte character std::string (UTF-8) to a wide (UTF-16) encoded std::string.
+inline std::wstring ConvertString(cstring _string)
 {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	return converter.from_bytes(string);
+	return converter.from_bytes(_string);
 }
 
-// Converts a wide (UTF-16) encoded string into a multi-byte (UTF-8) character string.
+// Converts a wide (UTF-16) encoded std::string into a multi-byte (UTF-8) character std::string.
 inline std::string ConvertString(const std::wstring& wstring)
 {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 	return converter.to_bytes(wstring);
 }
 
-// Gets a string resource from the module's resources.
+// Gets a std::string resource from the module's resources.
 inline std::string GetStringResource(int ID, cstring type)
 {
 	HMODULE hModule = GetModuleHandleA(nullptr);
@@ -297,6 +297,6 @@ inline std::string GetStringResource(int ID, cstring type)
 			return strData;
 		}
 	}
-	// Just return an empty string.
+	// Just return an empty std::string.
 	return std::string();
 }

@@ -142,7 +142,7 @@ void ByteBuffer::seekRelative(uint64 _bufferOffsetRelative)
 
 //-- READ
 
-bool ByteBuffer::readLine(string* _string)
+bool ByteBuffer::readLine(std::string* _string)
 {
 	_ASSERT(_string != nullptr);
 
@@ -168,7 +168,7 @@ bool ByteBuffer::readLine(string* _string)
 	// Skip \r and \n
 	seekRelative(nextLineBeginPos - lineEndPos);
 
-	string line(buff);
+	std::string line(buff);
 	delete[] buff;
 	line = Utils::Trim(line);
 
@@ -196,11 +196,11 @@ void ByteBuffer::readBytes(void* _destination, uint64 _size)
 	m_CurrentPosition = posAfterRead;
 }
 
-void ByteBuffer::readString(string* _string)
+void ByteBuffer::readString(std::string* _string)
 {
 	_ASSERT(_string != nullptr);
 
-	string str = "";
+	std::string str = "";
 	while (true)
 	{
 		uint8 byte;

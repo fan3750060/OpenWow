@@ -35,9 +35,9 @@ public:
 	void seekRelative(uint64 _bufferOffsetRelative) override;
 
 	// Read
-	bool readLine(string* _string) override;
+	bool readLine(std::string* _string) override;
 	void readBytes(void* _destination, uint64 _size = 1) override;
-	void readString(string* _string) override;
+	void readString(std::string* _string) override;
 
 	//-- SIGNED
 	ByteBuffer& operator>>(int8 &value)
@@ -93,7 +93,7 @@ public:
 		return *this;
 	}
 	//-- STRING
-	ByteBuffer& operator>>(string& _string)
+	ByteBuffer& operator>>(std::string& _string)
 	{
 		_string = "";
 

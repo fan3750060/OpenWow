@@ -22,7 +22,7 @@ public:
 
 private:
 	void FillWithSkin(SharedTexturePtr _texture);
-	void FillPixels(DBC_CharComponent_Sections::List _type, string _name);
+	void FillPixels(DBC_CharComponent_Sections::List _type, std::string _name);
 	void FillPixels(DBC_CharComponent_Sections::List _type, SharedTexturePtr _texture);
 
 private:

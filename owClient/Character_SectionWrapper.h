@@ -16,8 +16,8 @@ public:
 	static SharedTexturePtr getFaceUpperTexture(Character* _character);
 
 	// FacialHair
-	static string getFacialHairLowerTexture(Character* _character);
-	static string getFacialHairUpperTexture(Character* _character);
+	static std::string getFacialHairLowerTexture(Character* _character);
+	static std::string getFacialHairUpperTexture(Character* _character);
 	static uint32 getFacial1Geoset(Character* _character);
 	static uint32 getFacial2Geoset(Character* _character);
 	static uint32 getFacial3Geoset(Character* _character);
@@ -29,6 +29,6 @@ public:
 	static SharedTexturePtr getHairScalpUpperTexture(Character* _character);
 
 	// Naked
-	static string getNakedPelvisTexture(Character* _character);
-	static string getNakedTorsoTexture(Character* _character);
+	static std::string getNakedPelvisTexture(Character* _character);
+	static std::string getNakedTorsoTexture(Character* _character);
 };

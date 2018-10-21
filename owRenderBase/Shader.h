@@ -36,9 +36,9 @@ public:
 
 
 	/**
-	 * Load a shader file from a string.
+	 * Load a shader file from a std::string.
 	 * @param type: The type of shader to load.
-	 * @param source: The Shader source code in string format.
+	 * @param source: The Shader source code in std::string format.
 	 * @param sourceFileName: The file path of the original file if it exists. This is used to determine include paths.
 	 * @param entryPoint: The name of the entry-point function to be used by this shader.
 	 * @param profile: The shader profile to use to compile this shader.

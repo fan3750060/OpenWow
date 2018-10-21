@@ -259,7 +259,7 @@ int main(int argumentCount, char* arguments[])
 		g_pOpaquePipeline->GetBlendState().SetBlendMode(alphaBlending);
 		g_pOpaquePipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 		g_pOpaquePipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
-		g_pOpaquePipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
+		//g_pOpaquePipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
 		g_pOpaquePipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
 		g_pOpaquePipeline->GetRasterizerState().SetViewport(viewPort);
 

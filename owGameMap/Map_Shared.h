@@ -8,7 +8,7 @@ public:
 	SharedBufferPtr BufferTextureCoordDetail;
 	SharedBufferPtr BufferTextureCoordAlpha;
 
-	static string getMapFolder(const DBC_MapRecord& _map);
+	static std::string getMapFolder(const DBC_MapRecord& _map);
 
 	vector<uint16> GenarateHighMapArray(uint16 _holes = 0);
 	vector<uint16> GenarateDefaultMapArray(uint16 _holes = 0);

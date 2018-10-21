@@ -220,7 +220,7 @@ SharedTexturePtr TexturesManager::CreateAction(cstring _name)
 	return _texture;
 }
 
-void TexturesManager::LoadAction(string name, SharedTexturePtr& item)
+void TexturesManager::LoadAction(std::string name, SharedTexturePtr& item)
 {
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(name);
 	if (f == nullptr)

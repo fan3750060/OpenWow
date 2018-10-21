@@ -15,7 +15,7 @@ public:
 	// ISceneManager
 	SceneNode* getRootNode() const { return m_RootNode; }
 	SceneNode* getIntersectedNode() override { return m_IntersectedNode; }
-	string getIntersectedNodeInfo() { return m_IntersectedNode->getObjectInfo(); }
+	std::string getIntersectedNodeInfo() { return m_IntersectedNode->getObjectInfo(); }
 
 	void setCamera(Camera* _camera) override { m_MainCamera = _camera; }
 	Camera* getCamera() override { return m_MainCamera; }

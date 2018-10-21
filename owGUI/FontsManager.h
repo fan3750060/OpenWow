@@ -10,7 +10,7 @@ public:
 
 	SharedFontPtr Add(cstring _fontFileName, uint32 _fontSize);
 
-	shared_ptr<Font> GetMainFont() const override { return mainFont; }
+	std::shared_ptr<Font> GetMainFont() const override { return mainFont; }
 
 	// CRefManager1Dim
 	SharedFontPtr CreateAction(cstring name) override;

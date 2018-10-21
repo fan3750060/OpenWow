@@ -17,5 +17,5 @@ protected:
     Image* buttonsImages[4];
 
 private:
-    string textureName;
+    std::string textureName;
 };

@@ -52,7 +52,7 @@ void RenderPipeline::addRenderTarget(cstring id, bool depthBuf, uint32 numColBuf
 }
 
 
-RenderTarget* RenderPipeline::findRenderTarget(const string &id) const
+RenderTarget* RenderPipeline::findRenderTarget(const std::string &id) const
 {
 	if (id == "")
 	{

@@ -34,7 +34,7 @@ public:
 	ByteBuffer& getData() { return m_Buffer; }
 
 private:
-	string getName() { return string(m_PacketType == PacketType::READ ? "PacketRead" : "PacketWrite") + "[" + to_string(m_Id) + "]"; }
+	std::string getName() { return std::string(m_PacketType == PacketType::READ ? "PacketRead" : "PacketWrite") + "[" + to_string(m_Id) + "]"; }
 
 private:
 	uint64				m_Id;
@@ -94,8 +94,8 @@ private:
 	std::mutex					m_SocketObjBusy;
 	SOCKET						m_SocketObj;
 
-	string						m_Host;
-	string						m_Port;
+	std::string						m_Host;
+	std::string						m_Port;
 
 	// Thread
 	std::promise<void>			m_ReadThreadPromise;

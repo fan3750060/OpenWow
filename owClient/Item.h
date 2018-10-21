@@ -17,5 +17,5 @@ public:
 private:
 
 public:
-	string					gender;
+	std::string					gender;
 };

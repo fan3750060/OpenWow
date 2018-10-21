@@ -36,7 +36,7 @@ const char* CONCAT_GET(_name)(uint8 _index) const                \
 }
 
 #define __DBC_LOCSTR(_name, _field)                              \
-string CONCAT_GET(_name)(int8 _locale = -1) const                \
+std::string CONCAT_GET(_name)(int8 _locale = -1) const                \
 {                                                                \
 	return getLocalizedString(static_cast<uint32>(_field - 1));  \
 }
@@ -201,7 +201,7 @@ protected:
 		return reinterpret_cast<char*>(const_cast<uint8*>(m_DBC_Stats->stringTable) + stringOffset);
 	}
 
-	string getLocalizedString(uint32 field, int8 locale = -1) const
+	std::string getLocalizedString(uint32 field, int8 locale = -1) const
 	{
 		int8 loc = locale;
 		if (locale == -1)
@@ -291,7 +291,7 @@ protected:
 	multimap<uint32, RECORD_T*> records;
 
 private:
-	string m_FileName;
+	std::string m_FileName;
 	std::shared_ptr<IFile> m_File;
 };
 

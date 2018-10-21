@@ -139,7 +139,7 @@ struct SM2_Texture
 		uint32 : 30;
 	} flags;
 
-	M2Array<char> filename; // for non-hardcoded textures (type != 0), this still points to a zero-sized string
+	M2Array<char> filename; // for non-hardcoded textures (type != 0), this still points to a zero-sized std::string
 };
 
 struct SM2_TextureWeight

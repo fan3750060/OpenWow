@@ -48,7 +48,7 @@ Application::Application()
 
 	if (!RegisterClassEx(&renderWindowClass))
 	{
-		fail1("Failed to register the render window class.");
+		fail2("Failed to register the render window class.");
 	}
 
 #ifdef  IS_DX11

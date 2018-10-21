@@ -100,7 +100,7 @@ void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
 	const DBC_CreatureModelDataRecord* modelRec = _record->Get_Model();
 	_ASSERT(modelRec != nullptr);
 
-	string modelName = modelRec->Get_ModelPath();
+	std::string modelName = modelRec->Get_ModelPath();
 	SmartM2Ptr m2 = GetManager<IM2Manager>()->Add(modelName);
 	_ASSERT(m2 != nullptr);
 

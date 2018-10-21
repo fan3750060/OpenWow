@@ -27,7 +27,7 @@ public:
 	void Update();
 
 public: // Getters
-	string getFilenameT() const { return m_MapFilenameT; }
+	std::string getFilenameT() const { return m_MapFilenameT; }
 	const DBC_MapRecord& GetDBCMap() const { return m_DBC_Map; }
 
 	bool isUncompressedAlpha() const { return m_WDT->getFlags()->Flag_8bitMCAL; }
@@ -69,7 +69,7 @@ private:
 	bool IsTileInCurrent(std::shared_ptr<ADT> _mapTile);
 
 private:
-	string					m_MapFilenameT;
+	std::string					m_MapFilenameT;
 	DBC_MapRecord			m_DBC_Map;
 
 	std::shared_ptr<ADT>	m_ADTCache[C_TilesCacheSize];

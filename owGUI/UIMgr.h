@@ -33,7 +33,7 @@ public:
 	FontsManager* FontsMgr() { return m_FontsMgr; }
 
 	// IUIMgrEx
-	string GetNewName();
+	std::string GetNewName();
 	void SetForDetach(UIElement* _element) override;
 	void SetForDelete(UIElement* _element) override;
 	void DetachFromParent(UIElement* _element) override;

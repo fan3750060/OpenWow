@@ -10,8 +10,8 @@ public:
     {
         for (uint8 i = 0; i < 4; i++)
         {
-            gColorMap[i] = getLocation((string("gColorMap[") + std::to_string(i) + "]").c_str());
-            gSpecularMap[i] = getLocation((string("gSpecularMap[") + std::to_string(i) + "]").c_str());
+            gColorMap[i] = getLocation((std::string("gColorMap[") + std::to_string(i) + "]").c_str());
+            gSpecularMap[i] = getLocation((std::string("gSpecularMap[") + std::to_string(i) + "]").c_str());
         }
 
 		gIsNortrend = getLocation("gIsNortrend");

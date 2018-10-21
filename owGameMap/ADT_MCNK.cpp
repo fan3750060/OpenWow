@@ -332,7 +332,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Material
-	std::shared_ptr<Texture> t30 = Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
+	std::shared_ptr<Texture> t30 = Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\moon.blp"); // PURE
 	std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(Application::Get().GetRenderDevice());
 	mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
 
@@ -342,6 +342,7 @@ bool ADT_MCNK::Load()
 
 		__geomDefault = Application::Get().GetRenderDevice()->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
+		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordDetail);
 		__geomDefault->SetIndexBuffer(__ibDefault);
 		__geomDefault->SetMaterial(mat);
 

@@ -231,9 +231,9 @@ void UIMgr::RenderUI()
 
 //
 
-string UIMgr::GetNewName()
+std::string UIMgr::GetNewName()
 {
-	string name = "UIElement_" + to_string(m_IDCounter);
+	std::string name = "UIElement_" + to_string(m_IDCounter);
 	m_IDCounter++;
 	return name;
 }

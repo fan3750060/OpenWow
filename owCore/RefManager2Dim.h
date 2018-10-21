@@ -63,7 +63,7 @@ protected:
 private:
 	inline void pre_delete(ID_TYPE id, T* item)
 	{
-		string itemName;
+		std::string itemName;
 
 		for (auto it = names.begin(); it != names.end(); ++it)
 		{
@@ -90,7 +90,7 @@ private:
 	}
 
 public:
-	map<string, ID_TYPE> names; // names - id
+	map<std::string, ID_TYPE> names; // names - id
 	map<ID_TYPE, T*> items; //id - item
 };
 

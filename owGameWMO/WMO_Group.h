@@ -18,7 +18,7 @@ class CWMO_Doodad_Instance;
 class WMO_Group
 {
 public:
-	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, string _groupName, std::shared_ptr<IFile> _groupFile);
+	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile);
 	virtual ~WMO_Group();
 
 	void CreateInsances(std::shared_ptr<CWMO_Group_Instance> _parent) const;
@@ -32,8 +32,8 @@ public:
 	void RenderCollision(cmat4 _world) const;
 
 public:
-	const string							m_GroupName;
-	const string							m_GroupDescription;
+	const std::string							m_GroupName;
+	const std::string							m_GroupDescription;
 	const uint32							m_GroupIndex;
 	std::shared_ptr<IFile>					m_F;
 	SWMO_Group_HeaderDef					m_Header;

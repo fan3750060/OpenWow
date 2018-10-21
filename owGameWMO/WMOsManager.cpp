@@ -18,7 +18,7 @@ SmartWMOPtr WMOsManager::CreateAction(cstring name)
 	return _wmo;
 }
 
-void WMOsManager::LoadAction(string name, SmartWMOPtr& item)
+void WMOsManager::LoadAction(std::string name, SmartWMOPtr& item)
 {
 	if (!item->Load())
 	{

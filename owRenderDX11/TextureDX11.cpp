@@ -362,7 +362,7 @@ bool TextureDX11::LoadTextureCube(cstring fileName)
 	/*fs::path filePath( fileName );
 	if ( !fs::exists( filePath ) || !fs::is_regular_file( filePath ) )
 	{
-		Log::Error( "Could not load texture: " + filePath.string() );
+		Log::Error( "Could not load texture: " + filePath.std::string() );
 		return false;
 	}
 
@@ -387,14 +387,14 @@ bool TextureDX11::LoadTextureCube(cstring fileName)
 
 	if ( fif == FIF_UNKNOWN || !FreeImage_FIFSupportsReading( fif ) )
 	{
-		Log::Error( "Unknow file format: " + filePath.string() );
+		Log::Error( "Unknow file format: " + filePath.std::string() );
 		return false;
 	}
 
-	FIMULTIBITMAP* dib = FreeImage_OpenMultiBitmap( fif, filePath.string().c_str(), FALSE, TRUE, TRUE );
+	FIMULTIBITMAP* dib = FreeImage_OpenMultiBitmap( fif, filePath.std::string().c_str(), FALSE, TRUE, TRUE );
 	if ( dib == nullptr || FreeImage_GetPageCount( dib ) == 0 )
 	{
-		Log::Error( "Failed to load image: " + filePath.string() );
+		Log::Error( "Failed to load image: " + filePath.std::string() );
 		return false;
 	}
 

@@ -21,6 +21,6 @@ public:
 	void SetNeedSort() { m_ObjectsNeedSort = true; }
 
 private:
-	vector<IRenderable3D*>		m_Objects;
+	std::vector<IRenderable3D*>		m_Objects;
 	bool					    m_ObjectsNeedSort;
 };

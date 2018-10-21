@@ -18,7 +18,7 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	// Common texture
 	if (m_SpecialType == SM2_Texture::Type::NONE)
 	{
-		string textureFileName = (const char*)(f->getData() + _proto.filename.offset);
+		std::string textureFileName = (const char*)(f->getData() + _proto.filename.offset);
 		m_Texture = _Render->TexturesMgr()->Add(textureFileName);
 	}
 }

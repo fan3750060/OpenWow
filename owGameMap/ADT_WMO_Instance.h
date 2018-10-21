@@ -26,7 +26,7 @@ public:
 	virtual ~ADT_WMO_Instance();
 
 	// ISceneNode
-	string getObjectInfo() const override { return "@ADT_WMO@"; }
+	std::string getObjectInfo() const override { return "@ADT_WMO@"; }
 
 	// IRenderable3D
 	bool PreRender3D() override;

@@ -82,7 +82,7 @@ public:
 	// ISceneNode::Selectable
 	void setSelectable() { m_Selectable = true; }
 	bool isSelectable() const { return m_Selectable; }
-	virtual string getObjectInfo() const { return "emp"; };
+	virtual std::string getObjectInfo() const { return "emp"; };
 
 	// IUpdatable
 	virtual void Input(CInput* _input, double _time, double _dTime) override {};

@@ -9,6 +9,6 @@ public:
 	void Update(CInput* _input, double _time, double _dTime);
 
 private:
-	vector<IUpdatable*> m_Objects;
+	std::vector<IUpdatable*> m_Objects;
 	IBaseManager* m_BaseManager;
 };

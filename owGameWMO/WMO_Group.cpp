@@ -12,7 +12,7 @@
 #include "WMO_Liquid_Instance.h"
 #include "WMO_Fixes.h"
 
-WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, string _groupName, std::shared_ptr<IFile> _groupFile) :
+WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile) :
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
 	m_GroupIndex(_groupIndex),

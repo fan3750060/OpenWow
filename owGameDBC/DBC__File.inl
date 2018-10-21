@@ -5,7 +5,7 @@ template<class RECORD_T>
 inline DBCFile<RECORD_T>::DBCFile(const char* _fileName) :
 	m_File(nullptr)
 {
-	m_FileName = string("DBFilesClient\\") + string(_fileName);
+	m_FileName = std::string("DBFilesClient\\") + std::string(_fileName);
 }
 
 template<class RECORD_T>

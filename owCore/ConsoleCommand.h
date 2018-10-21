@@ -7,13 +7,13 @@ public:
 	virtual ~ConsoleCommand();
 
 	// IConsoleCommand
-	const string GetName() const override;
+	const std::string GetName() const override;
 	bool HasArgs() const override;
 	void Execute() override;
 	void Execute(cstring _args) override;
 
 protected:
-	string     m_Name;
+	std::string     m_Name;
 	bool       m_HasArgs;
 	Function*  m_Function;
 };
@@ -29,7 +29,7 @@ public:
 	{}
 
 	// IConsoleCommand
-	const string GetName() const override { return ConsoleCommand::GetName(); };
+	const std::string GetName() const override { return ConsoleCommand::GetName(); };
 	bool HasArgs() const override { return ConsoleCommand::HasArgs(); };
 	void Execute() override { return ConsoleCommand::Execute(); };
 	void Execute(cstring _args) override

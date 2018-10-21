@@ -16,7 +16,7 @@ public:
 	void RenderNormals();
 
 	// ISceneNode
-	//string getObjectInfo() const override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
+	//std::string getObjectInfo() const override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
 	//void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
 
 	// ILoadable

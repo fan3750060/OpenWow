@@ -6,7 +6,7 @@
 // Additional
 #include "BaseManager.h"
 
-void Test(vector<string>& _args)
+void Test(vector<std::string>& _args)
 {
 	Log::Print("00000000Args size[%d]", _args.size());
 
@@ -94,7 +94,7 @@ IConsoleCommand* CConsole::GetConsoleCommandByName(cstring _commandName)
 
 //--
 
-ConsoleCommands CConsole::GetConsoleCommandHelp(string _input)
+ConsoleCommands CConsole::GetConsoleCommandHelp(std::string _input)
 {
 	Utils::ToLower(_input);
 
@@ -124,7 +124,7 @@ ConsoleCommands CConsole::GetConsoleCommandHelp(string _input)
 	return commands;
 }
 
-bool CConsole::ProcessConsoleCommand(string _line)
+bool CConsole::ProcessConsoleCommand(std::string _line)
 {
 	Utils::ToLower(_line);
 
@@ -133,12 +133,12 @@ bool CConsole::ProcessConsoleCommand(string _line)
 		return false;
 	}
 
-	string command;
-	string args;
+	std::string command;
+	std::string args;
 
 	// Divide line to command and args by first finded space
 	auto spacePos = _line.find_first_of(' ');
-	if (spacePos != string::npos)
+	if (spacePos != std::string::npos)
 	{
 		command = Utils::Trim(_line.substr(0, spacePos));
 		args = Utils::Trim(_line.substr(spacePos + 1));

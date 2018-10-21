@@ -16,7 +16,7 @@ struct RenderTarget
 		rendBuf = nullptr;
 	}
 
-	string					id;
+	std::string					id;
 	uint32					numColBufs;
 	R_TextureFormats::List	format;
 	uint32					width, height;

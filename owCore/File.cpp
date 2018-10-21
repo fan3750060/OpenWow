@@ -27,7 +27,7 @@ CFile::~CFile()
 	//Log::Info("File[%s] closed.", Path_Name().c_str());
 }
 
-void CFile::FixFilePath(string& _string)
+void CFile::FixFilePath(std::string& _string)
 {
 	size_t index = 0;
 	while (true)
@@ -49,7 +49,7 @@ void CFile::ParsePathAndExtension()
 
 	// Find name and path
 	auto lastSlashPos = m_Name.find_last_of('\\');
-	if (lastSlashPos != string::npos)
+	if (lastSlashPos != std::string::npos)
 	{
 		m_Path += m_Name.substr(0, lastSlashPos + 1);
 		m_Name = m_Name.substr(lastSlashPos + 1);
@@ -57,7 +57,7 @@ void CFile::ParsePathAndExtension()
 
 	// Extension
 	auto lastPointPos = m_Name.find_last_of('.');
-	if (lastPointPos != string::npos)
+	if (lastPointPos != std::string::npos)
 	{
 		m_Extension = Utils::ToLower(m_Name.substr(lastPointPos + 1));
 	}

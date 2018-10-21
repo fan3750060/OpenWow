@@ -31,7 +31,7 @@ public:
 
 #pragma region Getters
 public:
-	string getFilename() const { return m_FileName; }
+	std::string getFilename() const { return m_FileName; }
 	BoundingBox	getBounds() const { return m_Bounds; }
 
 	bool useAmbColor() const { return !(m_Header.flags.skip_base_color); }
@@ -40,7 +40,7 @@ public:
 #pragma endregion
 
 public:
-	const string							m_FileName;
+	const std::string							m_FileName;
 	SWMO_HeaderDef							m_Header;				// MOHD chunk
 	BoundingBox								m_Bounds;
 

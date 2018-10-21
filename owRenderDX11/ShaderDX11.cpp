@@ -156,7 +156,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 		std::vector<D3D_SHADER_MACRO> macros;
 		for (auto macro : shaderMacros)
 		{
-			// The macro definitions passed to this function only store temporary string objects.
+			// The macro definitions passed to this function only store temporary std::string objects.
 			// I need to copy the temporary strings into the D3D macro type 
 			// in order for it to persist outside of this for loop.
 			std::string name = macro.first;
@@ -179,7 +179,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 #endif
 
 		// fs::path filePath( sourceFileName );
-		 //std::string sourceFilePath = filePath.string();
+		 //std::string sourceFilePath = filePath.std::string();
 
 		hr = D3DCompile((LPCVOID)source.c_str(), source.size(), sourceFileName.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint.c_str(), _profile.c_str(), flags, 0, &pShaderBlob, &pErrorBlob);
 
@@ -355,10 +355,10 @@ bool ShaderDX11::LoadShaderFromFile(ShaderType shaderType, cstring fileName, con
 	{
 		std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
 
-		string data = "";
+		std::string data = "";
 		while (!file->isEof())
 		{
-			string line;
+			std::string line;
 			file->readLine(&line);
 
 			data += line + '\n';

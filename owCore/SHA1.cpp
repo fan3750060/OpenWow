@@ -70,9 +70,9 @@ void SHA1Hash::Finalize(void)
     SHA1_Final(mDigest, &mC);
 }
 
-string SHA1Hash::toString()
+std::string SHA1Hash::toString()
 {
-	string result = "";
+	std::string result = "";
 
 	for (uint32 i = 0; i < SHA_DIGEST_LENGTH; i++)
 	{

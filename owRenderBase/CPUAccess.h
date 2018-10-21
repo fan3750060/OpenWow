@@ -1,6 +1,8 @@
 #pragma once
 
-// CPU Access. Used for textures and Buffers
+/**
+ * CPU Access. Used for textures and Buffers
+ */
 enum class CPUAccess
 {
 	None = 0,          // No CPU access to this texture is necessary.

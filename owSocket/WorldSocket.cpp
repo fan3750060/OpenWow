@@ -280,7 +280,7 @@ void CWorldSocket::S_AuthChallenge(ByteBuffer& _buff)
 	BigNumber ourSeed;
 	ourSeed.SetRand(4 * 8);
 
-	string upperUsername = Utils::ToUpper(m_World->getUsername());
+	std::string upperUsername = Utils::ToUpper(m_World->getUsername());
 	uint8 zeroBytes[] = { 0, 0, 0, 0 };
 
 	SHA1Hash uSHA;

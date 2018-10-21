@@ -21,45 +21,45 @@ CMPQArchiveManager::CMPQArchiveManager()
 
 	// Files 1.12
 #if (VERSION == VERSION_Vanila)
-	AddArchive(string("backup.MPQ"));
-	AddArchive(string("base.MPQ"));
-	AddArchive(string("dbc.MPQ"));
-	AddArchive(string("fonts.MPQ"));
-	AddArchive(string("interface.MPQ"));
-	AddArchive(string("misc.MPQ"));
-	AddArchive(string("model.MPQ"));
-	AddArchive(string("patch.MPQ"));
-	AddArchive(string("patch-2.MPQ"));
-	AddArchive(string("patch-3.MPQ"));
-	AddArchive(string("sound.MPQ"));
-	AddArchive(string("speech.MPQ"));
-	AddArchive(string("terrain.MPQ"));
-	AddArchive(string("texture.MPQ"));
-	AddArchive(string("wmo.MPQ"));
+	AddArchive(std::string("backup.MPQ"));
+	AddArchive(std::string("base.MPQ"));
+	AddArchive(std::string("dbc.MPQ"));
+	AddArchive(std::string("fonts.MPQ"));
+	AddArchive(std::string("interface.MPQ"));
+	AddArchive(std::string("misc.MPQ"));
+	AddArchive(std::string("model.MPQ"));
+	AddArchive(std::string("patch.MPQ"));
+	AddArchive(std::string("patch-2.MPQ"));
+	AddArchive(std::string("patch-3.MPQ"));
+	AddArchive(std::string("sound.MPQ"));
+	AddArchive(std::string("speech.MPQ"));
+	AddArchive(std::string("terrain.MPQ"));
+	AddArchive(std::string("texture.MPQ"));
+	AddArchive(std::string("wmo.MPQ"));
 
-	//AddArchive(string("ruRU/patch-1.MPQ"));
-	//AddArchive(string("ruRU/patch-2.MPQ"));
-	//AddArchive(string("ruRU/patch-3.MPQ"));
+	//AddArchive(std::string("ruRU/patch-1.MPQ"));
+	//AddArchive(std::string("ruRU/patch-2.MPQ"));
+	//AddArchive(std::string("ruRU/patch-3.MPQ"));
 
 #elif (VERSION == VERSION_WotLK)
-	AddArchive(string("common.MPQ"));
-	AddArchive(string("common-2.MPQ"));
-	AddArchive(string("expansion.MPQ"));
-	AddArchive(string("lichking.MPQ"));
-	AddArchive(string("patch.MPQ"));
-	AddArchive(string("patch-2.MPQ"));
-	AddArchive(string("patch-3.MPQ"));
-	//AddArchive(string("patch-w.MPQ"));
-	//AddArchive(string("patch-x.MPQ"));
+	AddArchive(std::string("common.MPQ"));
+	AddArchive(std::string("common-2.MPQ"));
+	AddArchive(std::string("expansion.MPQ"));
+	AddArchive(std::string("lichking.MPQ"));
+	AddArchive(std::string("patch.MPQ"));
+	AddArchive(std::string("patch-2.MPQ"));
+	AddArchive(std::string("patch-3.MPQ"));
+	//AddArchive(std::string("patch-w.MPQ"));
+	//AddArchive(std::string("patch-x.MPQ"));
 
-	AddArchive(string("ruRU/locale-ruRU.MPQ"));
-	AddArchive(string("ruRU/expansion-locale-ruRU.MPQ"));
-	AddArchive(string("ruRU/lichking-locale-ruRU.MPQ"));
-	AddArchive(string("ruRU/patch-ruRU.MPQ"));
-	AddArchive(string("ruRU/patch-ruRU-2.MPQ"));
-	AddArchive(string("ruRU/patch-ruRU-3.MPQ"));
-	//AddArchive(string("ruRU/patch-ruRU-w.MPQ"));
-	//AddArchive(string("ruRU/patch-ruRU-x.MPQ"));
+	AddArchive(std::string("ruRU/locale-ruRU.MPQ"));
+	AddArchive(std::string("ruRU/expansion-locale-ruRU.MPQ"));
+	AddArchive(std::string("ruRU/lichking-locale-ruRU.MPQ"));
+	AddArchive(std::string("ruRU/patch-ruRU.MPQ"));
+	AddArchive(std::string("ruRU/patch-ruRU-2.MPQ"));
+	AddArchive(std::string("ruRU/patch-ruRU-3.MPQ"));
+	//AddArchive(std::string("ruRU/patch-ruRU-w.MPQ"));
+	//AddArchive(std::string("ruRU/patch-ruRU-x.MPQ"));
 #endif
 
 
@@ -74,7 +74,7 @@ CMPQArchiveManager::~CMPQArchiveManager()
 	}
 }
 
-void CMPQArchiveManager::AddArchive(string filename)
+void CMPQArchiveManager::AddArchive(std::string filename)
 {
 	mpq_archive_s* mpq_a;
 	int result = libmpq__archive_open(&mpq_a, (archives + filename).c_str(), -1);

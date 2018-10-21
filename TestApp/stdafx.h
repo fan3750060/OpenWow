@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma comment(lib, "freetype28.lib")
+#pragma comment(lib, "freetype.lib")
 #pragma comment(lib, "libmpq.lib")
 
 // CORE

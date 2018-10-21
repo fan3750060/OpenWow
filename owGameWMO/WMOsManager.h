@@ -15,7 +15,7 @@ public:
 
 	// CRefManager1Dim
 	SmartWMOPtr CreateAction(cstring name) override;
-	void LoadAction(string name, SmartWMOPtr& item);
+	void LoadAction(std::string name, SmartWMOPtr& item);
 	bool DeleteAction(cstring name) override;
 	void MakeContext();
 

@@ -18,7 +18,7 @@ bool CLocalFile::Open()
 {
 	// Open stream
 	ifstream stream;
-	stream.open(string(m_LocalFilesFolder + Path_Name()), ios::binary);
+	stream.open(std::string(m_LocalFilesFolder + Path_Name()), ios::binary);
 
 	// Check stream
 	if (!stream.is_open())
@@ -26,7 +26,7 @@ bool CLocalFile::Open()
 		stream.clear();
 		stream.close();
 
-		stream.open(string(Path_Name()), ios::binary);
+		stream.open(std::string(Path_Name()), ios::binary);
 
 		if (!stream.is_open())
 		{
@@ -77,7 +77,7 @@ uint64_t CLocalFile::GetFileSize(cstring _name)
 {
 	// Open stream
 	ifstream stream;
-	stream.open(string(m_LocalFilesFolder + _name), ios::binary);
+	stream.open(std::string(m_LocalFilesFolder + _name), ios::binary);
 
 	// Check stream
 	if (!stream.is_open())
@@ -100,7 +100,7 @@ bool CLocalFile::IsFileExists(cstring _name)
 {
 	// Open stream
 	ifstream stream;
-	stream.open(string(m_LocalFilesFolder + _name), ios::binary);
+	stream.open(std::string(m_LocalFilesFolder + _name), ios::binary);
 
 	// Check stream
 	if (!stream.is_open())

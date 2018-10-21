@@ -36,7 +36,7 @@ public:
 		uint8 BugfixVersion;
 		uint16 Build;
 
-		string toString()
+		std::string toString()
 		{
 			return to_string(MajorVersion) + "." + to_string(MinorVersion) + "." + to_string(BugfixVersion) + " (" + to_string(Build) + ")";
 		}
@@ -81,8 +81,8 @@ public:
 	RealmType Type;
 	uint8 Locked;
 	RealmFlags Flag;
-	string Name;
-	string Addres;
+	std::string Name;
+	std::string Addres;
 	float Population;
 	uint8 CharactersCount;
 	uint8 TimeZone;
@@ -90,6 +90,6 @@ public:
 	RealmBuildInfo BuildInfo;
 
 private:
-	string m_IPAddres;
-	string m_Port;
+	std::string m_IPAddres;
+	std::string m_Port;
 };

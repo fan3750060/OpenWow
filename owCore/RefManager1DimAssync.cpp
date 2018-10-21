@@ -17,7 +17,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 		WaitForSingleObject(m_Event_Add, INFINITE);
 
-		string name;
+		std::string name;
 		CRefItem* refItem;
 		bool result = manager->m_ObjectsToLoad.pop_front(&name, &refItem);
 		if (!result)

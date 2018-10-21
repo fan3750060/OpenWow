@@ -11,7 +11,7 @@ __interface
 	bool Tick();
 
 	uint8 GetArgumentsCount() const;
-	string GetArgument(uint8 index) const;
+	std::string GetArgument(uint8 index) const;
 
 	uint32 GetFPS() const;
 

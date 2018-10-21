@@ -43,12 +43,12 @@ private:
 	void InitGeosetComponents();
 	void InitTextureComponents();
 
-	SmartM2Ptr        LoadObjectModel   (InventoryType::List _objectType, string _modelName);
-	SharedTexturePtr LoadObjectTexture (InventoryType::List _objectType, string _textureName);
-	SharedTexturePtr LoadSkinTexture   (DBC_CharComponent_Sections::List _type, string _textureName);
+	SmartM2Ptr        LoadObjectModel   (InventoryType::List _objectType, std::string _modelName);
+	SharedTexturePtr LoadObjectTexture (InventoryType::List _objectType, std::string _textureName);
+	SharedTexturePtr LoadSkinTexture   (DBC_CharComponent_Sections::List _type, std::string _textureName);
 	
 	// Helpers
-	string getTextureComponentName(DBC_CharComponent_Sections::List _type, string _textureName, Gender::List _gender);
+	std::string getTextureComponentName(DBC_CharComponent_Sections::List _type, std::string _textureName, Gender::List _gender);
 	char getGenderLetter(Gender::List _gender);
 
 private:

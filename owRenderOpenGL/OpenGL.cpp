@@ -637,7 +637,7 @@ void initWGLExtensions()
 
 	if (!dummy_window) 
 	{
-		fail1("Failed to create dummy OpenGL window.");
+		fail2("Failed to create dummy OpenGL window.");
 	}
 
 	HDC dummy_dc = GetDC(dummy_window);

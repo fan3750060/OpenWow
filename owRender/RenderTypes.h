@@ -8,7 +8,7 @@
 
 struct R_VertexLayoutAttrib
 {
-	string  semanticName;
+	std::string  semanticName;
 	uint32  vbSlot;
 	uint32  size;
 	uint32  offset;

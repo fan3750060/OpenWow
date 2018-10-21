@@ -35,7 +35,7 @@ void WDT::Load()
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
 
-	string fileName = mapController->getFilenameT() + ".wdt";
+	std::string fileName = mapController->getFilenameT() + ".wdt";
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
@@ -90,7 +90,7 @@ void WDT::Load()
 			{
 				char* buf = new char[size];
 				f->readBytes(buf, size);
-				m_GlobalWMOName = string(buf);
+				m_GlobalWMOName = std::string(buf);
 				delete[] buf;
 			}
 		}

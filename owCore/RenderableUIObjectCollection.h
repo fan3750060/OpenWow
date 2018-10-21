@@ -44,5 +44,5 @@ public:
 	void RenderUI();
 
 private:
-	vector<CRenderableUIObject>   m_Objects;
+	std::vector<CRenderableUIObject>   m_Objects;
 };

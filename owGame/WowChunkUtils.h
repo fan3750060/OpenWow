@@ -13,7 +13,7 @@ __tbuf[size] = 0; \
 char* __tp = __tbuf; \
 while (__tp < __tbuf + size) \
 { \
-	string _string(__tp); \
+	std::string _string(__tp); \
 	__tp += _string.length() + 1; \
 
 #define WOWCHUNK_READ_STRINGS_END \
@@ -27,7 +27,7 @@ char* end = p + size; \
 int t = 0; \
 while (p < end) \
 { \
-	string _string(p); \
+	std::string _string(p); \
 	p += strlen(p) + 1; \
 	while ((p < end) && (*p == 0)) p++; \
 

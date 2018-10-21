@@ -45,7 +45,7 @@ void GameState_InWorld::RenderUI()
 	// Skyname
 	//char* sn = _World->m_SkyManager->getSkyName();
 	//if(sn)
-	//	_Render->RenderText(vec2(200, 0), string(sn));
+	//	_Render->RenderText(vec2(200, 0), std::string(sn));
 
 	// Area and region
 
@@ -54,7 +54,7 @@ void GameState_InWorld::RenderUI()
 
 	// Area
 	DBC_AreaTableRecord* areaRecord = nullptr;
-	string areaName = "<unknown>";
+	std::string areaName = "<unknown>";
 
 	areaRecord = DBC_AreaTable[_World->Map()->GetAreaID()];
 	if (areaRecord != nullptr)
@@ -64,7 +64,7 @@ void GameState_InWorld::RenderUI()
 
 	// Region
 	const DBC_AreaTableRecord* regionRecord = nullptr;
-	string regionName = "<unknown>";
+	std::string regionName = "<unknown>";
 
 	if (areaRecord != nullptr)
 	{

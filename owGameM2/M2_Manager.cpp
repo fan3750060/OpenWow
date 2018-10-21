@@ -37,7 +37,7 @@ CM2_Manager::~CM2_Manager()
 
 SmartM2Ptr CM2_Manager::CreateAction(cstring name)
 {
-	string newName = Utils::ToLower(name);
+	std::string newName = Utils::ToLower(name);
 	if (newName.find("orgrimmarsmokeemitter.mdx") != -1 ||
 		newName.find("orgrimmarfloatingembers.mdx") != -1)
 	{

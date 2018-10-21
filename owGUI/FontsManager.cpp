@@ -31,7 +31,7 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 		return nullptr;
 	}
 
-	string fontFileName = _nameAndSize.substr(0, _delimIndex - 1);
+	std::string fontFileName = _nameAndSize.substr(0, _delimIndex - 1);
 	uint32 fontSize = Utils::ToType<uint32>(_nameAndSize.substr(_delimIndex + 1));
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fontFileName);

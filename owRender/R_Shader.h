@@ -26,7 +26,7 @@ private:
 	bool linkShaderProgram();
 
 public:
-	string				m_Name;
+	std::string				m_Name;
 	uint32				m_ProgramGLObj;
 	R_InputLayout		m_InputLayouts[MaxNumVertexLayouts];
 

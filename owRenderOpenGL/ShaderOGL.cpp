@@ -3,7 +3,7 @@
 // General
 #include "ShaderOGL.h"
 
-string RecursionInclude(std::shared_ptr<IFile> f)
+std::string RecursionInclude(std::shared_ptr<IFile> f)
 {
 	if (f == nullptr)
 	{
@@ -11,11 +11,11 @@ string RecursionInclude(std::shared_ptr<IFile> f)
 		return "";
 	}
 
-	string data = "";
+	std::string data = "";
 
 	while (!f->isEof())
 	{
-		string line;
+		std::string line;
 		if (false == f->readLine(&line))
 		{
 			break;
@@ -31,12 +31,12 @@ string RecursionInclude(std::shared_ptr<IFile> f)
 		if (line[0] == '#' && line[1] == 'i' && line[2] == 'n' && line[3] == 'c' && line[4] == 'l')
 		{
 			size_t firstBracketPosition = line.find('"');
-			_ASSERT(firstBracketPosition != string::npos);
+			_ASSERT(firstBracketPosition != std::string::npos);
 
 			size_t lastBracketPosition = line.find_last_of('"');
 			_ASSERT(firstBracketPosition != lastBracketPosition);
 
-			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
+			std::string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
 			CFile::FixFilePath(inludeFileName);
 			data += RecursionInclude(GetManager<IFilesManager>()->Open(f->Path() + inludeFileName)) + '\n';
 
@@ -179,7 +179,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 	m_ShaderFileName = fileName;
 
 	std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
-	string fileSource = RecursionInclude(file);
+	std::string fileSource = RecursionInclude(file);
 	const GLchar *source = (const GLchar *)fileSource.c_str();
 
 	m_GLObj = glCreateShaderProgramv(GLTranslateShaderType(shaderType), 1, &source);

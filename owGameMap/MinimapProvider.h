@@ -4,7 +4,7 @@ struct MinimapData_Map
 {
 	uint8		X_Coord;
 	uint8		Y_Coord;
-	string		filename;
+	std::string		filename;
 };
 
 struct MinimapDir
@@ -16,7 +16,7 @@ struct MinimapDir
 	void Load();
 	void Render(cvec3 _pos);
 
-	string						name;
+	std::string						name;
 	vector<MinimapData_Map*>	data;
 	SharedTexturePtr			textures[C_TilesInMap][C_TilesInMap];
 };
@@ -30,7 +30,7 @@ public:
 	//--
 
 	void Init();
-	MinimapDir* getMinimap(string _name);
+	MinimapDir* getMinimap(std::string _name);
 
 private:
 	std::shared_ptr<IFile> m_File;

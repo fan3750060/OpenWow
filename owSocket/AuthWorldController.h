@@ -26,10 +26,10 @@ public:
 	CWorldSocket* getWorldSocket() const { return m_WorldSocket; }
 
 private:
-	string				m_Host;
-	string				m_Port;
-	string				m_Username;
-	string				m_Password;
+	std::string				m_Host;
+	std::string				m_Port;
+	std::string				m_Username;
+	std::string				m_Password;
 	BigNumber			m_Key;
 
 	vector<RealmInfo>	m_Realms;

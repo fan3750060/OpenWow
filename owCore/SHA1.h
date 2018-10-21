@@ -41,14 +41,14 @@ public:
 	uint8* GetDigest(void) { return mDigest; }
 	int GetLength(void) const { return SHA_DIGEST_LENGTH; }
 
-	string toString();
+	std::string toString();
 
 private:
 	SHA_CTX mC;
 	uint8 mDigest[SHA_DIGEST_LENGTH];
 };
 
-/// Returns the SHA1 hash of the given content as hex string.
+/// Returns the SHA1 hash of the given content as hex std::string.
 std::string CalculateSHA1Hash(std::string const& content);
 
 #endif

@@ -10,9 +10,9 @@ __interface IByteBuffer
 
 	void seek(uint64 _bufferOffsetAbsolute);
 	void seekRelative(uint64 _bufferOffsetRelative);
-	bool readLine(string* _string);
+	bool readLine(std::string* _string);
 	void readBytes(void* _destination, uint64 _size = 1);
-	void readString(string* _string);
+	void readString(std::string* _string);
 };
 
 
@@ -22,10 +22,10 @@ struct IFile : public IByteBuffer
 
 	virtual bool Open() = 0;
 
-	virtual string Name() const = 0;
-	virtual string Path() const = 0;
-	virtual string Extension() const = 0;
-	virtual string Path_Name() const = 0;
+	virtual std::string Name() const = 0;
+	virtual std::string Path() const = 0;
+	virtual std::string Extension() const = 0;
+	virtual std::string Path_Name() const = 0;
 };
 
 struct 
@@ -70,6 +70,6 @@ struct
 {
 	virtual ~IMPQArchiveManager() {};
 
-	virtual void AddArchive(string _filename) = 0;
+	virtual void AddArchive(std::string _filename) = 0;
 	virtual SMPQFileLocation GetFileLocation(cstring _filename) = 0;
 };

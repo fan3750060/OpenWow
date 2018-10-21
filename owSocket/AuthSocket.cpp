@@ -109,7 +109,7 @@ bool CAuthSocket::S_LoginChallenge(ByteBuffer& _buff)
 
 	char buff[256];
 	sprintf_s(buff, "%s:%s", m_World->getUsername().c_str(), m_World->getPassword().c_str());
-	string NameAndPass = Utils::ToUpper(buff);
+	std::string NameAndPass = Utils::ToUpper(buff);
 
 	BigNumber A, u, x;
 	BigNumber k(3);

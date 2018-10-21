@@ -16,7 +16,7 @@ public:
 
 	// CRefManager1Dim
     SharedTexturePtr CreateAction(cstring name) override;
-	void LoadAction(string name, SharedTexturePtr& item) override;
+	void LoadAction(std::string name, SharedTexturePtr& item) override;
 	bool DeleteAction(cstring name) override;
 	void MakeContext() override;
 

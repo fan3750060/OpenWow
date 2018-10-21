@@ -9,12 +9,12 @@ public:
 
 	void SetAsDataNode();
 
-	string GetName() { return name; };
+	std::string GetName() { return name; };
 	XMLNode* GetParent() { return parent; };
 	vector<XMLNode*>& GetChilds() { return childs; }
-	map<string, string>& GetData() { return data; };
+	map<std::string, std::string>& GetData() { return data; };
 	bool IsKeyExists(cstring _keyName) const { return data.find(_keyName) != data.end(); }
-	string GetKeyValue(string _keyName)
+	std::string GetKeyValue(std::string _keyName)
 	{
 		if (!IsKeyExists(_keyName))
 			return "";
@@ -26,10 +26,10 @@ public:
 	void AddData(cstring _keyName, cstring _data, bool append = false);
 
 private:
-	string name;
+	std::string name;
 	XMLNode* parent;
 	vector<XMLNode*> childs;
-	map<string, string> data;
+	map<std::string, std::string> data;
 
 	bool isDataNode;
 };
@@ -45,12 +45,12 @@ public:
 	 XMLNode* GetRootNode() const { return rootNode; };
 
 private:
-	bool ProcessLine(string& _line);
-	bool ProcessTag(string& _tag);
-	bool ProcessData(string& _data);
+	bool ProcessLine(std::string& _line);
+	bool ProcessTag(std::string& _tag);
+	bool ProcessData(std::string& _data);
 	void DeleteDataNodes(XMLNode* _startNode);
 
 private:
-	string filename;
+	std::string filename;
 	XMLNode* rootNode;
 };

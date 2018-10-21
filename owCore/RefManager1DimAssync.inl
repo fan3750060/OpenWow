@@ -21,7 +21,7 @@ CRefManager1DimAssync<T>::~CRefManager1DimAssync()
 	for (auto it = objects.begin(); it != objects.end(); )
 	{
 		SharedTexturePtr item = it->second;
-		string name = GetNameByItem(item);
+		std::string name = GetNameByItem(item);
 
 		this->DeleteAction(name);
 		//delete item;
@@ -39,7 +39,7 @@ CRefManager1DimAssync<T>::~CRefManager1DimAssync()
 }
 
 template <class T>
-inline shared_ptr<T> CRefManager1DimAssync<T>::Add(cstring name)
+inline std::shared_ptr<T> CRefManager1DimAssync<T>::Add(cstring name)
 {
 	SharedTexturePtr item = GetItemByName(name);
 	if (item != nullptr)
@@ -79,7 +79,7 @@ bool CRefManager1DimAssync<T>::Exists(cstring name) const
 template <class T>
 inline void CRefManager1DimAssync<T>::Delete(cstring name)
 {
-	shared_ptr<T> item = GetItemByName(name);
+	std::shared_ptr<T> item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		auto it = objects.find(name);
@@ -92,7 +92,7 @@ inline void CRefManager1DimAssync<T>::Delete(cstring name)
 }
 
 template <class T>
-inline void CRefManager1DimAssync<T>::Delete(shared_ptr<T> item)
+inline void CRefManager1DimAssync<T>::Delete(std::shared_ptr<T> item)
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -109,7 +109,7 @@ inline void CRefManager1DimAssync<T>::Delete(shared_ptr<T> item)
 }
 
 template <class T>
-inline shared_ptr<T> CRefManager1DimAssync<T>::GetItemByName(cstring name) const
+inline std::shared_ptr<T> CRefManager1DimAssync<T>::GetItemByName(cstring name) const
 {
 	auto name_item = objects.find(name);
 	if (name_item != objects.end())
@@ -121,7 +121,7 @@ inline shared_ptr<T> CRefManager1DimAssync<T>::GetItemByName(cstring name) const
 }
 
 template <class T>
-inline std::string CRefManager1DimAssync<T>::GetNameByItem(shared_ptr<T> item) const
+inline std::string CRefManager1DimAssync<T>::GetNameByItem(std::shared_ptr<T> item) const
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -150,13 +150,13 @@ inline void CRefManager1DimAssync<T>::PrintAllInfo()
 }
 
 template<class T>
-inline shared_ptr<T> CRefManager1DimAssync<T>::CreateAction(cstring name)
+inline std::shared_ptr<T> CRefManager1DimAssync<T>::CreateAction(cstring name)
 {
 	return NULL;
 }
 
 template<class T>
-inline void CRefManager1DimAssync<T>::LoadAction(string name, shared_ptr<T>& item)
+inline void CRefManager1DimAssync<T>::LoadAction(std::string name, std::shared_ptr<T>& item)
 {
 }
 

@@ -56,7 +56,7 @@ private:
 	WDT_MAIN							m_TileFlag[C_TilesInMap][C_TilesInMap];
 
 private:
-	string								m_GlobalWMOName;
+	std::string								m_GlobalWMOName;
 	ADT_MODF							m_GlobalWMOPlacementInfo;
 #ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	std::shared_ptr<ADT_WMO_Instance>	m_GlobalWMO;

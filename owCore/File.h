@@ -10,10 +10,10 @@ public:
 	 virtual ~CFile();
 
 	 // IFile
-	 string Name() const override { return m_Name; }
-	 string Path() const override { return m_Path; }
-	 string Extension() const override { return m_Extension; }
-	 string Path_Name() const override { return string(m_Path + m_Name); }
+	 std::string Name() const override { return m_Name; }
+	 std::string Path() const override { return m_Path; }
+	 std::string Extension() const override { return m_Extension; }
+	 std::string Path_Name() const override { return std::string(m_Path + m_Name); }
 
 	 // IByteBuffer
 	 uint64_t getSize() const override 
@@ -51,7 +51,7 @@ public:
 		 m_FilesManager->Guard();
 		 m_ByteBuffer.seekRelative(_bufferOffsetRelative); 
 	 }
-	 bool readLine(string* _string) override
+	 bool readLine(std::string* _string) override
 	 { 
 		 m_FilesManager->Guard();
 		 return m_ByteBuffer.readLine(_string);
@@ -61,14 +61,14 @@ public:
 		 m_FilesManager->Guard();
 		 m_ByteBuffer.readBytes(_destination, _size); 
 	 }
-	 void readString(string* _string) override
+	 void readString(std::string* _string) override
 	 {
 		 m_FilesManager->Guard();
 		 m_ByteBuffer.readString(_string);
 	 }
 
 public:
-	static void FixFilePath(string& _string);
+	static void FixFilePath(std::string& _string);
 
 private:
 	void ParsePathAndExtension();
@@ -78,7 +78,7 @@ protected:
 	IFilesManager* m_FilesManager;
 
 private: // IFile
-	string m_Name;
-	string m_Path;
-	string m_Extension;
+	std::string m_Name;
+	std::string m_Path;
+	std::string m_Extension;
 };

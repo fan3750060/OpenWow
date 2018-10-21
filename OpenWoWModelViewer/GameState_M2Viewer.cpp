@@ -36,7 +36,7 @@ void GameState_M2Viewer::InfoAnim()
 
 void GameState_M2Viewer::OpenFile(const char* _fname)
 {
-	string path = _fname;
+	std::string path = _fname;
 	int pos = path.find("ExData");
 	_ASSERT(pos != -1);
 	path = path.substr(pos + 7);

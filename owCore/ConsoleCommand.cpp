@@ -14,7 +14,7 @@ ConsoleCommand::~ConsoleCommand()
 	delete m_Function;
 }
 
-const string ConsoleCommand::GetName() const 
+const std::string ConsoleCommand::GetName() const 
 { 
 	return m_Name; 
 }

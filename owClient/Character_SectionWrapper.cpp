@@ -23,7 +23,7 @@ SharedTexturePtr Character_SectionWrapper::getSkinTexture(Character* _character)
 			i.Get_Gender() == _character->Gender &&
 			i.Get_VariationOrColor() == _character->skin)
 		{
-			string textureName = i.Get_Texture1();
+			std::string textureName = i.Get_Texture1();
 			if (textureName.empty())
 			{
 				break;
@@ -45,7 +45,7 @@ SharedTexturePtr Character_SectionWrapper::getSkinExtraTexture(Character* _chara
 			i.Get_Gender() == _character->Gender &&
 			i.Get_VariationOrColor() == _character->skin)
 		{
-			string textureName = i.Get_Texture2();
+			std::string textureName = i.Get_Texture2();
 			if (textureName.empty())
 			{
 				break;
@@ -74,7 +74,7 @@ SharedTexturePtr Character_SectionWrapper::getFaceLowerTexture(Character* _chara
 			i.Get_VariationOrColor() == _character->skin
 			)
 		{
-			string textureName = i.Get_Texture1();
+			std::string textureName = i.Get_Texture1();
 			if (textureName.empty())
 			{
 				break;
@@ -98,7 +98,7 @@ SharedTexturePtr Character_SectionWrapper::getFaceUpperTexture(Character* _chara
 			i.Get_VariationOrColor() == _character->skin
 			)
 		{
-			string textureName = i.Get_Texture2();
+			std::string textureName = i.Get_Texture2();
 			if (textureName.empty())
 			{
 				break;
@@ -114,7 +114,7 @@ SharedTexturePtr Character_SectionWrapper::getFaceUpperTexture(Character* _chara
 //-- FañialHair
 //------------------------------------------------------------
 
-string Character_SectionWrapper::getFacialHairLowerTexture(Character* _character)
+std::string Character_SectionWrapper::getFacialHairLowerTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -131,7 +131,7 @@ string Character_SectionWrapper::getFacialHairLowerTexture(Character* _character
 	fail1(); return "";
 }
 
-string Character_SectionWrapper::getFacialHairUpperTexture(Character* _character)
+std::string Character_SectionWrapper::getFacialHairUpperTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -228,7 +228,7 @@ SharedTexturePtr Character_SectionWrapper::getHairTexture(Character* _character)
 			i.Get_VariationOrColor() == _character->hairColor
 			)
 		{
-			string textureName = i.Get_Texture1();
+			std::string textureName = i.Get_Texture1();
 			if (textureName.empty())
 			{
 				break;
@@ -251,7 +251,7 @@ SharedTexturePtr Character_SectionWrapper::getHairScalpLowerTexture(Character* _
 			i.Get_VariationOrColor() == _character->hairColor
 			)
 		{
-			string textureName = i.Get_Texture2();
+			std::string textureName = i.Get_Texture2();
 			if (textureName.empty())
 			{
 				break;
@@ -274,7 +274,7 @@ SharedTexturePtr Character_SectionWrapper::getHairScalpUpperTexture(Character* _
 			i.Get_VariationOrColor() == _character->hairColor
 			)
 		{
-			string textureName = i.Get_Texture3();
+			std::string textureName = i.Get_Texture3();
 			if (textureName.empty())
 			{
 				break;
@@ -289,7 +289,7 @@ SharedTexturePtr Character_SectionWrapper::getHairScalpUpperTexture(Character* _
 //-- NAKED
 //------------------------------------------------------------
 
-string Character_SectionWrapper::getNakedPelvisTexture(Character * _character)
+std::string Character_SectionWrapper::getNakedPelvisTexture(Character * _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -308,7 +308,7 @@ string Character_SectionWrapper::getNakedPelvisTexture(Character * _character)
 	return "";
 }
 
-string Character_SectionWrapper::getNakedTorsoTexture(Character * _character)
+std::string Character_SectionWrapper::getNakedTorsoTexture(Character * _character)
 {
 	for (auto& i : DBC_CharSections)
 	{

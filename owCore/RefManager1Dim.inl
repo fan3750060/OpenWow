@@ -10,8 +10,8 @@ CRefManager1Dim<T>::~CRefManager1Dim()
 {
 	for (auto it = objects.begin(); it != objects.end(); )
 	{
-		shared_ptr<T> item = it->second;
-		string name = GetNameByItem(item);
+		std::shared_ptr<T> item = it->second;
+		std::string name = GetNameByItem(item);
 
 		this->DeleteAction(name);
 		//delete item;
@@ -21,9 +21,9 @@ CRefManager1Dim<T>::~CRefManager1Dim()
 }
 
 template <class T>
-shared_ptr<T> CRefManager1Dim<T>::Add(cstring name)
+std::shared_ptr<T> CRefManager1Dim<T>::Add(cstring name)
 {
-	shared_ptr<T> item = GetItemByName(name);
+	std::shared_ptr<T> item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		return item;
@@ -47,7 +47,7 @@ bool CRefManager1Dim<T>::Exists(cstring name) const
 template <class T>
 void CRefManager1Dim<T>::Delete(cstring name)
 {
-	shared_ptr<T> item = GetItemByName(name);
+	std::shared_ptr<T> item = GetItemByName(name);
 	if (item != nullptr)
 	{
 		auto it = objects.find(name);
@@ -60,7 +60,7 @@ void CRefManager1Dim<T>::Delete(cstring name)
 }
 
 template <class T>
-void CRefManager1Dim<T>::Delete(shared_ptr<T> item)
+void CRefManager1Dim<T>::Delete(std::shared_ptr<T> item)
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -77,7 +77,7 @@ void CRefManager1Dim<T>::Delete(shared_ptr<T> item)
 }
 
 template <class T>
-shared_ptr<T> CRefManager1Dim<T>::GetItemByName(cstring name) const
+std::shared_ptr<T> CRefManager1Dim<T>::GetItemByName(cstring name) const
 {
 	auto name_item = objects.find(name);
 	if (name_item != objects.end())
@@ -89,7 +89,7 @@ shared_ptr<T> CRefManager1Dim<T>::GetItemByName(cstring name) const
 }
 
 template <class T>
-std::string CRefManager1Dim<T>::GetNameByItem(shared_ptr<T> item) const
+std::string CRefManager1Dim<T>::GetNameByItem(std::shared_ptr<T> item) const
 {
 	for (auto it = objects.begin(); it != objects.end(); ++it)
 	{
@@ -118,7 +118,7 @@ void CRefManager1Dim<T>::PrintAllInfo()
 }
 
 template<class T>
-inline shared_ptr<T> CRefManager1Dim<T>::CreateAction(cstring name)
+inline std::shared_ptr<T> CRefManager1Dim<T>::CreateAction(cstring name)
 {
 	return NULL;
 }

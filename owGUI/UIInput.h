@@ -18,7 +18,7 @@ public:
     void SetInputMaxLenght(int _inputStringMaxLenght) { inputStringMaxLenght = _inputStringMaxLenght; }
     void SetInputMode(InputMode _inputMode) { inputMode = _inputMode; }
 
-    string Data() const { return m_Text; }
+    std::string Data() const { return m_Text; }
 
     //
 

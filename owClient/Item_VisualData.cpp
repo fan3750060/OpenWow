@@ -15,7 +15,7 @@
 struct
 {
 	InventoryType::List	        slot;
-	string						folder = "";
+	std::string						folder = "";
 	MeshIDType::List			modifiers[MESHID_MAX_MODS] = MESHID_ALLUNK;
 	uint32						count = 0;
 	M2_AttachmentType::List		attach[ATTACHS_MAX] = { M2_AttachmentType::Count, M2_AttachmentType::Count };
@@ -64,7 +64,7 @@ struct
 struct
 {
 	DBC_CharComponent_Sections::List list;
-	string folder;
+	std::string folder;
 } ItemTextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT] =
 {
 	{ DBC_CharComponent_Sections::ARMS_UPPER,	"ARMUPPERTEXTURE" },
@@ -118,8 +118,8 @@ void CItem_VisualData::InitObjectComponents()
 
 	for (uint32 i = 0; i < ItemObjectComponents[InventoryType].count; i++)
 	{
-		string objectFileName = displayInfo->Get_ObjectModelName(i);
-		string objectTextureName = displayInfo->Get_ObjectTextureName(i);
+		std::string objectFileName = displayInfo->Get_ObjectModelName(i);
+		std::string objectTextureName = displayInfo->Get_ObjectTextureName(i);
 
 		if (objectFileName.empty() && InventoryType != InventoryType::CLOAK)
 		{
@@ -164,7 +164,7 @@ void CItem_VisualData::InitObjectComponents()
 					continue;
 				}
 
-				string visEffectModelName = visEffect->Get_Name();
+				std::string visEffectModelName = visEffect->Get_Name();
 				if (visEffectModelName.empty())
 				{
 					continue;
@@ -217,7 +217,7 @@ void CItem_VisualData::InitTextureComponents()
 
 	for (uint32 i = 0; i < DBC_CharComponent_Sections::ITEMS_COUNT; i++)
 	{
-		string textureComponentName = displayInfo->Get_TextureComponents(i);
+		std::string textureComponentName = displayInfo->Get_TextureComponents(i);
 		if (textureComponentName.empty())
 		{
 			continue;
@@ -228,21 +228,21 @@ void CItem_VisualData::InitTextureComponents()
 	}
 }
 
-SmartM2Ptr CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, string _modelName)
+SmartM2Ptr CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, std::string _modelName)
 {
 	return GetManager<IM2Manager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _modelName);
 }
 
-SharedTexturePtr CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, string _textureName)
+SharedTexturePtr CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, std::string _textureName)
 {
 	return GetManager<ITexturesManager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _textureName + ".blp");
 }
 
-SharedTexturePtr CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, string _textureName)
+SharedTexturePtr CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, std::string _textureName)
 {
-	string universalTexture = getTextureComponentName(_type, _textureName, Gender::None);
-	string maleTexture = getTextureComponentName(_type, _textureName, Gender::Male);
-	string femaleTexture = getTextureComponentName(_type, _textureName, Gender::Female);
+	std::string universalTexture = getTextureComponentName(_type, _textureName, Gender::None);
+	std::string maleTexture = getTextureComponentName(_type, _textureName, Gender::Male);
+	std::string femaleTexture = getTextureComponentName(_type, _textureName, Gender::Female);
 
 	if (CMPQFile::IsFileExists(universalTexture))
 	{
@@ -264,13 +264,13 @@ SharedTexturePtr CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::L
 
 //--
 
-string CItem_VisualData::getTextureComponentName(DBC_CharComponent_Sections::List _type, string _textureName, Gender::List _gender)
+std::string CItem_VisualData::getTextureComponentName(DBC_CharComponent_Sections::List _type, std::string _textureName, Gender::List _gender)
 {
 
 
 	char maleTexture[256];
 	sprintf_s(maleTexture, "Item\\TEXTURECOMPONENTS\\%s\\%s_%c.blp", ItemTextureComponents[_type].folder.c_str(), _textureName.c_str(), getGenderLetter(_gender));
-	return string(maleTexture);
+	return std::string(maleTexture);
 }
 
 char CItem_VisualData::getGenderLetter(Gender::List _gender)

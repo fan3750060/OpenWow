@@ -99,7 +99,7 @@ bool UIFile::ProcessXMLNode(XMLNode* _node, UIElement* _parent)
 {
 	_ASSERT(_node != nullptr);
 
-	string nodeClassType = Utils::ToLower(_node->GetName());
+	std::string nodeClassType = Utils::ToLower(_node->GetName());
 
 	if (nodeClassType == "image")
 		return true;
@@ -168,8 +168,8 @@ UIElement* UIFile::LoadUIElement(XMLNode* _node)
 
 bool UIFile::CreateUIElementByXMLNode(UIElement*& _element, XMLNode* _node)
 {
-	string elementClassName = Utils::ToLower(_node->GetName());
-	string elementName = _node->GetKeyValue("name");
+	std::string elementClassName = Utils::ToLower(_node->GetName());
+	std::string elementName = _node->GetKeyValue("name");
 
 	if (elementClassName == "uielement")
 		_element = new UIElement(mUIMgr);
@@ -197,7 +197,7 @@ bool UIFile::CreateUIElementByXMLNode(UIElement*& _element, XMLNode* _node)
 	}
 
 	// SetName
-	string resultElementName = elementName.empty() ? elementClassName : elementName;
+	std::string resultElementName = elementName.empty() ? elementClassName : elementName;
 
 	// Check dublicates
 	if (IsElementExists(resultElementName))
@@ -218,7 +218,7 @@ bool UIFile::CreateUIElementByXMLNode(UIElement*& _element, XMLNode* _node)
 bool UIFile::LoadCommonParams(UIElement*& _element, XMLNode* _node)
 {
 	// Position
-	string buff = _node->GetKeyValue("pos");
+	std::string buff = _node->GetKeyValue("pos");
 	auto pos = Utils::ToPoint(buff);
 
 	// Size
@@ -298,7 +298,7 @@ Image* UIFile::GetImage(XMLNode* _node)
 	if (imageNode == nullptr)
 		return nullptr;
 
-	string textureName = imageNode->GetKeyValue("textureName");
+	std::string textureName = imageNode->GetKeyValue("textureName");
 	if (textureName.empty())
 	{
 		Log::Error("UIFile[%s]: Node[%s]: Image: 'textureName' is empty.", filename.c_str(), _node->GetName().c_str());
@@ -312,7 +312,7 @@ Image* UIFile::GetImage(XMLNode* _node)
 		return nullptr;
 	}
 
-	string buff = imageNode->GetKeyValue("start");
+	std::string buff = imageNode->GetKeyValue("start");
 	vec2 imageStart = Utils::ToPoint(buff);
 
 	buff = imageNode->GetKeyValue("size");

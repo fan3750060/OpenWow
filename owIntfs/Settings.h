@@ -19,8 +19,8 @@ __interface
 	void RegisterUint32(cstring _name, uint32 _defaultValue);
 	uint32& GetUint32(cstring _name);
 
-	void RegisterString(cstring _name, string _defaultValue);
-	string& GetString(cstring _name);
+	void RegisterString(cstring _name, std::string _defaultValue);
+	std::string& GetString(cstring _name);
 
 	void RegisterGroup(GUID _guid, ISettingGroup* _group);
 	ISettingGroup* GetGroup(GUID _guid);

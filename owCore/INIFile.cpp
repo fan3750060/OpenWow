@@ -10,7 +10,7 @@
 
 	while (!ByteBuffer::IsEof())
 	{
-		string line = ByteBuffer::readLine();
+		std::string line = ByteBuffer::readLine();
 
         if (line.length() == 0)
         {
@@ -42,7 +42,7 @@
 	return true;
 }
 
-vector<SectionStruct> INIFile::GetSections(string _sectionName)
+vector<SectionStruct> INIFile::GetSections(std::string _sectionName)
 {
 	vector<SectionStruct> myMap;
 
@@ -57,7 +57,7 @@ vector<SectionStruct> INIFile::GetSections(string _sectionName)
 	return myMap;
 }
 
-SectionStruct* INIFile::GetFirstSection(string _sectionName)
+SectionStruct* INIFile::GetFirstSection(std::string _sectionName)
 {
 	for (auto it : data)
 		if (_sectionName == it.section)

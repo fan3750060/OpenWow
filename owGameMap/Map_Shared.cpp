@@ -57,9 +57,9 @@ CMapShared::CMapShared()
 	BufferTextureCoordAlpha = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)alphaTextureCoord, C_MapBufferSize, sizeof(vec2));
 }
 
-string CMapShared::getMapFolder(const DBC_MapRecord& _map)
+std::string CMapShared::getMapFolder(const DBC_MapRecord& _map)
 {
-	return "World\\Maps\\" + string(_map.Get_Directory()) + "\\" + string(_map.Get_Directory());
+	return "World\\Maps\\" + std::string(_map.Get_Directory()) + "\\" + std::string(_map.Get_Directory());
 }
 
 vector<uint16> CMapShared::GenarateHighMapArray(uint16 _holes)

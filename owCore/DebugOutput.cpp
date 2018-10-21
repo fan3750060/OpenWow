@@ -7,7 +7,7 @@ void CDebugOutput::PushMessage(CDebugOutput::DebugMessageType _type, const char*
 {
 	// Parse args end
 	int len = vsnprintf(NULL, 0, _message, _vaList);
-	string buff;
+	std::string buff;
 	if (len > 0)
 	{
 		buff.resize(len + 1);
@@ -18,28 +18,28 @@ void CDebugOutput::PushMessage(CDebugOutput::DebugMessageType _type, const char*
 
 void CDebugOutput::PushMessage(cstring _message, CDebugOutput::DebugMessageType _type)
 {
-	string messageWithPrefix;
+	std::string messageWithPrefix;
 
 	// Set Prefix
 	switch (_type)
 	{
 		case TYPE_INFO:
-		messageWithPrefix = "~" + string(_message);
+		messageWithPrefix = "~" + std::string(_message);
 		break;
 		case TYPE_PRINT:
-		messageWithPrefix = " " + string(_message);
+		messageWithPrefix = " " + std::string(_message);
 		break;
 		case TYPE_GREEN:
-		messageWithPrefix = "^" + string(_message);
+		messageWithPrefix = "^" + std::string(_message);
 		break;
 		case TYPE_WARNING:
-		messageWithPrefix = "@" + string(_message);
+		messageWithPrefix = "@" + std::string(_message);
 		break;
 		case TYPE_ERROR:
-		messageWithPrefix = "!" + string(_message);
+		messageWithPrefix = "!" + std::string(_message);
 		break;
 		case TYPE_FATAL:
-		messageWithPrefix = "FATAL ERROR: " + string(_message);
+		messageWithPrefix = "FATAL ERROR: " + std::string(_message);
 		break;
 	}
 

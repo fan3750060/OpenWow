@@ -24,7 +24,7 @@ private:
 private:
 	IDebugOutput* m_DebugOutput_ConsoleWindows;
 
-    vector<IDebugOutput*> m_DebugOutputs;
+	std::vector<IDebugOutput*> m_DebugOutputs;
     CRITICAL_SECTION debugCS;
 };
 

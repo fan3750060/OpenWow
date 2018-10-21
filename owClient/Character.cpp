@@ -83,7 +83,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 
 	// 4. Creature textures
 	{
-		string bakedTextureName = humanoidRecExtra->Get_BakedSkin();
+		std::string bakedTextureName = humanoidRecExtra->Get_BakedSkin();
 		SharedTexturePtr bakedSkinTexture = nullptr;
 		if (!bakedTextureName.empty())
 		{
@@ -161,9 +161,9 @@ void Character::Render3D()
 
 void Character::CreateCharacterModel()
 {
-	string modelClientFileString = DBC_ChrRaces[Race]->Get_ClientFileString();
-	string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
-	string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
+	std::string modelClientFileString = DBC_ChrRaces[Race]->Get_ClientFileString();
+	std::string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
+	std::string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
 
 	SmartM2Ptr model = GetManager<IM2Manager>()->Add(fullModelName);
 	_ASSERT(model != nullptr);

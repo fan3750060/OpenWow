@@ -109,7 +109,7 @@ bool ADT::Load()
 	}
 
 	// M2 names
-	vector<string> m_MDXsNames;
+	vector<std::string> m_MDXsNames;
 	f->seek(startPos + header.MMDX);
 	{
 		f->seekRelative(4);
@@ -141,7 +141,7 @@ bool ADT::Load()
 	}
 
 	// WMO Names
-	vector<string> m_WMOsNames;
+	vector<std::string> m_WMOsNames;
 	f->seek(startPos + header.MWMO);
 	{
 		f->seekRelative(4);
@@ -243,7 +243,7 @@ bool ADT::Load()
 		it->diffuseTexture = Application::Get().GetRenderDevice()->CreateTexture2D(it->textureName);
 
 		// PreLoad specular texture
-		string specularTextureName = it->textureName;
+		std::string specularTextureName = it->textureName;
 		specularTextureName = specularTextureName.insert(specularTextureName.length() - 4, "_s");
 		it->specularTexture = Application::Get().GetRenderDevice()->CreateTexture2D(specularTextureName);
 	}

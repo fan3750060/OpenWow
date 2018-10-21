@@ -150,7 +150,7 @@ void SceneNode::SetParent(std::weak_ptr<SceneNode> wpNode)
 	// As a precaution, store myself is a shared pointer so I don't get deleted
 	// half-way through this function!
 	// Technically self deletion shouldn't occur because the thing invoking this function
-	// should have a shared_ptr to it.
+	// should have a std::shared_ptr to it.
 	//std::shared_ptr<SceneNode> me = shared_from_this();
 
 	if (std::shared_ptr<SceneNode> parent = wpNode.lock())

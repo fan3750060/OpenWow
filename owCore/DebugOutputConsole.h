@@ -10,7 +10,7 @@ public:
 
 protected:
 	// CDebugOutput
-	void Print(string _messageFmt, CDebugOutput::DebugMessageType _type);
+	void Print(std::string _messageFmt, CDebugOutput::DebugMessageType _type);
 
 private:
 	enum ConsoleWindowsColor

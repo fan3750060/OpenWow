@@ -59,14 +59,14 @@ SharedTexturePtr Character_SkinTextureBaker::createTexture(Character* _character
 	// 2. Hide boobs :)
 	{
 		// Female
-		string nakedUpperTexture = Character_SectionWrapper::getNakedTorsoTexture(_character);
+		std::string nakedUpperTexture = Character_SectionWrapper::getNakedTorsoTexture(_character);
 		if (nakedUpperTexture.length() > 0)
 		{
 			FillPixels(DBC_CharComponent_Sections::TORSO_UPPER, nakedUpperTexture);
 		}
 
 		// Male + Female
-		string nakedLowerTexture = Character_SectionWrapper::getNakedPelvisTexture(_character);
+		std::string nakedLowerTexture = Character_SectionWrapper::getNakedPelvisTexture(_character);
 		_ASSERT(nakedLowerTexture.length() > 0);
 		FillPixels(DBC_CharComponent_Sections::LEGS_UPPER, nakedLowerTexture);
 	}
@@ -122,7 +122,7 @@ void Character_SkinTextureBaker::FillWithSkin(SharedTexturePtr _skinTexture)
 	SafeDeleteArray(skinTexturePixels);
 }
 
-void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, string _name)
+void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, std::string _name)
 {
 	SharedTexturePtr texture = GetManager<ITexturesManager>()->Add(_name);
 	if (texture == nullptr)

@@ -39,7 +39,7 @@ public: // Static
 	static uint32 calcTextureSize(R_TextureFormats::List _format, int _width, int _height, int _depth);
 
 public:
-	string					m_Name;
+	std::string					m_Name;
 	uint32                  m_GLObj;
 	uint32                  m_GLFmt;
 	int                     m_Type;
@@ -84,4 +84,4 @@ void R_TextureDeleter2(SharedTexturePtr _texture)
 	//_texture = nullptr;
 }*/
 
-typedef shared_ptr<R_Texture> SharedTexturePtr;
+typedef std::shared_ptr<R_Texture> SharedTexturePtr;

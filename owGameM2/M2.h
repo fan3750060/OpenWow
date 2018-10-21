@@ -33,10 +33,10 @@ public:
 	void calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
 
 public:
-	string getFilename() const { return m_FileName; }
-	string getFilenameWithoutExt() const { return m_FileNameWithoutExt; }
-	string getFilePath() const { return m_FilePath; }
-	string getUniqueName() const { return m_UniqueName; }
+	std::string getFilename() const { return m_FileName; }
+	std::string getFilenameWithoutExt() const { return m_FileNameWithoutExt; }
+	std::string getFilePath() const { return m_FilePath; }
+	std::string getUniqueName() const { return m_UniqueName; }
 	cbbox getBounds() const { return m_Bounds; }
 	
 #pragma region Loops & Sequences
@@ -67,11 +67,11 @@ public:
 	CM2_Comp_Skeleton* m_Skeleton;
 
 public:
-	string								m_FileName;
-	string								m_FileNameWithoutExt;
-	string								m_FilePath;
+	std::string								m_FileName;
+	std::string								m_FileNameWithoutExt;
+	std::string								m_FilePath;
 
-	string								m_UniqueName;
+	std::string								m_UniqueName;
 	BoundingBox							m_Bounds;
 
 	// Vertices

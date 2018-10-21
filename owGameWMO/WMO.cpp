@@ -125,10 +125,10 @@ bool WMO::Load()
 				sprintf_s(fname, "%s_%03d.wmo", temp, i);
 				std::shared_ptr<IFile> groupFile = GetManager<IFilesManager>()->Open(fname); // It delete later
 
-				string groupName = groupFile->Name();
+				std::string groupName = groupFile->Name();
 				if (groupInfos[i].nameoffset > 0)
 				{
-					groupName = string(groupsNames + groupInfos[i].nameoffset);
+					groupName = std::string(groupsNames + groupInfos[i].nameoffset);
 				}
 
 				WMO_Group* group = new WMO_Group(this, i, groupName, groupFile);

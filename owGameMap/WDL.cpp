@@ -22,7 +22,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
 
-	string fileName = mapController->getFilenameT() + ".wdl";
+	std::string fileName = mapController->getFilenameT() + ".wdl";
 
 	// Low-resolution tiles
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
@@ -112,7 +112,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
 	for (auto it : m_LowResolutionWMOsPlacementInfo)
 	{
-		const string name = m_LowResolutionWMOsNames[it.nameIndex];
+		const std::string name = m_LowResolutionWMOsNames[it.nameIndex];
 
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
 		m_LowResolutionWMOs.push_back(make_shared<ADT_WMO_Instance>(_parent, wmo, it));
@@ -125,7 +125,7 @@ void WDL::Load()
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
 
-	string fileName = mapController->getFilenameT() + ".wdl";
+	std::string fileName = mapController->getFilenameT() + ".wdl";
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)

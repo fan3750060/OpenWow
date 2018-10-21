@@ -5,7 +5,7 @@
 
 #pragma region Language
 
-string ProcessInclude(std::shared_ptr<IFile> f)
+std::string ProcessInclude(std::shared_ptr<IFile> f)
 {
 	if (f == nullptr)
 	{
@@ -13,11 +13,11 @@ string ProcessInclude(std::shared_ptr<IFile> f)
 		return "";
 	}
 
-	string data = "";
+	std::string data = "";
 
 	while (!f->isEof())
 	{
-		string line;
+		std::string line;
 		f->readLine(&line);
 
 		// Skip empty lines
@@ -30,12 +30,12 @@ string ProcessInclude(std::shared_ptr<IFile> f)
 		if (line[0] == '#' && line[1] == 'i' && line[2] == 'n' && line[3] == 'c' && line[4] == 'l')
 		{
 			uint32_t firstBracketPosition = line.find('"');
-            _ASSERT(firstBracketPosition != string::npos);
+            _ASSERT(firstBracketPosition != std::string::npos);
 
 			uint32_t lastBracketPosition = line.find_last_of('"');
 			_ASSERT(firstBracketPosition != lastBracketPosition);
 
-			string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
+			std::string inludeFileName = line.substr(firstBracketPosition + 1, lastBracketPosition - firstBracketPosition - 1);
 			CFile::FixFilePath(inludeFileName);
 			data += ProcessInclude(GetManager<IFilesManager>()->Open(f->Path() + inludeFileName)) + '\n';
 
@@ -53,8 +53,8 @@ string ProcessInclude(std::shared_ptr<IFile> f)
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".vs"));
-	string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".fs"));
+	std::string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".vs"));
+	std::string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileName + ".fs"));
 
     Process(_fileName, shVS.c_str(), shFS.c_str(), nullptr);
 }
@@ -62,8 +62,8 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileName)
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS)
 	: m_RenderDevice(_RenderDevice)
 {
-	string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
-	string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
+	std::string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
+	std::string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
 
     Process(_fileNameVS, shVS.c_str(), shFS.c_str(), nullptr);
 }
@@ -71,11 +71,11 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _fileNameFS, cstring _fileNameGS)
 	: m_RenderDevice(_RenderDevice)
 {
-    string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
-    string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
+    std::string shVS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameVS));
+    std::string shFS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameFS));
 	if (!_fileNameGS.empty())
 	{
-		string shGS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameGS));
+		std::string shGS = ProcessInclude(GetManager<IFilesManager>()->Open(_fileNameGS));
 		Process(_fileNameGS, shVS.c_str(), shFS.c_str(), shGS.c_str());
 		return;
 	}
@@ -86,7 +86,7 @@ Technique::Technique(RenderDevice* _RenderDevice, cstring _fileNameVS, cstring _
 
 void Technique::Process(cstring _name, const char* vertexShaderSrc, const char* fragmentShaderSrc, const char* geometryShaderSrc)
 {
-	string shaderName = _name;
+	std::string shaderName = _name;
 	size_t pos = shaderName.find_last_of('.');
 	if (pos != -1)
 	{

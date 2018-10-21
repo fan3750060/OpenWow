@@ -3,23 +3,23 @@
 // General
 #include "Utils.h"
 
-string Utils::ParseSectionName(string& s)
+std::string Utils::ParseSectionName(std::string& s)
 {
 	uint32_t bracket = s.find_first_of(']');
-	if (bracket == string::npos)
+	if (bracket == std::string::npos)
 		return "";
 
 	return s.substr(1, bracket - 1);
 }
 
-string Utils::ParseSectionAndIncludeName(string& s, string& _includeSectionName)
+std::string Utils::ParseSectionAndIncludeName(std::string& s, std::string& _includeSectionName)
 {
 	uint32_t bracket = s.find_first_of(']');
-	if (bracket == string::npos)
+	if (bracket == std::string::npos)
 		return "";
 
 	uint32_t includeSymbol = s.find_first_of(':');
-	if (includeSymbol == string::npos)
+	if (includeSymbol == std::string::npos)
 		_includeSectionName = "";
 	else
 		_includeSectionName = s.substr(includeSymbol + 1);
@@ -27,10 +27,10 @@ string Utils::ParseSectionAndIncludeName(string& s, string& _includeSectionName)
 	return s.substr(1, bracket - 1);
 }
 
-void Utils::ParseKeyPair(string& s, string& key, string& val)
+void Utils::ParseKeyPair(std::string& s, std::string& key, std::string& val)
 {
 	uint32_t separator = s.find_first_of('=');
-	if (separator == string::npos)
+	if (separator == std::string::npos)
 	{
 		key = "";
 		val = "";
@@ -75,8 +75,8 @@ bool Utils::TryParse(const type_info& type, cstring value, void* output)
 	else if (type == typeid(double))
 		stream >> (double&)*((double*)output);
 
-	else if (type == typeid(string))
-		*((string *)output) = value;
+	else if (type == typeid(std::string))
+		*((std::string *)output) = value;
 
 	else
 	{
@@ -89,55 +89,55 @@ bool Utils::TryParse(const type_info& type, cstring value, void* output)
 
 // String
 
-string Utils::Trim(string& s, cstring delimiters)
+std::string Utils::Trim(std::string& s, cstring delimiters)
 {
 	return TrimLeft(TrimRight(s, delimiters), delimiters);
 }
 
-string Utils::TrimLeft(string& s, cstring delimiters)
+std::string Utils::TrimLeft(std::string& s, cstring delimiters)
 {
 	return s.erase(0, s.find_first_not_of(delimiters));
 }
 
-string Utils::TrimRight(string& s, cstring delimiters)
+std::string Utils::TrimRight(std::string& s, cstring delimiters)
 {
 	return s.erase(s.find_last_not_of(delimiters) + 1);
 }
 
-string Utils::ToLower(cstring _string)
+std::string Utils::ToLower(cstring _string)
 {
-	string str = _string;
+	std::string str = _string;
 	str = Trim(str);
 	transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
 }
 
-string Utils::ToUpper(cstring _string)
+std::string Utils::ToUpper(cstring _string)
 {
-	string str = _string;
+	std::string str = _string;
 	str = Trim(str);
 	transform(str.begin(), str.end(), str.begin(), ::toupper);
 	return str;
 }
 
-int Utils::popFirstInt(string& s, char separator)
+int Utils::popFirstInt(std::string& s, char separator)
 {
 	return ToType<int>(GetFirstSubString(s, separator));
 }
 
-double Utils::popFirstDouble(string& s, char separator)
+double Utils::popFirstDouble(std::string& s, char separator)
 {
 	return ToType<double>(GetFirstSubString(s, separator));
 }
 
-float Utils::popFirstFloat(string& s, char separator)
+float Utils::popFirstFloat(std::string& s, char separator)
 {
 	return ToType<float>(GetFirstSubString(s, separator));
 }
 
-string Utils::GetFirstSubString(string& s, char separator)
+std::string Utils::GetFirstSubString(std::string& s, char separator)
 {
-	string outs = "";
+	std::string outs = "";
 	uint32_t seppos;
 
 	if (separator == 0)
@@ -145,7 +145,7 @@ string Utils::GetFirstSubString(string& s, char separator)
 		seppos = s.find_first_of(',');
 		uint32_t alt_seppos = s.find_first_of(';');
 
-		if (alt_seppos != string::npos && alt_seppos < seppos)
+		if (alt_seppos != std::string::npos && alt_seppos < seppos)
 		{
 			seppos = alt_seppos; // return the first ',' or ';'
 		}
@@ -155,7 +155,7 @@ string Utils::GetFirstSubString(string& s, char separator)
 		seppos = s.find_first_of(separator);
 	}
 
-	if (seppos == string::npos)
+	if (seppos == std::string::npos)
 	{
 		outs = s;
 		s = "";
@@ -169,20 +169,20 @@ string Utils::GetFirstSubString(string& s, char separator)
 	return outs;
 }
 
-string Utils::getNextToken(cstring s, uint32_t& cursor, char separator)
+std::string Utils::getNextToken(cstring s, uint32_t& cursor, char separator)
 {
 	uint32_t seppos = s.find_first_of(separator, cursor);
-	if (seppos == string::npos)
+	if (seppos == std::string::npos)
 	{ // not found
-		cursor = string::npos;
+		cursor = std::string::npos;
 		return "";
 	}
-	string outs = s.substr(cursor, seppos - cursor);
+	std::string outs = s.substr(cursor, seppos - cursor);
 	cursor = seppos + 1;
 	return outs;
 }
 
-string Utils::stripCarriageReturn(cstring line)
+std::string Utils::stripCarriageReturn(cstring line)
 {
 	if (line.length() > 0)
 	{
@@ -194,9 +194,9 @@ string Utils::stripCarriageReturn(cstring line)
 	return line;
 }
 
-string Utils::getLine(ifstream& infile)
+std::string Utils::getLine(ifstream& infile)
 {
-	string line;
+	std::string line;
 	// This is the standard way to check whether a read failed.
 	if (!getline(infile, line))
 		return "";

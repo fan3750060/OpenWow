@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Utils.h"
 
-string Utils::ToString(const type_info& type, void* value)
+std::string Utils::ToString(const type_info& type, void* value)
 {
 	stringstream stream;
 
@@ -32,8 +32,8 @@ string Utils::ToString(const type_info& type, void* value)
 	else if (type == typeid(double))
 		stream << *((double*)value);
 
-	else if (type == typeid(string))
-		return (string&)*((string *)value);
+	else if (type == typeid(std::string))
+		return (std::string&)*((std::string *)value);
 
 	else
 	{
@@ -49,7 +49,7 @@ string Utils::ToString(const type_info& type, void* value)
 
 bool Utils::ToBool(cstring _string)
 {
-	string _str = _string;
+	std::string _str = _string;
 	Trim(_str);
 	transform(_str.begin(), _str.end(), _str.begin(), ::tolower);
 
@@ -64,14 +64,14 @@ bool Utils::ToBool(cstring _string)
 
 // My types
 
-vec2 Utils::ToPoint(string& _string)
+vec2 Utils::ToPoint(std::string& _string)
 {
 	float _x = popFirstFloat(_string);
 	float _y = popFirstFloat(_string);
 	return vec2(_x, _y);
 }
 
-vec3 Utils::ToVector3(string& _string)
+vec3 Utils::ToVector3(std::string& _string)
 {
 	float _x = popFirstFloat(_string);
 	float _y = popFirstFloat(_string);
@@ -79,7 +79,7 @@ vec3 Utils::ToVector3(string& _string)
 	return vec3(_x, _y, _z);
 }
 
-Color Utils::ToColorFromName(string& _string)
+Color Utils::ToColorFromName(std::string& _string)
 {
 	ToLower(_string);
 
@@ -123,7 +123,7 @@ Color Utils::ToColorFromName(string& _string)
 		return COLOR_EMPTY;
 }
 
-Color Utils::ToColorFromRGB(string& _string)
+Color Utils::ToColorFromRGB(std::string& _string)
 {
 	Color c;
 	c.red = static_cast<float>(popFirstFloat(_string)) / 255.0f;
@@ -133,7 +133,7 @@ Color Utils::ToColorFromRGB(string& _string)
 	return c;
 }
 
-Color Utils::ToColorFromRGBA(string& _string)
+Color Utils::ToColorFromRGBA(std::string& _string)
 {
 	Color c;
 	c.red = static_cast<float>(popFirstFloat(_string)) / 255.0f;
@@ -143,7 +143,7 @@ Color Utils::ToColorFromRGBA(string& _string)
 	return c;
 }
 
-TextAlignW Utils::ToTextAlignW(string& _string)
+TextAlignW Utils::ToTextAlignW(std::string& _string)
 {
 	ToLower(_string);
 
@@ -160,7 +160,7 @@ TextAlignW Utils::ToTextAlignW(string& _string)
 		return TextAlignW::TEXT_ALIGNW_LEFT;
 }
 
-TextAlignH Utils::ToTextAlignH(string& _string)
+TextAlignH Utils::ToTextAlignH(std::string& _string)
 {
 	ToLower(_string);
 
@@ -178,7 +178,7 @@ TextAlignH Utils::ToTextAlignH(string& _string)
 		return TextAlignH::TEXT_ALIGNH_BOTTOM;
 }
 
-InputMode Utils::ToInputMode(string& _string)
+InputMode Utils::ToInputMode(std::string& _string)
 {
 	ToLower(_string);
 

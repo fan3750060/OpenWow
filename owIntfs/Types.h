@@ -79,9 +79,8 @@ class Color;
 #include <sstream>
 #include <queue>
 #include <unordered_map>
-using namespace std;
 
-typedef const string& cstring;
+typedef const std::string& cstring;
 
 // Consts
 enum TextAlignW

@@ -730,7 +730,7 @@ typedef void (GLAPIENTRYP PFNGLGETVERTEXATTRIBPOINTERVPROC) (GLuint index, GLenu
 typedef GLboolean(GLAPIENTRYP PFNGLISPROGRAMPROC) (GLuint program);
 typedef GLboolean(GLAPIENTRYP PFNGLISSHADERPROC) (GLuint shader);
 typedef void (GLAPIENTRYP PFNGLLINKPROGRAMPROC) (GLuint program);
-typedef void (GLAPIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar* *string, const GLint *length);
+typedef void (GLAPIENTRYP PFNGLSHADERSOURCEPROC) (GLuint shader, GLsizei count, const GLchar* *std::string, const GLint *length);
 typedef void (GLAPIENTRYP PFNGLUSEPROGRAMPROC) (GLuint program);
 typedef void (GLAPIENTRYP PFNGLUNIFORM1FPROC) (GLint location, GLfloat v0);
 typedef void (GLAPIENTRYP PFNGLUNIFORM2FPROC) (GLint location, GLfloat v0, GLfloat v1);

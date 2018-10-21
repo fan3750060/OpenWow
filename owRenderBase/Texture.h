@@ -205,6 +205,6 @@ protected:
 private:
 };
 
-typedef shared_ptr<Texture> SharedTexturePtr;
+typedef std::shared_ptr<Texture> SharedTexturePtr;
 
 #include "Texture.inl"

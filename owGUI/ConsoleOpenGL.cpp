@@ -60,7 +60,7 @@ void CConsoleOpenGL::RenderUI()
 	// Input rectangle
 	_Render->RenderRectangle(vec2(0.0f, consoleHeight), vec2(windowSize.x, fontHeight), COLOR_DARKGRAY);
 
-	// Input string
+	// Input std::string
 	m_UIMgr->RenderText(vec2(0.0f, consoleHeight), ">" + inputString, COLOR_WHITE);
 
 	// Helper
@@ -84,7 +84,7 @@ void CConsoleOpenGL::RenderUI()
 			}
 
 			// Text
-			string line = commandName;
+			std::string line = commandName;
 			if (command->HasArgs())
 			{
 				line += " [args]";
@@ -213,7 +213,7 @@ bool CConsoleOpenGL::OnCharInput(uint32 _char)
 
 //
 
-void CConsoleOpenGL::Print(string _messageFmt, DebugMessageType _type)
+void CConsoleOpenGL::Print(std::string _messageFmt, DebugMessageType _type)
 {
 	Color color = COLOR_WHITE;
 

@@ -18,17 +18,17 @@ public:
 	bool& GetBool(cstring _name) override;
 	void RegisterUint32(cstring _name, uint32 _defaultValue) override;
 	uint32& GetUint32(cstring _name) override;
-	void RegisterString(cstring _name, string _defaultValue) override;
-	string& GetString(cstring _name) override;
+	void RegisterString(cstring _name, std::string _defaultValue) override;
+	std::string& GetString(cstring _name) override;
 
 	void RegisterGroup(GUID _guid, ISettingGroup* _group) override;
 	ISettingGroup* GetGroup(GUID _guid) override;
 
 private:
-	map<string, bool> m_BoolSettings;
-	map<string, uint32> m_Uint32Settings;
-	map<string, string> m_StringSettings;
-	map<GUID, ISettingGroup*> m_Groups;
+	std::map<std::string, bool> m_BoolSettings;
+	std::map<std::string, uint32> m_Uint32Settings;
+	std::map<std::string, std::string> m_StringSettings;
+	std::map<GUID, ISettingGroup*> m_Groups;
 };
 
 template<class T>

@@ -22,7 +22,7 @@ private:
 	SharedTexturePtr					        m_Minimap;
 	uint32								        m_MAREOffsets[C_TilesInMap][C_TilesInMap];
 	vector<std::shared_ptr<CWDL_LowResTile>>	m_LowResilutionTiles;
-	vector<string>						        m_LowResolutionWMOsNames;
+	vector<std::string>						        m_LowResolutionWMOsNames;
 	vector<ADT_MODF>					        m_LowResolutionWMOsPlacementInfo;
 #ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	vector<std::shared_ptr<ADT_WMO_Instance>>	m_LowResolutionWMOs;

@@ -2,15 +2,15 @@
 
 /*struct KeyValueStruct
 {
-	string key, value;
+	std::string key, value;
 };
 
 struct SectionStruct
 {
-	string section;
+	std::string section;
 	vector<KeyValueStruct> data;
 
-	string GetValue(string _keyName)
+	std::string GetValue(std::string _keyName)
 	{
 		for (auto it : data)
 			if (it.key == _keyName)
@@ -27,14 +27,14 @@ class INIFile final : public File
 public:
     bool Open() override;
 
-	vector<SectionStruct> GetSections(string _sectionName);
-	SectionStruct* GetFirstSection(string _sectionName);
+	vector<SectionStruct> GetSections(std::string _sectionName);
+	SectionStruct* GetFirstSection(std::string _sectionName);
 
 	template<typename T>
-	bool Assign(T& addr, string _keyName);
+	bool Assign(T& addr, std::string _keyName);
 
 	template<typename T>
-	bool Assign(T& addr, string _section, string _keyName);
+	bool Assign(T& addr, std::string _section, std::string _keyName);
 
 	 vector<SectionStruct> Data() const { return data; }
 
@@ -43,13 +43,13 @@ private:
 };
 
 template<typename T>
-inline bool INIFile::Assign(T& addr, string _keyName)
+inline bool INIFile::Assign(T& addr, std::string _keyName)
 {
 	return Assign(addr, "root", _keyName);
 }
 
 template<typename T>
-inline bool INIFile::Assign(T& addr, string _section, string _keyName)
+inline bool INIFile::Assign(T& addr, std::string _section, std::string _keyName)
 {
 	auto section = GetFirstSection(_section);
 	if (section.data.size() == 0)

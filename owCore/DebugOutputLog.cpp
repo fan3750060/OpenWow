@@ -7,7 +7,7 @@
 
 DebugOutput_Log::DebugOutput_Log()
 {
-	string fileName = string(LOGFILENAME);
+	std::string fileName = std::string(LOGFILENAME);
 
 	if (fileName.empty())
 	{
@@ -33,7 +33,7 @@ DebugOutput_Log::~DebugOutput_Log()
 
 //
 
-void DebugOutput_Log::Print(string _messageFmt, CDebugOutput::DebugMessageType _type)
+void DebugOutput_Log::Print(std::string _messageFmt, CDebugOutput::DebugMessageType _type)
 {
 	m_LogStream << _messageFmt << endl;
 	m_LogStream.flush();

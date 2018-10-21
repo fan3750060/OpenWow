@@ -317,7 +317,7 @@ void Liquid::createBuffer()
 
 void Liquid_Layer::InitTextures()
 {
-	string baseName = LiquidType->Get_Texture(0);
+	std::string baseName = LiquidType->Get_Texture(0);
 
 	char buf[256];
 	for (int i = 1; i <= 30; i++)

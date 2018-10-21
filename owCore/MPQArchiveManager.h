@@ -9,7 +9,7 @@ public:
 	CMPQArchiveManager();
 	~CMPQArchiveManager();
 
-	void AddArchive(string _filename);
+	void AddArchive(std::string _filename);
 	SMPQFileLocation GetFileLocation(cstring _filename);
 
 private:

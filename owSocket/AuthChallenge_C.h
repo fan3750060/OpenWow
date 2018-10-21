@@ -2,7 +2,7 @@
 
 struct AuthChallenge_C : public ISendable
 {
-	AuthChallenge_C(string _username, uint32 _ip) :
+	AuthChallenge_C(std::string _username, uint32 _ip) :
 		cmd(AUTH_LOGON_CHALLENGE),
 		username(_username),
 		ip(_ip)
@@ -47,5 +47,5 @@ struct AuthChallenge_C : public ISendable
 	uint8   version3;
 	uint16  build;
 	uint32  ip;
-	string	username;
+	std::string	username;
 };

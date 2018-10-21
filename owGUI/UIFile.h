@@ -30,11 +30,11 @@ private:
 	Image* GetImage(XMLNode* _node);
 
 private:
-	string filename;
+	std::string filename;
 
 	UIWindow* parent;
 	UIWindow* rootElement;
 
-	map<string, UIElement*> elements;
+	map<std::string, UIElement*> elements;
 	IUIMgr*		mUIMgr;
 };

@@ -145,8 +145,8 @@ void XMLFile::Print(XMLNode* _startNode, int _level) const
 {
 	_ASSERT(_startNode != nullptr);
 
-	string line = "";
-	string spaces = "";
+	std::string line = "";
+	std::string spaces = "";
 	for (auto i = 0; i < _level; i++) spaces += "   ";
 	line += spaces + '<' + _startNode->GetName() + '>';
 	////Log::Print(line);
@@ -164,7 +164,7 @@ void XMLFile::Print(XMLNode* _startNode, int _level) const
 }
 
 XMLNode* currentNode = nullptr;
-bool XMLFile::ProcessLine(string& _line)
+bool XMLFile::ProcessLine(std::string& _line)
 {
 	_line = Utils::Trim(_line);
 
@@ -174,7 +174,7 @@ bool XMLFile::ProcessLine(string& _line)
 	auto openBracketPos = _line.find_first_of('<');
 	auto closeBracketPos = _line.find_first_of('>');
 
-	if (openBracketPos == string::npos && closeBracketPos != string::npos)
+	if (openBracketPos == std::string::npos && closeBracketPos != std::string::npos)
 	{
 		//Log::Error("XML[%s]: Syntax error: Can't find '<', but '>' finded. Line [%s]", filename.c_str(), _line.c_str());
 		return false;
@@ -186,8 +186,8 @@ bool XMLFile::ProcessLine(string& _line)
 		return false;
 	}
 
-	string data;
-	string otherString;
+	std::string data;
+	std::string otherString;
 
 	// data from 0 to openBracketPos;
 	if (openBracketPos > 0 && openBracketPos <= _line.length())
@@ -208,7 +208,7 @@ bool XMLFile::ProcessLine(string& _line)
 	}
 
 	// line is data only
-	if (openBracketPos == string::npos)
+	if (openBracketPos == std::string::npos)
 	{
 		// Process data
 		data = _line;
@@ -222,7 +222,7 @@ bool XMLFile::ProcessLine(string& _line)
 	}
 
 	// Process TAG
-	string tag = _line.substr(0, closeBracketPos + 1);
+	std::string tag = _line.substr(0, closeBracketPos + 1);
 	if (!ProcessTag(tag))
 	{
 		//Log::Error("XML[%s]: Error processing tag [%s].", filename.c_str(), tag.c_str());
@@ -241,7 +241,7 @@ bool XMLFile::ProcessLine(string& _line)
 	return true;
 }
 
-bool XMLFile::ProcessTag(string& _tag)
+bool XMLFile::ProcessTag(std::string& _tag)
 {
 	_ASSERT(!_tag.empty());
 	_tag = _tag.substr(1, _tag.size() - 2);
@@ -290,7 +290,7 @@ bool XMLFile::ProcessTag(string& _tag)
 	// If we have slash at end
 	bool isSingleNode = false;
 	auto slashPos = _tag.find_last_of('/');
-	if (slashPos != string::npos && slashPos == _tag.length() - 1)
+	if (slashPos != std::string::npos && slashPos == _tag.length() - 1)
 	{
 		_tag = _tag.substr(0, slashPos);
 		isSingleNode = true;
@@ -298,9 +298,9 @@ bool XMLFile::ProcessTag(string& _tag)
 	}
 
 	// If we have space
-	string currentNodeName = _tag;
+	std::string currentNodeName = _tag;
 	auto spacePos = _tag.find_first_of(' ');
-	if (spacePos != string::npos)
+	if (spacePos != std::string::npos)
 	{
 		currentNodeName = _tag.substr(0, spacePos);
 	}
@@ -322,15 +322,15 @@ bool XMLFile::ProcessTag(string& _tag)
 		currentNode = newNode;
 
 	// parse attribs
-	if (spacePos != string::npos)
+	if (spacePos != std::string::npos)
 	{
-		string attrs = Utils::Trim(_tag.substr(spacePos + 1));
+		std::string attrs = Utils::Trim(_tag.substr(spacePos + 1));
 
 		while (attrs.length() >= 5)
 		{ // a="b"
 			auto equalPos = attrs.find_first_of('=');
-			string key = Utils::Trim(attrs.substr(0, equalPos));
-			string value = Utils::Trim(attrs.substr(equalPos + 1));
+			std::string key = Utils::Trim(attrs.substr(0, equalPos));
+			std::string value = Utils::Trim(attrs.substr(equalPos + 1));
 
 			// First brackets
 			auto quotesPos = value.find_first_of('"');
@@ -357,7 +357,7 @@ bool XMLFile::ProcessTag(string& _tag)
 			newNode->AddData(key, value);
 
 			//Log::Green("KEY [%s] VALUE [%s]", key.c_str(), value.c_str());
-			string substr = attrs.substr(key.length() + value.length() + 3);
+			std::string substr = attrs.substr(key.length() + value.length() + 3);
 
 			attrs = Utils::Trim(substr);
 		}
@@ -366,7 +366,7 @@ bool XMLFile::ProcessTag(string& _tag)
 	return true;
 }
 
-bool XMLFile::ProcessData(string& _data)
+bool XMLFile::ProcessData(std::string& _data)
 {
 	_ASSERT(!_data.empty());
 	//Log::Info("Proc data [%s]...", _data.c_str());

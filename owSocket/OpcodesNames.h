@@ -19,7 +19,7 @@
 #ifndef _OPCODESNAMES_H
 #define _OPCODESNAMES_H
 
-const string OpcodesNames[] =
+const std::string OpcodesNames[] =
 {
 	"NONE",  // 0x000,
 	"CMSG_BOOTME",  // 0x001,
@@ -885,15 +885,15 @@ const string OpcodesNames[] =
 	"CMSG_LFG_LEAVE",  // 0x35D,
 	"CMSG_SEARCH_LFG_JOIN",  // 0x35E,
 	"CMSG_SEARCH_LFG_LEAVE",  // 0x35F,
-	"SMSG_UPDATE_LFG_LIST",  // 0x360,    // uint32, uint32, if (uint8) { uint32 count, for (count) { uint64} }, uint32 count2, uint32, for (count2) { uint64, uint32 flags, if (flags & 0x2) {string}, if (flags & 0x10) {for (3) uint8}, if (flags & 0x80) {uint64, uint32}}, uint32 count3, uint32, for (count3) {uint64, uint32 flags, if (flags & 0x1) {uint8, uint8, uint8, for (3) uint8, uint32, uint32, uint32, uint32, uint32, uint32, float, float, uint32, uint32, uint32, uint32, uint32, float, uint32, uint32, uint32, uint32, uint32, uint32}, if (flags&0x2) string, if (flags&0x4) uint8, if (flags&0x8) uint64, if (flags&0x10) uint8, if (flags&0x20) uint32, if (flags&0x40) uint8, if (flags& 0x80) {uint64, uint32}}
+	"SMSG_UPDATE_LFG_LIST",  // 0x360,    // uint32, uint32, if (uint8) { uint32 count, for (count) { uint64} }, uint32 count2, uint32, for (count2) { uint64, uint32 flags, if (flags & 0x2) {std::string}, if (flags & 0x10) {for (3) uint8}, if (flags & 0x80) {uint64, uint32}}, uint32 count3, uint32, for (count3) {uint64, uint32 flags, if (flags & 0x1) {uint8, uint8, uint8, for (3) uint8, uint32, uint32, uint32, uint32, uint32, uint32, float, float, uint32, uint32, uint32, uint32, uint32, float, uint32, uint32, uint32, uint32, uint32, uint32}, if (flags&0x2) std::string, if (flags&0x4) uint8, if (flags&0x8) uint64, if (flags&0x10) uint8, if (flags&0x20) uint32, if (flags&0x40) uint8, if (flags& 0x80) {uint64, uint32}}
 	"SMSG_LFG_PROPOSAL_UPDATE",  // 0x361,    // uint32, uint8, uint32, uint32, uint8, for (uint8) {uint32, uint8, uint8, uint8, uint8}
 	"CMSG_LFG_PROPOSAL_RESULT",  // 0x362,
 	"SMSG_LFG_ROLE_CHECK_UPDATE",  // 0x363,    // uint32, uint8, for (uint8) uint32, uint8, for (uint8) { uint64, uint8, uint32, uint8, }
 	"SMSG_LFG_JOIN_RESULT",  // 0x364,    // uint32 unk, uint32, if (unk",  //= 6) { uint8 count, for (count) uint64 }
 	"SMSG_LFG_QUEUE_STATUS",  // 0x365,    // uint32 dungeon, uint32 lfgtype, uint32, uint32, uint32, uint32, uint8, uint8, uint8, uint8
 	"CMSG_SET_LFG_COMMENT",  // 0x366,
-	"SMSG_LFG_UPDATE_PLAYER",  // 0x367,    // uint8, if (uint8) { uint8, uint8, uint8, uint8, if (uint8) for (uint8) uint32, string}
-	"SMSG_LFG_UPDATE_PARTY",  // 0x368,    // uint8, if (uint8) { uint8, uint8, uint8, for (3) uint8, uint8, if (uint8) for (uint8) uint32, string}
+	"SMSG_LFG_UPDATE_PLAYER",  // 0x367,    // uint8, if (uint8) { uint8, uint8, uint8, uint8, if (uint8) for (uint8) uint32, std::string}
+	"SMSG_LFG_UPDATE_PARTY",  // 0x368,    // uint8, if (uint8) { uint8, uint8, uint8, for (3) uint8, uint8, if (uint8) for (uint8) uint32, std::string}
 	"SMSG_LFG_UPDATE_SEARCH",  // 0x369,    // uint8
 	"CMSG_LFG_SET_ROLES",  // 0x36A,
 	"CMSG_LFG_SET_NEEDS",  // 0x36B,
@@ -1284,7 +1284,7 @@ const string OpcodesNames[] =
 	"CMSG_TOGGLE_XP_GAIN",  // 0x4EC,
 	"SMSG_TOGGLE_XP_GAIN",  // 0x4ED, // enable/disable XP gain console message
 	"SMSG_GMRESPONSE_DB_ERROR",  // 0x4EE, // empty
-	"SMSG_GMRESPONSE_RECEIVED",  // 0x4EF, // uint32, uint32, string[2000], string[4000][4]
+	"SMSG_GMRESPONSE_RECEIVED",  // 0x4EF, // uint32, uint32, std::string[2000], std::string[4000][4]
 	"CMSG_GMRESPONSE_RESOLVE",  // 0x4F0,
 	"SMSG_GMRESPONSE_STATUS_UPDATE",  // 0x4F1, // uint8 (1 - EVENT_GMSURVEY_DISPLAY, 0 - EVENT_UPDATE_TICKET)"S
 	"SMSG_GMRESPONSE_CREATE_TICKET",  // 0x4F2,

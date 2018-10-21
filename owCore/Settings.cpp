@@ -52,13 +52,13 @@ uint32& CSettings::GetUint32(cstring _name)
 	return m_Uint32Settings[_name];
 }
 
-void CSettings::RegisterString(cstring _name, string _defaultValue)
+void CSettings::RegisterString(cstring _name, std::string _defaultValue)
 {
 	_ASSERT(m_StringSettings.find(_name) == m_StringSettings.end());
 	m_StringSettings.insert(make_pair(_name, _defaultValue));
 }
 
-string& CSettings::GetString(cstring _name)
+std::string& CSettings::GetString(cstring _name)
 {
 	_ASSERT(m_StringSettings.find(_name) != m_StringSettings.end());
 	return m_StringSettings[_name];

@@ -26,7 +26,7 @@ public:
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
 	// ISceneNode
-	string getObjectInfo() const override { return "@WMO_Base@" + m_Object->getFilename(); }
+	std::string getObjectInfo() const override { return "@WMO_Base@" + m_Object->getFilename(); }
 
 	// IUpdatable
 	void Update(double _time, double _dTime) override;

@@ -39,16 +39,16 @@ public:
 	SharedBufferPtr createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
 	SharedTextureBufferPtr createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
 	uint32 getBufferMem() const { return m_BufferMem; }
-	string getBufferMemStr() const { return convertToString(m_BufferMem); }
+	std::string getBufferMemStr() const { return convertToString(m_BufferMem); }
 
 	// Textures
 	SharedTexturePtr createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
 	uint32 getTextureMem() const { return m_TextureMem; }
-	string getTextureMemStr() const { return convertToString(m_TextureMem); }
+	std::string getTextureMemStr() const { return convertToString(m_TextureMem); }
 
 	// Shaders
 	std::shared_ptr<R_Shader> createShader(cstring _name, const char *vertexShaderSrc, const char *fragmentShaderSrc, const char *geometryShaderSrc, const char *tessControlShaderSrc, const char *tessEvaluationShaderSrc, const char *computeShaderSrc);
-	string getShaderLog() const { return m_ShaderLog; }
+	std::string getShaderLog() const { return m_ShaderLog; }
 
 	// Renderbuffers
 	std::shared_ptr<R_RenderBuffer> createRenderBuffer(uint32 width, uint32 height, R_TextureFormats::List format, bool depth, uint32 numColBufs, uint32 samples);
@@ -237,7 +237,7 @@ private:
 
 	bool						_doubleBuffered;
 
-	string					    m_ShaderLog;
+	std::string					    m_ShaderLog;
 	uint32						m_DepthFormat;
 
 	

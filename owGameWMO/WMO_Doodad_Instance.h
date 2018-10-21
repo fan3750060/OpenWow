@@ -13,7 +13,7 @@ public:
 	void setPortalVisibility(bool _visibility) { m_PortalVis = _visibility; }
 		
 	// ISceneNode
-	string getObjectInfo() const override { return getM2()->getFilename(); }
+	std::string getObjectInfo() const override { return getM2()->getFilename(); }
 
 	// IRenderable
 	bool PreRender3D() override;
