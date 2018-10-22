@@ -4,6 +4,7 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="CamContrTEMP.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

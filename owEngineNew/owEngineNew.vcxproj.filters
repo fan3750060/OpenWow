@@ -25,6 +25,9 @@
     <Filter Include="Filesystem">
       <UniqueIdentifier>{88d506bc-0b85-4937-9d87-6d1479c5df24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Passes\_unused">
+      <UniqueIdentifier>{deea5326-0821-4a14-84f7-617d872f1e1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,22 +57,10 @@
     <ClCompile Include="Passes\CopyTexturePass.cpp">
       <Filter>Passes</Filter>
     </ClCompile>
-    <ClCompile Include="Passes\DeferredLightingPass.cpp">
-      <Filter>Passes</Filter>
-    </ClCompile>
     <ClCompile Include="Passes\DispatchPass.cpp">
       <Filter>Passes</Filter>
     </ClCompile>
-    <ClCompile Include="Passes\GenerateMipMapsPass.cpp">
-      <Filter>Passes</Filter>
-    </ClCompile>
     <ClCompile Include="Passes\InvokeFunctionPass.cpp">
-      <Filter>Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\LightPickingPass.cpp">
-      <Filter>Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\LightsPass.cpp">
       <Filter>Passes</Filter>
     </ClCompile>
     <ClCompile Include="Passes\OpaquePass.cpp">
@@ -105,6 +96,18 @@
     </ClCompile>
     <ClCompile Include="Passes\EndQueryPass.cpp">
       <Filter>Passes\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\LightPickingPass.cpp">
+      <Filter>Passes\_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\LightsPass.cpp">
+      <Filter>Passes\_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\DeferredLightingPass.cpp">
+      <Filter>Passes\_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\GenerateMipMapsPass.cpp">
+      <Filter>Passes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -144,22 +147,10 @@
     <ClInclude Include="Passes\CopyTexturePass.h">
       <Filter>Passes</Filter>
     </ClInclude>
-    <ClInclude Include="Passes\DeferredLightingPass.h">
-      <Filter>Passes</Filter>
-    </ClInclude>
     <ClInclude Include="Passes\DispatchPass.h">
       <Filter>Passes</Filter>
     </ClInclude>
-    <ClInclude Include="Passes\GenerateMipMapsPass.h">
-      <Filter>Passes</Filter>
-    </ClInclude>
     <ClInclude Include="Passes\InvokeFunctionPass.h">
-      <Filter>Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\LightPickingPass.h">
-      <Filter>Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\LightsPass.h">
       <Filter>Passes</Filter>
     </ClInclude>
     <ClInclude Include="Passes\OpaquePass.h">
@@ -198,6 +189,18 @@
     </ClInclude>
     <ClInclude Include="Passes\EndQueryPass.h">
       <Filter>Passes\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\LightsPass.h">
+      <Filter>Passes\_unused</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\LightPickingPass.h">
+      <Filter>Passes\_unused</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\DeferredLightingPass.h">
+      <Filter>Passes\_unused</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\GenerateMipMapsPass.h">
+      <Filter>Passes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

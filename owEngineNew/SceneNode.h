@@ -103,6 +103,7 @@ private:
 	typedef std::vector<std::shared_ptr<Mesh>> MeshList;
 
 	std::string         m_Name;
+	SceneNodeTypes      m_Type;
 
 	// Transforms node from parent's space to world space for rendering.
 	mat4                m_LocalTransform;

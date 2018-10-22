@@ -4,40 +4,10 @@
 #include <ctime>
 
 
-Camera g_Camera;
-glm::vec2 g_PreviousMousePosition;
+#include "CamContrTEMP.h"
 
-struct CameraMovement
-{
-	// Translation movement
-	float Forward, Back, Left, Right, Up, Down;
-	// Rotation movement
-	float RollCW, RollCCW;
-	float Pitch, Yaw;
-	// Move in/out from pivot point.
-	float PivotTranslate;
-	// Do you want to go faster?
-	bool TranslateFaster;
-	bool RotateFaster;
 
-	CameraMovement()
-		: Forward(0.0f)
-		, Back(0.0f)
-		, Left(0.0f)
-		, Right(0.0f)
-		, Up(0.0f)
-		, Down(0.0f)
-		, RollCW(0.0f)
-		, RollCCW(0.0f)
-		, Pitch(0.0f)
-		, Yaw(0.0f)
-		, PivotTranslate(0.0f)
-		, TranslateFaster(false)
-		, RotateFaster(false)
-	{}
-};
-CameraMovement g_CameraMovement;
-
+extern Camera g_Camera;
 
 std::shared_ptr<Scene> g_pScene = nullptr;
 
@@ -50,7 +20,6 @@ std::shared_ptr<Shader> g_pPixelShader;
 
 //--
 
-std::shared_ptr<PipelineState> g_pOpaquePipeline;
 std::shared_ptr<PipelineState> g_pTransparentPipeline;
 
 //--
@@ -60,19 +29,10 @@ std::shared_ptr<SamplerState> g_LinearRepeatSampler;
 
 //--
 
-void OnUpdate(UpdateEventArgs& e);
-
-void OnMouseButtonPressed(MouseButtonEventArgs& e);
-void OnMouseButtonReleased(MouseButtonEventArgs& e);
-void OnMouseMoved(MouseMotionEventArgs& e);
-void OnMouseWheel(MouseWheelEventArgs& e);
-
 void OnPreRender(RenderEventArgs& e);
 void OnRender(RenderEventArgs& e);
 void OnPostRender(RenderEventArgs& e);
 
-void OnKeyPressed(KeyEventArgs& e);
-void OnKeyReleased(KeyEventArgs& e);
 
 // Techique
 RenderTechnique g_ForwardTechnique;
@@ -238,47 +198,9 @@ int main(int argumentCount, char* arguments[])
 
 		// SAMPLER
 
-		// Create samplers
-		g_LinearRepeatSampler = renderDevice->CreateSamplerState();
-		g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-		g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
-
-		g_LinearClampSampler = renderDevice->CreateSamplerState();
-		g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-		g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
-
-		// STATES
-		BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
-		DepthStencilState::DepthMode enableDepthWrites(true, DepthStencilState::DepthWrite::Enable);
-		DepthStencilState::DepthMode disableDepthWrites(true, DepthStencilState::DepthWrite::Disable);
-
-		// PIPELINES
-		g_pOpaquePipeline = renderDevice->CreatePipelineState();
-		g_pOpaquePipeline->SetShader(Shader::VertexShader, g_pVertexShader);
-		g_pOpaquePipeline->SetShader(Shader::PixelShader, g_pPixelShader);
-		g_pOpaquePipeline->GetBlendState().SetBlendMode(alphaBlending);
-		g_pOpaquePipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
-		g_pOpaquePipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
-		//g_pOpaquePipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
-		g_pOpaquePipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
-		g_pOpaquePipeline->GetRasterizerState().SetViewport(viewPort);
-
-		/*g_pTransparentPipeline = renderDevice->CreatePipelineState();
-		g_pTransparentPipeline->SetShader(Shader::VertexShader, g_pVertexShader);
-		g_pTransparentPipeline->SetShader(Shader::PixelShader, g_pPixelShader);
-		g_pTransparentPipeline->GetBlendState().SetBlendMode(alphaBlending);
-		g_pTransparentPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
-		g_pTransparentPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
-		g_pTransparentPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
-		g_pTransparentPipeline->SetRenderTarget(renderWindow->GetRenderTarget());*/
-
-
-
 		// Add a pass to render opaque geometry.
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardOpaqueQuery));
-		g_ForwardTechnique.AddPass(std::make_shared<OpaquePass>(g_pScene, g_pOpaquePipeline));
-		//g_ForwardTechnique.AddPass(std::make_shared<EndQueryPass>(g_pForwardOpaqueQuery));
+		AddMapPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 
 		// Add a pass for rendering transparent geometry
 		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardTransparentQuery));
@@ -291,8 +213,6 @@ int main(int argumentCount, char* arguments[])
 		//g_ForwardTechnique.AddPass(g_LightsPassBack);
 		//g_ForwardTechnique.AddPass(g_LightsPassFront);
 
-
-
 		app.Run();
 	}
 
@@ -301,26 +221,16 @@ int main(int argumentCount, char* arguments[])
 
 //--------------------------------------------
 
-void OnUpdate(UpdateEventArgs& e)
-{
-	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 300 : 2;
-	float rotateMultiplier = (g_CameraMovement.RotateFaster) ? 300 : 2;
 
-	g_Camera.TranslateX((g_CameraMovement.Right - g_CameraMovement.Left) * e.ElapsedTime * moveMultiplier);
-	g_Camera.TranslateY((g_CameraMovement.Up - g_CameraMovement.Down) * e.ElapsedTime * moveMultiplier);
-	g_Camera.TranslateZ((g_CameraMovement.Back - g_CameraMovement.Forward) * e.ElapsedTime * moveMultiplier);
-	//g_Camera.AddPitch(g_CameraMovement.Pitch * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::Local);
-	//g_Camera.AddYaw(g_CameraMovement.Yaw * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::World);
-}
 
 void OnPreRender(RenderEventArgs& e)
 {
 	g_pFrameQuery->Begin(e.FrameCounter);
 
 #ifdef  IS_DX11
-	g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
+	//g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
 #else
-	g_pPixelShader->GetShaderParameterByName("DiffuseTexture").Set(g_LinearRepeatSampler);
+	//g_pPixelShader->GetShaderParameterByName("DiffuseTexture").Set(g_LinearRepeatSampler);
 #endif
 }
 
@@ -330,13 +240,6 @@ void OnRender(RenderEventArgs& e)
 	e.Camera = &g_Camera;
 
 	g_ForwardTechnique.Render(e);
-
-	//Sleep(50);
-
-	// Generate light picking texture
-	// This is only done when the mouse is clicked.
-	// @see: OnMouseButtonReleased
-	//g_LightPickingTechnique.Render( e );
 }
 
 void OnPostRender(RenderEventArgs& e)
@@ -373,132 +276,4 @@ void OnPostRender(RenderEventArgs& e)
 	{
 		g_ForwardTransparentStatistic.Sample(forwardTransparentResult.ElapsedTime * 1000.0);
 	}*/
-}
-
-//--------------------------------------------
-
-void OnKeyPressed(KeyEventArgs& e)
-{
-	switch (e.Key)
-	{
-	case KeyCode::W:
-	{
-		g_CameraMovement.Forward = 1.0f;
-	}
-	break;
-	case KeyCode::A:
-	{
-		g_CameraMovement.Left = 1.0f;
-	}
-	break;
-	case KeyCode::S:
-	{
-		g_CameraMovement.Back = 1.0f;
-	}
-	break;
-	case KeyCode::D:
-	{
-		g_CameraMovement.Right = 1.0f;
-	}
-	break;
-	case KeyCode::Q:
-	{
-		g_CameraMovement.Down = 1.0f;
-	}
-	break;
-	case KeyCode::E:
-	{
-		g_CameraMovement.Up = 1.0f;
-	}
-	break;
-	case KeyCode::ShiftKey:
-	{
-		g_CameraMovement.TranslateFaster = true;
-		g_CameraMovement.RotateFaster = true;
-	}
-	}
-
-}
-
-void OnKeyReleased(KeyEventArgs& e)
-{
-	switch (e.Key)
-	{
-	case KeyCode::W:
-	{
-		g_CameraMovement.Forward = 0.0f;
-	}
-	break;
-	case KeyCode::A:
-	{
-		g_CameraMovement.Left = 0.0f;
-	}
-	break;
-	case KeyCode::S:
-	{
-		g_CameraMovement.Back = 0.0f;
-	}
-	break;
-	case KeyCode::D:
-	{
-		g_CameraMovement.Right = 0.0f;
-	}
-	break;
-	case KeyCode::Q:
-	{
-		g_CameraMovement.Down = 0.0f;
-	}
-	break;
-	case KeyCode::E:
-	{
-		g_CameraMovement.Up = 0.0f;
-	}
-	break;
-	case KeyCode::R:
-	{
-		g_CameraMovement.RollCW = 0.0f;
-	}
-	break;
-	case KeyCode::F:
-	{
-		g_CameraMovement.RollCCW = 0.0f;
-	}
-	break;
-	case KeyCode::ShiftKey:
-	{
-		g_CameraMovement.TranslateFaster = false;
-		g_CameraMovement.RotateFaster = false;
-	}
-	break;
-	}
-}
-
-void OnMouseButtonPressed(MouseButtonEventArgs& e)
-{
-	g_Camera.OnMousePressed(e);
-
-	g_PreviousMousePosition = glm::vec2(e.X, e.Y);
-}
-
-void OnMouseButtonReleased(MouseButtonEventArgs& e)
-{
-	//g_Camera.OnMouseReleased(e);
-
-	glm::vec2 currentMousePosition = glm::vec2(e.X, e.Y);
-	float offset = glm::distance(g_PreviousMousePosition, currentMousePosition);
-}
-
-void OnMouseMoved(MouseMotionEventArgs& e)
-{
-	if (e.LeftButton)
-	{
-		g_Camera.OnMouseMoved(e);
-	}
-}
-
-void OnMouseWheel(MouseWheelEventArgs& e)
-{
-	//float fPivot = g_Camera.GetPivotDistance();
-	//fPivot -= e.WheelDelta * (g_CameraMovement.TranslateFaster ? 1.0f : 0.1f);
-	//g_Camera.SetPivotDistance(fPivot);
 }

@@ -22,6 +22,9 @@
     <Filter Include="Map\Shaders">
       <UniqueIdentifier>{90029abd-62c9-4ac3-9ca5-fdb3d6656f36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pases">
+      <UniqueIdentifier>{7cb4ca49-cc19-4521-b63c-875a194bd00e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map_Shared.cpp">
@@ -77,6 +80,15 @@
     </ClCompile>
     <ClCompile Include="ADT.cpp">
       <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL_Node_Pass.cpp">
+      <Filter>Pases</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_CHUNK_Pass.cpp">
+      <Filter>Pases</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatePasses.cpp">
+      <Filter>Pases</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +154,15 @@
     </ClInclude>
     <ClInclude Include="SkyParams.h">
       <Filter>Map\Skies</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_Node_Pass.h">
+      <Filter>Pases</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_CHUNK_Pass.h">
+      <Filter>Pases</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatePasses.h">
+      <Filter>Pases</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

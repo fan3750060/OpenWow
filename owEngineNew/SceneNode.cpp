@@ -12,6 +12,7 @@
 SceneNode::SceneNode(cmat4 localTransform)
 	: m_LocalTransform(localTransform)
 	, m_Name("SceneNode")
+	, m_Type(SN_TYPE_NONE)
 {
 	m_InverseTransform = glm::inverse(m_LocalTransform);
 }

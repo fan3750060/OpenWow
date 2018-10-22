@@ -17,6 +17,6 @@ void OpaquePass::Visit(Mesh& mesh)
 
 	if (pMaterial /*&& !pMaterial->IsTransparent()*/)
 	{
-		mesh.Render(GetRenderEventArgs());
+		//mesh.Render(GetRenderEventArgs());
 	}
 }

@@ -141,6 +141,11 @@ RenderDevice* Application::GetRenderDevice()
 	return m_pRenderDevice;
 }
 
+RenderWindow* Application::GetRenderWindow()
+{
+	return m_Windows;
+}
+
 // Convert the message ID into a MouseButton ID
 static MouseButtonEventArgs::MouseButton DecodeMouseButton(UINT messageID)
 {

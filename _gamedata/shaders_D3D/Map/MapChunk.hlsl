@@ -8,7 +8,7 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float3 position       : POSITION;
+	float4 position       : SV_POSITION;
 	float3 normal         : NORMAL0;
 	float2 texCoordDetail : TEXCOORD0;
 	float2 texCoordAlpha  : TEXCOORD1;
@@ -22,10 +22,10 @@ cbuffer PerObject : register(b0)
 }
 
 // Textures and samples
-Texture2D ColorMap0 : register(t0);
-Texture2D ColorMap1 : register(t1);
-Texture2D ColorMap2 : register(t2);
-Texture2D ColorMap3 : register(t3);
+Texture2D ColorMap0       : register(t0);
+Texture2D ColorMap1       : register(t1);
+Texture2D ColorMap2       : register(t2);
+Texture2D ColorMap3       : register(t3);
 sampler   ColorMapSampler : register(s0);
 
 VertexShaderOutput VS_main(VertexShaderInput IN)

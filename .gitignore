@@ -6,6 +6,10 @@
 *.lo
 *.o
 *.obj
+*.pdb
+*.tlog
+*.log
+*.idb
 
 # Precompiled Headers
 *.gch
@@ -33,8 +37,6 @@
 # zip
 *.zip
 
-Debug/
-Release/
 
 bin/
 bin_x64/

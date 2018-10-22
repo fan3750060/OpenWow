@@ -16,3 +16,5 @@
 #include "../owGameMap/DayNightCycle.h"
 #include "../owGameMap/SkyManager.h"
 #include "../owGameMap/EnvironmentManager.h"
+
+#include "../owGameMap/CreatePasses.h"

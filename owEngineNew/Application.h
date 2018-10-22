@@ -15,7 +15,9 @@ public:
 	void Stop();
 
 	RenderWindow* CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
+
 	RenderDevice* GetRenderDevice();
+	RenderWindow* GetRenderWindow();
 
 	HINSTANCE GetModuleHandle() const;
 

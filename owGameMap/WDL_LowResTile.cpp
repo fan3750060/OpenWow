@@ -22,6 +22,7 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _i
 		//setDrawOrder(19);
 	}
 
+	m_Geom->SetType(SN_TYPE_WDL_NODE);
 	AddMesh(m_Geom);
 
 	// State

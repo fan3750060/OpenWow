@@ -11,7 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ADT_CHUNK_Pass.cpp" />
     <ClCompile Include="ADT_Liquid.cpp" />
+    <ClCompile Include="CreatePasses.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="DayNightPhase.cpp" />
     <ClCompile Include="EnvironmentManager.cpp" />
@@ -30,13 +32,16 @@
     </ClCompile>
     <ClCompile Include="WDL.cpp" />
     <ClCompile Include="WDL_LowResTile.cpp" />
+    <ClCompile Include="WDL_Node_Pass.cpp" />
     <ClCompile Include="WDT.cpp" />
     <ClCompile Include="ADT_WMO_Instance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameMap.h" />
+    <ClInclude Include="ADT_CHUNK_Pass.h" />
     <ClInclude Include="ADT_Liquid.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="CreatePasses.h" />
     <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="DayNightPhase.h" />
     <ClInclude Include="EnvironmentManager.h" />
@@ -53,6 +58,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WDL.h" />
     <ClInclude Include="WDL_LowResTile.h" />
+    <ClInclude Include="WDL_Node_Pass.h" />
     <ClInclude Include="WDT.h" />
     <ClInclude Include="ADT_WMO_Instance.h" />
   </ItemGroup>
