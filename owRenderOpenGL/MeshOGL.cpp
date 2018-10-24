@@ -72,25 +72,18 @@ std::shared_ptr<Material> MeshOGL::GetMaterial() const
 	return m_pMaterial;
 }
 
-void MeshOGL::Render(RenderEventArgs& renderArgs)
+void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> constantBuffer)
 {
-	PipelineState* pipeline = renderArgs.PipelineState;
-	if (pipeline)
+	if (m_pMaterial)
 	{
-		std::shared_ptr<ShaderOGL> pVS = std::dynamic_pointer_cast<ShaderOGL>(pipeline->GetShader(Shader::VertexShader));
+		m_pMaterial->Bind();
+
+		std::shared_ptr<ShaderOGL> pVS = std::dynamic_pointer_cast<ShaderOGL>(m_pMaterial->GetShader(Shader::VertexShader));
 
 		if (m_bIsDirty)
 		{
 			Commit(pVS);
 			m_bIsDirty = false;
-		}
-
-		if (m_pMaterial)
-		{
-			for (auto shader : pipeline->GetShaders())
-			{
-				m_pMaterial->Bind(shader.second);
-			}
 		}
 	}
 	_ASSERT(m_bIsDirty != true);

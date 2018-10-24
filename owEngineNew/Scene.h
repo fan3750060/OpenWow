@@ -14,7 +14,5 @@ public:
 
 	virtual void ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<Mesh> _mesh) = 0;
 
-	virtual void Render(RenderEventArgs& renderEventArgs) = 0;
-
 	virtual void Accept(IVisitor& visitor) = 0;
 };

@@ -53,11 +53,9 @@ public:
 
 	virtual std::shared_ptr<Material> CreateMaterial();
 	virtual void DestroyMaterial(std::shared_ptr<Material> Material);
-	virtual std::shared_ptr<Material> GetDefaultMaterial() const;
 
 	virtual std::shared_ptr<PipelineState> CreatePipelineState();
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline);
-	virtual std::shared_ptr<PipelineState> GetDefaultPipeline() const;
 
 public:
 	bool IsDoubleBuffered();
@@ -99,15 +97,12 @@ private:
 
 	typedef std::vector< std::shared_ptr<Material> > MaterialList;
 	MaterialList m_Materials;
-	std::shared_ptr<Material> m_pDefaultMaterial;
 
 	typedef std::vector< std::shared_ptr<PipelineState> > PipelineList;
 	PipelineList m_Pipelines;
 
 	typedef std::vector< std::shared_ptr<Query> > QueryList;
 	QueryList m_Queries;
-
-	std::shared_ptr<PipelineState> m_pDefaultPipeline;
 
 	
 

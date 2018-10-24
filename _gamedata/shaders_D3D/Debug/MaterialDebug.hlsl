@@ -1,4 +1,4 @@
-#include "..\\_gamedata\\shaders_D3D\\Map\\MapWDL_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\Material\\MaterialDebug.h"
 
 struct VertexShaderInput
 {
@@ -16,9 +16,10 @@ cbuffer PerObject : register(b0)
 {
 	float4x4 ModelViewProjection;
 }
+
 cbuffer Material : register(b2)
 {
-    MapWDL_Material Material;
+    MaterialDebug Material;
 };
 
 VertexShaderOutput VS_main(VertexShaderInput IN)

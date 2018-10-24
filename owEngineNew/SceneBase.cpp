@@ -37,18 +37,8 @@ void SceneBase::ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_p
 	node->SetParent(parent);
 }
 
-void SceneBase::Render(RenderEventArgs& args)
-{
-	if (m_pRootNode)
-	{
-		m_pRootNode->Render(args);
-	}
-}
-
 void SceneBase::Accept(IVisitor& visitor)
 {
-	visitor.Visit(*this);
-
 	if (m_pRootNode)
 	{
 		m_pRootNode->Accept(visitor);

@@ -125,7 +125,7 @@ void LightsPass::Visit( Mesh& mesh )
     // for rendering the mesh as a light object.
     mesh.SetMaterial( m_LightMaterial );
 
-    mesh.Render( GetRenderEventArgs() );
+    mesh.Render( GetRenderEventArgs(), nullptr);
 
     // Restore the mesh's original material.
     mesh.SetMaterial( tempMaterial );

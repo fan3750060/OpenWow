@@ -90,6 +90,9 @@
     <ClCompile Include="CreatePasses.cpp">
       <Filter>Pases</Filter>
     </ClCompile>
+    <ClCompile Include="Material_WDL.cpp">
+      <Filter>Pases</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnvironmentManager.h">
@@ -162,6 +165,9 @@
       <Filter>Pases</Filter>
     </ClInclude>
     <ClInclude Include="CreatePasses.h">
+      <Filter>Pases</Filter>
+    </ClInclude>
+    <ClInclude Include="Material_WDL.h">
       <Filter>Pases</Filter>
     </ClInclude>
   </ItemGroup>

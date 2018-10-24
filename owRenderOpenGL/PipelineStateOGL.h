@@ -10,10 +10,6 @@ public:
 	PipelineStateOGL();
 	virtual ~PipelineStateOGL();
 
-	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader);
-	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const;
-	virtual const ShaderMap& GetShaders() const;
-
 	virtual void SetBlendState(const BlendState& blendState);
 	virtual BlendState& GetBlendState();
 
@@ -35,7 +31,6 @@ private: // OpenGL
 	uint32 m_GLProgramPipeline;
 
 private:
-	ShaderMap m_Shaders;
 	BlendStateOGL m_BlendState;
 	RasterizerStateOGL m_RasterizerState;
 	DepthStencilStateOGL m_DepthStencilState;

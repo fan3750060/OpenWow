@@ -36,40 +36,6 @@ MaterialBase::~MaterialBase()
 	}
 }
 
-void MaterialBase::Bind(std::weak_ptr<Shader> wpShader) const
-{
-	std::shared_ptr<Shader> pShader = wpShader.lock();
-	_ASSERT(pShader != NULL);
-
-	if (m_Dirty)
-	{
-		// Make sure the constant buffer associated to this material is updated.
-		MaterialBase* _this = const_cast<MaterialBase*>(this);
-		_this->UpdateConstantBuffer();
-		_this->m_Dirty = false;
-	}
-
-	// OOPS.. Dangerous. Just blindly set all textures associated to this material.
-	// Maybe I should check the names of the textures in the shader before doing this?
-	// I could be replacing textures that are bound to the shader that shouldn't be changed!?
-	// (Because they have been specified by the user for example).
-	for (auto texture : m_Textures)
-	{
-		std::shared_ptr<Texture> pTexture = texture.second;
-		pTexture->Bind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
-	}
-
-	// If the shader has a parameter called "Material".
-	/*ShaderParameter& materialParameter = pShader->GetShaderParameterByName("MaterialBase");
-	if (materialParameter.IsValid())
-	{
-		// Assign this material's constant buffer to it.
-		materialParameter.Set<ConstantBuffer>(m_pConstantBuffer);
-		// If the shader parameter is modified, they have to be 
-		// rebound to update the rendering pipeline.
-		materialParameter.Bind();
-	}*/
-}
 
 cvec4 MaterialBase::GetGlobalAmbientColor() const
 {
@@ -181,7 +147,7 @@ void MaterialBase::SetBumpIntensity(float bumpIntensity)
 
 std::shared_ptr<Texture> MaterialBase::GetTexture(TextureType type) const
 {
-	TextureMap::const_iterator itr = m_Textures.find(type);
+	TextureMap::const_iterator itr = m_Textures.find((uint8)type);
 	if (itr != m_Textures.end())
 	{
 		return itr->second;
@@ -192,7 +158,7 @@ std::shared_ptr<Texture> MaterialBase::GetTexture(TextureType type) const
 
 void MaterialBase::SetTexture(TextureType type, std::shared_ptr<Texture> texture)
 {
-	m_Textures[type] = texture;
+	m_Textures[(uint8)type] = texture;
 
 	switch (type)
 	{
@@ -249,7 +215,19 @@ bool MaterialBase::IsTransparent() const
 		m_pProperties->m_AlphaThreshold <= 0.0f); // Objects with an alpha threshold > 0 should be drawn in the opaque pass.
 }
 
-void MaterialBase::UpdateConstantBuffer()
+//-----
+
+Material::TextureMap MaterialBase::GetTextureMap() const
+{
+	return m_Textures;
+}
+
+std::shared_ptr<ConstantBuffer> MaterialBase::GetConstantBuffer() const
+{
+	return m_pConstantBuffer;
+}
+
+void MaterialBase::UpdateConstantBuffer() const
 {
 	if (m_pConstantBuffer)
 	{

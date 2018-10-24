@@ -10,7 +10,7 @@ public:
 	CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, SharedMeshPtr _geom);
 
 	// SceneNode
-	void Render(RenderEventArgs& renderEventArgs) override;
+	void Render(RenderEventArgs& renderEventArgs);
 
 private:
 	const int				           m_IndexX, m_IndexZ;

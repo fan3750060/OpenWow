@@ -31,19 +31,6 @@ BasePass::~BasePass()
 	m_RenderDevice->DestroyConstantBuffer(m_PerObjectConstantBuffer);
 }
 
-void BasePass::SetPerObjectConstantBufferData(PerObject& perObjectData)
-{
-	m_PerObjectConstantBuffer->Set(perObjectData);
-}
-
-void BasePass::BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader)
-{
-	if (shader)
-	{
-		shader->GetShaderParameterByName("PerObject").Set(m_PerObjectConstantBuffer);
-	}
-}
-
 void BasePass::PreRender(RenderEventArgs& e)
 {
 	e.PipelineState = m_Pipeline.get();
@@ -51,8 +38,6 @@ void BasePass::PreRender(RenderEventArgs& e)
 
 	if (m_Pipeline)
 	{
-		// Make sure the per object constant buffer is bound to the vertex shader.
-		BindPerObjectConstantBuffer(m_Pipeline->GetShader(Shader::VertexShader));
 		m_Pipeline->Bind();
 	}
 }
@@ -74,10 +59,6 @@ void BasePass::PostRender(RenderEventArgs& e)
 }
 
 // Inherited from Visitor
-void BasePass::Visit(Scene& scene)
-{
-
-}
 
 void BasePass::Visit(SceneNode& node)
 {
@@ -100,7 +81,7 @@ void BasePass::Visit(Mesh& mesh)
 	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial && m_pRenderEventArgs)
 	{
-		mesh.Render(*m_pRenderEventArgs);
+		mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
 	}
 }
 
@@ -118,4 +99,16 @@ RenderEventArgs& BasePass::GetRenderEventArgs() const
 RenderDevice* BasePass::GetRenderDevice() const
 {
 	return m_RenderDevice;
+}
+
+//----------------------------------------------------------------------
+
+void BasePass::SetPerObjectConstantBufferData(PerObject& perObjectData)
+{
+	m_PerObjectConstantBuffer->Set(perObjectData);
+}
+
+std::shared_ptr<ConstantBuffer> BasePass::GetConstantBuffer() const
+{
+	return m_PerObjectConstantBuffer;
 }

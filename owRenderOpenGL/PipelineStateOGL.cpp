@@ -52,28 +52,6 @@ PipelineStateOGL::~PipelineStateOGL()
 	}
 }
 
-void PipelineStateOGL::SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader)
-{
-	std::shared_ptr<ShaderOGL> shaderOGL = std::dynamic_pointer_cast<ShaderOGL>(pShader);
-	m_Shaders[type] = shaderOGL;
-}
-
-std::shared_ptr<Shader> PipelineStateOGL::GetShader(Shader::ShaderType type) const
-{
-	ShaderMap::const_iterator iter = m_Shaders.find(type);
-	if (iter != m_Shaders.end())
-	{
-		return iter->second;
-	}
-
-	return nullptr;
-}
-
-const PipelineState::ShaderMap& PipelineStateOGL::GetShaders() const
-{
-	return m_Shaders;
-}
-
 void PipelineStateOGL::SetBlendState(const BlendState& blendState)
 {
 	m_BlendState = dynamic_cast<const BlendStateOGL&>(blendState);
@@ -125,7 +103,7 @@ void PipelineStateOGL::Bind()
 	m_RasterizerState.Bind();
 	m_DepthStencilState.Bind();
 
-	for (auto shader : m_Shaders)
+	/*for (auto shader : m_Shaders)
 	{
 		std::shared_ptr<ShaderOGL> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.second);
 		if (pShader)
@@ -133,7 +111,7 @@ void PipelineStateOGL::Bind()
 			pShader->Bind();
 			glUseProgramStages(m_GLProgramPipeline, GLTranslateShaderBitType(shader.first), pShader->GetGLObject());
 		}
-	}
+	}*/
 
 	glBindProgramPipeline(m_GLProgramPipeline);
 }
@@ -145,7 +123,7 @@ void PipelineStateOGL::UnBind()
 		m_RenderTarget->UnBind();
 	}
 
-	for (auto shader : m_Shaders)
+	/*for (auto shader : m_Shaders)
 	{
 		std::shared_ptr<Shader> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.second);
 		if (pShader)
@@ -153,5 +131,5 @@ void PipelineStateOGL::UnBind()
 			glUseProgramStages(m_GLProgramPipeline, GLTranslateShaderBitType(shader.first), 0);
 			pShader->UnBind();
 		}
-	}
+	}*/
 }

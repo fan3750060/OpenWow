@@ -455,10 +455,6 @@ void RenderDeviceDX11::DestroyMaterial(std::shared_ptr<Material> material)
 	}
 }
 
-std::shared_ptr<Material> RenderDeviceDX11::GetDefaultMaterial() const
-{
-	return m_pDefaultMaterial;
-}
 
 std::shared_ptr<PipelineState> RenderDeviceDX11::CreatePipelineState()
 {
@@ -475,11 +471,6 @@ void RenderDeviceDX11::DestoryPipelineState(std::shared_ptr<PipelineState> pipel
 	{
 		m_Pipelines.erase(iter);
 	}
-}
-
-std::shared_ptr<PipelineState> RenderDeviceDX11::GetDefaultPipeline() const
-{
-	return m_pDefaultPipeline;
 }
 
 
@@ -514,13 +505,4 @@ void RenderDeviceDX11::LoadDefaultResources()
 	m_pDefaultTexture = CreateTexture2D("Textures\\ShaneCube.blp");
 	//m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());
 	//m_pDefaultTexture->Clear(ClearFlags::Color, vec4(1, 0, 1, 1));
-
-	//m_pDefaultMaterial = CreateMaterial();
-	//m_pDefaultMaterial->SetTexture(Material::TextureType::Diffuse, m_pDefaultTexture);
-
-	m_pDefaultPipeline = CreatePipelineState();
-	m_pDefaultPipeline->SetShader(Shader::VertexShader, pDefaultVertexShader);
-	m_pDefaultPipeline->SetShader(Shader::PixelShader, pDefaultPixelShader);
-	// TODO: Default pipeline state must be assigned to a renderwindow
-	// because the RenderWindow has a default render target that must be bound to the pipeline.
 }

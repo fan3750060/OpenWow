@@ -22,9 +22,6 @@
     <Filter Include="Passes\Query">
       <UniqueIdentifier>{315a420d-5e16-49f7-83c7-a3ccb81dfa2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Filesystem">
-      <UniqueIdentifier>{88d506bc-0b85-4937-9d87-6d1479c5df24}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Passes\_unused">
       <UniqueIdentifier>{deea5326-0821-4a14-84f7-617d872f1e1c}</UniqueIdentifier>
     </Filter>

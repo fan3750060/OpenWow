@@ -15,6 +15,6 @@ void WDL_Node_Pass::Visit(Mesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_WDL_NODE)
 	{
-		mesh.Render(GetRenderEventArgs());
+		mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
 	}
 }

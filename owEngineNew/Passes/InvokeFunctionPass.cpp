@@ -8,9 +8,7 @@ InvokeFunctionPass::InvokeFunctionPass(std::function<void(void)> func)
 {}
 
 InvokeFunctionPass::~InvokeFunctionPass()
-{
-
-}
+{}
 
 void InvokeFunctionPass::Render(RenderEventArgs& e)
 {

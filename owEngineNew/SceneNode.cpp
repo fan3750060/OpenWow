@@ -188,19 +188,6 @@ void SceneNode::RemoveMesh(std::shared_ptr<Mesh> mesh)
 	}
 }
 
-void SceneNode::Render(RenderEventArgs& args)
-{
-	for (auto mesh : m_Meshes)
-	{
-		mesh->Render(args);
-	}
-
-	for (auto child : m_Children)
-	{
-		child->Render(args);
-	}
-}
-
 void SceneNode::Accept(IVisitor& visitor)
 {
 	visitor.Visit(*this);

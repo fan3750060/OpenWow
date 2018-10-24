@@ -50,5 +50,5 @@ void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs)
 		return;
 	}
 
-	SceneNode::Render(renderEventArgs);
+	//SceneNode::Render(renderEventArgs);
 }

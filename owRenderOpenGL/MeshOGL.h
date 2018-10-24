@@ -16,7 +16,7 @@ public:
 	virtual void SetMaterial(std::shared_ptr<Material> material);
 	virtual std::shared_ptr<Material> GetMaterial() const;
 
-	virtual void Render(RenderEventArgs& renderArgs);
+	virtual void Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> constantBuffer);
 
 	virtual void Accept(IVisitor& visitor);
 

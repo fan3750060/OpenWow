@@ -6,6 +6,9 @@
 // General
 #include "WDL.h"
 
+// Additonal
+#include "Material_WDL.h"
+
 WDL::WDL(std::weak_ptr<MapController> _mapController) :
 	m_MapController(_mapController),
 	m_Minimap(nullptr)
@@ -32,10 +35,17 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		return;
 	}
 
+	// CreateShaders
+	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader();
+	g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
+	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader();
+	g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
+
 	// Material
-	std::shared_ptr<Texture> t30 = Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
-	std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(Application::Get().GetRenderDevice());
-	mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
+	std::shared_ptr<Material_WDL> mat = std::make_shared<Material_WDL>(Application::Get().GetRenderDevice());
+	mat->SetDiffuseColor(vec4(0, 0.4, 0.8, 1.0));
+	mat->SetShader(Shader::VertexShader, g_pVertexShader);
+	mat->SetShader(Shader::PixelShader, g_pPixelShader);
 
 	// Heightmap
 	vec3 lowres[17][17];

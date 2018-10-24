@@ -63,15 +63,20 @@ std::shared_ptr<Material> MeshDX11::GetMaterial() const
 	return m_pMaterial;
 }
 
-void MeshDX11::Render(RenderEventArgs& renderArgs)
+void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> constantBuffer)
 {
 	std::shared_ptr<ShaderDX11> pVS;
 
 	// Use the vertex shader to convert the buffer semantics to slot ID's
-	PipelineState* pipeline = renderArgs.PipelineState;
-	if (pipeline)
+	if (m_pMaterial)
 	{
-		pVS = std::dynamic_pointer_cast<ShaderDX11>(pipeline->GetShader(Shader::VertexShader));
+		m_pMaterial->Bind();
+
+		pVS = std::dynamic_pointer_cast<ShaderDX11>(m_pMaterial->GetShader(Shader::VertexShader));
+		if (pVS)
+		{
+			pVS->GetShaderParameterByName("PerObject").Set(constantBuffer);
+		}
 
 		if (pVS)
 		{
@@ -86,16 +91,7 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 				}
 			}
 		}
-
-		if (m_pMaterial)
-		{
-			for (auto shader : pipeline->GetShaders())
-			{
-				m_pMaterial->Bind(shader.second);
-			}
-		}
 	}
-
 	m_pDeviceContext->IASetPrimitiveTopology(m_PrimitiveTopology);
 
 	if (m_pIndexBuffer != NULL)
@@ -122,9 +118,14 @@ void MeshDX11::Render(RenderEventArgs& renderArgs)
 			{
 				UINT slotID = pVS->GetSemanticSlot(binding.Name);
 				// Bind the vertex buffer to a particular slot ID.
-				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
+				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer); // TODO: Unbind
 			}
 		}
+	}
+
+	if (m_pMaterial)
+	{
+		m_pMaterial->Unbind();
 	}
 }
 

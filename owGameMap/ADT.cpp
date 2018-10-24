@@ -330,6 +330,4 @@ void ADT::Render(RenderEventArgs& renderEventArgs)
 	//{
 	//	return false;
 	//}
-
-	SceneNode::Render(renderEventArgs);
 }

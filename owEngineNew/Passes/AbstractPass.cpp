@@ -32,8 +32,6 @@ void AbstractPass::PostRender(RenderEventArgs& e)
 {}
 
 // Inherited from Visitor
-void AbstractPass::Visit(Scene& scene)
-{}
 
 void AbstractPass::Visit(SceneNode& node)
 {}

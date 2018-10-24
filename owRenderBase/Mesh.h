@@ -8,7 +8,7 @@ class Shader;
 class Material;
 class RenderEventArgs;
 class Visitor;
-
+class ConstantBuffer;
 
 enum SceneNodeTypes : uint8
 {
@@ -33,7 +33,7 @@ public:
 	virtual void SetMaterial(std::shared_ptr<Material> material) = 0;
 	virtual std::shared_ptr<Material> GetMaterial() const = 0;
 
-	virtual void Render(RenderEventArgs& renderEventArgs) = 0;
+	virtual void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> constantBuffer) = 0;
 
 	virtual void Accept(IVisitor& visitor) = 0;
 

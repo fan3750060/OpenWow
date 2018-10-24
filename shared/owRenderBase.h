@@ -10,8 +10,9 @@
 #include "../owRenderBase/SamplerState.h"
 
 #include "../owRenderBase/Material.h"
-#include "../owRenderBase/MaterialDebug.h"
 #include "../owRenderBase/MaterialBase.h"
+#include "../owRenderBase/MaterialDebug.h"
+#include "../owRenderBase/MaterialTextured.h"
 
 #include "../owRenderBase/Light.h"
 #include "../owRenderBase/Mesh.h"

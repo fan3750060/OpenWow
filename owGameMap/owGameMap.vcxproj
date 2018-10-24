@@ -22,6 +22,7 @@
     <ClCompile Include="Map_Shared.cpp" />
     <ClCompile Include="ADT.cpp" />
     <ClCompile Include="ADT_MDX_Instance.cpp" />
+    <ClCompile Include="Material_WDL.cpp" />
     <ClCompile Include="MinimapProvider.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SkyManager.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="Map_Shared.h" />
     <ClInclude Include="ADT.h" />
     <ClInclude Include="ADT_MDX_Instance.h" />
+    <ClInclude Include="Material_WDL.h" />
     <ClInclude Include="MinimapProvider.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SkyManager.h" />

@@ -331,10 +331,24 @@ bool ADT_MCNK::Load()
 		__geomHigh->finishCreatingGeometry();*/
 	}
 
+	// CreateShaders
+	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader();
+	g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/Debug/MaterialTextured.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
+	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader();
+	g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/Debug/MaterialTextured.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
+
+	// Create samplers
+	std::shared_ptr<SamplerState> g_LinearRepeatSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
+	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
+
+	g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
+
 	// Material
-	std::shared_ptr<Texture> t30 = Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\moon.blp"); // PURE
-	std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(Application::Get().GetRenderDevice());
-	mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
+	std::shared_ptr<MaterialTextured> mat = std::make_shared<MaterialTextured>(Application::Get().GetRenderDevice());
+	mat->SetTexture(m_DiffuseTextures[0]); // DXT1
+	mat->SetShader(Shader::VertexShader, g_pVertexShader);
+	mat->SetShader(Shader::PixelShader, g_pPixelShader);
 
 	{ // Geom Default
 		vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);

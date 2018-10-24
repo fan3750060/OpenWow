@@ -7,9 +7,7 @@ class ConstantBuffer;
 class MaterialBase : public Material
 {
 public:
-	// These are the texture slots that will be used to bind the material's textures
-	// to the shader. Make sure you use the same texture slots in your own shaders.
-	enum class TextureType
+	enum class TextureType : uint8
 	{
 		Ambient = 0,
 		Emissive = 1,
@@ -21,10 +19,9 @@ public:
 		Opacity = 7,
 	};
 
+public:
 	MaterialBase(RenderDevice* renderDevice);
 	virtual ~MaterialBase();
-
-	virtual void Bind(std::weak_ptr<Shader> pShader) const override;
 
 	cvec4 GetDiffuseColor() const;
 	void SetDiffuseColor(cvec4 diffuse);
@@ -67,9 +64,14 @@ public:
 	bool IsTransparent() const;
 
 private:
-	// If the material properties have changed, update the contents of the constant buffer.
-	void UpdateConstantBuffer();
+	virtual TextureMap GetTextureMap() const;
+	std::shared_ptr<ConstantBuffer> GetConstantBuffer() const override;
+	void UpdateConstantBuffer() const override;
 
+	// Textures
+	TextureMap m_Textures;
+
+	// ConstantBuffer
 	__declspec(align(16)) struct MaterialProperties
 	{
 		MaterialProperties()
@@ -131,19 +133,6 @@ private:
 		vec2        m_Padding;          // Pad to 16 byte boundary.
 		//-------------------------- ( 16 bytes )
 	};  //--------------------------- ( 16 * 10 = 160 bytes )
-
-	// Material properties have to be 16 byte aligned.
-	// To guarantee alignment, we'll use _aligned_malloc to allocate memory
-	// for the material properties.
 	MaterialProperties* m_pProperties;
-
-	// Constant buffer that stores material properties.
-	// This material owns this constant buffer and will delete it 
-	// when the material is destroyed.
 	std::shared_ptr<ConstantBuffer> m_pConstantBuffer;
-
-	// Textures are stored by which texture unit (or texture register)
-	// they are bound to.
-	typedef std::map<TextureType, std::shared_ptr<Texture> > TextureMap;
-	TextureMap m_Textures;
 };

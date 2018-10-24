@@ -10,10 +10,6 @@ public:
 	PipelineStateDX11(ID3D11Device2* pDevice);
 	virtual ~PipelineStateDX11();
 
-	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader);
-	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const;
-	virtual const ShaderMap& GetShaders() const;
-
 	virtual void SetBlendState(const BlendState& blendState);
 	virtual BlendState& GetBlendState();
 
@@ -34,8 +30,6 @@ protected:
 private:
 	ATL::CComPtr< ID3D11Device2 > m_pDevice;
 	ATL::CComPtr< ID3D11DeviceContext2> m_pDeviceContext;
-
-	ShaderMap m_Shaders;
 
 	BlendStateDX11 m_BlendState;
 	RasterizerStateDX11 m_RasterizerState;

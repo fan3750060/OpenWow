@@ -1,3 +1,5 @@
+#include "..\\_gamedata\\shaders_D3D\\Map\\MapChunk_Material.h"
+
 struct VertexShaderInput
 {
 	float3 position       : POSITION;
@@ -20,6 +22,10 @@ cbuffer PerObject : register(b0)
 {
 	float4x4 ModelViewProjection;
 }
+cbuffer Material : register(b2)
+{
+    MapChunk_Material Material;
+};
 
 // Textures and samples
 Texture2D ColorMap0       : register(t0);

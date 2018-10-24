@@ -14,16 +14,6 @@
 class PipelineState : public Object
 {
 public:
-	/**
-	 * An associated map that associates a shader to a type.
-	 */
-	typedef std::map<Shader::ShaderType, std::shared_ptr<Shader> > ShaderMap;
-
-	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader) = 0;
-	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const = 0;
-	virtual const ShaderMap& GetShaders() const = 0;
-
-
 	virtual void SetBlendState(const BlendState& blendState) = 0;
 	virtual BlendState& GetBlendState() = 0;
 

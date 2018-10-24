@@ -27,6 +27,9 @@
       <Filter>Types &amp; Enums\Materials</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MaterialTextured.cpp">
+      <Filter>Types &amp; Enums\Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -119,6 +122,9 @@
       <Filter>Types &amp; Enums\Materials</Filter>
     </ClInclude>
     <ClInclude Include="MaterialDebug.h">
+      <Filter>Types &amp; Enums\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialTextured.h">
       <Filter>Types &amp; Enums\Materials</Filter>
     </ClInclude>
   </ItemGroup>

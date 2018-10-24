@@ -22,7 +22,7 @@ LightPickingPass::~LightPickingPass()
 void LightPickingPass::PreRender(RenderEventArgs& e)
 {
 	// Make sure the light index is bound to the pixel shader stage.
-	e.PipelineState->GetShader(Shader::PixelShader)->GetShaderParameterByName("LightIndexBuffer").Set(m_LightParamsCB);
+	//e.PipelineState->GetShader(Shader::PixelShader)->GetShaderParameterByName("LightIndexBuffer").Set(m_LightParamsCB);
 
 	base::PreRender(e);
 }
@@ -32,5 +32,5 @@ void LightPickingPass::Visit(Mesh& mesh)
 	m_pLightParams->m_LightIndex = GetCurrentLightIndex();
 	m_LightParamsCB->Set(*m_pLightParams);
 
-	mesh.Render(GetRenderEventArgs());
+	mesh.Render(GetRenderEventArgs(), m_LightParamsCB);
 }

@@ -36,34 +36,12 @@ MaterialDebug::~MaterialDebug()
 	}
 }
 
-void MaterialDebug::Bind(std::weak_ptr<Shader> wpShader) const
-{
-	std::shared_ptr<Shader> pShader = wpShader.lock();
-	_ASSERT(pShader != NULL);
-
-	if (m_Dirty)
-	{
-		// Make sure the constant buffer associated to this material is updated.
-		MaterialDebug* _this = const_cast<MaterialDebug*>(this);
-		_this->UpdateConstantBuffer();
-		_this->m_Dirty = false;
-	}
-
-	// If the shader has a parameter called "MaterialDebug".
-	ShaderParameter& materialParameter = pShader->GetShaderParameterByName("MaterialDebug");
-	if (materialParameter.IsValid())
-	{
-		// Assign this material's constant buffer to it.
-		materialParameter.Set<ConstantBuffer>(m_pConstantBuffer);
-		// If the shader parameter is modified, they have to be rebound to update the rendering pipeline.
-		materialParameter.Bind();
-	}
-}
-
 cvec4 MaterialDebug::GetDiffuseColor() const
 {
 	return m_pProperties->m_DiffuseColor;
 }
+
+//-----
 
 void MaterialDebug::SetDiffuseColor(cvec4 diffuse)
 {
@@ -71,7 +49,12 @@ void MaterialDebug::SetDiffuseColor(cvec4 diffuse)
 	m_Dirty = true;
 }
 
-void MaterialDebug::UpdateConstantBuffer()
+std::shared_ptr<ConstantBuffer> MaterialDebug::GetConstantBuffer() const
+{
+	return m_pConstantBuffer;
+}
+
+void MaterialDebug::UpdateConstantBuffer() const
 {
 	if (m_pConstantBuffer)
 	{

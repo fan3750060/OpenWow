@@ -129,11 +129,9 @@ public:
 
 	virtual std::shared_ptr<Material> CreateMaterial() = 0;
 	virtual void DestroyMaterial(std::shared_ptr<Material> material) = 0;
-	virtual std::shared_ptr<Material> GetDefaultMaterial() const = 0;
 
 	virtual std::shared_ptr<PipelineState> CreatePipelineState() = 0;
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline) = 0;
-	virtual std::shared_ptr<PipelineState> GetDefaultPipeline() const = 0;
 
 	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 stride) = 0;
 	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 stride) = 0;

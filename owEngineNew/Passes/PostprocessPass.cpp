@@ -17,7 +17,7 @@ void PostprocessPass::Render(RenderEventArgs& e)
 
 	SetPerObjectConstantBufferData(perObjectData);
 
-	std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
+	/*std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
 
 	if (m_Texture)
 	{
@@ -30,7 +30,7 @@ void PostprocessPass::Render(RenderEventArgs& e)
 	if (m_Texture)
 	{
 		m_Texture->UnBind(0, pShader, ShaderParameter::Type::Texture);
-	}
+	}*/
 }
 
 void PostprocessPass::Visit(SceneNode& node)

@@ -26,7 +26,6 @@ public:
 	virtual void PostRender(RenderEventArgs& e);
 
 	// Inherited from Visitor
-	virtual void Visit(Scene& scene);
 	virtual void Visit(SceneNode& node);
 	virtual void Visit(Mesh& mesh);
 
@@ -44,10 +43,8 @@ protected:
 
 	RenderDevice* GetRenderDevice() const;
 
-	// Set and bind the constant buffer data.
 	void SetPerObjectConstantBufferData(PerObject& perObjectData);
-	// Bind the constant to the shader.
-	void BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader);
+	std::shared_ptr<ConstantBuffer> GetConstantBuffer() const;
 
 private:
 	PerObject* m_PerObjectData;

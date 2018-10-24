@@ -6,7 +6,7 @@
 // Passes can derive from this class to minimize the number of methods that 
 // must be overriden in order to implement a render pass.
 // Most of the methods of the abstract pass resolve to do-nothing functions.
-class AbstractPass : public RenderPass
+class AbstractPass : public IRenderPass
 {
 public:
 	AbstractPass();
@@ -22,7 +22,6 @@ public:
 	virtual void PostRender(RenderEventArgs& e);
 
 	// Inherited from Visitor
-	virtual void Visit(Scene& scene);
 	virtual void Visit(SceneNode& node);
 	virtual void Visit(Mesh& mesh);
 

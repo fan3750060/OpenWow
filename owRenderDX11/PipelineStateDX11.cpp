@@ -16,26 +16,6 @@ PipelineStateDX11::~PipelineStateDX11()
 
 }
 
-void PipelineStateDX11::SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader)
-{
-	m_Shaders[type] = pShader;
-}
-
-std::shared_ptr<Shader> PipelineStateDX11::GetShader(Shader::ShaderType type) const
-{
-	ShaderMap::const_iterator iter = m_Shaders.find(type);
-	if (iter != m_Shaders.end())
-	{
-		return iter->second;
-	}
-
-	return nullptr;
-}
-
-const PipelineState::ShaderMap& PipelineStateDX11::GetShaders() const
-{
-	return m_Shaders;
-}
 
 void PipelineStateDX11::SetBlendState(const BlendState& blendState)
 {
@@ -88,14 +68,7 @@ void PipelineStateDX11::Bind()
 	m_RasterizerState.Bind();
 	m_DepthStencilState.Bind();
 
-	for (auto shader : m_Shaders)
-	{
-		std::shared_ptr<Shader> pShader = shader.second;
-		if (pShader)
-		{
-			pShader->Bind();
-		}
-	}
+	/*sh*/
 }
 
 void PipelineStateDX11::UnBind()
@@ -105,12 +78,5 @@ void PipelineStateDX11::UnBind()
 		m_RenderTarget->UnBind();
 	}
 
-	for (auto shader : m_Shaders)
-	{
-		std::shared_ptr<Shader> pShader = shader.second;
-		if (pShader)
-		{
-			pShader->UnBind();
-		}
-	}
+	/*sh*/
 }

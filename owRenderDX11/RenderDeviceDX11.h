@@ -53,11 +53,9 @@ public:
 
 	virtual std::shared_ptr<Material> CreateMaterial();
 	virtual void DestroyMaterial(std::shared_ptr<Material> Material);
-	virtual std::shared_ptr<Material> GetDefaultMaterial() const;
 
 	virtual std::shared_ptr<PipelineState> CreatePipelineState();
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline);
-	virtual std::shared_ptr<PipelineState> GetDefaultPipeline() const;
 
 	// Specific to RenderDeviceDX11
 	ATL::CComPtr<ID3D11Device2> GetDevice() const;
@@ -84,7 +82,9 @@ private:
 	MeshList m_Meshes;
 
 	typedef std::vector< std::shared_ptr<Shader> > ShaderList;
+	typedef std::map< std::string, std::shared_ptr<Shader> > ShaderMap;
 	ShaderList m_Shaders;
+	ShaderMap m_ShadersByName;
 
 	typedef std::vector< std::shared_ptr<Texture> > TextureList;
 	typedef std::map< std::string, std::shared_ptr<Texture> > TextureMap;
@@ -100,15 +100,12 @@ private:
 
 	typedef std::vector< std::shared_ptr<Material> > MaterialList;
 	MaterialList m_Materials;
-	std::shared_ptr<Material> m_pDefaultMaterial;
 
 	typedef std::vector< std::shared_ptr<PipelineState> > PipelineList;
 	PipelineList m_Pipelines;
 
 	typedef std::vector< std::shared_ptr<Query> > QueryList;
 	QueryList m_Queries;
-
-	std::shared_ptr<PipelineState> m_pDefaultPipeline;
 
 	void LoadDefaultResources();
 };

@@ -15,6 +15,6 @@ void ADT_CHUNK_Pass::Visit(Mesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_ADT_CHUNK)
 	{
-		mesh.Render(GetRenderEventArgs());
+		mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
 	}
 }

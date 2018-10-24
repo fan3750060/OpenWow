@@ -16,8 +16,8 @@ public:
 
 	// Add a pass to the technique. The ID of the added pass is returned
 	// and can be used to retrieve the pass later.
-	virtual unsigned int AddPass(std::shared_ptr<RenderPass> pass);
-	virtual std::shared_ptr<RenderPass> GetPass(unsigned int ID) const;
+	virtual unsigned int AddPass(std::shared_ptr<IRenderPass> pass);
+	virtual std::shared_ptr<IRenderPass> GetPass(unsigned int ID) const;
 
 	// Render the scene using the passes that have been configured.
 	virtual void Render(RenderEventArgs& renderEventArgs);
@@ -25,7 +25,7 @@ public:
 protected:
 
 private:
-	typedef std::vector< std::shared_ptr<RenderPass> > RenderPassList;
+	typedef std::vector< std::shared_ptr<IRenderPass> > RenderPassList;
 	RenderPassList m_Passes;
 
 };

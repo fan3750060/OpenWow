@@ -12,7 +12,7 @@ class Mesh;
 // Passes can be added to a RenderTechnique and the render technique's 
 // "Render" method should be used to render all the passes in the order that 
 // they are added to the technique.
-class RenderPass : public IVisitor, public Object
+class IRenderPass : public IVisitor, public Object
 {
 public:
 	// Enable or disable the pass. If a pass is disabled, the technique will skip it.
@@ -25,7 +25,6 @@ public:
 	virtual void PostRender(RenderEventArgs& e) = 0;
 
 	// Inherited from Visitor
-	virtual void Visit(Scene& scene) = 0;
 	virtual void Visit(SceneNode& node) = 0;
 	virtual void Visit(Mesh& mesh) = 0;
 };

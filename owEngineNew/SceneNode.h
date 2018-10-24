@@ -83,12 +83,6 @@ public:
 	virtual void RemoveMesh(std::shared_ptr<Mesh> mesh);
 
 	/**
-	 * Render meshes associated with this scene node.
-	 * This method will traverse it's children.
-	 */
-	virtual void Render(RenderEventArgs& renderEventArgs);
-
-	/**
 	 * Allow a visitor to visit this node.
 	 */
 	virtual void Accept(IVisitor& visitor);
