@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ADT_CHUNK_Material.cpp" />
     <ClCompile Include="ADT_CHUNK_Pass.cpp" />
     <ClCompile Include="ADT_Liquid.cpp" />
     <ClCompile Include="CreatePasses.cpp" />
@@ -22,7 +23,6 @@
     <ClCompile Include="Map_Shared.cpp" />
     <ClCompile Include="ADT.cpp" />
     <ClCompile Include="ADT_MDX_Instance.cpp" />
-    <ClCompile Include="Material_WDL.cpp" />
     <ClCompile Include="MinimapProvider.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SkyManager.cpp" />
@@ -33,12 +33,14 @@
     </ClCompile>
     <ClCompile Include="WDL.cpp" />
     <ClCompile Include="WDL_LowResTile.cpp" />
+    <ClCompile Include="WDL_Node_Material.cpp" />
     <ClCompile Include="WDL_Node_Pass.cpp" />
     <ClCompile Include="WDT.cpp" />
     <ClCompile Include="ADT_WMO_Instance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameMap.h" />
+    <ClInclude Include="ADT_CHUNK_Material.h" />
     <ClInclude Include="ADT_CHUNK_Pass.h" />
     <ClInclude Include="ADT_Liquid.h" />
     <ClInclude Include="common.h" />
@@ -52,7 +54,6 @@
     <ClInclude Include="Map_Shared.h" />
     <ClInclude Include="ADT.h" />
     <ClInclude Include="ADT_MDX_Instance.h" />
-    <ClInclude Include="Material_WDL.h" />
     <ClInclude Include="MinimapProvider.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SkyManager.h" />
@@ -60,18 +61,13 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WDL.h" />
     <ClInclude Include="WDL_LowResTile.h" />
+    <ClInclude Include="WDL_Node_Material.h" />
     <ClInclude Include="WDL_Node_Pass.h" />
     <ClInclude Include="WDT.h" />
     <ClInclude Include="ADT_WMO_Instance.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Sky.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\_gamedata\shaders_D3D\Map\MapChunk.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C29C7FEE-86D9-4EEF-965F-68B89C516FAE}</ProjectGuid>

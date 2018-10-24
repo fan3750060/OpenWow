@@ -32,7 +32,9 @@ Texture2D ColorMap0       : register(t0);
 Texture2D ColorMap1       : register(t1);
 Texture2D ColorMap2       : register(t2);
 Texture2D ColorMap3       : register(t3);
+Texture2D AlphaMap        : register(t4);
 sampler   ColorMapSampler : register(s0);
+sampler   AlphaMapSampler : register(s1);
 
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
@@ -48,10 +50,50 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	for (int i = 0; i < 4; i++)
+	float3 layersColor = float3(0,0,0);
+	float3 resultColor = float3(0,0,0);
+	
+	/* NORTREND
+	float alphaSumma = 0.0;
+	if (Material.LayersCnt >= 2)
 	{
-
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
+		alphaSumma += alphaCurrent;
+		layersColor += ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
 	}
+	if (Material.LayersCnt >= 3)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
+		alphaSumma += alphaCurrent;
+		layersColor += ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+	}
+	if (Material.LayersCnt >= 4)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
+		alphaSumma += alphaCurrent;
+		layersColor += ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+	}
+	resultColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
+	*/
+	
+	/* NOT NORTREND */
+	layersColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb;
+	if (Material.LayersCnt >= 2)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
+		layersColor = lerp(layersColor, ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+	}
+	if (Material.LayersCnt >= 3)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
+		layersColor = lerp(layersColor, ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+	}
+	if (Material.LayersCnt >= 4)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
+		layersColor = lerp(layersColor, ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+	}
+	resultColor = layersColor;
 
-	return ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail);
+	return float4(resultColor, 1.0f);
 }

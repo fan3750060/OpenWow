@@ -26,7 +26,7 @@ public:
 	virtual void DestroyConstantBuffer(std::shared_ptr<ConstantBuffer> buffer);
 	virtual void DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> buffer);
 
-	virtual std::shared_ptr<Shader> CreateShader();
+	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 	virtual void DestroyShader(std::shared_ptr<Shader> shader);
 	
 	virtual std::shared_ptr<Mesh> CreateMesh();
@@ -81,7 +81,9 @@ private:
 	MeshList m_Meshes;
 
 	typedef std::vector< std::shared_ptr<Shader> > ShaderList;
+	typedef std::map< std::string, std::shared_ptr<Shader> > ShaderMap;
 	ShaderList m_Shaders;
+	ShaderMap m_ShadersByName;
 
 	typedef std::vector< std::shared_ptr<Texture> > TextureList;
 	TextureList m_Textures;

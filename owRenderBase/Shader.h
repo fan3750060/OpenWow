@@ -74,9 +74,9 @@ public:
 	}
 
 	// Check to see if this shader supports a given semantic.
-	virtual bool                 HasSemantic(cstring binding) const;
-	virtual const InputSemantic& GetSemantic(cstring binding) const;
-	virtual UINT                 GetSemanticSlot(cstring binding) const;
+	virtual bool                 HasSemantic(const BufferBinding& binding) const;
+	virtual const InputSemantic& GetSemantic(const BufferBinding& binding) const;
+	virtual UINT                 GetSemanticSlot(const BufferBinding& binding) const;
 
 	/**
 	 * Bind this shader for use in the rendering pipeline.

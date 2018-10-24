@@ -13,12 +13,6 @@ public:
 	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, IFile* _file);
 	virtual ~ADT_MCNK();
 
-	void RenderNormals();
-
-	// ISceneNode
-	//std::string getObjectInfo() const override { return "@ADT_MCNK@" + to_string(header.indexX) + ", " + to_string(header.indexY); }
-	//void CalculateMatrix(bool _isRotationQuat = false) override { fail1(); };
-
 	// ILoadable
 	bool Load() override;
 	bool Delete() override;
@@ -28,8 +22,6 @@ public:
 	// IRenderable
 	bool PreRender3D();
 	void Render3D();
-
-	//static void BindUniforms(Technique* _techique);
 
 public:
 	IFile* m_File;
@@ -42,9 +34,6 @@ public:
 	std::shared_ptr<Liquid_Instance> m_LiquidInstance;
 
 	SharedTexturePtr m_BlendRBGShadowATexture;
-
-
-	SharedMeshPtr __geomDebugNormals;
 
 	// Qulity
 	SharedBufferPtr __ibHigh;

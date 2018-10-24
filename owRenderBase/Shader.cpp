@@ -34,11 +34,11 @@ ShaderParameter& Shader::GetShaderParameterByName(cstring name) const
 	return gs_InvalidShaderParameter;
 }
 
-bool Shader::HasSemantic(cstring binding) const
+bool Shader::HasSemantic(const BufferBinding& binding) const
 {
 	for (auto& it : m_InputSemantics)
 	{
-		if (it.first.Name == binding)
+		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
 		{
 			return true;
 		}
@@ -47,11 +47,11 @@ bool Shader::HasSemantic(cstring binding) const
 	return false;
 }
 
-const InputSemantic& Shader::GetSemantic(cstring binding) const
+const InputSemantic& Shader::GetSemantic(const BufferBinding& binding) const
 {
 	for (auto& it : m_InputSemantics)
 	{
-		if (it.first.Name == binding)
+		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
 		{
 			return it.first;
 		}
@@ -61,11 +61,11 @@ const InputSemantic& Shader::GetSemantic(cstring binding) const
 	return gs_InvalidShaderSemantic;
 }
 
-UINT Shader::GetSemanticSlot(cstring binding) const
+UINT Shader::GetSemanticSlot(const BufferBinding& binding) const
 {
 	for (auto& it : m_InputSemantics)
 	{
-		if (it.first.Name == binding)
+		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
 		{
 			return it.second;
 		}

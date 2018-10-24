@@ -255,38 +255,6 @@ void RenderDeviceDX11::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer>
 
 //--
 
-// GLM's own quaternion from two vector constructor does not handle cases 
-// where the vectors may be pointing in opposite directions.
-// This method handles the cases where the u and v vectors are opposites.
-// source: http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final
-// accessed: 26/05/2015
-inline glm::quat RotationFromTwoVectors(cvec3 u, cvec3 v)
-{
-	float normUV = glm::sqrt(glm::dot(u, u) * glm::dot(v, v));
-	float real = normUV + glm::dot(u, v);
-
-	vec3 vec;
-
-	if (real < 1.e-6f * normUV)
-	{
-		/* If u and v are exactly opposite, rotate 180 degrees
-		* around an arbitrary orthogonal axis. Axis normalisation
-		* can happen later, when we normalise the quaternion.
-		*/
-		real = 0.0f;
-		vec = (glm::abs(u.x) > abs(u.z)) ? vec3(-u.y, u.x, 0.0f) : vec3(0.0f, -u.z, u.y);
-	}
-	else
-	{
-		/* Otherwise, build quaternion the standard way. */
-		vec = glm::cross(u, v);
-	}
-
-	return glm::normalize(glm::quat(real, vec));
-}
-
-
-
 std::shared_ptr<Mesh> RenderDeviceDX11::CreateMesh()
 {
 	std::shared_ptr<Mesh> mesh = std::make_shared<MeshDX11>(m_pDevice);
@@ -304,10 +272,19 @@ void RenderDeviceDX11::DestroyMesh(std::shared_ptr<Mesh> mesh)
 	}
 }
 
-std::shared_ptr<Shader> RenderDeviceDX11::CreateShader()
+std::shared_ptr<Shader> RenderDeviceDX11::CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
+	std::string fullName = fileName + entryPoint + profile;
+
+	ShaderMap::iterator iter = m_ShadersByName.find(fullName);
+	if (iter != m_ShadersByName.end())
+		return iter->second;
+
 	std::shared_ptr<Shader> pShader = std::make_shared<ShaderDX11>(m_pDevice);
+	pShader->LoadShaderFromFile(type, fileName, shaderMacros, entryPoint, profile);
+	
 	m_Shaders.push_back(pShader);
+	m_ShadersByName.insert(ShaderMap::value_type(fullName, pShader));
 
 	return pShader;
 }
@@ -494,13 +471,6 @@ void RenderDeviceDX11::DestoryQuery(std::shared_ptr<Query> query)
 
 void RenderDeviceDX11::LoadDefaultResources()
 {
-	// Load a default shader
-	std::shared_ptr<Shader> pDefaultVertexShader = CreateShader();
-	pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D\\DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "vs_4_0");
-
-	std::shared_ptr<Shader> pDefaultPixelShader = CreateShader();
-	pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D\\DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "ps_4_0");
-
 	// Create a magenta texture if a texture defined in the shader is not bound.
 	m_pDefaultTexture = CreateTexture2D("Textures\\ShaneCube.blp");
 	//m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());

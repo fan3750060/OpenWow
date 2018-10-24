@@ -7,7 +7,7 @@
 #include "WDL.h"
 
 // Additonal
-#include "Material_WDL.h"
+#include "WDL_Node_Material.h"
 
 WDL::WDL(std::weak_ptr<MapController> _mapController) :
 	m_MapController(_mapController),
@@ -36,13 +36,15 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	}
 
 	// CreateShaders
-	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader();
-	g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
-	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader();
-	g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
+	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader(
+		Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+	);
+	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader(
+		Shader::PixelShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+	);
 
 	// Material
-	std::shared_ptr<Material_WDL> mat = std::make_shared<Material_WDL>(Application::Get().GetRenderDevice());
+	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>(Application::Get().GetRenderDevice());
 	mat->SetDiffuseColor(vec4(0, 0.4, 0.8, 1.0));
 	mat->SetShader(Shader::VertexShader, g_pVertexShader);
 	mat->SetShader(Shader::PixelShader, g_pPixelShader);
@@ -106,13 +108,13 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 
 				//
 
-				SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
+				/*SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
 				std::shared_ptr<CWDL_LowResTile> lowResTile = make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
 				lowResTile->SetParent(_parent);
-				m_LowResilutionTiles.push_back(lowResTile);
+				m_LowResilutionTiles.push_back(lowResTile);*/
 			}
 		}
 	}

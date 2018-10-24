@@ -25,7 +25,6 @@ private:
 		vec4   m_DiffuseColor;
 		//-------------------------- ( 16 bytes )
 	};
-
 	MaterialProperties* m_pProperties;
 	std::shared_ptr<ConstantBuffer> m_pConstantBuffer;
 };

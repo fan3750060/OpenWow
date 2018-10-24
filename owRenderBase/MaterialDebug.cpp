@@ -14,10 +14,8 @@ MaterialDebug::MaterialDebug(RenderDevice* renderDevice)
 	: Material(renderDevice)
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
-	// Construct default material properties.
 	*m_pProperties = MaterialProperties();
 
-	// Initialize the constant buffer.
 	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
 }
 

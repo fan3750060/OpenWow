@@ -7,7 +7,7 @@ class Buffer;
 class ConstantBuffer;
 class StructuredBuffer;
 #include "Mesh.h"
-class Shader;
+#include "Shader.h"
 #include "Texture.h"
 class RenderTarget;
 #include "Query.h"
@@ -99,7 +99,7 @@ public:
 	virtual std::shared_ptr<Mesh> CreateMesh() = 0;
 	virtual void DestroyMesh(std::shared_ptr<Mesh> mesh) = 0;
 
-	virtual std::shared_ptr<Shader> CreateShader() = 0;
+	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
 	virtual void DestroyShader(std::shared_ptr<Shader> shader) = 0;
 
 	// Create a texture from a file.

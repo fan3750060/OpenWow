@@ -1,4 +1,4 @@
-#include "..\\_gamedata\\shaders_D3D\\Material\\MaterialDebug.h"
+#include "..\\_gamedata\\shaders_D3D\\Debug\\Debug_Material.h"
 
 struct VertexShaderInput
 {
@@ -19,7 +19,7 @@ cbuffer PerObject : register(b0)
 
 cbuffer Material : register(b2)
 {
-    MaterialDebug Material;
+    Debug_Material Material;
 };
 
 VertexShaderOutput VS_main(VertexShaderInput IN)

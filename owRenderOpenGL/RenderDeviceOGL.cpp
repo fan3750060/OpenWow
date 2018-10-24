@@ -307,10 +307,19 @@ void RenderDeviceOGL::DestroyMesh(std::shared_ptr<Mesh> mesh)
 }
 
 
-std::shared_ptr<Shader> RenderDeviceOGL::CreateShader()
+std::shared_ptr<Shader> RenderDeviceOGL::CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
+	std::string fullName = fileName + entryPoint + profile;
+
+	ShaderMap::iterator iter = m_ShadersByName.find(fullName);
+	if (iter != m_ShadersByName.end())
+		return iter->second;
+
 	std::shared_ptr<Shader> pShader = std::make_shared<ShaderOGL>();
+	pShader->LoadShaderFromFile(type, fileName, shaderMacros, entryPoint, profile);
+
 	m_Shaders.push_back(pShader);
+	m_ShadersByName.insert(ShaderMap::value_type(fullName, pShader));
 
 	return pShader;
 }
@@ -513,13 +522,6 @@ void RenderDeviceOGL::DestoryQuery(std::shared_ptr<Query> query)
 
 void RenderDeviceOGL::LoadDefaultResources()
 {
-	// Load a default shader
-	//std::shared_ptr<Shader> pDefaultVertexShader = CreateShader();
-	//pDefaultVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders\\M2\\M2.vs", Shader::ShaderMacros(), "VS_main", "vs_4_0");
-
-	//std::shared_ptr<Shader> pDefaultPixelShader = CreateShader();
-	//pDefaultPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders\\M2\\M2.fs", Shader::ShaderMacros(), "PS_main", "ps_4_0");
-
 	// Create a magenta texture if a texture defined in the shader is not bound.
 	m_pDefaultTexture = CreateTexture2D("Textures\\ShaneCube.blp");
 	//m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());

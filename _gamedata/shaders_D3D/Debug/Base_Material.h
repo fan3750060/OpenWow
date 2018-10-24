@@ -1,4 +1,4 @@
-struct MaterialBase
+struct Base_Material
 {
     float4  GlobalAmbient;
     //-------------------------- ( 16 bytes )

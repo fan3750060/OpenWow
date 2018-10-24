@@ -132,11 +132,11 @@ void MeshOGL::Commit(std::weak_ptr<ShaderOGL> _shader)
 		uint32 i = 0;
 		for (BufferMap::value_type buffer : m_VertexBuffers)
 		{
-			if (!pVS->HasSemantic(buffer.first.Name))
+			if (!pVS->HasSemantic(buffer.first))
 				continue;
 
-			const InputSemantic& semantic = pVS->GetSemantic(buffer.first.Name);
-			UINT             semanticSlot = pVS->GetSemanticSlot(buffer.first.Name);
+			const InputSemantic& semantic = pVS->GetSemantic(buffer.first);
+			UINT             semanticSlot = pVS->GetSemanticSlot(buffer.first);
 
 			// Bind the vertex buffer to a particular slot ID.
 			buffer.second->Bind(semanticSlot, pVS, ShaderParameter::Type::Buffer);
@@ -163,10 +163,10 @@ void MeshOGL::Commit(std::weak_ptr<ShaderOGL> _shader)
 
 		for (BufferMap::value_type buffer : m_VertexBuffers)
 		{
-			if (!pVS->HasSemantic(buffer.first.Name))
+			if (!pVS->HasSemantic(buffer.first))
 				continue;
 
-			UINT semanticSlot = pVS->GetSemanticSlot(buffer.first.Name);
+			UINT semanticSlot = pVS->GetSemanticSlot(buffer.first);
 
 			buffer.second->UnBind(semanticSlot, pVS, ShaderParameter::Type::Buffer);
 		}

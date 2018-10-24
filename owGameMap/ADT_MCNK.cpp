@@ -11,6 +11,7 @@
 #include "ADT_Liquid.h"
 #include "MapController.h"
 #include "Map_Shared.h"
+#include "ADT_CHUNK_Material.h"
 
 ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, IFile* _file) :
 	m_MapController(_mapController),
@@ -106,7 +107,7 @@ bool ADT_MCNK::Load()
 
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(int24), normals_INT24, false);
-		normalsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)tempNormals, C_MapBufferSize, sizeof(vec3));
+		normalsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)tempNormals, C_MapBufferSize, sizeof(vec4));
 	}
 
 	// Heights
@@ -332,21 +333,33 @@ bool ADT_MCNK::Load()
 	}
 
 	// CreateShaders
-	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader();
-	g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/Debug/MaterialTextured.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
-	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader();
-	g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/Debug/MaterialTextured.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
+	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader(
+		Shader::VertexShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+	);
+	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader(
+		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+	);
 
 	// Create samplers
+	std::shared_ptr<SamplerState> g_LinearClampSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
+	g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+	g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
+
 	std::shared_ptr<SamplerState> g_LinearRepeatSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
 	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
 	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
 
-	g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
+	g_pPixelShader->GetShaderParameterByName("ColorMapSampler").Set(g_LinearRepeatSampler);
+	g_pPixelShader->GetShaderParameterByName("AlphaMapSampler").Set(g_LinearClampSampler);
 
 	// Material
-	std::shared_ptr<MaterialTextured> mat = std::make_shared<MaterialTextured>(Application::Get().GetRenderDevice());
-	mat->SetTexture(m_DiffuseTextures[0]); // DXT1
+	std::shared_ptr<ADT_CHUNK_Material> mat = std::make_shared<ADT_CHUNK_Material>(Application::Get().GetRenderDevice());
+	for (uint32 i = 0; i < header.nLayers; i++)
+	{
+		mat->SetTexture(i, m_DiffuseTextures[i]); // DXT1
+	}
+	mat->SetTexture(4, m_BlendRBGShadowATexture);
+	mat->SetLayersCnt(header.nLayers);
 	mat->SetShader(Shader::VertexShader, g_pVertexShader);
 	mat->SetShader(Shader::PixelShader, g_pPixelShader);
 
@@ -356,47 +369,15 @@ bool ADT_MCNK::Load()
 
 		__geomDefault = Application::Get().GetRenderDevice()->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
-		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordDetail);
+		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
+		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);
+		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
 		__geomDefault->SetIndexBuffer(__ibDefault);
 		__geomDefault->SetMaterial(mat);
 		__geomDefault->SetType(SN_TYPE_ADT_CHUNK);
 
 		AddMesh(__geomDefault);
-
-		/*__geomDefault = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
-		__geomDefault->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-		__geomDefault->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
-		__geomDefault->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
-		__geomDefault->setGeomVertexParams(_MapShared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-		__geomDefault->setGeomVertexParams(_MapShared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
-		__geomDefault->setGeomIndexParams(__ibDefault, R_IndexFormat::IDXFMT_16);
-		__geomDefault->finishCreatingGeometry();*/
 	}
-
-	// Debug geom
-	/*__geomDebugNormals = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
-	__geomDebugNormals->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-	__geomDebugNormals->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
-	__geomDebugNormals->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
-	__geomDebugNormals->finishCreatingGeometry();*/
-
-	// High state
-	/*m_StateHigh.setGeometry(__geomHigh);
-	for (uint32 i = 0; i < header.nLayers; i++)
-	{
-		m_StateHigh.setTexture(CMCNK_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-		m_StateHigh.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-	}
-	m_StateHigh.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);*/
-
-	// Default state
-	/*m_StateDefault.setGeometry(__geomDefault);
-	for (uint32 i = 0; i < header.nLayers; i++)
-	{
-		m_StateDefault.setTexture(CMCNK_Pass::C_ColorsStart + i, m_DiffuseTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-		m_StateDefault.setTexture(CMCNK_Pass::C_SpecularStart + i, m_SpecularTextures[i], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-	}
-	m_StateDefault.setTexture(CMCNK_Pass::C_Blend, m_BlendRBGShadowATexture, SS_ADDR_CLAMP, 0);*/
 
 	return true;
 }
@@ -500,24 +481,3 @@ void ADT_MCNK::Render3D()
 		glActiveTexture(GL_TEXTURE1);
 	}
 }*/
-
-
-void ADT_MCNK::RenderNormals()
-{
-	/*if (!m_QualitySettings.draw_mcnk)
-	{
-		return;
-	}*/
-
-	/*CDebug_Normals* pass = _Render->getTechniquesMgr()->DebugNormal_Pass.operator->();
-
-	pass->Bind();
-	{
-		pass->setWorld(mat4());
-
-		_Render->r.setGeometry(__geomDebugNormals);
-		_Render->r.drawIndexed(0, m_IndexesCountHigh, 0, C_MapBufferSize);
-	}
-	pass->Unbind();*/
-}
-

@@ -165,7 +165,6 @@ int main(int argumentCount, char* arguments[])
 		contr->MapPreLoad(*DBC_Map[1]);
 		contr->MapLoad();
 		contr->MapPostLoad();
-
 		contr->EnterMap(30, 30);
 
 
@@ -183,35 +182,8 @@ int main(int argumentCount, char* arguments[])
 		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
-		// SHADERS
-#ifdef  IS_DX11
-		std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
-		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
-		g_pPixelShader = renderDevice->CreateShader();
-		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_D3D/DefaultShader.hlsl", Shader::ShaderMacros(), "PS_main", "latest");
-#else
-		std::shared_ptr<Shader> g_pVertexShader = renderDevice->CreateShader();
-		g_pVertexShader->LoadShaderFromFile(Shader::VertexShader, "shaders_OGL/Debug/Debug.vs", Shader::ShaderMacros(), "VS_main", "latest");
-		g_pPixelShader = renderDevice->CreateShader();
-		g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, "shaders_OGL/Debug/Debug.fs", Shader::ShaderMacros(), "PS_main", "latest");
-#endif
-
-		// SAMPLER
-
-		// Add a pass to render opaque geometry.
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
 		AddMapPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-
-		// Add a pass for rendering transparent geometry
-		//g_ForwardTechnique.AddPass(std::make_shared<BeginQueryPass>(g_pForwardTransparentQuery));
-		//g_ForwardTechnique.AddPass(std::make_shared<TransparentPass>(g_pScene, g_pTransparentPipeline));
-		//g_ForwardTechnique.AddPass(std::make_shared<EndQueryPass>(g_pForwardTransparentQuery));
-
-		// Add a pass to render the lights in the scene as opaque geometry. Can be toggled with 'l' key.
-		//std::shared_ptr<LightsPass> g_LightsPassFront = std::make_shared<LightsPass>(g_Config.Lights, g_Sphere, g_Cone, g_Arrow, g_pLightsPipelineFront);
-		//std::shared_ptr<LightsPass> g_LightsPassBack = std::make_shared<LightsPass>(g_Config.Lights, g_Sphere, g_Cone, g_Arrow, g_pLightsPipelineBack);
-		//g_ForwardTechnique.AddPass(g_LightsPassBack);
-		//g_ForwardTechnique.AddPass(g_LightsPassFront);
 
 		app.Run();
 	}

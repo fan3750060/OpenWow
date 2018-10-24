@@ -19,9 +19,6 @@
     <Filter Include="Map\Skies">
       <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map\Shaders">
-      <UniqueIdentifier>{90029abd-62c9-4ac3-9ca5-fdb3d6656f36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pases">
       <UniqueIdentifier>{7cb4ca49-cc19-4521-b63c-875a194bd00e}</UniqueIdentifier>
     </Filter>
@@ -90,7 +87,10 @@
     <ClCompile Include="CreatePasses.cpp">
       <Filter>Pases</Filter>
     </ClCompile>
-    <ClCompile Include="Material_WDL.cpp">
+    <ClCompile Include="WDL_Node_Material.cpp">
+      <Filter>Pases</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_CHUNK_Material.cpp">
       <Filter>Pases</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,7 +167,10 @@
     <ClInclude Include="CreatePasses.h">
       <Filter>Pases</Filter>
     </ClInclude>
-    <ClInclude Include="Material_WDL.h">
+    <ClInclude Include="WDL_Node_Material.h">
+      <Filter>Pases</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_CHUNK_Material.h">
       <Filter>Pases</Filter>
     </ClInclude>
   </ItemGroup>
@@ -175,10 +178,5 @@
     <None Include="Sky.inl">
       <Filter>Map\Skies</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\_gamedata\shaders_D3D\Map\MapChunk.hlsl">
-      <Filter>Map\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#include "..\\_gamedata\\shaders_D3D\\Materials\\MaterialTextured.h"
+#include "..\\_gamedata\\shaders_D3D\\Debug\\Textured_Material.h"
 
 struct VertexShaderInput
 {
@@ -16,10 +16,9 @@ cbuffer PerObject : register(b0)
 {
 	float4x4 ModelViewProjection;
 }
-
-cbuffer MaterialBase : register(b2)
+cbuffer Material : register(b2)
 {
-    MaterialTextured Mat;
+    Textured_Material Mat;
 };
 
 Texture2D DiffuseTexture : register(t0);
