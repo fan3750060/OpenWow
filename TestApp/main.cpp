@@ -106,58 +106,21 @@ int main(int argumentCount, char* arguments[])
 		RenderDevice* renderDevice = app.GetRenderDevice();
 
 
-		//std::shared_ptr<Texture> t0 = renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
-		//std::shared_ptr<Texture> t1 = renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
-		//std::shared_ptr<Texture> t2 = renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
-		std::shared_ptr<Texture> t3 = renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
-
-		std::shared_ptr<Texture> t0 = renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
-		std::shared_ptr<Texture> t1 = renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
-		std::shared_ptr<Texture> t2 = renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
-
-		std::shared_ptr<Texture> t30 = renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
-
-
-		renderDevice->CreateTexture2D("TILESET\\Barrens\\BarrensBaseBush.blp");
-
-		// Material
-		std::shared_ptr<MaterialBase> mat = std::make_shared<MaterialBase>(renderDevice);
-		mat->SetTexture(MaterialBase::TextureType::Diffuse, t30); // DXT1
-
-		std::shared_ptr<Mesh> mesh1 = renderDevice->CreateSphere();
-		mesh1->SetMaterial(mat);
-		std::shared_ptr<Mesh> mesh2 = renderDevice->CreateCube();
-		mesh2->SetMaterial(mat);
-		std::shared_ptr<Mesh> mesh3 = renderDevice->CreatePlane();
-		mesh3->SetMaterial(mat);
-		std::shared_ptr<Mesh> mesh4 = renderDevice->CreatePlane();
-		mesh4->SetMaterial(mat);
-		std::shared_ptr<Mesh> mesh5 = renderDevice->CreatePlane();
-		mesh5->SetMaterial(mat);
+		/*renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
+		renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
+		renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
+		renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
+		renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
+		renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
+		renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
+		renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE*/
 
 		g_pScene = std::make_shared<SceneBase>();
 
-		/*std::shared_ptr<SceneNode> n1 = g_pScene->CreateSceneNode();
-		n1->SetLocalTransform(glm::translate(vec3(-100.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
-		n1->AddMesh(mesh1);
-
-		std::shared_ptr<SceneNode> n2 = g_pScene->CreateSceneNode();
-		n2->SetLocalTransform(glm::translate(vec3(-50.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
-		n2->AddMesh(mesh2);
-
-		std::shared_ptr<SceneNode> n3 = g_pScene->CreateSceneNode();
-		n3->SetLocalTransform(glm::translate(vec3(0.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
-		n3->AddMesh(mesh3);
-
-		std::shared_ptr<SceneNode> n4 = g_pScene->CreateSceneNode();
-		n4->SetLocalTransform(glm::translate(vec3(50.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
-		n4->AddMesh(mesh4);
-
-		std::shared_ptr<SceneNode> n5 = g_pScene->CreateSceneNode();
-		n5->SetLocalTransform(glm::translate(vec3(100.0f, 0.0f, 0.0f)) * glm::scale(vec3(15.0f)));
-		n5->AddMesh(mesh5);*/
-
 		OpenDBs();
+
+		const float x = 40;
+		const float y = 40;
 
 		std::shared_ptr<MapController> contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
@@ -165,7 +128,7 @@ int main(int argumentCount, char* arguments[])
 		contr->MapPreLoad(*DBC_Map[1]);
 		contr->MapLoad();
 		contr->MapPostLoad();
-		contr->EnterMap(30, 30);
+		contr->EnterMap(x, y);
 
 
 		Viewport viewPort(0, 0, 1024.0f, 768.0f);
@@ -174,7 +137,7 @@ int main(int argumentCount, char* arguments[])
 
 		// CAMERA
 		g_Camera.SetTranslate(vec3(0, 0, 0));
-		g_Camera.SetTranslate(vec3(30 * C_TileSize, 200, 30 * C_TileSize));
+		g_Camera.SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
 		g_Camera.SetViewport(viewPort);
 		g_Camera.SetProjectionRH(45.0f, 1024.0f / 768.0f, 0.1f, 10000.0f);
@@ -198,12 +161,6 @@ int main(int argumentCount, char* arguments[])
 void OnPreRender(RenderEventArgs& e)
 {
 	g_pFrameQuery->Begin(e.FrameCounter);
-
-#ifdef  IS_DX11
-	//g_pPixelShader->GetShaderParameterByName("DiffuseSampler").Set(g_LinearRepeatSampler);
-#else
-	//g_pPixelShader->GetShaderParameterByName("DiffuseTexture").Set(g_LinearRepeatSampler);
-#endif
 }
 
 void OnRender(RenderEventArgs& e)

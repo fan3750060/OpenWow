@@ -127,9 +127,6 @@ public:
 	virtual std::shared_ptr<SamplerState> CreateSamplerState() = 0;
 	virtual void DestroySampler(std::shared_ptr<SamplerState> sampler) = 0;
 
-	virtual std::shared_ptr<Material> CreateMaterial() = 0;
-	virtual void DestroyMaterial(std::shared_ptr<Material> material) = 0;
-
 	virtual std::shared_ptr<PipelineState> CreatePipelineState() = 0;
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline) = 0;
 

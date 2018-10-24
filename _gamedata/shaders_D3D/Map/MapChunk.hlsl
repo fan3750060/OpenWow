@@ -54,46 +54,50 @@ float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 	float3 resultColor = float3(0,0,0);
 	
 	/* NORTREND
-	float alphaSumma = 0.0;
-	if (Material.LayersCnt >= 2)
 	{
-		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
-		alphaSumma += alphaCurrent;
-		layersColor += ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		float alphaSumma = 0.0;
+		if (Material.LayersCnt >= 2)
+		{
+			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
+			alphaSumma += alphaCurrent;
+			layersColor += ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		}
+		if (Material.LayersCnt >= 3)
+		{
+			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
+			alphaSumma += alphaCurrent;
+			layersColor += ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		}
+		if (Material.LayersCnt >= 4)
+		{
+			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
+			alphaSumma += alphaCurrent;
+			layersColor += ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		}
+		resultColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
 	}
-	if (Material.LayersCnt >= 3)
-	{
-		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
-		alphaSumma += alphaCurrent;
-		layersColor += ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
-	}
-	if (Material.LayersCnt >= 4)
-	{
-		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
-		alphaSumma += alphaCurrent;
-		layersColor += ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
-	}
-	resultColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
 	*/
 	
 	/* NOT NORTREND */
-	layersColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb;
-	if (Material.LayersCnt >= 2)
 	{
-		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
-		layersColor = lerp(layersColor, ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		layersColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb;
+		if (Material.LayersCnt >= 2)
+		{
+			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
+			layersColor = lerp(layersColor, ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		}
+		if (Material.LayersCnt >= 3)
+		{
+			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
+			layersColor = lerp(layersColor, ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		}
+		if (Material.LayersCnt >= 4)
+		{
+			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
+			layersColor = lerp(layersColor, ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		}
+		resultColor = layersColor;
 	}
-	if (Material.LayersCnt >= 3)
-	{
-		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
-		layersColor = lerp(layersColor, ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
-	}
-	if (Material.LayersCnt >= 4)
-	{
-		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
-		layersColor = lerp(layersColor, ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
-	}
-	resultColor = layersColor;
 
 	return float4(resultColor, 1.0f);
 }

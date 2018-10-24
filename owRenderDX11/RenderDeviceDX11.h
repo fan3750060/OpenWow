@@ -51,9 +51,6 @@ public:
 	virtual std::shared_ptr<SamplerState> CreateSamplerState();
 	virtual void DestroySampler(std::shared_ptr<SamplerState> sampler);
 
-	virtual std::shared_ptr<Material> CreateMaterial();
-	virtual void DestroyMaterial(std::shared_ptr<Material> Material);
-
 	virtual std::shared_ptr<PipelineState> CreatePipelineState();
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline);
 
@@ -97,9 +94,6 @@ private:
 
 	typedef std::vector< std::shared_ptr<SamplerState> > SamplerList;
 	SamplerList m_Samplers;
-
-	typedef std::vector< std::shared_ptr<Material> > MaterialList;
-	MaterialList m_Materials;
 
 	typedef std::vector< std::shared_ptr<PipelineState> > PipelineList;
 	PipelineList m_Pipelines;

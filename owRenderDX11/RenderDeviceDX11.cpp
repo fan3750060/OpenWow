@@ -17,13 +17,10 @@
 RenderDeviceDX11::RenderDeviceDX11()
 {
 	CreateDevice();
-
-	LoadDefaultResources();
 }
 
 RenderDeviceDX11::~RenderDeviceDX11()
 {
-	m_Materials.clear();
 	m_Scenes.clear();
 	m_Meshes.clear();
 	m_Buffers.clear();
@@ -411,24 +408,6 @@ void RenderDeviceDX11::DestroySampler(std::shared_ptr<SamplerState> sampler)
 	if (iter != m_Samplers.end())
 	{
 		m_Samplers.erase(iter);
-	}
-}
-
-
-std::shared_ptr<Material> RenderDeviceDX11::CreateMaterial()
-{
-	//std::shared_ptr<Material> pMaterial = std::make_shared<Material>(this);
-	//m_Materials.push_back(pMaterial);
-	//return pMaterial;
-	return nullptr;
-}
-
-void RenderDeviceDX11::DestroyMaterial(std::shared_ptr<Material> material)
-{
-	MaterialList::iterator iter = std::find(m_Materials.begin(), m_Materials.end(), material);
-	if (iter != m_Materials.end())
-	{
-		m_Materials.erase(iter);
 	}
 }
 

@@ -108,13 +108,13 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 
 				//
 
-				/*SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
+				SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
 				std::shared_ptr<CWDL_LowResTile> lowResTile = make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
 				lowResTile->SetParent(_parent);
-				m_LowResilutionTiles.push_back(lowResTile);*/
+				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
 	}

@@ -18,7 +18,7 @@ LightsPass::LightsPass( std::vector<Light>& lights, std::shared_ptr<Scene> point
     , m_pSpotLightScene( spotLight )
     , m_pDirectionalLightScene( directionalLight )
 {
-    m_LightMaterial = m_RenderDevice->CreateMaterial();
+   // m_LightMaterial = m_RenderDevice->CreateMaterial();
 }
 
 LightsPass::~LightsPass()
