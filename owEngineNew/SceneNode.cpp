@@ -13,6 +13,7 @@ SceneNode::SceneNode(cmat4 localTransform)
 	: m_LocalTransform(localTransform)
 	, m_Name("SceneNode")
 	, m_Type(SN_TYPE_NONE)
+	, m_Scale(1.0f, 1.0f, 1.0f)
 {
 	m_InverseTransform = glm::inverse(m_LocalTransform);
 }
@@ -102,10 +103,10 @@ void SceneNode::AddChild(std::shared_ptr<SceneNode> pNode)
 		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
 		if (iter == m_Children.end())
 		{
-			mat4 worldTransform = pNode->GetWorldTransfom();
+			//mat4 worldTransform = pNode->GetWorldTransfom();
 			pNode->m_pParentNode = shared_from_this();
-			mat4 localTransform = GetInverseWorldTransform() * worldTransform;
-			pNode->SetLocalTransform(localTransform);
+			//mat4 localTransform = GetInverseWorldTransform() * worldTransform;
+			//pNode->SetLocalTransform(localTransform);
 			m_Children.push_back(pNode);
 			if (!pNode->GetName().empty())
 			{
@@ -161,10 +162,10 @@ void SceneNode::SetParent(std::weak_ptr<SceneNode> wpNode)
 	else if (parent = m_pParentNode.lock())
 	{
 		// Setting parent to NULL.. remove from current parent and reset parent node.
-		mat4 worldTransform = GetWorldTransfom();
+		//mat4 worldTransform = GetWorldTransfom();
 		parent->RemoveChild(shared_from_this());
 		m_pParentNode.reset();
-		SetLocalTransform(worldTransform);
+		//SetLocalTransform(worldTransform);
 	}
 }
 

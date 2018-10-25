@@ -44,6 +44,6 @@ void DebugOutput_ConsoleWindows::Print(std::string _messageFmt, CDebugOutput::De
 
 	// Add
 	SetConsoleTextAttribute(m_ConsoleHandle, color);
-	cout << _messageFmt << endl;
+	std::cout << _messageFmt << std::endl;
 	SetConsoleTextAttribute(m_ConsoleHandle, m_DefaultConsoleColor);
 }

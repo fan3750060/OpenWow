@@ -62,7 +62,7 @@ std::string CMapShared::getMapFolder(const DBC_MapRecord& _map)
 	return "World\\Maps\\" + std::string(_map.Get_Directory()) + "\\" + std::string(_map.Get_Directory());
 }
 
-vector<uint16> CMapShared::GenarateHighMapArray(uint16 _holes)
+std::vector<uint16> CMapShared::GenarateHighMapArray(uint16 _holes)
 {
 	if (_holes == 0 && !m_HighMapStrip.empty())
 	{
@@ -79,7 +79,7 @@ vector<uint16> CMapShared::GenarateHighMapArray(uint16 _holes)
 		for (uint16 j = 0; j < 8; j++)
 			innerArray[i][j] = 9 + (i * 17) + j;
 
-	vector<uint16> myIndexes;
+	std::vector<uint16> myIndexes;
 	for (uint16 i = 0; i < 8; i++)
 	{
 		for (uint16 j = 0; j < 8; j++)
@@ -110,7 +110,7 @@ vector<uint16> CMapShared::GenarateHighMapArray(uint16 _holes)
 	return myIndexes;
 }
 
-vector<uint16> CMapShared::GenarateDefaultMapArray(uint16 _holes)
+std::vector<uint16> CMapShared::GenarateDefaultMapArray(uint16 _holes)
 {
 	if (_holes == 0 && !m_DefaultMapStrip.empty())
 	{
@@ -122,7 +122,7 @@ vector<uint16> CMapShared::GenarateDefaultMapArray(uint16 _holes)
 		for (uint16 j = 0; j < 9; j++)
 			outerArray[i][j] = (i * 17) + j;
 
-	vector<uint16> myIndexes;
+	std::vector<uint16> myIndexes;
 	for (uint16 i = 0; i < 8; i += 1)
 	{
 		for (uint16 j = 0; j < 8; j += 1)

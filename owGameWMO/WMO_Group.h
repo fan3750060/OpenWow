@@ -12,7 +12,9 @@
 // FORWARD BEGIN
 class WMO;
 class CWMO_Group_Instance;
+#ifdef GAME_WMO_INCLUDE_WM2
 class CWMO_Doodad_Instance;
+#endif
 // FORWARD END
 
 class WMO_Group
@@ -21,7 +23,7 @@ public:
 	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile);
 	virtual ~WMO_Group();
 
-	void CreateInsances(std::shared_ptr<CWMO_Group_Instance> _parent) const;
+	void CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const;
 
 	uint32 to_wmo_liquid(int x);
 
@@ -39,35 +41,35 @@ public:
 	SWMO_Group_HeaderDef					m_Header;
 	BoundingBox								m_Bounds;
 
-	vector<CWMO_Part_Portal*>				m_Portals;
+	std::vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
-	SharedMeshPtr							__geom;
+	std::shared_ptr<Mesh>					__geom;
 
 public:
 	//-- Triangles --//
 	vec3 * dataFromMOVT;
-	vector<SWMO_Group_MaterialDef>			m_MaterialsInfo;
+	std::vector<SWMO_Group_MaterialDef>		m_MaterialsInfo;
 	bool									m_IsMOCVExists;
 
 	//-- Render bathes --//
-	vector<WMO_Group_Part_Batch*>			m_WMOBatchIndexes;
+	std::vector<WMO_Group_Part_Batch*>		m_WMOBatchIndexes;
 	SWMO_Group_BatchDef*					moba;
 
 	//-- Lights --//
-	vector<uint16>							m_WMOLightsIndexes;
+	std::vector<uint16>						m_WMOLightsIndexes;
 	C4Vec*									mocv;
 	uint32									mocv_count;
 
 	//-- Doodads references --//
-	vector<uint16>							m_DoodadsPlacementIndexes;
+	std::vector<uint16>						m_DoodadsPlacementIndexes;
 
 	//-- Collision --//
 	// MOBN chunk
 	// MOBR chunk
-	vector<uint16> collisionIndexes;
+	std::vector<uint16>                     collisionIndexes;
 	SharedBufferPtr							VB_Collision;
-	vector<CWMO_Group_Part_BSP_Node*>		m_CollisionNodes;
+	std::vector<CWMO_Group_Part_BSP_Node*>	m_CollisionNodes;
 
 	//-- Liquid --//
 	SWMO_Group_MLIQDef						m_LiquidHeader;

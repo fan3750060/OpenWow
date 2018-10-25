@@ -12,7 +12,7 @@ public:
     void OnRenderUI() override;
 
 private:
-	SharedTexturePtr  m_Background;
+	std::shared_ptr<Texture>  m_Background;
     Image*    m_Images[8];
     enum Images
     {

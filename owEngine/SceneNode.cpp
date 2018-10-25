@@ -47,7 +47,7 @@ bool SceneNode::checkDistance(float _distance) const
 	return distToCamera < _distance;
 }
 
-void SceneNode::CalculateMatrix(bool _isRotationQuat)
+void SceneNode::CalculateLocalTransform(bool _isRotationQuat)
 {
 	m_RelTransform = mat4();
 
@@ -68,7 +68,7 @@ void SceneNode::CalculateMatrix(bool _isRotationQuat)
 
 	if (m_Parent != nullptr)
 	{
-		m_AbsTransform = (m_Parent->getAbsTrans()) * m_RelTransform;
+		m_AbsTransform = (m_Parent->GetWorldTransfom()) * m_RelTransform;
 	}
 	else
 	{
@@ -79,7 +79,7 @@ void SceneNode::CalculateMatrix(bool _isRotationQuat)
 	{
 		for (auto& ch : m_Childs)
 		{
-			ch->CalculateMatrix();
+			ch->CalculateLocalTransform();
 		}
 	}*/
 }

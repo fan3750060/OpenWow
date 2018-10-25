@@ -10,5 +10,5 @@ public:
 	DayNightPhase getPhase(uint32 _gameTime);
 
 private:
-	vector<DayNightPhase> dayNightPhases;
+	std::vector<DayNightPhase> dayNightPhases;
 };

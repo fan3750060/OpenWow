@@ -9,12 +9,12 @@ public:
 	void Restore();
 
 public:
-	void SetDiffuseTexture(SharedTexturePtr _DiffuseTexture)
+	void SetDiffuseTexture(std::shared_ptr<Texture> _DiffuseTexture)
 	{
 		m_DiffuseTexture = _DiffuseTexture;
 	}
 
-	void SetSpecularTexture(SharedTexturePtr _SpecularTexture)
+	void SetSpecularTexture(std::shared_ptr<Texture> _SpecularTexture)
 	{
 		m_SpecularTexture = _SpecularTexture;
 	}
@@ -45,8 +45,8 @@ private:
 	vec4 m_SpecularColor;
 
 	// Textures
-	SharedTexturePtr m_DiffuseTexture;  
-	SharedTexturePtr m_SpecularTexture;
+	std::shared_ptr<Texture> m_DiffuseTexture;  
+	std::shared_ptr<Texture> m_SpecularTexture;
 
 	// Render Modes
 	bool m_IsTwoSided;

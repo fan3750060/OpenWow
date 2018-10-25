@@ -45,10 +45,7 @@ public:
 	const WDT_MPHD_Flags* getFlags() const { return &m_Flag; }
 	bool MapHasTiles() { return m_IsTileBased; }
 	bool MapHasGlobalWMO() { return !m_GlobalWMOName.empty(); }
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	const std::shared_ptr<ADT_WMO_Instance> GetGlobalWMOInstance() const { return m_GlobalWMO; }
-#endif
-
 
 private:
 	WDT_MPHD_Flags						m_Flag;
@@ -56,11 +53,9 @@ private:
 	WDT_MAIN							m_TileFlag[C_TilesInMap][C_TilesInMap];
 
 private:
-	std::string								m_GlobalWMOName;
+	std::string							m_GlobalWMOName;
 	ADT_MODF							m_GlobalWMOPlacementInfo;
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	std::shared_ptr<ADT_WMO_Instance>	m_GlobalWMO;
-#endif
 
 private: // PARENT
 	const std::weak_ptr<MapController>  m_MapController;

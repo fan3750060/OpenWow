@@ -119,8 +119,10 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		const float x = 40;
-		const float y = 40;
+		const float x = 35;
+		const float y = 35;
+
+		new WMOsManager(nullptr);
 
 		std::shared_ptr<MapController> contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
@@ -147,6 +149,7 @@ int main(int argumentCount, char* arguments[])
 
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
 		AddMapPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
+		AddWMOPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 
 		app.Run();
 	}

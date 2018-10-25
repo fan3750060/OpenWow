@@ -196,12 +196,12 @@ void RenderGL::DrawBoundingBox(cbbox _box, vec4 _color)
 
 #pragma region GUI Part
 
-void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, bool rotate)
+void RenderGL::RenderTexture(vec2 _pos, std::shared_ptr<Texture> _texture, bool rotate)
 {
 	RenderTexture(_pos, _texture, _texture->GetSize(), rotate);
 }
 
-void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, bool rotate)
+void RenderGL::RenderTexture(vec2 _pos, std::shared_ptr<Texture> _texture, vec2 _size, bool rotate)
 {
 	// Transform
 	mat4 worldTransform;
@@ -226,7 +226,7 @@ void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, b
 	m_TechniquesManager->UI_Texture->Unbind();
 }
 
-void RenderGL::RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, float rotate)
+void RenderGL::RenderTexture(vec2 _pos, std::shared_ptr<Texture> _texture, vec2 _size, float rotate)
 {
 	// Transform
 	mat4 worldTransform;

@@ -23,5 +23,8 @@
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
 
+#include <owGameWMO.h>
+#pragma comment(lib, "owGameWMO.lib")
+
 #include <owGameMap.h>
 #pragma comment(lib, "owGameMap.lib")

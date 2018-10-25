@@ -47,7 +47,8 @@ bool ADT_MCNK::Load()
 
 		// Set translate
 		setTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint), false);
-
+		// Matrix
+		//CalculateLocalTransform();
 		// Bounds
 		BoundingBox bbox
 		(
@@ -273,10 +274,10 @@ bool ADT_MCNK::Load()
 			CRange height;
 			m_File->readBytes(&height, 8);
 
-			std::shared_ptr<CADT_Liquid> m_Liquid = make_shared<CADT_Liquid>(8, 8);
+			std::shared_ptr<CADT_Liquid> m_Liquid = std::make_shared<CADT_Liquid>(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = make_shared<Liquid_Instance>(weak_from_this(), m_Liquid.operator->(), vec3(getTranslate().x, 0.0f, getTranslate().z));
+			m_LiquidInstance = std::make_shared<Liquid_Instance>(weak_from_this(), m_Liquid.operator->(), vec3(getTranslate().x, 0.0f, getTranslate().z));
 		}
 	}
 
@@ -364,7 +365,7 @@ bool ADT_MCNK::Load()
 	mat->SetShader(Shader::PixelShader, g_pPixelShader);
 
 	{ // Geom Default
-		vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
+		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
 		__ibDefault = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)mapArrayDefault.data(), mapArrayDefault.size());
 
 		__geomDefault = Application::Get().GetRenderDevice()->CreateMesh();

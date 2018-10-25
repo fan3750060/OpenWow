@@ -42,7 +42,7 @@ private:
 
 private:
 	UniquePtr<CWMO_Base_Instance>	backgroundModel;
-	SharedMeshPtr					m_DebugGeom;
+	std::shared_ptr<Mesh>					m_DebugGeom;
 
 
 

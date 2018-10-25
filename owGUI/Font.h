@@ -3,15 +3,15 @@
 class Font 
 {
 public:
-	Font(SharedTexturePtr _texture, SharedMeshPtr _fontGeometry, vector<uint32> _widthArray, uint32 _height);
+	Font(std::shared_ptr<Texture> _texture, std::shared_ptr<Mesh> _fontGeometry, vector<uint32> _widthArray, uint32 _height);
 	~Font();
 
 	void Render(cstring _string, vec2 _offset, const Color& _color) const;
 
 	// Getters
 	uint32 GetStringWidth(cstring _string) const;
-	SharedTexturePtr getTexture() const { return m_Texture; }
-	SharedMeshPtr getGeometry() const { return m_Geometry; }
+	std::shared_ptr<Texture> getTexture() const { return m_Texture; }
+	std::shared_ptr<Mesh> getGeometry() const { return m_Geometry; }
 	uint32 GetHeight() const { return m_Height; }
 
 public:
@@ -19,8 +19,8 @@ public:
 	static const uint32 NUM_CHARS = 256;
 
 private:
-	SharedTexturePtr	m_Texture;
-	SharedMeshPtr	m_Geometry;
+	std::shared_ptr<Texture>	m_Texture;
+	std::shared_ptr<Mesh>	m_Geometry;
 	vector<uint32>	m_WidthArray;
 	uint32			m_Height;
 };

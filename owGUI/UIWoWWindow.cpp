@@ -5,7 +5,7 @@
 
 void UIWoWWindow::Init(cvec2 _position, cvec2 _size)
 {
-	SharedTexturePtr texture = _Render->TexturesMgr()->Add("Interface/DialogFrame/UI-DialogBox-Border.blp");
+	std::shared_ptr<Texture> texture = _Render->TexturesMgr()->Add("Interface/DialogFrame/UI-DialogBox-Border.blp");
     for (uint8 i = 0; i < 8; i++)
     {
         m_Images[i] = new Image(texture, vec2(i * 32.0f, 0.0f), vec2(C_ImgSize, C_ImgSize));

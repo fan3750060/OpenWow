@@ -6,7 +6,7 @@
 // General
 #include "WDL_LowResTile.h"
 
-CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, SharedMeshPtr _geom) :
+CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, std::shared_ptr<Mesh> _geom) :
 	m_MapController(_parent),
 	m_IndexX(_indexX),
 	m_IndexZ(_indexZ),
@@ -24,12 +24,6 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _i
 
 	m_Geom->SetType(SN_TYPE_WDL_NODE);
 	AddMesh(m_Geom);
-
-	// State
-	//m_State.setDepthTest(false);
-	//m_State.setDepthMask(false);
-	//_Render->getRenderStorage()->SetEGxBlend(&m_State, 0);
-	//m_State.setGeometry(m_Geom);
 }
 
 void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs)

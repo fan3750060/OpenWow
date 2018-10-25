@@ -150,7 +150,7 @@ void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, IFile* f)
 				layer.heights.push_back(map[p].magmaVert.height);
 				layer.textureCoords.push_back
 				(
-					make_pair
+					std::make_pair
 					(
 						static_cast<float>(map[p].magmaVert.s) / 8.0f,
 						static_cast<float>(map[p].magmaVert.t) / 8.0f
@@ -183,8 +183,8 @@ void Liquid::createBuffer()
 {
 	for (auto& layer : m_WaterLayers)
 	{
-		vector<SLiquidVertexData> mh2oVertices;
-		vector<uint16> m_Indices;
+		std::vector<SLiquidVertexData> mh2oVertices;
+		std::vector<uint16> m_Indices;
 		uint32 cntr = 0;
 
 		for (uint8 y = layer.y; y < layer.Height + layer.y; y++)
@@ -215,10 +215,10 @@ void Liquid::createBuffer()
 
 				// R_Texture coords
 				std::pair<float, float> t1, t2, t3, t4;
-				t1 = make_pair(0.0f, 0.0f);
-				t2 = make_pair(0.0f, 1.0f);
-				t3 = make_pair(1.0f, 1.0f);
-				t4 = make_pair(1.0f, 0.0f);
+				t1 = std::make_pair(0.0f, 0.0f);
+				t2 = std::make_pair(0.0f, 1.0f);
+				t3 = std::make_pair(1.0f, 1.0f);
+				t4 = std::make_pair(1.0f, 0.0f);
 				if (layer.textureCoords.size() > 0)
 				{
 					t1 = layer.textureCoords[p1];

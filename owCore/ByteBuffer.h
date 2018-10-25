@@ -196,6 +196,6 @@ private:
 
 	bool            m_IsEOF;
 	bool		    m_IsAllocated;
-	vector<uint8>   m_Data;
+	std::vector<uint8>   m_Data;
 	uint64_t	    m_CurrentPosition;
 };

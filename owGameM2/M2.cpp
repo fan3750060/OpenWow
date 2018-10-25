@@ -45,7 +45,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 		CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 		pass->Bind();
 		{
-			pass->setWorld(_instance->getAbsTrans());
+			pass->setWorld(_instance->GetWorldTransfom());
 			pass->SetColorDoodad(_instance->getColor());
 
 			/*for (auto& it : m_Skins)
@@ -66,7 +66,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 	}
 
 	// Ribbons
-	m_Miscellaneous->render(_instance->getAbsTrans());
+	m_Miscellaneous->render(_instance->GetWorldTransfom());
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)

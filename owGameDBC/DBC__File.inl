@@ -50,7 +50,7 @@ inline bool DBCFile<RECORD_T>::Open()
 	for (uint64_t _offset = m_File->getPos(); _offset != stringTableOffset; _offset += recordSize)
 	{
 		RECORD_T* record = new RECORD_T(this, const_cast<uint8*>(m_File->getData() + _offset));
-		records.insert(make_pair(record->Get_ID(), record));
+		records.insert(std::make_pair(record->Get_ID(), record));
 	}
 
 	_ASSERT(recordCount == records.size());
@@ -70,7 +70,7 @@ RECORD_T* DBCFile<RECORD_T>::operator[](uint32 _id)
 }
 
 template <class RECORD_T>
-const multimap<uint32, RECORD_T*>& DBCFile<RECORD_T>::Records() const
+const std::multimap<uint32, RECORD_T*>& DBCFile<RECORD_T>::Records() const
 {
 	return records;
 }

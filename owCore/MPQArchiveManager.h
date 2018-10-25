@@ -13,5 +13,5 @@ public:
 	SMPQFileLocation GetFileLocation(cstring _filename);
 
 private:
-	vector<mpq_archive_s*> m_OpenArchives;
+	std::vector<mpq_archive_s*> m_OpenArchives;
 };

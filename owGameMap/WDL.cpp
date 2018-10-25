@@ -45,7 +45,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 
 	// Material
 	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>(Application::Get().GetRenderDevice());
-	mat->SetDiffuseColor(vec4(0, 0.4, 0.8, 1.0));
+	mat->SetDiffuseColor(vec4(0, 0.2, 0.8, 1.0));
 	mat->SetShader(Shader::VertexShader, g_pVertexShader);
 	mat->SetShader(Shader::PixelShader, g_pPixelShader);
 
@@ -77,7 +77,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 						lowsub[y][x] = vec3(C_TileSize*(i + (x + 0.5f) / 16.0f), tilebuf2[y * 16 + x], C_TileSize*(j + (y + 0.5f) / 16.0f));
 
 
-				vector<vec3> vecrtices;
+				std::vector<vec3> vecrtices;
 
 				for (int y = 0; y < 16; y++)
 				{
@@ -101,25 +101,20 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 					}
 				}
 
-				
-
 				// Vertex buffer
 				SharedBufferPtr __vb = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vecrtices.data(), vecrtices.size(), sizeof(vec3));
 
-				//
-
-				SharedMeshPtr __geom = Application::Get().GetRenderDevice()->CreateMesh();
+				std::shared_ptr<Mesh> __geom = Application::Get().GetRenderDevice()->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
-				std::shared_ptr<CWDL_LowResTile> lowResTile = make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
+				std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
 				lowResTile->SetParent(_parent);
 				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
 	}
 
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	// Load low-resolution WMOs
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
 	for (auto it : m_LowResolutionWMOsPlacementInfo)
@@ -127,9 +122,8 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		const std::string name = m_LowResolutionWMOsNames[it.nameIndex];
 
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
-		m_LowResolutionWMOs.push_back(make_shared<ADT_WMO_Instance>(_parent, wmo, it));
+		m_LowResolutionWMOs.push_back(std::make_shared<ADT_WMO_Instance>(_parent, wmo, it));
 	}
-#endif
 }
 
 void WDL::Load()

@@ -37,16 +37,18 @@ WMO::~WMO()
 	ERASE_VECTOR(m_Fogs);
 }
 
-void WMO::CreateInsances(CWMO_Base_Instance* _parent)
+void WMO::CreateInsances(std::weak_ptr<CWMO_Base_Instance> _parent)
 {
 	for (auto& it : m_Groups)
 	{
-		std::shared_ptr<CWMO_Group_Instance> groupInstance = make_shared<CWMO_Group_Instance>(_parent, it);
-		_parent->AddGroupInstance(groupInstance);
+		std::shared_ptr<CWMO_Group_Instance> groupInstance = std::make_shared<CWMO_Group_Instance>(_parent, it);
+		groupInstance->SetParent(_parent);
+
+		/*_parent.lock()->AddGroupInstance(groupInstance);
 		if (it->m_Header.flags.IS_OUTDOOR)
 		{
-			_parent->AddOutdoorGroupInstance(groupInstance);
-		}
+			_parent.lock()->AddOutdoorGroupInstance(groupInstance);
+		}*/
 
 		it->CreateInsances(groupInstance);
 	}
@@ -154,7 +156,7 @@ bool WMO::Load()
 			{
 				m_PortalVertices.push_back(Fix_XZmY(portalVertexes[i]));
 			}
-			m_PortalVB = _Render->r.createVertexBuffer(m_PortalVertices.size() * sizeof(vec3), m_PortalVertices.data(), false);
+			m_PortalVB = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)m_PortalVertices.data(), m_PortalVertices.size(), sizeof(vec3));
 		}
 		else if (strcmp(fourcc, "MOPT") == 0)
 		{
@@ -291,26 +293,26 @@ void WMO::Render(CWMO_Base_Instance* _localContr) const
 {
 	/*for (auto& it : m_Portals)
 	{
-		it->Render(_localContr->getAbsTrans());
+		it->Render(_localContr->GetWorldTransfom());
 	}*/
 
 
 	for (auto& it : m_Lights)
 	{
-		it->Render(_localContr->getAbsTrans());
+		//it->Render(_localContr->GetWorldTransfom());
 	}
 }
 
 bool WMO::drawSkybox()
 {
-	if (m_Skybox == nullptr)
+	/*if (m_Skybox == nullptr)
 	{
 		return false;
 	}
 
 	mat4 worldMatrix;
 	worldMatrix = glm::translate(worldMatrix, _Render->getCamera()->Position);
-	worldMatrix = glm::scale(worldMatrix, vec3(2.0f));
+	worldMatrix = glm::scale(worldMatrix, vec3(2.0f));*/
 
 	//m_Skybox->Render(worldMatrix, nullptr, vec4(1.0f), 0, 0, 0);
 

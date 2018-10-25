@@ -21,7 +21,7 @@ public:
 		m_CoordsCalculated(false)
 	{}
 
-	Image(SharedTexturePtr _texture) :
+	Image(std::shared_ptr<Texture> _texture) :
 		m_Texture(_texture),
 		m_Start(vec2()),
 		m_Size(_texture->GetSize())
@@ -30,7 +30,7 @@ public:
 		CalculateCoords();
 	}
 
-	Image(SharedTexturePtr _texture, cvec2 _size) :
+	Image(std::shared_ptr<Texture> _texture, cvec2 _size) :
 		m_Texture(_texture),
 		m_Start(vec2()),
 		m_Size(_size)
@@ -39,7 +39,7 @@ public:
 		CalculateCoords();
 	}
 
-	Image(SharedTexturePtr _texture, cvec2 _start, cvec2 _size) :
+	Image(std::shared_ptr<Texture> _texture, cvec2 _start, cvec2 _size) :
 		m_Texture(_texture),
 		m_Start(_start),
 		m_Size(_size)
@@ -55,7 +55,7 @@ public:
 
 	//
 
-	SharedTexturePtr GetTexture() { return m_Texture; }
+	std::shared_ptr<Texture> GetTexture() { return m_Texture; }
 
 	void SetStart(cvec2 _start)
 	{
@@ -116,7 +116,7 @@ private:
 	}
 
 private:
-	SharedTexturePtr  m_Texture;
+	std::shared_ptr<Texture>  m_Texture;
 	vec2        m_Start;
 	vec2        m_Size;
 

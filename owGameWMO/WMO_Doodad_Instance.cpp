@@ -3,6 +3,8 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
+#ifdef GAME_WMO_INCLUDE_WM2
+
 CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, const WMO_Group* _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
 	CM2_Base_Instance(_parent, _mdxObject),
 	m_ParentGroup(_parentGroup),
@@ -31,7 +33,7 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, SmartM2Ptr _mdxOb
 		setRotateQuat(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y), false);
 		setScale(vec3(_placement.scale, -_placement.scale, -_placement.scale), false);
 		//
-		CalculateMatrix(true);
+		CalculateLocalTransform(true);
 	}
 
 	setDrawOrder(22);
@@ -77,4 +79,4 @@ void CWMO_Doodad_Instance::Render3D()
 	CM2_Base_Instance::Render3D();
 }
 
-
+#endif

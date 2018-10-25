@@ -12,5 +12,5 @@ protected:
 	void Print(std::string _messageFmt, CDebugOutput::DebugMessageType _type);
 
 private:
-	ofstream m_LogStream;
+	std::ofstream m_LogStream;
 };

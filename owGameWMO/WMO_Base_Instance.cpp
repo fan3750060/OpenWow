@@ -3,14 +3,13 @@
 // General
 #include "WMO_Base_Instance.h"
 
-CWMO_Base_Instance::CWMO_Base_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject) :
-	SceneNode(_parent),
+CWMO_Base_Instance::CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject) :
 	m_Object(_wmoObject)
 {
 	_ASSERT(m_Object);
 
-	setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
-	setSelectable();
+	//setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
+	//setSelectable();
 
 	//_Bindings->RegisterUpdatableObject(this);
 }
@@ -22,14 +21,14 @@ CWMO_Base_Instance::~CWMO_Base_Instance()
 
 void CWMO_Base_Instance::InitTransform()
 {
-	m_Object->CreateInsances(this);
+	m_Object->CreateInsances(std::static_pointer_cast<CWMO_Base_Instance, SceneNode>(shared_from_this()));
 
-	m_InvWorld = glm::inverse(getAbsTrans());
+	m_InvWorld = glm::inverse(GetWorldTransfom());
 	if (m_Object->m_PortalController != nullptr)
 	{
 		for (auto& v : m_Object->m_PortalVertices)
 		{
-			m_ConvertedVerts.push_back(getAbsTrans() * vec4(v, 0));
+			m_ConvertedVerts.push_back(GetWorldTransfom() * vec4(v, 0));
 		}
 	}
 }
@@ -37,7 +36,7 @@ void CWMO_Base_Instance::InitTransform()
 void CWMO_Base_Instance::EmptyTransformAndBounds()
 {
 	// Matrix
-	CalculateMatrix();
+	CalculateLocalTransform();
 
 	// Bounds
 	BoundingBox bbox;
@@ -56,7 +55,7 @@ void CWMO_Base_Instance::Update(double _time, double _dTime)
 
 bool CWMO_Base_Instance::PreRender3D()
 {
-	if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
+	/*if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
 	{
 		return false;
 	}
@@ -64,7 +63,7 @@ bool CWMO_Base_Instance::PreRender3D()
 	if (!checkFrustum())
 	{
 		return false;
-	}
+	}*/
 
 #ifndef WMO_DISABLE_PORTALS
 	if (m_Object->m_PortalController != nullptr)
@@ -78,10 +77,10 @@ bool CWMO_Base_Instance::PreRender3D()
 
 void CWMO_Base_Instance::Render3D()
 {
-	if (!m_QualitySettings.draw_map_wmo)
+	/*if (!m_QualitySettings.draw_map_wmo)
 	{
 		return;
-	}
+	}*/
 
 	//_Render->DrawBoundingBox(m_Bounds);
 

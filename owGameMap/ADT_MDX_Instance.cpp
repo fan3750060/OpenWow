@@ -22,7 +22,7 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, co
 		// Scale
 		setScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f), false);
 
-		CalculateMatrix();
+		CalculateLocalTransform();
 	}
 
 	InitLocal();

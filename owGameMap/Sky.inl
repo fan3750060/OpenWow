@@ -1,9 +1,9 @@
 #pragma once
 
 template<typename T>
-inline T GetByTimeTemplate(vector<Sky::SkyParam<T>>* _array, uint32 _paramNum, uint32 _time)
+inline T GetByTimeTemplate(std::vector<Sky::SkyParam<T>>* _array, uint32 _paramNum, uint32 _time)
 {
-	const vector<Sky::SkyParam<T>>& param = _array[_paramNum];
+	const std::vector<Sky::SkyParam<T>>& param = _array[_paramNum];
     if (param.empty())
     {
         return T();

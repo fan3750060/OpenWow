@@ -15,3 +15,5 @@
 #include "../owGameWMO/WMO_Liquid_Instance.h"
 
 #include "../owGameWMO/WMOsManager.h"
+
+#include "../owGameWMO/CreatePasses.h"

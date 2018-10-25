@@ -44,7 +44,7 @@ public:
     static   std::string GetFirstSubString(std::string& _string, char separator = 0);
     static   std::string getNextToken(cstring _string, uint32_t& cursor, char separator);
     static   std::string stripCarriageReturn(cstring line);
-    static   std::string getLine(ifstream& infile);
+    static   std::string getLine(std::ifstream& infile);
 
     static   bool PointInRectangle(const vec2 _point, const vec2 _rectStart, const vec2 _rectEnd);
 };
@@ -54,7 +54,7 @@ template <typename T>
 inline T Utils::ToType(cstring _string)
 {
     T result;
-    if (!(stringstream(_string) >> result))
+    if (!(std::stringstream(_string) >> result))
     {
         result = 0;
     }
@@ -226,7 +226,7 @@ inline std::string convertToString(uint32 _bytes)
 	}
 
 	std::string buf;
-	buf += to_string(first) + "," + to_string(second); // bytes
+	buf += std::to_string(first) + "," + std::to_string(second); // bytes
 	switch (p)
 	{
 	case 0:

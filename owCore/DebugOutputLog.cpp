@@ -15,7 +15,7 @@ DebugOutput_Log::DebugOutput_Log()
 		fail1();
 	}
 
-	m_LogStream.open(fileName.c_str(), ios::out);
+	m_LogStream.open(fileName.c_str(), std::ios::out);
 	if (!m_LogStream.is_open())
 	{
 		Log::Error("LogFile[%s]: Can not open file!", fileName.c_str());
@@ -35,6 +35,6 @@ DebugOutput_Log::~DebugOutput_Log()
 
 void DebugOutput_Log::Print(std::string _messageFmt, CDebugOutput::DebugMessageType _type)
 {
-	m_LogStream << _messageFmt << endl;
+	m_LogStream << _messageFmt << std::endl;
 	m_LogStream.flush();
 }

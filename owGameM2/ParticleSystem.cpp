@@ -378,7 +378,7 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 	SharedBufferPtr __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
 
 	// Geometry
-	SharedMeshPtr __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
+	std::shared_ptr<Mesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(ParticleVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(ParticleVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 28, sizeof(ParticleVertex));

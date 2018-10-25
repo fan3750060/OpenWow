@@ -18,7 +18,7 @@ void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _ga
     _ASSERT(_gameState != nullptr);
     _ASSERT(m_GameStatesCollection.find(_name) == m_GameStatesCollection.end());
 
-    m_GameStatesCollection.insert(make_pair(_name, _gameState));
+    m_GameStatesCollection.insert(std::make_pair(_name, _gameState));
 }
 
 bool GameStateManager::SetGameState(GameStatesNames::List _name)

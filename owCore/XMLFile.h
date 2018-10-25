@@ -11,8 +11,8 @@ public:
 
 	std::string GetName() { return name; };
 	XMLNode* GetParent() { return parent; };
-	vector<XMLNode*>& GetChilds() { return childs; }
-	map<std::string, std::string>& GetData() { return data; };
+	std::vector<XMLNode*>& GetChilds() { return childs; }
+	std::map<std::string, std::string>& GetData() { return data; };
 	bool IsKeyExists(cstring _keyName) const { return data.find(_keyName) != data.end(); }
 	std::string GetKeyValue(std::string _keyName)
 	{
@@ -28,8 +28,8 @@ public:
 private:
 	std::string name;
 	XMLNode* parent;
-	vector<XMLNode*> childs;
-	map<std::string, std::string> data;
+	std::vector<XMLNode*> childs;
+	std::map<std::string, std::string> data;
 
 	bool isDataNode;
 };

@@ -98,7 +98,7 @@ void CADT_Liquid::CreateFromTerrainMH2O(IFile* f, MH2O_Header* _header)
 			for (uint32 g = 0; g < vertexDataSize; g++)
 			{
 				waterLayer.heights.push_back(pHeights[g]);
-				waterLayer.textureCoords.push_back(make_pair(static_cast<float>(pUVMap[g].x) / 8.0f, static_cast<float>(pUVMap[g].y) / 8.0f));
+				waterLayer.textureCoords.push_back(std::make_pair(static_cast<float>(pUVMap[g].x) / 8.0f, static_cast<float>(pUVMap[g].y) / 8.0f));
 			}
 		}
 		else if (waterLayer.VertexFormat == 2)         // Case 2, Depth only data (OCEAN)
@@ -120,7 +120,7 @@ void CADT_Liquid::CreateFromTerrainMH2O(IFile* f, MH2O_Header* _header)
 			for (uint32 g = 0; g < vertexDataSize; g++)
 			{
 				waterLayer.heights.push_back(pHeights[g]);
-				waterLayer.textureCoords.push_back(make_pair(static_cast<float>(pUVMap[g].x / 8), static_cast<float>(pUVMap[g].y / 8)));
+				waterLayer.textureCoords.push_back(std::make_pair(static_cast<float>(pUVMap[g].x / 8), static_cast<float>(pUVMap[g].y / 8)));
 				waterLayer.depths.push_back(pDepths[g]);
 			}
 		}

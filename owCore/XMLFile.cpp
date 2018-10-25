@@ -91,8 +91,8 @@ bool XMLFile::Open(cstring _filename)
 		return false;
 	}
 
-	ifstream xmlStream;
-	xmlStream.open(filename, ios::in);
+	std::ifstream xmlStream;
+	xmlStream.open(filename, std::ios::in);
 	if (!xmlStream.is_open())
 	{
 		//Log::Error("XML[%s]: Can not open file!", filename.c_str());

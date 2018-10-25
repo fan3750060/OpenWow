@@ -10,7 +10,7 @@ EnvironmentManager::EnvironmentManager()
 {
 
 
-	dayNightCycle = make_shared<DayNightCycle>();
+	dayNightCycle = std::make_shared<DayNightCycle>();
 
 	// Colors
     m_OutdoorAmbientColor = vec4();

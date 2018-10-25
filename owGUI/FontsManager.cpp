@@ -172,13 +172,13 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 
 	//
 
-    SharedMeshPtr __geom = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PT);
+    std::shared_ptr<Mesh> __geom = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0,            sizeof(Texture_Vertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, sizeof(vec3), sizeof(Texture_Vertex));
 	__geom->finishCreatingGeometry();
 
 	// Font texture
-	SharedTexturePtr texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, imageWidth, imageHeight, 1, R_TextureFormats::RGBA8, false, false, false, false);
+	std::shared_ptr<Texture> texture = m_RenderDevice->createTexture(R_TextureTypes::Tex2D, imageWidth, imageHeight, 1, R_TextureFormats::RGBA8, false, false, false, false);
 	texture->uploadTextureData(0, 0, image);
 
 	delete[] image;

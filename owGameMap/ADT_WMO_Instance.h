@@ -17,20 +17,17 @@ struct ADT_MODF
 	uint16 scale;			// Legion+
 };
 
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
-
 class ADT_WMO_Instance : public CWMO_Base_Instance
 {
 public:
-	ADT_WMO_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo);
+	ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo);
 	virtual ~ADT_WMO_Instance();
 
-	// ISceneNode
-	std::string getObjectInfo() const override { return "@ADT_WMO@"; }
+	void Load();
 
 	// IRenderable3D
-	bool PreRender3D() override;
-	void Render3D() override;
+	bool PreRender3D();
+	void Render3D();
 
 private:
 	uint32									m_UniqueId;
@@ -40,5 +37,3 @@ public:	// Static
 private:
 	static std::set<uint32> m_AlreadyDraw;
 };
-
-#endif

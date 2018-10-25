@@ -82,7 +82,7 @@ public:
 
 private:
 	// Buffers and geom
-	SharedMeshPtr						m_CollisionGeom;
+	std::shared_ptr<Mesh>						m_CollisionGeom;
 	uint32								m_CollisionIndCnt;
 	uint32								m_CollisionVetCnt;
 

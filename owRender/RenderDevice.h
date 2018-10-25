@@ -31,7 +31,7 @@ public:
 	void beginRendering();
 
 	// Geometry
-	SharedMeshPtr beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
+	std::shared_ptr<Mesh> beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
 
 	// Buffers
 	SharedBufferPtr createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
@@ -42,7 +42,7 @@ public:
 	std::string getBufferMemStr() const { return convertToString(m_BufferMem); }
 
 	// Textures
-	SharedTexturePtr createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
+	std::shared_ptr<Texture> createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB);
 	uint32 getTextureMem() const { return m_TextureMem; }
 	std::string getTextureMemStr() const { return convertToString(m_TextureMem); }
 
@@ -75,11 +75,11 @@ public:
 	{
 		m_State.setScissorRect(x, y, width, height);
 	}
-	void setGeometry(SharedMeshPtr geoIndex)
+	void setGeometry(std::shared_ptr<Mesh> geoIndex)
 	{
 		m_State.setGeometry(geoIndex);
 	}
-	void setTexture(uint32 slot, SharedTexturePtr texObj, uint16 samplerState, uint16 usage)
+	void setTexture(uint32 slot, std::shared_ptr<Texture> texObj, uint16 samplerState, uint16 usage)
 	{
 		m_State.setTexture(slot, texObj, samplerState, usage);
 	}
@@ -249,7 +249,7 @@ private:
 	
 
 
-	SharedMeshPtr				m_DefaultGeometry;
+	std::shared_ptr<Mesh>				m_DefaultGeometry;
 
 
 	//------------------------------------------------------------------------------------

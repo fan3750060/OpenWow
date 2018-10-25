@@ -84,7 +84,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 	// 4. Creature textures
 	{
 		std::string bakedTextureName = humanoidRecExtra->Get_BakedSkin();
-		SharedTexturePtr bakedSkinTexture = nullptr;
+		std::shared_ptr<Texture> bakedSkinTexture = nullptr;
 		if (!bakedTextureName.empty())
 		{
 			bakedSkinTexture = GetManager<ITexturesManager>()->Add("Textures\\BakedNpcTextures\\" + bakedTextureName);
@@ -207,7 +207,7 @@ void Character::RefreshItemVisualData()
 	}
 }
 
-void Character::RefreshTextures(SharedTexturePtr _skin)
+void Character::RefreshTextures(std::shared_ptr<Texture> _skin)
 {
 	if (_skin == nullptr)
 	{
@@ -224,7 +224,7 @@ void Character::RefreshTextures(SharedTexturePtr _skin)
 	if (item->InventoryType != InventoryType::NON_EQUIP)
 	{
 		_ASSERT(item->getObjectComponents().size() == 1);
-		SharedTexturePtr cloackTexttre = item->getObjectComponents()[0].texture;
+		std::shared_ptr<Texture> cloackTexttre = item->getObjectComponents()[0].texture;
 		setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, cloackTexttre);
 	}
 }

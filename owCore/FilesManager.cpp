@@ -24,11 +24,11 @@ std::shared_ptr<IFile> CFilesManager::Open(cstring _fileName)
 
 	if (CLocalFile::IsFileExists(_fileName))
 	{
-		file = make_shared<CLocalFile>(_fileName);
+		file = std::make_shared<CLocalFile>(_fileName);
 	}
 	else if (CMPQFile::IsFileExists(_fileName))
 	{
-		file = make_shared<CMPQFile>(_fileName);
+		file = std::make_shared<CMPQFile>(_fileName);
 	}
 
 	if (file != nullptr)

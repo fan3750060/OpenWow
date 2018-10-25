@@ -16,6 +16,9 @@
     <Filter Include="Groups">
       <UniqueIdentifier>{3f2936b2-5b52-4e66-b693-368fcfe7587f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderStuff">
+      <UniqueIdentifier>{03e409fe-820d-422a-a956-bcadd15ed4e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -60,6 +63,12 @@
     </ClCompile>
     <ClCompile Include="WMO_Group_Part_BSP_Node.cpp">
       <Filter>Groups</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatePasses.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Pass.cpp">
+      <Filter>RenderStuff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="WMO_Fixes.h">
       <Filter>Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatePasses.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Pass.h">
+      <Filter>RenderStuff</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

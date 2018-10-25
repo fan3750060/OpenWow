@@ -32,16 +32,14 @@ public: // Getters
 
 	bool isUncompressedAlpha() const { return m_WDT->getFlags()->Flag_8bitMCAL; }
 	bool isTileBased() const { return m_WDT->MapHasTiles(); }
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	const std::shared_ptr<ADT_WMO_Instance> getGlobalInstance() const { return m_WDT->GetGlobalWMOInstance(); }
-#endif // GAME_MAP_INCLUDE_WMO_AND_M2
 	int GetCurrentX() const { return m_CurrentTileX; }
 	int GetCurrentZ() const { return m_CurrentTileZ; }
 
 	void SetOutOfBounds(bool _value) { m_IsOnInvalidTile = _value; }
 	bool IsOutOfBounds() const { return m_IsOnInvalidTile; }
 	
-	SharedTexturePtr getMinimap() const { return m_WDL->getMinimap(); }
+	std::shared_ptr<Texture> getMinimap() const { return m_WDL->getMinimap(); }
 	const std::shared_ptr<SkyManager> getSkyManager() const { return m_SkyManager; }
 	const WowTime* getTime() const { return &m_GameTime; }
 

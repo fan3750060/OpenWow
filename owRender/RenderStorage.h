@@ -48,19 +48,19 @@ public:
 	// Geometry & VertexBuffers
     //----------------------------------------------
 
-	SharedMeshPtr __QuadVTDynamic;
+	std::shared_ptr<Mesh> __QuadVTDynamic;
 
     // 2D
 
-	SharedMeshPtr __Quad;
-	SharedMeshPtr __QuadVT;
+	std::shared_ptr<Mesh> __Quad;
+	std::shared_ptr<Mesh> __QuadVT;
 	SharedBufferPtr __vbQuadVTDynamic;
 
     // 3D
 
-    SharedMeshPtr _cubeGeo;
-	SharedMeshPtr _sphereGeo;
-	SharedMeshPtr _coneGeo;
+    std::shared_ptr<Mesh> _cubeGeo;
+	std::shared_ptr<Mesh> _sphereGeo;
+	std::shared_ptr<Mesh> _coneGeo;
 
     //----------------------------------------------
     // Index buffers

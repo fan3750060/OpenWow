@@ -30,15 +30,14 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 	// Scene node params
 	{
 		// Set translate
-		setTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize), false);
-
+		//setTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize), false);
 		// Bounds
-		BoundingBox bbox
-		(
-			vec3(getTranslate().x,              Math::MaxFloat, getTranslate().z),
-			vec3(getTranslate().x + C_TileSize, Math::MinFloat, getTranslate().z + C_TileSize)
-		);
-		setBounds(bbox);
+		//BoundingBox bbox
+		//(
+		//	vec3(getTranslate().x,              Math::MaxFloat, getTranslate().z),
+		//	vec3(getTranslate().x + C_TileSize, Math::MinFloat, getTranslate().z + C_TileSize)
+		//);
+		//setBounds(bbox);
 	}
 
 	/*setOpaque(true);
@@ -100,7 +99,7 @@ bool ADT::Load()
 
 		WOWCHUNK_READ_STRINGS_BEGIN
 
-		std::shared_ptr<ADT_TextureInfo> textureInfo = make_shared<ADT_TextureInfo>();
+		std::shared_ptr<ADT_TextureInfo> textureInfo = std::make_shared<ADT_TextureInfo>();
 		textureInfo->textureName = _string;
 
 		m_Textures.push_back(textureInfo);
@@ -109,7 +108,7 @@ bool ADT::Load()
 	}
 
 	// M2 names
-	vector<std::string> m_MDXsNames;
+	std::vector<std::string> m_MDXsNames;
 	f->seek(startPos + header.MMDX);
 	{
 		f->seekRelative(4);
@@ -123,7 +122,7 @@ bool ADT::Load()
 	}
 
 	// M2 Offsets
-	vector<uint32> m_MDXsOffsets;
+	std::vector<uint32> m_MDXsOffsets;
 	f->seek(startPos + header.MMID);
 	{
 		f->seekRelative(4);
@@ -141,7 +140,7 @@ bool ADT::Load()
 	}
 
 	// WMO Names
-	vector<std::string> m_WMOsNames;
+	std::vector<std::string> m_WMOsNames;
 	f->seek(startPos + header.MWMO);
 	{
 		f->seekRelative(4);
@@ -154,7 +153,7 @@ bool ADT::Load()
 	}
 
 	// WMO Offsets
-	vector<uint32> m_WMOsOffsets;
+	std::vector<uint32> m_WMOsOffsets;
 	f->seek(startPos + header.MWID);
 	{
 		f->seekRelative(4);
@@ -172,7 +171,7 @@ bool ADT::Load()
 	}
 
 	// M2 PlacementInfo
-	vector<ADT_MDXDef> m_MDXsPlacementInfo;
+	std::vector<ADT_MDXDef> m_MDXsPlacementInfo;
 	f->seek(startPos + header.MDDF);
 	{
 		f->seekRelative(4);
@@ -188,7 +187,7 @@ bool ADT::Load()
 	}
 
 	// WMO PlacementInfo
-	vector<ADT_MODF> m_WMOsPlacementInfo;
+	std::vector<ADT_MODF> m_WMOsPlacementInfo;
 	f->seek(startPos + header.MODF);
 	{
 		f->seekRelative(4);
@@ -225,7 +224,7 @@ bool ADT::Load()
 						liquid->CreateFromTerrainMH2O(f.operator->(), mh2o_Header);
 
 						// Create instance
-						std::shared_ptr<Liquid_Instance> instance = make_shared<Liquid_Instance>(weak_from_this(), liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(weak_from_this(), liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
 						instance->SetParent(weak_from_this());
 						m_LiquidsInstances.push_back(instance);
 					}
@@ -260,7 +259,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 		_ASSERT(size + 8 == chunks[i].size);
 
-		std::shared_ptr<ADT_MCNK> chunk = make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f.operator->());
+		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f.operator->());
 		chunk->Load();
 		chunk->SetParent(m_MapController);
 		m_Chunks.push_back(chunk);
@@ -271,13 +270,15 @@ bool ADT::Load()
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
+
 	for (auto& it : m_WMOsPlacementInfo)
 	{
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
 		{
-			std::shared_ptr<ADT_WMO_Instance> inst = make_shared<ADT_WMO_Instance>(this, wmo, it);
+			std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), wmo, it);
+			inst->Load();
+			inst->SetParent(shared_from_this());
 			m_WMOsInstances.push_back(inst);
 
 			BoundingBox bbox = getBounds();
@@ -286,14 +287,14 @@ bool ADT::Load()
 		}
 	}
 
+#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	//-- MDXs -------------------------------------------------------------------------
-
 	for (auto& it : m_MDXsPlacementInfo)
 	{
 		SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
-			std::shared_ptr<ADT_MDX_Instance> inst = make_shared<ADT_MDX_Instance>(this, mdx, it);
+			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), mdx, it);
 			m_MDXsInstances.push_back(inst);
 
 			BoundingBox bbox = getBounds();

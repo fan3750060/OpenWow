@@ -13,7 +13,7 @@ WMOsManager::WMOsManager(IOpenGLAdapter* _adapter) :
 
 SmartWMOPtr WMOsManager::CreateAction(cstring name)
 {
-	SmartWMOPtr _wmo = make_shared<WMO>(name);
+	SmartWMOPtr _wmo = std::make_shared<WMO>(name);
 	LoadAction(name, _wmo);
 	return _wmo;
 }

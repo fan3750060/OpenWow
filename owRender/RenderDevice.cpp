@@ -257,9 +257,9 @@ void RenderDevice::beginRendering()
 
 // Geometry
 
-SharedMeshPtr RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
+std::shared_ptr<Mesh> RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
 {
-	SharedMeshPtr geometry = make_shared<R_GeometryInfo>(this);
+	std::shared_ptr<Mesh> geometry = make_shared<R_GeometryInfo>(this);
 	
 	uint32 geometryGLObj;
 	glGenVertexArrays(1, &geometryGLObj);
@@ -312,9 +312,9 @@ SharedTextureBufferPtr RenderDevice::createTextureBuffer(R_TextureFormats::List 
 
 // Texturesm
 
-SharedTexturePtr RenderDevice::createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB)
+std::shared_ptr<Texture> RenderDevice::createTexture(R_TextureTypes::List type, int width, int height, int depth, R_TextureFormats::List format, bool hasMips, bool genMips, bool compress, bool sRGB)
 {
-	SharedTexturePtr tex = make_shared<R_Texture>("<empty>", this);
+	std::shared_ptr<Texture> tex = make_shared<R_Texture>("<empty>", this);
 	tex->createTexture(type, width, height, depth, format, hasMips, genMips, compress, sRGB);
 	checkError();
 	return tex;
@@ -431,7 +431,7 @@ void RenderDevice::commitStates(RenderState* _newStsate, uint32 filter)
 					continue;
 				}
 
-				SharedTexturePtr& tex = _newStsate->m_TextureSlot[i].m_Texture;
+				std::shared_ptr<Texture>& tex = _newStsate->m_TextureSlot[i].m_Texture;
 				uint32 access[3] = { GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE };
 
 				glBindImageTexture(i, tex->m_GLObj, 0, false, 0, access[_newStsate->m_TextureSlot[i].usage - 1], tex->m_GLFmt);
@@ -441,7 +441,7 @@ void RenderDevice::commitStates(RenderState* _newStsate, uint32 filter)
 			}
 			else if (_newStsate->m_TextureSlot[i].m_Texture != nullptr)
 			{
-				SharedTexturePtr& tex = _newStsate->m_TextureSlot[i].m_Texture;
+				std::shared_ptr<Texture>& tex = _newStsate->m_TextureSlot[i].m_Texture;
 				glBindTexture(tex->m_Type, tex->m_GLObj);
 
 				// Apply sampler state

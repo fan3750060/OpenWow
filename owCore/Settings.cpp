@@ -67,7 +67,7 @@ std::string& CSettings::GetString(cstring _name)
 void CSettings::RegisterGroup(GUID _guid, ISettingGroup* _group)
 {
 	_ASSERT(m_Groups.find(_guid) == m_Groups.end());
-	m_Groups.insert(make_pair(_guid, _group));
+	m_Groups.insert(std::make_pair(_guid, _group));
 	_group->InitDefault();
 }
 

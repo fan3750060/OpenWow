@@ -15,7 +15,7 @@ public:
 	//
 
 	void createRenderBuffer(uint32 _width, uint32 _height, R_TextureFormats::List _format, bool _depth, uint32 _numColBufs, uint32 _samples);
-	SharedTexturePtr getRenderBufferTex(uint32 bufIndex);
+	std::shared_ptr<Texture> getRenderBufferTex(uint32 bufIndex);
 	void setRenderBuffer();
 	void resetRenderBuffer();
 	bool getRenderBufferData(int _bufIndex, int* _width, int* _height, int* _compCount, void* _dataBuffer, int _bufferSize);
@@ -29,8 +29,8 @@ public:
 	uint32				m_Width, m_Height;
 	uint32				m_Samples;
 
-	SharedTexturePtr	m_DepthTexture;
-	SharedTexturePtr	m_ColorsTextures[MaxColorAttachmentCount];
+	std::shared_ptr<Texture>	m_DepthTexture;
+	std::shared_ptr<Texture>	m_ColorsTextures[MaxColorAttachmentCount];
 	uint32				m_DepthBufferGLObj;
 	uint32				m_ColorsBuffersGLObj[MaxColorAttachmentCount];  // Used for multisampling
 

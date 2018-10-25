@@ -45,11 +45,11 @@ struct Liquid_Layer
 	bool hasmask;
 	uint8 mask[8];
 
-	vector<float> heights;
-	vector<uint8> depths;
-	vector<pair<float, float>> textureCoords;
+	std::vector<float> heights;
+	std::vector<uint8> depths;
+	std::vector<std::pair<float, float>> textureCoords;
 
-	vector<bool> renderTiles;
+	std::vector<bool> renderTiles;
 
 	// Render
 	void InitTextures();
@@ -76,7 +76,7 @@ protected:
 	uint32						m_TilesCount;
 	BoundingBox					m_Bounds;
 
-	vector<Liquid_Layer>		m_WaterLayers;
+	std::vector<Liquid_Layer>		m_WaterLayers;
 
 	float						ydir;
 

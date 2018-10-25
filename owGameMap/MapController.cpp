@@ -23,8 +23,8 @@ MapController::MapController() :
 	{
 		//setOpaque(true);
 
-		BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
-		setBounds(bbox);
+		//BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
+		//setBounds(bbox);
 	}
 
 	/*time_t t = time(0);   // get time now
@@ -225,7 +225,7 @@ std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
     }
 
     // Create new tile
-    m_ADTCache[firstnull] = make_shared<ADT>(shared_from_this(), x, z);
+    m_ADTCache[firstnull] = std::make_shared<ADT>(shared_from_this(), x, z);
 	m_ADTCache[firstnull]->SetParent(weak_from_this());
 	m_ADTCache[firstnull]->Load();
 	//GetManager<ILoader>()->AddToLoadQueue(m_ADTCache[firstnull]);

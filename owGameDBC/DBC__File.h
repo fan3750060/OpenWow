@@ -285,10 +285,10 @@ public:
 		return Iterator(this, stringTable);
 	}
 
-	const multimap<uint32, RECORD_T*>& Records() const;
+	const std::multimap<uint32, RECORD_T*>& Records() const;
 
 protected:
-	multimap<uint32, RECORD_T*> records;
+	std::multimap<uint32, RECORD_T*> records;
 
 private:
 	std::string m_FileName;

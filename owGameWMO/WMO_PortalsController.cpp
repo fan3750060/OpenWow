@@ -59,7 +59,7 @@ void CWMO_PortalsController::GetPolyFrustum(const vec3* poly, uint32 num_verts, 
 void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvWorldCamera)
 {
 	// Reset all flags
-	for (auto& group : _localContr->getGroupInstances())
+	/*for (auto& group : _localContr->getGroupInstances())
 	{
 		group->m_PortalsVis = false;
 		group->m_Calculated = false;
@@ -115,12 +115,12 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 		{
 			Recur(_localContr, ogr.operator->(), _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
 		}
-	}
+	}*/
 }
 
 bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_Instance* _group, cvec3 _InvWorldCamera, const Frustum& _frustum, bool _isFirstIteration)
 {
-	if (_group == nullptr || _group->m_Calculated)
+	/*if (_group == nullptr || _group->m_Calculated)
 	{
 		return false;
 	}
@@ -184,7 +184,7 @@ bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_I
 			portalFrustum,
 			false
 		);
-	}
+	}*/
 
 	return true;
 }

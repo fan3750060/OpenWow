@@ -14,7 +14,7 @@ Texture2	ExtraSkinTexture	FaceUpperTexture	FacialUpperTexture	ScalpLowerTexture	
 Texture3	-					-					-					ScalpUpperTexture	-
 */
 
-SharedTexturePtr Character_SectionWrapper::getSkinTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getSkinTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -36,7 +36,7 @@ SharedTexturePtr Character_SectionWrapper::getSkinTexture(Character* _character)
 	return nullptr;
 }
 
-SharedTexturePtr Character_SectionWrapper::getSkinExtraTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getSkinExtraTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -62,7 +62,7 @@ SharedTexturePtr Character_SectionWrapper::getSkinExtraTexture(Character* _chara
 //-- Face
 //------------------------------------------------------------
 
-SharedTexturePtr Character_SectionWrapper::getFaceLowerTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getFaceLowerTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -86,7 +86,7 @@ SharedTexturePtr Character_SectionWrapper::getFaceLowerTexture(Character* _chara
 	return nullptr;
 }
 
-SharedTexturePtr Character_SectionWrapper::getFaceUpperTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getFaceUpperTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -216,7 +216,7 @@ uint32 Character_SectionWrapper::getHairGeoset(Character* _character)
 	return UINT32_MAX;
 }
 
-SharedTexturePtr Character_SectionWrapper::getHairTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getHairTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -239,7 +239,7 @@ SharedTexturePtr Character_SectionWrapper::getHairTexture(Character* _character)
 	return nullptr;
 }
 
-SharedTexturePtr Character_SectionWrapper::getHairScalpLowerTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpLowerTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{
@@ -262,7 +262,7 @@ SharedTexturePtr Character_SectionWrapper::getHairScalpLowerTexture(Character* _
 	return nullptr;
 }
 
-SharedTexturePtr Character_SectionWrapper::getHairScalpUpperTexture(Character* _character)
+std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpUpperTexture(Character* _character)
 {
 	for (auto& i : DBC_CharSections)
 	{

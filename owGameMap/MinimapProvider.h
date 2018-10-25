@@ -17,8 +17,8 @@ struct MinimapDir
 	void Render(cvec3 _pos);
 
 	std::string						name;
-	vector<MinimapData_Map*>	data;
-	SharedTexturePtr			textures[C_TilesInMap][C_TilesInMap];
+	std::vector<MinimapData_Map*>	data;
+	std::shared_ptr<Texture>        textures[C_TilesInMap][C_TilesInMap];
 };
 
 class CMinimapProvider
@@ -35,6 +35,6 @@ public:
 private:
 	std::shared_ptr<IFile> m_File;
 
-	vector<MinimapDir*> m_Minimaps;
+	std::vector<MinimapDir*> m_Minimaps;
 	const CGroupVideo& m_GroupVideo;
 };

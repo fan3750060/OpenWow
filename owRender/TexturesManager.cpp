@@ -74,7 +74,7 @@ TexturesManager::~TexturesManager()
 
 //
 
-void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, SharedTexturePtr _texture)
+void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, std::shared_ptr<Texture> _texture)
 {
     // Read data
     BLPHeader header;
@@ -210,9 +210,9 @@ void TexturesManager::LoadBLPTexture(std::shared_ptr<IFile> f, SharedTexturePtr 
 
 // Protected
 
-SharedTexturePtr TexturesManager::CreateAction(cstring _name)
+std::shared_ptr<Texture> TexturesManager::CreateAction(cstring _name)
 {
-	SharedTexturePtr _texture = make_shared<R_Texture>(_name, m_RenderDevice);
+	std::shared_ptr<Texture> _texture = make_shared<R_Texture>(_name, m_RenderDevice);
 	_texture->Fill(DefaultTexture().operator*());
 
 	//Log::Info("TexturesManager[%s]: Texture loaded. Size [%0.0fx%0.0f].", _name.c_str(), _texture->GetSize().x, _texture->GetSize().y);
@@ -220,7 +220,7 @@ SharedTexturePtr TexturesManager::CreateAction(cstring _name)
 	return _texture;
 }
 
-void TexturesManager::LoadAction(std::string name, SharedTexturePtr& item)
+void TexturesManager::LoadAction(std::string name, std::shared_ptr<Texture>& item)
 {
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(name);
 	if (f == nullptr)

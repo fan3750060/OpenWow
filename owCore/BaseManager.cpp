@@ -24,7 +24,7 @@ void CBaseManager::RegisterManager(GUID _type, IManager* _manager)
 		fail1();
 	}
 
-	m_Managers.insert(make_pair(_type, _manager));
+	m_Managers.insert(std::make_pair(_type, _manager));
 }
 
 void CBaseManager::UnregisterManager(GUID _type)

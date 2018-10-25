@@ -64,17 +64,17 @@ bool CM2_Base_Instance::isMeshEnabled(uint32 _index) const
 }
 void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, cstring _textureName)
 {
-	SharedTexturePtr texture = Application::Get().GetRenderDevice()->CreateTexture2D(_textureName);
+	std::shared_ptr<Texture> texture = Application::Get().GetRenderDevice()->CreateTexture2D(_textureName);
 	setSpecialTexture(_type, texture);
 }
-void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, SharedTexturePtr _texture)
+void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture)
 {
 	if (_texture != nullptr)
 	{
 		m_SpecialTextures[_type] = _texture;
 	}
 }
-SharedTexturePtr CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type _type) const
+std::shared_ptr<Texture> CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type _type) const
 {
 	_ASSERT(_type < SM2_Texture::Type::COUNT);
 	return m_SpecialTextures[_type];
@@ -127,13 +127,13 @@ void CM2_Base_Instance::Render3D()
 		//}
 		//}
 
-		m_M2->Render(this/*getAbsTrans(), m_MeshProvider, m_DoodadColor, m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time)*/);
+		m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time)*/);
 		return;
 	}
 
 	//_Render->DrawBoundingBox(getBounds());
 
-	m_M2->Render(this/*getAbsTrans(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time)*/);
+	m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time)*/);
 }
 
 //-----------------

@@ -3,9 +3,7 @@
 // General
 #include "ADT_WMO_Instance.h"
 
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
-
-ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo) :
+ADT_WMO_Instance::ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo) :
 	CWMO_Base_Instance(_parent, _wmoObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;
@@ -22,20 +20,21 @@ ADT_WMO_Instance::ADT_WMO_Instance(SceneNode* _parent, SmartWMOPtr _wmoObject, A
 		rotate.y = rotate.y - glm::half_pi<float>();
 		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);
 		// Matrix
-		CalculateMatrix();
+		CalculateLocalTransform();
 		// Bounds
 		BoundingBox bbox(_placementInfo.boundingBox.min, _placementInfo.boundingBox.max);
 		setBounds(bbox);
 	}
-
-	InitTransform();
-
-	setDrawOrder(21);
 }
 
 ADT_WMO_Instance::~ADT_WMO_Instance()
 {
 	//Log::Info("ADT_WMO Deleted");
+}
+
+void ADT_WMO_Instance::Load()
+{
+	InitTransform();
 }
 
 bool ADT_WMO_Instance::PreRender3D()
@@ -66,6 +65,4 @@ void ADT_WMO_Instance::reset()
 {
 	m_AlreadyDraw.clear();
 }
-set<uint32> ADT_WMO_Instance::m_AlreadyDraw;
-
-#endif
+std::set<uint32> ADT_WMO_Instance::m_AlreadyDraw;

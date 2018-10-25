@@ -8,12 +8,12 @@ class Character_SectionWrapper
 {
 public:
 	// Skin
-	static SharedTexturePtr getSkinTexture(Character* _character);
-	static SharedTexturePtr getSkinExtraTexture(Character* _character);
+	static std::shared_ptr<Texture> getSkinTexture(Character* _character);
+	static std::shared_ptr<Texture> getSkinExtraTexture(Character* _character);
 
 	// Face
-	static SharedTexturePtr getFaceLowerTexture(Character* _character);
-	static SharedTexturePtr getFaceUpperTexture(Character* _character);
+	static std::shared_ptr<Texture> getFaceLowerTexture(Character* _character);
+	static std::shared_ptr<Texture> getFaceUpperTexture(Character* _character);
 
 	// FacialHair
 	static std::string getFacialHairLowerTexture(Character* _character);
@@ -24,9 +24,9 @@ public:
 
 	// Hair
 	static uint32     getHairGeoset(Character* _character);
-	static SharedTexturePtr getHairTexture(Character* _character);
-	static SharedTexturePtr getHairScalpLowerTexture(Character* _character);
-	static SharedTexturePtr getHairScalpUpperTexture(Character* _character);
+	static std::shared_ptr<Texture> getHairTexture(Character* _character);
+	static std::shared_ptr<Texture> getHairScalpLowerTexture(Character* _character);
+	static std::shared_ptr<Texture> getHairScalpUpperTexture(Character* _character);
 
 	// Naked
 	static std::string getNakedPelvisTexture(Character* _character);

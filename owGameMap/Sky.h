@@ -49,8 +49,8 @@ private:
     bool					m_IsGlobalSky;
 
 	SkyParams				m_Params;
-    vector<SkyParam<vec3>>  m_IntBand_Colors[LightColors::COUNT];
-    vector<SkyParam<float>> m_FloatBand_Fogs[LightFogs::COUNT];
+	std::vector<SkyParam<vec3>>  m_IntBand_Colors[LightColors::COUNT];
+	std::vector<SkyParam<float>> m_FloatBand_Fogs[LightFogs::COUNT];
 };
 
 #include "Sky.inl"

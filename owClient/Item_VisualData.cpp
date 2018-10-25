@@ -137,14 +137,14 @@ void CItem_VisualData::InitObjectComponents()
 		}
 		else if (InventoryType == InventoryType::CLOAK)
 		{
-			SharedTexturePtr texture = LoadObjectTexture(InventoryType, objectTextureName);
+			std::shared_ptr<Texture> texture = LoadObjectTexture(InventoryType, objectTextureName);
 			m_ObjectComponents.push_back({ nullptr, texture, nullptr });
 			continue;
 		}
 
 		// Fill data
 		SmartM2Ptr model = LoadObjectModel(InventoryType, objectFileName);
-		SharedTexturePtr itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
+		std::shared_ptr<Texture> itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
 		const CM2_Part_Attachment* itemObjectAttach = m_ParentCharacter->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
@@ -223,7 +223,7 @@ void CItem_VisualData::InitTextureComponents()
 			continue;
 		}
 
-		SharedTexturePtr textureComponent = LoadSkinTexture(ItemTextureComponents[i].list, textureComponentName);
+		std::shared_ptr<Texture> textureComponent = LoadSkinTexture(ItemTextureComponents[i].list, textureComponentName);
 		m_TextureComponents[i] = textureComponent;
 	}
 }
@@ -233,12 +233,12 @@ SmartM2Ptr CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, st
 	return GetManager<IM2Manager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _modelName);
 }
 
-SharedTexturePtr CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, std::string _textureName)
+std::shared_ptr<Texture> CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, std::string _textureName)
 {
 	return GetManager<ITexturesManager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _textureName + ".blp");
 }
 
-SharedTexturePtr CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, std::string _textureName)
+std::shared_ptr<Texture> CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sections::List _type, std::string _textureName)
 {
 	std::string universalTexture = getTextureComponentName(_type, _textureName, Gender::None);
 	std::string maleTexture = getTextureComponentName(_type, _textureName, Gender::Male);

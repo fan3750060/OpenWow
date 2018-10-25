@@ -39,9 +39,9 @@ private:
 	SkyParams m_Interpolated;
 
 	std::shared_ptr<Buffer> colorsBuffer;
-	SharedMeshPtr __geom;
+	std::shared_ptr<Mesh> __geom;
 
-	vector<Sky*> skies;
+	std::vector<Sky*> skies;
 
 private: // PARENT
 	std::weak_ptr<MapController> m_MapController;

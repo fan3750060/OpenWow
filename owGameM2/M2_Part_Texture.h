@@ -14,7 +14,7 @@ public:
 	void set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const;
 
 	// Common texture
-	SharedTexturePtr getTexture() const { return m_Texture; }
+	std::shared_ptr<Texture> getTexture() const { return m_Texture; }
 	// Special texture
 	bool isTextureSpecial() const { return (m_SpecialType != SM2_Texture::Type::NONE); }
 	SM2_Texture::Type getSpecialTextureType() const { return m_SpecialType; }
@@ -23,7 +23,7 @@ private:
 	bool								m_WrapX;
 	bool								m_WrapY;
 
-	SharedTexturePtr					m_Texture;
+	std::shared_ptr<Texture>					m_Texture;
 	SM2_Texture::Type		m_SpecialType;
 
 	//--

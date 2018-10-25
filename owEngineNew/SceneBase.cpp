@@ -8,7 +8,7 @@
 
 SceneBase::SceneBase()
 {
-	m_pRootNode = make_shared<SceneNode>();
+	m_pRootNode = std::make_shared<SceneNode>();
 }
 
 SceneBase::~SceneBase()
@@ -22,7 +22,7 @@ std::shared_ptr<SceneNode> SceneBase::GetRootNode() const
 
 std::shared_ptr<SceneNode> SceneBase::CreateSceneNode(std::shared_ptr<SceneNode> parent)
 {
-	std::shared_ptr<SceneNode> node = make_shared<SceneNode>();
+	std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>();
 
 	node->SetParent(parent != nullptr ? parent : GetRootNode());
 
@@ -31,7 +31,7 @@ std::shared_ptr<SceneNode> SceneBase::CreateSceneNode(std::shared_ptr<SceneNode>
 
 void SceneBase::ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<Mesh> _mesh)
 {
-	std::shared_ptr<SceneNode> node = make_shared<SceneNode>();
+	std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>();
 	node->AddMesh(_mesh);
 
 	node->SetParent(parent);

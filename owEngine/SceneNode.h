@@ -33,7 +33,7 @@ public:
 	{ 
 		if (m_Translate == _translate) return;
 		m_Translate = _translate; 
-		if (_calculateMatrix) CalculateMatrix();
+		if (_calculateMatrix) CalculateLocalTransform();
 	}
 	cvec3 getTranslate() const { return m_Translate; }
 
@@ -42,7 +42,7 @@ public:
 	{ 
 		if (m_Rotate == _rotate) return;
 		m_Rotate = _rotate; 
-		if (_calculateMatrix) CalculateMatrix();
+		if (_calculateMatrix) CalculateLocalTransform();
 	}
 	cvec3 getRotate() const { return m_Rotate; }
 	
@@ -50,7 +50,7 @@ public:
 	void setRotateQuat(cquat _rotate, bool _calculateMatrix = true)
 	{
 		m_RotateQuat = _rotate;
-		if (_calculateMatrix) CalculateMatrix();
+		if (_calculateMatrix) CalculateLocalTransform();
 	}
 	cquat getRotateQuat() const { return m_RotateQuat; }
 
@@ -59,7 +59,7 @@ public:
 	{ 
 		if (m_Scale == _scale) return;
 		m_Scale = _scale; 
-		if (_calculateMatrix) CalculateMatrix();
+		if (_calculateMatrix) CalculateLocalTransform();
 	}
 	cvec3 getScale() const { return m_Scale; }
 
@@ -72,7 +72,7 @@ public:
 	cmat4 getRelTrans() const { return m_RelTransform; }
 
 	void setAbsTrans(cmat4 _matrix) { m_AbsTransform = _matrix; }
-	cmat4 getAbsTrans() const { return m_AbsTransform; }
+	cmat4 GetWorldTransfom() const { return m_AbsTransform; }
 
 	// Checks
 	bool checkFrustum() const;
@@ -104,7 +104,7 @@ public:
 	vec4 getDebugColor() const { return m_DebugColor; }
 
 protected:
-	virtual void CalculateMatrix(bool _isRotationQuat = false);
+	virtual void CalculateLocalTransform(bool _isRotationQuat = false);
 
 private:
 	SceneNode*			m_Parent;

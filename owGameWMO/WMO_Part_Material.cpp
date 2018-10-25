@@ -11,11 +11,11 @@ WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialD
 	m_Proto(_proto),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	m_DiffuseTexture[0] = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + m_Proto.diffuseNameIndex);
+	//m_DiffuseTexture[0] = Application::Get().GetRenderDevice()->CreateTexture2D(_parentWMO->m_TexturesNames + m_Proto.diffuseNameIndex);
 
 	if (m_Proto.envNameIndex)
 	{
-		m_DiffuseTexture[1] = _Render->TexturesMgr()->Add(_parentWMO->m_TexturesNames + m_Proto.envNameIndex);
+		//m_DiffuseTexture[1] = Application::Get().GetRenderDevice()->CreateTexture2D(_parentWMO->m_TexturesNames + m_Proto.envNameIndex);
 	}
 
 	//Log::Warn("Shader = [%d], Blend mode [%d]", m_Proto.shader, m_Proto.blendMode);
@@ -27,6 +27,7 @@ WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialD
 	vec4 color = fromARGB(m_Proto.diffColor);
 }
 
+#ifdef GAME_WMO_INCLUDE_WM2
 void WMO_Part_Material::fillRenderState(RenderState* _state) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
@@ -38,10 +39,11 @@ void WMO_Part_Material::fillRenderState(RenderState* _state) const
 	_state->setCullMode(m_Proto.flags.IsTwoSided ? RS_CULL_NONE : RS_CULL_BACK);
 	_Render->getRenderStorage()->SetEGxBlend(_state, m_Proto.blendMode);
 }
+#endif
 
 void WMO_Part_Material::set() const
 {
-	uint16 sampler = m_QualitySettings.Texture_Sampler;
+	/*uint16 sampler = m_QualitySettings.Texture_Sampler;
 	sampler |= (m_Proto.flags.TextureClampS) ? SS_ADDRU_CLAMP : SS_ADDRU_WRAP;
 	sampler |= (m_Proto.flags.TextureClampT) ? SS_ADDRV_CLAMP : SS_ADDRV_WRAP;
 
@@ -52,5 +54,5 @@ void WMO_Part_Material::set() const
 
 	//_Render->r.setAlphaToCoverage(true);
 
-	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), m_Proto.blendMode);
+	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), m_Proto.blendMode);*/
 }

@@ -39,15 +39,16 @@ public:
 	const int                                   m_IndexX, m_IndexZ;
 	
 
-	vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
+	std::vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
 
 	// Instances
+	std::vector<std::shared_ptr<ADT_WMO_Instance>>	m_WMOsInstances;
 #ifdef GAME_MAP_INCLUDE_WMO_AND_M2
-	vector<std::shared_ptr<ADT_WMO_Instance>>	m_WMOsInstances;
 	vector<std::shared_ptr<ADT_MDX_Instance>>	m_MDXsInstances;
 #endif
-	vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
-	vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
+
+	std::vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
+	std::vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
 
 private: // PARENT
 	const std::weak_ptr<MapController>			m_MapController;

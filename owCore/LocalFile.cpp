@@ -17,8 +17,8 @@ CLocalFile::CLocalFile(cstring _name, cstring _path) :
 bool CLocalFile::Open()
 {
 	// Open stream
-	ifstream stream;
-	stream.open(std::string(m_LocalFilesFolder + Path_Name()), ios::binary);
+	std::ifstream stream;
+	stream.open(std::string(m_LocalFilesFolder + Path_Name()), std::ios::binary);
 
 	// Check stream
 	if (!stream.is_open())
@@ -26,7 +26,7 @@ bool CLocalFile::Open()
 		stream.clear();
 		stream.close();
 
-		stream.open(std::string(Path_Name()), ios::binary);
+		stream.open(std::string(Path_Name()), std::ios::binary);
 
 		if (!stream.is_open())
 		{
@@ -56,7 +56,7 @@ bool CLocalFile::Open()
 	m_ByteBuffer.SetFilled();
 	m_ByteBuffer.getDataEx()[fileSize] = '\0';
 
-	streamsize readedBytes = stream.gcount();
+	std::streamsize readedBytes = stream.gcount();
 	if (readedBytes < fileSize)
 	{
 		//memset(&data[0] + readedBytes, 0, fileSize - static_cast<uint32_t>(readedBytes));
@@ -76,8 +76,8 @@ bool CLocalFile::Open()
 uint64_t CLocalFile::GetFileSize(cstring _name)
 {
 	// Open stream
-	ifstream stream;
-	stream.open(std::string(m_LocalFilesFolder + _name), ios::binary);
+	std::ifstream stream;
+	stream.open(std::string(m_LocalFilesFolder + _name), std::ios::binary);
 
 	// Check stream
 	if (!stream.is_open())
@@ -99,8 +99,8 @@ uint64_t CLocalFile::GetFileSize(cstring _name)
 bool CLocalFile::IsFileExists(cstring _name)
 {
 	// Open stream
-	ifstream stream;
-	stream.open(std::string(m_LocalFilesFolder + _name), ios::binary);
+	std::ifstream stream;
+	stream.open(std::string(m_LocalFilesFolder + _name), std::ios::binary);
 
 	// Check stream
 	if (!stream.is_open())
@@ -108,7 +108,7 @@ bool CLocalFile::IsFileExists(cstring _name)
 		stream.clear();
 		stream.close();
 
-		stream.open(_name, ios::binary);
+		stream.open(_name, std::ios::binary);
 
 		if (!stream.is_open())
 		{

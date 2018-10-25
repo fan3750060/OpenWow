@@ -7,14 +7,14 @@ class MapController;
 class CWDL_LowResTile : public SceneNode
 {
 public:
-	CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, SharedMeshPtr _geom);
+	CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, std::shared_ptr<Mesh> _geom);
 
 	// SceneNode
 	void Render(RenderEventArgs& renderEventArgs);
 
 private:
 	const int				           m_IndexX, m_IndexZ;
-	SharedMeshPtr			           m_Geom;
+	std::shared_ptr<Mesh>              m_Geom;
 
 private: // PARENT
 	const std::weak_ptr<MapController> m_MapController;

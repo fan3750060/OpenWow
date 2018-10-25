@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef GAME_WMO_INCLUDE_WM2
+
 #include "WMO_Headers.h"
 
 #include "WMO_Group.h"
@@ -24,3 +26,5 @@ private:
 	const uint32		m_Index;
 	bool				m_PortalVis;
 };
+
+#endif

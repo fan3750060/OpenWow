@@ -13,6 +13,9 @@ public:
 	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, IFile* _file);
 	virtual ~ADT_MCNK();
 
+	// SceneNode
+	void CalculateLocalTransform(bool _isRotationQuat = false) override { _ASSERT(false); }
+
 	// ILoadable
 	bool Load() override;
 	bool Delete() override;
@@ -28,19 +31,19 @@ public:
 	ADT_MCNK_Header header;
 
 	ADT_MCNK_MCLY mcly[4];
-	SharedTexturePtr m_DiffuseTextures[4];
-	SharedTexturePtr m_SpecularTextures[4];
+	std::shared_ptr<Texture> m_DiffuseTextures[4];
+	std::shared_ptr<Texture> m_SpecularTextures[4];
 
 	std::shared_ptr<Liquid_Instance> m_LiquidInstance;
 
-	SharedTexturePtr m_BlendRBGShadowATexture;
+	std::shared_ptr<Texture> m_BlendRBGShadowATexture;
 
 	// Qulity
 	SharedBufferPtr __ibHigh;
-	SharedMeshPtr __geomHigh;
+	std::shared_ptr<Mesh> __geomHigh;
 
 	SharedBufferPtr __ibDefault;
-	SharedMeshPtr __geomDefault;
+	std::shared_ptr<Mesh> __geomDefault;
 
 private: // PARENT
 	const std::weak_ptr<MapController>	m_MapController;

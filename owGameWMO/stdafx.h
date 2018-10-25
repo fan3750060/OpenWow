@@ -7,7 +7,8 @@
 
 #include <owGameDBC.h>
 #include <owGame.h>
+#ifdef GAME_WMO_INCLUDE_WM2
 #include <owGameM2.h>
-
+#endif
 #include "common.h"
 

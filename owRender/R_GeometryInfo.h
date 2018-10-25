@@ -57,4 +57,4 @@ protected:
 	RenderDevice*				m_RenderDevice;
 };
 
-typedef std::shared_ptr<R_GeometryInfo> SharedMeshPtr;
+typedef std::shared_ptr<R_GeometryInfo> std::shared_ptr<Mesh>;

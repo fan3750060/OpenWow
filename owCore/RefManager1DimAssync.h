@@ -38,7 +38,7 @@ public:
 	virtual void MakeContext();
 
 public:
-	map<std::string, std::shared_ptr<T>> objects;
+	std::map<std::string, std::shared_ptr<T>> objects;
 
 #ifndef DISABLE_ASSYNC
 public:

@@ -3,7 +3,7 @@
 
 std::string Utils::ToString(const type_info& type, void* value)
 {
-	stringstream stream;
+	std::stringstream stream;
 
 	if (type == typeid(bool))
 		stream << *((bool*)value);

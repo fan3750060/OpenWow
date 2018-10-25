@@ -46,7 +46,7 @@ void Utils::ParseKeyPair(std::string& s, std::string& key, std::string& val)
 
 bool Utils::TryParse(const type_info& type, cstring value, void* output)
 {
-	stringstream stream(value);
+	std::stringstream stream(value);
 
 	if (type == typeid(bool))
 		stream >> (bool&)*((bool*)output);
@@ -194,11 +194,11 @@ std::string Utils::stripCarriageReturn(cstring line)
 	return line;
 }
 
-std::string Utils::getLine(ifstream& infile)
+std::string Utils::getLine(std::ifstream& infile)
 {
 	std::string line;
 	// This is the standard way to check whether a read failed.
-	if (!getline(infile, line))
+	if (!std::getline(infile, line))
 		return "";
 	line = stripCarriageReturn(line);
 	return line;

@@ -77,7 +77,7 @@ void SkyManager::Calculate(uint32 _time)
 	}
 
 	// Geometry
-	vector<vec4> colors;
+	std::vector<vec4> colors;
 	for (uint32 h = 0; h < C_SkySegmentsCount; h++)
 	{
 		for (uint32 v = 0; v < C_SkycolorsCount - 1; v++)
@@ -169,7 +169,7 @@ void SkyManager::InitBuffer()
 	vec3 basepos1[C_SkycolorsCount];
 	vec3 basepos2[C_SkycolorsCount];
 
-	vector<vec3> vertices;
+	std::vector<vec3> vertices;
 
 	for (uint32 h = 0; h < C_SkySegmentsCount; h++)
 	{

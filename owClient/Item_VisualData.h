@@ -14,7 +14,7 @@ class Creature_M2Instance;
 struct ObjectComponent
 {
 	CItem_M2Instance*           model;
-	SharedTexturePtr            texture;
+	std::shared_ptr<Texture>            texture;
 	const CM2_Part_Attachment*	attach;
 };
 
@@ -34,7 +34,7 @@ public:
 
 	const vector<ObjectComponent>&  getObjectComponents() const { return m_ObjectComponents; }
 	const vector<GeosetComponent>&  getGeosetComponents() const { return m_GeosetComponents; }
-	SharedTexturePtr                getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
+	std::shared_ptr<Texture>                getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
 
 	void Render3D();
 
@@ -44,8 +44,8 @@ private:
 	void InitTextureComponents();
 
 	SmartM2Ptr        LoadObjectModel   (InventoryType::List _objectType, std::string _modelName);
-	SharedTexturePtr LoadObjectTexture (InventoryType::List _objectType, std::string _textureName);
-	SharedTexturePtr LoadSkinTexture   (DBC_CharComponent_Sections::List _type, std::string _textureName);
+	std::shared_ptr<Texture> LoadObjectTexture (InventoryType::List _objectType, std::string _textureName);
+	std::shared_ptr<Texture> LoadSkinTexture   (DBC_CharComponent_Sections::List _type, std::string _textureName);
 	
 	// Helpers
 	std::string getTextureComponentName(DBC_CharComponent_Sections::List _type, std::string _textureName, Gender::List _gender);
@@ -54,7 +54,7 @@ private:
 private:
 	vector<ObjectComponent>  m_ObjectComponents;
 	vector<GeosetComponent>  m_GeosetComponents;
-	SharedTexturePtr         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
+	std::shared_ptr<Texture>         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
 private: // PARENT
 	Character* m_ParentCharacter;

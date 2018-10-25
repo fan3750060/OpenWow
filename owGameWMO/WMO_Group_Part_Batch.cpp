@@ -19,16 +19,16 @@ WMO_Group_Part_Batch::WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Grou
 	m_Bounds.calculateCenter();
 
 	// Init renderState
-	m_WMOMaterial->fillRenderState(&m_State);
+	//m_WMOMaterial->fillRenderState(&m_State);
 	//m_State.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	m_State.setDepthMask(true);
-	m_State.setDepthTest(true);
+	//m_State.setDepthMask(true);
+	//m_State.setDepthTest(true);
 	//m_State.setGeometry(_parentGroup->__geom); geom is nullptr now, set it later
 }
 
 void WMO_Group_Part_Batch::Render()
 {
-	CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
+	/*CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
 	{
 		pass->SetBlendMode(m_WMOMaterial->getBlendMode());
 
@@ -41,5 +41,5 @@ void WMO_Group_Part_Batch::Render()
 			&m_State,
 			true
 		);
-	}
+	}*/
 }

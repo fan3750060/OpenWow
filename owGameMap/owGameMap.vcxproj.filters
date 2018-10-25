@@ -19,7 +19,7 @@
     <Filter Include="Map\Skies">
       <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pases">
+    <Filter Include="RenderStuff">
       <UniqueIdentifier>{7cb4ca49-cc19-4521-b63c-875a194bd00e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -79,19 +79,19 @@
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="WDL_Node_Pass.cpp">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClCompile>
     <ClCompile Include="ADT_CHUNK_Pass.cpp">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClCompile>
     <ClCompile Include="CreatePasses.cpp">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClCompile>
     <ClCompile Include="WDL_Node_Material.cpp">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClCompile>
     <ClCompile Include="ADT_CHUNK_Material.cpp">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -159,19 +159,19 @@
       <Filter>Map\Skies</Filter>
     </ClInclude>
     <ClInclude Include="WDL_Node_Pass.h">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClInclude>
     <ClInclude Include="ADT_CHUNK_Pass.h">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClInclude>
     <ClInclude Include="CreatePasses.h">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClInclude>
     <ClInclude Include="WDL_Node_Material.h">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClInclude>
     <ClInclude Include="ADT_CHUNK_Material.h">
-      <Filter>Pases</Filter>
+      <Filter>RenderStuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

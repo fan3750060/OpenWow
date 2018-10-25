@@ -48,5 +48,5 @@ public:
 
 private:
 	std::mutex m_Lock;
-	map<T, P> m_Map;
+	std::map<T, P> m_Map;
 };

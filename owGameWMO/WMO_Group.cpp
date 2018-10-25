@@ -29,17 +29,19 @@ WMO_Group::~WMO_Group()
 	ERASE_VECTOR(m_CollisionNodes);
 }
 
-void WMO_Group::CreateInsances(std::shared_ptr<CWMO_Group_Instance> _parent) const
+void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 {
-	if (m_WMOLiqiud != nullptr)
+	_parent.lock()->AddMesh(__geom);
+
+	/*if (m_WMOLiqiud != nullptr)
 	{
 		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
-		std::shared_ptr<CWMO_Liquid_Instance> liquid = make_shared<CWMO_Liquid_Instance>(_parent.operator->(), m_WMOLiqiud.operator->(), realPos, this);
-		_parent->addLiquidInstance(liquid);
-	}
-
+		std::shared_ptr<CWMO_Liquid_Instance> liquid = make_shared<CWMO_Liquid_Instance>(_parent, m_WMOLiqiud.operator->(), realPos, this);
+		_parent.lock()->addLiquidInstance(liquid);
+	}*/
+#ifdef GAME_WMO_INCLUDE_WM2
 	for (auto& index : m_DoodadsPlacementIndexes)
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
@@ -53,6 +55,7 @@ void WMO_Group::CreateInsances(std::shared_ptr<CWMO_Group_Instance> _parent) con
 		}
 		_parent->addDoodadInstance(instance);
 	}
+#endif
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)
@@ -78,7 +81,7 @@ void WMO_Group::Load()
 	SharedBufferPtr	IB_Default = nullptr;
 	dataFromMOVT = nullptr;
 	SharedBufferPtr	VB_Vertexes = nullptr;
-	vector<SharedBufferPtr>	VB_TextureCoords;
+	std::vector<SharedBufferPtr>	VB_TextureCoords;
 	SharedBufferPtr	VB_Normals = nullptr;
 	SharedBufferPtr	VB_Colors = nullptr;
 
@@ -133,7 +136,7 @@ void WMO_Group::Load()
 			uint32 indicesCount = size / sizeof(uint16);
 			uint16* indices = (uint16*)m_F->getDataFromCurrent();
 			// Buffer
-			IB_Default = _Render->r.createIndexBuffer(indicesCount * sizeof(uint16), indices, false);
+			IB_Default = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)indices, indicesCount);
 
 			dataFromMOVI = indices;
 		}
@@ -148,8 +151,8 @@ void WMO_Group::Load()
 				vertexes[i] = Fix_XZmY(vertexes[i]);
 			}
 			// Buffer
-			VB_Vertexes = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec3), vertexes, false);
-			VB_Colors = _Render->r.createVertexBuffer(vertexesCount * sizeof(vec4), nullptr, false);
+			VB_Vertexes = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertexes, vertexesCount, sizeof(vec3));
+			//VB_Colors = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)nullptr, vertexesCount, sizeof(vec4));
 			//m_Bounds.calculate(vertexes, vertexesCount);
 
 			dataFromMOVT = vertexes;
@@ -165,13 +168,13 @@ void WMO_Group::Load()
 				normals[i] = Fix_XZmY(normals[i]);
 			}
 			// Buffer
-			VB_Normals = _Render->r.createVertexBuffer(normalsCount * sizeof(vec3), normals, false);
+			VB_Normals = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)normals, normalsCount, sizeof(vec3));
 		}
-		else if (strcmp(fourcc, "MOTV") == 0) // R_Texture coordinates
+		else if (strcmp(fourcc, "MOTV") == 0) // Texture coordinates
 		{
 			uint32 textureCoordsCount = size / sizeof(vec2);
 			vec2* textureCoords = (vec2*)m_F->getDataFromCurrent();
-			VB_TextureCoords.push_back(_Render->r.createVertexBuffer(textureCoordsCount * sizeof(vec2), textureCoords, false));
+			VB_TextureCoords.push_back(Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)textureCoords, textureCoordsCount, sizeof(vec2)));
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // WMO_Group_Batch
 		{
@@ -244,7 +247,7 @@ void WMO_Group::Load()
 			FixColorVertexAlpha(this);
 
 			// Convert
-			vector<vec4> vertexColorsConverted;
+			std::vector<vec4> vertexColorsConverted;
 			for (uint32 i = 0; i < vertexColorsCount; i++)
 			{
 				vertexColorsConverted.push_back(vec4
@@ -257,7 +260,7 @@ void WMO_Group::Load()
 			}
 
 			// Buffer
-			VB_Colors = _Render->r.createVertexBuffer(vertexColorsConverted.size() * sizeof(vec4), vertexColorsConverted.data(), false);
+			//VB_Colors = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertexColorsConverted.data(), vertexColorsConverted.size(), sizeof(vec4));
 			m_IsMOCVExists = vertexColorsCount > 0;
 
 			delete[] mocv;
@@ -292,7 +295,7 @@ void WMO_Group::Load()
 				}
 			}
 
-			m_WMOLiqiud = make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
+			m_WMOLiqiud = std::make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
 			m_WMOLiqiud->CreateFromWMO(m_F.operator->(), m_ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
 
 		}
@@ -313,19 +316,45 @@ void WMO_Group::Load()
 
 	// Create geom
 	{
-		__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
-		__geom->setGeomVertexParams(VB_Vertexes, R_DataType::T_FLOAT, 0, 0);
-		__geom->setGeomVertexParams(VB_Normals, R_DataType::T_FLOAT, 0, 0);
-		__geom->setGeomVertexParams(VB_Colors, R_DataType::T_FLOAT, 0, 0);
-		__geom->setGeomVertexParams(VB_TextureCoords[0], R_DataType::T_FLOAT, 0, 0);
-		__geom->setGeomVertexParams((VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0], R_DataType::T_FLOAT, 0, 0);
-		__geom->setGeomIndexParams(IB_Default, R_IndexFormat::IDXFMT_16);
-		__geom->finishCreatingGeometry();
+		// CreateShaders
+		std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader(
+			Shader::VertexShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+		);
+		std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader(
+			Shader::PixelShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+		);
+
+		// Create samplers
+		std::shared_ptr<SamplerState> g_LinearClampSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
+		g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+		g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
+
+		std::shared_ptr<SamplerState> g_LinearRepeatSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
+		g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+		g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
+
+		g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_LinearRepeatSampler);
+
+		// Material
+		std::shared_ptr<MaterialTextured> mat = std::make_shared<MaterialTextured>(Application::Get().GetRenderDevice());
+		mat->SetTexture(Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\ShaneCube.blp"));
+		mat->SetShader(Shader::VertexShader, g_pVertexShader);
+		mat->SetShader(Shader::PixelShader, g_pPixelShader);
+
+		__geom = Application::Get().GetRenderDevice()->CreateMesh();
+		__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
+		__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
+		//__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
+		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
+		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
+		__geom->SetIndexBuffer(IB_Default);
+		__geom->SetMaterial(mat);
+		__geom->SetType(SN_TYPE_WMO);
 	}
 
 	for (auto& batch : m_WMOBatchIndexes)
 	{
-		batch->setGeom(__geom);
+		//batch->setGeom(__geom);
 	}
 
 	// Create collision geom
@@ -375,7 +404,7 @@ void WMO_Group::initLighting()
 
 void WMO_Group::Render(cmat4 _world) const
 {
-	{
+	/*{
 		CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
 		pass->Bind();
 		{
@@ -394,15 +423,15 @@ void WMO_Group::Render(cmat4 _world) const
 			}
 		}
 		pass->Unbind();
-	}
+	}*/
 
 	//RenderCollision(_world);
 }
 
 void WMO_Group::RenderCollision(cmat4 _world) const
 {
-	for (auto& node : m_CollisionNodes)
+	/*for (auto& node : m_CollisionNodes)
 	{
 		node->Render(_world);
-	}
+	}*/
 }

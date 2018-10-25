@@ -26,9 +26,9 @@ public:
 	//
 
 	void Init(cvec2 _position, cvec2 _size, Image* _image, Color _color = COLOR_EMPTY);
-    void Init(cvec2 _position, cvec2 _size, SharedTexturePtr _texture, Color _color = COLOR_EMPTY);
+    void Init(cvec2 _position, cvec2 _size, std::shared_ptr<Texture> _texture, Color _color = COLOR_EMPTY);
 
-    void SetTexture(SharedTexturePtr _texture)
+    void SetTexture(std::shared_ptr<Texture> _texture)
     {
         m_Texture = _texture;
     }
@@ -112,7 +112,7 @@ protected:
 	vec2        m_Size;
 	Image*      m_Image;
 	Image*      m_SecondImage;
-	SharedTexturePtr    m_Texture;
+	std::shared_ptr<Texture>    m_Texture;
 	Color       m_Color;
 
 private:

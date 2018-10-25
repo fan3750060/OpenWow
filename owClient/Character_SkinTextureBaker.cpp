@@ -35,9 +35,9 @@ Character_SkinTextureBaker::Character_SkinTextureBaker()
 	}
 }
 
-SharedTexturePtr Character_SkinTextureBaker::createTexture(Character* _character)
+std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _character)
 {
-	SharedTexturePtr bakedSkinTexture = _Render->r.createTexture
+	std::shared_ptr<Texture> bakedSkinTexture = _Render->r.createTexture
 	(
 		R_TextureTypes::Tex2D,
 		SkinTextureWidth,
@@ -95,7 +95,7 @@ SharedTexturePtr Character_SkinTextureBaker::createTexture(Character* _character
 	return bakedSkinTexture;
 }
 
-void Character_SkinTextureBaker::FillWithSkin(SharedTexturePtr _skinTexture)
+void Character_SkinTextureBaker::FillWithSkin(std::shared_ptr<Texture> _skinTexture)
 {
 	_ASSERT(_skinTexture != nullptr);
 	_ASSERT(_skinTexture->m_Width == (SkinTextureWidth / 2) || _skinTexture->m_Width == SkinTextureWidth);
@@ -124,7 +124,7 @@ void Character_SkinTextureBaker::FillWithSkin(SharedTexturePtr _skinTexture)
 
 void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, std::string _name)
 {
-	SharedTexturePtr texture = GetManager<ITexturesManager>()->Add(_name);
+	std::shared_ptr<Texture> texture = GetManager<ITexturesManager>()->Add(_name);
 	if (texture == nullptr)
 	{
 		return;
@@ -133,7 +133,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 	FillPixels(_type, texture);
 }
 
-void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, SharedTexturePtr _compTexture)
+void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, std::shared_ptr<Texture> _compTexture)
 {
 	if (_compTexture == nullptr)
 	{

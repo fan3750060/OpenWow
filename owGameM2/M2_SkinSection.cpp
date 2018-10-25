@@ -58,7 +58,7 @@ void CM2_SkinSection::Draw(RenderState* _state, CM2_Base_Instance* _instance)
 
 		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
 		{
-			skeleton->getBoneLookup(i)->calcBillboard(_instance->getAbsTrans());
+			skeleton->getBoneLookup(i)->calcBillboard(_instance->GetWorldTransfom());
 		}*/
 
 		vector<mat4> bones;

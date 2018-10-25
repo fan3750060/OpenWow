@@ -6,7 +6,7 @@
 // Additional
 #include "BaseManager.h"
 
-void Test(vector<std::string>& _args)
+void Test(std::vector<std::string>& _args)
 {
 	Log::Print("00000000Args size[%d]", _args.size());
 

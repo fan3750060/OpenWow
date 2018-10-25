@@ -8,9 +8,7 @@
 
 WDT::WDT(std::weak_ptr<MapController> _mapController) :
 	m_IsTileBased(false),
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	m_GlobalWMO(nullptr),
-#endif
 	m_MapController(_mapController)
 {}
 
@@ -23,10 +21,8 @@ void WDT::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
 	if (!m_GlobalWMOName.empty())
 	{
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
-		m_GlobalWMO = make_shared<ADT_WMO_Instance>(_parent, wmo, m_GlobalWMOPlacementInfo);
-#endif
+		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(_parent.lock(), wmo, m_GlobalWMOPlacementInfo);
 	}
 }
 

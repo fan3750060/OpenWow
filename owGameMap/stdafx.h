@@ -11,8 +11,8 @@
 #include <owGame.h>
 #ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 #include <owGameM2.h>
-#include <owGameWMO.h>
 #endif
+#include <owGameWMO.h>
 
 #include "common.h"
 

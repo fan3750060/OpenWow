@@ -57,7 +57,7 @@ private:
 
 /*struct R_TextureDeleter
 {
-	void operator()(SharedTexturePtr p)
+	void operator()(std::shared_ptr<Texture> p)
 	{
 		ITexturesManager* textManager = GetManager<ITexturesManager>();
 		if (textManager != nullptr)
@@ -71,7 +71,7 @@ private:
 	}
 };
 
-void R_TextureDeleter2(SharedTexturePtr _texture)
+void R_TextureDeleter2(std::shared_ptr<Texture> _texture)
 {
 	ITexturesManager* textManager = GetManager<ITexturesManager>();
 	if (textManager != nullptr)
@@ -84,4 +84,4 @@ void R_TextureDeleter2(SharedTexturePtr _texture)
 	//_texture = nullptr;
 }*/
 
-typedef std::shared_ptr<R_Texture> SharedTexturePtr;
+typedef std::shared_ptr<R_Texture> std::shared_ptr<Texture>;

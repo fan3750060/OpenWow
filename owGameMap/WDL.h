@@ -16,17 +16,15 @@ public:
 	void CreateInsances(std::weak_ptr<SceneNode> _parent);
 	void Load();
 
-	SharedTexturePtr getMinimap() { return m_Minimap; }
+	std::shared_ptr<Texture> getMinimap() { return m_Minimap; }
 
 private:
-	SharedTexturePtr					        m_Minimap;
-	uint32								        m_MAREOffsets[C_TilesInMap][C_TilesInMap];
-	vector<std::shared_ptr<CWDL_LowResTile>>	m_LowResilutionTiles;
-	vector<std::string>						        m_LowResolutionWMOsNames;
-	vector<ADT_MODF>					        m_LowResolutionWMOsPlacementInfo;
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
-	vector<std::shared_ptr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
-#endif
+	std::shared_ptr<Texture>					    m_Minimap;
+	uint32											m_MAREOffsets[C_TilesInMap][C_TilesInMap];
+	std::vector<std::shared_ptr<CWDL_LowResTile>>	m_LowResilutionTiles;
+	std::vector<std::string>						m_LowResolutionWMOsNames;
+	std::vector<ADT_MODF>					        m_LowResolutionWMOsPlacementInfo;
+	std::vector<std::shared_ptr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
 
 private: // PARENT
 	const std::weak_ptr<MapController>          m_MapController;

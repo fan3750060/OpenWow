@@ -42,9 +42,9 @@ public:
 	// GUI Part
 	//------------------
 
-	void RenderTexture(vec2 _pos, SharedTexturePtr _texture, bool rotate = false);
-    void RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, bool rotate = false);
-	void RenderTexture(vec2 _pos, SharedTexturePtr _texture, vec2 _size, float rotate);
+	void RenderTexture(vec2 _pos, std::shared_ptr<Texture> _texture, bool rotate = false);
+    void RenderTexture(vec2 _pos, std::shared_ptr<Texture> _texture, vec2 _size, bool rotate = false);
+	void RenderTexture(vec2 _pos, std::shared_ptr<Texture> _texture, vec2 _size, float rotate);
 
 	void RenderRectangle(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;
 	void RenderRectangleOutline(vec2 _pos, vec2 _size, const Color& _color = COLOR_GREEN) override;

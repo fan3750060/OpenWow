@@ -14,7 +14,8 @@ enum SceneNodeTypes : uint8
 {
 	SN_TYPE_NONE = 0,
 	SN_TYPE_WDL_NODE,
-	SN_TYPE_ADT_CHUNK
+	SN_TYPE_ADT_CHUNK,
+	SN_TYPE_WMO
 };
 
 class Mesh : public Object
@@ -40,5 +41,3 @@ public:
 private:
 	SceneNodeTypes m_Type;
 };
-
-typedef std::shared_ptr<Mesh> SharedMeshPtr;
