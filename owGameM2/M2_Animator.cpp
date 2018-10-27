@@ -34,7 +34,7 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 
 
 		CM2_Animation* animation = new CM2_Animation(m_M2, record->Get_ID(), record->Get_Name(), findedSeqIndex, m_M2->m_Sequences[findedSeqIndex]);
-		m_Animations.insert(make_pair(record->Get_ID(), animation));
+		m_Animations.insert(std::make_pair(record->Get_ID(), animation));
 		//Log::Warn("Animation [%d] '%s'", record->Get_ID(), record->Get_Name());
 	}
 

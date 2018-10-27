@@ -29,7 +29,7 @@ std::shared_ptr<SceneNode> SceneBase::CreateSceneNode(std::shared_ptr<SceneNode>
 	return node;
 }
 
-void SceneBase::ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<Mesh> _mesh)
+void SceneBase::ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<IMesh> _mesh)
 {
 	std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>();
 	node->AddMesh(_mesh);

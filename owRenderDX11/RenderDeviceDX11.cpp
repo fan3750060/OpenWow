@@ -252,15 +252,15 @@ void RenderDeviceDX11::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer>
 
 //--
 
-std::shared_ptr<Mesh> RenderDeviceDX11::CreateMesh()
+std::shared_ptr<IMesh> RenderDeviceDX11::CreateMesh()
 {
-	std::shared_ptr<Mesh> mesh = std::make_shared<MeshDX11>(m_pDevice);
+	std::shared_ptr<IMesh> mesh = std::make_shared<MeshDX11>(m_pDevice);
 	m_Meshes.push_back(mesh);
 
 	return mesh;
 }
 
-void RenderDeviceDX11::DestroyMesh(std::shared_ptr<Mesh> mesh)
+void RenderDeviceDX11::DestroyMesh(std::shared_ptr<IMesh> mesh)
 {
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
 	if (iter != m_Meshes.end())

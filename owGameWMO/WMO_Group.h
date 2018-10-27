@@ -44,7 +44,7 @@ public:
 	std::vector<CWMO_Part_Portal*>				m_Portals;
 
 public:
-	std::shared_ptr<Mesh>					__geom;
+	std::shared_ptr<IMesh>					__geom;
 
 public:
 	//-- Triangles --//
@@ -68,7 +68,7 @@ public:
 	// MOBN chunk
 	// MOBR chunk
 	std::vector<uint16>                     collisionIndexes;
-	SharedBufferPtr							VB_Collision;
+	std::shared_ptr<Buffer>							VB_Collision;
 	std::vector<CWMO_Group_Part_BSP_Node*>	m_CollisionNodes;
 
 	//-- Liquid --//

@@ -54,7 +54,7 @@ struct Liquid_Layer
 	// Render
 	void InitTextures();
 
-	std::shared_ptr<Mesh>                    m_Mesh;
+	std::shared_ptr<IMesh>                    m_Mesh;
 	std::vector<std::shared_ptr<Texture>>    m_Textures;
 };
 #include __PACK_END
@@ -76,7 +76,7 @@ protected:
 	uint32						m_TilesCount;
 	BoundingBox					m_Bounds;
 
-	std::vector<Liquid_Layer>		m_WaterLayers;
+	std::vector<Liquid_Layer>	m_WaterLayers;
 
 	float						ydir;
 

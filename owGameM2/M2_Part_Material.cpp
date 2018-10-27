@@ -30,18 +30,18 @@ CM2_Part_Material::CM2_Part_Material(const SM2_Material& _proto)
 	m_M2BlendMode = _proto.m_BlendMode;
 }
 
-void CM2_Part_Material::fillRenderState(RenderState* _state) const
+/*void CM2_Part_Material::fillRenderState(RenderState* _state) const
 {
 	_state->setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
 	_state->setDepthTest(m_DepthTestEnabled);
 	_state->setDepthMask(m_DepthMaskEnabled);
 	_Render->getRenderStorage()->SetEGxBlend(_state, M2Blend_To_EGxBlend[m_M2BlendMode].EGxBLend);
-}
+}*/
 
 void CM2_Part_Material::Set() const
 {
-	_Render->r.setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
+	/*_Render->r.setCullMode(m_IsTwoSided ? R_CullMode::RS_CULL_NONE : R_CullMode::RS_CULL_BACK);
 	_Render->r.setDepthTest(m_DepthTestEnabled);
 	_Render->r.setDepthMask(m_DepthMaskEnabled);
-	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), M2Blend_To_EGxBlend[m_M2BlendMode].EGxBLend);
+	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), M2Blend_To_EGxBlend[m_M2BlendMode].EGxBLend);*/
 }

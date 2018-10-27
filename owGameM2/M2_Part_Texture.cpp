@@ -19,11 +19,11 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	if (m_SpecialType == SM2_Texture::Type::NONE)
 	{
 		std::string textureFileName = (const char*)(f->getData() + _proto.filename.offset);
-		m_Texture = _Render->TexturesMgr()->Add(textureFileName);
+		m_Texture = Application::Get().GetRenderDevice()->CreateTexture2D(textureFileName);
 	}
 }
 
-void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const
+/*void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
 
@@ -50,4 +50,4 @@ void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance*
 
 	_ASSERT(getTexture());
 	_state->setTexture(_slot, getTexture(), sampler, 0);
-}
+}*/

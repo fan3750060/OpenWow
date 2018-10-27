@@ -1,6 +1,6 @@
 #pragma once
 
-class Mesh;
+class IMesh;
 class Camera;
 class RenderEventArgs;
 class Visitor;
@@ -79,8 +79,8 @@ public:
 	 * as it is possible that the same mesh is added to multiple scene nodes.
 	 * Deleting the scene node does not delete the meshes associated with it.
 	 */
-	virtual void AddMesh(std::shared_ptr<Mesh> mesh);
-	virtual void RemoveMesh(std::shared_ptr<Mesh> mesh);
+	virtual void AddMesh(std::shared_ptr<IMesh> mesh);
+	virtual void RemoveMesh(std::shared_ptr<IMesh> mesh);
 
 	/**
 	 * Allow a visitor to visit this node.
@@ -94,7 +94,7 @@ protected:
 private:
 	typedef std::vector<std::shared_ptr<SceneNode>> NodeList;
 	typedef std::multimap<std::string, std::shared_ptr<SceneNode>> NodeNameMap;
-	typedef std::vector<std::shared_ptr<Mesh>> MeshList;
+	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
 
 	std::string         m_Name;
 	SceneNodeTypes      m_Type;

@@ -9,15 +9,15 @@ public:
 	~CM2_Manager();
 
 	// IM2Manager
-	SmartM2Ptr Add(cstring name) { return CRefManager1Dim::Add(name); }
+	std::shared_ptr<M2> Add(cstring name) { return CRefManager1Dim::Add(name); }
 	bool Exists(cstring name) const { return CRefManager1Dim::Exists(name); }
 	void Delete(cstring name) { CRefManager1Dim::Delete(name); }
-	void Delete(SmartM2Ptr item) { CRefManager1Dim::Delete(item); }
+	void Delete(std::shared_ptr<M2> item) { CRefManager1Dim::Delete(item); }
 
 	// CRefManager1Dim
-	SmartM2Ptr CreateAction(cstring name) override;
+	std::shared_ptr<M2> CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
 
 private:
-	SmartM2Ptr m_DefaultModel;
+	std::shared_ptr<M2> m_DefaultModel;
 };

@@ -11,22 +11,16 @@
 // Additional
 #include "M2_Part_Material.h"
 
-CM2_Skin::CM2_Skin(M2* _model) :
+CM2_Skin::CM2_Skin(const std::weak_ptr<M2> _model) :
 	m_ParentM2(_model),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
-
-CM2_Skin::~CM2_Skin()
-{
-	ERASE_VECTOR(m_Batches);
-	ERASE_VECTOR(m_Sections);
-}
 
 //
 
 void CM2_Skin::Draw(CM2_Base_Instance* _instance)
 {
-	for (auto& p : m_Batches)
+	for (auto p : m_Batches)
 	{
 		p->Render(_instance);
 	}

@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-class Mesh;
+class IMesh;
 class Texture;
 class SceneNode;
 
@@ -18,7 +18,7 @@ public:
 
 	virtual std::shared_ptr<SceneNode> CreateSceneNode(std::shared_ptr<SceneNode> parent = nullptr);
 
-	virtual void ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<Mesh> _mesh);
+	virtual void ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<IMesh> _mesh);
 
 	virtual void Accept(IVisitor& visitor);
 

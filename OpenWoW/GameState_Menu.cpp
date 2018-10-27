@@ -257,7 +257,7 @@ void GameState_Menu::randBackground()
 	char path[256];
 	sprintf_s(path, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", randui, randui);
 
-	SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(path);
+	std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(path);
 	mdx->getMiscellaneous()->getCamera(0)->setup(vec3(0), 0);
 
 	m_BackgroudModel = make_shared<CM2_Base_Instance>(nullptr, mdx);

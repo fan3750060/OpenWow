@@ -169,7 +169,7 @@ void SceneNode::SetParent(std::weak_ptr<SceneNode> wpNode)
 	}
 }
 
-void SceneNode::AddMesh(std::shared_ptr<Mesh> mesh)
+void SceneNode::AddMesh(std::shared_ptr<IMesh> mesh)
 {
 	assert(mesh);
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
@@ -179,7 +179,7 @@ void SceneNode::AddMesh(std::shared_ptr<Mesh> mesh)
 	}
 }
 
-void SceneNode::RemoveMesh(std::shared_ptr<Mesh> mesh)
+void SceneNode::RemoveMesh(std::shared_ptr<IMesh> mesh)
 {
 	assert(mesh);
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);

@@ -3,7 +3,7 @@
 // General
 #include "ADT_WMO_Instance.h"
 
-ADT_WMO_Instance::ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo) :
+ADT_WMO_Instance::ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject, ADT_MODF& _placementInfo) :
 	CWMO_Base_Instance(_parent, _wmoObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;

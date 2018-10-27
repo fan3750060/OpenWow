@@ -3,7 +3,7 @@
 class RenderEventArgs;
 class Scene;
 class SceneNode;
-class Mesh;
+class IMesh;
 
 // A render pass describes a single pass to render a scene.
 // This could include opaque pass, transparent pass,
@@ -26,5 +26,5 @@ public:
 
 	// Inherited from Visitor
 	virtual void Visit(SceneNode& node) = 0;
-	virtual void Visit(Mesh& mesh) = 0;
+	virtual void Visit(IMesh& mesh) = 0;
 };

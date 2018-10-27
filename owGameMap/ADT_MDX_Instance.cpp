@@ -3,9 +3,7 @@
 // General
 #include "ADT_MDX_Instance.h"
 
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
-
-ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, const ADT_MDXDef& _placementInfo) :
+ADT_MDX_Instance::ADT_MDX_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo) :
 	CM2_Base_Instance(_parent, _mdxObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;
@@ -27,9 +25,9 @@ ADT_MDX_Instance::ADT_MDX_Instance(SceneNode* _parent, SmartM2Ptr _mdxObject, co
 
 	InitLocal();
 	
-	setDrawOrder(21);
-	setDebugColor(vec4(1.0f, 0.0f, 1.0f, 1.0f));
-	setSelectable();
+	//setDrawOrder(21);
+	//setDebugColor(vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	//setSelectable();
 }
 
 ADT_MDX_Instance::~ADT_MDX_Instance()
@@ -71,11 +69,8 @@ void ADT_MDX_Instance::Render3D()
 }
 
 //
-set<uint32> ADT_MDX_Instance::m_AlreadyDraw;
+std::set<uint32> ADT_MDX_Instance::m_AlreadyDraw;
 void ADT_MDX_Instance::reset()
 {
 	m_AlreadyDraw.clear();
 }
-
-
-#endif

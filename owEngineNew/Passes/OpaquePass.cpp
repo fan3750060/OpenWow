@@ -11,7 +11,7 @@ OpaquePass::OpaquePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineSta
 OpaquePass::~OpaquePass()
 {}
 
-void OpaquePass::Visit(Mesh& mesh)
+void OpaquePass::Visit(IMesh& mesh)
 {
 	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
 

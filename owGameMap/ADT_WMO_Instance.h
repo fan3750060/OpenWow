@@ -20,7 +20,7 @@ struct ADT_MODF
 class ADT_WMO_Instance : public CWMO_Base_Instance
 {
 public:
-	ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject, ADT_MODF& _placementInfo);
+	ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject, ADT_MODF& _placementInfo);
 	virtual ~ADT_WMO_Instance();
 
 	void Load();

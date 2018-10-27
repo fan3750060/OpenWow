@@ -19,22 +19,23 @@ void AddMapPasses(RenderDevice* device, RenderWindow* window, RenderTechnique * 
 
 	// STATES
 	BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
+	BlendState::BlendMode disableBlending;
 	DepthStencilState::DepthMode enableDepthWrites(true, DepthStencilState::DepthWrite::Enable);
 	DepthStencilState::DepthMode disableDepthWrites(false, DepthStencilState::DepthWrite::Disable);
 
 	// PIPELINES
 	std::shared_ptr<PipelineState> WDLPipeline = device->CreatePipelineState();
-	WDLPipeline->GetBlendState().SetBlendMode(alphaBlending);
+	WDLPipeline->GetBlendState().SetBlendMode(disableBlending);
 	WDLPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
-	WDLPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
+	WDLPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::Back);
 	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
 	WDLPipeline->SetRenderTarget(window->GetRenderTarget());
 	WDLPipeline->GetRasterizerState().SetViewport(*viewport);
 
 	std::shared_ptr<PipelineState> ADTPipeline = device->CreatePipelineState();
-	ADTPipeline->GetBlendState().SetBlendMode(alphaBlending);
+	ADTPipeline->GetBlendState().SetBlendMode(disableBlending);
 	ADTPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
-	ADTPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
+	ADTPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::Back);
 	ADTPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	ADTPipeline->SetRenderTarget(window->GetRenderTarget());
 	ADTPipeline->GetRasterizerState().SetViewport(*viewport);

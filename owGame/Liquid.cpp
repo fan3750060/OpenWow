@@ -287,22 +287,23 @@ void Liquid::createBuffer()
 		}
 
 
-		std::shared_ptr<Buffer> __vb = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)mh2oVertices.data(), mh2oVertices.size(), sizeof(SLiquidVertexData));
+		//std::shared_ptr<Buffer> __vb = Application::Get().GetRenderDevice()->CreateVertexBuffer((const float*)mh2oVertices.data(), mh2oVertices.size(), sizeof(SLiquidVertexData));
+		//std::shared_ptr<Buffer> __ib = Application::Get().GetRenderDevice()->CreateIndexBuffer(m_Indices.data(), m_Indices.size());
 
-		std::shared_ptr<Buffer> __ib = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer(m_Indices.data(), m_Indices.size());
+		//layer.m_Mesh = Application::Get().GetRenderDevice()->CreateMesh();
+		//layer.m_Mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+		//layer.m_Mesh->SetIndexBuffer(__ib);
 
-		std::shared_ptr<Mesh>  __mesh = Application::Get().GetRenderDevice()->CreateMesh();
-		__mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
-		__mesh->SetIndexBuffer(__ib);
+
 
 		//__mesh->SetMaterial()
 		// Vertex buffer
-		/*SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
+		/*std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
 		layer.m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
 		_ASSERT(layer.m_VerticesCnt > 0);
 
 		// Index bufer
-		SharedBufferPtr __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
+		std::shared_ptr<Buffer> __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
 		layer.m_IndicesCnt = static_cast<uint32>(m_Indices.size());
 		_ASSERT(layer.m_IndicesCnt > 0);
 

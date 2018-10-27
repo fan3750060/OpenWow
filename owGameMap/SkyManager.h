@@ -39,7 +39,7 @@ private:
 	SkyParams m_Interpolated;
 
 	std::shared_ptr<Buffer> colorsBuffer;
-	std::shared_ptr<Mesh> __geom;
+	std::shared_ptr<IMesh> __geom;
 
 	std::vector<Sky*> skies;
 

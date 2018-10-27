@@ -36,5 +36,5 @@ void AbstractPass::PostRender(RenderEventArgs& e)
 void AbstractPass::Visit(SceneNode& node)
 {}
 
-void AbstractPass::Visit(Mesh& mesh)
+void AbstractPass::Visit(IMesh& mesh)
 {}

@@ -6,7 +6,7 @@
 // General
 #include "M2_Part_Light.h"
 
-CM2_Part_Light::CM2_Part_Light(const M2* _parentM2, IFile* f, const SM2_Light& _proto, cGlobalLoopSeq global) :
+CM2_Part_Light::CM2_Part_Light(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Light& _proto, cGlobalLoopSeq global) :
 	m_Bone(nullptr),
 
 	ambColorValue(vec3(1.0f, 1.0f, 1.0f)),

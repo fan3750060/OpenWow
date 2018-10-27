@@ -3,8 +3,7 @@
 // General
 #include "M2_Base_Instance.h"
 
-CM2_Base_Instance::CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartM2Ptr _m2Object) :
-	SceneNode(_parent),
+CM2_Base_Instance::CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _m2Object) :
 	m_M2(nullptr),
 	m_Attached(nullptr),
 	m_Animator(nullptr),
@@ -47,7 +46,7 @@ void CM2_Base_Instance::Detach()
 	m_Attached = nullptr;
 }
 
-void CM2_Base_Instance::setM2(SmartM2Ptr _model)
+void CM2_Base_Instance::setM2(std::shared_ptr<M2> _model)
 {
 	_ASSERT(m_M2 == nullptr);
 	_ASSERT(_model != nullptr);
@@ -145,7 +144,7 @@ void CM2_Base_Instance::InitLocal()
 	// Create animator
 	if (m_M2->isAnimated())
 	{
-		m_Animator = make_shared<CM2_Animator>(m_M2.operator->());
+		m_Animator = std::make_shared<CM2_Animator>(m_M2.operator->());
 		//_Bindings->RegisterUpdatableObject(this);
 	}
 }

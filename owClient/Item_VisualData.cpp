@@ -143,7 +143,7 @@ void CItem_VisualData::InitObjectComponents()
 		}
 
 		// Fill data
-		SmartM2Ptr model = LoadObjectModel(InventoryType, objectFileName);
+		std::shared_ptr<M2> model = LoadObjectModel(InventoryType, objectFileName);
 		std::shared_ptr<Texture> itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
 		const CM2_Part_Attachment* itemObjectAttach = m_ParentCharacter->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
@@ -170,7 +170,7 @@ void CItem_VisualData::InitObjectComponents()
 					continue;
 				}
 
-				SmartM2Ptr visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
+				std::shared_ptr<M2> visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
 
 				std::shared_ptr<CM2_Base_Instance> visInstance = make_shared<CM2_Base_Instance>(itemObjectInstance, visModel);
 				const CM2_Part_Attachment* visAttach = nullptr;
@@ -228,7 +228,7 @@ void CItem_VisualData::InitTextureComponents()
 	}
 }
 
-SmartM2Ptr CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, std::string _modelName)
+std::shared_ptr<M2> CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, std::string _modelName)
 {
 	return GetManager<IM2Manager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _modelName);
 }

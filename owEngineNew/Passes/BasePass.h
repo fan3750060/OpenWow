@@ -27,7 +27,7 @@ public:
 
 	// Inherited from Visitor
 	virtual void Visit(SceneNode& node);
-	virtual void Visit(Mesh& mesh);
+	virtual void Visit(IMesh& mesh);
 
 protected:
 	// PerObject constant buffer data.

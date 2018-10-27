@@ -11,7 +11,7 @@ WMO_Pass::WMO_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> 
 WMO_Pass::~WMO_Pass()
 {}
 
-void WMO_Pass::Visit(Mesh& mesh)
+void WMO_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_WMO)
 	{

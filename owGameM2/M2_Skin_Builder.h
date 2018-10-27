@@ -29,7 +29,6 @@ class CM2_Skin_Builder
 {
 public:
 	CM2_Skin_Builder(CM2_Builder* _m2Builder, M2* _model, CM2_Skin* _skin, IFile* _file);
-	~CM2_Skin_Builder();
 
 	void Load();
 
@@ -44,7 +43,7 @@ private:
 
 	//
 
-	vector<SM2_SkinBatch>	m_SkinBatches;
+	std::vector<SM2_SkinBatch>	m_SkinBatches;
 
 	//--
 	CM2_Builder*			m_M2Builder;

@@ -39,11 +39,11 @@ public:
 	std::shared_ptr<Texture> m_BlendRBGShadowATexture;
 
 	// Qulity
-	SharedBufferPtr __ibHigh;
-	std::shared_ptr<Mesh> __geomHigh;
+	std::shared_ptr<Buffer> __ibHigh;
+	std::shared_ptr<IMesh> __geomHigh;
 
-	SharedBufferPtr __ibDefault;
-	std::shared_ptr<Mesh> __geomDefault;
+	std::shared_ptr<Buffer> __ibDefault;
+	std::shared_ptr<IMesh> __geomDefault;
 
 private: // PARENT
 	const std::weak_ptr<MapController>	m_MapController;

@@ -284,15 +284,15 @@ void RenderDeviceOGL::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> 
 }
 
 
-std::shared_ptr<Mesh> RenderDeviceOGL::CreateMesh()
+std::shared_ptr<IMesh> RenderDeviceOGL::CreateMesh()
 {
-	std::shared_ptr<Mesh> mesh = std::make_shared<MeshOGL>();
+	std::shared_ptr<IMesh> mesh = std::make_shared<MeshOGL>();
 	m_Meshes.push_back(mesh);
 
 	return mesh;
 }
 
-void RenderDeviceOGL::DestroyMesh(std::shared_ptr<Mesh> mesh)
+void RenderDeviceOGL::DestroyMesh(std::shared_ptr<IMesh> mesh)
 {
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
 	if (iter != m_Meshes.end())

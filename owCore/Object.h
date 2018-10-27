@@ -30,10 +30,10 @@ protected:
 	boost::uuids::uuid GetUUID() const;
 
 private:
-	Object(const Object& copy) = delete;
-	Object(Object&& copy) = delete;
-	Object& operator=(const Object& other) = delete;
-	Object& operator=(Object&& other) = delete;
+	Object(const Object&) = delete;
+	Object(Object&&) = delete;
+	Object& operator=(const Object&) = delete;
+	Object& operator=(Object&&) = delete;
 
 	boost::uuids::uuid m_UUID;
 };

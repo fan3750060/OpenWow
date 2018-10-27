@@ -11,7 +11,7 @@ WDL_Node_Pass::WDL_Node_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<Pipel
 WDL_Node_Pass::~WDL_Node_Pass()
 {}
 
-void WDL_Node_Pass::Visit(Mesh& mesh)
+void WDL_Node_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_WDL_NODE)
 	{

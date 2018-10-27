@@ -11,7 +11,7 @@ ADT_CHUNK_Pass::ADT_CHUNK_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<Pip
 ADT_CHUNK_Pass::~ADT_CHUNK_Pass()
 {}
 
-void ADT_CHUNK_Pass::Visit(Mesh& mesh)
+void ADT_CHUNK_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_ADT_CHUNK)
 	{

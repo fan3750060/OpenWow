@@ -11,24 +11,24 @@
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="RenderDevice.cpp" />
     <ClCompile Include="Ray.cpp">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Camera.cpp">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="MaterialBase.cpp">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="MaterialDebug.cpp">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MaterialTextured.cpp">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,7 +39,7 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="BufferBinding.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>Buffers</Filter>
@@ -62,16 +62,16 @@
     <ClInclude Include="Query.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Viewport.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="Ray.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="RaycastHit.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="Rect.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="BlendState.h">
       <Filter>Pipeline</Filter>
@@ -88,44 +88,41 @@
     <ClInclude Include="PipelineState.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadSafeQueue.h">
-      <Filter>Types &amp; Enums</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="Pixel.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="RenderEvents.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="ClearFlags.h">
-      <Filter>Types &amp; Enums\Enums</Filter>
+      <Filter>Types\Enums</Filter>
     </ClInclude>
     <ClInclude Include="CPUAccess.h">
-      <Filter>Types &amp; Enums\Enums</Filter>
+      <Filter>Types\Enums</Filter>
     </ClInclude>
     <ClInclude Include="InputSemantic.h">
-      <Filter>Types &amp; Enums</Filter>
+      <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="PrimitiveTopology.h">
-      <Filter>Types &amp; Enums\Enums</Filter>
+      <Filter>Types\Enums</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="MaterialBase.h">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="MaterialDebug.h">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="MaterialTextured.h">
-      <Filter>Types &amp; Enums\Materials</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -138,14 +135,14 @@
     <Filter Include="Pipeline">
       <UniqueIdentifier>{123d88e5-6f73-4277-900f-1fac68a5662c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Types &amp; Enums">
+    <Filter Include="Materials">
+      <UniqueIdentifier>{440872ae-1af9-47f9-827d-8bad426aa57a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
       <UniqueIdentifier>{e4130516-475b-42b6-940c-b2ad68251d5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Types &amp; Enums\Enums">
+    <Filter Include="Types\Enums">
       <UniqueIdentifier>{57c74fbd-55e5-4070-b317-6527bbe4b296}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Types &amp; Enums\Materials">
-      <UniqueIdentifier>{440872ae-1af9-47f9-827d-8bad426aa57a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

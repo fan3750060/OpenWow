@@ -84,16 +84,16 @@ public:
 
 private:
 	// Attachments, events, lights and cameras
-	vector<CM2_Part_Attachment*>		m_Attachments;
-	vector<int16>						m_AttachmentsLookup;
-	vector<CM2_Part_Event*>				m_Events;
-	vector<CM2_Part_Light*>				m_Lights;
-	vector<CM2_Part_Camera*>			m_Cameras;
-	vector<int16>						m_CamerasLookup;
+	std::vector<CM2_Part_Attachment*>		m_Attachments;
+	std::vector<int16>						m_AttachmentsLookup;
+	std::vector<CM2_Part_Event*>				m_Events;
+	std::vector<CM2_Part_Light*>				m_Lights;
+	std::vector<CM2_Part_Camera*>			m_Cameras;
+	std::vector<int16>						m_CamerasLookup;
 
 	// Particles
-	vector<CM2_RibbonEmitters*>			m_RibbonEmitters;
-	vector<CM2_ParticleSystem*>				particleSystems;
+	std::vector<CM2_RibbonEmitters*>			m_RibbonEmitters;
+	std::vector<CM2_ParticleSystem*>				particleSystems;
 
 	bool								m_HasMisc;
 };

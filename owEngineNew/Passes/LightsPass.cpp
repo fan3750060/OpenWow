@@ -117,7 +117,7 @@ void LightsPass::Visit( SceneNode& node )
 
 }
 
-void LightsPass::Visit( Mesh& mesh )
+void LightsPass::Visit( IMesh& mesh )
 {
     std::shared_ptr<Material> tempMaterial = mesh.GetMaterial();
 

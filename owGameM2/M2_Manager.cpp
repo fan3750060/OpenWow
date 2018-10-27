@@ -35,7 +35,7 @@ CM2_Manager::~CM2_Manager()
 
 //
 
-SmartM2Ptr CM2_Manager::CreateAction(cstring name)
+std::shared_ptr<M2> CM2_Manager::CreateAction(cstring name)
 {
 	std::string newName = Utils::ToLower(name);
 	if (newName.find("orgrimmarsmokeemitter.mdx") != -1 ||
@@ -44,7 +44,7 @@ SmartM2Ptr CM2_Manager::CreateAction(cstring name)
 		return nullptr;
 	}
 
-	SmartM2Ptr model = make_shared<M2>(name);
+	std::shared_ptr<M2> model = std::make_shared<M2>(name);
 
 	CM2_Builder builder(model);
 	if (!builder.Load())

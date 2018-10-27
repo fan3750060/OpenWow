@@ -51,8 +51,8 @@ public:
 	const bool isAnimated() const { return m_IsAnimated; }
 public:
 	GlobalLoopSeq						m_GlobalLoops;
-	vector<SM2_Sequence>				m_Sequences;
-	vector<int16>						m_SequencesLookup;
+	std::vector<SM2_Sequence>				m_Sequences;
+	std::vector<int16>						m_SequencesLookup;
 	bool								m_IsAnimated;
 #pragma endregion
 
@@ -67,22 +67,22 @@ public:
 	CM2_Comp_Skeleton* m_Skeleton;
 
 public:
-	std::string								m_FileName;
-	std::string								m_FileNameWithoutExt;
-	std::string								m_FilePath;
+	std::string							m_FileName;
+	std::string							m_FileNameWithoutExt;
+	std::string							m_FilePath;
 
-	std::string								m_UniqueName;
+	std::string							m_UniqueName;
 	BoundingBox							m_Bounds;
 
 	// Vertices
 	bool								m_IsContainGeom;
 
 	// Skins
-	vector<CM2_Skin*>					m_Skins;
+	std::vector<CM2_Skin*>				m_Skins;
 
 private:
 	// Buffers and geom
-	std::shared_ptr<Mesh>						m_CollisionGeom;
+	std::shared_ptr<IMesh>				m_CollisionGeom;
 	uint32								m_CollisionIndCnt;
 	uint32								m_CollisionVetCnt;
 
@@ -99,4 +99,3 @@ private: // Static and Consts
 		GetManager<IM2Manager>()->Delete(p);
 	}
 };*/
-typedef std::shared_ptr<M2> SmartM2Ptr;

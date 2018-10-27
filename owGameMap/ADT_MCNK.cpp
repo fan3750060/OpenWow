@@ -58,9 +58,9 @@ bool ADT_MCNK::Load()
 		setBounds(bbox);
 	}
 
-	SharedBufferPtr verticesBuffer = nullptr;
-	SharedBufferPtr normalsBuffer = nullptr;
-	SharedBufferPtr mccvBuffer = nullptr;
+	std::shared_ptr<Buffer> verticesBuffer = nullptr;
+	std::shared_ptr<Buffer> normalsBuffer = nullptr;
+	std::shared_ptr<Buffer> mccvBuffer = nullptr;
 
 	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
@@ -108,7 +108,7 @@ bool ADT_MCNK::Load()
 
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(int24), normals_INT24, false);
-		normalsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)tempNormals, C_MapBufferSize, sizeof(vec4));
+		normalsBuffer = Application::Get().GetRenderDevice()->CreateVertexBuffer(tempNormals, C_MapBufferSize);
 	}
 
 	// Heights
@@ -147,7 +147,7 @@ bool ADT_MCNK::Load()
 		bbox.calculateCenter();
 		setBounds(bbox);
 
-		verticesBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)tempVertexes, C_MapBufferSize, sizeof(vec3));
+		verticesBuffer = Application::Get().GetRenderDevice()->CreateVertexBuffer(tempVertexes, C_MapBufferSize);
 	}
 
 	// Textures
@@ -366,7 +366,7 @@ bool ADT_MCNK::Load()
 
 	{ // Geom Default
 		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
-		__ibDefault = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)mapArrayDefault.data(), mapArrayDefault.size());
+		__ibDefault = Application::Get().GetRenderDevice()->CreateIndexBuffer(mapArrayDefault);
 
 		__geomDefault = Application::Get().GetRenderDevice()->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
@@ -453,7 +453,7 @@ void ADT_MCNK::Render3D()
 
 //
 
-/*void ADT_MCNK::drawPass(int anim)
+/*void ADT_MCNK::drawPass(int anim) VERY OLD :)
 {
 	if (anim)
 	{

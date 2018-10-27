@@ -343,7 +343,7 @@ void Camera::CreateRenderable()
 
 
 	// Vertex buffer
-	SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(verts.size()) * sizeof(vec3), verts.data());
+	std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(verts.size()) * sizeof(vec3), verts.data());
 	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, 12);
 	__geom->finishCreatingGeometry();

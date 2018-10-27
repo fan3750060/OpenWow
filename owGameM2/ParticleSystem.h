@@ -5,7 +5,7 @@
 #include "M2_Types.h"
 #include "M2_Part_Bone.h"
 
-typedef list<Particle> ParticleList;
+typedef std::list<Particle> ParticleList;
 
 // Defines
 #define MAX_PARTICLES 10000
@@ -24,7 +24,7 @@ class CM2_ParticleSystem
 	friend class PlaneParticleEmitter;
 	friend class SphereParticleEmitter;
 public:
-	CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals);
+	CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals);
 	~CM2_ParticleSystem();
 
 	void update(double _time, double _dTime);
@@ -55,7 +55,7 @@ private:
 
 	uint32 m_CurrentAnimation, m_CurrentTime, m_GlobalTime;
 	int rows, cols;
-	vector<TexCoordSet> m_Tiles;
+	std::vector<TexCoordSet> m_Tiles;
 
 	bool billboard;
 
@@ -66,11 +66,9 @@ private:
 	int32 flags;
 	int16 pType;
 
-	RenderState							m_State;
-
 private:
-	const M2*             m_ParentM2;
-	const CM2_Part_Bone*  m_ParentBone;
+	const std::weak_ptr<M2>				m_ParentM2;
+	const std::weak_ptr<CM2_Part_Bone>	m_ParentBone;
 };
 
 template<class T>

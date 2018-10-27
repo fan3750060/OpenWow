@@ -29,8 +29,8 @@ public:
 	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 	virtual void DestroyShader(std::shared_ptr<Shader> shader);
 	
-	virtual std::shared_ptr<Mesh> CreateMesh();
-	virtual void DestroyMesh(std::shared_ptr<Mesh> mesh);
+	virtual std::shared_ptr<IMesh> CreateMesh();
+	virtual void DestroyMesh(std::shared_ptr<IMesh> mesh);
 
 	virtual std::shared_ptr<Texture> CreateTexture2D(cstring fileName);
 	virtual std::shared_ptr<Texture> CreateTextureCube(cstring fileName);
@@ -74,7 +74,7 @@ private:
 	typedef std::vector< std::shared_ptr<Buffer> > BufferList;
 	BufferList m_Buffers;
 
-	typedef std::vector< std::shared_ptr<Mesh> > MeshList;
+	typedef std::vector< std::shared_ptr<IMesh> > MeshList;
 	MeshList m_Meshes;
 
 	typedef std::vector< std::shared_ptr<Shader> > ShaderList;

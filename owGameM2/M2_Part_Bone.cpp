@@ -6,7 +6,7 @@
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, vector<std::shared_ptr<IFile>>* animfiles) :
+CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles) :
 	m_ParentBone(nullptr)
 {
 	m_GameBoneId = _proto.key_bone_id;
@@ -93,7 +93,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 
 void CM2_Part_Bone::calcBillboard(cmat4 _worldMatrix)
 {
-	if (IsBillboard())
+	/*if (IsBillboard())
 	{
 		m_TransformMatrix = glm::translate(m_TransformMatrix, pivot);
 		{
@@ -133,5 +133,5 @@ void CM2_Part_Bone::calcBillboard(cmat4 _worldMatrix)
 			m_TransformMatrix[2][2] = vRight.z;
 		}
 		m_TransformMatrix = glm::translate(m_TransformMatrix, pivot * -1.0f);
-	}
+	}*/
 }

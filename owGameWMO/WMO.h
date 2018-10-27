@@ -36,7 +36,7 @@ public:
 
 	bool useAmbColor() const { return !(m_Header.flags.skip_base_color); }
 #ifdef GAME_WMO_INCLUDE_WM2
-	SmartM2Ptr getSkybox() { return m_Skybox; }
+	std::shared_ptr<M2> getSkybox() { return m_Skybox; }
 #endif
 #pragma endregion
 
@@ -57,12 +57,12 @@ public:
 
 	//-- Skybox --//
 #ifdef GAME_WMO_INCLUDE_WM2
-	SmartM2Ptr								m_Skybox;
+	std::shared_ptr<M2>								m_Skybox;
 #endif
 
 	//-- Portals --//
 	std::vector<vec3>						m_PortalVertices;		// MOPV chunk
-	SharedBufferPtr							m_PortalVB;
+	std::shared_ptr<Buffer>							m_PortalVB;
 	std::vector<CWMO_Part_Portal*>			m_Portals;
 	std::vector<SWMO_PortalReferencesDef>	m_PortalReferences;		// MOPR chunk
 	CWMO_PortalsController*					m_PortalController;
@@ -89,5 +89,3 @@ public:
 	//-- Volumes plane --//
 	// MCVP chunk (optional)	
 };
-
-typedef std::shared_ptr<WMO> SmartWMOPtr;

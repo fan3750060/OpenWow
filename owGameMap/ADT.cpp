@@ -273,7 +273,7 @@ bool ADT::Load()
 
 	for (auto& it : m_WMOsPlacementInfo)
 	{
-		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
+		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
 		{
 			std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), wmo, it);
@@ -287,11 +287,10 @@ bool ADT::Load()
 		}
 	}
 
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
 	//-- MDXs -------------------------------------------------------------------------
 	for (auto& it : m_MDXsPlacementInfo)
 	{
-		SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
+		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
 			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), mdx, it);
@@ -302,7 +301,6 @@ bool ADT::Load()
 			setBounds(bbox);
 		}
 	}
-#endif
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

@@ -23,7 +23,7 @@ public:
 
 	// Inherited from Visitor
 	virtual void Visit(SceneNode& node);
-	virtual void Visit(Mesh& mesh);
+	virtual void Visit(IMesh& mesh);
 
 private:
 	bool m_Enabled;

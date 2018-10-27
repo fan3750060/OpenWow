@@ -3,17 +3,17 @@
 // General
 #include "Mesh.h"
 
-Mesh::Mesh()
+IMesh::IMesh()
 	: m_Type(SN_TYPE_NONE)
 {
 }
 
-SceneNodeTypes Mesh::GetType() const
+SceneNodeTypes IMesh::GetType() const
 {
 	return m_Type;
 }
 
-void Mesh::SetType(SceneNodeTypes type)
+void IMesh::SetType(SceneNodeTypes type)
 {
 	m_Type = type;
 }

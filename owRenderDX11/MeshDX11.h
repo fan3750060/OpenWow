@@ -2,7 +2,7 @@
 
 class ConstantBuffer;
 
-class MeshDX11 : public Mesh
+class MeshDX11 : public IMesh
 {
 public:
 	MeshDX11(ID3D11Device2* pDevice);

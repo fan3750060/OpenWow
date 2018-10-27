@@ -257,9 +257,9 @@ void RenderDevice::beginRendering()
 
 // Geometry
 
-std::shared_ptr<Mesh> RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
+std::shared_ptr<IMesh> RenderDevice::beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout)
 {
-	std::shared_ptr<Mesh> geometry = make_shared<R_GeometryInfo>(this);
+	std::shared_ptr<IMesh> geometry = make_shared<R_GeometryInfo>(this);
 	
 	uint32 geometryGLObj;
 	glGenVertexArrays(1, &geometryGLObj);
@@ -273,25 +273,25 @@ std::shared_ptr<Mesh> RenderDevice::beginCreatingGeometry(R_PrimitiveType primTy
 
 // Buffers
 
-SharedBufferPtr RenderDevice::createVertexBuffer(uint32 size, const void *data, bool _isDynamic)
+std::shared_ptr<Buffer> RenderDevice::createVertexBuffer(uint32 size, const void *data, bool _isDynamic)
 {
-	SharedBufferPtr buf = make_shared<R_Buffer>(this);
+	std::shared_ptr<Buffer> buf = make_shared<R_Buffer>(this);
 	buf->createVertexBuffer(size, data, _isDynamic);
 	return buf;
 }
 
-SharedBufferPtr RenderDevice::createIndexBuffer(uint32 size, const void *data, bool _isDynamic)
+std::shared_ptr<Buffer> RenderDevice::createIndexBuffer(uint32 size, const void *data, bool _isDynamic)
 {
-	SharedBufferPtr buf = make_shared<R_Buffer>(this);
+	std::shared_ptr<Buffer> buf = make_shared<R_Buffer>(this);
 	buf->createIndexBuffer(size, data, _isDynamic);
 	return buf;
 }
 
-SharedBufferPtr RenderDevice::createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic)
+std::shared_ptr<Buffer> RenderDevice::createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic)
 {
 	if (m_DeviceCapsSettings.computeShaders)
 	{
-		SharedBufferPtr buf = make_shared<R_Buffer>(this);
+		std::shared_ptr<Buffer> buf = make_shared<R_Buffer>(this);
 		buf->createShaderStorageBuffer(size, data, _isDynamic);
 		return buf;
 	}

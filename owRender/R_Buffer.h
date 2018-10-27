@@ -32,4 +32,4 @@ private:
 	RenderDevice* m_RenderDevice;
 };
 
-typedef std::shared_ptr<R_Buffer> SharedBufferPtr;
+typedef std::shared_ptr<R_Buffer> std::shared_ptr<Buffer>;

@@ -38,7 +38,7 @@ void RenderStorage::CreateGeometry()
 	// Unit quad
 	//-----------------------------------------
 
-	SharedBufferPtr __vbQuad = m_RenderDevice->createVertexBuffer(verticesQuad.size() * sizeof(vec3), verticesQuad.data(), false);
+	std::shared_ptr<Buffer> __vbQuad = m_RenderDevice->createVertexBuffer(verticesQuad.size() * sizeof(vec3), verticesQuad.data(), false);
 	__Quad = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	__Quad->setGeomVertexParams(__vbQuad, R_DataType::T_FLOAT, 0, 0);
 	__Quad->setGeomIndexParams(__ibQuadDefault, R_IndexFormat::IDXFMT_16);
@@ -48,7 +48,7 @@ void RenderStorage::CreateGeometry()
 	// Unit quad with texture coords
 	//-----------------------------------------
 
-	SharedBufferPtr __vbQuadVT = m_RenderDevice->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
+	std::shared_ptr<Buffer> __vbQuadVT = m_RenderDevice->createVertexBuffer(4 * sizeof(Texture_Vertex), nullptr);
 	__vbQuadVT->updateBufferData(0,					4 * sizeof(vec3), verticesQuad.data());
 	__vbQuadVT->updateBufferData(4 * sizeof(vec3),	4 * sizeof(vec2), texCoordsQuad.data());
 
@@ -85,8 +85,8 @@ void RenderStorage::CreateGeometry()
 		4, 0, 3, 3, 7, 4,   3, 2, 6, 6, 7, 3,   4, 5, 1, 1, 0, 4
 	};
 
-	SharedBufferPtr _vbCube = m_RenderDevice->createVertexBuffer(8 * sizeof(vec3), cubeVerts);
-	SharedBufferPtr _ibCube = m_RenderDevice->createIndexBuffer(36 * sizeof(uint16), cubeInds);
+	std::shared_ptr<Buffer> _vbCube = m_RenderDevice->createVertexBuffer(8 * sizeof(vec3), cubeVerts);
+	std::shared_ptr<Buffer> _ibCube = m_RenderDevice->createIndexBuffer(36 * sizeof(uint16), cubeInds);
 
 	_cubeGeo = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	_cubeGeo->setGeomVertexParams(_vbCube, R_DataType::T_FLOAT, 0, sizeof(vec3));
@@ -133,8 +133,8 @@ void RenderStorage::CreateGeometry()
 		}
 	}
 
-	SharedBufferPtr _vbSphere = m_RenderDevice->createVertexBuffer(126 * sizeof(vec3), spVerts);
-	SharedBufferPtr _ibSphere = m_RenderDevice->createIndexBuffer(128 * 3 * sizeof(uint16), spInds);
+	std::shared_ptr<Buffer> _vbSphere = m_RenderDevice->createVertexBuffer(126 * sizeof(vec3), spVerts);
+	std::shared_ptr<Buffer> _ibSphere = m_RenderDevice->createIndexBuffer(128 * 3 * sizeof(uint16), spInds);
 
 	_sphereGeo = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	_sphereGeo->setGeomVertexParams(_vbSphere, R_DataType::T_FLOAT, 0, sizeof(vec3));
@@ -159,8 +159,8 @@ void RenderStorage::CreateGeometry()
 		2, 12, 10,   2, 1, 12,   12, 11, 10
 	};
 
-	SharedBufferPtr _vbCone = m_RenderDevice->createVertexBuffer(13 * sizeof(vec3), coneVerts);
-	SharedBufferPtr _ibCone = m_RenderDevice->createIndexBuffer(22 * 3 * sizeof(uint16), coneInds);
+	std::shared_ptr<Buffer> _vbCone = m_RenderDevice->createVertexBuffer(13 * sizeof(vec3), coneVerts);
+	std::shared_ptr<Buffer> _ibCone = m_RenderDevice->createIndexBuffer(22 * 3 * sizeof(uint16), coneInds);
 
 	_coneGeo = m_RenderDevice->beginCreatingGeometry(PRIM_TRILIST, __layout_GxVBF_P);
 	_coneGeo->setGeomVertexParams(_vbCone, R_DataType::T_FLOAT, 0, sizeof(vec3));

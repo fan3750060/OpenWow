@@ -8,8 +8,8 @@ struct SM2_Loop
 {
 	uint32 timestamp;
 };
-typedef vector<SM2_Loop> GlobalLoopSeq;
-typedef const vector<SM2_Loop>* cGlobalLoopSeq;
+typedef std::vector<SM2_Loop> GlobalLoopSeq;
+typedef const std::vector<SM2_Loop>* cGlobalLoopSeq;
 
 struct SM2_Sequence
 {

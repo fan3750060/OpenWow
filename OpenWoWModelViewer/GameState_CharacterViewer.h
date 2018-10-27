@@ -37,7 +37,7 @@ public:
 	bool OnCharInput(uint32 _char) override { return false; }
 
 private:
-	std::shared_ptr<Mesh> m_DebugGeom;
+	std::shared_ptr<IMesh> m_DebugGeom;
 
 	SharedPtr<Character> m_Char[10];
 

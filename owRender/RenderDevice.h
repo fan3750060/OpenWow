@@ -31,12 +31,12 @@ public:
 	void beginRendering();
 
 	// Geometry
-	std::shared_ptr<Mesh> beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
+	std::shared_ptr<IMesh> beginCreatingGeometry(R_PrimitiveType primType, uint32 _vertexLayout);
 
 	// Buffers
-	SharedBufferPtr createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
-	SharedBufferPtr createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
-	SharedBufferPtr createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	std::shared_ptr<Buffer> createVertexBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	std::shared_ptr<Buffer> createIndexBuffer(uint32 size, const void *data, bool _isDynamic = true);
+	std::shared_ptr<Buffer> createShaderStorageBuffer(uint32 size, const void *data, bool _isDynamic = true);
 	SharedTextureBufferPtr createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
 	uint32 getBufferMem() const { return m_BufferMem; }
 	std::string getBufferMemStr() const { return convertToString(m_BufferMem); }
@@ -75,7 +75,7 @@ public:
 	{
 		m_State.setScissorRect(x, y, width, height);
 	}
-	void setGeometry(std::shared_ptr<Mesh> geoIndex)
+	void setGeometry(std::shared_ptr<IMesh> geoIndex)
 	{
 		m_State.setGeometry(geoIndex);
 	}
@@ -249,7 +249,7 @@ private:
 	
 
 
-	std::shared_ptr<Mesh>				m_DefaultGeometry;
+	std::shared_ptr<IMesh>				m_DefaultGeometry;
 
 
 	//------------------------------------------------------------------------------------

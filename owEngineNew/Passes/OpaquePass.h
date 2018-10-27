@@ -11,7 +11,7 @@ public:
 	OpaquePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~OpaquePass();
 
-	virtual void Visit(Mesh& mesh);
+	virtual void Visit(IMesh& mesh);
 
 protected:
 

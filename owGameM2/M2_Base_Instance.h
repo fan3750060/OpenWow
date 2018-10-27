@@ -5,12 +5,12 @@
 class CM2_Base_Instance : public SceneNode
 {
 public:
-	CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartM2Ptr _m2Object = nullptr);
+	CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _m2Object = nullptr);
 	virtual ~CM2_Base_Instance();
 
 	// CM2_Base_Instance
-	void setM2(SmartM2Ptr _model);
-	SmartM2Ptr getM2() const { return m_M2; }
+	void setM2(std::shared_ptr<M2> _model);
+	std::shared_ptr<M2> getM2() const { return m_M2; }
 
 	void Attach(const CM2_Part_Attachment* _attachment);
 	void Detach();
@@ -56,6 +56,6 @@ private:
 	bool				m_NeedRecalcAnimation;
 
 private: // PARENT
-	SmartM2Ptr					m_M2;
+	std::shared_ptr<M2>					m_M2;
 	const CM2_Part_Attachment*	m_Attached;
 };

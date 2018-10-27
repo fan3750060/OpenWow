@@ -134,7 +134,6 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="ThreadSafeQueue.h" />
     <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <ItemGroup>

@@ -156,7 +156,7 @@ bool WMO::Load()
 			{
 				m_PortalVertices.push_back(Fix_XZmY(portalVertexes[i]));
 			}
-			m_PortalVB = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)m_PortalVertices.data(), m_PortalVertices.size(), sizeof(vec3));
+			m_PortalVB = Application::Get().GetRenderDevice()->CreateVertexBuffer(m_PortalVertices);
 		}
 		else if (strcmp(fourcc, "MOPT") == 0)
 		{

@@ -36,21 +36,18 @@ public:
 	void Render(RenderEventArgs& renderEventArgs);
 
 public:
-	const int                                   m_IndexX, m_IndexZ;
+	const int										m_IndexX, m_IndexZ;
 	
-
 	std::vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
 
 	// Instances
 	std::vector<std::shared_ptr<ADT_WMO_Instance>>	m_WMOsInstances;
-#ifdef GAME_MAP_INCLUDE_WMO_AND_M2
-	vector<std::shared_ptr<ADT_MDX_Instance>>	m_MDXsInstances;
-#endif
+	std::vector<std::shared_ptr<ADT_MDX_Instance>>	m_MDXsInstances;
 
 	std::vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
 	std::vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
 
 private: // PARENT
-	const std::weak_ptr<MapController>			m_MapController;
-	CGroupQuality&								m_QualitySettings;
+	const std::weak_ptr<MapController>				m_MapController;
+	CGroupQuality&									m_QualitySettings;
 };

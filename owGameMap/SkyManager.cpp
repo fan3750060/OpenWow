@@ -193,7 +193,7 @@ void SkyManager::InitBuffer()
 	}
 
 	// Vertex buffer
-	SharedBufferPtr vertexBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertices.data(), vertices.size(), sizeof(vec3));
+	std::shared_ptr<Buffer> vertexBuffer = Application::Get().GetRenderDevice()->CreateVertexBuffer(vertices);
 
 	// Colors buffer
 	//colorsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));

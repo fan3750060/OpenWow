@@ -2,9 +2,6 @@
 
 // Include
 #include "RenderDevice.h"
-#include "Shader.h"
-#include "ShaderParameter.h"
-#include "Texture.h"
 #include "ConstantBuffer.h"
 
 // General

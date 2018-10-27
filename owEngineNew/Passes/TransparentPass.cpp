@@ -10,7 +10,7 @@ TransparentPass::TransparentPass(std::shared_ptr<Scene> scene, std::shared_ptr<P
 TransparentPass::~TransparentPass()
 {}
 
-void TransparentPass::Visit(Mesh& mesh)
+void TransparentPass::Visit(IMesh& mesh)
 {
 	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial /*&& pMaterial->IsTransparent()*/)

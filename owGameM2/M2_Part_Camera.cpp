@@ -44,9 +44,10 @@ void CM2_Part_Camera::setup(cvec3 _startPoint, float rotate)
 	vec3 pp = m_PositionBase + pResult;
 	vec3 tt = m_TargetBase + tResult;
 
-	_Render->getCamera()->setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
-	_Render->getCamera()->Position = pp;
-	_Render->getCamera()->setViewMatrix(glm::lookAt(pp, tt, u));
+	// TODO
+	//_Render->getCamera()->setupViewParams(fov, m_VideoSettings.aspectRatio, nearclip, farclip);
+	//_Render->getCamera()->Position = pp;
+	//_Render->getCamera()->setViewMatrix(glm::lookAt(pp, tt, u));
 }
 
 void CM2_Part_Camera::getParams(vec3* _position, vec3* _target, float* _fov, float* _nearPlane, float* _farPlane)

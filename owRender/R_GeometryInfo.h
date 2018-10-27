@@ -20,7 +20,7 @@ struct R_VertexBufferSlot
 
 	//
 
-	SharedBufferPtr	m_VertexBuffer;
+	std::shared_ptr<Buffer>	m_VertexBuffer;
 	R_DataType		m_VertexBufferDataType;
 	uint32			m_Offset;
 	uint32			m_Stride;
@@ -40,14 +40,14 @@ public:
 
 	//
 
-	void setGeomVertexParams(SharedBufferPtr _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm = false);
-	void setGeomIndexParams(SharedBufferPtr _indBuf, R_IndexFormat _format);
+	void setGeomVertexParams(std::shared_ptr<Buffer> _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm = false);
+	void setGeomIndexParams(std::shared_ptr<Buffer> _indBuf, R_IndexFormat _format);
 	void finishCreatingGeometry();
 
 public:
 	vector<R_VertexBufferSlot>	m_VertexBufInfo;
 	uint32						m_VAOGLObj;
-	SharedBufferPtr				m_IndexBuffer;
+	std::shared_ptr<Buffer>				m_IndexBuffer;
 	R_PrimitiveType				m_PrimType;
 	uint32						m_VertexLayout;
 	R_IndexFormat				m_IndexBufferFormat;
@@ -57,4 +57,4 @@ protected:
 	RenderDevice*				m_RenderDevice;
 };
 
-typedef std::shared_ptr<R_GeometryInfo> std::shared_ptr<Mesh>;
+typedef std::shared_ptr<R_GeometryInfo> std::shared_ptr<IMesh>;

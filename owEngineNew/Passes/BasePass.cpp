@@ -76,7 +76,7 @@ void BasePass::Visit(SceneNode& node)
 	}
 }
 
-void BasePass::Visit(Mesh& mesh)
+void BasePass::Visit(IMesh& mesh)
 {
 	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial && m_pRenderEventArgs)

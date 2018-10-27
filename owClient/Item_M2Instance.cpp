@@ -3,7 +3,7 @@
 // General
 #include "Item_M2Instance.h"
 
-CItem_M2Instance::CItem_M2Instance(CM2_Base_Instance* _parent, SmartM2Ptr _model) :
+CItem_M2Instance::CItem_M2Instance(CM2_Base_Instance* _parent, std::shared_ptr<M2> _model) :
 	CM2_Base_Instance(_parent, _model)
 { 
 

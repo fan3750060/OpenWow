@@ -32,8 +32,8 @@ public:
 		return (m_Materials[_index]);
 	}
 private:
-	vector<CM2_Part_Color*>				m_Colors;
-	vector<CM2_Part_Material*>			m_Materials;
+	std::vector<CM2_Part_Color*>				m_Colors;
+	std::vector<CM2_Part_Material*>			m_Materials;
 
 	//--------------------------------------------------------------------
 
@@ -76,18 +76,18 @@ public:
 		return (m_TexturesTransform[newIndex]);
 	}
 public:
-	vector<CM2_Part_Texture*>			m_Textures;
-	vector<int16_t>						m_TexturesLookup;
+	std::vector<CM2_Part_Texture*>			m_Textures;
+	std::vector<int16_t>						m_TexturesLookup;
 	//--
-	vector<int16_t>						m_TexturesUnitLookup;
-	vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
-	vector<int16_t>						m_TexturesCombos;
+	std::vector<int16_t>						m_TexturesUnitLookup;
+	std::vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
+	std::vector<int16_t>						m_TexturesCombos;
 	//--
-	vector<CM2_Part_TextureWeight*>		m_TextureWeights;
-	vector<int16_t>						m_TextureWeightsLookup;
+	std::vector<CM2_Part_TextureWeight*>		m_TextureWeights;
+	std::vector<int16_t>						m_TextureWeightsLookup;
 	//--
-	vector<CM2_Part_TextureTransform*>	m_TexturesTransform;
-	vector<int16_t>						m_TexturesTransformLookup;
+	std::vector<CM2_Part_TextureTransform*>	m_TexturesTransform;
+	std::vector<int16_t>						m_TexturesTransformLookup;
 	bool								m_IsAnimTextures;
 
 };

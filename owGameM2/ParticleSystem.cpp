@@ -6,7 +6,7 @@
 // General
 #include "ParticleSystem.h"
 
-CM2_ParticleSystem::CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Particle& _proto, cGlobalLoopSeq globals) :
+CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Particle& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_parentM2),
 	m_Emitter(nullptr), 
 	mid(0), 
@@ -15,10 +15,13 @@ CM2_ParticleSystem::CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Partic
 	m_CurrentTime(0.0),
 	m_GlobalTime(0.0)
 {
-	m_Position = Fix_XZmY(_proto.Position);
-	m_ParentBone = m_ParentM2->getSkeleton()->getBoneDirect(_proto.bone);
+	const std::shared_ptr<M2> ParentM2 = m_ParentM2.lock();
+	_ASSERT(ParentM2 != nullptr);
 
-	texture = m_ParentM2->getMaterials()->m_Textures[_proto.texture]->getTexture();
+	m_Position = Fix_XZmY(_proto.Position);
+	m_ParentBone = ParentM2->getSkeleton()->getBoneDirect(_proto.bone);
+
+	texture = ParentM2->getMaterials()->m_Textures[_proto.texture]->getTexture();
 
 	blend = _proto.blendingType;
 	uint8 emitterType = _proto.emitterType;
@@ -45,11 +48,11 @@ CM2_ParticleSystem::CM2_ParticleSystem(M2* _parentM2, IFile* f, const SM2_Partic
 	enabled.init(_proto.enabledIn, f, globals);
 
 	// Blend state
-	m_State.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_ONE);
+	/*m_State.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_ONE);
 	m_State.setCullMode(R_CullMode::RS_CULL_BACK);
 	m_State.setDepthMask(false);
 	_ASSERT(texture != nullptr);
-	m_State.setTexture(Material::C_DiffuseTextureIndex, texture, 0, 0);
+	m_State.setTexture(Material::C_DiffuseTextureIndex, texture, 0, 0);*/
 
 
 	vec3 colors2[3];
@@ -272,7 +275,7 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 		vUp = vec3(modelview[1], modelview[5], modelview[9]);
 	}*/
 
-
+	/*
 	if (billboard)
 	{
 		mat4 W = _worldMatrix;
@@ -285,9 +288,10 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 		//vec3 vForward = vec3(VW[0][2], VW[1][2], VW[2][2]) / worldScale.z;
 		//vRight *= -1.0f;
 	}
+	*/
 
-	vector<ParticleVertex> vertices;
-	vector<uint16> m_Indices;
+	std::vector<ParticleVertex> vertices;
+	std::vector<uint16> m_Indices;
 	uint32 cntr = 0;
 
 	/*
@@ -370,15 +374,15 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 	}
 
 	// Vertex buffer
-	_ASSERT(vertices.data() != nullptr);
-	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
+	/*_ASSERT(vertices.data() != nullptr);
+	std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
 
 	// Index buffer
 	_ASSERT(m_Indices.data() != nullptr);
-	SharedBufferPtr __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
+	std::shared_ptr<Buffer> __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
 
 	// Geometry
-	std::shared_ptr<Mesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
+	std::shared_ptr<IMesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(ParticleVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(ParticleVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 28, sizeof(ParticleVertex));
@@ -396,7 +400,7 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 
 		_Render->r.drawIndexed(0, m_Indices.size(), 0, vertices.size(), &m_State, true);
 	}
-	pass->Unbind();
+	pass->Unbind();*/
 }
 
 //

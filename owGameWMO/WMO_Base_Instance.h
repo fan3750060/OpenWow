@@ -10,11 +10,11 @@
 class CWMO_Base_Instance : public SceneNode
 {
 public:
-	CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject);
+	CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject);
 	virtual ~CWMO_Base_Instance();
 
 	// WMO_Base_Instance
-	SmartWMOPtr getObject() { return m_Object; }
+	std::shared_ptr<WMO> getObject() { return m_Object; }
 	void InitTransform();
 	void EmptyTransformAndBounds();
 
@@ -38,7 +38,7 @@ public:
 	void Render3D();
 
 protected:
-	const SmartWMOPtr						m_Object;
+	const std::shared_ptr<WMO>						m_Object;
 	SWMO_Doodad_SetInfo						m_DoodadSetInfo;
 
 	mat4									m_InvWorld;

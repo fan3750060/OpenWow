@@ -6,7 +6,7 @@ class Camera;
 class Buffer;
 class StructuredBuffer;
 class Scene;
-class Mesh;
+class IMesh;
 class Shader;
 class Texture;
 class SamplerState;

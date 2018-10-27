@@ -43,7 +43,7 @@ private:
 	void InitGeosetComponents();
 	void InitTextureComponents();
 
-	SmartM2Ptr        LoadObjectModel   (InventoryType::List _objectType, std::string _modelName);
+	std::shared_ptr<M2>        LoadObjectModel   (InventoryType::List _objectType, std::string _modelName);
 	std::shared_ptr<Texture> LoadObjectTexture (InventoryType::List _objectType, std::string _textureName);
 	std::shared_ptr<Texture> LoadSkinTexture   (DBC_CharComponent_Sections::List _type, std::string _textureName);
 	

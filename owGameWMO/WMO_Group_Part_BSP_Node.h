@@ -17,6 +17,6 @@ private:
 	const WMO_Group* m_ParentGroup;
 	SWMO_Group_MOBNDef m_Proto;
 
-	std::shared_ptr<Mesh>							m_GEOM_Collision;
+	std::shared_ptr<IMesh>							m_GEOM_Collision;
 	vec4 color;
 };

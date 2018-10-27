@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Material.h"
-class Texture;
 class ConstantBuffer;
 
 class MaterialDebug : public Material

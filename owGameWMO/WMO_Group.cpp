@@ -46,7 +46,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
 
-		SmartM2Ptr mdx = GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
+		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
 		std::shared_ptr<CWMO_Doodad_Instance> instance = nullptr;
 		if (mdx)
 		{
@@ -78,12 +78,12 @@ void WMO_Group::Load()
 {
 	// Buffer
 	uint16* dataFromMOVI = nullptr;
-	SharedBufferPtr	IB_Default = nullptr;
+	std::shared_ptr<Buffer>	IB_Default = nullptr;
 	dataFromMOVT = nullptr;
-	SharedBufferPtr	VB_Vertexes = nullptr;
-	std::vector<SharedBufferPtr>	VB_TextureCoords;
-	SharedBufferPtr	VB_Normals = nullptr;
-	SharedBufferPtr	VB_Colors = nullptr;
+	std::shared_ptr<Buffer>	VB_Vertexes = nullptr;
+	std::vector<std::shared_ptr<Buffer>>	VB_TextureCoords;
+	std::shared_ptr<Buffer>	VB_Normals = nullptr;
+	std::shared_ptr<Buffer>	VB_Colors = nullptr;
 
 	// CollisionTEMP
 	uint32 collisionCount = 0;
@@ -136,7 +136,7 @@ void WMO_Group::Load()
 			uint32 indicesCount = size / sizeof(uint16);
 			uint16* indices = (uint16*)m_F->getDataFromCurrent();
 			// Buffer
-			IB_Default = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)indices, indicesCount);
+			IB_Default = Application::Get().GetRenderDevice()->CreateIndexBuffer(indices, indicesCount);
 
 			dataFromMOVI = indices;
 		}
@@ -151,8 +151,8 @@ void WMO_Group::Load()
 				vertexes[i] = Fix_XZmY(vertexes[i]);
 			}
 			// Buffer
-			VB_Vertexes = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertexes, vertexesCount, sizeof(vec3));
-			//VB_Colors = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)nullptr, vertexesCount, sizeof(vec4));
+			VB_Vertexes = Application::Get().GetRenderDevice()->CreateVertexBuffer(vertexes, vertexesCount);
+			//VB_Colors = Application::Get().GetRenderDevice()->CreateVertexBuffer(nullptr, vertexesCount);
 			//m_Bounds.calculate(vertexes, vertexesCount);
 
 			dataFromMOVT = vertexes;
@@ -168,13 +168,13 @@ void WMO_Group::Load()
 				normals[i] = Fix_XZmY(normals[i]);
 			}
 			// Buffer
-			VB_Normals = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)normals, normalsCount, sizeof(vec3));
+			VB_Normals = Application::Get().GetRenderDevice()->CreateVertexBuffer(normals, normalsCount);
 		}
 		else if (strcmp(fourcc, "MOTV") == 0) // Texture coordinates
 		{
 			uint32 textureCoordsCount = size / sizeof(vec2);
 			vec2* textureCoords = (vec2*)m_F->getDataFromCurrent();
-			VB_TextureCoords.push_back(Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)textureCoords, textureCoordsCount, sizeof(vec2)));
+			VB_TextureCoords.push_back(Application::Get().GetRenderDevice()->CreateVertexBuffer(textureCoords, textureCoordsCount));
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // WMO_Group_Batch
 		{

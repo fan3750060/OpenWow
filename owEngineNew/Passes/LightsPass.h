@@ -18,7 +18,7 @@ public:
     // Inherited from Visitor
     virtual void Visit( Scene& scene );
     virtual void Visit( SceneNode& node );
-    virtual void Visit( Mesh& mesh );
+    virtual void Visit( IMesh& mesh );
 
 protected:
     const Light* GetCurrentLight();

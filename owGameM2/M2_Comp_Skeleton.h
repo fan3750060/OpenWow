@@ -57,9 +57,9 @@ public:
 
 
 private:
-	vector<CM2_Part_Bone*>				m_Bones;
-	vector<int16>						m_BonesLookup;
-	vector<int16>						m_GameBonesLookup;
+	std::vector<CM2_Part_Bone*>			m_Bones;
+	std::vector<int16>					m_BonesLookup;
+	std::vector<int16>					m_GameBonesLookup;
 	bool								m_HasBones;
 	bool								m_IsAnimBones;
 	bool								m_IsBillboard;

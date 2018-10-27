@@ -37,5 +37,5 @@ private:
 	int32					m_GrInner;
 	int32					m_GrOuter;
 
-	std::shared_ptr<Mesh>			m_Geom;
+	std::shared_ptr<IMesh>			m_Geom;
 };

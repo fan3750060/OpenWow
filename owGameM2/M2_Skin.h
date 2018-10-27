@@ -15,16 +15,15 @@ class CM2_Skin
 {
 	friend CM2_Skin_Builder;
 public:
-	CM2_Skin(M2* _model);
-	~CM2_Skin();
+	CM2_Skin(const std::weak_ptr<M2> _model);
 
 	void Draw(CM2_Base_Instance* _instance);
 
 private:
-	vector<CM2_SkinSection*>	m_Sections;
-	vector<CM2_Skin_Batch*>		m_Batches;
+	std::vector<std::shared_ptr<CM2_SkinSection>>	m_Sections;
+	std::vector<std::shared_ptr<CM2_Skin_Batch>>   m_Batches;
 
 private: // PARENT
-	M2* m_ParentM2;
+	const std::weak_ptr<M2> m_ParentM2;
 	CGroupQuality& m_QualitySettings;
 };

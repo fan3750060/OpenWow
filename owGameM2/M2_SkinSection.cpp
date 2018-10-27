@@ -8,7 +8,7 @@
 // General
 #include "M2_SkinSection.h"
 
-CM2_SkinSection::CM2_SkinSection(M2* _model, const uint16 _index, const SM2_SkinSection& _proto) :
+CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<M2> _model, const uint16 _index, const SM2_SkinSection& _proto) :
 	m_Index(_index),
 	m_Proto(_proto),
 	m_ParentM2(_model),
@@ -17,10 +17,12 @@ CM2_SkinSection::CM2_SkinSection(M2* _model, const uint16 _index, const SM2_Skin
 
 }
 
-void CM2_SkinSection::CreateGeometry(vector<SM2_Vertex>& _vertexes, vector<uint16>& _indexes)
+void CM2_SkinSection::CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes)
 {
-	SharedBufferPtr __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
-	SharedBufferPtr __ib = _Render->r.createIndexBuffer(static_cast<uint32>(_indexes.size()) * sizeof(uint16), _indexes.data(), false);
+	std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
+	std::shared_ptr<Buffer> __ib = Application::Get().GetRenderDevice()->CreateIndexBuffer(_indexes);
+
+	std::shared_ptr<Buffer> __vbPos = Application::Get().GetRenderDevice()->CreateFloatBuffer(
 
 	// Begin geometry
 	__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PBNT2);
@@ -46,22 +48,16 @@ void CM2_SkinSection::Draw(RenderState* _state, CM2_Base_Instance* _instance)
 	{
 		pass->SetBonesMaxInfluences(m_Proto.boneInfluences);
 
-		/*for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		{
-			skeleton->getBoneLookup(i)->SetNeedCalculate();
-		}
+		//for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		//	skeleton->getBoneLookup(i)->SetNeedCalculate();
 
-		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		{
-			skeleton->getBoneLookup(i)->calcMatrix(_instance->getAnimator()->getSequenceIndex(), _instance->getAnimator()->getCurrentTime(), _instance->m_Time);
-		}
+		//for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		//	skeleton->getBoneLookup(i)->calcMatrix(_instance->getAnimator()->getSequenceIndex(), _instance->getAnimator()->getCurrentTime(), _instance->m_Time);
 
-		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		{
-			skeleton->getBoneLookup(i)->calcBillboard(_instance->GetWorldTransfom());
-		}*/
+		//for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
+		//	skeleton->getBoneLookup(i)->calcBillboard(_instance->GetWorldTransfom());
 
-		vector<mat4> bones;
+		std::vector<mat4> bones;
 		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
 		{
 			_ASSERT(skeleton->isLookupBoneCorrect(i));

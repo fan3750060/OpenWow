@@ -6,7 +6,7 @@
 // Additional
 #include "M2_Skin_Builder.h"
 
-CM2_Builder::CM2_Builder(SmartM2Ptr _model) :
+CM2_Builder::CM2_Builder(std::shared_ptr<M2> _model) :
 	m_M2(_model),
 	m_F(nullptr),
 	m_GlobalLoops(nullptr),
@@ -518,12 +518,12 @@ void CM2_Builder::Step8Skins()
 
 void CM2_Builder::Step9Collision()
 {
-	SharedBufferPtr collisonVB = nullptr;
-	SharedBufferPtr collisonIB = nullptr;
+	std::shared_ptr<Buffer> collisonVB = nullptr;
+	std::shared_ptr<Buffer> collisonIB = nullptr;
 
 	if (m_Header.collisionVertices.size > 0)
 	{
-		vector<vec3> collisionVertices;
+		std::vector<vec3> collisionVertices;
 		vec3* CollisionVertices = (vec3*)(m_F->getData() + m_Header.collisionVertices.offset);
 		for (uint32 i = 0; i < m_Header.collisionVertices.size; i++)
 		{
@@ -535,29 +535,30 @@ void CM2_Builder::Step9Collision()
 			collisionVertices[i] = Fix_XZmY(collisionVertices[i]);
 		}
 
-		collisonVB = _Render->r.createVertexBuffer(static_cast<uint32>(collisionVertices.size()) * sizeof(vec3), collisionVertices.data(), false);
+		collisonVB = Application::Get().GetRenderDevice()->CreateVertexBuffer(collisionVertices);
 	}
 
 	if (m_Header.collisionTriangles.size > 0)
 	{
-		vector<uint16> collisionTriangles;
+		std::vector<uint16> collisionTriangles;
 		uint16* CollisionTriangles = (uint16*)(m_F->getData() + m_Header.collisionTriangles.offset);
 		for (uint32 i = 0; i < m_Header.collisionTriangles.size; i++)
 		{
 			collisionTriangles.push_back(CollisionTriangles[i]);
 		}
 
-		collisonIB = _Render->r.createIndexBuffer(collisionTriangles.size() * sizeof(uint16), collisionTriangles.data(), false);
+		collisonIB = Application::Get().GetRenderDevice()->CreateIndexBuffer(collisionTriangles);
 	}
 
 	if (collisonVB != nullptr && collisonIB != nullptr)
 	{
 		m_M2->m_CollisionVetCnt = m_Header.collisionVertices.size;
 		m_M2->m_CollisionIndCnt = m_Header.collisionTriangles.size;
-		m_M2->m_CollisionGeom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
-		m_M2->m_CollisionGeom->setGeomVertexParams(collisonVB, R_DataType::T_FLOAT, 0, sizeof(vec3)); // pos 0-2
-		m_M2->m_CollisionGeom->setGeomIndexParams(collisonIB, R_IndexFormat::IDXFMT_16);
-		m_M2->m_CollisionGeom->finishCreatingGeometry();
+
+		//m_M2->m_CollisionGeom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
+		//m_M2->m_CollisionGeom->setGeomVertexParams(collisonVB, R_DataType::T_FLOAT, 0, sizeof(vec3)); // pos 0-2
+		//m_M2->m_CollisionGeom->setGeomIndexParams(collisonIB, R_IndexFormat::IDXFMT_16);
+		//m_M2->m_CollisionGeom->finishCreatingGeometry();
 	}
 	else
 	{

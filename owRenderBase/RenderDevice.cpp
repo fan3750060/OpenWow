@@ -3,37 +3,7 @@
 // General
 #include "RenderDevice.h"
 
-// GLM's own quaternion from two vector constructor does not handle cases 
-// where the vectors may be pointing in opposite directions.
-// This method handles the cases where the u and v vectors are opposites.
-// source: http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final
-// accessed: 26/05/2015
-inline glm::quat RotationFromTwoVectors(cvec3 u, cvec3 v)
-{
-	float normUV = glm::sqrt(glm::dot(u, u) * glm::dot(v, v));
-	float real = normUV + glm::dot(u, v);
-
-	vec3 vec;
-
-	if (real < 1.e-6f * normUV)
-	{
-		/* If u and v are exactly opposite, rotate 180 degrees
-		* around an arbitrary orthogonal axis. Axis normalisation
-		* can happen later, when we normalise the quaternion.
-		*/
-		real = 0.0f;
-		vec = (glm::abs(u.x) > abs(u.z)) ? vec3(-u.y, u.x, 0.0f) : vec3(0.0f, -u.z, u.y);
-	}
-	else
-	{
-		/* Otherwise, build quaternion the standard way. */
-		vec = glm::cross(u, v);
-	}
-
-	return glm::normalize(glm::quat(real, vec));
-}
-
-std::shared_ptr<Mesh> RenderDevice::CreatePlane(cvec3 N)
+std::shared_ptr<IMesh> RenderDevice::CreatePlane(cvec3 N)
 {
 	vec3 p[4];
 	p[0] = vec3(1.0f, 0, 1.0f);
@@ -55,15 +25,15 @@ std::shared_ptr<Mesh> RenderDevice::CreatePlane(cvec3 N)
 	i[4] = 3;
 	i[5] = 0;
 
-	std::shared_ptr<Mesh> mesh = CreateMesh();
+	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)p, 4, sizeof(vec3));
+	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(p, 4);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __tb = CreateFloatVertexBuffer((const float*)t, 4, sizeof(vec2));
+	std::shared_ptr<Buffer> __tb = CreateVertexBuffer(t, 4);
 	mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __tb);
 
-	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer(i, 6);
+	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(i, 6);
 	mesh->SetIndexBuffer(__ib);
 
 	//std::shared_ptr<Material> mat = CreateMaterial();
@@ -73,7 +43,7 @@ std::shared_ptr<Mesh> RenderDevice::CreatePlane(cvec3 N)
 	return mesh;
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateScreenQuad(float left, float right, float bottom, float top, float z)
+std::shared_ptr<IMesh> RenderDevice::CreateScreenQuad(float left, float right, float bottom, float top, float z)
 {
 	vec3 p[4]; // Vertex position
 	vec3 n[4]; // Vertex normal (required for texture patch polygons)
@@ -88,15 +58,15 @@ std::shared_ptr<Mesh> RenderDevice::CreateScreenQuad(float left, float right, fl
 	p[3] = vec3(right, top, z);      n[3] = vec3(0, 0, 1);    t[3] = vec2(1, 1);
 
 
-	std::shared_ptr<Mesh> mesh = CreateMesh();
+	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)p, 4, sizeof(vec3));
+	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(p, 4);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __tb = CreateFloatVertexBuffer((const float*)t, 4, sizeof(vec2));
+	std::shared_ptr<Buffer> __tb = CreateVertexBuffer(t, 4);
 	mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __tb);
 
-	std::shared_ptr<Buffer> __nb = CreateFloatVertexBuffer((const float*)n, 4, sizeof(vec3));
+	std::shared_ptr<Buffer> __nb = CreateVertexBuffer(n, 4);
 	mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), __nb);
 
 	//std::shared_ptr<Material> mat = CreateMaterial();
@@ -106,7 +76,7 @@ std::shared_ptr<Mesh> RenderDevice::CreateScreenQuad(float left, float right, fl
 	return mesh;
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateSphere()
+std::shared_ptr<IMesh> RenderDevice::CreateSphere()
 {
 	vec3 spVerts[126] =
 	{  // x, y, z
@@ -146,12 +116,12 @@ std::shared_ptr<Mesh> RenderDevice::CreateSphere()
 		}
 	}
 
-	std::shared_ptr<Mesh> mesh = CreateMesh();
+	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)spVerts, 126, sizeof(vec3));
+	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(spVerts, 126);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)spInds, 128 * 3);
+	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(spInds, 128 * 3);
 	mesh->SetIndexBuffer(__ib);
 
 	//std::shared_ptr<Material> mat = CreateMaterial();
@@ -161,7 +131,7 @@ std::shared_ptr<Mesh> RenderDevice::CreateSphere()
 	return mesh;
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateCube()
+std::shared_ptr<IMesh> RenderDevice::CreateCube()
 {
 	float cubeVerts[8 * 3] = {  // x, y, z
 		-0.5f, -0.5f,  0.5f,   0.5f, -0.5f,  0.5f,  0.5f, 0.5f,  0.5f,   -0.5f, 0.5f, 0.5f,
@@ -172,12 +142,12 @@ std::shared_ptr<Mesh> RenderDevice::CreateCube()
 		4, 0, 3, 3, 7, 4,   3, 2, 6, 6, 7, 3,   4, 5, 1, 1, 0, 4
 	};
 
-	std::shared_ptr<Mesh> mesh = CreateMesh();
+	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)cubeVerts, 8 * 3, sizeof(vec3));
+	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(cubeVerts, 8 * 3);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)cubeInds, 36);
+	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(cubeInds, 36);
 	mesh->SetIndexBuffer(__ib);
 
 	//std::shared_ptr<Material> mat = CreateMaterial();
@@ -187,7 +157,7 @@ std::shared_ptr<Mesh> RenderDevice::CreateCube()
 	return mesh;
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
+std::shared_ptr<IMesh> RenderDevice::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
 {
 	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
@@ -214,7 +184,7 @@ std::shared_ptr<Mesh> RenderDevice::CreateCylinder(float baseRadius, float apexR
 	return nullptr;
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateCone()
+std::shared_ptr<IMesh> RenderDevice::CreateCone()
 {
 	float coneVerts[13 * 3] = {  // x, y, z
 		0.f, 0.f, 0.f,
@@ -230,12 +200,12 @@ std::shared_ptr<Mesh> RenderDevice::CreateCone()
 		2, 12, 10,   2, 1, 12,   12, 11, 10
 	};
 
-	std::shared_ptr<Mesh> mesh = CreateMesh();
+	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateFloatVertexBuffer((const float*)coneVerts, 13 * 3, sizeof(vec3));
+	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(coneVerts, 13 * 3);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __ib = CreateUInt16IndexBuffer((const uint16*)coneInds, 22 * 3);
+	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(coneInds, 22 * 3);
 	mesh->SetIndexBuffer(__ib);
 
 	//std::shared_ptr<Material> mat = CreateMaterial();
@@ -245,7 +215,7 @@ std::shared_ptr<Mesh> RenderDevice::CreateCone()
 	return mesh;
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateArrow(cvec3 tail, cvec3 head, float radius)
+std::shared_ptr<IMesh> RenderDevice::CreateArrow(cvec3 tail, cvec3 head, float radius)
 {
 	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
@@ -282,37 +252,57 @@ std::shared_ptr<Mesh> RenderDevice::CreateArrow(cvec3 tail, cvec3 head, float ra
 
 }
 
-std::shared_ptr<Mesh> RenderDevice::CreateAxis(float radius, float length)
+std::shared_ptr<IMesh> RenderDevice::CreateAxis(float radius, float length)
 {
 
 	return nullptr;
 }
 
-// Template specializations for vertex buffers.
+// Template specializations for vertex buffers (with std::vector)
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
 {
 	return CreateFloatVertexBuffer(&(data[0]), (uint32)data.size(), sizeof(float));
 }
-
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), sizeof(vec2));
 }
-
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), sizeof(vec3));
 }
-
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), sizeof(vec4));
 }
 
+// Template specializations for vertex buffers (with common types)
+template<>
+std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
+{
+	return CreateFloatVertexBuffer(data, count, sizeof(float));
+}
+template<>
+std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
+{
+	return CreateFloatVertexBuffer((const float*)data, count, sizeof(vec2));
+}
+template<>
+std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
+{
+	return CreateFloatVertexBuffer((const float*)data, count, sizeof(vec3));
+}
+template<>
+std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
+{
+	return CreateFloatVertexBuffer((const float*)data, count, sizeof(vec4));
+}
+
+// Template specializations for index buffers (with std::vector)
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer< std::vector<uint16> >(const std::vector<uint16>& data)
 {
@@ -323,4 +313,17 @@ template<>
 std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer< std::vector<uint32> >(const std::vector<uint32>& data)
 {
 	return CreateUInt32IndexBuffer(&(data[0]), (uint32)data.size());
+}
+
+// Template specializations for index buffers (with common types)
+template<>
+std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count)
+{
+	return CreateUInt16IndexBuffer(data, count);
+}
+
+template<>
+std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer<uint32>(const uint32* data, uint32 count)
+{
+	return CreateUInt32IndexBuffer(data, count);
 }

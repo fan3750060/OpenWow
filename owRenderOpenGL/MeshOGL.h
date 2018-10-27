@@ -2,7 +2,7 @@
 
 class ShaderOGL;
 
-class MeshOGL : public Mesh
+class MeshOGL : public IMesh
 {
 public:
 	MeshOGL();

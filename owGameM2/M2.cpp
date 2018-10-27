@@ -42,27 +42,27 @@ void M2::Render(CM2_Base_Instance* _instance)
 {
 	if (m_IsContainGeom)
 	{
-		CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
+		/*CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 		pass->Bind();
 		{
 			pass->setWorld(_instance->GetWorldTransfom());
 			pass->SetColorDoodad(_instance->getColor());
 
-			/*for (auto& it : m_Skins)
-			{
-				it->Draw(_instance);
-				break;
-			}*/
+			//for (auto& it : m_Skins)
+			//{
+			//	it->Draw(_instance);
+			//	break;
+			//}
 			m_Skins.back()->Draw(_instance);
 		}
-		pass->Unbind();
+		pass->Unbind();*/
 
-		/*RenderCollision(_worldMatrix);
+		//RenderCollision(_worldMatrix);
 
-		for (auto& it : m_Skins)
-		{
-		it->RenderNormals();
-		}*/
+		//for (auto& it : m_Skins)
+		//{
+		//it->RenderNormals();
+		//}
 	}
 
 	// Ribbons
@@ -71,7 +71,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 
 void M2::RenderCollision(cmat4 _worldMatrix)
 {
-	if (m_CollisionGeom == nullptr)
+	/*if (m_CollisionGeom == nullptr)
 	{
 		return;
 	}
@@ -89,7 +89,7 @@ void M2::RenderCollision(cmat4 _worldMatrix)
 	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
+	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);*/
 }
 
 void M2::update(double _time, double _dTime)

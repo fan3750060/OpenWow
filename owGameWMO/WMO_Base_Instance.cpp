@@ -3,7 +3,7 @@
 // General
 #include "WMO_Base_Instance.h"
 
-CWMO_Base_Instance::CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, SmartWMOPtr _wmoObject) :
+CWMO_Base_Instance::CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject) :
 	m_Object(_wmoObject)
 {
 	_ASSERT(m_Object);

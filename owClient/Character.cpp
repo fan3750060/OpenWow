@@ -165,7 +165,7 @@ void Character::CreateCharacterModel()
 	std::string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
 	std::string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
 
-	SmartM2Ptr model = GetManager<IM2Manager>()->Add(fullModelName);
+	std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add(fullModelName);
 	_ASSERT(model != nullptr);
 
 	setM2(model);

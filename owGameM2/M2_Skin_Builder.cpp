@@ -43,7 +43,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 		const SM2_SkinSection& section = t_sections[sectionIndex];
 		CM2_SkinSection* skinSection = new CM2_SkinSection(m_ParentM2, sectionIndex, section);
 
-		vector<SM2_Vertex> vertexes;
+		std::vector<SM2_Vertex> vertexes;
 		for (uint32 vert = section.vertexStart; vert < section.vertexStart + section.vertexCount; vert++)
 		{
 			SM2_Vertex newVertex = m_M2Builder->m_Vertexes[t_verticesIndexes[vert]];
@@ -56,7 +56,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 			vertexes.push_back(newVertex);
 		}
 
-		vector<uint16> indexes;
+		std::vector<uint16> indexes;
 		for (uint16 ind = section.indexStart; ind < section.indexStart + section.indexCount; ind++)
 		{
 			uint16 index = t_indexesIndexes[ind];

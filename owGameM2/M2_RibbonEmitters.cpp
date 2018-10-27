@@ -17,11 +17,14 @@ struct RibbonVertex
 	vec2 tex;
 };
 
-CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
+CM2_RibbonEmitters::CM2_RibbonEmitters(const std::weak_ptr<M2> _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_model),
 	tcolor(vec4(1.0f))
 {
-	m_Bone = (m_ParentM2->getSkeleton()->getBoneDirect(_proto.boneIndex));
+	const std::shared_ptr<M2> ParentM2 = m_ParentM2.lock();
+	_ASSERT(ParentM2 != nullptr);
+
+	m_Bone = (ParentM2->getSkeleton()->getBoneDirect(_proto.boneIndex));
 	posValue = pos = Fix_XZmY(_proto.position);
 
 	m_Color.init(_proto.colorTrack, f, globals);
@@ -33,11 +36,11 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(M2* _model, IFile* f, const SM2_RibbonEmi
 		uint16_t* TexturesList = (uint16_t*)(f->getData() + _proto.textureIndices.offset);
 		// just use the first texture for now; most models I've checked only had one
 		_ASSERT(_proto.textureIndices.size > 0);
-		m_Texture = m_ParentM2->getMaterials()->m_Textures[TexturesList[0]]->getTexture();
+		m_Texture = ParentM2->getMaterials()->m_Textures[TexturesList[0]]->getTexture();
 
 		uint16_t* MaterialsList = (uint16_t*)(f->getData() + _proto.materialIndices.offset);
 		_ASSERT(_proto.materialIndices.size > 0);
-		m_Material = (m_ParentM2->getMaterials()->GetMaterial(MaterialsList[0]));
+		m_Material = (ParentM2->getMaterials()->GetMaterial(MaterialsList[0]));
 	}
 
 	// TODO: figure out actual correct way to calculate length
@@ -127,9 +130,9 @@ void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime, cma
 
 void CM2_RibbonEmitters::Render(cmat4 _world)
 {
-	vector<RibbonVertex> vertices;
+	std::vector<RibbonVertex> vertices;
 
-	list<RibbonSegment>::iterator it = segs.begin();
+	std::list<RibbonSegment>::iterator it = segs.begin();
 	float l = 0;
 	for (; it != segs.end(); ++it)
 	{
@@ -203,10 +206,10 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 
 
 	// Vertex buffer
-	SharedBufferPtr __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
+	/*std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
-	std::shared_ptr<Mesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_PT);
+	std::shared_ptr<IMesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_PT);
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(RibbonVertex));
 	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(RibbonVertex));
 	__geom->finishCreatingGeometry();
@@ -229,5 +232,5 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 
 		_Render->r.draw(0, vertices.size());
 	}
-	pass->Unbind();
+	pass->Unbind();*/
 }

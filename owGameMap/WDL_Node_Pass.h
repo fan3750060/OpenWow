@@ -9,7 +9,7 @@ public:
 	WDL_Node_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~WDL_Node_Pass();
 
-	virtual void Visit(Mesh& mesh);
+	virtual void Visit(IMesh& mesh);
 
 protected:
 

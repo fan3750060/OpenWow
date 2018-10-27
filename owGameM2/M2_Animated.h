@@ -28,7 +28,7 @@ public:
 		if (m_DataOUT != nullptr) delete[] m_DataOUT;
 	}
 
-	void init(const M2Track<D>& b, IFile* f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix, vector<std::shared_ptr<IFile>>* animfiles = nullptr)
+	void init(const M2Track<D>& b, IFile* f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix, std::vector<std::shared_ptr<IFile>>* animfiles = nullptr)
 	{
 		m_Type = b.interpolation_type;
 		m_GlobalSeqIndex = b.global_sequence;
@@ -43,12 +43,12 @@ public:
 		m_Count = b.timestamps.size;
 		if (b.timestamps.size == 0)	return;
 
-		m_Times = new vector<uint32>[m_Count];
-		m_Data = new vector<T>[m_Count];
+		m_Times = new std::vector<uint32>[m_Count];
+		m_Data = new std::vector<T>[m_Count];
 		if (m_Type == INTERPOLATION_HERMITE)
 		{
-			m_DataIN = new vector<T>[m_Count];
-			m_DataOUT = new vector<T>[m_Count];
+			m_DataIN = new std::vector<T>[m_Count];
+			m_DataOUT = new std::vector<T>[m_Count];
 		}
 
 		// times
@@ -60,18 +60,18 @@ public:
 			D* keys = nullptr;
 			if (animfiles != nullptr && animfiles->at(j) != nullptr)
 			{
-				assert3(pHeadTimes[j].offset < animfiles->at(j)->getSize(), to_string(pHeadTimes[j].offset).c_str(), to_string(animfiles->at(j)->getSize()).c_str());
+				assert3(pHeadTimes[j].offset < animfiles->at(j)->getSize(), std::to_string(pHeadTimes[j].offset).c_str(), std::to_string(animfiles->at(j)->getSize()).c_str());
 				times = (uint32*)(animfiles->at(j)->getData() + pHeadTimes[j].offset);
 
-				assert3(pHeadKeys[j].offset < animfiles->at(j)->getSize(), to_string(pHeadKeys[j].offset).c_str(), to_string(animfiles->at(j)->getSize()).c_str());
+				assert3(pHeadKeys[j].offset < animfiles->at(j)->getSize(), std::to_string(pHeadKeys[j].offset).c_str(), std::to_string(animfiles->at(j)->getSize()).c_str());
 				keys = (D*)(animfiles->at(j)->getData() + pHeadKeys[j].offset);
 			}
 			else
 			{
-				assert3(pHeadTimes[j].offset < f->getSize(), to_string(pHeadTimes[j].offset).c_str(), to_string(f->getSize()).c_str());
+				assert3(pHeadTimes[j].offset < f->getSize(), std::to_string(pHeadTimes[j].offset).c_str(), std::to_string(f->getSize()).c_str());
 				times = (uint32*)(f->getData() + pHeadTimes[j].offset);
 
-				assert3(pHeadKeys[j].offset < f->getSize(), to_string(pHeadKeys[j].offset).c_str(), to_string(f->getSize()).c_str());
+				assert3(pHeadKeys[j].offset < f->getSize(), std::to_string(pHeadKeys[j].offset).c_str(), std::to_string(f->getSize()).c_str());
 				keys = (D*)(f->getData() + pHeadKeys[j].offset);
 			}
 
@@ -142,8 +142,8 @@ public:
 			return T();
 		}
 
-		const vector<uint32>& pTimes = m_Times[anim];
-		const vector<T>& pData = m_Data[anim];
+		const std::vector<uint32>& pTimes = m_Times[anim];
+		const std::vector<T>& pData = m_Data[anim];
 
 		if ((m_Count > anim) && (pData.size() > 1) && (pTimes.size() > 1))
 		{
@@ -197,8 +197,8 @@ private:
 
 	uint32			m_Count;
 
-	vector<uint32>*	m_Times;
-	vector<T>*		m_Data;
-	vector<T>*		m_DataIN;
-	vector<T>*		m_DataOUT;
+	std::vector<uint32>*	m_Times;
+	std::vector<T>*			m_Data;
+	std::vector<T>*			m_DataIN;
+	std::vector<T>*			m_DataOUT;
 };

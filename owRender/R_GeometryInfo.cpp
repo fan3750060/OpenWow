@@ -36,7 +36,7 @@ R_GeometryInfo::~R_GeometryInfo()
 	glBindVertexArray(0);
 }
 
-void R_GeometryInfo::setGeomVertexParams(SharedBufferPtr _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm)
+void R_GeometryInfo::setGeomVertexParams(std::shared_ptr<Buffer> _vbo, R_DataType _type, uint32 _offset, uint32 _stride, bool _needNorm)
 {
 	R_VertexBufferSlot attribInfo;
 	attribInfo.m_VertexBuffer = _vbo;
@@ -48,7 +48,7 @@ void R_GeometryInfo::setGeomVertexParams(SharedBufferPtr _vbo, R_DataType _type,
 	m_VertexBufInfo.push_back(attribInfo);
 }
 
-void R_GeometryInfo::setGeomIndexParams(SharedBufferPtr _indBuf, R_IndexFormat _format)
+void R_GeometryInfo::setGeomIndexParams(std::shared_ptr<Buffer> _indBuf, R_IndexFormat _format)
 {
 	m_IndexBuffer = _indBuf;
 	m_IndexBufferFormat = _format;
@@ -74,7 +74,7 @@ void R_GeometryInfo::finishCreatingGeometry()
 		R_VertexLayoutAttrib& attrib = vl.attribs[i];
 		const R_VertexBufferSlot& vbSlot = m_VertexBufInfo[attrib.vbSlot];
 
-		SharedBufferPtr buf = m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer;
+		std::shared_ptr<Buffer> buf = m_VertexBufInfo[attrib.vbSlot].m_VertexBuffer;
 		_ASSERT(buf->m_GLObj && buf->m_Type == GL_ARRAY_BUFFER || buf->m_Type == GL_SHADER_STORAGE_BUFFER); // special case for compute buffer
 
 		glBindBuffer(GL_ARRAY_BUFFER, buf->m_GLObj);

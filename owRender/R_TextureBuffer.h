@@ -14,7 +14,7 @@ public:
 	void createTextureBuffer(R_TextureFormats::List format, uint32 bufSize, const void *data, bool _isDynamic = true);
 
 public:
-	SharedBufferPtr	m_Buffer;
+	std::shared_ptr<Buffer>	m_Buffer;
 	uint32			m_GLFmt;
 	uint32			m_GLTexID;
 

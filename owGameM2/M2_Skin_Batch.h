@@ -13,7 +13,7 @@ class CM2_Skin_Batch
 {
 	friend CM2_Skin_Builder;
 public:
-	CM2_Skin_Batch(const M2* _parentM2);
+	CM2_Skin_Batch(const std::weak_ptr<M2>	 _parentM2);
 
 	void Init();
 
@@ -26,18 +26,16 @@ private:
 	int32								m_PriorityPlan;
 	CM2_SkinSection*					m_SkinSection;
 
-	const CM2_Part_Color*				m_Color;
-	const CM2_Part_Material*			m_Material;
-	vector<const CM2_Part_Texture*>		m_Textures;
-	int16								m_TextureUnit;
-	const CM2_Part_TextureWeight*		m_TextureWeight;
-	const CM2_Part_TextureTransform*	m_TextureTransform;
+	const CM2_Part_Color*					m_Color;
+	const CM2_Part_Material*				m_Material;
+	std::vector<const CM2_Part_Texture*>	m_Textures;
+	int16									m_TextureUnit;
+	const CM2_Part_TextureWeight*			m_TextureWeight;
+	const CM2_Part_TextureTransform*		m_TextureTransform;
 
-	int32								newShader;
-
-	RenderState							m_State;
+	int32									newShader;
 
 private: // PARENT
-	const M2*							m_ParentM2;
-	CGroupQuality&						m_QualitySettings;
+	const std::weak_ptr<M2>					m_ParentM2;
+	CGroupQuality&							m_QualitySettings;
 };

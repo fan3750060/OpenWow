@@ -9,7 +9,7 @@ class CM2_Builder
 {
 	friend CM2_Skin_Builder;
 public:
-	CM2_Builder(SmartM2Ptr _model);
+	CM2_Builder(std::shared_ptr<M2> _model);
 	~CM2_Builder();
 
 	bool Load();
@@ -30,7 +30,7 @@ public:
 	bool IsAnimated() const { return m_M2->m_IsAnimated; }
 
 private:
-	SmartM2Ptr				m_M2;
+	std::shared_ptr<M2>				m_M2;
 	std::shared_ptr<IFile>  m_F;
 	SM2_Header				m_Header;
 
@@ -38,13 +38,13 @@ private:
 
 	// Global loop, animation and bones
 	cGlobalLoopSeq			m_GlobalLoops;
-	vector<std::shared_ptr<IFile>>			animfiles;
+	std::vector<std::shared_ptr<IFile>>			animfiles;
 
 	// Bones
 	SM2_Bone*				m_M2Bones;
 
 	// Vertices
-	vector<SM2_Vertex>		m_Vertexes;
+	std::vector<SM2_Vertex>		m_Vertexes;
 
 	// Skins
 	SM2_SkinProfile*		m_Skins;

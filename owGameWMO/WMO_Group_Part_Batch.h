@@ -15,7 +15,7 @@ public:
 	WMO_Group_Part_Batch(const WMO* _parentWMO, const WMO_Group* _parentGroup, const SWMO_Group_BatchDef& _proto);
 
 #ifdef GAME_WMO_INCLUDE_WM2
-	void setGeom(std::shared_ptr<Mesh> _geom) { m_State.setGeometry(_geom); }
+	void setGeom(std::shared_ptr<IMesh> _geom) { m_State.setGeometry(_geom); }
 #endif
 	uint32 getBlendMode() const { return m_WMOMaterial->getBlendMode(); }
 

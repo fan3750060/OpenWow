@@ -18,10 +18,10 @@ enum SceneNodeTypes : uint8
 	SN_TYPE_WMO
 };
 
-class Mesh : public Object
+class IMesh : public Object
 {
 public:
-	Mesh();
+	IMesh();
 
 	virtual SceneNodeTypes GetType() const;
 	virtual void SetType(SceneNodeTypes type);

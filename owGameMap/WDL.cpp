@@ -102,15 +102,15 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 				}
 
 				// Vertex buffer
-				SharedBufferPtr __vb = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vecrtices.data(), vecrtices.size(), sizeof(vec3));
+				std::shared_ptr<Buffer> __vb = Application::Get().GetRenderDevice()->CreateVertexBuffer(vecrtices);
 
-				std::shared_ptr<Mesh> __geom = Application::Get().GetRenderDevice()->CreateMesh();
+				std::shared_ptr<IMesh> __geom = Application::Get().GetRenderDevice()->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
-				std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
+				/*std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
 				lowResTile->SetParent(_parent);
-				m_LowResilutionTiles.push_back(lowResTile);
+				m_LowResilutionTiles.push_back(lowResTile);*/
 			}
 		}
 	}
@@ -121,7 +121,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	{
 		const std::string name = m_LowResolutionWMOsNames[it.nameIndex];
 
-		SmartWMOPtr wmo = GetManager<IWMOManager>()->Add(name);
+		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(name);
 		m_LowResolutionWMOs.push_back(std::make_shared<ADT_WMO_Instance>(_parent, wmo, it));
 	}
 }

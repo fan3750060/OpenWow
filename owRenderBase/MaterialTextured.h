@@ -2,7 +2,6 @@
 
 #include "Material.h"
 class Texture;
-class ConstantBuffer;
 
 class MaterialTextured : public Material
 {
