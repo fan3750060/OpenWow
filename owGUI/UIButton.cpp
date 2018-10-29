@@ -38,7 +38,7 @@ void UIButton::SetAction(Function* _onPress)
 		delete onPressFunction;
 	}
 
-    _ASSERT(_onPress);
+    assert1(_onPress);
 	onPressFunction = _onPress;
 }
 

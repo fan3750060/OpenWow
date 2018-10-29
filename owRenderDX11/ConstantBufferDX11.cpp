@@ -69,7 +69,7 @@ bool ConstantBufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderPar
 	bool result = true;
 
 	std::shared_ptr<Shader> pShader = shader.lock();
-	_ASSERT(pShader != NULL);
+	assert1(pShader != NULL);
 	ID3D11Buffer* pBuffers[] = { m_pBuffer };
 
 	switch (pShader->GetType())
@@ -103,7 +103,7 @@ bool ConstantBufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderPar
 void ConstantBufferDX11::UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	std::shared_ptr<Shader> pShader = shader.lock();
-	_ASSERT(pShader != NULL);
+	assert1(pShader != NULL);
 	ID3D11Buffer* pBuffers[] = { nullptr };
 
 	switch (pShader->GetType())

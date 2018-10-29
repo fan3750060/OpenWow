@@ -29,7 +29,7 @@ void WDT::CreateInsances(std::weak_ptr<SceneNode> _parent)
 void WDT::Load()
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
-	_ASSERT(mapController != NULL);
+	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdt";
 
@@ -58,7 +58,7 @@ void WDT::Load()
 		{
 			uint32 version;
 			f->readBytes(&version, 4);
-			_ASSERT(version == 18);
+			assert1(version == 18);
 		}
 		else if (strcmp(fourcc, "MPHD") == 0)
 		{
@@ -92,8 +92,8 @@ void WDT::Load()
 		}
 		else if (strcmp(fourcc, "MODF") == 0)
 		{
-			_ASSERT(m_Flag.Flag_GlobalWMO);
-			_ASSERT((size / sizeof(ADT_MODF)) == 1);
+			assert1(m_Flag.Flag_GlobalWMO);
+			assert1((size / sizeof(ADT_MODF)) == 1);
 			f->readBytes(&m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
 		}
 		else
@@ -104,5 +104,5 @@ void WDT::Load()
 		f->seek(nextpos);
 	}
 
-	_ASSERT(m_IsTileBased || m_GlobalWMOName.size() > 0);
+	assert1(m_IsTileBased || m_GlobalWMOName.size() > 0);
 }

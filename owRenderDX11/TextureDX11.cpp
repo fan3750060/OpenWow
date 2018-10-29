@@ -819,7 +819,7 @@ void TextureDX11::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParamete
 	}
 
 	std::shared_ptr<Shader> pShader = shader.lock();
-	_ASSERT(pShader != NULL);
+	assert1(pShader != NULL);
 	ID3D11ShaderResourceView* srv[] = { m_pShaderResourceView };
 	ID3D11UnorderedAccessView* uav[] = { m_pUnorderedAccessView };
 
@@ -861,7 +861,7 @@ void TextureDX11::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParamete
 void TextureDX11::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	std::shared_ptr<Shader> pShader = shader.lock();
-	_ASSERT(pShader != NULL);
+	assert1(pShader != NULL);
 
 	ID3D11ShaderResourceView* srv[] = { nullptr };
 	ID3D11UnorderedAccessView* uav[] = { nullptr };

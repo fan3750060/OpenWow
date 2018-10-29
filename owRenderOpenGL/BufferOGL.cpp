@@ -12,7 +12,7 @@ BufferOGL::BufferOGL(UINT bindFlags, const void* data, size_t count, UINT stride
 	, m_bIsBound(false)
 {
 	glGenBuffers(1, &m_GLObj);
-	_ASSERT(m_GLObj != 0);
+	assert1(m_GLObj != 0);
 	glBindBuffer(m_BindFlags, m_GLObj);
 	glBufferData(m_BindFlags, count * stride, data, /*_isDynamic ? */GL_DYNAMIC_DRAW/* : GL_STATIC_DRAW*/);
 	glBindBuffer(m_BindFlags, 0);
@@ -42,7 +42,7 @@ void BufferOGL::UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter:
 void BufferOGL::Copy(std::shared_ptr<Buffer> other)
 {
 	std::shared_ptr<BufferOGL> srcBuffer = std::dynamic_pointer_cast<BufferOGL>(other);
-	_ASSERT(srcBuffer->m_GLObj != 0);
+	assert1(srcBuffer->m_GLObj != 0);
 
 	if (srcBuffer && (srcBuffer.get() != this) && ((m_uiCount * m_uiStride) == (srcBuffer->m_uiCount * srcBuffer->m_uiStride)))
 	{

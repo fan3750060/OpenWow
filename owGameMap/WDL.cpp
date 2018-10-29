@@ -23,7 +23,7 @@ WDL::~WDL()
 void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
-	_ASSERT(mapController != NULL);
+	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdl";
 
@@ -108,9 +108,9 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
-				std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, __geom, i, j);
+				/*std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, __geom, i, j);
 				_parent.lock()->AddMesh(lowResTile);
-				m_LowResilutionTiles.push_back(lowResTile);
+				m_LowResilutionTiles.push_back(lowResTile);*/
 			}
 		}
 	}
@@ -129,7 +129,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 void WDL::Load()
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
-	_ASSERT(mapController != NULL);
+	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdl";
 

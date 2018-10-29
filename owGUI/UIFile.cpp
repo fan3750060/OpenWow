@@ -55,7 +55,7 @@ bool UIFile::Load(cstring _filename)
 
 void UIFile::Destroy()
 {
-	_ASSERT(rootElement != nullptr);
+	assert1(rootElement != nullptr);
 	rootElement->Delete();
 }
 
@@ -82,7 +82,7 @@ void UIFile::SetParent(UIWindow* _parent)
 
 void UIFile::Show() const
 {
-	_ASSERT(rootElement != nullptr);
+	assert1(rootElement != nullptr);
 	if (parent != nullptr)
 		rootElement->AttachTo(parent);
 	else
@@ -91,13 +91,13 @@ void UIFile::Show() const
 
 void UIFile::Hide() const
 {
-	_ASSERT(rootElement != nullptr);
+	assert1(rootElement != nullptr);
 	rootElement->Detach();
 }
 
 bool UIFile::ProcessXMLNode(XMLNode* _node, UIElement* _parent)
 {
-	_ASSERT(_node != nullptr);
+	assert1(_node != nullptr);
 
 	std::string nodeClassType = Utils::ToLower(_node->GetName());
 
@@ -135,7 +135,7 @@ bool UIFile::ProcessXMLNode(XMLNode* _node, UIElement* _parent)
 	// Add childs
 	for (auto it = _node->GetChilds().begin(); it != _node->GetChilds().end(); ++it)
 	{
-		_ASSERT(*it != nullptr);
+		assert1(*it != nullptr);
 		if (!ProcessXMLNode(*it, element))
 		{
 			return false;

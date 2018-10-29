@@ -31,7 +31,7 @@ void GameState_CreateCharacter::CreateBackgroud(Race::List _charRace)
 	if (_charRace == Race::Gnome) _charRace = Race::Dwarf;
 
 	DBC_ChrRacesRecord* raceRecord = DBC_ChrRaces[_charRace];
-	_ASSERT(raceRecord != nullptr);
+	assert1(raceRecord != nullptr);
 
 	char buff[256];
 	sprintf_s(buff, "Interface\\Glues\\Models\\UI_%s\\UI_%s.m2", raceRecord->Get_ClientFileString(), raceRecord->Get_ClientFileString());
@@ -61,7 +61,7 @@ void GameState_CreateCharacter::UpdateState()
 	Race::List race = Races[m_CurrentRace].race;
 
 	DBC_ChrRacesRecord* raceRecord = DBC_ChrRaces[race];
-	_ASSERT(raceRecord != nullptr);
+	assert1(raceRecord != nullptr);
 
 	CharacterTemplate tempPala;
 	tempPala.TemplateFillDefaultPaladin();

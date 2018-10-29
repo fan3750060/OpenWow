@@ -55,10 +55,10 @@ void CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2, uint32 _globalTime)
 {
 	std::shared_ptr<CM2_ParticleSystem> ParticleSystem = m_ParticleSystem.lock();
-	_ASSERT(ParticleSystem != nullptr);
+	assert1(ParticleSystem != nullptr);
 
 	std::shared_ptr<const CM2_Part_Bone> ParticleSystem_ParentBone = ParticleSystem->m_ParentBone.lock();
-	_ASSERT(ParticleSystem_ParentBone != nullptr);
+	assert1(ParticleSystem_ParentBone != nullptr);
 
 	// Model Flags - *shrug* gotta write this down somewhere.
 	// 0x1 =
@@ -183,10 +183,10 @@ Particle PlaneParticleEmitter::newParticle(int anim, int time, float w, float l,
 Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l, float spd, float var, float spr, float spr2, uint32 _globalTime)
 {
 	std::shared_ptr<const CM2_ParticleSystem> ParticleSystem = m_ParticleSystem.lock();
-	_ASSERT(ParticleSystem != nullptr);
+	assert1(ParticleSystem != nullptr);
 
 	std::shared_ptr<const CM2_Part_Bone> ParticleSystem_ParentBone = ParticleSystem->m_ParentBone.lock();
-	_ASSERT(ParticleSystem_ParentBone != nullptr);
+	assert1(ParticleSystem_ParentBone != nullptr);
 
 	Particle p;
 	vec3 dir;

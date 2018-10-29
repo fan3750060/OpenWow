@@ -8,7 +8,7 @@
 
 bool CUpdatableObjectCollection::RegisterObject(IUpdatable* _uiObject)
 {
-	_ASSERT(_BaseManager->GetPhase() != Phase_Input && _BaseManager->GetPhase() != Phase_Update);
+	assert1(_BaseManager->GetPhase() != Phase_Input && _BaseManager->GetPhase() != Phase_Update);
 	m_Objects.push_back(_uiObject);
 
 	return true;
@@ -16,7 +16,7 @@ bool CUpdatableObjectCollection::RegisterObject(IUpdatable* _uiObject)
 
 void CUpdatableObjectCollection::UnregisterObject(IUpdatable * _uiObject)
 {
-	_ASSERT(_BaseManager->GetPhase() != Phase_Input && _BaseManager->GetPhase() != Phase_Update);
+	assert1(_BaseManager->GetPhase() != Phase_Input && _BaseManager->GetPhase() != Phase_Update);
 	m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 }
 

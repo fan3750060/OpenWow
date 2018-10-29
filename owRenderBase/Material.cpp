@@ -100,6 +100,18 @@ void Material::Unbind() const
 		std::shared_ptr<Shader> pShader = shader.second;
 		if (pShader)
 		{
+			for (auto texture : m_Textures)
+			{
+				std::shared_ptr<Texture> pTexture = texture.second;
+				pTexture->UnBind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
+			}
+
+			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
+			if (materialParameter.IsValid() && m_pConstantBuffer != nullptr)
+			{
+				materialParameter.UnBind();
+			}
+
 			pShader->UnBind();
 		}
 	}

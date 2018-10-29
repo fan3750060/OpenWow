@@ -48,6 +48,6 @@ CM2_Part_Texture::CM2_Part_Texture(std::shared_ptr<IFile> f, const SM2_Texture& 
 		return;
 	}
 
-	_ASSERT(getTexture());
+	assert1(getTexture());
 	_state->setTexture(_slot, getTexture(), sampler, 0);
 }*/

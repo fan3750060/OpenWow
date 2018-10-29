@@ -24,7 +24,7 @@ void CRenderable3DObjectCollection::UnregisterObject(IRenderable3D* _uiObject)
     m_Objects.erase(std::remove(m_Objects.begin(), m_Objects.end(), _uiObject), m_Objects.end());
 	m_ObjectsNeedSort = true;
 
-	_ASSERT(_BaseManager->GetPhase() != Phase_Pre3D && _BaseManager->GetPhase() != Phase_3D && _BaseManager->GetPhase() != Phase_Post3D);
+	assert1(_BaseManager->GetPhase() != Phase_Pre3D && _BaseManager->GetPhase() != Phase_3D && _BaseManager->GetPhase() != Phase_Post3D);
 }
 
 void CRenderable3DObjectCollection::Render3D()

@@ -137,7 +137,7 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 
 RenderDevice* Application::GetRenderDevice()
 {
-	_ASSERT(m_pRenderDevice);
+	assert1(m_pRenderDevice);
 	return m_pRenderDevice;
 }
 

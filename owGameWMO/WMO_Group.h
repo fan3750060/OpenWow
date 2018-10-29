@@ -48,7 +48,7 @@ public:
 
 	//-- Render bathes --//
 	std::vector<SWMO_Group_BatchDef>		m_WMOBatchs;
-	std::vector< std::shared_ptr<WMO_Group_Part_Batch>>		m_WMOBatchIndexes;
+	std::vector<std::shared_ptr<WMO_Group_Part_Batch>>		m_WMOBatchIndexes;
 	SWMO_Group_BatchDef*					moba;
 
 	//-- Lights --//

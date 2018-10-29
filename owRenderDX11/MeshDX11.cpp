@@ -107,21 +107,21 @@ void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 		m_pDeviceContext->Draw(vertexCount, 0);
 	}
 
-	if (pVS)
-	{
-		for (BufferMap::value_type buffer : m_VertexBuffers)
-		{
-			BufferBinding binding = buffer.first;
-			if (pVS->HasSemantic(binding))
-			{
-				UINT slotID = pVS->GetSemanticSlot(binding);
-				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer); // TODO: Unbind
-			}
-		}
-	}
-
 	if (m_pMaterial)
 	{
+		if (pVS)
+		{
+			for (BufferMap::value_type buffer : m_VertexBuffers)
+			{
+				BufferBinding binding = buffer.first;
+				if (pVS->HasSemantic(binding))
+				{
+					UINT slotID = pVS->GetSemanticSlot(binding);
+					buffer.second->UnBind(slotID, pVS, ShaderParameter::Type::Buffer); // TODO: Unbind
+				}
+			}
+		}
+
 		m_pMaterial->Unbind();
 	}
 }

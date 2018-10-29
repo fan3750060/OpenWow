@@ -54,7 +54,7 @@ ADT::~ADT()
 bool ADT::Load()
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
-	_ASSERT(mapController != NULL);
+	assert1(mapController != NULL);
 
 	char filename[256];
 	sprintf_s(filename, "%s_%d_%d.adt", mapController->getFilenameT().c_str(), m_IndexX, m_IndexZ);
@@ -67,7 +67,7 @@ bool ADT::Load()
 	{
 		uint32 version;
 		f->readBytes(&version, 4);
-		_ASSERT(version == 18);
+		assert1(version == 18);
 	}
 
 	// MHDR + size (8)
@@ -86,7 +86,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(ADT_MCIN);
-		_ASSERT(count == C_ChunksInTileGlobal);
+		assert1(count == C_ChunksInTileGlobal);
 		memcpy(chunks, f->getDataFromCurrent(), sizeof(ADT_MCIN) * count);
 	}
 
@@ -130,7 +130,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(uint32);
-		_ASSERT(count == m_MDXsNames.size());
+		assert1(count == m_MDXsNames.size());
 		for (uint32_t i = 0; i < count; i++)
 		{
 			uint32 offset;
@@ -161,7 +161,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 
 		uint32 count = size / sizeof(uint32);
-		_ASSERT(count == m_WMOsNames.size());
+		assert1(count == m_WMOsNames.size());
 		for (uint32_t i = 0; i < count; i++)
 		{
 			uint32 offset;
@@ -210,7 +210,7 @@ bool ADT::Load()
 			f->seekRelative(4);
 			uint32_t size;
 			f->readBytes(&size, sizeof(uint32_t));
-			_ASSERT(size > 0);
+			assert1(size > 0);
 
 			const uint8* abuf = f->getDataFromCurrent();
 			for (uint32 i = 0; i < C_ChunksInTile; i++)
@@ -257,7 +257,7 @@ bool ADT::Load()
 		f->seekRelative(4); // MCNK
 		uint32_t size;
 		f->readBytes(&size, sizeof(uint32_t));
-		_ASSERT(size + 8 == chunks[i].size);
+		assert1(size + 8 == chunks[i].size);
 
 		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f);
 		chunk->Load();
@@ -316,7 +316,7 @@ bool ADT::Delete()
 void ADT::Render(RenderEventArgs& renderEventArgs)
 {
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
-	_ASSERT(mapController != NULL);
+	assert1(mapController != NULL);
 
 	PipelineState* state = renderEventArgs.PipelineState;
 	if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))

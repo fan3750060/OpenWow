@@ -22,7 +22,7 @@ public:
 public:
 	std::shared_ptr<CM2_Part_Attachment> getAttachmentDirect(uint32 _index) const
 	{
-		_ASSERT(_index < static_cast<uint32>(m_Attachments.size()));
+		assert1(_index < static_cast<uint32>(m_Attachments.size()));
 		return (m_Attachments[_index]);
 	}
 
@@ -45,26 +45,26 @@ public:
 			return nullptr;
 		}
 		int16 newIndex = m_AttachmentsLookup[_index];
-		_ASSERT(newIndex != -1);
-		_ASSERT(newIndex < static_cast<int16>(m_Attachments.size()));
+		assert1(newIndex != -1);
+		assert1(newIndex < static_cast<int16>(m_Attachments.size()));
 		return (m_Attachments[newIndex]);
 	}
 
 	std::shared_ptr<CM2_Part_Event> getEvents(uint32 _index) const
 	{
-		_ASSERT(_index < m_Events.size());
+		assert1(_index < m_Events.size());
 		return (m_Events[_index]);
 	}
 
 	std::shared_ptr<CM2_Part_Light> getLight(uint32 _index) const
 	{
-		_ASSERT(_index < m_Lights.size());
+		assert1(_index < m_Lights.size());
 		return (m_Lights[_index]);
 	}
 
 	std::shared_ptr<CM2_Part_Camera> getCameraDirect(uint32 _index) const
 	{
-		_ASSERT(_index < static_cast<uint32>(m_Cameras.size()));
+		assert1(_index < static_cast<uint32>(m_Cameras.size()));
 		return (m_Cameras[_index]);
 	}
 
@@ -76,8 +76,8 @@ public:
 			return nullptr;
 		}
 		int16 newIndex = m_CamerasLookup[_index];
-		_ASSERT(newIndex != -1);
-		_ASSERT(newIndex < static_cast<int16>(m_Cameras.size()));
+		assert1(newIndex != -1);
+		assert1(newIndex < static_cast<int16>(m_Cameras.size()));
 		return (m_Cameras[newIndex]);
 	}
 

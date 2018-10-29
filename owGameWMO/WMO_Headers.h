@@ -61,7 +61,7 @@ struct SWMO_MaterialDef
 	CBgra emissive_color;						// emissive color; see below (emissive color)
 	CBgra sidn_emissive_color;					// set at runtime; gets sidn-manipulated emissive color; see below (emissive color)
 
-	uint32 envNameIndex;
+	uint32 envNameIndex;					    // offset into MOTX
 
 	uint32 diffColor;
 

@@ -22,7 +22,7 @@ UIMgr::UIMgr()
 
 UIMgr::~UIMgr()
 {
-	//_ASSERT(m_RootElement != nullptr);
+	//assert1(m_RootElement != nullptr);
 	//delete m_RootElement;
 
     //
@@ -40,7 +40,7 @@ UIMgr::~UIMgr()
 
 void UIMgr::AttachToRoot(UIElement* _element)
 {
-    _ASSERT(m_RootElement != nullptr);
+    assert1(m_RootElement != nullptr);
 	if (m_RootElement != nullptr)
 	{
 		AttachElementToParent(_element, m_RootElement);
@@ -81,7 +81,7 @@ void UIMgr::AttachElementToParent(UIElement* _element, UIElement* _parent)
 
 void UIMgr::SetFocus(UIElement* _element) 
 {
-    _ASSERT(_element != nullptr);
+    assert1(_element != nullptr);
 
     if (_element->m_Deep > m_FocusedElement->m_Deep)
     {
@@ -208,7 +208,7 @@ void UIMgr::Update(double _time, double _dTime)
 	}
 
 	// Update window
-	_ASSERT(m_RootElement != nullptr);
+	assert1(m_RootElement != nullptr);
 	m_FocusedElement = m_RootElement;
 	m_RootElement->Update();
 }
@@ -216,7 +216,7 @@ void UIMgr::Update(double _time, double _dTime)
 void UIMgr::RenderUI()
 {
     // Update window
-    _ASSERT(m_RootElement != nullptr);
+    assert1(m_RootElement != nullptr);
 	if (m_RootElement != nullptr)
 	{
 		m_RootElement->RenderUI();
@@ -316,25 +316,25 @@ bool UIMgr::OnMouseButtonPressed(int _button, int _mods, cvec2 _mousePos)
 
 bool UIMgr::OnMouseButtonReleased(int _button, int _mods, cvec2 _mousePos)
 {
-    _ASSERT(m_RootElement != nullptr);
+    assert1(m_RootElement != nullptr);
     return m_RootElement->OnMouseButtonReleased(_button, _mods, _mousePos);
 }
 
 bool UIMgr::OnMouseWheel(int _yoffset)
 {
-    _ASSERT(m_RootElement != nullptr);
+    assert1(m_RootElement != nullptr);
     return m_RootElement->OnMouseWheel(_yoffset);
 }
 
 bool UIMgr::OnKeyboardPressed(int _key, int _scancode, int _mods)
 {
-    _ASSERT(m_RootElement != nullptr);
+    assert1(m_RootElement != nullptr);
     return m_RootElement->OnKeyboardPressed(_key, _scancode, _mods);
 }
 
 bool UIMgr::OnKeyboardReleased(int _key, int _scancode, int _mods)
 {
-    _ASSERT(m_RootElement != nullptr);
+    assert1(m_RootElement != nullptr);
     return m_RootElement->OnKeyboardReleased(_key, _scancode, _mods);
 }
 

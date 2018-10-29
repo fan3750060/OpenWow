@@ -6,7 +6,7 @@
 CWMO_Base_Instance::CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject) :
 	m_Object(_wmoObject)
 {
-	_ASSERT(m_Object);
+	assert1(m_Object);
 
 	//setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
 	//setSelectable();

@@ -99,7 +99,7 @@ void RenderTargetOGL::Clear(AttachmentPoint attachment, ClearFlags clearFlags, c
 {
 	GLint currentFB = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFB);
-	_ASSERT(currentFB == m_GLObj);
+	assert1(currentFB == m_GLObj);
 
 	uint8 clearFlags8 = (uint8)clearFlags;
 	
@@ -227,7 +227,7 @@ void RenderTargetOGL::Bind()
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_GLObj);
-	_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+	assert1(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 	
 	GLenum buffers[8] = { };
 	GLsizei buffersCnt = 0;
@@ -245,8 +245,8 @@ void RenderTargetOGL::Bind()
 
 void RenderTargetOGL::UnBind()
 {
-	_ASSERT(m_RenderDevice->GetDefaultRB() != m_GLObj);
-	_ASSERT(m_RenderDevice->GetDefaultRB() == 0);
+	assert1(m_RenderDevice->GetDefaultRB() != m_GLObj);
+	assert1(m_RenderDevice->GetDefaultRB() == 0);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_GLObj);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_RenderDevice->GetDefaultRB());

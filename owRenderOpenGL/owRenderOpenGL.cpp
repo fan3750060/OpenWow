@@ -18,7 +18,7 @@ RenderDevice* CreateRenderDeviceOGL(CBaseManager* _baseManager)
 RenderWindow* CreateRenderWindowOGL(HWND hWnd, RenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
 	RenderDeviceOGL* pDevice = dynamic_cast<RenderDeviceOGL*>(device);
-	_ASSERT(pDevice != NULL);
+	assert1(pDevice != NULL);
 
 	return new RenderWindowOGL(hWnd, pDevice, windowName, windowWidth, windowHeight, vSync);
 }

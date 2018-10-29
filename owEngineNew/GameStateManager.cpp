@@ -15,15 +15,15 @@ GameStateManager::~GameStateManager()
 
 void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _gameState)
 {
-    _ASSERT(_gameState != nullptr);
-    _ASSERT(m_GameStatesCollection.find(_name) == m_GameStatesCollection.end());
+    assert1(_gameState != nullptr);
+    assert1(m_GameStatesCollection.find(_name) == m_GameStatesCollection.end());
 
     m_GameStatesCollection.insert(std::make_pair(_name, _gameState));
 }
 
 bool GameStateManager::SetGameState(GameStatesNames::List _name)
 {
-    _ASSERT(m_GameStatesCollection.find(_name) != m_GameStatesCollection.end());
+    assert1(m_GameStatesCollection.find(_name) != m_GameStatesCollection.end());
 
     IGameState* gameState = m_GameStatesCollection[_name];
     return SetGameState(gameState);
@@ -31,7 +31,7 @@ bool GameStateManager::SetGameState(GameStatesNames::List _name)
 
 bool GameStateManager::SetGameState(IGameState* _newGameState)
 {
-    _ASSERT(_newGameState);
+    assert1(_newGameState);
 
     Log::Print("GameStateManager[]: Setting new CGameState.");
 

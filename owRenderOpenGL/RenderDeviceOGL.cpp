@@ -60,7 +60,7 @@ void _stdcall glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 
 	Log::Error("");
 
-	_ASSERT(false);
+	assert1(false);
 }
 #endif
 

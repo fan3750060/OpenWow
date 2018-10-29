@@ -12,6 +12,12 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	m_Proto(_proto),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
+	// Constant buffer
+	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
+	(*m_pProperties) = MaterialProperties();
+	(*m_pProperties).m_BlendMode = m_Proto.blendMode;
+	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
+
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
@@ -21,16 +27,15 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	);
 
 	// Create samplers
-	std::shared_ptr<SamplerState> g_LinearClampSampler = _RenderDevice->CreateSamplerState();
-	g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-	g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
-
-	std::shared_ptr<SamplerState> g_LinearRepeatSampler = _RenderDevice->CreateSamplerState();
-	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
+	std::shared_ptr<SamplerState> g_Sampler = _RenderDevice->CreateSamplerState();
+	g_Sampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+	g_Sampler->SetWrapMode(
+		m_Proto.flags.TextureClampS ? SamplerState::WrapMode::Clamp : SamplerState::WrapMode::Repeat, 
+		m_Proto.flags.TextureClampT ? SamplerState::WrapMode::Clamp : SamplerState::WrapMode::Repeat
+	);
 
 	// Assign samplers
-	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_LinearRepeatSampler);
+	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_Sampler);
 
 	// This
 	SetTexture(0, _RenderDevice->CreateTexture2D(_parentWMO.lock()->m_TexturesNames + m_Proto.diffuseNameIndex));
@@ -51,6 +56,15 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	vec4 color = fromARGB(m_Proto.diffColor);
 }
 
+WMO_Part_Material::~WMO_Part_Material()
+{
+	if (m_pProperties)
+	{
+		_aligned_free(m_pProperties);
+		m_pProperties = nullptr;
+	}
+}
+
 /*void WMO_Part_Material::fillRenderState(RenderState* _state) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
@@ -63,9 +77,9 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	_Render->getRenderStorage()->SetEGxBlend(_state, m_Proto.blendMode);
 }*/
 
-void WMO_Part_Material::set() const
+/*void WMO_Part_Material::set() const
 {
-	/*uint16 sampler = m_QualitySettings.Texture_Sampler;
+	uint16 sampler = m_QualitySettings.Texture_Sampler;
 	sampler |= (m_Proto.flags.TextureClampS) ? SS_ADDRU_CLAMP : SS_ADDRU_WRAP;
 	sampler |= (m_Proto.flags.TextureClampT) ? SS_ADDRV_CLAMP : SS_ADDRV_WRAP;
 
@@ -76,5 +90,5 @@ void WMO_Part_Material::set() const
 
 	//_Render->r.setAlphaToCoverage(true);
 
-	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), m_Proto.blendMode);*/
-}
+	_Render->getRenderStorage()->SetEGxBlend(_Render->r.getState(), m_Proto.blendMode);
+}*/

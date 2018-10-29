@@ -300,12 +300,12 @@ void Liquid::createBuffer()
 		// Vertex buffer
 		/*std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
 		layer.m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
-		_ASSERT(layer.m_VerticesCnt > 0);
+		assert1(layer.m_VerticesCnt > 0);
 
 		// Index bufer
 		std::shared_ptr<Buffer> __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
 		layer.m_IndicesCnt = static_cast<uint32>(m_Indices.size());
-		_ASSERT(layer.m_IndicesCnt > 0);
+		assert1(layer.m_IndicesCnt > 0);
 
 		// Geometry
 		layer.m_Mesh = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);

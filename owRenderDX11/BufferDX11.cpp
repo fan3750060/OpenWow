@@ -54,7 +54,7 @@ bool BufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::
 		m_bIsBound = true;
 		break;
 	default:
-		_ASSERT(false);
+		assert1(false);
 	}
 
 	return true;
@@ -63,11 +63,13 @@ bool BufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::
 void BufferDX11::UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	ID3D11Buffer* buffers[] = { nullptr };
+	UINT offsets[] = { 0 };
+	UINT strides[] = { 0 };
 
 	switch (m_BindFlags)
 	{
 	case D3D11_BIND_VERTEX_BUFFER:
-		m_pDeviceContext->IASetVertexBuffers(id, 1, buffers, nullptr, nullptr);
+		m_pDeviceContext->IASetVertexBuffers(id, 1, buffers, strides, offsets);
 		m_bIsBound = true;
 		break;
 	case D3D11_BIND_INDEX_BUFFER:

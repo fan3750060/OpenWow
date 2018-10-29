@@ -54,5 +54,6 @@ void MeshWrapper::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Const
 
 void MeshWrapper::Accept(IVisitor& visitor)
 {
-	m_Mesh->Accept(visitor);
+	//m_Mesh->Accept(visitor);
+	visitor.Visit(*this);
 }

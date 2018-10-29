@@ -154,7 +154,7 @@ bool ADT_MCNK::Load()
 	m_File->seek(startPos + header.ofsLayer);
 	{
 		std::shared_ptr<ADT> parentADT = m_ParentADT.lock();
-		_ASSERT(parentADT != NULL);
+		assert1(parentADT != NULL);
 
 		for (uint32 i = 0; i < header.nLayers; i++)
 		{
@@ -194,7 +194,7 @@ bool ADT_MCNK::Load()
 	m_File->seek(startPos + header.ofsAlpha);
 	{
 		std::shared_ptr<MapController> mapController = m_MapController.lock();
-		_ASSERT(mapController != NULL);
+		assert1(mapController != NULL);
 
 		for (uint32 i = 1; i < header.nLayers; i++)
 		{

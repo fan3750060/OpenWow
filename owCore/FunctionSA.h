@@ -16,7 +16,7 @@ public:
 public:
 	void operator()() override
 	{
-		_ASSERT(m_FuncWithArgumentPtr != nullptr);
+		assert1(m_FuncWithArgumentPtr != nullptr);
 
 		(*m_FuncWithArgumentPtr)(m_Argument);
 	}
@@ -48,8 +48,8 @@ public:
 
 	void operator()() override
 	{
-		_ASSERT(m_ClassInstancePtr != nullptr);
-		_ASSERT(m_ClassMethodWithArgumentPtr != nullptr);
+		assert1(m_ClassInstancePtr != nullptr);
+		assert1(m_ClassMethodWithArgumentPtr != nullptr);
 
 		(m_ClassInstancePtr->*m_ClassMethodWithArgumentPtr)(m_Argument);
 	}

@@ -23,10 +23,10 @@ Creature::Creature() :
 void Creature::InitFromDisplayInfo(uint32 _id)
 {
 	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
-	_ASSERT(rec != nullptr);
+	assert1(rec != nullptr);
 
 	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
-	_ASSERT(humanoidRecExtra == nullptr);
+	assert1(humanoidRecExtra == nullptr);
 
 	// 1. Load model
 	{
@@ -55,7 +55,7 @@ void Creature::InitFromDisplayInfo(uint32 _id)
 
 void Creature::setMeshEnabled(MeshIDType::List _type, uint32 _value)
 {
-	_ASSERT(_type < MeshIDType::Count);
+	assert1(_type < MeshIDType::Count);
 	if (_value == UINT32_MAX)
 	{
 		return;
@@ -69,10 +69,10 @@ bool Creature::isMeshEnabled(uint32 _index) const
 	uint32 div100 = _index / 100;
 	uint32 mod100 = _index % 100;
 
-	//_ASSERT(div100 < MeshIDType::Count);
-	_ASSERT(div100 != 6);
-	_ASSERT(div100 != 14);
-	_ASSERT(div100 != 16);
+	//assert1(div100 < MeshIDType::Count);
+	assert1(div100 != 6);
+	assert1(div100 != 14);
+	assert1(div100 != 16);
 
 	for (uint32 i = 0; i < MeshIDType::Count; i++)
 	{
@@ -98,11 +98,11 @@ bool Creature::isMeshEnabled(uint32 _index) const
 void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
 {
 	const DBC_CreatureModelDataRecord* modelRec = _record->Get_Model();
-	_ASSERT(modelRec != nullptr);
+	assert1(modelRec != nullptr);
 
 	std::string modelName = modelRec->Get_ModelPath();
 	std::shared_ptr<M2> m2 = GetManager<IM2Manager>()->Add(modelName);
-	_ASSERT(m2 != nullptr);
+	assert1(m2 != nullptr);
 
 	setM2(m2);
 

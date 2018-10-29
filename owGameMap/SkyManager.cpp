@@ -214,7 +214,7 @@ void SkyManager::InitBuffer()
 void SkyManager::CalculateSkiesWeights(cvec3 pos)
 {
 	skies.back()->m_Wight = 1.0f;
-	_ASSERT(skies.back()->m_IsGlobalSky);
+	assert1(skies.back()->m_IsGlobalSky);
 
 	for (int i = skies.size() - 2; i >= 0; i--)
 	{

@@ -18,8 +18,8 @@ Character_SkinTextureBaker::Character_SkinTextureBaker()
 {
 	uint32 textureWidth = DBC_CharComponentTextureLayouts[SkinDefaultLayout]->Get_Width();
 	uint32 textureHeight = DBC_CharComponentTextureLayouts[SkinDefaultLayout]->Get_Height();
-	_ASSERT(textureWidth == SkinTextureWidth);
-	_ASSERT(textureHeight == SkinTextureHeight);
+	assert1(textureWidth == SkinTextureWidth);
+	assert1(textureHeight == SkinTextureHeight);
 
 	for (auto& it : DBC_CharComponentTextureSections)
 	{
@@ -67,7 +67,7 @@ std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _c
 
 		// Male + Female
 		std::string nakedLowerTexture = Character_SectionWrapper::getNakedPelvisTexture(_character);
-		_ASSERT(nakedLowerTexture.length() > 0);
+		assert1(nakedLowerTexture.length() > 0);
 		FillPixels(DBC_CharComponent_Sections::LEGS_UPPER, nakedLowerTexture);
 	}
 
@@ -97,8 +97,8 @@ std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _c
 
 void Character_SkinTextureBaker::FillWithSkin(std::shared_ptr<Texture> _skinTexture)
 {
-	_ASSERT(_skinTexture != nullptr);
-	_ASSERT(_skinTexture->m_Width == (SkinTextureWidth / 2) || _skinTexture->m_Width == SkinTextureWidth);
+	assert1(_skinTexture != nullptr);
+	assert1(_skinTexture->m_Width == (SkinTextureWidth / 2) || _skinTexture->m_Width == SkinTextureWidth);
 
 	PixelData* skinTexturePixels = new PixelData[_skinTexture->m_Width * _skinTexture->m_Height];
 	if (!_skinTexture->getTextureData(0, 0, skinTexturePixels))
@@ -106,7 +106,7 @@ void Character_SkinTextureBaker::FillWithSkin(std::shared_ptr<Texture> _skinText
 		fail1();
 	}
 
-	_ASSERT(SkinTextureWidth >= _skinTexture->m_Width);
+	assert1(SkinTextureWidth >= _skinTexture->m_Width);
 	uint32 divSmall = SkinTextureWidth / _skinTexture->m_Width;
 
 	for (uint32 x = 0; x < SkinTextureWidth; x++)
@@ -140,7 +140,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 		return;
 	}
 
-	_ASSERT(_compTexture->m_Width == 128 || _compTexture->m_Width == 256);
+	assert1(_compTexture->m_Width == 128 || _compTexture->m_Width == 256);
 
 	PixelData* texturePixels = new PixelData[_compTexture->m_Width * _compTexture->m_Height];
 	if (!_compTexture->getTextureData(0, 0, texturePixels))
@@ -148,7 +148,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 		fail1();
 	}
 
-	_ASSERT(SkinComponentWidth >= _compTexture->m_Width);
+	assert1(SkinComponentWidth >= _compTexture->m_Width);
 	uint32 divSmall = SkinComponentWidth / _compTexture->m_Width;
 
 	CharacterSkinRegion& region = m_Regions[_type];

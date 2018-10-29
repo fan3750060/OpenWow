@@ -274,7 +274,7 @@ void SamplerStateDX11::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderPar
 	}
 
 	std::shared_ptr<Shader> pShader = shader.lock();
-	_ASSERT(pShader != NULL);
+	assert1(pShader != NULL);
 	ID3D11SamplerState* pSamplers[] = { m_pSamplerState };
 
 	switch (pShader->GetType())
@@ -303,7 +303,7 @@ void SamplerStateDX11::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderPar
 void SamplerStateDX11::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	std::shared_ptr<Shader> pShader = shader.lock();
-	_ASSERT(pShader != NULL);
+	assert1(pShader != NULL);
 	ID3D11SamplerState* pSamplers[] = { nullptr };
 
 	switch (pShader->GetType())

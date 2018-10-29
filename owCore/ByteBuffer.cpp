@@ -83,7 +83,7 @@ void ByteBuffer::Allocate(uint64 _size)
 
 	if (_size > 0)
 	{
-		_ASSERT(!m_IsAllocated);
+		assert1(!m_IsAllocated);
 		m_Data.reserve(_size);
 		m_IsAllocated = true;
 	}
@@ -128,14 +128,14 @@ void ByteBuffer::CopyData(const uint8* _data, uint64 _size)
 
 void ByteBuffer::seek(uint64 _bufferOffsetAbsolute)
 {
-	_ASSERT(_bufferOffsetAbsolute <= getSize());
+	assert1(_bufferOffsetAbsolute <= getSize());
 	m_CurrentPosition = _bufferOffsetAbsolute;
 	m_IsEOF = m_CurrentPosition >= getSize();
 }
 
 void ByteBuffer::seekRelative(uint64 _bufferOffsetRelative)
 {
-	_ASSERT(m_CurrentPosition + _bufferOffsetRelative <= getSize());
+	assert1(m_CurrentPosition + _bufferOffsetRelative <= getSize());
 	m_CurrentPosition += _bufferOffsetRelative;
 	m_IsEOF = m_CurrentPosition >= getSize();
 }
@@ -144,7 +144,7 @@ void ByteBuffer::seekRelative(uint64 _bufferOffsetRelative)
 
 bool ByteBuffer::readLine(std::string* _string)
 {
-	_ASSERT(_string != nullptr);
+	assert1(_string != nullptr);
 
 	if (m_IsEOF)
 	{
@@ -190,7 +190,7 @@ void ByteBuffer::readBytes(void* _destination, uint64 _size)
 		m_IsEOF = true;
 	}
 
-	_ASSERT(_destination != nullptr);
+	assert1(_destination != nullptr);
 	std::memcpy(_destination, &(m_Data[m_CurrentPosition]), _size);
 
 	m_CurrentPosition = posAfterRead;
@@ -198,7 +198,7 @@ void ByteBuffer::readBytes(void* _destination, uint64 _size)
 
 void ByteBuffer::readString(std::string* _string)
 {
-	_ASSERT(_string != nullptr);
+	assert1(_string != nullptr);
 
 	std::string str = "";
 	while (true)
@@ -221,7 +221,7 @@ void ByteBuffer::readString(std::string* _string)
 
 void ByteBuffer::Append(const uint8* _data, uint64 _size)
 {
-	_ASSERT(_data != nullptr);
+	assert1(_data != nullptr);
 
 	for (uint64 i = 0; i < _size; i++)
 	{

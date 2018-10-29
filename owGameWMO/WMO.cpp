@@ -74,7 +74,7 @@ bool WMO::Load()
 		{
 			uint32 version;
 			f->readBytes(&version, 4);
-			_ASSERT(version == 17);
+			assert1(version == 17);
 		}
 		else if (strcmp(fourcc, "MOHD") == 0)               // Header
 		{
@@ -91,7 +91,7 @@ bool WMO::Load()
 		{
 			uint32 materialsCount = size / sizeof(SWMO_MaterialDef);
 			SWMO_MaterialDef* materials = (SWMO_MaterialDef*)f->getDataFromCurrent();
-			_ASSERT(materialsCount == m_Header.nTextures);
+			assert1(materialsCount == m_Header.nTextures);
 			for (uint32 i = 0; i < materialsCount; i++)
 			{
 				std::shared_ptr<WMO_Part_Material> _mat = std::make_shared<WMO_Part_Material>(shared_from_this(), materials[i]);
@@ -108,7 +108,7 @@ bool WMO::Load()
 		{
 			uint32 groupInfosCount = size / sizeof(WMO_GroupInfoDef);
 			WMO_GroupInfoDef* groupInfos = (WMO_GroupInfoDef*)f->getDataFromCurrent();
-			_ASSERT(groupInfosCount == m_Header.nGroups);
+			assert1(groupInfosCount == m_Header.nGroups);
 			for (uint32 i = 0; i < groupInfosCount; i++)
 			{
 				char temp[256];
@@ -154,7 +154,7 @@ bool WMO::Load()
 		{
 			uint32 portalDefsCount = size / sizeof(SWMO_PortalDef);
 			SWMO_PortalDef* portalDefs = (SWMO_PortalDef*)f->getDataFromCurrent();
-			_ASSERT(portalDefsCount == m_Header.nPortals);
+			assert1(portalDefsCount == m_Header.nPortals);
 			for (uint32 i = 0; i < portalDefsCount; i++)
 			{
 				std::shared_ptr<CWMO_Part_Portal> portal = std::make_shared<CWMO_Part_Portal>(shared_from_this(), portalDefs[i]);
@@ -192,7 +192,7 @@ bool WMO::Load()
 		{
 			uint32 lightsCount = size / sizeof(SWMO_LightDef);
 			SWMO_LightDef* lights = (SWMO_LightDef*)f->getDataFromCurrent();
-			_ASSERT(lightsCount == m_Header.nLights);
+			assert1(lightsCount == m_Header.nLights);
 			for (uint32 i = 0; i < lightsCount; i++)
 			{
 				std::shared_ptr<WMO_Part_Light> _wmoLight = std::make_shared<WMO_Part_Light>(lights[i]);
@@ -203,7 +203,7 @@ bool WMO::Load()
 		{
 			uint32 doodadsSetsCount = size / sizeof(SWMO_Doodad_SetInfo);
 			SWMO_Doodad_SetInfo* doodadsSets = (SWMO_Doodad_SetInfo*)f->getDataFromCurrent();
-			_ASSERT(doodadsSetsCount == m_Header.nDoodadSets);
+			assert1(doodadsSetsCount == m_Header.nDoodadSets);
 			for (uint32 i = 0; i < doodadsSetsCount; i++)
 			{
 				m_DoodadsSetInfos.push_back(doodadsSets[i]);
@@ -259,8 +259,8 @@ bool WMO::Load()
 
 		for (auto& it : m_PortalReferences)
 		{
-			_ASSERT(it.portalIndex < m_Portals.size());
-			_ASSERT(it.groupIndex < m_Groups.size());
+			assert1(it.portalIndex < m_Portals.size());
+			assert1(it.groupIndex < m_Groups.size());
 		}
 	}
 
@@ -269,7 +269,7 @@ bool WMO::Load()
 	{
 		it->Load();
 
-		_ASSERT(it->m_Header.flags.IS_OUTDOOR != it->m_Header.flags.IS_INDOOR);
+		assert1(it->m_Header.flags.IS_OUTDOOR != it->m_Header.flags.IS_INDOOR);
 
 		// Add outdoor group
 		if (it->m_Header.flags.IS_OUTDOOR)

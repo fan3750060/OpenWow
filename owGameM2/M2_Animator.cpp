@@ -15,7 +15,7 @@ CM2_Animator::CM2_Animator(const std::weak_ptr<const M2> _m2) :
 	m_CurrentTime(0)
 {
 	std::shared_ptr<const M2> M2 = m_M2.lock();
-	_ASSERT(M2 != nullptr);
+	assert1(M2 != nullptr);
 
 	uint16 u = 0;
 	for (auto& i : DBC_AnimationData)
@@ -41,7 +41,7 @@ CM2_Animator::CM2_Animator(const std::weak_ptr<const M2> _m2) :
 		//Log::Warn("Animation [%d] '%s'", record->Get_ID(), record->Get_Name());
 	}
 
-	_ASSERT(m_Animations.size() > 0);
+	assert1(m_Animations.size() > 0);
 	PlayAnimation();
 }
 
@@ -130,6 +130,6 @@ void CM2_Animator::setOnEndFunction(Function* _onEnd)
 		delete m_OnAnimationEnded;
 	}
 
-	_ASSERT(_onEnd);
+	assert1(_onEnd);
 	m_OnAnimationEnded = _onEnd;
 }

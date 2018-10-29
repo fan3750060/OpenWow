@@ -30,16 +30,16 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		_parent.lock()->AddMesh(batch);
 	}
 
-	if (m_WMOLiqiud != nullptr)
+	/*if (m_WMOLiqiud != nullptr)
 	{
 		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
 		std::shared_ptr<CWMO_Liquid_Instance> liquid = std::make_shared<CWMO_Liquid_Instance>(_parent, m_WMOLiqiud, realPos, weak_from_this());
 		_parent.lock()->addLiquidInstance(liquid);
-	}
+	}*/
 
-	for (const auto& index : m_DoodadsPlacementIndexes)
+	/*for (const auto& index : m_DoodadsPlacementIndexes)
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
@@ -49,7 +49,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 			std::shared_ptr<CWMO_Doodad_Instance> instance = std::make_shared<CWMO_Doodad_Instance>(_parent, mdx, weak_from_this(), index, placement);
 			_parent.lock()->addDoodadInstance(instance);
 		}
-	}
+	}*/
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)
@@ -73,7 +73,7 @@ uint32 WMO_Group::to_wmo_liquid(int x)
 void WMO_Group::Load()
 {
 	std::shared_ptr<const WMO> ParentWMO = m_ParentWMO.lock();
-	_ASSERT(ParentWMO != nullptr);
+	assert1(ParentWMO != nullptr);
 
 	// Buffer
 	uint16* dataFromMOVI = nullptr;
@@ -106,7 +106,7 @@ void WMO_Group::Load()
 		{
 			uint32 version;
 			m_F->readBytes(&version, 4);
-			_ASSERT(version == 17);
+			assert1(version == 17);
 		}
 		else if (strcmp(fourcc, "MOGP") == 0)
 		{
@@ -115,7 +115,7 @@ void WMO_Group::Load()
 
 			m_F->readBytes(&m_Header, sizeof(SWMO_Group_HeaderDef));
 
-			_ASSERT(m_Header.flags.HAS_3_MOTV == 0);
+			assert1(m_Header.flags.HAS_3_MOTV == 0);
 
 			// Bounds
 			m_Bounds.set(m_Header.boundingBox.min, m_Header.boundingBox.max, true);
@@ -131,7 +131,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOVI") == 0) // Indices
 		{
-			_ASSERT(IB_Default == nullptr);
+			assert1(IB_Default == nullptr);
 			uint32 indicesCount = size / sizeof(uint16);
 			uint16* indices = (uint16*)m_F->getDataFromCurrent();
 			// Buffer
@@ -141,7 +141,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOVT") == 0) // Vertices chunk.
 		{
-			_ASSERT(VB_Vertexes == nullptr);
+			assert1(VB_Vertexes == nullptr);
 			uint32 vertexesCount = size / sizeof(vec3);
 			vec3* vertexes = (vec3*)m_F->getDataFromCurrent();
 			// Convert
@@ -158,7 +158,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MONR") == 0) // Normals
 		{
-			_ASSERT(VB_Normals == nullptr);
+			assert1(VB_Normals == nullptr);
 			uint32 normalsCount = size / sizeof(vec3);
 			vec3* normals = (vec3*)m_F->getDataFromCurrent();
 			// Convert
@@ -192,7 +192,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOLR") == 0) // Light references
 		{
-			_ASSERT(m_Header.flags.HAS_LIGHTS);
+			assert1(m_Header.flags.HAS_LIGHTS);
 			uint32 lightsIndexesCount = size / sizeof(uint16);
 			uint16* lightsIndexes = (uint16*)m_F->getDataFromCurrent();
 			for (uint32 i = 0; i < lightsIndexesCount; i++)
@@ -202,7 +202,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MODR") == 0) // Doodad references
 		{
-			_ASSERT(m_Header.flags.HAS_DOODADS);
+			assert1(m_Header.flags.HAS_DOODADS);
 			uint32 doodadsIndexesCount = size / sizeof(uint16);
 			uint16* doodadsIndexes = (uint16*)m_F->getDataFromCurrent();
 			for (uint32 i = 0; i < doodadsIndexesCount; i++)
@@ -213,7 +213,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOBN") == 0)
 		{
-			_ASSERT(m_Header.flags.HAS_COLLISION);
+			assert1(m_Header.flags.HAS_COLLISION);
 
 			collisionCount = size / sizeof(SWMO_Group_MOBNDef);
 			collisions = (SWMO_Group_MOBNDef*)m_F->getDataFromCurrent();
@@ -233,7 +233,7 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOCV") == 0) // Vertex colors
 		{
-			_ASSERT(m_Header.flags.HAS_VERTEX_COLORS);
+			assert1(m_Header.flags.HAS_VERTEX_COLORS);
 			uint32 vertexColorsCount = size / sizeof(CBgra);
 			CBgra* vertexColors = (CBgra*)m_F->getDataFromCurrent();
 			mocv = new C4Vec[vertexColorsCount];
@@ -312,16 +312,24 @@ void WMO_Group::Load()
 
 	// Create geom
 	{
-		std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
+		/*std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 		__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
 		__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
 		__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
 		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
 		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
-		__geom->SetIndexBuffer(IB_Default);
+		__geom->SetIndexBuffer(IB_Default);*/
 
 		for (const auto& batchProto : m_WMOBatchs)
 		{
+			std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
+			__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
+			__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
+			//__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
+			__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
+			__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
+			__geom->SetIndexBuffer(IB_Default);
+
 			std::shared_ptr<WMO_Group_Part_Batch> batch = std::make_shared<WMO_Group_Part_Batch>(m_ParentWMO, shared_from_this(), __geom, batchProto);
 			m_WMOBatchIndexes.push_back(batch);
 		}

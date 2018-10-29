@@ -38,7 +38,7 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 void CM2_Base_Instance::Attach(const CM2_Part_Attachment* _attachment)
 {
-	_ASSERT(_attachment != nullptr);
+	assert1(_attachment != nullptr);
 	m_Attached = _attachment;
 }
 void CM2_Base_Instance::Detach()
@@ -48,8 +48,8 @@ void CM2_Base_Instance::Detach()
 
 void CM2_Base_Instance::setM2(std::shared_ptr<M2> _model)
 {
-	_ASSERT(m_M2 == nullptr);
-	_ASSERT(_model != nullptr);
+	assert1(m_M2 == nullptr);
+	assert1(_model != nullptr);
 	m_M2 = _model;
 
 	InitLocal();
@@ -75,7 +75,7 @@ void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, std::shared_p
 }
 std::shared_ptr<Texture> CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type _type) const
 {
-	_ASSERT(_type < SM2_Texture::Type::COUNT);
+	assert1(_type < SM2_Texture::Type::COUNT);
 	return m_SpecialTextures[_type];
 }
 
@@ -154,7 +154,7 @@ void CM2_Base_Instance::CalculateLocalTransform(bool _isRotationQuat)
 	if (m_Attached != nullptr)
 	{
 		std::shared_ptr<const CM2_Part_Bone> bone = m_Attached->getBone().lock();
-		_ASSERT(bone != nullptr);
+		assert1(bone != nullptr);
 
 		mat4 relMatrix;
 		relMatrix = glm::translate(relMatrix, bone->getPivot());

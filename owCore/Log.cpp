@@ -83,7 +83,7 @@ void CLog::Fatal(const char* _message, ...)
 
 bool CLog::AddDebugOutput(IDebugOutput* _debugOutput)
 {
-	_ASSERT(_debugOutput != nullptr);
+	assert1(_debugOutput != nullptr);
 
 	if (find(m_DebugOutputs.begin(), m_DebugOutputs.end(), _debugOutput) != m_DebugOutputs.end())
 	{
@@ -97,7 +97,7 @@ bool CLog::AddDebugOutput(IDebugOutput* _debugOutput)
 
 bool CLog::DeleteDebugOutput(IDebugOutput* _debugOutput)
 {
-	_ASSERT(_debugOutput != nullptr);
+	assert1(_debugOutput != nullptr);
 
 	auto _debugOutputsIt = find(m_DebugOutputs.begin(), m_DebugOutputs.end(), _debugOutput);
 

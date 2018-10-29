@@ -14,7 +14,7 @@ public:
 	virtual ~ADT_MCNK();
 
 	// SceneNode
-	void CalculateLocalTransform(bool _isRotationQuat = false) override { _ASSERT(false); }
+	void CalculateLocalTransform(bool _isRotationQuat = false) override { assert1(false); }
 
 	// ILoadable
 	bool Load() override;

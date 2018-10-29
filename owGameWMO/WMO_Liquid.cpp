@@ -7,7 +7,7 @@ CWMO_Liquid::CWMO_Liquid(uint32 _x, uint32 _y) :
 	Liquid(_x, _y)
 {}
 
-void CWMO_Liquid::CreateFromWMO(std::shared_ptr<IFile> f, std::shared_ptr<WMO_Part_Material> _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor)
+void CWMO_Liquid::CreateFromWMO(std::shared_ptr<IFile> f, std::shared_ptr<const WMO_Part_Material> _material, const DBC_LiquidTypeRecord* _liquidType, bool _indoor)
 {
 	ydir = -1.0f; // Magic for WMO
 	initGeometry(_liquidType, f);

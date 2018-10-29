@@ -50,7 +50,7 @@ void XMLNode::AddChild(XMLNode* _node)
 		return;
 	}
 
-	_ASSERT(_node != nullptr);
+	assert1(_node != nullptr);
 
 	childs.push_back(_node);
 }
@@ -65,7 +65,7 @@ void XMLNode::AddData(cstring _keyName, cstring _value, bool append)
 
 	if (append)
 	{
-		_ASSERT(data.find(_keyName) != data.end());
+		assert1(data.find(_keyName) != data.end());
 		data[_keyName] += _value;
 	}
 	else
@@ -143,7 +143,7 @@ void XMLFile::Destroy()
 
 void XMLFile::Print(XMLNode* _startNode, int _level) const
 {
-	_ASSERT(_startNode != nullptr);
+	assert1(_startNode != nullptr);
 
 	std::string line = "";
 	std::string spaces = "";
@@ -158,7 +158,7 @@ void XMLFile::Print(XMLNode* _startNode, int _level) const
 
 	for (auto it = _startNode->GetChilds().begin(); it != _startNode->GetChilds().end(); ++it)
 	{
-		_ASSERT(*it != nullptr);
+		assert1(*it != nullptr);
 		Print(*it, _level + 1);
 	}
 }
@@ -202,7 +202,7 @@ bool XMLFile::ProcessLine(std::string& _line)
 
 		// Process other
 		otherString = _line.substr(openBracketPos);
-		_ASSERT(!otherString.empty());
+		assert1(!otherString.empty());
 		//Log::Info("Proc line [%s]...", otherString.c_str());
 		return ProcessLine(otherString);
 	}
@@ -233,7 +233,7 @@ bool XMLFile::ProcessLine(std::string& _line)
 	if (_line.size() > closeBracketPos + 1)
 	{
 		otherString = _line.substr(closeBracketPos + 1);
-		_ASSERT(!otherString.empty());
+		assert1(!otherString.empty());
 		//Log::Info("Proc line [%s]...", otherString.c_str());
 		return ProcessLine(otherString);
 	}
@@ -243,7 +243,7 @@ bool XMLFile::ProcessLine(std::string& _line)
 
 bool XMLFile::ProcessTag(std::string& _tag)
 {
-	_ASSERT(!_tag.empty());
+	assert1(!_tag.empty());
 	_tag = _tag.substr(1, _tag.size() - 2);
 	//Log::Info("Proc tag [%s]...", _tag.c_str());
 
@@ -351,9 +351,9 @@ bool XMLFile::ProcessTag(std::string& _tag)
 			value = value.substr(0, quotesPos);
 
 			// Add attributes
-			_ASSERT(!key.empty());
-			_ASSERT(!value.empty());
-			_ASSERT(newNode != nullptr);
+			assert1(!key.empty());
+			assert1(!value.empty());
+			assert1(newNode != nullptr);
 			newNode->AddData(key, value);
 
 			//Log::Green("KEY [%s] VALUE [%s]", key.c_str(), value.c_str());
@@ -368,7 +368,7 @@ bool XMLFile::ProcessTag(std::string& _tag)
 
 bool XMLFile::ProcessData(std::string& _data)
 {
-	_ASSERT(!_data.empty());
+	assert1(!_data.empty());
 	//Log::Info("Proc data [%s]...", _data.c_str());
 
 	// Add data or append data
@@ -386,11 +386,11 @@ bool XMLFile::ProcessData(std::string& _data)
 
 void XMLFile::DeleteDataNodes(XMLNode* _startNode)
 {
-	_ASSERT(_startNode != nullptr);
+	assert1(_startNode != nullptr);
 	for (auto it = _startNode->GetChilds().begin(); it != _startNode->GetChilds().end(); )
 	{
 		auto node = *it;
-		_ASSERT(node != nullptr);
+		assert1(node != nullptr);
 		if (node->IsDataNode())
 		{
 			//Log::Error("DATA Node FINDED [%s]", node->GetName().c_str());

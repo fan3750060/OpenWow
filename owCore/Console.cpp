@@ -49,7 +49,7 @@ void CConsole::AddCommonCommands()
 
 bool CConsole::AddConsoleCommand(IConsoleCommand* _command)
 {
-	_ASSERT(_command != nullptr);
+	assert1(_command != nullptr);
 
 	// Name is empty
 	if (_command->GetName().empty())

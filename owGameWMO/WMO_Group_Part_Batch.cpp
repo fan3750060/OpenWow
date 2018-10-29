@@ -32,7 +32,7 @@ WMO_Group_Part_Batch::WMO_Group_Part_Batch(const std::weak_ptr<const WMO> _paren
 
 void WMO_Group_Part_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, INT baseVertexLocation)
 {
-	base::Render(renderEventArgs, perObject, m_Proto.indexStart, m_Proto.indexCount, m_Proto.vertexStart);
+	MeshWrapper::Render(renderEventArgs, perObject, m_Proto.indexStart, m_Proto.indexCount);
 
 	/*CWMO_GeomertyPass* pass = _Render->getTechniquesMgr()->WMO_Pass.operator->();
 	{

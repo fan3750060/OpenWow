@@ -60,7 +60,7 @@ void CM2_SkinSection::Draw(CM2_Base_Instance* _instance)
 		std::vector<mat4> bones;
 		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
 		{
-			_ASSERT(skeleton->isLookupBoneCorrect(i));
+			assert1(skeleton->isLookupBoneCorrect(i));
 			bones.push_back(skeleton->getBoneLookup(i)->getTransformMatrix());
 		}
 

@@ -58,7 +58,7 @@ void MeshOGL::SetPrimitiveTopology(PrimitiveTopology _topology)
 		m_PrimitiveTopology = GL_TRIANGLE_STRIP;
 		break;
 	default:
-		_ASSERT(false);
+		assert1(false);
 	}
 }
 
@@ -86,7 +86,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer
 			m_bIsDirty = false;
 		}
 	}
-	_ASSERT(m_bIsDirty != true);
+	assert1(m_bIsDirty != true);
 
 	glBindVertexArray(m_GLObj);
 	{

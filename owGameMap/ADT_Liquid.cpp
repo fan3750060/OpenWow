@@ -38,11 +38,11 @@ void CADT_Liquid::CreateFromTerrainMH2O(std::shared_ptr<IFile> f, MH2O_Header* _
 	for (uint32 j = 0; j < _header->layersCount; j++)
 	{
 		MH2O_Instance* mh2o_instance = (MH2O_Instance*)(f->getDataFromCurrent() + _header->offsetInstances + sizeof(MH2O_Instance) * j);
-		//_ASSERT(mh2o_instance->minHeightLevel - mh2o_instance->maxHeightLevel > 0.001f);
+		//assert1(mh2o_instance->minHeightLevel - mh2o_instance->maxHeightLevel > 0.001f);
 
 		// Init liquid
 		const DBC_LiquidTypeRecord* liquidType = mh2o_instance->liquidType();
-		_ASSERT(liquidType != nullptr);
+		assert1(liquidType != nullptr);
 		
 		Liquid_Layer waterLayer;
 		waterLayer.x = mh2o_instance->xOffset;

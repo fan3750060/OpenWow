@@ -15,7 +15,7 @@ CWMO_Part_Portal::CWMO_Part_Portal(const std::weak_ptr<const WMO> _parentWMO, co
 {
 	m_StartVertex = _proto.startVertex;
 	m_Count = _proto.count;
-	_ASSERT(m_Count < 20);
+	assert1(m_Count < 20);
 
 	m_Plane.normal = Fix_XZmY(_proto.plane.normal);
 	m_Plane.dist = _proto.plane.distance;

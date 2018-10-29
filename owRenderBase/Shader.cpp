@@ -30,7 +30,7 @@ ShaderParameter& Shader::GetShaderParameterByName(cstring name) const
 		return *(iter->second);
 	}
 
-	//_ASSERT(false);
+	//assert1(false);
 	return gs_InvalidShaderParameter;
 }
 
@@ -57,7 +57,7 @@ const InputSemantic& Shader::GetSemantic(const BufferBinding& binding) const
 		}
 	}
 
-	_ASSERT(false);
+	assert1(false);
 	return gs_InvalidShaderSemantic;
 }
 
@@ -71,6 +71,6 @@ UINT Shader::GetSemanticSlot(const BufferBinding& binding) const
 		}
 	}
 
-	_ASSERT(false);
+	assert1(false);
 	return UINT_MAX;
 }

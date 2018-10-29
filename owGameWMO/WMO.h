@@ -46,7 +46,7 @@ public:
 public:
 	//-- Materials --//
 	char*									m_TexturesNames;		// MOTX chunk
-	std::vector<std::shared_ptr<WMO_Part_Material>>				m_Materials;			// MOMT chunk
+	std::vector<std::shared_ptr<const WMO_Part_Material>>				m_Materials;			// MOMT chunk
 
 	//-- Groups --//
 

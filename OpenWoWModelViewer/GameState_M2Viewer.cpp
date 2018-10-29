@@ -38,7 +38,7 @@ void GameState_M2Viewer::OpenFile(const char* _fname)
 {
 	std::string path = _fname;
 	int pos = path.find("ExData");
-	_ASSERT(pos != -1);
+	assert1(pos != -1);
 	path = path.substr(pos + 7);
 
 	M2* m2 = GetManager<IM2Manager>()->Add(path);
