@@ -72,7 +72,7 @@ std::shared_ptr<const Material> MeshOGL::GetMaterial() const
 	return m_pMaterial;
 }
 
-void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, INT baseVertexLocation)
+void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
 	if (m_pMaterial)
 	{
@@ -86,7 +86,7 @@ void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer
 			m_bIsDirty = false;
 		}
 	}
-	assert1(m_bIsDirty != true);
+	assert1(m_bIsDirty);
 
 	glBindVertexArray(m_GLObj);
 	{

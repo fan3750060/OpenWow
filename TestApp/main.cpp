@@ -15,18 +15,6 @@ RenderWindow* g_pRenderWindow;
 std::shared_ptr<Query> g_pFrameQuery;
 double g_FrameTime = 0.0;
 
-std::shared_ptr<Shader> g_pPixelShader;
-
-
-//--
-
-std::shared_ptr<PipelineState> g_pTransparentPipeline;
-
-//--
-
-std::shared_ptr<SamplerState> g_LinearClampSampler;
-std::shared_ptr<SamplerState> g_LinearRepeatSampler;
-
 //--
 
 void OnPreRender(RenderEventArgs& e);
@@ -82,7 +70,7 @@ int main(int argumentCount, char* arguments[])
 
 		Application app;
 
-		g_pRenderWindow = app.CreateRenderWindow("Name", 1024, 768);
+		g_pRenderWindow = app.CreateRenderWindow("Name", 1280, 1024);
 
 		// Register initialize/terminate events.
 		app.Initialize += boost::bind(&RenderWindow::OnInitialize, g_pRenderWindow, _1);
@@ -134,7 +122,7 @@ int main(int argumentCount, char* arguments[])
 		contr->EnterMap(x, y);
 
 
-		Viewport viewPort(0, 0, 1024.0f, 768.0f);
+		Viewport viewPort(0, 0, 1280.0f, 1024.0f);
 
 		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
@@ -143,7 +131,7 @@ int main(int argumentCount, char* arguments[])
 		g_Camera.SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
 		g_Camera.SetViewport(viewPort);
-		g_Camera.SetProjectionRH(45.0f, 1024.0f / 768.0f, 0.1f, 10000.0f);
+		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 0.5f, 2000.0f);
 
 		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);

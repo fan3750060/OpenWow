@@ -189,6 +189,10 @@ void SceneNode::RemoveMesh(std::shared_ptr<IMesh> mesh)
 	}
 }
 
+void SceneNode::Update(Camera* camera)
+{
+}
+
 void SceneNode::Accept(IVisitor& visitor)
 {
 	visitor.Visit(*this);

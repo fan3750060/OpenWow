@@ -35,19 +35,8 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		return;
 	}
 
-	// CreateShaders
-	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
-		Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
-	);
-	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
-		Shader::PixelShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
-	);
-
 	// Material
-	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>(_RenderDevice);
-	mat->SetDiffuseColor(vec4(0, 0.2, 0.8, 1.0));
-	mat->SetShader(Shader::VertexShader, g_pVertexShader);
-	mat->SetShader(Shader::PixelShader, g_pPixelShader);
+	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>();
 
 	// Heightmap
 	vec3 lowres[17][17];
@@ -108,9 +97,9 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
-				/*std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, __geom, i, j);
+				std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, __geom, i, j);
 				_parent.lock()->AddMesh(lowResTile);
-				m_LowResilutionTiles.push_back(lowResTile);*/
+				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
 	}

@@ -14,9 +14,8 @@ public:
 	void Render(cmat4 _worldMatrix);
 
 private:
-	const std::weak_ptr<const WMO_Group> m_ParentGroup;
-	SWMO_Group_MOBNDef m_Proto;
+	const SWMO_Group_MOBNDef m_Proto;
 
-	std::shared_ptr<IMesh>							m_GEOM_Collision;
+	std::shared_ptr<IMesh> m_GEOM_Collision;
 	vec4 color;
 };

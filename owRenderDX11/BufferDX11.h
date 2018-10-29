@@ -3,7 +3,7 @@
 class BufferDX11 : public Buffer
 {
 public:
-	BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data, size_t count, UINT stride);
+	BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data, size_t count, UINT offset, UINT stride);
 	~BufferDX11();
 
 	virtual bool Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
@@ -20,6 +20,9 @@ private:
 	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
 
 	ATL::CComPtr<ID3D11Buffer> m_pBuffer;
+
+	// The offset of the vertex buffer in bytes.
+	UINT m_uiOffset;
 
 	// The stride of the vertex buffer in bytes.
 	UINT m_uiStride;

@@ -218,9 +218,7 @@ std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
 		}
 
 		// maxidx is the winner (loser)
-		//GetManager<ILoader>()->AddToDeleteQueue(m_ADTCache[maxidx]);
-		//delete m_ADTCache[maxidx];
-		m_ADTCache[maxidx] = nullptr;
+		m_ADTCache[maxidx].reset();
 		firstnull = maxidx;
 	}
 

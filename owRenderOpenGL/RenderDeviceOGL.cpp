@@ -198,7 +198,7 @@ cstring RenderDeviceOGL::GetDeviceName() const
 	return m_DeviceName;
 }
 
-std::shared_ptr<Buffer> RenderDeviceOGL::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 stride)
+std::shared_ptr<Buffer> RenderDeviceOGL::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
 {
 	std::shared_ptr<Buffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
@@ -206,7 +206,7 @@ std::shared_ptr<Buffer> RenderDeviceOGL::CreateFloatVertexBuffer(const float* da
 	return buffer;
 }
 
-std::shared_ptr <Buffer> RenderDeviceOGL::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 stride)
+std::shared_ptr <Buffer> RenderDeviceOGL::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
 {
 	std::shared_ptr<Buffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);

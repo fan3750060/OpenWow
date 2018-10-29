@@ -2,10 +2,11 @@
 
 #include "BufferDX11.h"
 
-BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data, size_t count, UINT stride)
+BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data, size_t count, UINT offset, UINT stride)
 	: m_pDevice(pDevice)
 	, m_pDeviceContext(NULL)
 	, m_pBuffer(NULL)
+	, m_uiOffset(offset)
 	, m_uiStride(stride)
 	, m_BindFlags(bindFlags)
 	, m_uiCount((UINT)count)
@@ -40,7 +41,7 @@ bool BufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::
 	assert(m_pDeviceContext);
 
 	ID3D11Buffer* buffers[] = { m_pBuffer };
-	UINT offsets[] = { 0 };
+	UINT offsets[] = { m_uiOffset };
 	UINT strides[] = { m_uiStride };
 
 	switch (m_BindFlags)

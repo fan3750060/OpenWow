@@ -6,11 +6,9 @@
 // General
 #include "WMO_Group_Part_BSP_Node.h"
 
-CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const std::weak_ptr<const WMO_Group> _parentGroup, const SWMO_Group_MOBNDef & _proto) :
-	m_ParentGroup(_parentGroup)
+CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const std::weak_ptr<const WMO_Group> _parentGroup, const SWMO_Group_MOBNDef& _proto) :
+	m_Proto(_proto)
 {
-	m_Proto = _proto;
-
 	std::vector<vec3> collisionVertices;
 	collisionVertices.reserve(m_Proto.nFaces * 3);
 	/*for (uint32 i = m_Proto.faceStart; i < m_Proto.faceStart + m_Proto.nFaces; i++)

@@ -63,16 +63,13 @@ std::shared_ptr<const Material> MeshDX11::GetMaterial() const
 	return m_pMaterial;
 }
 
-void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, INT baseVertexLocation)
+void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
-	std::shared_ptr<ShaderDX11> pVS;
-
-	// Use the vertex shader to convert the buffer semantics to slot ID's
 	if (m_pMaterial)
 	{
 		m_pMaterial->Bind();
 
-		pVS = std::dynamic_pointer_cast<ShaderDX11>(m_pMaterial->GetShader(Shader::VertexShader));
+		std::shared_ptr<ShaderDX11> pVS = std::dynamic_pointer_cast<ShaderDX11>(m_pMaterial->GetShader(Shader::VertexShader));
 
 		if (pVS)
 		{
@@ -88,27 +85,24 @@ void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 				}
 			}
 		}
-	}
 
-	m_pDeviceContext->IASetPrimitiveTopology(m_PrimitiveTopology);
+		m_pDeviceContext->IASetPrimitiveTopology(m_PrimitiveTopology);
 
-	if (m_pIndexBuffer != NULL)
-	{
-		m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
-		if (indexCnt == 0)
-			m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
+		if (m_pIndexBuffer != NULL)
+		{
+			m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
+			if (indexCnt == 0)
+				m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
+			else
+				m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, 0);
+			m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
+		}
 		else
-			m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, baseVertexLocation);
-		m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
-	}
-	else
-	{
-		UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
-		m_pDeviceContext->Draw(vertexCount, 0);
-	}
+		{
+			UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
+			m_pDeviceContext->Draw(vertexCount, 0);
+		}
 
-	if (m_pMaterial)
-	{
 		if (pVS)
 		{
 			for (BufferMap::value_type buffer : m_VertexBuffers)
@@ -124,6 +118,8 @@ void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 
 		m_pMaterial->Unbind();
 	}
+	else
+		fail1();
 }
 
 void MeshDX11::Accept(IVisitor& visitor)

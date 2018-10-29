@@ -13,8 +13,8 @@ public:
 	virtual cstring GetDeviceName() const;
 
 	// Inherited from RenderDevice
-	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 stride);
-	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 stride);
+	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride);
+	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride);
 	virtual std::shared_ptr<Buffer> CreateUInt16IndexBuffer(const uint16* data, uint32 count);
 	virtual std::shared_ptr<Buffer> CreateUInt32IndexBuffer(const uint32* data, uint32 count);
 	virtual std::shared_ptr<ConstantBuffer> CreateConstantBuffer(const void* data, size_t size);

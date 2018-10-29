@@ -24,7 +24,7 @@ public:
 	void ClearCache();
 	uint32 GetAreaID(Camera* camera);
 
-	void Update(Camera* camera);
+	void Update(Camera* camera) override;
 
 public: // Getters
 	std::string getFilenameT() const { return m_MapFilenameT; }
@@ -67,8 +67,8 @@ private:
 	bool IsTileInCurrent(std::shared_ptr<ADT> _mapTile);
 
 private:
-	std::string					m_MapFilenameT;
-	DBC_MapRecord			m_DBC_Map;
+	std::string             m_MapFilenameT;
+	DBC_MapRecord           m_DBC_Map;
 
 	std::shared_ptr<ADT>	m_ADTCache[C_TilesCacheSize];
 	std::shared_ptr<ADT>	m_Current[C_RenderedTiles][C_RenderedTiles];

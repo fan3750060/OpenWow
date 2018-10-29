@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="LiquidInstance.cpp" />
     <ClCompile Include="Liquid.cpp" />
+    <ClCompile Include="LiquidMaterial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -23,6 +24,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="LiquidInstance.h" />
     <ClInclude Include="Liquid.h" />
+    <ClInclude Include="LiquidMaterial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WowChunkUtils.h" />
     <ClInclude Include="WowConsts.h" />

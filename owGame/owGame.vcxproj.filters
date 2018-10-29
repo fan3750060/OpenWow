@@ -18,6 +18,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="LiquidMaterial.cpp">
+      <Filter>Liquid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Liquid.h">
@@ -39,5 +42,8 @@
     <ClInclude Include="WowConsts.h" />
     <ClInclude Include="WowTime.h" />
     <ClInclude Include="WowTypes.h" />
+    <ClInclude Include="LiquidMaterial.h">
+      <Filter>Liquid</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

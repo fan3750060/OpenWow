@@ -9,5 +9,5 @@ public:
 	virtual ~Liquid_Instance() {};
 
 private:
-	CGroupQuality&		m_QualitySettings;
+	const CGroupQuality& m_QualitySettings;
 };

@@ -3,7 +3,7 @@
 class ADT_CHUNK_Material : public Material
 {
 public:
-	ADT_CHUNK_Material(RenderDevice* _device);
+	ADT_CHUNK_Material();
 	virtual ~ADT_CHUNK_Material();
 
 	uint32 GetLayersCnt() const;

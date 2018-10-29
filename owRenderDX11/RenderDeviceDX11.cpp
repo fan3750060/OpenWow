@@ -164,17 +164,17 @@ ATL::CComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
 }
 
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 stride)
+std::shared_ptr<Buffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, stride);
+	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr <Buffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 stride)
+std::shared_ptr <Buffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, stride);
+	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
@@ -182,7 +182,7 @@ std::shared_ptr <Buffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double
 
 std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, (UINT)sizeof(uint16));
+	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint16));
 	m_Buffers.push_back(buffer);
 
 	return buffer;
@@ -190,7 +190,7 @@ std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16* 
 
 std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, (UINT)sizeof(uint32));
+	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint32));
 	m_Buffers.push_back(buffer);
 
 	return buffer;

@@ -335,36 +335,16 @@ bool ADT_MCNK::Load()
 		__geomHigh->finishCreatingGeometry();*/
 	}
 
-	// CreateShaders
-	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
-		Shader::VertexShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
-	);
-	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
-		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
-	);
 
-	// Create samplers
-	std::shared_ptr<SamplerState> g_LinearClampSampler = _RenderDevice->CreateSamplerState();
-	g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-	g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
-
-	std::shared_ptr<SamplerState> g_LinearRepeatSampler = _RenderDevice->CreateSamplerState();
-	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
-
-	g_pPixelShader->GetShaderParameterByName("ColorMapSampler").Set(g_LinearRepeatSampler);
-	g_pPixelShader->GetShaderParameterByName("AlphaMapSampler").Set(g_LinearClampSampler);
 
 	// Material
-	std::shared_ptr<ADT_CHUNK_Material> mat = std::make_shared<ADT_CHUNK_Material>(_RenderDevice);
+	std::shared_ptr<ADT_CHUNK_Material> mat = std::make_shared<ADT_CHUNK_Material>();
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
 		mat->SetTexture(i, m_DiffuseTextures[i]); // DXT1
 	}
 	mat->SetTexture(4, m_BlendRBGShadowATexture);
 	mat->SetLayersCnt(header.nLayers);
-	mat->SetShader(Shader::VertexShader, g_pVertexShader);
-	mat->SetShader(Shader::PixelShader, g_pPixelShader);
 
 	{ // Geom Default
 		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);

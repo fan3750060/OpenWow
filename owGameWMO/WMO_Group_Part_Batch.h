@@ -12,11 +12,11 @@ class WMO_Group;
 class WMO_Group_Part_Batch : public MeshWrapper
 {
 public:
-	WMO_Group_Part_Batch(const std::weak_ptr<const WMO> _parentWMO, const std::weak_ptr<const WMO_Group> _parentGroup, std::shared_ptr<IMesh> _mesh, const SWMO_Group_BatchDef& _proto);
+	WMO_Group_Part_Batch(const std::weak_ptr<const WMO> _parentWMO, std::shared_ptr<IMesh> _mesh, const SWMO_Group_BatchDef& _proto);
 
 	uint32 getBlendMode() const { return m_WMOMaterial->getBlendMode(); }
 
-	void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, INT baseVertexLocation = 0) override;
+	void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
 
 private:
 	const SWMO_Group_BatchDef	m_Proto;

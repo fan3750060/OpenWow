@@ -312,25 +312,17 @@ void WMO_Group::Load()
 
 	// Create geom
 	{
-		/*std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
-		__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
-		__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
-		__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
-		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
-		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
-		__geom->SetIndexBuffer(IB_Default);*/
+		std::shared_ptr<IMesh> mesh = _RenderDevice->CreateMesh();
+		mesh->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
+		mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
+		mesh->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
+		mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
+		mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
+		mesh->SetIndexBuffer(IB_Default);
 
 		for (const auto& batchProto : m_WMOBatchs)
 		{
-			std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
-			__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
-			__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
-			//__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
-			__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
-			__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
-			__geom->SetIndexBuffer(IB_Default);
-
-			std::shared_ptr<WMO_Group_Part_Batch> batch = std::make_shared<WMO_Group_Part_Batch>(m_ParentWMO, shared_from_this(), __geom, batchProto);
+			std::shared_ptr<WMO_Group_Part_Batch> batch = std::make_shared<WMO_Group_Part_Batch>(m_ParentWMO, mesh, batchProto);
 			m_WMOBatchIndexes.push_back(batch);
 		}
 		std::sort(m_WMOBatchIndexes.begin(), m_WMOBatchIndexes.end(), WMO_Group_Part_BatchCompare());

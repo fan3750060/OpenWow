@@ -73,6 +73,8 @@ void BasePass::Visit(SceneNode& node)
 
 		// Update the constant buffer data
 		SetPerObjectConstantBufferData(perObjectData);
+
+		node.Update(camera);
 	}
 }
 

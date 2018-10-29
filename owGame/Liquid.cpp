@@ -3,6 +3,9 @@
 // General
 #include "liquid.h"
 
+// Additional
+#include "LiquidMaterial.h"
+
 Liquid::Liquid(uint32 x, uint32 y) :
 	m_TilesX(x),
 	m_TilesY(y),
@@ -15,9 +18,9 @@ Liquid::Liquid(uint32 x, uint32 y) :
 
 //--
 
-void Liquid::Render(cmat4 _worldMatrix)
+/*void Liquid::Render(cmat4 _worldMatrix)
 {
-	/*_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
+	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
 	_Render->r.setDepthTest(true);
 	_Render->r.setDepthMask(true);
@@ -68,8 +71,8 @@ void Liquid::Render(cmat4 _worldMatrix)
 		{
 			_Render->getTechniquesMgr()->m_Magma->Unbind();
 		}
-	}*/
-}
+	}
+}*/
 //--
 
 #pragma region Types
@@ -183,7 +186,8 @@ void Liquid::createBuffer()
 {
 	for (auto& layer : m_WaterLayers)
 	{
-		std::vector<SLiquidVertexData> mh2oVertices;
+		std::vector<vec3> mh2oVerticesPos;
+		std::vector<vec3> mh2oVerticesTex;
 		std::vector<uint16> m_Indices;
 		uint32 cntr = 0;
 
@@ -249,31 +253,17 @@ void Liquid::createBuffer()
 
 				// Insert vertex
 
-				mh2oVertices.push_back
-				(
-					{
-					vec3(C_UnitSize * static_cast<float>(x), h1, ydir * (C_UnitSize * static_cast<float>(y))),
-					vec3(t1.first, t1.second, a1)
-					}
-				);
+				mh2oVerticesPos.push_back(vec3(C_UnitSize * static_cast<float>(x), h1, ydir * (C_UnitSize * static_cast<float>(y))));
+				mh2oVerticesTex.push_back(vec3(t1.first, t1.second, a1));
 
-				mh2oVertices.push_back
-				({
-					vec3(C_UnitSize * static_cast<float>(x), h2, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
-					vec3(t2.first, t2.second, a2)
-					});
+				mh2oVerticesPos.push_back(vec3(C_UnitSize * static_cast<float>(x), h2, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))));
+				mh2oVerticesTex.push_back(vec3(t2.first, t2.second, a2));
 
-				mh2oVertices.push_back
-				({
-					vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h4, ydir * (C_UnitSize * static_cast<float>(y))),
-					vec3(t4.first, t4.second, a4)
-					});
+				mh2oVerticesPos.push_back(vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h4, ydir * (C_UnitSize * static_cast<float>(y))));
+				mh2oVerticesTex.push_back(vec3(t4.first, t4.second, a4));
 
-				mh2oVertices.push_back
-				({
-					vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h3, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))),
-					vec3(t3.first, t3.second, a3)
-					});
+				mh2oVerticesPos.push_back(vec3(C_UnitSize + C_UnitSize * static_cast<float>(x), h3, ydir * (C_UnitSize + C_UnitSize * static_cast<float>(y))));
+				mh2oVerticesTex.push_back(vec3(t3.first, t3.second, a3));
 
 				m_Indices.push_back(cntr + 2);
 				m_Indices.push_back(cntr + 1);
@@ -281,38 +271,19 @@ void Liquid::createBuffer()
 				m_Indices.push_back(cntr + 3);
 				m_Indices.push_back(cntr + 1);
 				m_Indices.push_back(cntr + 2);
-
 				cntr += 4;
 			}
 		}
 
+		layer.m_Mesh = _RenderDevice->CreateMesh();
+		layer.m_Mesh->AddVertexBuffer(BufferBinding("POSITION", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesPos));
+		layer.m_Mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesTex));
+		layer.m_Mesh->SetIndexBuffer(_RenderDevice->CreateIndexBuffer(m_Indices));
 
-		//std::shared_ptr<Buffer> __vb = _RenderDevice->CreateVertexBuffer((const float*)mh2oVertices.data(), mh2oVertices.size(), sizeof(SLiquidVertexData));
-		//std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(m_Indices.data(), m_Indices.size());
+		layer.m_Material = std::make_shared<LiquidMaterial>();
+		layer.m_Material->SetTexture(0, layer.m_Textures[0]);
 
-		//layer.m_Mesh = _RenderDevice->CreateMesh();
-		//layer.m_Mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
-		//layer.m_Mesh->SetIndexBuffer(__ib);
-
-
-
-		//__mesh->SetMaterial()
-		// Vertex buffer
-		/*std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(mh2oVertices.size()) * sizeof(SLiquidVertexData), mh2oVertices.data(), false);
-		layer.m_VerticesCnt = static_cast<uint32>(mh2oVertices.size());
-		assert1(layer.m_VerticesCnt > 0);
-
-		// Index bufer
-		std::shared_ptr<Buffer> __ib = _Render->r.createIndexBuffer(static_cast<uint32>(m_Indices.size()) * sizeof(uint16), m_Indices.data(), false);
-		layer.m_IndicesCnt = static_cast<uint32>(m_Indices.size());
-		assert1(layer.m_IndicesCnt > 0);
-
-		// Geometry
-		layer.m_Mesh = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PN);
-		layer.m_Mesh->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0, sizeof(SLiquidVertexData));
-		layer.m_Mesh->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 12, sizeof(SLiquidVertexData));
-		layer.m_Mesh->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-		layer.m_Mesh->finishCreatingGeometry();*/
+		layer.m_Mesh->SetMaterial(layer.m_Material);
 	}
 }
 

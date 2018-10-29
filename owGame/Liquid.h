@@ -54,7 +54,8 @@ struct Liquid_Layer
 	// Render
 	void InitTextures();
 
-	std::shared_ptr<IMesh>                    m_Mesh;
+	std::shared_ptr<IMesh>                   m_Mesh;
+	std::shared_ptr<Material>                m_Material;
 	std::vector<std::shared_ptr<Texture>>    m_Textures;
 };
 #include __PACK_END
@@ -63,8 +64,6 @@ class Liquid
 {
 public:
 	Liquid(uint32 x, uint32 y);
-
-	void Render(cmat4 _worldMatrix);
 
 protected:
 	void initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f);
@@ -82,7 +81,7 @@ protected:
 
 private:
 	ISkyManager*				m_SkyManager;
-	CGroupQuality&				m_QualitySettings;
+	const CGroupQuality& m_QualitySettings;
 
 private:
 	const vec3 defaultNormal = vec3(0.0f, 1.0f, 0.0f);

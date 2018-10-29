@@ -83,6 +83,11 @@ public:
 	virtual void RemoveMesh(std::shared_ptr<IMesh> mesh);
 
 	/**
+	 * Called before all others calls
+	 */
+	virtual void Update(Camera* camera);
+
+	/**
 	 * Allow a visitor to visit this node.
 	 */
 	virtual void Accept(IVisitor& visitor);

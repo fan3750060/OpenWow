@@ -267,44 +267,44 @@ std::shared_ptr<MeshWrapper> RenderDevice::CreateMeshWrapper()
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
 {
-	return CreateFloatVertexBuffer(&(data[0]), (uint32)data.size(), sizeof(float));
+	return CreateFloatVertexBuffer(&(data[0]), (uint32)data.size(), 0, sizeof(float));
 }
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
 {
-	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), sizeof(vec2));
+	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec2));
 }
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
 {
-	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), sizeof(vec3));
+	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec3));
 }
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
 {
-	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), sizeof(vec4));
+	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec4));
 }
 
 // Template specializations for vertex buffers (with common types)
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
 {
-	return CreateFloatVertexBuffer(data, count, sizeof(float));
+	return CreateFloatVertexBuffer(data, count, 0, sizeof(float));
 }
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
 {
-	return CreateFloatVertexBuffer((const float*)data, count, sizeof(vec2));
+	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec2));
 }
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
 {
-	return CreateFloatVertexBuffer((const float*)data, count, sizeof(vec3));
+	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec3));
 }
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
 {
-	return CreateFloatVertexBuffer((const float*)data, count, sizeof(vec4));
+	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec4));
 }
 
 // Template specializations for index buffers (with std::vector)
