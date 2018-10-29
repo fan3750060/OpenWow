@@ -10,9 +10,6 @@
     <Filter Include="Parts">
       <UniqueIdentifier>{b0f56994-9fa8-494f-a732-b6f401df22f5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Builder">
-      <UniqueIdentifier>{0cf512f7-ca02-4421-9ea7-17b0a54e3b36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Groups">
       <UniqueIdentifier>{3f2936b2-5b52-4e66-b693-368fcfe7587f}</UniqueIdentifier>
     </Filter>
@@ -36,9 +33,6 @@
     <ClCompile Include="WMO_Part_Material.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
-    <ClCompile Include="WMO_Builder.cpp">
-      <Filter>Builder</Filter>
-    </ClCompile>
     <ClCompile Include="WMO_Part_Portal.cpp">
       <Filter>Parts</Filter>
     </ClCompile>
@@ -58,9 +52,6 @@
       <Filter>Groups</Filter>
     </ClCompile>
     <ClCompile Include="WMO_PortalsController.cpp" />
-    <ClCompile Include="WMO_Group_Instance.cpp">
-      <Filter>Groups</Filter>
-    </ClCompile>
     <ClCompile Include="WMO_Group_Part_BSP_Node.cpp">
       <Filter>Groups</Filter>
     </ClCompile>
@@ -69,6 +60,9 @@
     </ClCompile>
     <ClCompile Include="WMO_Pass.cpp">
       <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO_Group_Instance.cpp">
+      <Filter>Instances</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,9 +88,6 @@
     <ClInclude Include="WMO_Part_Fog.h">
       <Filter>Parts</Filter>
     </ClInclude>
-    <ClInclude Include="WMO_Builder.h">
-      <Filter>Builder</Filter>
-    </ClInclude>
     <ClInclude Include="WMO_Part_Portal.h">
       <Filter>Parts</Filter>
     </ClInclude>
@@ -119,9 +110,6 @@
       <Filter>Groups</Filter>
     </ClInclude>
     <ClInclude Include="WMO_PortalsController.h" />
-    <ClInclude Include="WMO_Group_Instance.h">
-      <Filter>Groups</Filter>
-    </ClInclude>
     <ClInclude Include="WMO_Group_Part_BSP_Node.h">
       <Filter>Groups</Filter>
     </ClInclude>
@@ -133,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="WMO_Pass.h">
       <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO_Group_Instance.h">
+      <Filter>Instances</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

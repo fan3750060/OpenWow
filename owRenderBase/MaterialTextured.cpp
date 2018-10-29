@@ -31,10 +31,3 @@ void MaterialTextured::SetTexture(std::shared_ptr<Texture> texture)
 	m_Textures[0] = texture;
 	m_Dirty = true;
 }
-
-//-----
-
-Material::TextureMap MaterialTextured::GetTextureMap() const
-{
-	return m_Textures;
-}

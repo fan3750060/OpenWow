@@ -9,7 +9,7 @@ class CM2_Base_Instance;
 class CM2_Part_Texture
 {
 public:
-	CM2_Part_Texture(IFile* f, const SM2_Texture& _proto);
+	CM2_Part_Texture(std::shared_ptr<IFile> f, const SM2_Texture& _proto);
 
 	//void set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const;
 

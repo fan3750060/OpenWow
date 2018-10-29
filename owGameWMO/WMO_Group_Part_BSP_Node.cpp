@@ -6,7 +6,7 @@
 // General
 #include "WMO_Group_Part_BSP_Node.h"
 
-CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const WMO_Group * _parentGroup, const SWMO_Group_MOBNDef & _proto) :
+CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const std::weak_ptr<const WMO_Group> _parentGroup, const SWMO_Group_MOBNDef & _proto) :
 	m_ParentGroup(_parentGroup)
 {
 	m_Proto = _proto;

@@ -3,7 +3,7 @@
 // General
 #include "M2_Part_Camera.h"
 
-CM2_Part_Camera::CM2_Part_Camera(IFile* f, const SM2_Camera& _proto, cGlobalLoopSeq global) :
+CM2_Part_Camera::CM2_Part_Camera(std::shared_ptr<IFile> f, const SM2_Camera& _proto, cGlobalLoopSeq global) :
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
 	nearclip = _proto.near_clip;

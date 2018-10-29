@@ -15,7 +15,7 @@
 class CWMO_Base_Instance;
 // FORWARD END
 
-class WMO
+class WMO : public std::enable_shared_from_this<WMO>
 {
 	friend CWMO_Part_Portal;
 public:
@@ -35,9 +35,7 @@ public:
 	BoundingBox	getBounds() const { return m_Bounds; }
 
 	bool useAmbColor() const { return !(m_Header.flags.skip_base_color); }
-#ifdef GAME_WMO_INCLUDE_WM2
 	std::shared_ptr<M2> getSkybox() { return m_Skybox; }
-#endif
 #pragma endregion
 
 public:
@@ -48,24 +46,22 @@ public:
 public:
 	//-- Materials --//
 	char*									m_TexturesNames;		// MOTX chunk
-	std::vector<WMO_Part_Material*>				m_Materials;			// MOMT chunk
+	std::vector<std::shared_ptr<WMO_Part_Material>>				m_Materials;			// MOMT chunk
 
 	//-- Groups --//
 
-	std::vector<WMO_Group*>						m_Groups;				// MOGI chunk
-	std::vector<WMO_Group*>						m_OutdoorGroups;
+	std::vector<std::shared_ptr<WMO_Group>>						m_Groups;				// MOGI chunk
+	std::vector<std::shared_ptr<WMO_Group>>						m_OutdoorGroups;
 
 	//-- Skybox --//
-#ifdef GAME_WMO_INCLUDE_WM2
 	std::shared_ptr<M2>								m_Skybox;
-#endif
 
 	//-- Portals --//
 	std::vector<vec3>						m_PortalVertices;		// MOPV chunk
 	std::shared_ptr<Buffer>							m_PortalVB;
-	std::vector<CWMO_Part_Portal*>			m_Portals;
+	std::vector<std::shared_ptr<CWMO_Part_Portal>>			m_Portals;
 	std::vector<SWMO_PortalReferencesDef>	m_PortalReferences;		// MOPR chunk
-	CWMO_PortalsController*					m_PortalController;
+	std::shared_ptr<CWMO_PortalsController>					m_PortalController;
 
 	//-- Visible block
 	std::vector<vec3>						m_VisibleBlockVertices;	// MOVV chunk
@@ -73,7 +69,7 @@ public:
 
 
 	// -- Lights --//
-	std::vector<WMO_Part_Light*>			m_Lights;				// MOLT chunk
+	std::vector<std::shared_ptr<WMO_Part_Light>>			m_Lights;				// MOLT chunk
 
 
 	//-- Doodads --//
@@ -83,7 +79,7 @@ public:
 
 
 	//-- Fog --//
-	std::vector<WMO_Part_Fog*>				m_Fogs;					// MFOG chunk
+	std::vector<std::shared_ptr<WMO_Part_Fog>>				m_Fogs;					// MFOG chunk
 
 
 	//-- Volumes plane --//

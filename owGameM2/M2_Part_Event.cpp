@@ -6,7 +6,7 @@
 // General
 #include "M2_Part_Event.h"
 
-CM2_Part_Event::CM2_Part_Event(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Event& _proto, cGlobalLoopSeq global)
+CM2_Part_Event::CM2_Part_Event(const std::weak_ptr<M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Event& _proto, cGlobalLoopSeq global)
 {
 	const std::shared_ptr<M2> ParentM2 = _parentM2.lock();
 	_ASSERT(ParentM2 != nullptr);

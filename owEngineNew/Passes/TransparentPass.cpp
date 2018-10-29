@@ -12,7 +12,7 @@ TransparentPass::~TransparentPass()
 
 void TransparentPass::Visit(IMesh& mesh)
 {
-	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
+	std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial /*&& pMaterial->IsTransparent()*/)
 	{
 		mesh.Render(GetRenderEventArgs(), nullptr);

@@ -9,14 +9,11 @@
 // Additional
 #include "ShaderResolver.h"
 
-CM2_Skin_Builder::CM2_Skin_Builder(CM2_Builder* _m2Builder, M2* _model, CM2_Skin* _skin, IFile* _file) :
+CM2_Skin_Builder::CM2_Skin_Builder(const CM2_Builder& _m2Builder, std::weak_ptr<M2> _model, std::shared_ptr<CM2_Skin> _skin, std::shared_ptr<IFile> _file) :
 	m_M2Builder(_m2Builder),
 	m_ParentM2(_model),
 	m_Skin(_skin),
 	m_F(_file)
-{}
-
-CM2_Skin_Builder::~CM2_Skin_Builder()
 {}
 
 void CM2_Skin_Builder::Load()
@@ -27,26 +24,32 @@ void CM2_Skin_Builder::Load()
 
 void CM2_Skin_Builder::Step1LoadProfile()
 {
-	m_F->readBytes(&m_SkinProfile, sizeof(SM2_SkinProfile));
+	std::shared_ptr<IFile> F = m_F.lock();
+	_ASSERT(F != nullptr);
+
+	std::shared_ptr<CM2_Skin> Skin = m_Skin.lock();
+	_ASSERT(Skin != nullptr);
+
+	F->readBytes(&m_SkinProfile, sizeof(SM2_SkinProfile));
 
 	// Skin data
-	uint16*				t_verticesIndexes	= (uint16*)				(m_F->getData() + m_SkinProfile.vertices.offset);
-	uint16*				t_indexesIndexes	= (uint16*)				(m_F->getData() + m_SkinProfile.indices.offset);
-	SM2_SkinBones*		t_bonesIndexes		= (SM2_SkinBones*)		(m_F->getData() + m_SkinProfile.bones.offset);
-	SM2_SkinSection*	t_sections			= (SM2_SkinSection*)	(m_F->getData() + m_SkinProfile.submeshes.offset);
-	SM2_SkinBatch*		t_Batches			= (SM2_SkinBatch*)		(m_F->getData() + m_SkinProfile.batches.offset);
+	uint16*				t_verticesIndexes	= (uint16*)				(F->getData() + m_SkinProfile.vertices.offset);
+	uint16*				t_indexesIndexes	= (uint16*)				(F->getData() + m_SkinProfile.indices.offset);
+	SM2_SkinBones*		t_bonesIndexes		= (SM2_SkinBones*)		(F->getData() + m_SkinProfile.bones.offset);
+	SM2_SkinSection*	t_sections			= (SM2_SkinSection*)	(F->getData() + m_SkinProfile.submeshes.offset);
+	SM2_SkinBatch*		t_Batches			= (SM2_SkinBatch*)		(F->getData() + m_SkinProfile.batches.offset);
 
 	_ASSERT(m_SkinProfile.vertices.size == m_SkinProfile.bones.size);
 
 	for (uint32 sectionIndex = 0; sectionIndex < m_SkinProfile.submeshes.size; sectionIndex++)
 	{
 		const SM2_SkinSection& section = t_sections[sectionIndex];
-		CM2_SkinSection* skinSection = new CM2_SkinSection(m_ParentM2, sectionIndex, section);
+		std::shared_ptr<CM2_SkinSection> skinSection = std::make_shared<CM2_SkinSection>(m_ParentM2, sectionIndex, section);
 
 		std::vector<SM2_Vertex> vertexes;
 		for (uint32 vert = section.vertexStart; vert < section.vertexStart + section.vertexCount; vert++)
 		{
-			SM2_Vertex newVertex = m_M2Builder->m_Vertexes[t_verticesIndexes[vert]];
+			SM2_Vertex newVertex = m_M2Builder.m_Vertexes[t_verticesIndexes[vert]];
 			for (uint32 bone = 0; bone < section.boneInfluences; ++bone)
 			{
 				uint8 boneIndex = t_bonesIndexes[vert].index[bone];
@@ -67,7 +70,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 
 		skinSection->CreateGeometry(vertexes, indexes);
 
-		m_Skin->m_Sections.push_back(skinSection);
+		Skin->m_Sections.push_back(skinSection);
 	}
 
 	//--
@@ -84,17 +87,20 @@ void CM2_Skin_Builder::Step1LoadProfile()
 
 void CM2_Skin_Builder::Step2InitBatches()
 {
-	CM2_Comp_Materials* materials = m_ParentM2->getMaterials();
+	std::shared_ptr<CM2_Skin> Skin = m_Skin.lock();
+	_ASSERT(Skin != nullptr);
 
-	for (auto& it : m_SkinBatches)
+	const std::shared_ptr<const CM2_Comp_Materials> materials = m_ParentM2.lock()->getMaterials();
+
+	for (const auto& it : m_SkinBatches)
 	{
-		CM2_Skin_Batch* batch = new CM2_Skin_Batch(m_ParentM2);
+		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, nullptr);
 
-		batch->newShader = GetPixel(&it);
+		batch->newShader = GetPixel(it);
 
 		// Geometry data
 		batch->m_PriorityPlan = it.priorityPlane;
-		batch->m_SkinSection = m_Skin->m_Sections[it.skinSectionIndex];
+		batch->m_SkinSection = Skin->m_Sections[it.skinSectionIndex];
 
 		// Get classes
 		batch->m_Material = (materials->GetMaterial(it.materialIndex));
@@ -138,10 +144,10 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 		batch->Init();
 
-		m_Skin->m_Batches.push_back(batch);
+		Skin->m_Batches.push_back(batch);
 	}
 
-	std::sort(m_Skin->m_Batches.begin(), m_Skin->m_Batches.end(), [](const CM2_Skin_Batch* left, const CM2_Skin_Batch* right)
+	std::sort(Skin->m_Batches.begin(), Skin->m_Batches.end(), [](const std::shared_ptr<CM2_Skin_Batch> left, const std::shared_ptr<CM2_Skin_Batch> right)
 	{
 		return left->getPriorityPlan() < right->getPriorityPlan();
 	});

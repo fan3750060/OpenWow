@@ -9,13 +9,13 @@ class M2;
 class CM2_Part_Light
 {
 public:
-	CM2_Part_Light(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Light& _proto, cGlobalLoopSeq global);
+	CM2_Part_Light(const std::weak_ptr<M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Light& _proto, cGlobalLoopSeq global);
 
 	void setup(uint16 anim, uint32 time, uint32 globalTime);
 
 private:
 	SM2_Light::Type			type;
-	const CM2_Part_Bone*	m_Bone;
+	std::weak_ptr<const CM2_Part_Bone>	m_Bone;
 	vec3					position;
 
 	M2_Animated<vec3>		ambColor;

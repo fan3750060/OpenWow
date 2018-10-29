@@ -2,9 +2,7 @@
 
 #include "WMO.h"
 #include "WMO_Group_Instance.h"
-#ifdef GAME_WMO_INCLUDE_WM2
 #include "WMO_Doodad_Instance.h"
-#endif
 #include "WMO_Liquid_Instance.h"
 
 class CWMO_Base_Instance : public SceneNode

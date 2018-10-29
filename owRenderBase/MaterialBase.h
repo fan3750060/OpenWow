@@ -64,12 +64,7 @@ public:
 	bool IsTransparent() const;
 
 private:
-	virtual TextureMap GetTextureMap() const;
-	std::shared_ptr<ConstantBuffer> GetConstantBuffer() const override;
 	void UpdateConstantBuffer() const override;
-
-	// Textures
-	TextureMap m_Textures;
 
 	// ConstantBuffer
 	__declspec(align(16)) struct MaterialProperties
@@ -134,5 +129,4 @@ private:
 		//-------------------------- ( 16 bytes )
 	};  //--------------------------- ( 16 * 10 = 160 bytes )
 	MaterialProperties* m_pProperties;
-	std::shared_ptr<ConstantBuffer> m_pConstantBuffer;
 };

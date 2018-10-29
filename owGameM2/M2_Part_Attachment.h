@@ -102,16 +102,16 @@ struct M2_AttachmentType
 class CM2_Part_Attachment
 {
 public:
-	CM2_Part_Attachment(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Attachment& _proto, cGlobalLoopSeq global);
+	CM2_Part_Attachment(const std::weak_ptr<const M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Attachment& _proto, cGlobalLoopSeq global);
 	
-	const std::weak_ptr<CM2_Part_Bone> getBone() const { return m_Bone; }
+	const std::weak_ptr<const CM2_Part_Bone> getBone() const { return m_Bone; }
 	const cvec3 getPosition() const { return m_Position; }
 
 	void render(cmat4 _worldMatrix);
 
 private:
 	M2_AttachmentType::List				m_Type;
-	const std::weak_ptr<CM2_Part_Bone>	m_Bone;
+	std::weak_ptr<const CM2_Part_Bone>	m_Bone;
 	vec3								m_Position;
 	M2_Animated<uint8>					m_IsAnimateAttached;
 };

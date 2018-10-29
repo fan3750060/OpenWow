@@ -23,12 +23,6 @@ MaterialBase::MaterialBase(RenderDevice* renderDevice)
 
 MaterialBase::~MaterialBase()
 {
-	if (m_pConstantBuffer)
-	{
-		m_RenderDevice->DestroyConstantBuffer(m_pConstantBuffer);
-		m_pConstantBuffer.reset();
-	}
-
 	if (m_pProperties)
 	{
 		_aligned_free(m_pProperties);
@@ -216,16 +210,6 @@ bool MaterialBase::IsTransparent() const
 }
 
 //-----
-
-Material::TextureMap MaterialBase::GetTextureMap() const
-{
-	return m_Textures;
-}
-
-std::shared_ptr<ConstantBuffer> MaterialBase::GetConstantBuffer() const
-{
-	return m_pConstantBuffer;
-}
 
 void MaterialBase::UpdateConstantBuffer() const
 {

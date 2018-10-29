@@ -30,6 +30,7 @@
     <ClCompile Include="MaterialTextured.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
+    <ClCompile Include="MeshWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -124,6 +125,7 @@
     <ClInclude Include="MaterialTextured.h">
       <Filter>Materials</Filter>
     </ClInclude>
+    <ClInclude Include="MeshWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

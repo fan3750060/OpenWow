@@ -10,7 +10,7 @@ class MapController;
 class ADT_MCNK : public SceneNode, public ILoadable
 {
 public:
-	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, IFile* _file);
+	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, std::shared_ptr<IFile> _file);
 	virtual ~ADT_MCNK();
 
 	// SceneNode
@@ -27,7 +27,7 @@ public:
 	void Render3D();
 
 public:
-	IFile* m_File;
+	std::shared_ptr<IFile> m_File;
 	ADT_MCNK_Header header;
 
 	ADT_MCNK_MCLY mcly[4];

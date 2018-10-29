@@ -269,6 +269,8 @@ bool TextureDX11::LoadTextureCustom(uint16_t width, uint16_t height, void * pixe
 bool TextureDX11::LoadTexture2D(cstring fileName)
 {
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
+	if (f == nullptr)
+		return false;
 
 	LIBBLP_PixelView blpView;
 	LIBBLP_Load(f->getData(), f->getSize(), &blpView);

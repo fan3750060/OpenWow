@@ -23,6 +23,9 @@
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
 
+#include <owGameM2.h>
+#pragma comment(lib, "owGameM2.lib")
+
 #include <owGameWMO.h>
 #pragma comment(lib, "owGameWMO.lib")
 

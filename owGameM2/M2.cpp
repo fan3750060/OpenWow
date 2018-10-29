@@ -25,19 +25,6 @@ M2::M2(cstring name) :
 	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 }
 
-M2::~M2()
-{
-	SafeDelete(m_Materials);
-	SafeDelete(m_Miscellaneous);
-	SafeDelete(m_Skeleton);
-
-
-
-	ERASE_VECTOR(m_Skins);
-
-	//Log::Info("M2[%s]: Unloading...", m_FileName.c_str());
-}
-
 void M2::Render(CM2_Base_Instance* _instance)
 {
 	if (m_IsContainGeom)

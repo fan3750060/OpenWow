@@ -6,8 +6,7 @@
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles) :
-	m_ParentBone(nullptr)
+CM2_Part_Bone::CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles)
 {
 	m_GameBoneId = _proto.key_bone_id;
 	m_Flags = _proto.flags;
@@ -22,7 +21,7 @@ CM2_Part_Bone::CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq gl
 	pivot = Fix_XZmY(_proto.pivot);
 }
 
-void CM2_Part_Bone::setParentBone(const CM2_Comp_Skeleton* _skeleton)
+void CM2_Part_Bone::setParentBone(std::shared_ptr<CM2_Comp_Skeleton> _skeleton)
 {
 	if (m_ParentBoneID != -1)
 	{
@@ -37,9 +36,12 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 		return;
 	}
 
-	if (m_ParentBone != nullptr)
+	std::shared_ptr<CM2_Part_Bone> ParentBone = m_ParentBone.lock();
+	_ASSERT(ParentBone != nullptr);
+
+	if (ParentBone != nullptr)
 	{
-		m_ParentBone->calcMatrix(anim, time, globalTime);
+		ParentBone->calcMatrix(anim, time, globalTime);
 	}
 
 	mat4 m;
@@ -57,10 +59,10 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 			quat q = roll.getValue(anim, time, globalTime);
 			m *= glm::toMat4(q);
 
-			if (m_ParentBone != nullptr)
+			if (ParentBone != nullptr)
 			{
-				_ASSERT(m_ParentBone->IsCalculated());
-				m_RotationMatrix = m_ParentBone->m_RotationMatrix * glm::toMat4(q);
+				_ASSERT(ParentBone->IsCalculated());
+				m_RotationMatrix = ParentBone->m_RotationMatrix * glm::toMat4(q);
 			}
 			else
 			{
@@ -76,10 +78,10 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 		m = glm::translate(m, pivot * -1.0f);
 	}
 
-	if (m_ParentBone != nullptr)
+	if (ParentBone != nullptr)
 	{
-		_ASSERT(m_ParentBone->IsCalculated());
-		m_TransformMatrix = m_ParentBone->getTransformMatrix() * m;
+		_ASSERT(ParentBone->IsCalculated());
+		m_TransformMatrix = ParentBone->getTransformMatrix() * m;
 	}
 	else
 	{

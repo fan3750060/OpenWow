@@ -11,7 +11,7 @@ class CWMO_Base_Instance;
 class CWMO_Part_Portal
 {
 public:
-	CWMO_Part_Portal(const WMO* _parentWMO, const SWMO_PortalDef& _proto);
+	CWMO_Part_Portal(const std::weak_ptr<const WMO> _parentWMO, const SWMO_PortalDef& _proto);
 
 	void Render(cmat4 _worldMatrix);
 
@@ -27,7 +27,7 @@ public:
 	bool IsPositive(cvec3 _InvWorldCamera) const;
 
 private:
-	const WMO*				m_ParentWMO;
+	const std::weak_ptr<const WMO>				m_ParentWMO;
 	BoundingBox				m_Bounds;
 
 	uint16					m_StartVertex;

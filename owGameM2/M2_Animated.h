@@ -28,7 +28,7 @@ public:
 		if (m_DataOUT != nullptr) delete[] m_DataOUT;
 	}
 
-	void init(const M2Track<D>& b, IFile* f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix, std::vector<std::shared_ptr<IFile>>* animfiles = nullptr)
+	void init(const M2Track<D>& b, std::shared_ptr<IFile> f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix, std::vector<std::shared_ptr<IFile>>* animfiles = nullptr)
 	{
 		m_Type = b.interpolation_type;
 		m_GlobalSeqIndex = b.global_sequence;
@@ -121,7 +121,7 @@ public:
 		return (m_Data[anim].size() > 0);
 	}
 
-	T getValue(uint32 anim, uint32 time, uint32 globalTime)
+	T getValue(uint32 anim, uint32 time, uint32 globalTime) const
 	{
 		if (m_GlobalSeqIndex != -1)
 		{

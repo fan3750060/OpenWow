@@ -6,15 +6,10 @@ public:
 	ADT_CHUNK_Material(RenderDevice* _device);
 	virtual ~ADT_CHUNK_Material();
 
-	std::shared_ptr<Texture> GetTexture(uint8 ID) const;
-	void SetTexture(uint8 type, std::shared_ptr<Texture> texture);
-
 	uint32 GetLayersCnt() const;
 	void SetLayersCnt(uint32 value);
 
 protected:
-	virtual TextureMap GetTextureMap() const;
-	std::shared_ptr<ConstantBuffer> GetConstantBuffer() const override;
 	void UpdateConstantBuffer() const;
 
 private:
@@ -29,8 +24,4 @@ private:
 		//-------------------------- ( 32 bytes )
 	};
 	MaterialProperties* m_pProperties;
-	std::shared_ptr<ConstantBuffer> m_pConstantBuffer;
-
-	// Textures
-	TextureMap m_Textures;
 };

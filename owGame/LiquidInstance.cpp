@@ -3,7 +3,7 @@
 // General
 #include "LiquidInstance.h"
 
-Liquid_Instance::Liquid_Instance(std::weak_ptr<SceneNode> _parent, Liquid* _liquidObject, vec3 _position) :
+Liquid_Instance::Liquid_Instance(std::weak_ptr<SceneNode> _parent,std::shared_ptr<Liquid> _liquidObject, vec3 _position) :
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	// Scene node params

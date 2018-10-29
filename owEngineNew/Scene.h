@@ -3,7 +3,7 @@
 class IMesh;
 class SceneNode;
 class RenderEventArgs;
-struct IVisitor;
+class IVisitor;
 
 class Scene : public Object
 {

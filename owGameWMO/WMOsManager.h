@@ -5,7 +5,7 @@
 class WMOsManager : public IWMOManager, public CRefManager1Dim<WMO>
 {
 public:
-	WMOsManager(IOpenGLAdapter* _adapter);
+	WMOsManager();
 
 	// IWMOManager
 	std::shared_ptr<WMO> Add(cstring name) { return CRefManager1Dim::Add(name); }
@@ -18,7 +18,4 @@ public:
 	void LoadAction(std::string name, std::shared_ptr<WMO>& item);
 	bool DeleteAction(cstring name) override;
 	void MakeContext();
-
-private:
-	IOpenGLAdapter* m_Adapter;
 };

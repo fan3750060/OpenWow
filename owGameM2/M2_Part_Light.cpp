@@ -6,9 +6,7 @@
 // General
 #include "M2_Part_Light.h"
 
-CM2_Part_Light::CM2_Part_Light(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Light& _proto, cGlobalLoopSeq global) :
-	m_Bone(nullptr),
-
+CM2_Part_Light::CM2_Part_Light(const std::weak_ptr<M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Light& _proto, cGlobalLoopSeq global) :
 	ambColorValue(vec3(1.0f, 1.0f, 1.0f)),
 	ambIntensityValue(1.0f),
 	diffColorValue(vec3(1.0f, 1.0f, 1.0f)),
@@ -20,7 +18,7 @@ CM2_Part_Light::CM2_Part_Light(const std::weak_ptr<M2> _parentM2, IFile* f, cons
 	type = _proto.type;
 	if (_proto.bone != -1)
 	{
-		m_Bone = _parentM2->getSkeleton()->getBoneLookup(_proto.bone);
+		m_Bone = _parentM2.lock()->getSkeleton()->getBoneLookup(_proto.bone);
 	}
 
 	position = Fix_XZmY(_proto.position);
@@ -60,15 +58,18 @@ void CM2_Part_Light::setup(uint16 anim, uint32 time, uint32 globalTime)
 	vec4 ambcol(ambColorValue * ambIntensityValue, 1.0f);
 	vec4 diffcol(diffColorValue * diffIntensityValue, 1.0f);
 
-	if (m_Bone != nullptr)
+	std::shared_ptr<const CM2_Part_Bone> Bone = m_Bone.lock();
+	_ASSERT(Bone != nullptr);
+
+	if (Bone != nullptr)
 	{
 		if (type == SM2_Light::Type::Directional)
 		{
-			positionValue = m_Bone->getTransformMatrix() * vec4(position, 0);
+			positionValue = Bone->getTransformMatrix() * vec4(position, 0);
 		}
 		else if (type == SM2_Light::Type::Point)
 		{
-			directionValue = m_Bone->getRotateMatrix() * vec4(direction, 0);
+			directionValue = Bone->getRotateMatrix() * vec4(direction, 0);
 		}		
 	}
 

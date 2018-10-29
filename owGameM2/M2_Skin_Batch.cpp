@@ -8,13 +8,9 @@
 // General
 #include "M2_Skin_Batch.h"
 
-CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<M2>	 _parentM2) :
+CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::shared_ptr<IMesh> _mesh) :
+	MeshWrapper(_mesh),
 	m_ParentM2(_parentM2),
-
-	m_Color(nullptr),
-	m_Material(nullptr),
-	m_TextureWeight(nullptr),
-	m_TextureTransform(nullptr),
 
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}

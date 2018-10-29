@@ -18,12 +18,6 @@ MaterialDebug::MaterialDebug(RenderDevice* renderDevice)
 
 MaterialDebug::~MaterialDebug()
 {
-	if (m_pConstantBuffer)
-	{
-		m_RenderDevice->DestroyConstantBuffer(m_pConstantBuffer);
-		m_pConstantBuffer.reset();
-	}
-
 	if (m_pProperties)
 	{
 		_aligned_free(m_pProperties);
@@ -42,11 +36,6 @@ void MaterialDebug::SetDiffuseColor(cvec4 diffuse)
 {
 	m_pProperties->m_DiffuseColor = diffuse;
 	m_Dirty = true;
-}
-
-std::shared_ptr<ConstantBuffer> MaterialDebug::GetConstantBuffer() const
-{
-	return m_pConstantBuffer;
 }
 
 void MaterialDebug::UpdateConstantBuffer() const

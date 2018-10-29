@@ -7,6 +7,7 @@ class Buffer;
 class ConstantBuffer;
 class StructuredBuffer;
 #include "Mesh.h"
+#include "MeshWrapper.h"
 #include "Shader.h"
 #include "Texture.h"
 class RenderTarget;
@@ -100,6 +101,10 @@ public:
 	// @param length is the length is the length of each axis arm.
 	std::shared_ptr<IMesh> CreateAxis(float radius = 0.05f, float length = 0.5f);
 
+	//
+	// ABSTRACT
+	//
+
 	virtual std::shared_ptr<IMesh> CreateMesh() = 0;
 	virtual void DestroyMesh(std::shared_ptr<IMesh> mesh) = 0;
 
@@ -112,7 +117,7 @@ public:
 
 	// Create an empty texture of a predefined size.
 	virtual std::shared_ptr<Texture> CreateTexture2D(uint16_t width, uint16_t height, uint16_t slices, const Texture::TextureFormat& format = Texture::TextureFormat(), CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false) = 0;
-	virtual std::shared_ptr<Texture> CreateTextureCube(uint16_t size, uint16_t numCubes = 1,           const Texture::TextureFormat& format = Texture::TextureFormat(), CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false) = 0;
+	virtual std::shared_ptr<Texture> CreateTextureCube(uint16_t size, uint16_t numCubes = 1, const Texture::TextureFormat& format = Texture::TextureFormat(), CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false) = 0;
 	virtual std::shared_ptr<Texture> GetDefaultTexture() const = 0;
 
 	// Create an null texture (can be loaded later using Texture::LoadTexture2D function.
@@ -140,6 +145,9 @@ public:
 	virtual std::shared_ptr<Buffer> CreateUInt32IndexBuffer(const uint32* data, uint32 sizeInBytes) = 0;
 	virtual std::shared_ptr<ConstantBuffer> CreateConstantBuffer(const void* data, size_t size) = 0;
 	virtual std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false) = 0;
+
+	// Wrappers
+	std::shared_ptr<MeshWrapper> CreateMeshWrapper();
 };
 
 #include "RenderDevice.inl"

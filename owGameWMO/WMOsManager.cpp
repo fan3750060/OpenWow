@@ -3,8 +3,7 @@
 // General
 #include "WMOsManager.h"
 
-WMOsManager::WMOsManager(IOpenGLAdapter* _adapter) :
-	m_Adapter(_adapter)
+WMOsManager::WMOsManager()
 {
 	AddManager<IWMOManager>(this);
 
@@ -33,5 +32,5 @@ bool WMOsManager::DeleteAction(cstring name)
 
 void WMOsManager::MakeContext()
 {
-	m_Adapter->MakeThreadContext();
+
 }

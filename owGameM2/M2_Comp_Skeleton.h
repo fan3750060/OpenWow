@@ -11,7 +11,6 @@ class CM2_Comp_Skeleton
 	friend class CM2_Builder;
 public:
 	CM2_Comp_Skeleton();
-	virtual ~CM2_Comp_Skeleton();
 
 	void calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat);
 
@@ -20,7 +19,7 @@ public:
 	const bool isBillboard() const { return m_IsBillboard; }
 
 public:
-	CM2_Part_Bone* getBoneDirect(uint32 _index) const
+	std::shared_ptr<CM2_Part_Bone> getBoneDirect(uint32 _index) const
 	{
 		_ASSERT(_index < static_cast<uint32>(m_Bones.size()));
 		return (m_Bones[_index]);
@@ -30,7 +29,7 @@ public:
 		int16 newIndex = m_BonesLookup[_index];
 		return (newIndex != -1) && (newIndex < static_cast<int16>(m_Bones.size()));
 	}
-	CM2_Part_Bone* getBoneLookup(uint32 _index) const
+	std::shared_ptr<CM2_Part_Bone> getBoneLookup(uint32 _index) const
 	{
 		if (_index >= static_cast<uint32>(m_BonesLookup.size()))
 		{
@@ -42,7 +41,7 @@ public:
 		_ASSERT(newIndex < static_cast<int16>(m_Bones.size()));
 		return (m_Bones[newIndex]);
 	}
-	const CM2_Part_Bone* getGameBone(M2_GameBoneType::List _type) const
+	std::shared_ptr<CM2_Part_Bone> getGameBone(M2_GameBoneType::List _type) const
 	{
 		if (_type >= static_cast<int16>(m_GameBonesLookup.size()))
 		{
@@ -57,7 +56,7 @@ public:
 
 
 private:
-	std::vector<CM2_Part_Bone*>			m_Bones;
+	std::vector<std::shared_ptr<CM2_Part_Bone>>			m_Bones;
 	std::vector<int16>					m_BonesLookup;
 	std::vector<int16>					m_GameBonesLookup;
 	bool								m_HasBones;

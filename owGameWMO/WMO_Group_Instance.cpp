@@ -2,15 +2,13 @@
 
 // Include
 #include "WMO_Base_Instance.h"
-#ifdef GAME_WMO_INCLUDE_WM2
 #include "WMO_Doodad_Instance.h"
-#endif
 #include "WMO_Liquid_Instance.h"
 
 // General
 #include "WMO_Group_Instance.h"
 
-CWMO_Group_Instance::CWMO_Group_Instance(std::weak_ptr<CWMO_Base_Instance> _parent, const WMO_Group* _object) :
+CWMO_Group_Instance::CWMO_Group_Instance(const std::weak_ptr<const CWMO_Base_Instance> _parent, const std::shared_ptr<WMO_Group> _object) :
 	m_Object(_object),
 	m_PortalsVis(true),
 	m_Calculated(false)
@@ -27,10 +25,6 @@ CWMO_Group_Instance::CWMO_Group_Instance(std::weak_ptr<CWMO_Base_Instance> _pare
 
 	//setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
 	//setSelectable();
-}
-
-CWMO_Group_Instance::~CWMO_Group_Instance()
-{
 }
 
 void CWMO_Group_Instance::Accept(IVisitor& visitor)

@@ -36,15 +36,15 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	}
 
 	// CreateShaders
-	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader(
+	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
-	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader(
+	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
 		Shader::PixelShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
 	);
 
 	// Material
-	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>(Application::Get().GetRenderDevice());
+	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>(_RenderDevice);
 	mat->SetDiffuseColor(vec4(0, 0.2, 0.8, 1.0));
 	mat->SetShader(Shader::VertexShader, g_pVertexShader);
 	mat->SetShader(Shader::PixelShader, g_pPixelShader);
@@ -102,15 +102,15 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 				}
 
 				// Vertex buffer
-				std::shared_ptr<Buffer> __vb = Application::Get().GetRenderDevice()->CreateVertexBuffer(vecrtices);
+				std::shared_ptr<Buffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
 
-				std::shared_ptr<IMesh> __geom = Application::Get().GetRenderDevice()->CreateMesh();
+				std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 				__geom->SetMaterial(mat);
 				
-				/*std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, i, j, __geom);
-				lowResTile->SetParent(_parent);
-				m_LowResilutionTiles.push_back(lowResTile);*/
+				std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, __geom, i, j);
+				_parent.lock()->AddMesh(lowResTile);
+				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
 	}

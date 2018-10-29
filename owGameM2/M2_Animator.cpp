@@ -6,7 +6,7 @@
 // General
 #include "M2_Animator.h"
 
-CM2_Animator::CM2_Animator(const M2* _m2) :
+CM2_Animator::CM2_Animator(const std::weak_ptr<const M2> _m2) :
 	m_M2(_m2),
 	m_IsLoop(false),
 	m_IsPlayed(false),
@@ -14,6 +14,9 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 	animtime(0.0),
 	m_CurrentTime(0)
 {
+	std::shared_ptr<const M2> M2 = m_M2.lock();
+	_ASSERT(M2 != nullptr);
+
 	uint16 u = 0;
 	for (auto& i : DBC_AnimationData)
 	{
@@ -21,9 +24,9 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 
 		// Get animation with index (record->Get_ID() and variation index == 0)
 		int16 findedSeqIndex = -1;
-		for (uint16 j = 0; j < m_M2->m_Sequences.size(); j++)
+		for (uint16 j = 0; j < M2->m_Sequences.size(); j++)
 		{
-			if (m_M2->m_Sequences[j].__animID == record->Get_ID() && m_M2->m_Sequences[j].variationIndex == 0)
+			if (M2->m_Sequences[j].__animID == record->Get_ID() && M2->m_Sequences[j].variationIndex == 0)
 			{
 				findedSeqIndex = j;
 				break;
@@ -33,7 +36,7 @@ CM2_Animator::CM2_Animator(const M2* _m2) :
 		if (findedSeqIndex == -1) continue;
 
 
-		CM2_Animation* animation = new CM2_Animation(m_M2, record->Get_ID(), record->Get_Name(), findedSeqIndex, m_M2->m_Sequences[findedSeqIndex]);
+		std::shared_ptr<CM2_Animation> animation = std::make_shared<CM2_Animation>(M2, record->Get_ID(), record->Get_Name(), findedSeqIndex, M2->m_Sequences[findedSeqIndex]);
 		m_Animations.insert(std::make_pair(record->Get_ID(), animation));
 		//Log::Warn("Animation [%d] '%s'", record->Get_ID(), record->Get_Name());
 	}

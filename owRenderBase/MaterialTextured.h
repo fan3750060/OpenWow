@@ -11,10 +11,4 @@ public:
 
 	std::shared_ptr<Texture> GetTexture() const;
 	void SetTexture(std::shared_ptr<Texture> texture);
-
-private:
-	virtual TextureMap GetTextureMap() const;
-
-	// Textures
-	TextureMap m_Textures;
 };

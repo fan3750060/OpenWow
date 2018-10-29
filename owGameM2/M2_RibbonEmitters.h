@@ -13,7 +13,7 @@ struct RibbonSegment
 class CM2_RibbonEmitters
 {
 public:
-	CM2_RibbonEmitters(const std::weak_ptr<M2> _model, IFile* f, const SM2_RibbonEmitter& mta, cGlobalLoopSeq globals);
+	CM2_RibbonEmitters(const std::weak_ptr<M2> _model, std::shared_ptr<IFile> f, const SM2_RibbonEmitter& mta, cGlobalLoopSeq globals);
 
 	void setup(uint16 anim, uint32 time, uint32 _globalTime, cmat4 _worldMatrix);
 
@@ -23,12 +23,12 @@ private:
 	const std::weak_ptr<M2>						m_ParentM2;
 
 	uint32										m_ID;
-	const CM2_Part_Bone*						m_Bone;
+	std::weak_ptr<const CM2_Part_Bone>			m_Bone;
 	vec3										pos;
 	vec3										posValue;
 
-	std::shared_ptr<Texture>							m_Texture;
-	const CM2_Part_Material*					m_Material;
+	std::shared_ptr<Texture>					m_Texture;
+	std::weak_ptr<const CM2_Part_Material>		m_Material;
 
 	//std::shared_ptr<Buffer>								__vb;
 	//std::shared_ptr<Mesh>								__geom;

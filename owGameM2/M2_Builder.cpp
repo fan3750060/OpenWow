@@ -144,7 +144,7 @@ void CM2_Builder::Step2GlobalLoops()
 void CM2_Builder::Step3Bones()
 {
 #ifdef M2BUILDER_LOADBONES
-	CM2_Comp_Skeleton* skeleton = new CM2_Comp_Skeleton();
+	std::shared_ptr<CM2_Comp_Skeleton> skeleton = std::make_shared<CM2_Comp_Skeleton>();
 
 	// Bones
 	if (m_Header.bones.size > 0)
@@ -152,7 +152,7 @@ void CM2_Builder::Step3Bones()
 		m_M2Bones = (SM2_Bone*)(m_F->getData() + m_Header.bones.offset);
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			CM2_Part_Bone* bone = new CM2_Part_Bone(m_F.operator->(), m_M2Bones[i], m_GlobalLoops, &animfiles);
+			std::shared_ptr<CM2_Part_Bone> bone = std::make_shared<CM2_Part_Bone>(m_F, m_M2Bones[i], m_GlobalLoops, &animfiles);
 			skeleton->m_Bones.push_back(bone);
 		}
 
@@ -216,7 +216,7 @@ void CM2_Builder::Step4Vertices()
 
 void CM2_Builder::Step5ColorAndTextures()
 {
-	CM2_Comp_Materials* materials = new CM2_Comp_Materials();
+	std::shared_ptr<CM2_Comp_Materials> materials = std::make_shared<CM2_Comp_Materials>();
 
 	// 1 Colors
 	if (m_Header.colors.size > 0)
@@ -224,7 +224,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		SM2_Color* m_Colors = (SM2_Color*)(m_F->getData() + m_Header.colors.offset);
 		for (uint32 i = 0; i < m_Header.colors.size; i++)
 		{
-			CM2_Part_Color* color = new CM2_Part_Color(m_F.operator->(), m_Colors[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_Color> color = std::make_shared<CM2_Part_Color>(m_F, m_Colors[i], m_GlobalLoops);
 			materials->m_Colors.push_back(color);
 
 			// Animated
@@ -241,7 +241,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		SM2_Material* m_Materials = (SM2_Material*)(m_F->getData() + m_Header.materials.offset);
 		for (uint32 i = 0; i < m_Header.materials.size; i++)
 		{
-			CM2_Part_Material* material = new CM2_Part_Material(m_Materials[i]);
+			std::shared_ptr<CM2_Part_Material> material = std::make_shared<CM2_Part_Material>(m_Materials[i]);
 			materials->m_Materials.push_back(material);
 		}
 	}
@@ -254,7 +254,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_Textures = (SM2_Texture*)(m_F->getData() + m_Header.textures.offset);
 		for (uint32 i = 0; i < m_Header.textures.size; i++)
 		{
-			CM2_Part_Texture* texture = new CM2_Part_Texture(m_F.operator->(), m_Textures[i]);
+			std::shared_ptr<CM2_Part_Texture> texture = std::make_shared<CM2_Part_Texture>(m_F, m_Textures[i]);
 			materials->m_Textures.push_back(texture);
 		}
 	}
@@ -307,7 +307,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesWeight = (SM2_TextureWeight*)(m_F->getData() + m_Header.textureWeights.offset);
 		for (uint32 i = 0; i < m_Header.textureWeights.size; i++)
 		{
-			CM2_Part_TextureWeight* textureWeight = new CM2_Part_TextureWeight(m_F.operator->(), m_TexturesWeight[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_TextureWeight> textureWeight = std::make_shared<CM2_Part_TextureWeight>(m_F, m_TexturesWeight[i], m_GlobalLoops);
 			materials->m_TextureWeights.push_back(textureWeight);
 
 			// Animated
@@ -336,7 +336,7 @@ void CM2_Builder::Step5ColorAndTextures()
 		m_TexturesTransform = (SM2_TextureTransform*)(m_F->getData() + m_Header.textureTransforms.offset);
 		for (uint32 i = 0; i < m_Header.textureTransforms.size; i++)
 		{
-			CM2_Part_TextureTransform* textureTransform = new CM2_Part_TextureTransform(m_F.operator->(), m_TexturesTransform[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_TextureTransform> textureTransform = std::make_shared<CM2_Part_TextureTransform>(m_F, m_TexturesTransform[i], m_GlobalLoops);
 			materials->m_TexturesTransform.push_back(textureTransform);
 
 			// AnimTextures
@@ -366,7 +366,7 @@ void CM2_Builder::Step5ColorAndTextures()
 
 void CM2_Builder::Step6Misc()
 {
-	CM2_Comp_Miscellaneous* miscellaneous = new CM2_Comp_Miscellaneous();
+	std::shared_ptr<CM2_Comp_Miscellaneous> miscellaneous = std::make_shared<CM2_Comp_Miscellaneous>();
 
 	// Attachments
 	if (m_Header.attachments.size > 0)
@@ -374,7 +374,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Attachment* Attachments = (SM2_Attachment*)(m_F->getData() + m_Header.attachments.offset);
 		for (uint32 i = 0; i < m_Header.attachments.size; i++)
 		{
-			CM2_Part_Attachment* attachment = new CM2_Part_Attachment(m_M2.operator->(), m_F.operator->(), Attachments[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_Attachment> attachment = std::make_shared<CM2_Part_Attachment>(m_M2, m_F, Attachments[i], m_GlobalLoops);
 			miscellaneous->m_Attachments.push_back(attachment);
 		}
 
@@ -398,7 +398,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Event* Events = (SM2_Event*)(m_F->getData() + m_Header.events.offset);
 		for (uint32 i = 0; i < m_Header.events.size; i++)
 		{
-			CM2_Part_Event* event = new CM2_Part_Event(m_M2.operator->(), m_F.operator->(), Events[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_Event> event = std::make_shared<CM2_Part_Event>(m_M2, m_F, Events[i], m_GlobalLoops);
 			miscellaneous->m_Events.push_back(event);
 		}
 
@@ -412,7 +412,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Light* Lights = (SM2_Light*)(m_F->getData() + m_Header.lights.offset);
 		for (uint32 i = 0; i < m_Header.lights.size; i++)
 		{
-			CM2_Part_Light* light = new CM2_Part_Light(m_M2.operator->(), m_F.operator->(), Lights[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_Light> light = std::make_shared<CM2_Part_Light>(m_M2, m_F, Lights[i], m_GlobalLoops);
 			miscellaneous->m_Lights.push_back(light);
 		}
 
@@ -426,7 +426,7 @@ void CM2_Builder::Step6Misc()
 		SM2_Camera* Cameras = (SM2_Camera*)(m_F->getData() + m_Header.cameras.offset);
 		for (uint32 i = 0; i < m_Header.cameras.size; i++)
 		{
-			CM2_Part_Camera* camera = new CM2_Part_Camera(m_F.operator->(), Cameras[i], m_GlobalLoops);
+			std::shared_ptr<CM2_Part_Camera> camera = std::make_shared<CM2_Part_Camera>(m_F, Cameras[i], m_GlobalLoops);
 			miscellaneous->m_Cameras.push_back(camera);
 		}
 
@@ -450,7 +450,7 @@ void CM2_Builder::Step6Misc()
 		SM2_RibbonEmitter* Ribbons = (SM2_RibbonEmitter*)(m_F->getData() + m_Header.ribbon_emitters.offset);
 		for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
 		{
-			CM2_RibbonEmitters* ribbon = new CM2_RibbonEmitters(m_M2.operator->(), m_F.operator->(), Ribbons[i], m_GlobalLoops);
+			std::shared_ptr<CM2_RibbonEmitters> ribbon = std::make_shared<CM2_RibbonEmitters>(m_M2, m_F, Ribbons[i], m_GlobalLoops);
 			miscellaneous->m_RibbonEmitters.push_back(ribbon);
 		}
 
@@ -506,9 +506,9 @@ void CM2_Builder::Step8Skins()
 		std::shared_ptr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
 		_ASSERT(skinFile != nullptr);
 
-		CM2_Skin* skin = new CM2_Skin(m_M2.operator->());
+		std::shared_ptr<CM2_Skin> skin = std::make_shared<CM2_Skin>(m_M2);
 
-		CM2_Skin_Builder builder(this, m_M2.operator->(), skin, skinFile.operator->());
+		CM2_Skin_Builder builder(*this, m_M2, skin, skinFile);
 		builder.Load();
 
 		m_M2->m_Skins.push_back(skin);
@@ -535,7 +535,7 @@ void CM2_Builder::Step9Collision()
 			collisionVertices[i] = Fix_XZmY(collisionVertices[i]);
 		}
 
-		collisonVB = Application::Get().GetRenderDevice()->CreateVertexBuffer(collisionVertices);
+		collisonVB = _RenderDevice->CreateVertexBuffer(collisionVertices);
 	}
 
 	if (m_Header.collisionTriangles.size > 0)
@@ -547,7 +547,7 @@ void CM2_Builder::Step9Collision()
 			collisionTriangles.push_back(CollisionTriangles[i]);
 		}
 
-		collisonIB = Application::Get().GetRenderDevice()->CreateIndexBuffer(collisionTriangles);
+		collisonIB = _RenderDevice->CreateIndexBuffer(collisionTriangles);
 	}
 
 	if (collisonVB != nullptr && collisonIB != nullptr)

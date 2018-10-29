@@ -18,14 +18,13 @@ struct TexCoordSet
 
 #include "ParticleEmitters.h"
 
-class CM2_ParticleSystem
+class CM2_ParticleSystem : public std::enable_shared_from_this<CM2_ParticleSystem>
 {
 	friend class ParticleEmitter;
 	friend class PlaneParticleEmitter;
 	friend class SphereParticleEmitter;
 public:
-	CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Particle& mta, cGlobalLoopSeq globals);
-	~CM2_ParticleSystem();
+	CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Particle& mta, cGlobalLoopSeq globals);
 
 	void update(double _time, double _dTime);
 	void setup(uint16 anim, uint32 time, uint32 _globalTime);
@@ -34,7 +33,7 @@ public:
 
 private:
 
-	ParticleEmitter* m_Emitter;
+	std::shared_ptr<ParticleEmitter> m_Emitter;
 	std::shared_ptr<Texture> texture;
 
 private:
@@ -67,8 +66,8 @@ private:
 	int16 pType;
 
 private:
-	const std::weak_ptr<M2>				m_ParentM2;
-	const std::weak_ptr<CM2_Part_Bone>	m_ParentBone;
+	std::weak_ptr<const M2>				m_ParentM2;
+	std::weak_ptr<const CM2_Part_Bone>	m_ParentBone;
 };
 
 template<class T>

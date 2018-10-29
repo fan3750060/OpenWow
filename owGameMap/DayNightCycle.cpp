@@ -33,7 +33,7 @@ DayNightCycle::DayNightCycle()
 
 	while (f->getPos() < d)
 	{
-		DayNightPhase ols(f.operator->());
+		DayNightPhase ols(f);
 		dayNightPhases.push_back(ols);
 	}
 }

@@ -6,7 +6,7 @@
 DayNightPhase::DayNightPhase()
 {}
 
-DayNightPhase::DayNightPhase(IFile* f)
+DayNightPhase::DayNightPhase(std::shared_ptr<IFile> f)
 {
     float h, m;
 

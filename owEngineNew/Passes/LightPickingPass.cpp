@@ -7,7 +7,7 @@
 
 LightPickingPass::LightPickingPass(std::vector<Light>& lights, std::shared_ptr<Scene> pointLight, std::shared_ptr<Scene> spotLight, std::shared_ptr<Scene> directionalLight, std::shared_ptr<PipelineState> pipeline)
 	: base(lights, pointLight, spotLight, directionalLight, pipeline)
-	, m_RenderDevice(Application::Get().GetRenderDevice())
+	, m_RenderDevice(_RenderDevice)
 {
 	m_pLightParams = (LightParams*)_aligned_malloc(sizeof(LightParams), 16);
 	m_LightParamsCB = m_RenderDevice->CreateConstantBuffer(LightParams());

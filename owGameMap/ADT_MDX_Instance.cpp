@@ -24,10 +24,6 @@ ADT_MDX_Instance::ADT_MDX_Instance(std::weak_ptr<SceneNode> _parent, std::shared
 	}
 
 	InitLocal();
-	
-	//setDrawOrder(21);
-	//setDebugColor(vec4(1.0f, 0.0f, 1.0f, 1.0f));
-	//setSelectable();
 }
 
 ADT_MDX_Instance::~ADT_MDX_Instance()
@@ -60,10 +56,10 @@ bool ADT_MDX_Instance::PreRender3D()
 
 void ADT_MDX_Instance::Render3D()
 {
-	if (!m_QualitySettings.draw_map_m2)
-	{
-		return;
-	}
+	//if (!m_QualitySettings.draw_map_m2)
+	//{
+	//	return;
+	//}
 
 	CM2_Base_Instance::Render3D();
 }

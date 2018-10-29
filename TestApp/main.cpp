@@ -122,7 +122,8 @@ int main(int argumentCount, char* arguments[])
 		const float x = 35;
 		const float y = 35;
 
-		new WMOsManager(nullptr);
+		new WMOsManager();
+		new CM2_Manager();
 
 		std::shared_ptr<MapController> contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());

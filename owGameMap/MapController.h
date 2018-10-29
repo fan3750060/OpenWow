@@ -22,9 +22,9 @@ public:
 	void EnterMap(int32 x, int32 z);
 	std::shared_ptr<ADT> LoadTile(int32 x, int32 z);
 	void ClearCache();
-	uint32 GetAreaID();
+	uint32 GetAreaID(Camera* camera);
 
-	void Update();
+	void Update(Camera* camera);
 
 public: // Getters
 	std::string getFilenameT() const { return m_MapFilenameT; }

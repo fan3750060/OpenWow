@@ -193,13 +193,13 @@ void SkyManager::InitBuffer()
 	}
 
 	// Vertex buffer
-	std::shared_ptr<Buffer> vertexBuffer = Application::Get().GetRenderDevice()->CreateVertexBuffer(vertices);
+	std::shared_ptr<Buffer> vertexBuffer = _RenderDevice->CreateVertexBuffer(vertices);
 
 	// Colors buffer
-	//colorsBuffer = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));
+	//colorsBuffer = _RenderDevice->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));
 
 	// Geometry
-	__geom = Application::Get().GetRenderDevice()->CreateMesh();
+	__geom = _RenderDevice->CreateMesh();
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), vertexBuffer);
 	//__geom->AddVertexBuffer(BufferBinding("COLOR", 1), colorsBuffer);
 

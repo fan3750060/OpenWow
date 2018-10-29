@@ -16,29 +16,28 @@ class CM2_Comp_Materials
 	friend class CM2_Builder;
 public:
 	CM2_Comp_Materials();
-	virtual ~CM2_Comp_Materials();
 
 	void calc(uint16 anim, uint32 time, uint32 globalTime);
 
 public:
-	const CM2_Part_Color* GetColor(uint32 _index) const
+	std::shared_ptr<const CM2_Part_Color> GetColor(uint32 _index) const
 	{
 		_ASSERT(_index < m_Colors.size());
 		return (m_Colors[_index]);
 	}
-	const CM2_Part_Material* GetMaterial(uint32 _index) const
+	std::shared_ptr<const CM2_Part_Material> GetMaterial(uint32 _index) const
 	{
 		_ASSERT(_index < m_Materials.size());
 		return (m_Materials[_index]);
 	}
 private:
-	std::vector<CM2_Part_Color*>				m_Colors;
-	std::vector<CM2_Part_Material*>			m_Materials;
+	std::vector<std::shared_ptr<CM2_Part_Color>>				m_Colors;
+	std::vector<std::shared_ptr<CM2_Part_Material>>			m_Materials;
 
 	//--------------------------------------------------------------------
 
 public:
-	const CM2_Part_Texture* GetTexture(uint32 _index) const
+	std::shared_ptr<CM2_Part_Texture> GetTexture(uint32 _index) const
 	{
 		//_ASSERT(_index < m_TexturesLookup.size());
 		if (_index >= m_TexturesLookup.size())
@@ -51,7 +50,7 @@ public:
 		_ASSERT(newIndex < static_cast<int16>(m_Textures.size()));
 		return (m_Textures[newIndex]);
 	}
-	const CM2_Part_TextureWeight* GetTextureWeight(uint32 _index) const
+	std::shared_ptr<CM2_Part_TextureWeight> GetTextureWeight(uint32 _index) const
 	{
 		if (_index >= m_TextureWeightsLookup.size())
 		{
@@ -63,7 +62,7 @@ public:
 		_ASSERT(newIndex < static_cast<int16>(m_TextureWeights.size()));
 		return (m_TextureWeights[newIndex]);
 	}
-	const CM2_Part_TextureTransform* GetTextureTransform(uint32 _index) const
+	std::shared_ptr<CM2_Part_TextureTransform> GetTextureTransform(uint32 _index) const
 	{
 		if (_index >= m_TexturesTransformLookup.size())
 		{
@@ -76,17 +75,17 @@ public:
 		return (m_TexturesTransform[newIndex]);
 	}
 public:
-	std::vector<CM2_Part_Texture*>			m_Textures;
+	std::vector<std::shared_ptr<CM2_Part_Texture>>			m_Textures;
 	std::vector<int16_t>						m_TexturesLookup;
 	//--
 	std::vector<int16_t>						m_TexturesUnitLookup;
 	std::vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
 	std::vector<int16_t>						m_TexturesCombos;
 	//--
-	std::vector<CM2_Part_TextureWeight*>		m_TextureWeights;
+	std::vector<std::shared_ptr<CM2_Part_TextureWeight>>		m_TextureWeights;
 	std::vector<int16_t>						m_TextureWeightsLookup;
 	//--
-	std::vector<CM2_Part_TextureTransform*>	m_TexturesTransform;
+	std::vector<std::shared_ptr<CM2_Part_TextureTransform>>	m_TexturesTransform;
 	std::vector<int16_t>						m_TexturesTransformLookup;
 	bool								m_IsAnimTextures;
 

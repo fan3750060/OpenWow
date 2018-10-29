@@ -656,23 +656,23 @@ void initWGLExtensions()
 	int pixel_format = ChoosePixelFormat(dummy_dc, &pfd);
 	if (!pixel_format) 
 	{
-		fail1("Failed to find a suitable pixel format.");
+		fail2("Failed to find a suitable pixel format.");
 	}
 
 	if (!SetPixelFormat(dummy_dc, pixel_format, &pfd)) 
 	{
-		fail1("Failed to set the pixel format.");
+		fail2("Failed to set the pixel format.");
 	}
 
 	HGLRC dummy_context = wglCreateContext(dummy_dc);
 	if (!dummy_context)
 	{
-		fail1("Failed to create a dummy OpenGL rendering context.");
+		fail2("Failed to create a dummy OpenGL rendering context.");
 	}
 
 	if (!wglMakeCurrent(dummy_dc, dummy_context))
 	{
-		fail1("Failed to activate dummy OpenGL rendering context.");
+		fail2("Failed to activate dummy OpenGL rendering context.");
 	}
 
 	wglCreateContextAttribsARB = (wglCreateContextAttribsARB_type*)wglGetProcAddress("wglCreateContextAttribsARB");

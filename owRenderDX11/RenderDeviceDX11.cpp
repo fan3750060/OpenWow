@@ -17,6 +17,7 @@
 RenderDeviceDX11::RenderDeviceDX11()
 {
 	CreateDevice();
+	LoadDefaultResources();
 }
 
 RenderDeviceDX11::~RenderDeviceDX11()
@@ -305,7 +306,8 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(cstring fileName)
 	}
 
 	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice);
-	texture->LoadTexture2D(fileName);
+	if (!texture->LoadTexture2D(fileName))
+		return m_pDefaultTexture;
 
 	m_Textures.push_back(texture);
 	m_TexturesByName.insert(TextureMap::value_type(fileName, texture));
@@ -450,8 +452,5 @@ void RenderDeviceDX11::DestoryQuery(std::shared_ptr<Query> query)
 
 void RenderDeviceDX11::LoadDefaultResources()
 {
-	// Create a magenta texture if a texture defined in the shader is not bound.
 	m_pDefaultTexture = CreateTexture2D("Textures\\ShaneCube.blp");
-	//m_pDefaultTexture = CreateTexture2D(1, 1, 1, Texture::TextureFormat());
-	//m_pDefaultTexture->Clear(ClearFlags::Color, vec4(1, 0, 1, 1));
 }

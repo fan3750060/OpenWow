@@ -62,17 +62,17 @@ void MeshOGL::SetPrimitiveTopology(PrimitiveTopology _topology)
 	}
 }
 
-void MeshOGL::SetMaterial(std::shared_ptr<Material> material)
+void MeshOGL::SetMaterial(std::shared_ptr<const Material> material)
 {
 	m_pMaterial = material;
 }
 
-std::shared_ptr<Material> MeshOGL::GetMaterial() const
+std::shared_ptr<const Material> MeshOGL::GetMaterial() const
 {
 	return m_pMaterial;
 }
 
-void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> constantBuffer)
+void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, INT baseVertexLocation)
 {
 	if (m_pMaterial)
 	{

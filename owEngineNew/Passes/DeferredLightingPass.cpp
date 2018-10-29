@@ -20,7 +20,7 @@ DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
 )
 	: m_Lights(lights)
 	, m_pCurrentLight(nullptr)
-	, m_RenderDevice(Application::Get().GetRenderDevice())
+	, m_RenderDevice(_RenderDevice)
 	, m_LightPipeline0(lightPipeline0)
 	, m_LightPipeline1(lightPipeline1)
 	, m_DirectionalLightPipeline(directionalLightPipeline)

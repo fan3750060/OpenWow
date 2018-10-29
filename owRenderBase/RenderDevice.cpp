@@ -258,6 +258,11 @@ std::shared_ptr<IMesh> RenderDevice::CreateAxis(float radius, float length)
 	return nullptr;
 }
 
+std::shared_ptr<MeshWrapper> RenderDevice::CreateMeshWrapper()
+{
+	return std::make_shared<MeshWrapper>(CreateMesh());
+}
+
 // Template specializations for vertex buffers (with std::vector)
 template<>
 std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)

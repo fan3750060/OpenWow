@@ -7,7 +7,7 @@ class Buffer;
 class Shader;
 class Material;
 class RenderEventArgs;
-class Visitor;
+class IVisitor;
 class ConstantBuffer;
 
 enum SceneNodeTypes : uint8
@@ -22,6 +22,7 @@ class IMesh : public Object
 {
 public:
 	IMesh();
+	virtual ~IMesh();
 
 	virtual SceneNodeTypes GetType() const;
 	virtual void SetType(SceneNodeTypes type);
@@ -31,10 +32,10 @@ public:
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology) = 0;
 
-	virtual void SetMaterial(std::shared_ptr<Material> material) = 0;
-	virtual std::shared_ptr<Material> GetMaterial() const = 0;
+	virtual void SetMaterial(std::shared_ptr<const Material> material) = 0;
+	virtual std::shared_ptr<const Material> GetMaterial() const = 0;
 
-	virtual void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> constantBuffer) = 0;
+	virtual void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, INT baseVertexLocation = 0) = 0;
 
 	virtual void Accept(IVisitor& visitor) = 0;
 

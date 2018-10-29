@@ -88,6 +88,7 @@
     <ClCompile Include="MaterialDebug.cpp" />
     <ClCompile Include="MaterialTextured.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshWrapper.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderDevice.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="MaterialBase.h" />
     <ClInclude Include="MaterialDebug.h" />
     <ClInclude Include="MaterialTextured.h" />
+    <ClInclude Include="MeshWrapper.h" />
     <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="InputSemantic.h" />
     <ClInclude Include="Light.h" />

@@ -10,11 +10,6 @@ CM2_Comp_Skeleton::CM2_Comp_Skeleton()	:
 {
 }
 
-CM2_Comp_Skeleton::~CM2_Comp_Skeleton()
-{
-	ERASE_VECTOR(m_Bones);
-}
-
 void CM2_Comp_Skeleton::calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat)
 {
 	// Bones

@@ -3,9 +3,7 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
-#ifdef GAME_WMO_INCLUDE_WM2
-
-CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, std::shared_ptr<M2> _mdxObject, const WMO_Group* _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
+CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _mdxObject, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
 	CM2_Base_Instance(_parent, _mdxObject),
 	m_ParentGroup(_parentGroup),
 	m_Index(_index),
@@ -36,9 +34,9 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(SceneNode* _parent, std::shared_ptr<M
 		CalculateLocalTransform(true);
 	}
 
-	setDrawOrder(22);
-	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
-	setSelectable();
+	//setDrawOrder(22);
+	//setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
+	//setSelectable();
 }
 
 CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
@@ -71,12 +69,10 @@ bool CWMO_Doodad_Instance::PreRender3D()
 
 void CWMO_Doodad_Instance::Render3D()
 {
-	if (!m_QualitySettings.draw_wmo_doodads)
-	{
-		return;
-	}
+	//if (!m_QualitySettings.draw_wmo_doodads)
+	//{
+	//	return;
+	//}
 
 	CM2_Base_Instance::Render3D();
 }
-
-#endif

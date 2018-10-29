@@ -12,7 +12,7 @@
 #include "WMO_Liquid_Instance.h"
 #include "WMO_Fixes.h"
 
-WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile) :
+WMO_Group::WMO_Group(const std::weak_ptr<const WMO> _parentWMO, const uint32 _groupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile) :
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
 	m_GroupIndex(_groupIndex),
@@ -23,39 +23,33 @@ WMO_Group::WMO_Group(const WMO* _parentWMO, const uint32 _groupIndex, std::strin
 	m_WMOLiqiud = nullptr;
 }
 
-WMO_Group::~WMO_Group()
-{
-	ERASE_VECTOR(m_WMOBatchIndexes);
-	ERASE_VECTOR(m_CollisionNodes);
-}
-
 void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 {
-	_parent.lock()->AddMesh(__geom);
+	for (const auto& batch : m_WMOBatchIndexes)
+	{
+		_parent.lock()->AddMesh(batch);
+	}
 
-	/*if (m_WMOLiqiud != nullptr)
+	if (m_WMOLiqiud != nullptr)
 	{
 		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
-		std::shared_ptr<CWMO_Liquid_Instance> liquid = make_shared<CWMO_Liquid_Instance>(_parent, m_WMOLiqiud.operator->(), realPos, this);
+		std::shared_ptr<CWMO_Liquid_Instance> liquid = std::make_shared<CWMO_Liquid_Instance>(_parent, m_WMOLiqiud, realPos, weak_from_this());
 		_parent.lock()->addLiquidInstance(liquid);
-	}*/
-#ifdef GAME_WMO_INCLUDE_WM2
-	for (auto& index : m_DoodadsPlacementIndexes)
-	{
-		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO->m_DoodadsPlacementInfos[index];
+	}
 
-		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_ParentWMO->m_DoodadsFilenames + placement.flags.nameIndex);
-		std::shared_ptr<CWMO_Doodad_Instance> instance = nullptr;
+	for (const auto& index : m_DoodadsPlacementIndexes)
+	{
+		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
+
+		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_ParentWMO.lock()->m_DoodadsFilenames + placement.flags.nameIndex);
 		if (mdx)
 		{
-			instance = make_shared<CWMO_Doodad_Instance>(_parent.operator->(), mdx, this, index, placement);
-			// add to scene node is automaticly
+			std::shared_ptr<CWMO_Doodad_Instance> instance = std::make_shared<CWMO_Doodad_Instance>(_parent, mdx, weak_from_this(), index, placement);
+			_parent.lock()->addDoodadInstance(instance);
 		}
-		_parent->addDoodadInstance(instance);
 	}
-#endif
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)
@@ -72,10 +66,15 @@ uint32 WMO_Group::to_wmo_liquid(int x)
 	case DBC_LIQUIDTYPE_Type::slime:
 		return 20;
 	}
+
+	return UINT32_MAX;
 }
 
 void WMO_Group::Load()
 {
+	std::shared_ptr<const WMO> ParentWMO = m_ParentWMO.lock();
+	_ASSERT(ParentWMO != nullptr);
+
 	// Buffer
 	uint16* dataFromMOVI = nullptr;
 	std::shared_ptr<Buffer>	IB_Default = nullptr;
@@ -136,7 +135,7 @@ void WMO_Group::Load()
 			uint32 indicesCount = size / sizeof(uint16);
 			uint16* indices = (uint16*)m_F->getDataFromCurrent();
 			// Buffer
-			IB_Default = Application::Get().GetRenderDevice()->CreateIndexBuffer(indices, indicesCount);
+			IB_Default = _RenderDevice->CreateIndexBuffer(indices, indicesCount);
 
 			dataFromMOVI = indices;
 		}
@@ -151,8 +150,8 @@ void WMO_Group::Load()
 				vertexes[i] = Fix_XZmY(vertexes[i]);
 			}
 			// Buffer
-			VB_Vertexes = Application::Get().GetRenderDevice()->CreateVertexBuffer(vertexes, vertexesCount);
-			//VB_Colors = Application::Get().GetRenderDevice()->CreateVertexBuffer(nullptr, vertexesCount);
+			VB_Vertexes = _RenderDevice->CreateVertexBuffer(vertexes, vertexesCount);
+			//VB_Colors = _RenderDevice->CreateVertexBuffer(nullptr, vertexesCount);
 			//m_Bounds.calculate(vertexes, vertexesCount);
 
 			dataFromMOVT = vertexes;
@@ -168,16 +167,17 @@ void WMO_Group::Load()
 				normals[i] = Fix_XZmY(normals[i]);
 			}
 			// Buffer
-			VB_Normals = Application::Get().GetRenderDevice()->CreateVertexBuffer(normals, normalsCount);
+			VB_Normals = _RenderDevice->CreateVertexBuffer(normals, normalsCount);
 		}
 		else if (strcmp(fourcc, "MOTV") == 0) // Texture coordinates
 		{
 			uint32 textureCoordsCount = size / sizeof(vec2);
 			vec2* textureCoords = (vec2*)m_F->getDataFromCurrent();
-			VB_TextureCoords.push_back(Application::Get().GetRenderDevice()->CreateVertexBuffer(textureCoords, textureCoordsCount));
+			VB_TextureCoords.push_back(_RenderDevice->CreateVertexBuffer(textureCoords, textureCoordsCount));
 		}
 		else if (strcmp(fourcc, "MOBA") == 0) // WMO_Group_Batch
 		{
+			// Temp code
 			uint32 batchesCount = size / sizeof(SWMO_Group_BatchDef);
 			SWMO_Group_BatchDef* batches = (SWMO_Group_BatchDef*)m_F->getDataFromCurrent();
 			moba = new SWMO_Group_BatchDef[batchesCount];
@@ -187,12 +187,8 @@ void WMO_Group::Load()
 			{
 				SWMO_Group_BatchDef batchDef;
 				m_F->readBytes(&batchDef, sizeof(SWMO_Group_BatchDef));
-
-				WMO_Group_Part_Batch* batch = new WMO_Group_Part_Batch(m_ParentWMO, this, batchDef);
-				m_WMOBatchIndexes.push_back(batch);
+				m_WMOBatchs.push_back(batchDef);
 			}
-
-			std::sort(m_WMOBatchIndexes.begin(), m_WMOBatchIndexes.end(), WMO_Group_Part_BatchCompare());
 		}
 		else if (strcmp(fourcc, "MOLR") == 0) // Light references
 		{
@@ -244,7 +240,7 @@ void WMO_Group::Load()
 			memcpy(mocv, vertexColors, sizeof(C4Vec) * vertexColorsCount);
 			mocv_count = vertexColorsCount;
 
-			FixColorVertexAlpha(this);
+			FixColorVertexAlpha(shared_from_this());
 
 			// Convert
 			std::vector<vec4> vertexColorsConverted;
@@ -260,7 +256,7 @@ void WMO_Group::Load()
 			}
 
 			// Buffer
-			//VB_Colors = Application::Get().GetRenderDevice()->CreateFloatVertexBuffer((const float*)vertexColorsConverted.data(), vertexColorsConverted.size(), sizeof(vec4));
+			//VB_Colors = _RenderDevice->CreateFloatVertexBuffer((const float*)vertexColorsConverted.data(), vertexColorsConverted.size(), sizeof(vec4));
 			m_IsMOCVExists = vertexColorsCount > 0;
 
 			delete[] mocv;
@@ -269,10 +265,10 @@ void WMO_Group::Load()
 		{
 			m_F->readBytes(&m_LiquidHeader, sizeof(SWMO_Group_MLIQDef));
 
-			Log::Green("WMO[%s]: LiquidType CHUNK = HEADER[%d] [%d]", m_ParentWMO->m_FileName.c_str(), m_Header.liquidType, m_ParentWMO->m_Header.flags.use_liquid_type_dbc_id);
+			Log::Green("WMO[%s]: LiquidType CHUNK = HEADER[%d] [%d]", ParentWMO->m_FileName.c_str(), m_Header.liquidType, ParentWMO->m_Header.flags.use_liquid_type_dbc_id);
 
 			uint32 liquid_type;
-			if (m_ParentWMO->m_Header.flags.use_liquid_type_dbc_id)
+			if (ParentWMO->m_Header.flags.use_liquid_type_dbc_id)
 			{
 				if (m_Header.liquidType < 21)
 				{
@@ -296,7 +292,7 @@ void WMO_Group::Load()
 			}
 
 			m_WMOLiqiud = std::make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
-			m_WMOLiqiud->CreateFromWMO(m_F.operator->(), m_ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
+			m_WMOLiqiud->CreateFromWMO(m_F, ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
 
 		}
 		else
@@ -308,7 +304,7 @@ void WMO_Group::Load()
 
 	for (uint32 i = 0; i < collisionCount; i++)
 	{
-		CWMO_Group_Part_BSP_Node* collisionNode = new CWMO_Group_Part_BSP_Node(this, collisions[i]);
+		std::shared_ptr<CWMO_Group_Part_BSP_Node> collisionNode = std::make_shared<CWMO_Group_Part_BSP_Node>(shared_from_this(), collisions[i]);
 		m_CollisionNodes.push_back(collisionNode);
 	}
 
@@ -316,50 +312,21 @@ void WMO_Group::Load()
 
 	// Create geom
 	{
-		// CreateShaders
-		std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader(
-			Shader::VertexShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
-		);
-		std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader(
-			Shader::PixelShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
-		);
-
-		// Create samplers
-		std::shared_ptr<SamplerState> g_LinearClampSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
-		g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-		g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
-
-		std::shared_ptr<SamplerState> g_LinearRepeatSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
-		g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-		g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
-
-		g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_LinearRepeatSampler);
-
-		// Material
-		std::shared_ptr<MaterialTextured> mat = std::make_shared<MaterialTextured>(Application::Get().GetRenderDevice());
-		mat->SetTexture(Application::Get().GetRenderDevice()->CreateTexture2D("Textures\\ShaneCube.blp"));
-		mat->SetShader(Shader::VertexShader, g_pVertexShader);
-		mat->SetShader(Shader::PixelShader, g_pPixelShader);
-
-		__geom = Application::Get().GetRenderDevice()->CreateMesh();
+		std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 		__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
 		__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
-		//__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
+		__geom->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
 		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
 		__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
 		__geom->SetIndexBuffer(IB_Default);
-		__geom->SetMaterial(mat);
-		__geom->SetType(SN_TYPE_WMO);
-	}
 
-	for (auto& batch : m_WMOBatchIndexes)
-	{
-		//batch->setGeom(__geom);
-	}
-
-	// Create collision geom
-	{
-
+		for (const auto& batchProto : m_WMOBatchs)
+		{
+			std::shared_ptr<WMO_Group_Part_Batch> batch = std::make_shared<WMO_Group_Part_Batch>(m_ParentWMO, shared_from_this(), __geom, batchProto);
+			m_WMOBatchIndexes.push_back(batch);
+		}
+		std::sort(m_WMOBatchIndexes.begin(), m_WMOBatchIndexes.end(), WMO_Group_Part_BatchCompare());
+		m_WMOBatchs.clear();
 	}
 }
 

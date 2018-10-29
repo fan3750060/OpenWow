@@ -12,16 +12,13 @@
 // FORWARD BEGIN
 class WMO;
 class CWMO_Group_Instance;
-#ifdef GAME_WMO_INCLUDE_WM2
 class CWMO_Doodad_Instance;
-#endif
 // FORWARD END
 
-class WMO_Group
+class WMO_Group : public std::enable_shared_from_this<WMO_Group>
 {
 public:
-	WMO_Group(const WMO* _parentWMO, const uint32 m_GroupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile);
-	virtual ~WMO_Group();
+	WMO_Group(const std::weak_ptr<const WMO> _parentWMO, const uint32 m_GroupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile);
 
 	void CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const;
 
@@ -41,10 +38,7 @@ public:
 	SWMO_Group_HeaderDef					m_Header;
 	BoundingBox								m_Bounds;
 
-	std::vector<CWMO_Part_Portal*>				m_Portals;
-
-public:
-	std::shared_ptr<IMesh>					__geom;
+	std::vector< std::shared_ptr<CWMO_Part_Portal>>				m_Portals;
 
 public:
 	//-- Triangles --//
@@ -53,7 +47,8 @@ public:
 	bool									m_IsMOCVExists;
 
 	//-- Render bathes --//
-	std::vector<WMO_Group_Part_Batch*>		m_WMOBatchIndexes;
+	std::vector<SWMO_Group_BatchDef>		m_WMOBatchs;
+	std::vector< std::shared_ptr<WMO_Group_Part_Batch>>		m_WMOBatchIndexes;
 	SWMO_Group_BatchDef*					moba;
 
 	//-- Lights --//
@@ -69,13 +64,13 @@ public:
 	// MOBR chunk
 	std::vector<uint16>                     collisionIndexes;
 	std::shared_ptr<Buffer>							VB_Collision;
-	std::vector<CWMO_Group_Part_BSP_Node*>	m_CollisionNodes;
+	std::vector<std::shared_ptr<CWMO_Group_Part_BSP_Node>>	m_CollisionNodes;
 
 	//-- Liquid --//
 	SWMO_Group_MLIQDef						m_LiquidHeader;
 	std::shared_ptr<CWMO_Liquid>					m_WMOLiqiud;
 
-	//--
-	const WMO*								m_ParentWMO;
+	// Parent
+	const std::weak_ptr<const WMO>								m_ParentWMO;
 	const CGroupQuality&					m_Quality;
 };

@@ -220,8 +220,8 @@ bool ADT::Load()
 					MH2O_Header* mh2o_Header = (MH2O_Header*) abuf;
 					if (mh2o_Header->layersCount > 0)
 					{
-						CADT_Liquid* liquid = new CADT_Liquid(8, 8);
-						liquid->CreateFromTerrainMH2O(f.operator->(), mh2o_Header);
+						std::shared_ptr<CADT_Liquid> liquid = std::make_shared<CADT_Liquid>(8, 8);
+						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
 
 						// Create instance
 						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(weak_from_this(), liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
@@ -239,12 +239,12 @@ bool ADT::Load()
 	for (auto& it : m_Textures)
 	{
 		// PreLoad diffuse texture
-		it->diffuseTexture = Application::Get().GetRenderDevice()->CreateTexture2D(it->textureName);
+		it->diffuseTexture = _RenderDevice->CreateTexture2D(it->textureName);
 
 		// PreLoad specular texture
 		std::string specularTextureName = it->textureName;
 		specularTextureName = specularTextureName.insert(specularTextureName.length() - 4, "_s");
-		it->specularTexture = Application::Get().GetRenderDevice()->CreateTexture2D(specularTextureName);
+		it->specularTexture = _RenderDevice->CreateTexture2D(specularTextureName);
 	}
 
 	//-- Load Chunks ---------------------------------------------------------------------
@@ -259,7 +259,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 		_ASSERT(size + 8 == chunks[i].size);
 
-		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f.operator->());
+		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f);
 		chunk->Load();
 		chunk->SetParent(m_MapController);
 		m_Chunks.push_back(chunk);
@@ -288,7 +288,7 @@ bool ADT::Load()
 	}
 
 	//-- MDXs -------------------------------------------------------------------------
-	for (auto& it : m_MDXsPlacementInfo)
+	/*for (auto& it : m_MDXsPlacementInfo)
 	{
 		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
@@ -300,7 +300,7 @@ bool ADT::Load()
 			bbox.makeUnion(inst->getBounds());
 			setBounds(bbox);
 		}
-	}
+	}*/
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

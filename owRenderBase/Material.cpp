@@ -13,7 +13,13 @@ Material::Material(RenderDevice* renderDevice)
 {}
 
 Material::~Material()
-{}
+{
+	if (m_pConstantBuffer)
+	{
+		m_RenderDevice->DestroyConstantBuffer(m_pConstantBuffer);
+		m_pConstantBuffer.reset();
+	}
+}
 
 
 void Material::SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader)
@@ -37,7 +43,26 @@ const Material::ShaderMap& Material::GetShaders() const
 	return m_Shaders;
 }
 
-void Material::Bind()
+
+std::shared_ptr<Texture> Material::GetTexture(uint8 type) const
+{
+	TextureMap::const_iterator itr = m_Textures.find(type);
+	if (itr != m_Textures.end())
+	{
+		return itr->second;
+	}
+
+	return nullptr;
+}
+
+void Material::SetTexture(uint8 type, std::shared_ptr<Texture> texture)
+{
+	m_Textures[type] = texture;
+	m_Dirty = true;
+}
+
+
+void Material::Bind() const
 {
 	if (m_Dirty)
 	{
@@ -52,23 +77,23 @@ void Material::Bind()
 		{
 			pShader->Bind();
 
-			for (auto texture : GetTextureMap())
+			for (auto texture : m_Textures)
 			{
 				std::shared_ptr<Texture> pTexture = texture.second;
 				pTexture->Bind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
 			}
 
 			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
-			if (materialParameter.IsValid() && GetConstantBuffer() != nullptr)
+			if (materialParameter.IsValid() && m_pConstantBuffer != nullptr)
 			{
-				materialParameter.Set<ConstantBuffer>(GetConstantBuffer());
+				materialParameter.Set<ConstantBuffer>(m_pConstantBuffer);
 				materialParameter.Bind();
 			}
 		}
 	}
 }
 
-void Material::Unbind()
+void Material::Unbind() const
 {
 	for (auto shader : m_Shaders)
 	{
@@ -82,14 +107,8 @@ void Material::Unbind()
 
 //--
 
-Material::TextureMap Material::GetTextureMap() const
+void Material::CreateConstantBuffer()
 {
-	return TextureMap();
-}
-
-std::shared_ptr<ConstantBuffer> Material::GetConstantBuffer() const
-{
-	return nullptr;
 }
 
 void Material::UpdateConstantBuffer() const

@@ -6,7 +6,7 @@ class SceneNode;
 class IMesh;
 // FORWARD END
 
-struct IVisitor
+class IVisitor
 {
 public:
 	virtual void Visit(SceneNode& node) = 0;

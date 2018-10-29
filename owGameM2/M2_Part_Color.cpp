@@ -3,7 +3,7 @@
 // General
 #include "M2_Part_Color.h"
 
-CM2_Part_Color::CM2_Part_Color(IFile* f, const SM2_Color& _proto, cGlobalLoopSeq global) :
+CM2_Part_Color::CM2_Part_Color(std::shared_ptr<IFile> f, const SM2_Color& _proto, cGlobalLoopSeq global) :
 	vColor(vec3(1.0f, 1.0f, 1.0f)),
 	vAlpha(1.0f)
 {

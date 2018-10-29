@@ -6,7 +6,7 @@
 // General
 #include "ParticleSystem.h"
 
-CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile* f, const SM2_Particle& _proto, cGlobalLoopSeq globals) :
+CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Particle& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_parentM2),
 	m_Emitter(nullptr), 
 	mid(0), 
@@ -15,7 +15,7 @@ CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile*
 	m_CurrentTime(0.0),
 	m_GlobalTime(0.0)
 {
-	const std::shared_ptr<M2> ParentM2 = m_ParentM2.lock();
+	std::shared_ptr<const M2> ParentM2 = m_ParentM2.lock();
 	_ASSERT(ParentM2 != nullptr);
 
 	m_Position = Fix_XZmY(_proto.Position);
@@ -73,10 +73,10 @@ CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile*
 	switch (emitterType)
 	{
 	case 1:
-		m_Emitter = new PlaneParticleEmitter(this);
+		m_Emitter = std::make_shared<PlaneParticleEmitter>(shared_from_this());
 		break;
 	case 2:
-		m_Emitter = new SphereParticleEmitter(this);
+		m_Emitter = std::make_shared<SphereParticleEmitter>(shared_from_this());
 		break;
 	case 3: // Spline? (can't be bothered to find one)
 		break;
@@ -103,11 +103,6 @@ CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, IFile*
 		initTile(tc.tc, i);
 		m_Tiles.push_back(tc);
 	}
-}
-
-CM2_ParticleSystem::~CM2_ParticleSystem()
-{
-	delete m_Emitter;
 }
 
 void CM2_ParticleSystem::update(double _time, double _dTime)

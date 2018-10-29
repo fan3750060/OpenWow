@@ -6,17 +6,41 @@
 // General
 #include "Wmo_Part_Material.h"
 
-WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialDef& _proto) :
+WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, const SWMO_MaterialDef& _proto) :
+	Material(_RenderDevice),
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	//m_DiffuseTexture[0] = Application::Get().GetRenderDevice()->CreateTexture2D(_parentWMO->m_TexturesNames + m_Proto.diffuseNameIndex);
+	// CreateShaders
+	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
+		Shader::VertexShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+	);
+	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
+		Shader::PixelShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+	);
 
-	if (m_Proto.envNameIndex)
-	{
-		//m_DiffuseTexture[1] = Application::Get().GetRenderDevice()->CreateTexture2D(_parentWMO->m_TexturesNames + m_Proto.envNameIndex);
-	}
+	// Create samplers
+	std::shared_ptr<SamplerState> g_LinearClampSampler = _RenderDevice->CreateSamplerState();
+	g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+	g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
+
+	std::shared_ptr<SamplerState> g_LinearRepeatSampler = _RenderDevice->CreateSamplerState();
+	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
+
+	// Assign samplers
+	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_LinearRepeatSampler);
+
+	// This
+	SetTexture(0, _RenderDevice->CreateTexture2D(_parentWMO.lock()->m_TexturesNames + m_Proto.diffuseNameIndex));
+	SetShader(Shader::VertexShader, g_pVertexShader);
+	SetShader(Shader::PixelShader, g_pPixelShader);
+
+	//if (m_Proto.envNameIndex)
+	//{
+	//	SetTexture(1, _RenderDevice->CreateTexture2D(_parentWMO.lock()->m_TexturesNames + m_Proto.envNameIndex));
+	//}
 
 	//Log::Warn("Shader = [%d], Blend mode [%d]", m_Proto.shader, m_Proto.blendMode);
 	if (m_Proto.blendMode > 1)
@@ -27,8 +51,7 @@ WMO_Part_Material::WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialD
 	vec4 color = fromARGB(m_Proto.diffColor);
 }
 
-#ifdef GAME_WMO_INCLUDE_WM2
-void WMO_Part_Material::fillRenderState(RenderState* _state) const
+/*void WMO_Part_Material::fillRenderState(RenderState* _state) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;
 	sampler |= (m_Proto.flags.TextureClampS) ? SS_ADDRU_CLAMP : SS_ADDRU_WRAP;
@@ -38,8 +61,7 @@ void WMO_Part_Material::fillRenderState(RenderState* _state) const
 	_state->setTexture(Material::C_DiffuseTextureIndex + 1, m_DiffuseTexture[1], sampler, 0);
 	_state->setCullMode(m_Proto.flags.IsTwoSided ? RS_CULL_NONE : RS_CULL_BACK);
 	_Render->getRenderStorage()->SetEGxBlend(_state, m_Proto.blendMode);
-}
-#endif
+}*/
 
 void WMO_Part_Material::set() const
 {

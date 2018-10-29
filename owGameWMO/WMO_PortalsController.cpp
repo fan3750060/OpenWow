@@ -10,13 +10,16 @@
 // Additional
 #include "WMO_Group_Instance.h"
 
-CWMO_PortalsController::CWMO_PortalsController(const WMO* _parentWMO) :
+CWMO_PortalsController::CWMO_PortalsController(const std::weak_ptr<const WMO> _parentWMO) :
 	m_ParentWMO(_parentWMO)
 {
-	for (auto& it : m_ParentWMO->m_PortalReferences)
+	std::shared_ptr<const WMO> ParentWMO = m_ParentWMO.lock();
+	_ASSERT(ParentWMO != nullptr);
+
+	for (auto& it : ParentWMO->m_PortalReferences)
 	{
-		CWMO_Part_Portal* portal = m_ParentWMO->m_Portals[it.portalIndex];
-		WMO_Group* group = m_ParentWMO->m_Groups[it.groupIndex];
+		std::shared_ptr<CWMO_Part_Portal> portal = ParentWMO->m_Portals[it.portalIndex];
+		std::shared_ptr<WMO_Group> group = ParentWMO->m_Groups[it.groupIndex];
 
 		if (it.groupIndex == group->m_GroupIndex)
 		{

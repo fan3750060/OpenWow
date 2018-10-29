@@ -16,9 +16,7 @@ struct WMO_GroupInfoDef
 WMO::WMO(cstring name) :
 	m_FileName(name),
 	m_TexturesNames(nullptr),
-	m_PortalController(nullptr),
 	m_DoodadsFilenames(nullptr)
-
 {}
 
 WMO::~WMO()
@@ -28,13 +26,7 @@ WMO::~WMO()
 	//
 
 	SafeDeleteArray(m_TexturesNames);
-	ERASE_VECTOR(m_Materials);
-	ERASE_VECTOR(m_Groups);
-	ERASE_VECTOR(m_Portals);
-	if (m_PortalController) delete m_PortalController;
-	ERASE_VECTOR(m_Lights);
 	SafeDeleteArray(m_DoodadsFilenames);
-	ERASE_VECTOR(m_Fogs);
 }
 
 void WMO::CreateInsances(std::weak_ptr<CWMO_Base_Instance> _parent)
@@ -102,7 +94,7 @@ bool WMO::Load()
 			_ASSERT(materialsCount == m_Header.nTextures);
 			for (uint32 i = 0; i < materialsCount; i++)
 			{
-				WMO_Part_Material* _mat = new WMO_Part_Material(this, materials[i]);
+				std::shared_ptr<WMO_Part_Material> _mat = std::make_shared<WMO_Part_Material>(shared_from_this(), materials[i]);
 				m_Materials.push_back(_mat);
 			}
 		}
@@ -133,7 +125,7 @@ bool WMO::Load()
 					groupName = std::string(groupsNames + groupInfos[i].nameoffset);
 				}
 
-				WMO_Group* group = new WMO_Group(this, i, groupName, groupFile);
+				std::shared_ptr<WMO_Group> group = std::make_shared<WMO_Group>(shared_from_this(), i, groupName, groupFile);
 				m_Groups.push_back(group);
 			}
 		}
@@ -156,7 +148,7 @@ bool WMO::Load()
 			{
 				m_PortalVertices.push_back(Fix_XZmY(portalVertexes[i]));
 			}
-			m_PortalVB = Application::Get().GetRenderDevice()->CreateVertexBuffer(m_PortalVertices);
+			m_PortalVB = _RenderDevice->CreateVertexBuffer(m_PortalVertices);
 		}
 		else if (strcmp(fourcc, "MOPT") == 0)
 		{
@@ -165,7 +157,7 @@ bool WMO::Load()
 			_ASSERT(portalDefsCount == m_Header.nPortals);
 			for (uint32 i = 0; i < portalDefsCount; i++)
 			{
-				CWMO_Part_Portal* portal = new CWMO_Part_Portal(this, portalDefs[i]);
+				std::shared_ptr<CWMO_Part_Portal> portal = std::make_shared<CWMO_Part_Portal>(shared_from_this(), portalDefs[i]);
 				m_Portals.push_back(portal);
 			}
 		}
@@ -203,7 +195,7 @@ bool WMO::Load()
 			_ASSERT(lightsCount == m_Header.nLights);
 			for (uint32 i = 0; i < lightsCount; i++)
 			{
-				WMO_Part_Light* _wmoLight = new WMO_Part_Light(lights[i]);
+				std::shared_ptr<WMO_Part_Light> _wmoLight = std::make_shared<WMO_Part_Light>(lights[i]);
 				m_Lights.push_back(_wmoLight);
 			}
 		}
@@ -240,7 +232,7 @@ bool WMO::Load()
 			SWMO_FogDef* fogs = (SWMO_FogDef*)f->getDataFromCurrent();
 			for (uint32 i = 0; i < fogsCount; i++)
 			{
-				WMO_Part_Fog* fog = new WMO_Part_Fog(fogs[i]);
+				std::shared_ptr<WMO_Part_Fog> fog = std::make_shared<WMO_Part_Fog>(fogs[i]);
 				m_Fogs.push_back(fog);
 			}
 		}
@@ -263,7 +255,7 @@ bool WMO::Load()
 	// Create portal controller
 	if (m_Portals.size() > 0)
 	{
-		m_PortalController = new CWMO_PortalsController(this);
+		m_PortalController = std::make_shared<CWMO_PortalsController>(shared_from_this());
 
 		for (auto& it : m_PortalReferences)
 		{
@@ -273,7 +265,7 @@ bool WMO::Load()
 	}
 
 	// Init m_Groups
-	for (auto& it : m_Groups)
+	for (auto it : m_Groups)
 	{
 		it->Load();
 

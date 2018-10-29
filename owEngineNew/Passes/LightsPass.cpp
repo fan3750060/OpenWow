@@ -12,7 +12,7 @@ LightsPass::LightsPass( std::vector<Light>& lights, std::shared_ptr<Scene> point
     , m_Lights( lights )
     , m_pCurrentLight( nullptr )
     , m_uiLightIndex( (uint32_t)-1 )
-    , m_RenderDevice( Application::Get().GetRenderDevice() )
+    , m_RenderDevice( _RenderDevice )
     , m_Pipeline( pipeline )
     , m_PointLightScene( pointLight )
     , m_pSpotLightScene( spotLight )
@@ -119,7 +119,7 @@ void LightsPass::Visit( SceneNode& node )
 
 void LightsPass::Visit( IMesh& mesh )
 {
-    std::shared_ptr<Material> tempMaterial = mesh.GetMaterial();
+    std::shared_ptr<const Material> tempMaterial = mesh.GetMaterial();
 
     // Temporarily replace the material of the mesh
     // for rendering the mesh as a light object.

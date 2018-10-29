@@ -13,7 +13,6 @@ public:
 	void SetDiffuseColor(cvec4 diffuse);
 
 private:
-	std::shared_ptr<ConstantBuffer> GetConstantBuffer() const override;
 	void UpdateConstantBuffer() const;
 
 	__declspec(align(16)) struct MaterialProperties
@@ -25,5 +24,4 @@ private:
 		//-------------------------- ( 16 bytes )
 	};
 	MaterialProperties* m_pProperties;
-	std::shared_ptr<ConstantBuffer> m_pConstantBuffer;
 };

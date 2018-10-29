@@ -6,43 +6,32 @@
 // General
 #include "WDL_LowResTile.h"
 
-CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<MapController> _parent, uint32 _indexX, uint32 _indexZ, std::shared_ptr<IMesh> _geom) :
+CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std::shared_ptr<IMesh> _mesh, uint32 _indexX, uint32 _indexZ) :
+	MeshWrapper(_mesh),
 	m_MapController(_parent),
 	m_IndexX(_indexX),
-	m_IndexZ(_indexZ),
-	m_Geom(_geom)
+	m_IndexZ(_indexZ)
 {
-	{
-		BoundingBox bbox; // Infinity
-		bbox.calculateCenter();
-		setBounds(bbox);
-
-		// Scene node settings
-		//setOpaque(true);
-		//setDrawOrder(19);
-	}
-
-	m_Geom->SetType(SN_TYPE_WDL_NODE);
-	AddMesh(m_Geom);
+	SetType(SN_TYPE_WDL_NODE);
 }
 
-void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs)
+void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, INT baseVertexLocation)
 {
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	std::shared_ptr<const MapController> MapController = m_MapController.lock();
 	_ASSERT(mapController != NULL);
 
-	int32 currentX = mapController->GetCurrentX();
-	int32 currentZ = mapController->GetCurrentZ();
+	int32 currentX = MapController->GetCurrentX();
+	int32 currentZ = MapController->GetCurrentZ();
 
 	/*if (m_MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
 	{
 		return;
 	}*/
 
-	if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
-	{
-		return;
-	}
+	//if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
+	//{
+	//	return;
+	//}
 
-	//SceneNode::Render(renderEventArgs);
+	base::Render(renderEventArgs, perObject);
 }

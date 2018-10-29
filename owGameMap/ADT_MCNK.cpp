@@ -13,7 +13,7 @@
 #include "Map_Shared.h"
 #include "ADT_CHUNK_Material.h"
 
-ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, IFile* _file) :
+ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, std::shared_ptr<IFile> _file) :
 	m_MapController(_mapController),
 	m_ParentADT(_parentTile),
 	m_File(_file),
@@ -108,7 +108,7 @@ bool ADT_MCNK::Load()
 
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(vec3), tempNormals, false);
 		//normalsBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(int24), normals_INT24, false);
-		normalsBuffer = Application::Get().GetRenderDevice()->CreateVertexBuffer(tempNormals, C_MapBufferSize);
+		normalsBuffer = _RenderDevice->CreateVertexBuffer(tempNormals, C_MapBufferSize);
 	}
 
 	// Heights
@@ -147,7 +147,7 @@ bool ADT_MCNK::Load()
 		bbox.calculateCenter();
 		setBounds(bbox);
 
-		verticesBuffer = Application::Get().GetRenderDevice()->CreateVertexBuffer(tempVertexes, C_MapBufferSize);
+		verticesBuffer = _RenderDevice->CreateVertexBuffer(tempVertexes, C_MapBufferSize);
 	}
 
 	// Textures
@@ -263,7 +263,7 @@ bool ADT_MCNK::Load()
 			}
 		}
 	}
-	m_BlendRBGShadowATexture = Application::Get().GetRenderDevice()->CreateTexture();
+	m_BlendRBGShadowATexture = _RenderDevice->CreateTexture();
 	m_BlendRBGShadowATexture->LoadTextureCustom(64, 64, blendbuf);
 
 	// Liquids
@@ -277,7 +277,7 @@ bool ADT_MCNK::Load()
 			std::shared_ptr<CADT_Liquid> m_Liquid = std::make_shared<CADT_Liquid>(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = std::make_shared<Liquid_Instance>(weak_from_this(), m_Liquid.operator->(), vec3(getTranslate().x, 0.0f, getTranslate().z));
+			m_LiquidInstance = std::make_shared<Liquid_Instance>(weak_from_this(), m_Liquid, vec3(getTranslate().x, 0.0f, getTranslate().z));
 		}
 	}
 
@@ -311,14 +311,16 @@ bool ADT_MCNK::Load()
 		//mccvBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(uint32), mccvColorsUINT8, false);
 	}
 
+	m_File.reset();
+
 	{ // Geom High
 		/*vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
-		__ibHigh = Application::Get().GetRenderDevice()->CreateUInt16IndexBuffer((const uint16*)mapArrayHigh.data(), mapArrayHigh.size());
+		__ibHigh = _RenderDevice->CreateUInt16IndexBuffer((const uint16*)mapArrayHigh.data(), mapArrayHigh.size());
 
-		__geomHigh = Application::Get().GetRenderDevice()->CreateMesh();
+		__geomHigh = _RenderDevice->CreateMesh();
 		__geomHigh->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
 		__geomHigh->SetIndexBuffer(__ibHigh);
-		__geomHigh->SetMaterial(Application::Get().GetRenderDevice()->GetDefaultMaterial());
+		__geomHigh->SetMaterial(_RenderDevice->GetDefaultMaterial());
 
 
 		AddMesh(__geomHigh);*/
@@ -334,19 +336,19 @@ bool ADT_MCNK::Load()
 	}
 
 	// CreateShaders
-	std::shared_ptr<Shader> g_pVertexShader = Application::Get().GetRenderDevice()->CreateShader(
+	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
-	std::shared_ptr<Shader> g_pPixelShader = Application::Get().GetRenderDevice()->CreateShader(
+	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
 		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
 	);
 
 	// Create samplers
-	std::shared_ptr<SamplerState> g_LinearClampSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
+	std::shared_ptr<SamplerState> g_LinearClampSampler = _RenderDevice->CreateSamplerState();
 	g_LinearClampSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
 	g_LinearClampSampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
 
-	std::shared_ptr<SamplerState> g_LinearRepeatSampler = Application::Get().GetRenderDevice()->CreateSamplerState();
+	std::shared_ptr<SamplerState> g_LinearRepeatSampler = _RenderDevice->CreateSamplerState();
 	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
 	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
 
@@ -354,7 +356,7 @@ bool ADT_MCNK::Load()
 	g_pPixelShader->GetShaderParameterByName("AlphaMapSampler").Set(g_LinearClampSampler);
 
 	// Material
-	std::shared_ptr<ADT_CHUNK_Material> mat = std::make_shared<ADT_CHUNK_Material>(Application::Get().GetRenderDevice());
+	std::shared_ptr<ADT_CHUNK_Material> mat = std::make_shared<ADT_CHUNK_Material>(_RenderDevice);
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
 		mat->SetTexture(i, m_DiffuseTextures[i]); // DXT1
@@ -366,9 +368,9 @@ bool ADT_MCNK::Load()
 
 	{ // Geom Default
 		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
-		__ibDefault = Application::Get().GetRenderDevice()->CreateIndexBuffer(mapArrayDefault);
+		__ibDefault = _RenderDevice->CreateIndexBuffer(mapArrayDefault);
 
-		__geomDefault = Application::Get().GetRenderDevice()->CreateMesh();
+		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);

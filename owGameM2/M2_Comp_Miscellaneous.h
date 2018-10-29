@@ -14,14 +14,13 @@ class CM2_Comp_Miscellaneous
 	friend class CM2_Builder;
 public:
 	CM2_Comp_Miscellaneous();
-	virtual ~CM2_Comp_Miscellaneous();
 
 	void update(double _time, double _dTime);
 	void calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat);
 	void render(cmat4 _worldMat);
 
 public:
-	CM2_Part_Attachment* getAttachmentDirect(uint32 _index) const
+	std::shared_ptr<CM2_Part_Attachment> getAttachmentDirect(uint32 _index) const
 	{
 		_ASSERT(_index < static_cast<uint32>(m_Attachments.size()));
 		return (m_Attachments[_index]);
@@ -38,7 +37,7 @@ public:
 		return (newIndex != -1) && (newIndex < static_cast<int16>(m_Attachments.size()));
 	}
 
-	CM2_Part_Attachment* getAttachment(M2_AttachmentType::List _index) const
+	std::shared_ptr<CM2_Part_Attachment> getAttachment(M2_AttachmentType::List _index) const
 	{
 		if (_index >= m_AttachmentsLookup.size())
 		{
@@ -51,25 +50,25 @@ public:
 		return (m_Attachments[newIndex]);
 	}
 
-	CM2_Part_Event* getEvents(uint32 _index) const
+	std::shared_ptr<CM2_Part_Event> getEvents(uint32 _index) const
 	{
 		_ASSERT(_index < m_Events.size());
 		return (m_Events[_index]);
 	}
 
-	CM2_Part_Light* getLight(uint32 _index) const
+	std::shared_ptr<CM2_Part_Light> getLight(uint32 _index) const
 	{
 		_ASSERT(_index < m_Lights.size());
 		return (m_Lights[_index]);
 	}
 
-	CM2_Part_Camera* getCameraDirect(uint32 _index) const
+	std::shared_ptr<CM2_Part_Camera> getCameraDirect(uint32 _index) const
 	{
 		_ASSERT(_index < static_cast<uint32>(m_Cameras.size()));
 		return (m_Cameras[_index]);
 	}
 
-	CM2_Part_Camera* getCamera(uint32 _index) const
+	std::shared_ptr<CM2_Part_Camera> getCamera(uint32 _index) const
 	{
 		if (_index >= m_CamerasLookup.size())
 		{
@@ -84,16 +83,16 @@ public:
 
 private:
 	// Attachments, events, lights and cameras
-	std::vector<CM2_Part_Attachment*>		m_Attachments;
-	std::vector<int16>						m_AttachmentsLookup;
-	std::vector<CM2_Part_Event*>				m_Events;
-	std::vector<CM2_Part_Light*>				m_Lights;
-	std::vector<CM2_Part_Camera*>			m_Cameras;
-	std::vector<int16>						m_CamerasLookup;
+	std::vector<std::shared_ptr<CM2_Part_Attachment>>	m_Attachments;
+	std::vector<int16>									m_AttachmentsLookup;
+	std::vector<std::shared_ptr<CM2_Part_Event>>		m_Events;
+	std::vector<std::shared_ptr<CM2_Part_Light>>		m_Lights;
+	std::vector<std::shared_ptr<CM2_Part_Camera>>		m_Cameras;
+	std::vector<int16>									m_CamerasLookup;
 
 	// Particles
-	std::vector<CM2_RibbonEmitters*>			m_RibbonEmitters;
-	std::vector<CM2_ParticleSystem*>				particleSystems;
+	std::vector<std::shared_ptr<CM2_RibbonEmitters>>	m_RibbonEmitters;
+	std::vector<std::shared_ptr<CM2_ParticleSystem>>	particleSystems;
 
 	bool								m_HasMisc;
 };

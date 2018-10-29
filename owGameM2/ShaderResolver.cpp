@@ -497,9 +497,9 @@ void* GetEffect(SM2_SkinBatch* batch)
 	return nullptr;
 }
 
-int32 GetPixel(SM2_SkinBatch* batch)
+int32 GetPixel(const SM2_SkinBatch& batch)
 {
-	uint32 index = M2GetPixelShaderID(batch->textureCount, batch->shader_id);
+	uint32 index = M2GetPixelShaderID(batch.textureCount, batch.shader_id);
 	_ASSERT(index < 15);
 	return arr[index];
 }

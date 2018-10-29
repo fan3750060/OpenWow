@@ -18,17 +18,22 @@ public:
 	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const;
 	virtual const ShaderMap& GetShaders() const;
 
-	virtual void Bind();
-	virtual void Unbind();
+	virtual std::shared_ptr<Texture> GetTexture(uint8 ID) const;
+	virtual void SetTexture(uint8 type, std::shared_ptr<Texture> texture);
+
+	virtual void Bind() const;
+	virtual void Unbind() const;
 
 protected:
-	virtual TextureMap GetTextureMap() const;
-	virtual std::shared_ptr<ConstantBuffer> GetConstantBuffer() const;
+	virtual void CreateConstantBuffer();
 	virtual void UpdateConstantBuffer() const;
 
 protected:
-	ShaderMap     m_Shaders;
+	ShaderMap                        m_Shaders;
 
-	RenderDevice* m_RenderDevice;
-	bool          m_Dirty;
+	TextureMap                       m_Textures;
+	std::shared_ptr<ConstantBuffer>  m_pConstantBuffer;
+
+	RenderDevice*                    m_RenderDevice;
+	mutable bool                     m_Dirty;
 };

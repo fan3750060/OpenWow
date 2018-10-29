@@ -6,23 +6,19 @@
 class WMO;
 // FORWARD END
 
-class WMO_Part_Material
+class WMO_Part_Material : public Material
 {
 public:
-	WMO_Part_Material(const WMO* _parentWMO, const SWMO_MaterialDef& _proto);
+	WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, const SWMO_MaterialDef& _proto);
 
-#ifdef GAME_WMO_INCLUDE_WM2
-	void fillRenderState(RenderState* _state) const;
-#endif
 	void set() const;
 	
 	uint32 getBlendMode() const { return m_Proto.blendMode; }
 
 private:
-	const WMO*					m_ParentWMO;
-	const SWMO_MaterialDef		m_Proto;
+	const SWMO_MaterialDef         m_Proto;
 
-	std::shared_ptr<Texture>			m_DiffuseTexture[3];
-
-	CGroupQuality&				m_QualitySettings;
+	// Parent
+	const std::weak_ptr<const WMO> m_ParentWMO;
+	const CGroupQuality&           m_QualitySettings;
 };

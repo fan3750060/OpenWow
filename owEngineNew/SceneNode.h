@@ -3,7 +3,7 @@
 class IMesh;
 class Camera;
 class RenderEventArgs;
-class Visitor;
+class IVisitor;
 
 class SceneNode : public Object, public std::enable_shared_from_this<SceneNode>
 {

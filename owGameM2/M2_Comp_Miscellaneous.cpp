@@ -11,17 +11,6 @@ CM2_Comp_Miscellaneous::CM2_Comp_Miscellaneous() :
 {
 }
 
-
-CM2_Comp_Miscellaneous::~CM2_Comp_Miscellaneous()
-{
-	ERASE_VECTOR(m_Events);
-	ERASE_VECTOR(m_Attachments);
-	ERASE_VECTOR(m_Lights);
-	ERASE_VECTOR(m_Cameras);
-
-	ERASE_VECTOR(m_RibbonEmitters);
-}
-
 void CM2_Comp_Miscellaneous::update(double _time, double _dTime)
 {
 	for (auto& it : particleSystems)

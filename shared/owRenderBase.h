@@ -9,6 +9,7 @@
 #include "../owRenderBase/Texture.h"
 #include "../owRenderBase/SamplerState.h"
 
+// Standart materials
 #include "../owRenderBase/Material.h"
 #include "../owRenderBase/MaterialBase.h"
 #include "../owRenderBase/MaterialDebug.h"
@@ -16,6 +17,7 @@
 
 #include "../owRenderBase/Light.h"
 #include "../owRenderBase/Mesh.h"
+#include "../owRenderBase/MeshWrapper.h"
 #include "../owRenderBase/ConstantBuffer.h"
 #include "../owRenderBase/StructuredBuffer.h"
 #include "../owRenderBase/Camera.h"

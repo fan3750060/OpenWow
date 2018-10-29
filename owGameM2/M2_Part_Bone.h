@@ -60,9 +60,9 @@ struct M2_GameBoneType
 class CM2_Part_Bone
 {
 public:
-	CM2_Part_Bone(IFile* f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles);
+	CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles);
 
-	void setParentBone(const CM2_Comp_Skeleton* _skeleton);
+	void setParentBone(std::shared_ptr<CM2_Comp_Skeleton> _skeleton);
 	uint16 getSubmesh() const { return submesh; };
 
 	void calcMatrix(uint16 anim, uint32 time, uint32 globalTime);
@@ -85,7 +85,7 @@ public:
 	bool IsCalculated() const { return m_IsCalculated; }
 
 	int32			getGameBoneID() const { return m_GameBoneId; }
-	CM2_Part_Bone*	getParentBone() const { return m_ParentBone; }
+	std::weak_ptr<CM2_Part_Bone>	getParentBone() const { return m_ParentBone; }
 	int16			getParentBoneID() const { return m_ParentBoneID; }
 	cmat4			getTransformMatrix() const { return m_TransformMatrix; }
 	cmat4			getRotateMatrix() const { return m_RotationMatrix; }
@@ -96,9 +96,9 @@ private:
 	int32           m_GameBoneId; // Bones lookup table
 	SM2_Bone::Flags m_Flags;
 
-	int16			m_ParentBoneID;
-	CM2_Part_Bone*	m_ParentBone;
-	uint16			submesh;
+	int16							m_ParentBoneID;
+	std::weak_ptr<CM2_Part_Bone>	m_ParentBone;
+	uint16							submesh;
 
 	vec3 pivot, transPivot;
 

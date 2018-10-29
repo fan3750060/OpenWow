@@ -3,7 +3,7 @@
 // General
 #include "M2_Part_TextureTransform.h"
 
-CM2_Part_TextureTransform::CM2_Part_TextureTransform(IFile* f, const SM2_TextureTransform& _proto, cGlobalLoopSeq global)
+CM2_Part_TextureTransform::CM2_Part_TextureTransform(std::shared_ptr<IFile> f, const SM2_TextureTransform& _proto, cGlobalLoopSeq global)
 {
 	trans.init(_proto.translation, f, global);
 	roll.init(_proto.rotation, f, global);

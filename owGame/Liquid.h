@@ -67,7 +67,7 @@ public:
 	void Render(cmat4 _worldMatrix);
 
 protected:
-	void initGeometry(const DBC_LiquidTypeRecord* _type, IFile* f);
+	void initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f);
 	void createBuffer();
 	
 

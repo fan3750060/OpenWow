@@ -6,7 +6,7 @@
 // General
 #include "M2_Part_Texture.h"
 
-CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
+CM2_Part_Texture::CM2_Part_Texture(std::shared_ptr<IFile> f, const SM2_Texture& _proto) :
 	m_Texture(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
@@ -19,7 +19,7 @@ CM2_Part_Texture::CM2_Part_Texture(IFile* f, const SM2_Texture& _proto) :
 	if (m_SpecialType == SM2_Texture::Type::NONE)
 	{
 		std::string textureFileName = (const char*)(f->getData() + _proto.filename.offset);
-		m_Texture = Application::Get().GetRenderDevice()->CreateTexture2D(textureFileName);
+		m_Texture = _RenderDevice->CreateTexture2D(textureFileName);
 	}
 }
 

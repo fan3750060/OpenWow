@@ -11,7 +11,7 @@
 // Additional
 #include "M2_Part_Material.h"
 
-CM2_Skin::CM2_Skin(const std::weak_ptr<M2> _model) :
+CM2_Skin::CM2_Skin(const std::weak_ptr<const M2> _model) :
 	m_ParentM2(_model),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}

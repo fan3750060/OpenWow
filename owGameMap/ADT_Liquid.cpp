@@ -7,7 +7,7 @@ CADT_Liquid::CADT_Liquid(uint32 _x, uint32 _y) :
 	Liquid(_x, _y)
 {}
 
-void CADT_Liquid::CreateFromMCLQ(IFile* f, ADT_MCNK_Header header)
+void CADT_Liquid::CreateFromMCLQ(std::shared_ptr<IFile> f, ADT_MCNK_Header header)
 {
 	initGeometry(header.getLiquidType(), f);
 }
@@ -33,7 +33,7 @@ struct MH2O_Instance
 #include __PACK_END
 #pragma endregion
 
-void CADT_Liquid::CreateFromTerrainMH2O(IFile* f, MH2O_Header* _header)
+void CADT_Liquid::CreateFromTerrainMH2O(std::shared_ptr<IFile> f, MH2O_Header* _header)
 {
 	for (uint32 j = 0; j < _header->layersCount; j++)
 	{

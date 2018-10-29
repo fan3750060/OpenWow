@@ -53,17 +53,17 @@ void MeshDX11::SetPrimitiveTopology(PrimitiveTopology _topology)
 	}
 }
 
-void MeshDX11::SetMaterial(std::shared_ptr<Material> material)
+void MeshDX11::SetMaterial(std::shared_ptr<const Material> material)
 {
 	m_pMaterial = material;
 }
 
-std::shared_ptr<Material> MeshDX11::GetMaterial() const
+std::shared_ptr<const Material> MeshDX11::GetMaterial() const
 {
 	return m_pMaterial;
 }
 
-void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> constantBuffer)
+void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, INT baseVertexLocation)
 {
 	std::shared_ptr<ShaderDX11> pVS;
 
@@ -76,7 +76,7 @@ void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 
 		if (pVS)
 		{
-			pVS->GetShaderParameterByName("PerObject").Set(constantBuffer);
+			pVS->GetShaderParameterByName("PerObject").Set(perObject);
 
 			for (BufferMap::value_type buffer : m_VertexBuffers)
 			{
@@ -94,15 +94,15 @@ void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 
 	if (m_pIndexBuffer != NULL)
 	{
-		// TOOD: Primitive reset?
 		m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
-		m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
+		if (indexCnt == 0)
+			m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
+		else
+			m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, baseVertexLocation);
 		m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
 	}
 	else
 	{
-		// We assume we have at least one vertex buffer.
-		// If not, then why are we rendering this mesh?
 		UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
 		m_pDeviceContext->Draw(vertexCount, 0);
 	}

@@ -47,3 +47,5 @@ private:
 	RenderDevice*   m_pRenderDevice;
 	RenderWindow*   m_Windows;
 };
+
+#define _RenderDevice Application::Get().GetRenderDevice()

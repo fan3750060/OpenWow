@@ -24,7 +24,6 @@ class M2
 	friend class CM2_Skin_Builder;
 public:
 	M2(cstring name);
-	~M2();
 
 	void Render(CM2_Base_Instance* _instance);
 	void RenderCollision(cmat4 _worldMatrix);
@@ -57,14 +56,14 @@ public:
 #pragma endregion
 
 public:
-	CM2_Comp_Materials* getMaterials() const { return m_Materials; }
-	CM2_Comp_Materials* m_Materials;
+	std::shared_ptr<CM2_Comp_Materials> getMaterials() const { return m_Materials; }
+	std::shared_ptr<CM2_Comp_Materials> m_Materials;
 
-	CM2_Comp_Miscellaneous* getMiscellaneous() const { return m_Miscellaneous; }
-	CM2_Comp_Miscellaneous* m_Miscellaneous;
+	std::shared_ptr<CM2_Comp_Miscellaneous> getMiscellaneous() const { return m_Miscellaneous; }
+	std::shared_ptr<CM2_Comp_Miscellaneous> m_Miscellaneous;
 
-	CM2_Comp_Skeleton* getSkeleton() const { return m_Skeleton; }
-	CM2_Comp_Skeleton* m_Skeleton;
+	std::shared_ptr<CM2_Comp_Skeleton> getSkeleton() const { return m_Skeleton; }
+	std::shared_ptr<CM2_Comp_Skeleton> m_Skeleton;
 
 public:
 	std::string							m_FileName;
@@ -78,7 +77,7 @@ public:
 	bool								m_IsContainGeom;
 
 	// Skins
-	std::vector<CM2_Skin*>				m_Skins;
+	std::vector<std::shared_ptr<CM2_Skin>>				m_Skins;
 
 private:
 	// Buffers and geom

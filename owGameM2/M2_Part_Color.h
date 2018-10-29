@@ -5,7 +5,7 @@
 class CM2_Part_Color
 {
 public:
-	CM2_Part_Color(IFile* f, const SM2_Color& _proto, cGlobalLoopSeq global);
+	CM2_Part_Color(std::shared_ptr<IFile> f, const SM2_Color& _proto, cGlobalLoopSeq global);
 
 	void calc(uint16 anim, uint32 time, uint32 globalTime);
 

@@ -8,6 +8,10 @@ IMesh::IMesh()
 {
 }
 
+IMesh::~IMesh()
+{
+}
+
 SceneNodeTypes IMesh::GetType() const
 {
 	return m_Type;

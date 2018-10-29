@@ -9,7 +9,7 @@
 
 BasePass::BasePass()
 	: m_pRenderEventArgs(nullptr)
-	, m_RenderDevice(Application::Get().GetRenderDevice())
+	, m_RenderDevice(_RenderDevice)
 {
 	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
 	m_PerObjectConstantBuffer = m_RenderDevice->CreateConstantBuffer(PerObject());
@@ -19,7 +19,7 @@ BasePass::BasePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> 
 	: m_pRenderEventArgs(nullptr)
 	, m_Scene(scene)
 	, m_Pipeline(pipeline)
-	, m_RenderDevice(Application::Get().GetRenderDevice())
+	, m_RenderDevice(_RenderDevice)
 {
 	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
 	m_PerObjectConstantBuffer = m_RenderDevice->CreateConstantBuffer(PerObject());
@@ -78,7 +78,7 @@ void BasePass::Visit(SceneNode& node)
 
 void BasePass::Visit(IMesh& mesh)
 {
-	std::shared_ptr<Material> pMaterial = mesh.GetMaterial();
+	std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial && m_pRenderEventArgs)
 	{
 		mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);

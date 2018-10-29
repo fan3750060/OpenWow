@@ -17,7 +17,7 @@ struct RibbonVertex
 	vec2 tex;
 };
 
-CM2_RibbonEmitters::CM2_RibbonEmitters(const std::weak_ptr<M2> _model, IFile* f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
+CM2_RibbonEmitters::CM2_RibbonEmitters(const std::weak_ptr<M2> _model, std::shared_ptr<IFile> f, const SM2_RibbonEmitter& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_model),
 	tcolor(vec4(1.0f))
 {
@@ -62,8 +62,11 @@ CM2_RibbonEmitters::CM2_RibbonEmitters(const std::weak_ptr<M2> _model, IFile* f,
 
 void CM2_RibbonEmitters::setup(uint16 anim, uint32 time, uint32 _globalTime, cmat4 _worldMatrix)
 {
-	vec3 ntpos = _worldMatrix * (m_Bone->getTransformMatrix() * vec4(pos, 0));
-	vec3 ntup = _worldMatrix * (m_Bone->getTransformMatrix() * vec4((pos + vec3(0, 0, 1.0f)), 0));
+	std::shared_ptr<const CM2_Part_Bone> Bone = m_Bone.lock();
+	_ASSERT(Bone != nullptr);
+
+	vec3 ntpos = _worldMatrix * (Bone->getTransformMatrix() * vec4(pos, 0));
+	vec3 ntup = _worldMatrix * (Bone->getTransformMatrix() * vec4((pos + vec3(0, 0, 1.0f)), 0));
 
 	ntup -= ntpos;
 	ntup = glm::normalize(ntup);

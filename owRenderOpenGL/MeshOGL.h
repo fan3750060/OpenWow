@@ -13,10 +13,10 @@ public:
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology);
 
-	virtual void SetMaterial(std::shared_ptr<Material> material);
-	virtual std::shared_ptr<Material> GetMaterial() const;
+	virtual void SetMaterial(std::shared_ptr<const Material> material);
+	virtual std::shared_ptr<const Material> GetMaterial() const;
 
-	virtual void Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> constantBuffer);
+	virtual void Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, INT baseVertexLocation = 0);
 
 	virtual void Accept(IVisitor& visitor);
 
@@ -32,7 +32,7 @@ private:
 	size_t m_VertexCount;
 	std::shared_ptr<Buffer> m_pIndexBuffer;
 	GLuint m_PrimitiveTopology;
-	std::shared_ptr<Material> m_pMaterial;
+	std::shared_ptr<const Material> m_pMaterial;
 
 	bool m_bIsDirty;
 };

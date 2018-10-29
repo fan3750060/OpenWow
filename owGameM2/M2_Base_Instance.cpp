@@ -15,7 +15,7 @@ CM2_Base_Instance::CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shar
 {
 	for (uint8 i = 0; i < SM2_Texture::Type::COUNT; i++)
 	{
-		m_SpecialTextures[i] = Application::Get().GetRenderDevice()->GetDefaultTexture();
+		m_SpecialTextures[i] = _RenderDevice->GetDefaultTexture();
 	}
 
 	if (_m2Object != nullptr)
@@ -63,7 +63,7 @@ bool CM2_Base_Instance::isMeshEnabled(uint32 _index) const
 }
 void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, cstring _textureName)
 {
-	std::shared_ptr<Texture> texture = Application::Get().GetRenderDevice()->CreateTexture2D(_textureName);
+	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(_textureName);
 	setSpecialTexture(_type, texture);
 }
 void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture)
@@ -144,7 +144,7 @@ void CM2_Base_Instance::InitLocal()
 	// Create animator
 	if (m_M2->isAnimated())
 	{
-		m_Animator = std::make_shared<CM2_Animator>(m_M2.operator->());
+		m_Animator = std::make_shared<CM2_Animator>(m_M2);
 		//_Bindings->RegisterUpdatableObject(this);
 	}
 }
@@ -153,7 +153,7 @@ void CM2_Base_Instance::CalculateLocalTransform(bool _isRotationQuat)
 {
 	if (m_Attached != nullptr)
 	{
-		const CM2_Part_Bone* bone = m_Attached->getBone();
+		std::shared_ptr<const CM2_Part_Bone> bone = m_Attached->getBone().lock();
 		_ASSERT(bone != nullptr);
 
 		mat4 relMatrix;

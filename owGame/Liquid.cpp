@@ -113,7 +113,7 @@ struct SLiquidFlag
 #include __PACK_END
 #pragma endregion
 
-void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, IFile* f)
+void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f)
 {
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
@@ -287,10 +287,10 @@ void Liquid::createBuffer()
 		}
 
 
-		//std::shared_ptr<Buffer> __vb = Application::Get().GetRenderDevice()->CreateVertexBuffer((const float*)mh2oVertices.data(), mh2oVertices.size(), sizeof(SLiquidVertexData));
-		//std::shared_ptr<Buffer> __ib = Application::Get().GetRenderDevice()->CreateIndexBuffer(m_Indices.data(), m_Indices.size());
+		//std::shared_ptr<Buffer> __vb = _RenderDevice->CreateVertexBuffer((const float*)mh2oVertices.data(), mh2oVertices.size(), sizeof(SLiquidVertexData));
+		//std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(m_Indices.data(), m_Indices.size());
 
-		//layer.m_Mesh = Application::Get().GetRenderDevice()->CreateMesh();
+		//layer.m_Mesh = _RenderDevice->CreateMesh();
 		//layer.m_Mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 		//layer.m_Mesh->SetIndexBuffer(__ib);
 
@@ -324,7 +324,7 @@ void Liquid_Layer::InitTextures()
 	for (int i = 1; i <= 30; i++)
 	{
 		sprintf_s(buf, baseName.c_str(), i);
-		std::shared_ptr<Texture> texture = Application::Get().GetRenderDevice()->CreateTexture2D(buf);
+		std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(buf);
 		m_Textures.push_back(texture);
 	}
 }
