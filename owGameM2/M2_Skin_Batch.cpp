@@ -13,14 +13,26 @@ CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::sha
 	m_ParentM2(_parentM2),
 
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
-{}
+{
+	m_TestMaterial = std::make_shared<M2_Material>();
+	SetType(SN_TYPE_M2);
+}
 
 void CM2_Skin_Batch::Init()
 {
 	//m_Material->fillRenderState(&m_State);
 }
 
-void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)
+void CM2_Skin_Batch::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+{
+	SetMaterial(m_TestMaterial);
+
+	MeshWrapper::Render(renderEventArgs, perObject, 0, m_SkinSection->getProto().indexCount);
+
+	SetMaterial(nullptr);
+}
+
+/*void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)
 {
 	uint32 meshPartID = m_SkinSection->getProto().meshPartID;
 
@@ -31,7 +43,7 @@ void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)
 
 	//--
 
-	/*CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
+	CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 	{
 		pass->SetShader(newShader);
 		pass->SetBlendMode(m_Material->getBlendMode());
@@ -65,7 +77,7 @@ void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)
 		{
 			pass->SetTextureAnimMatrix(m_TextureTransform->getValue());
 		}
-	}*/
+	}
 
 	//m_SkinSection->Draw(&m_State, _instance);
-}
+}*/

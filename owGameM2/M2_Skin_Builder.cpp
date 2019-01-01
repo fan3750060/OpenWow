@@ -94,13 +94,15 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 	for (const auto& it : m_SkinBatches)
 	{
-		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, nullptr);
+		std::shared_ptr<CM2_SkinSection> skinSection = Skin->m_Sections[it.skinSectionIndex];
+
+		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, skinSection->__geom);
 
 		batch->newShader = GetPixel(it);
 
 		// Geometry data
 		batch->m_PriorityPlan = it.priorityPlane;
-		batch->m_SkinSection = Skin->m_Sections[it.skinSectionIndex];
+		batch->m_SkinSection = skinSection;
 
 		// Get classes
 		batch->m_Material = (materials->GetMaterial(it.materialIndex));

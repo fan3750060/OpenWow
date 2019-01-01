@@ -25,6 +25,14 @@ M2::M2(cstring name) :
 	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 }
 
+void M2::CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent)
+{
+	for (auto& it : m_Skins)
+	{
+		it->CreateInsances(_parent);
+	}
+}
+
 void M2::Render(CM2_Base_Instance* _instance)
 {
 	if (m_IsContainGeom)
@@ -53,7 +61,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 	}
 
 	// Ribbons
-	m_Miscellaneous->render(_instance->GetWorldTransfom());
+	//m_Miscellaneous->render(_instance->GetWorldTransfom());
 }
 
 void M2::RenderCollision(cmat4 _worldMatrix)

@@ -12,6 +12,8 @@ public:
 	void setM2(std::shared_ptr<M2> _model);
 	std::shared_ptr<M2> getM2() const { return m_M2; }
 
+	void Load();
+
 	void Attach(const CM2_Part_Attachment* _attachment);
 	void Detach();
 

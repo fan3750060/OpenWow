@@ -2,6 +2,7 @@
 
 #include "M2_Part_Material.h"
 #include "M2_SkinSection.h"
+#include "M2_Material.h"
 
 // FORWARD BEGIN
 class M2;
@@ -17,7 +18,9 @@ public:
 
 	void Init();
 
-	void Render(CM2_Base_Instance* _instance);
+	//void Render(CM2_Base_Instance* _instance);
+	void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
+
 
 	int32 getPriorityPlan() const { return m_PriorityPlan; }
 	const std::weak_ptr<CM2_SkinSection> getSkin() const { return m_SkinSection; }
@@ -35,6 +38,7 @@ private:
 	std::shared_ptr<const CM2_Part_TextureTransform>	m_TextureTransform;
 
 	int32												newShader;
+	std::shared_ptr<M2_Material>                        m_TestMaterial;
 
 	// Parent
 	const std::weak_ptr<const M2> m_ParentM2;

@@ -25,6 +25,8 @@ class M2
 public:
 	M2(cstring name);
 
+	void CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent);
+
 	void Render(CM2_Base_Instance* _instance);
 	void RenderCollision(cmat4 _worldMatrix);
 

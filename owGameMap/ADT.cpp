@@ -288,19 +288,21 @@ bool ADT::Load()
 	}
 
 	//-- MDXs -------------------------------------------------------------------------
-	/*for (auto& it : m_MDXsPlacementInfo)
+	for (auto& it : m_MDXsPlacementInfo)
 	{
 		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
 			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), mdx, it);
+			inst->Load();
+			inst->SetParent(shared_from_this());
 			m_MDXsInstances.push_back(inst);
 
 			BoundingBox bbox = getBounds();
 			bbox.makeUnion(inst->getBounds());
 			setBounds(bbox);
 		}
-	}*/
+	}
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

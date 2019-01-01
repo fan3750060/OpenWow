@@ -15,7 +15,9 @@ enum SceneNodeTypes : uint8
 	SN_TYPE_NONE = 0,
 	SN_TYPE_WDL_NODE,
 	SN_TYPE_ADT_CHUNK,
-	SN_TYPE_WMO
+	SN_TYPE_WMO,
+	SN_TYPE_M2,
+	SN_TYPE_LQ
 };
 
 class IMesh : public Object

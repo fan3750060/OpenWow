@@ -17,6 +17,8 @@ class CM2_Skin
 public:
 	CM2_Skin(const std::weak_ptr<const M2> _model);
 
+	void CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent);
+
 	void Draw(CM2_Base_Instance* _instance);
 
 private:

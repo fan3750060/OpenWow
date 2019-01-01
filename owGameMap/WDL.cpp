@@ -42,7 +42,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	vec3 lowres[17][17];
 	vec3 lowsub[16][16];
 
-	for (uint8 j = 0; j < C_TilesInMap; j++)
+	/*for (uint8 j = 0; j < C_TilesInMap; j++)
 	{
 		for (uint8 i = 0; i < C_TilesInMap; i++)
 		{
@@ -102,7 +102,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
-	}
+	}*/
 
 	// Load low-resolution WMOs
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());

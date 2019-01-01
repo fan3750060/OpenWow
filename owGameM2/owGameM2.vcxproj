@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CreatePasses.cpp" />
     <ClCompile Include="M2_Animation.cpp" />
     <ClCompile Include="M2_Animator.cpp" />
     <ClCompile Include="M2_Comp_Materials.cpp" />
     <ClCompile Include="M2_Comp_Miscellaneous.cpp" />
     <ClCompile Include="M2_Comp_Skeleton.cpp" />
+    <ClCompile Include="M2_Material.cpp" />
     <ClCompile Include="M2_Part_Attachment.cpp" />
     <ClCompile Include="M2_Part_Event.cpp" />
     <ClCompile Include="M2_Part_Material.cpp" />
@@ -43,9 +45,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="M2_Pass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameM2.h" />
+    <ClInclude Include="CreatePasses.h" />
     <ClInclude Include="M2_AnimatedConverters.h" />
     <ClInclude Include="M2_Animated.h" />
     <ClInclude Include="M2_Animation.h" />
@@ -53,6 +57,7 @@
     <ClInclude Include="M2_Comp_Materials.h" />
     <ClInclude Include="M2_Comp_Miscellaneous.h" />
     <ClInclude Include="M2_Comp_Skeleton.h" />
+    <ClInclude Include="M2_Material.h" />
     <ClInclude Include="M2_Part_Attachment.h" />
     <ClInclude Include="M2_Part_Event.h" />
     <ClInclude Include="M2_Part_Material.h" />
@@ -82,6 +87,7 @@
     <ClInclude Include="M2_Base_Instance.h" />
     <ClInclude Include="ShaderResolver.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="M2_Pass.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AD0FB1D4-E81D-482D-A74F-EEAFFD9B2DFC}</ProjectGuid>

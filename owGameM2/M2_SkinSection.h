@@ -24,7 +24,7 @@ public:
 private:
 	const uint16			m_Index;
 	const SM2_SkinSection	m_Proto;
-
+public:
 	std::shared_ptr<IMesh> __geom;
 
 private: // PARENT

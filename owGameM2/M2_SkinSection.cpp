@@ -19,8 +19,21 @@ CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<const M2> _model, const uin
 
 void CM2_SkinSection::CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes)
 {
+	std::shared_ptr<Buffer> VB_Vertexes = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 0, sizeof(SM2_Vertex));
+	std::shared_ptr<Buffer> VB_Normals = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 20, sizeof(SM2_Vertex));
+	std::shared_ptr<Buffer> VB_TextureCoords = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 32, sizeof(SM2_Vertex));
+	std::shared_ptr<Buffer> IB_Indexes = _RenderDevice->CreateIndexBuffer(_indexes);
+
+
+	__geom = _RenderDevice->CreateMesh();
+	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
+	__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
+	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords);
+	__geom->SetIndexBuffer(IB_Indexes);
+
+
 	//std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
-	std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(_indexes);
+	//std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(_indexes);
 
 	//std::shared_ptr<Buffer> __vbPos = _RenderDevice->CreateFloatBuffer(
 

@@ -34,6 +34,9 @@
     <Filter Include="Components\Parts_Miscellaneous\Particle">
       <UniqueIdentifier>{74069097-38bc-4d66-bc04-1f1a8ed4c72c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderStuff">
+      <UniqueIdentifier>{b831f8ee-734b-484b-a78d-387e3f758afd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="M2_Builder.cpp">
@@ -116,6 +119,15 @@
     </ClCompile>
     <ClCompile Include="M2_Part_Light.cpp">
       <Filter>Components\Parts_Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatePasses.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Pass.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Material.cpp">
+      <Filter>RenderStuff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +235,15 @@
     </ClInclude>
     <ClInclude Include="M2_Part_Light.h">
       <Filter>Components\Parts_Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatePasses.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Pass.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Material.h">
+      <Filter>RenderStuff</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

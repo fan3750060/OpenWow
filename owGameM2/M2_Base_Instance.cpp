@@ -36,6 +36,11 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 // CM2_Base_Instance
 
+void CM2_Base_Instance::Load()
+{
+	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode>(shared_from_this()));
+}
+
 void CM2_Base_Instance::Attach(const CM2_Part_Attachment* _attachment)
 {
 	assert1(_attachment != nullptr);
