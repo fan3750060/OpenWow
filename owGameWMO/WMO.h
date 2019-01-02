@@ -39,47 +39,47 @@ public:
 #pragma endregion
 
 public:
-	const std::string						m_FileName;
-	SWMO_HeaderDef							m_Header;				// MOHD chunk
-	BoundingBox								m_Bounds;
+	const std::string                                                   m_FileName;
+	SWMO_HeaderDef                                                      m_Header;				// MOHD chunk
+	BoundingBox                                                         m_Bounds;
 
 public:
 	//-- Materials --//
-	char*									m_TexturesNames;		// MOTX chunk
+	char*																m_TexturesNames;		// MOTX chunk
 	std::vector<std::shared_ptr<const WMO_Part_Material>>				m_Materials;			// MOMT chunk
 
 	//-- Groups --//
 
-	std::vector<std::shared_ptr<WMO_Group>>						m_Groups;				// MOGI chunk
-	std::vector<std::shared_ptr<WMO_Group>>						m_OutdoorGroups;
+	std::vector<std::shared_ptr<WMO_Group>>                             m_Groups;				// MOGI chunk
+	std::vector<std::shared_ptr<WMO_Group>>                             m_OutdoorGroups;
 
 	//-- Skybox --//
-	std::shared_ptr<M2>								m_Skybox;
+	std::shared_ptr<M2>                                                 m_Skybox;
 
 	//-- Portals --//
-	std::vector<vec3>						m_PortalVertices;		// MOPV chunk
-	std::shared_ptr<Buffer>							m_PortalVB;
-	std::vector<std::shared_ptr<CWMO_Part_Portal>>			m_Portals;
-	std::vector<SWMO_PortalReferencesDef>	m_PortalReferences;		// MOPR chunk
-	std::shared_ptr<CWMO_PortalsController>					m_PortalController;
+	std::vector<vec3>                                                   m_PortalVertices;		// MOPV chunk
+	std::shared_ptr<Buffer>                                             m_PortalVB;
+	std::vector<std::shared_ptr<CWMO_Part_Portal>>                      m_Portals;
+	std::vector<SWMO_PortalReferencesDef>                               m_PortalReferences;		// MOPR chunk
+	std::shared_ptr<CWMO_PortalsController>                             m_PortalController;
 
 	//-- Visible block
-	std::vector<vec3>						m_VisibleBlockVertices;	// MOVV chunk
-	std::vector<SWMO_VisibleBlockListDef>	m_VisibleBlockList;		// MOVB chunk
+	std::vector<vec3>                                                   m_VisibleBlockVertices;	// MOVV chunk
+	std::vector<SWMO_VisibleBlockListDef>                               m_VisibleBlockList;		// MOVB chunk
 
 
 	// -- Lights --//
-	std::vector<std::shared_ptr<WMO_Part_Light>>			m_Lights;				// MOLT chunk
+	std::vector<std::shared_ptr<WMO_Part_Light>>                        m_Lights;				// MOLT chunk
 
 
 	//-- Doodads --//
-	std::vector<SWMO_Doodad_SetInfo>		m_DoodadsSetInfos;			// MODS chunk
-	char*									m_DoodadsFilenames;			// MODN chunk        
-	std::vector<SWMO_Doodad_PlacementInfo>  m_DoodadsPlacementInfos;
+	std::vector<SWMO_Doodad_SetInfo>                                    m_DoodadsSetInfos;      // MODS chunk
+	char*                                                               m_DoodadsFilenames;     // MODN chunk        
+	std::vector<SWMO_Doodad_PlacementInfo>                              m_DoodadsPlacementInfos;
 
 
 	//-- Fog --//
-	std::vector<std::shared_ptr<WMO_Part_Fog>>				m_Fogs;					// MFOG chunk
+	std::vector<std::shared_ptr<WMO_Part_Fog>>                          m_Fogs;					// MFOG chunk
 
 
 	//-- Volumes plane --//

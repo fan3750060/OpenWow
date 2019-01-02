@@ -39,17 +39,19 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		_parent.lock()->addLiquidInstance(liquid);
 	}*/
 
-	/*for (const auto& index : m_DoodadsPlacementIndexes)
+	for (const auto& index : m_DoodadsPlacementIndexes)
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
 		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_ParentWMO.lock()->m_DoodadsFilenames + placement.flags.nameIndex);
 		if (mdx)
 		{
-			std::shared_ptr<CWMO_Doodad_Instance> instance = std::make_shared<CWMO_Doodad_Instance>(_parent, mdx, weak_from_this(), index, placement);
-			_parent.lock()->addDoodadInstance(instance);
+			std::shared_ptr<CWMO_Doodad_Instance> inst = std::make_shared<CWMO_Doodad_Instance>(mdx, weak_from_this(), index, placement);
+			inst->Load();
+			inst->SetParent(_parent);
+			_parent.lock()->addDoodadInstance(inst);
 		}
-	}*/
+	}
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)

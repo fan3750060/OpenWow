@@ -4,9 +4,8 @@
 #include "M2_Pass.h"
 
 M2_Pass::M2_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
-	: base(scene, pipeline)
-{
-}
+	: BasePass(scene, pipeline)
+{}
 
 M2_Pass::~M2_Pass()
 {}

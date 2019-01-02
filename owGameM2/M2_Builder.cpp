@@ -447,7 +447,7 @@ void CM2_Builder::Step6Misc()
 	// Ribbons
 	if (m_Header.ribbon_emitters.size > 0)
 	{
-		SM2_RibbonEmitter* Ribbons = (SM2_RibbonEmitter*)(m_F->getData() + m_Header.ribbon_emitters.offset);
+		/*SM2_RibbonEmitter* Ribbons = (SM2_RibbonEmitter*)(m_F->getData() + m_Header.ribbon_emitters.offset);
 		for (uint32 i = 0; i < m_Header.ribbon_emitters.size; i++)
 		{
 			std::shared_ptr<CM2_RibbonEmitters> ribbon = std::make_shared<CM2_RibbonEmitters>(m_M2, m_F, Ribbons[i], m_GlobalLoops);
@@ -455,7 +455,7 @@ void CM2_Builder::Step6Misc()
 		}
 
 		// Animated
-		miscellaneous->m_HasMisc = true;
+		miscellaneous->m_HasMisc = true;*/
 	}
 
 	// Particle systems

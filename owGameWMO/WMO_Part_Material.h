@@ -23,7 +23,7 @@ private:
 		vec3   m_Pad;
 		//-------------------------- ( 32 bytes )
 	};
-	MaterialProperties* m_pProperties;
+	MaterialProperties*            m_pProperties;
 
 	// Parent
 	const std::weak_ptr<const WMO> m_ParentWMO;

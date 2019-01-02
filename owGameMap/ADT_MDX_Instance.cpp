@@ -3,8 +3,8 @@
 // General
 #include "ADT_MDX_Instance.h"
 
-ADT_MDX_Instance::ADT_MDX_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo) :
-	CM2_Base_Instance(_parent, _mdxObject)
+ADT_MDX_Instance::ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo) :
+	CM2_Base_Instance(_mdxObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;
 
@@ -31,37 +31,26 @@ ADT_MDX_Instance::~ADT_MDX_Instance()
 	//Log::Info("ADT_MDX Deleted");
 }
 
-bool ADT_MDX_Instance::PreRender3D()
+void ADT_MDX_Instance::Accept(IVisitor & visitor)
 {
-	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
-	{
-		return false;
-	}
-
-	// Check distance to camera
-	//if (!checkDistance2D(m_QualitySettings.ADT_MDX_Distance))
-	//{
-	//	return false;
-	//}
-
-	if (!CM2_Base_Instance::PreRender3D())
-	{
-		return false;
-	}
-
-	m_AlreadyDraw.insert(m_UniqueId);
-
-	return true;
-}
-
-void ADT_MDX_Instance::Render3D()
-{
-	//if (!m_QualitySettings.draw_map_m2)
+	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+	
+	//if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	//{
 	//	return;
 	//}
 
-	CM2_Base_Instance::Render3D();
+	/*float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
+	{
+		return;
+	}*/
+
+	// SceneNode
+	CM2_Base_Instance::Accept(visitor);
+
+	//m_AlreadyDraw.insert(m_UniqueId);
 }
 
 //

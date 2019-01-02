@@ -22,9 +22,7 @@ public:
 	void setLoaded() {}
 	bool isLoaded() const { return true; } // TODO FIXME
 
-	// IRenderable
-	bool PreRender3D();
-	void Render3D();
+	void Accept(IVisitor& visitor) override;
 
 public:
 	std::shared_ptr<IFile> m_File;

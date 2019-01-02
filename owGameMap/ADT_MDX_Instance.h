@@ -18,12 +18,10 @@ struct ADT_MDXDef
 class ADT_MDX_Instance : public CM2_Base_Instance
 {
 public:
-	ADT_MDX_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo);
+	ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo);
 	virtual ~ADT_MDX_Instance();
 
-	// IRenderable3D
-	bool PreRender3D();
-	void Render3D();
+	void Accept(IVisitor& visitor) override;
 
 public: 
 	uint32				m_UniqueId;

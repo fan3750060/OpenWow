@@ -19,14 +19,14 @@ public:
 	void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
 
 private:
-	const SWMO_Group_BatchDef	m_Proto;
-	std::shared_ptr<const WMO_Part_Material>	m_WMOMaterial;
-	BoundingBox					m_Bounds;
+	const SWMO_Group_BatchDef                   m_Proto;
+	std::shared_ptr<const WMO_Part_Material>    m_WMOMaterial;
+	BoundingBox                                 m_Bounds;
 
 	// Parent
-	const std::weak_ptr<const WMO>       m_ParentWMO;
-	const std::weak_ptr<const WMO_Group> m_ParentGroup;
-	const CGroupQuality&                 m_Quality;
+	const std::weak_ptr<const WMO>              m_ParentWMO;
+	const std::weak_ptr<const WMO_Group>        m_ParentGroup;
+	const CGroupQuality&                        m_Quality;
 };
 
 struct WMO_Group_Part_BatchCompare

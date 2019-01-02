@@ -19,6 +19,11 @@ const Viewport& Camera::GetViewport() const
 	return m_Viewport;
 }
 
+const Frustum& Camera::GetFrustum() const
+{
+	return m_Frustum;
+}
+
 void Camera::SetProjectionRH(float fovy, float aspect, float zNear, float zFar)
 {
 	m_fVFOV = fovy;
@@ -231,6 +236,9 @@ void Camera::UpdateViewMatrix()
 		mat4 rotationMatrix = glm::toMat4(m_Rotate);
 
 		m_ViewMatrix = glm::inverse(translateMatrix * rotationMatrix);
+
+		// Update frustum
+		m_Frustum.buildViewFrustum(m_ViewMatrix, m_ProjectionMatrix);
 
 		m_bViewProjectionInverseDirty = true;
 		m_bViewDirty = false;

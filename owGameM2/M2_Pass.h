@@ -4,8 +4,6 @@
 class M2_Pass : public BasePass
 {
 public:
-	typedef BasePass base;
-
 	M2_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~M2_Pass();
 

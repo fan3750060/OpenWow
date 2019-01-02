@@ -3,8 +3,8 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
-CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _mdxObject, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
-	CM2_Base_Instance(_parent, _mdxObject),
+CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::shared_ptr<M2> _mdxObject, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
+	CM2_Base_Instance(_mdxObject),
 	m_ParentGroup(_parentGroup),
 	m_Index(_index),
 	m_PortalVis(true)
@@ -33,10 +33,6 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::weak_ptr<SceneNode> _parent, std
 		//
 		CalculateLocalTransform(true);
 	}
-
-	//setDrawOrder(22);
-	//setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
-	//setSelectable();
 }
 
 CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
@@ -59,10 +55,10 @@ bool CWMO_Doodad_Instance::PreRender3D()
 	//}
 
 	// Frustrum culling
-	if (!CM2_Base_Instance::PreRender3D())
-	{
-		return false;
-	}
+	//if (!CM2_Base_Instance::PreRender3D())
+	//{
+	//	return false;
+	//}
 
 	return true;
 }
@@ -74,5 +70,5 @@ void CWMO_Doodad_Instance::Render3D()
 	//	return;
 	//}
 
-	CM2_Base_Instance::Render3D();
+	//CM2_Base_Instance::Render3D();
 }

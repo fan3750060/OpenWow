@@ -3,8 +3,8 @@
 // General
 #include "ADT_WMO_Instance.h"
 
-ADT_WMO_Instance::ADT_WMO_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject, ADT_MODF& _placementInfo) :
-	CWMO_Base_Instance(_parent, _wmoObject)
+ADT_WMO_Instance::ADT_WMO_Instance(std::shared_ptr<WMO> _wmoObject, ADT_MODF& _placementInfo) :
+	CWMO_Base_Instance(_wmoObject)
 {
 	m_UniqueId = _placementInfo.uniqueId;
 	uint16 doodadSetIndex = _placementInfo.doodadSetIndex;
@@ -37,26 +37,17 @@ void ADT_WMO_Instance::Load()
 	InitTransform();
 }
 
-bool ADT_WMO_Instance::PreRender3D()
+void ADT_WMO_Instance::Accept(IVisitor & visitor)
 {
-	if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
-	{
-		return false;
-	}
+	//if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+	//{
+	//	return false;
+	//}
 
-	if (!CWMO_Base_Instance::PreRender3D())
-	{
-		return false;
-	}
+	// SceneNode
+	CWMO_Base_Instance::Accept(visitor);
 
-	m_AlreadyDraw.insert(m_UniqueId);
-
-	return true;
-}
-
-void ADT_WMO_Instance::Render3D()
-{
-	CWMO_Base_Instance::Render3D();
+	//m_AlreadyDraw.insert(m_UniqueId);
 }
 
 //

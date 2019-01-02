@@ -22,7 +22,7 @@ M2::M2(cstring name) :
 	// Vertices
 	m_IsContainGeom(false)
 {
-	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
+	Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 }
 
 void M2::CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent)
@@ -33,11 +33,11 @@ void M2::CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent)
 	}
 }
 
-void M2::Render(CM2_Base_Instance* _instance)
+/*void M2::Render(CM2_Base_Instance* _instance)
 {
 	if (m_IsContainGeom)
 	{
-		/*CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
+		CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
 		pass->Bind();
 		{
 			pass->setWorld(_instance->GetWorldTransfom());
@@ -50,7 +50,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 			//}
 			m_Skins.back()->Draw(_instance);
 		}
-		pass->Unbind();*/
+		pass->Unbind();
 
 		//RenderCollision(_worldMatrix);
 
@@ -62,30 +62,7 @@ void M2::Render(CM2_Base_Instance* _instance)
 
 	// Ribbons
 	//m_Miscellaneous->render(_instance->GetWorldTransfom());
-}
-
-void M2::RenderCollision(cmat4 _worldMatrix)
-{
-	/*if (m_CollisionGeom == nullptr)
-	{
-		return;
-	}
-
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-
-	_Render->getTechniquesMgr()->Debug_Pass->Bind();
-	_Render->getTechniquesMgr()->Debug_Pass->setWorld(_worldMatrix);
-	_Render->getTechniquesMgr()->Debug_Pass->SetColor4(vec4(0.0f, 1.0f, 0.0f, 0.7f));
-
-	_Render->r.setGeometry(m_CollisionGeom);
-	_Render->r.drawIndexed(0, m_CollisionIndCnt, 0, m_CollisionVetCnt);
-
-	_Render->getTechniquesMgr()->Debug_Pass->Unbind();
-
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);*/
-}
+}*/
 
 void M2::update(double _time, double _dTime)
 {

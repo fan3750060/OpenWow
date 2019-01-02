@@ -39,11 +39,6 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 		//);
 		//setBounds(bbox);
 	}
-
-	/*setOpaque(true);
-	setDrawOrder(20);
-	setDebugColor(vec4(0.0f, 0.3f, 0.3f, 0.3f));
-	setSelectable();*/
 }
 
 ADT::~ADT()
@@ -276,7 +271,7 @@ bool ADT::Load()
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
 		{
-			std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), wmo, it);
+			std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(wmo, it);
 			inst->Load();
 			inst->SetParent(shared_from_this());
 			m_WMOsInstances.push_back(inst);
@@ -293,7 +288,7 @@ bool ADT::Load()
 		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
-			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), mdx, it);
+			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(mdx, it);
 			inst->Load();
 			inst->SetParent(shared_from_this());
 			m_MDXsInstances.push_back(inst);

@@ -18,17 +18,46 @@ CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::sha
 	SetType(SN_TYPE_M2);
 }
 
-void CM2_Skin_Batch::Init()
-{
-	//m_Material->fillRenderState(&m_State);
-}
-
 void CM2_Skin_Batch::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
+	/*uint32 meshPartID = m_SkinSection->getProto().meshPartID;
+	if (!_instance->isMeshEnabled(meshPartID))
+	{
+		return;
+	}*/
+
+	// Model color
+	/*bool isColorEnable = (m_Color != nullptr);
+	pass->SetColorEnable(isColorEnable);
+	if (isColorEnable)
+	{
+		pass->SetColor(m_Color->getValue());
+	}*/
+
+	// Textures
+	for (uint32 i = 0; i < m_Textures.size(); i++)
+	{
+		m_TestMaterial->SetTexture(i, m_Textures[i].lock()->getTexture());
+	}
+
+	// Texture alpha
+	/*bool isTextureWeightEnable = (m_TextureWeight != nullptr);
+	pass->SetTextureWeightEnable(isTextureWeightEnable);
+	if (isTextureWeightEnable)
+	{
+		pass->SetTextureWeight(m_TextureWeight->getValue());
+	}*/
+
+	// Texture transform
+	/*bool isTextureTransformEnable = (m_TextureTransform != nullptr);
+	pass->SetTextureAnimEnable(isTextureTransformEnable);
+	if (isTextureTransformEnable)
+	{
+		pass->SetTextureAnimMatrix(m_TextureTransform->getValue());
+	}*/
+
 	SetMaterial(m_TestMaterial);
-
 	MeshWrapper::Render(renderEventArgs, perObject, 0, m_SkinSection->getProto().indexCount);
-
 	SetMaterial(nullptr);
 }
 

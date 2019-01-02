@@ -27,8 +27,8 @@ public:
 
 	void CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent);
 
-	void Render(CM2_Base_Instance* _instance);
-	void RenderCollision(cmat4 _worldMatrix);
+	//void Render(CM2_Base_Instance* _instance);
+	//void RenderCollision(cmat4 _worldMatrix);
 
 	void update(double _time, double _dTime);
 	void calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
@@ -91,12 +91,3 @@ private: // Static and Consts
 	const uint8							C_TexturesMaxCount = 128;
 	const uint8							C_BonesInfluences = 4;
 };
-
-
-/*struct M2Deleter
-{
-	void operator()(M2* p)
-	{
-		GetManager<IM2Manager>()->Delete(p);
-	}
-};*/

@@ -209,3 +209,22 @@ void SceneNode::Accept(IVisitor& visitor)
 		child->Accept(visitor);
 	}
 }
+
+bool SceneNode::checkFrustum(const Camera& _camera) const
+{
+	return !_camera.GetFrustum().cullBox(getBounds());
+}
+
+bool SceneNode::checkDistance2D(cvec3 _camPos, float _distance) const
+{
+	// Check distance to camera
+	float distToCamera2D = glm::length(Fix_X0Z(_camPos) - Fix_X0Z(getBounds().getCenter())) - getBounds().getRadius();
+	return distToCamera2D < _distance;
+}
+
+bool SceneNode::checkDistance(cvec3 _camPos, float _distance) const
+{
+	// Check distance to camera
+	float distToCamera = glm::length(_camPos - getBounds().getCenter()) - getBounds().getRadius();
+	return distToCamera < _distance;
+}

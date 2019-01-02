@@ -8,7 +8,7 @@
 class CWMO_Base_Instance : public SceneNode
 {
 public:
-	CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject);
+	CWMO_Base_Instance(std::shared_ptr<WMO> _wmoObject);
 	virtual ~CWMO_Base_Instance();
 
 	// WMO_Base_Instance
@@ -25,23 +25,16 @@ public:
 	cmat4 getInvWorld() const { return m_InvWorld; }
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
-	// ISceneNode
-	//std::string getObjectInfo() const override { return "@WMO_Base@" + m_Object->getFilename(); }
-
-	// IUpdatable
-	void Update(double _time, double _dTime);
-
-	// IRenderable3D
-	bool PreRender3D();
-	void Render3D();
+	// SceneNode
+	void Accept(IVisitor& visitor) override;
 
 protected:
-	const std::shared_ptr<WMO>						m_Object;
-	SWMO_Doodad_SetInfo						m_DoodadSetInfo;
+	const std::shared_ptr<WMO>                                          m_Object;
+	SWMO_Doodad_SetInfo                                                 m_DoodadSetInfo;
 
-	mat4									m_InvWorld;
-	std::vector<vec3>							m_ConvertedVerts;
+	mat4                                                                m_InvWorld;
+	std::vector<vec3>                                                   m_ConvertedVerts;
 	
-	std::vector<std::shared_ptr<CWMO_Group_Instance>>	m_GroupInstances;
-	std::vector<std::shared_ptr<CWMO_Group_Instance>>	m_OutdoorGroupInstances;
+	std::vector<std::shared_ptr<CWMO_Group_Instance>>                   m_GroupInstances;
+	std::vector<std::shared_ptr<CWMO_Group_Instance>>                   m_OutdoorGroupInstances;
 };

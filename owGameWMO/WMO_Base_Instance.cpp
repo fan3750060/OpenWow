@@ -3,21 +3,14 @@
 // General
 #include "WMO_Base_Instance.h"
 
-CWMO_Base_Instance::CWMO_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<WMO> _wmoObject) :
+CWMO_Base_Instance::CWMO_Base_Instance(std::shared_ptr<WMO> _wmoObject) :
 	m_Object(_wmoObject)
 {
-	assert1(m_Object);
-
-	//setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));
-	//setSelectable();
-
-	//_Bindings->RegisterUpdatableObject(this);
+	assert1(m_Object != nullptr);
 }
 
 CWMO_Base_Instance::~CWMO_Base_Instance()
-{
-	//_Bindings->UnregisterUpdatableObject(this);
-}
+{}
 
 void CWMO_Base_Instance::InitTransform()
 {
@@ -46,24 +39,22 @@ void CWMO_Base_Instance::EmptyTransformAndBounds()
 	setBounds(bbox);
 }
 
-void CWMO_Base_Instance::Update(double _time, double _dTime)
-{
-
-}
-
 #define WMO_DISABLE_PORTALS
 
-bool CWMO_Base_Instance::PreRender3D()
+void CWMO_Base_Instance::Accept(IVisitor & visitor)
 {
-	/*if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
-	{
-		return false;
-	}
+	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
 
-	if (!checkFrustum())
+	//if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
+	//{
+	//	return;
+	//}
+
+	if (!checkFrustum(camera))
 	{
-		return false;
-	}*/
+		return;
+	}
 
 #ifndef WMO_DISABLE_PORTALS
 	if (m_Object->m_PortalController != nullptr)
@@ -72,18 +63,5 @@ bool CWMO_Base_Instance::PreRender3D()
 	}
 #endif
 
-	return true;
-}
-
-void CWMO_Base_Instance::Render3D()
-{
-	/*if (!m_QualitySettings.draw_map_wmo)
-	{
-		return;
-	}*/
-
-	//_Render->DrawBoundingBox(m_Bounds);
-
-	
-	m_Object->Render(this);
+	SceneNode::Accept(visitor);
 }

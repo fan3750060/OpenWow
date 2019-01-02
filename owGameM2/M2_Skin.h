@@ -19,8 +19,6 @@ public:
 
 	void CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent);
 
-	void Draw(CM2_Base_Instance* _instance);
-
 private:
 	std::vector<std::shared_ptr<CM2_SkinSection>>	m_Sections;
 	std::vector<std::shared_ptr<CM2_Skin_Batch>>   m_Batches;

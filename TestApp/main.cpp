@@ -14,7 +14,7 @@ std::shared_ptr<Scene> g_pScene = nullptr;
 RenderWindow* g_pRenderWindow;
 std::shared_ptr<Query> g_pFrameQuery;
 double g_FrameTime = 0.0;
-
+std::shared_ptr<MapController> contr;
 //--
 
 void OnPreRender(RenderEventArgs& e);
@@ -107,13 +107,13 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		const float x = 35;
-		const float y = 35;
+		const float x = 36;
+		const float y = 33;
 
 		new WMOsManager();
 		new CM2_Manager();
 
-		std::shared_ptr<MapController> contr = std::make_shared<MapController>();
+		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
 
 		contr->MapPreLoad(*DBC_Map[1]);
@@ -184,7 +184,12 @@ void OnPostRender(RenderEventArgs& e)
 #else
 		g_FrameTime = frameResult.ElapsedTime / 1000000.0;
 #endif
-		g_pRenderWindow->SetWindowName(std::to_string(g_FrameTime));
+
+		std::string title = std::to_string(g_FrameTime);
+		if (contr != nullptr)
+			title += "_" + std::to_string(contr->GetCurrentX()) + "_" + std::to_string(contr->GetCurrentZ());
+
+		g_pRenderWindow->SetWindowName(title);
 	}
 
 	// Query results for forward rendering technique.

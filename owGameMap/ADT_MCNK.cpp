@@ -21,10 +21,7 @@ ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<AD
 	m_LiquidInstance(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	memset(mcly, 0x00, 16 * 4);
-
-	//setDrawOrder(21);
-	//setDebugColor(vec4(0.0f, 0.4f, 0.0f, 0.8f));
+	memset(mcly, 0x00, sizeof(ADT_MCNK_MCLY) * 4);
 }
 
 ADT_MCNK::~ADT_MCNK()
@@ -370,27 +367,8 @@ bool ADT_MCNK::Delete()
 	return true;
 }
 
-bool ADT_MCNK::PreRender3D()
-{
-	// Check distance to camera
-	/*float distToCamera2D = (_Render->getCamera()->Position.toX0Z() - m_Bounds.getCenter().toX0Z()).length() - getBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
-	{
-		return false;
-	}*/
-
-	// Check frustrum
-	//if (!checkFrustum())
-	//{
-	//	return false;
-	//}
-
-	return true;
-}
-
-void ADT_MCNK::Render3D()
-{
-	/*if (!m_QualitySettings.draw_mcnk)
+/*
+	if (!m_QualitySettings.draw_mcnk)
 	{
 		return;
 	}
@@ -430,7 +408,27 @@ void ADT_MCNK::Render3D()
 			}
 		}
 		pass->Unbind();
-	}*/
+	}
+*/
+
+void ADT_MCNK::Accept(IVisitor& visitor)
+{
+	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+
+	float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
+	{
+		return;
+	}
+
+	// Check frustrum
+	if (!checkFrustum(camera))
+	{
+		return;
+	}
+
+	SceneNode::Accept(visitor);
 }
 
 //

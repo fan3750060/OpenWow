@@ -92,6 +92,11 @@ public:
 	 */
 	virtual void Accept(IVisitor& visitor);
 
+	// Checks
+	bool checkFrustum(const Camera& _camera) const;
+	bool checkDistance2D(cvec3 _camPos, float _distance) const;
+	bool checkDistance(cvec3 _camPos, float _distance) const;
+
 protected:
 	virtual mat4 GetParentWorldTransform() const;
 	virtual void CalculateLocalTransform(bool _isRotationQuat = false);

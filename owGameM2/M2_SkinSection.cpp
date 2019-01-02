@@ -24,7 +24,6 @@ void CM2_SkinSection::CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, c
 	std::shared_ptr<Buffer> VB_TextureCoords = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 32, sizeof(SM2_Vertex));
 	std::shared_ptr<Buffer> IB_Indexes = _RenderDevice->CreateIndexBuffer(_indexes);
 
-
 	__geom = _RenderDevice->CreateMesh();
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
 	__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);

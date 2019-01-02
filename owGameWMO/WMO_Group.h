@@ -31,8 +31,8 @@ public:
 	void RenderCollision(cmat4 _world) const;
 
 public:
-	const std::string							m_GroupName;
-	const std::string							m_GroupDescription;
+	const std::string                       m_GroupName;
+	const std::string                       m_GroupDescription;
 	const uint32							m_GroupIndex;
 	std::shared_ptr<IFile>					m_F;
 	SWMO_Group_HeaderDef					m_Header;
@@ -63,14 +63,14 @@ public:
 	// MOBN chunk
 	// MOBR chunk
 	std::vector<uint16>                     collisionIndexes;
-	std::shared_ptr<Buffer>							VB_Collision;
+	std::shared_ptr<Buffer>                 VB_Collision;
 	std::vector<std::shared_ptr<CWMO_Group_Part_BSP_Node>>	m_CollisionNodes;
 
 	//-- Liquid --//
 	SWMO_Group_MLIQDef						m_LiquidHeader;
-	std::shared_ptr<CWMO_Liquid>					m_WMOLiqiud;
+	std::shared_ptr<CWMO_Liquid>            m_WMOLiqiud;
 
 	// Parent
-	const std::weak_ptr<const WMO>								m_ParentWMO;
+	const std::weak_ptr<const WMO>          m_ParentWMO;
 	const CGroupQuality&					m_Quality;
 };

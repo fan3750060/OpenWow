@@ -22,6 +22,8 @@ public:
 	void SetViewport(const Viewport& viewport);
 	const Viewport& GetViewport() const;
 
+	const Frustum& GetFrustum() const;
+
 	// Set projection parameters
 	void SetProjectionRH(float fovy, float aspect, float zNear, float zFar);
 	void SetProjectionLH(float fovy, float aspect, float zNear, float zFar);
@@ -100,6 +102,9 @@ protected:
 
 	// View port parameters
 	Viewport    m_Viewport;
+
+	// Frustum
+	Frustum     m_Frustum;
 
 	// Projection parameters
 	float       m_fVFOV;

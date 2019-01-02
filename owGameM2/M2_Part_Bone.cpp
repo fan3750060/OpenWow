@@ -37,8 +37,6 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 	}
 
 	std::shared_ptr<CM2_Part_Bone> ParentBone = m_ParentBone.lock();
-	assert1(ParentBone != nullptr);
-
 	if (ParentBone != nullptr)
 	{
 		ParentBone->calcMatrix(anim, time, globalTime);

@@ -5,7 +5,7 @@
 class CM2_Base_Instance : public SceneNode
 {
 public:
-	CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _m2Object = nullptr);
+	CM2_Base_Instance(std::shared_ptr<M2> _m2Object = nullptr);
 	virtual ~CM2_Base_Instance();
 
 	// CM2_Base_Instance
@@ -37,9 +37,8 @@ public:
 	// IUpdatable
 	void Update(double _time, double _dTime);
 
-	// IRenderable3D
-	bool PreRender3D();
-	void Render3D();
+	// SceneNode
+	void Accept(IVisitor& visitor) override;
 
 protected:
 	void InitLocal();
@@ -47,17 +46,17 @@ protected:
 
 private:
 	// Color & Alpha
-	vec4				m_Color;
-	float				m_Alpha;
+	vec4                            m_Color;
+	float                           m_Alpha;
 
 	// Mesh & Replaces textures
-	std::shared_ptr<Texture> m_SpecialTextures[SM2_Texture::Type::COUNT];
+	std::shared_ptr<Texture>		m_SpecialTextures[SM2_Texture::Type::COUNT];
 
 	// Animtion
-	std::shared_ptr<CM2_Animator>		m_Animator;
-	bool				m_NeedRecalcAnimation;
+	std::shared_ptr<CM2_Animator>   m_Animator;
+	bool                            m_NeedRecalcAnimation;
 
 private: // PARENT
-	std::shared_ptr<M2>					m_M2;
-	const CM2_Part_Attachment*	m_Attached;
+	std::shared_ptr<M2>             m_M2;
+	const CM2_Part_Attachment*      m_Attached;
 };

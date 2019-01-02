@@ -3,7 +3,7 @@
 // General
 #include "M2_Base_Instance.h"
 
-CM2_Base_Instance::CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shared_ptr<M2> _m2Object) :
+CM2_Base_Instance::CM2_Base_Instance(std::shared_ptr<M2> _m2Object) :
 	m_M2(nullptr),
 	m_Attached(nullptr),
 	m_Animator(nullptr),
@@ -22,8 +22,6 @@ CM2_Base_Instance::CM2_Base_Instance(std::weak_ptr<SceneNode> _parent, std::shar
 	{
 		setM2(_m2Object);
 	}
-
-	//setDrawOrder(21);
 }
 
 CM2_Base_Instance::~CM2_Base_Instance()
@@ -95,21 +93,24 @@ void CM2_Base_Instance::Update(double _time, double _dTime)
 	m_M2->update(_time, _dTime);
 }
 
-
-// IRenderable3D
-bool CM2_Base_Instance::PreRender3D()
+void CM2_Base_Instance::Accept(IVisitor& visitor)
 {
-	//if (!checkFrustum())
+	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+
+	//float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	//if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	//{
-	//	return false;
+	//	return;
 	//}
 
-	return true;
-}
+	// Check frustrum
+	if (!checkFrustum(camera))
+	{
+		return;
+	}
 
-void CM2_Base_Instance::Render3D()
-{
-	if (m_Attached != nullptr)
+	/*if (m_Attached != nullptr)
 	{
 		CalculateLocalTransform();
 	}
@@ -118,12 +119,12 @@ void CM2_Base_Instance::Render3D()
 	{
 		m_Animator->Update(m_Time, m_DTime);
 
-		/*if (m_Object->isBillboard())
-		{
-		m_Object->calc(m_Animator->getAnimID(), m_Animator->getCurrentTime(_time), _time);
-		}
-		else
-		{*/
+		//if (m_Object->isBillboard())
+		//{
+		//m_Object->calc(m_Animator->getAnimID(), m_Animator->getCurrentTime(_time), _time);
+		//}
+		//else
+		//{
 		//if (!m_NeedRecalcAnimation)
 		//{
 		m_M2->calc(m_Animator->getSequenceIndex(), GetWorldTransfom(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
@@ -131,14 +132,17 @@ void CM2_Base_Instance::Render3D()
 		//}
 		//}
 
-		m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time)*/);
-		return;
-	}
+		//m_M2->Render(thisGetWorldTransfom(), m_MeshProvider, m_DoodadColor, m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
+	}*/
 
 	//_Render->DrawBoundingBox(getBounds());
 
-	m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time)*/);
+	//m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time)*/);
+
+	// SceneNode
+	SceneNode::Accept(visitor);
 }
+
 
 //-----------------
 // ISceneNode

@@ -38,6 +38,7 @@ protected:
 		glm::mat4 Model;
 	};
 
+public:
 	void SetRenderEventArgs(RenderEventArgs& e);
 	RenderEventArgs& GetRenderEventArgs() const;
 

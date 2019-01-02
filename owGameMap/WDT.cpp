@@ -22,7 +22,7 @@ void WDT::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	if (!m_GlobalWMOName.empty())
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
-		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(_parent.lock(), wmo, m_GlobalWMOPlacementInfo);
+		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(wmo, m_GlobalWMOPlacementInfo);
 	}
 }
 
