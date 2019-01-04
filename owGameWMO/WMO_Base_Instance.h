@@ -26,7 +26,7 @@ public:
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
 	// SceneNode
-	void Accept(IVisitor& visitor) override;
+	bool Accept(IVisitor& visitor) override;
 
 protected:
 	const std::shared_ptr<WMO>                                          m_Object;

@@ -20,7 +20,7 @@ public:
 
     virtual void PreRender( RenderEventArgs& e );
 
-    virtual void Visit( IMesh& mesh );
+    virtual bool Visit( IMesh& mesh );
 
 private:
 

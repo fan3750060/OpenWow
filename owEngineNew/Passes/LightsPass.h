@@ -16,9 +16,9 @@ public:
     virtual void Render( RenderEventArgs& e );
 
     // Inherited from Visitor
-    virtual void Visit( Scene& scene );
-    virtual void Visit( SceneNode& node );
-    virtual void Visit( IMesh& mesh );
+    virtual bool Visit( Scene& scene );
+    virtual bool Visit( SceneNode& node );
+    virtual bool Visit( IMesh& mesh );
 
 protected:
     const Light* GetCurrentLight();

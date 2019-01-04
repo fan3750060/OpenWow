@@ -9,6 +9,6 @@ class IMesh;
 class IVisitor
 {
 public:
-	virtual void Visit(SceneNode& node) = 0;
-	virtual void Visit(IMesh& mesh) = 0;
+	virtual bool Visit(SceneNode& node) = 0;
+	virtual bool Visit(IMesh& mesh) = 0;
 };

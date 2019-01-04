@@ -1,6 +1,7 @@
 #pragma once
 
 // FORWARD BEGIN
+class Image;
 class UIElement;
 // FORWARD END
 

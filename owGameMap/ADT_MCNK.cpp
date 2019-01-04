@@ -29,6 +29,34 @@ ADT_MCNK::~ADT_MCNK()
 	//Log::Info("ADT_MCNK Deleted");
 }
 
+void ADT_MCNK::TransRotScaleToLocalTransform()
+{
+	assert1(false);
+}
+
+//
+// SceneNode
+//
+bool ADT_MCNK::Accept(IVisitor& visitor)
+{
+	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+
+	float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
+	{
+		return false;
+	}
+
+	// Check frustrum
+	if (!checkFrustum(camera))
+	{
+		return false;
+	}
+
+	return SceneNode::Accept(visitor);
+}
+
 //
 
 bool ADT_MCNK::Load()
@@ -43,9 +71,9 @@ bool ADT_MCNK::Load()
 		//setOpaque(true);
 
 		// Set translate
-		setTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint), false);
+		setTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
 		// Matrix
-		//CalculateLocalTransform();
+		//TransRotScaleToLocalTransform();
 		// Bounds
 		BoundingBox bbox
 		(
@@ -274,7 +302,8 @@ bool ADT_MCNK::Load()
 			std::shared_ptr<CADT_Liquid> m_Liquid = std::make_shared<CADT_Liquid>(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = std::make_shared<Liquid_Instance>(weak_from_this(), m_Liquid, vec3(getTranslate().x, 0.0f, getTranslate().z));
+			m_LiquidInstance = std::make_shared<Liquid_Instance>(m_Liquid, vec3(getTranslate().x, 0.0f, getTranslate().z));
+			m_LiquidInstance->SetParent(weak_from_this());
 		}
 	}
 
@@ -345,7 +374,7 @@ bool ADT_MCNK::Load()
 
 	{ // Geom Default
 		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
-		__ibDefault = _RenderDevice->CreateIndexBuffer(mapArrayDefault);
+		std::shared_ptr<Buffer> __ibDefault = _RenderDevice->CreateIndexBuffer(mapArrayDefault);
 
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
@@ -410,26 +439,6 @@ bool ADT_MCNK::Delete()
 		pass->Unbind();
 	}
 */
-
-void ADT_MCNK::Accept(IVisitor& visitor)
-{
-	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
-	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
-
-	float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
-	{
-		return;
-	}
-
-	// Check frustrum
-	if (!checkFrustum(camera))
-	{
-		return;
-	}
-
-	SceneNode::Accept(visitor);
-}
 
 //
 

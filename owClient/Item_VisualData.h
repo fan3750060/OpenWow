@@ -32,8 +32,8 @@ public:
 
 	void Load();
 
-	const vector<ObjectComponent>&  getObjectComponents() const { return m_ObjectComponents; }
-	const vector<GeosetComponent>&  getGeosetComponents() const { return m_GeosetComponents; }
+	const std::vector<ObjectComponent>&  getObjectComponents() const { return m_ObjectComponents; }
+	const std::vector<GeosetComponent>&  getGeosetComponents() const { return m_GeosetComponents; }
 	std::shared_ptr<Texture>                getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
 
 	void Render3D();
@@ -52,8 +52,8 @@ private:
 	char getGenderLetter(Gender::List _gender);
 
 private:
-	vector<ObjectComponent>  m_ObjectComponents;
-	vector<GeosetComponent>  m_GeosetComponents;
+	std::vector<ObjectComponent>  m_ObjectComponents;
+	std::vector<GeosetComponent>  m_GeosetComponents;
 	std::shared_ptr<Texture>         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
 private: // PARENT

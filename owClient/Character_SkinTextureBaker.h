@@ -50,5 +50,5 @@ private:
 	};
 
 	PixelData*	                                              m_Pixels;
-	map<DBC_CharComponent_Sections::List, CharacterSkinRegion> m_Regions;
+	std::map<DBC_CharComponent_Sections::List, CharacterSkinRegion> m_Regions;
 };

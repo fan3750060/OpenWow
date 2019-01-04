@@ -78,12 +78,12 @@ void LightsPass::Render( RenderEventArgs& e )
 }
 
 // Inherited from Visitor
-void LightsPass::Visit( Scene& scene )
+bool LightsPass::Visit( Scene& scene )
 {
-
+	return false;
 }
 
-void LightsPass::Visit( SceneNode& node )
+bool LightsPass::Visit( SceneNode& node )
 {
     Camera* camera = GetRenderEventArgs().Camera;
 
@@ -115,9 +115,10 @@ void LightsPass::Visit( SceneNode& node )
 
     SetPerObjectConstantBufferData( perObjectData );
 
+	return true;
 }
 
-void LightsPass::Visit( IMesh& mesh )
+bool LightsPass::Visit( IMesh& mesh )
 {
     std::shared_ptr<const Material> tempMaterial = mesh.GetMaterial();
 
@@ -129,6 +130,8 @@ void LightsPass::Visit( IMesh& mesh )
 
     // Restore the mesh's original material.
     mesh.SetMaterial( tempMaterial );
+
+	return true;
 }
 
 

@@ -28,8 +28,8 @@ public:
     virtual void PostRender( RenderEventArgs& e );
 
     // Inherited from Visitor
-    virtual void Visit( Scene& scene );
-    virtual void Visit( SceneNode& node );
+    virtual bool Visit( Scene& scene );
+    virtual bool Visit( SceneNode& node );
 
 protected:
 

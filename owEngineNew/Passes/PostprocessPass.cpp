@@ -33,7 +33,8 @@ void PostprocessPass::Render(RenderEventArgs& e)
 	}*/
 }
 
-void PostprocessPass::Visit(SceneNode& node)
+bool PostprocessPass::Visit(SceneNode& node)
 {
 	// Do nothing in this case
+	return false;
 }

@@ -10,7 +10,7 @@ CM2_Viewer_Instance::CM2_Viewer_Instance(M2 * _object) :
 	{
 		setScale(vec3(10.0f));
 
-		CalculateLocalTransform();
+		TransRotScaleToLocalTransform();
 	}
 
 	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));

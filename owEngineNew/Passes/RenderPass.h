@@ -25,6 +25,6 @@ public:
 	virtual void PostRender(RenderEventArgs& e) = 0;
 
 	// Inherited from Visitor
-	virtual void Visit(SceneNode& node) = 0;
-	virtual void Visit(IMesh& mesh) = 0;
+	virtual bool Visit(SceneNode& node) = 0;
+	virtual bool Visit(IMesh& mesh) = 0;
 };

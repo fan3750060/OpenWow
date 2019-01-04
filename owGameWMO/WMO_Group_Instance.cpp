@@ -8,14 +8,14 @@
 // General
 #include "WMO_Group_Instance.h"
 
-CWMO_Group_Instance::CWMO_Group_Instance(const std::weak_ptr<const CWMO_Base_Instance> _parent, const std::shared_ptr<WMO_Group> _object) :
+CWMO_Group_Instance::CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _object) :
 	m_Object(_object),
 	m_PortalsVis(true),
 	m_Calculated(false)
 {
 	{
 		// Matrix
-		CalculateLocalTransform();
+		TransRotScaleToLocalTransform();
 
 		//BoundingBox bbox = _object->m_Bounds;
 		//bbox.calculateCenter();
@@ -27,9 +27,9 @@ CWMO_Group_Instance::CWMO_Group_Instance(const std::weak_ptr<const CWMO_Base_Ins
 	//setSelectable();
 }
 
-void CWMO_Group_Instance::Accept(IVisitor& visitor)
+bool CWMO_Group_Instance::Accept(IVisitor& visitor)
 {
-	SceneNode::Accept(visitor);
+	return SceneNode::Accept(visitor);
 }
 
 bool CWMO_Group_Instance::PreRender3D()

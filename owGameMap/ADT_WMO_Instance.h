@@ -26,7 +26,7 @@ public:
 	void Load();
 
 	// Scene node
-	void Accept(IVisitor& visitor) override;
+	bool Accept(IVisitor& visitor) override;
 
 private:
 	uint32									m_UniqueId;

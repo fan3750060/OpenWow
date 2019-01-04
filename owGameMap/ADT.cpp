@@ -29,21 +29,27 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 {
 	// Scene node params
 	{
-		// Set translate
-		//setTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize), false);
-		// Bounds
-		//BoundingBox bbox
-		//(
-		//	vec3(getTranslate().x,              Math::MaxFloat, getTranslate().z),
-		//	vec3(getTranslate().x + C_TileSize, Math::MinFloat, getTranslate().z + C_TileSize)
-		//);
-		//setBounds(bbox);
+		setTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
+		BoundingBox bbox
+		(
+			vec3(getTranslate().x,              Math::MaxFloat, getTranslate().z),
+			vec3(getTranslate().x + C_TileSize, Math::MinFloat, getTranslate().z + C_TileSize)
+		);
+		setBounds(bbox);
 	}
 }
 
 ADT::~ADT()
 {
 	//Log::Info("ADT Deleted");
+}
+
+//
+// SceneNode
+//
+void ADT::TransRotScaleToLocalTransform()
+{
+	assert1(false);
 }
 
 bool ADT::Load()
@@ -219,7 +225,7 @@ bool ADT::Load()
 						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
 
 						// Create instance
-						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(weak_from_this(), liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
 						instance->SetParent(weak_from_this());
 						m_LiquidsInstances.push_back(instance);
 					}
@@ -289,7 +295,7 @@ bool ADT::Load()
 		if (mdx)
 		{
 			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(mdx, it);
-			inst->Load();
+			inst->CreateInstances();
 			inst->SetParent(shared_from_this());
 			m_MDXsInstances.push_back(inst);
 

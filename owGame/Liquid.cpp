@@ -27,9 +27,9 @@ Liquid::Liquid(uint32 x, uint32 y) :
 
 	for (auto& layer : m_WaterLayers)
 	{
-		_Render->r.setGeometry(layer.m_Mesh);
+		_Render->r.setGeometry(layer->m_Mesh);
 
-		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+		if (layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 		{
 			_Render->getTechniquesMgr()->m_Water->Bind();
 			_Render->getTechniquesMgr()->m_Water->setWorld(_worldMatrix);
@@ -40,10 +40,10 @@ Liquid::Liquid(uint32 x, uint32 y) :
 			_Render->getTechniquesMgr()->m_Magma->setWorld(_worldMatrix);
 		}
 
-		uint32_t texidx = (uint32_t)(_World->EnvM()->animtime 0.0f / 60.0f) % layer.m_Textures.size();
-		_Render->r.setTexture(Material::C_DiffuseTextureIndex, layer.m_Textures[texidx], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
+		uint32_t texidx = (uint32_t)(_World->EnvM()->animtime 0.0f / 60.0f) % layer->m_Textures.size();
+		_Render->r.setTexture(Material::C_DiffuseTextureIndex, layer->m_Textures[texidx], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
 
-		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+		if (layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 		{
 			if (m_SkyManager != nullptr)
 			{
@@ -61,9 +61,9 @@ Liquid::Liquid(uint32 x, uint32 y) :
 			}
 		}
 
-		_Render->r.drawIndexed(0, layer.m_IndicesCnt, 0, layer.m_VerticesCnt, nullptr, false);
+		_Render->r.drawIndexed(0, layer->m_IndicesCnt, 0, layer->m_VerticesCnt, nullptr, false);
 
-		if (layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer.LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+		if (layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 		{
 			_Render->getTechniquesMgr()->m_Water->Unbind();
 		}
@@ -121,18 +121,18 @@ void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFi
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
 
-	Liquid_Layer layer;
-	layer.LiquidType = _type;
-	layer.InitTextures();
-	layer.VertexFormat = _type->Get_LiquidMaterialID()->Get_LiquidVertexFormat();
+	std::shared_ptr<Liquid_Layer> layer = std::make_shared<Liquid_Layer>(_RenderDevice->CreateMesh());
+	layer->LiquidType = _type;
+	layer->InitTextures();
+	layer->VertexFormat = _type->Get_LiquidMaterialID()->Get_LiquidVertexFormat();
 	if (_type->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
 	{
-		layer.VertexFormat = 2;
+		layer->VertexFormat = 2;
 	}
-	layer.x = 0;
-	layer.y = 0;
-	layer.Width = m_TilesX;
-	layer.Height = m_TilesY;
+	layer->x = 0;
+	layer->y = 0;
+	layer->Width = m_TilesX;
+	layer->Height = m_TilesY;
 	
 
 	for (uint32 j = 0; j < m_TilesY + 1; j++)
@@ -141,17 +141,17 @@ void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFi
 		{
 			uint32 p = j * (m_TilesX + 1) + i;
 
-			layer.renderTiles.push_back((flags[p].liquid & 0x08) == 0);
+			layer->renderTiles.push_back((flags[p].liquid & 0x08) == 0);
 
-			if (layer.VertexFormat == 0)
+			if (layer->VertexFormat == 0)
 			{
-				layer.heights.push_back(map[p].waterVert.height);
-				layer.depths.push_back(map[p].waterVert.depth);
+				layer->heights.push_back(map[p].waterVert.height);
+				layer->depths.push_back(map[p].waterVert.depth);
 			}
-			else if (layer.VertexFormat == 1)
+			else if (layer->VertexFormat == 1)
 			{
-				layer.heights.push_back(map[p].magmaVert.height);
-				layer.textureCoords.push_back
+				layer->heights.push_back(map[p].magmaVert.height);
+				layer->textureCoords.push_back
 				(
 					std::make_pair
 					(
@@ -160,9 +160,9 @@ void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFi
 					)
 				);
 			}
-			else if (layer.VertexFormat == 2)
+			else if (layer->VertexFormat == 2)
 			{
-				layer.depths.push_back(map[p].oceanVert.depth);
+				layer->depths.push_back(map[p].oceanVert.depth);
 			}
 		}
 	}
@@ -191,30 +191,30 @@ void Liquid::createBuffer()
 		std::vector<uint16> m_Indices;
 		uint32 cntr = 0;
 
-		for (uint8 y = layer.y; y < layer.Height + layer.y; y++)
+		for (uint8 y = layer->y; y < layer->Height + layer->y; y++)
 		{
-			for (uint8 x = layer.x; x < layer.Width + layer.x; x++)
+			for (uint8 x = layer->x; x < layer->Width + layer->x; x++)
 			{
-				unsigned tx = x - layer.x;
-				unsigned ty = y - layer.y;
+				unsigned tx = x - layer->x;
+				unsigned ty = y - layer->y;
 
 				// p1--p4
 				// |    |
 				// p2--p3
-				unsigned p1 = tx + ty * (layer.Width + 1);
-				unsigned p2 = tx + (ty + 1)     * (layer.Width + 1);
-				unsigned p3 = tx + 1 + (ty + 1) * (layer.Width + 1);
-				unsigned p4 = tx + 1 + ty * (layer.Width + 1);
+				unsigned p1 = tx + ty * (layer->Width + 1);
+				unsigned p2 = tx + (ty + 1)     * (layer->Width + 1);
+				unsigned p3 = tx + 1 + (ty + 1) * (layer->Width + 1);
+				unsigned p4 = tx + 1 + ty * (layer->Width + 1);
 
 				// heights
 				float h1, h2, h3, h4;
 				h1 = h2 = h3 = h4 = 0.0f;
-				if (layer.heights.size() > 0)
+				if (layer->heights.size() > 0)
 				{
-					h1 = layer.heights[p1];
-					h2 = layer.heights[p2];
-					h3 = layer.heights[p3];
-					h4 = layer.heights[p4];
+					h1 = layer->heights[p1];
+					h2 = layer->heights[p2];
+					h3 = layer->heights[p3];
+					h4 = layer->heights[p4];
 				}
 
 				// R_Texture coords
@@ -223,29 +223,29 @@ void Liquid::createBuffer()
 				t2 = std::make_pair(0.0f, 1.0f);
 				t3 = std::make_pair(1.0f, 1.0f);
 				t4 = std::make_pair(1.0f, 0.0f);
-				if (layer.textureCoords.size() > 0)
+				if (layer->textureCoords.size() > 0)
 				{
-					t1 = layer.textureCoords[p1];
-					t2 = layer.textureCoords[p2];
-					t3 = layer.textureCoords[p3];
-					t4 = layer.textureCoords[p4];
+					t1 = layer->textureCoords[p1];
+					t2 = layer->textureCoords[p2];
+					t3 = layer->textureCoords[p3];
+					t4 = layer->textureCoords[p4];
 				}
 
 				// alpha
 				float a1, a2, a3, a4;
 				a1 = a2 = a3 = a4 = 1.0f;
-				if (layer.depths.size() > 0)
+				if (layer->depths.size() > 0)
 				{
-					a1 = minf(static_cast<float>(layer.depths[p1]) / 127.0f, 1.0f); // whats the magic formular here ???
-					a2 = minf(static_cast<float>(layer.depths[p2]) / 127.0f, 1.0f);
-					a3 = minf(static_cast<float>(layer.depths[p3]) / 127.0f, 1.0f);
-					a4 = minf(static_cast<float>(layer.depths[p4]) / 127.0f, 1.0f);
+					a1 = minf(static_cast<float>(layer->depths[p1]) / 127.0f, 1.0f); // whats the magic formular here ???
+					a2 = minf(static_cast<float>(layer->depths[p2]) / 127.0f, 1.0f);
+					a3 = minf(static_cast<float>(layer->depths[p3]) / 127.0f, 1.0f);
+					a4 = minf(static_cast<float>(layer->depths[p4]) / 127.0f, 1.0f);
 				}
 
 				// Skip hidden water tile
-				if (layer.renderTiles.size() != 0)
+				if (layer->renderTiles.size() != 0)
 				{
-					if (!layer.renderTiles[tx + ty * layer.Width])
+					if (!layer->renderTiles[tx + ty * layer->Width])
 					{
 						continue;
 					}
@@ -275,17 +275,25 @@ void Liquid::createBuffer()
 			}
 		}
 
-		layer.m_Mesh = _RenderDevice->CreateMesh();
-		layer.m_Mesh->SetType(SN_TYPE_LQ);
-		layer.m_Mesh->AddVertexBuffer(BufferBinding("POSITION", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesPos));
-		layer.m_Mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesTex));
-		layer.m_Mesh->SetIndexBuffer(_RenderDevice->CreateIndexBuffer(m_Indices));
+		layer->SetType(SN_TYPE_LQ);
+		layer->AddVertexBuffer(BufferBinding("POSITION", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesPos));
+		layer->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesTex));
+		layer->SetIndexBuffer(_RenderDevice->CreateIndexBuffer(m_Indices));
 
-		layer.m_Material = std::make_shared<LiquidMaterial>();
-		layer.m_Material->SetTexture(0, layer.m_Textures[0]);
+		std::shared_ptr<Material> liqMaterial = std::make_shared<LiquidMaterial>();
+		liqMaterial->SetTexture(0, layer->m_Textures[0]);
 
-		layer.m_Mesh->SetMaterial(layer.m_Material);
+		layer->SetMaterial(liqMaterial);
 	}
+}
+
+Liquid_Layer::Liquid_Layer(std::shared_ptr<IMesh> _mesh) :
+	MeshWrapper(_mesh)
+{
+}
+
+Liquid_Layer::~Liquid_Layer()
+{
 }
 
 void Liquid_Layer::InitTextures()

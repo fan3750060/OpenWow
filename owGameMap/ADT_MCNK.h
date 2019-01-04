@@ -14,15 +14,14 @@ public:
 	virtual ~ADT_MCNK();
 
 	// SceneNode
-	void CalculateLocalTransform(bool _isRotationQuat = false) override { assert1(false); }
+	void TransRotScaleToLocalTransform() override;
+	bool Accept(IVisitor& visitor) override;
 
 	// ILoadable
 	bool Load() override;
 	bool Delete() override;
 	void setLoaded() {}
 	bool isLoaded() const { return true; } // TODO FIXME
-
-	void Accept(IVisitor& visitor) override;
 
 public:
 	std::shared_ptr<IFile> m_File;
@@ -37,10 +36,7 @@ public:
 	std::shared_ptr<Texture> m_BlendRBGShadowATexture;
 
 	// Qulity
-	std::shared_ptr<Buffer> __ibHigh;
 	std::shared_ptr<IMesh> __geomHigh;
-
-	std::shared_ptr<Buffer> __ibDefault;
 	std::shared_ptr<IMesh> __geomDefault;
 
 private: // PARENT

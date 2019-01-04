@@ -9,7 +9,7 @@ public:
 	WMO_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~WMO_Pass();
 
-	virtual void Visit(IMesh& mesh);
+	virtual bool Visit(IMesh& mesh);
 
 protected:
 

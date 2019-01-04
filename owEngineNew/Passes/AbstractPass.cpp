@@ -33,8 +33,12 @@ void AbstractPass::PostRender(RenderEventArgs& e)
 
 // Inherited from Visitor
 
-void AbstractPass::Visit(SceneNode& node)
-{}
+bool AbstractPass::Visit(SceneNode& node)
+{
+	return false;
+}
 
-void AbstractPass::Visit(IMesh& mesh)
-{}
+bool AbstractPass::Visit(IMesh& mesh)
+{
+	return false;
+}

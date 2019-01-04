@@ -26,12 +26,9 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::shared_ptr<M2> _mdxObject, const
 
 	// Scene node params
 	{
-		// Convert
-		setTranslate(Fix_XZmY(_placement.position), false);
-		setRotateQuat(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y), false);
-		setScale(vec3(_placement.scale, -_placement.scale, -_placement.scale), false);
-		//
-		CalculateLocalTransform(true);
+		setTranslate(Fix_XZmY(_placement.position));
+		setRotateQuat(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y));
+		setScale(vec3(_placement.scale, -_placement.scale, -_placement.scale));
 	}
 }
 

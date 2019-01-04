@@ -11,10 +11,12 @@ WDL_Node_Pass::WDL_Node_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<Pipel
 WDL_Node_Pass::~WDL_Node_Pass()
 {}
 
-void WDL_Node_Pass::Visit(IMesh& mesh)
+bool WDL_Node_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_WDL_NODE)
 	{
-		mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
 	}
+
+	return false;
 }

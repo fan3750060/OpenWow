@@ -13,14 +13,14 @@ ADT_WMO_Instance::ADT_WMO_Instance(std::shared_ptr<WMO> _wmoObject, ADT_MODF& _p
 	// Scene node params
 	{
 		// Translate
-		setTranslate(_placementInfo.position, false);
+		setTranslate(_placementInfo.position);
 		// Rotate
 		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - glm::half_pi<float>();
-		setRotate(vec3(rotate.z, rotate.y, rotate.x), false);
+		setRotate(vec3(rotate.z, rotate.y, rotate.x));
 		// Matrix
-		CalculateLocalTransform();
+		TransRotScaleToLocalTransform();
 		// Bounds
 		BoundingBox bbox(_placementInfo.boundingBox.min, _placementInfo.boundingBox.max);
 		setBounds(bbox);
@@ -37,7 +37,7 @@ void ADT_WMO_Instance::Load()
 	InitTransform();
 }
 
-void ADT_WMO_Instance::Accept(IVisitor & visitor)
+bool ADT_WMO_Instance::Accept(IVisitor& visitor)
 {
 	//if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 	//{
@@ -45,9 +45,13 @@ void ADT_WMO_Instance::Accept(IVisitor & visitor)
 	//}
 
 	// SceneNode
-	CWMO_Base_Instance::Accept(visitor);
+	if (CWMO_Base_Instance::Accept(visitor))
+	{
+		//m_AlreadyDraw.insert(m_UniqueId);
+		return true;
+	}
 
-	//m_AlreadyDraw.insert(m_UniqueId);
+	return false;
 }
 
 //

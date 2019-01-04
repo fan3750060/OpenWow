@@ -40,23 +40,11 @@
     <ClInclude Include="Bindings.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="OpenGLAdapter.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared\owIntfs.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="SkyManager.h">
       <Filter>Game\Wow</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Render.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderDevice.h">
-      <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
       <Filter>GUI</Filter>
@@ -65,7 +53,10 @@
       <Filter>Networking</Filter>
     </ClInclude>
     <ClInclude Include="Visitor.h">
-      <Filter>RenderNew</Filter>
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNodeProvider.h">
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +72,6 @@
     <Filter Include="Core\Debug, Console &amp; Log">
       <UniqueIdentifier>{ea46065f-3629-447b-86c7-eaf0605943d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render">
-      <UniqueIdentifier>{70f72ad1-2656-4af2-ac49-a89a3f92b159}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Wow">
       <UniqueIdentifier>{21602bdc-920c-4d59-bd62-644ceb5f4589}</UniqueIdentifier>
     </Filter>
@@ -93,7 +81,7 @@
     <Filter Include="Networking">
       <UniqueIdentifier>{eaf559ac-5eba-4217-99fa-ba2e73a8d6a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderNew">
+    <Filter Include="Render">
       <UniqueIdentifier>{98b09ec3-003c-4139-bfc6-71ba4f9d8c85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

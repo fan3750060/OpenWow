@@ -16,7 +16,7 @@ void CItem_M2Instance::AddVisualEffect(std::shared_ptr<CM2_Base_Instance> _visua
 
 void CItem_M2Instance::Render3D()
 {
-	CM2_Base_Instance::Render3D();
+	//CM2_Base_Instance::Render3D();
 
 	// Visual effects
 	for (auto& vis : m_VisualEffects)

@@ -26,7 +26,7 @@ public:
 	const CItem_VisualData* getItemTextureComponents(InventoryType::List _slot) const { return m_VisualItems[_slot]; }
 
 	// IRenderable
-	void Render3D() override;
+	void Render3D();
 
 private:
 	void CreateCharacterModel();
@@ -38,5 +38,5 @@ private:
 
 private:
 	CharacterTemplate			m_Template;
-	vector<CItem_VisualData*>   m_VisualItems;
+	std::vector<CItem_VisualData*>   m_VisualItems;
 };

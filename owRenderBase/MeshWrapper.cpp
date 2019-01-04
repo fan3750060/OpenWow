@@ -47,12 +47,12 @@ std::shared_ptr<const Material> MeshWrapper::GetMaterial() const
 	return m_Mesh->GetMaterial();
 }
 
-void MeshWrapper::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool MeshWrapper::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
-	m_Mesh->Render(renderEventArgs, perObject, indexStartLocation, indexCnt);
+	return m_Mesh->Render(renderEventArgs, perObject, indexStartLocation, indexCnt);
 }
 
-void MeshWrapper::Accept(IVisitor& visitor)
+bool MeshWrapper::Accept(IVisitor& visitor)
 {
-	visitor.Visit(*this);
+	return visitor.Visit(*this);
 }

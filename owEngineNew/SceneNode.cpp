@@ -13,6 +13,7 @@ SceneNode::SceneNode(cmat4 localTransform)
 	: m_LocalTransform(localTransform)
 	, m_Name("SceneNode")
 	, m_Type(SN_TYPE_NONE)
+	, m_IsRotateQuat(false)
 	, m_Scale(1.0f, 1.0f, 1.0f)
 {
 	m_InverseTransform = glm::inverse(m_LocalTransform);
@@ -77,12 +78,12 @@ mat4 SceneNode::GetParentWorldTransform() const
 	return parentTransform;
 }
 
-void SceneNode::CalculateLocalTransform(bool _isRotationQuat)
+void SceneNode::TransRotScaleToLocalTransform()
 {
 	m_LocalTransform = mat4();
 
 	m_LocalTransform = glm::translate(m_LocalTransform, m_Translate);
-	if (_isRotationQuat)
+	if (m_IsRotateQuat)
 	{
 		m_LocalTransform *= glm::toMat4(m_RotateQuat);
 	}
@@ -193,9 +194,9 @@ void SceneNode::Update(Camera* camera)
 {
 }
 
-void SceneNode::Accept(IVisitor& visitor)
+bool SceneNode::Accept(IVisitor& visitor)
 {
-	visitor.Visit(*this);
+	bool visitResult = visitor.Visit(*this);
 
 	// Visit meshes.
 	for (auto mesh : m_Meshes)
@@ -208,6 +209,8 @@ void SceneNode::Accept(IVisitor& visitor)
 	{
 		child->Accept(visitor);
 	}
+
+	return visitResult;
 }
 
 bool SceneNode::checkFrustum(const Camera& _camera) const

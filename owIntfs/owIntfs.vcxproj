@@ -29,10 +29,7 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Networking.h" />
-    <ClInclude Include="OpenGLAdapter.h" />
-    <ClInclude Include="Render.h" />
-    <ClInclude Include="RenderDevice.h" />
-    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneNodeProvider.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SkyManager.h" />
     <ClInclude Include="stdafx.h" />

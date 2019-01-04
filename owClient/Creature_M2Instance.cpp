@@ -5,13 +5,10 @@
 
 Creature_M2Instance::Creature_M2Instance() : 
 	CM2_Base_Instance(nullptr)
-{
-
-}
+{}
 
 Creature_M2Instance::~Creature_M2Instance()
-{
-}
+{}
 
 bool Creature_M2Instance::isMeshEnabled(uint32 _index) const
 {

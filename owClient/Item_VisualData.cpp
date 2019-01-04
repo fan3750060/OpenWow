@@ -172,7 +172,7 @@ void CItem_VisualData::InitObjectComponents()
 
 				std::shared_ptr<M2> visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
 
-				std::shared_ptr<CM2_Base_Instance> visInstance = make_shared<CM2_Base_Instance>(itemObjectInstance, visModel);
+				std::shared_ptr<CM2_Base_Instance> visInstance = std::make_shared<CM2_Base_Instance>(itemObjectInstance, visModel);
 				const CM2_Part_Attachment* visAttach = nullptr;
 
 				if (itemObjectInstance->getM2()->getMiscellaneous()->isAttachmentExists((M2_AttachmentType::List)j))

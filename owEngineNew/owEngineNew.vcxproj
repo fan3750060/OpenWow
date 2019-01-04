@@ -29,10 +29,8 @@
     <ClCompile Include="Passes\InvokeFunctionPass.cpp" />
     <ClCompile Include="Passes\LightPickingPass.cpp" />
     <ClCompile Include="Passes\LightsPass.cpp" />
-    <ClCompile Include="Passes\OpaquePass.cpp" />
     <ClCompile Include="Passes\PostprocessPass.cpp" />
     <ClCompile Include="Passes\RenderTechnique.cpp" />
-    <ClCompile Include="Passes\TransparentPass.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -63,11 +61,9 @@
     <ClInclude Include="Passes\InvokeFunctionPass.h" />
     <ClInclude Include="Passes\LightPickingPass.h" />
     <ClInclude Include="Passes\LightsPass.h" />
-    <ClInclude Include="Passes\OpaquePass.h" />
     <ClInclude Include="Passes\PostprocessPass.h" />
     <ClInclude Include="Passes\RenderPass.h" />
     <ClInclude Include="Passes\RenderTechnique.h" />
-    <ClInclude Include="Passes\TransparentPass.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneNode.h" />

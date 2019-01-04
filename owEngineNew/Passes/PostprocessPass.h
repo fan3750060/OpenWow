@@ -14,7 +14,7 @@ public:
     // Render the pass. This should only be called by the RenderTechnique.
     virtual void Render( RenderEventArgs& e );
 
-    virtual void Visit( SceneNode& node );
+    virtual bool Visit( SceneNode& node );
 
 protected:
 

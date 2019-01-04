@@ -11,10 +11,12 @@ Liquid_Pass::Liquid_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineS
 Liquid_Pass::~Liquid_Pass()
 {}
 
-void Liquid_Pass::Visit(IMesh& mesh)
+bool Liquid_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_LQ)
 	{
-		mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
 	}
+
+	return false;
 }

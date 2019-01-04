@@ -22,8 +22,8 @@ public:
 	virtual void PostRender(RenderEventArgs& e);
 
 	// Inherited from Visitor
-	virtual void Visit(SceneNode& node);
-	virtual void Visit(IMesh& mesh);
+	virtual bool Visit(SceneNode& node);
+	virtual bool Visit(IMesh& mesh);
 
 private:
 	bool m_Enabled;

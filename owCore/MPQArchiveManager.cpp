@@ -9,7 +9,8 @@
 #if (VERSION == VERSION_Vanila)
 const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
 #elif (VERSION == VERSION_WotLK)
-const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
+//const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
+const char* archives = "C:/Data_3.3.5/";
 #endif
 
 //

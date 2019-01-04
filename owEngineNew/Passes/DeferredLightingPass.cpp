@@ -157,12 +157,12 @@ void DeferredLightingPass::PostRender(RenderEventArgs& e)
 }
 
 // Inherited from Visitor
-void DeferredLightingPass::Visit(Scene& scene)
+bool DeferredLightingPass::Visit(Scene& scene)
 {
-
+	return false;
 }
 
-void DeferredLightingPass::Visit(SceneNode& node)
+bool DeferredLightingPass::Visit(SceneNode& node)
 {
 	Camera* camera = GetRenderEventArgs().Camera;
 
@@ -200,4 +200,6 @@ void DeferredLightingPass::Visit(SceneNode& node)
 	}
 
 	SetPerObjectConstantBufferData(perObjectData);
+
+	return true;
 }

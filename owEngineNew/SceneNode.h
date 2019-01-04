@@ -19,19 +19,19 @@ public:
 	virtual void SetName(cstring name);
 
 	// Translate
-	void setTranslate(cvec3 _translate, bool _calculateMatrix = true) { if (m_Translate == _translate) return; m_Translate = _translate; if (_calculateMatrix) CalculateLocalTransform(); }
+	void setTranslate(cvec3 _translate) { m_Translate = _translate;  }
 	cvec3 getTranslate() const { return m_Translate; }
 
 	// Rotate
-	void setRotate(cvec3 _rotate, bool _calculateMatrix = true) { if (m_Rotate == _rotate) return; m_Rotate = _rotate; if (_calculateMatrix) CalculateLocalTransform(); }
+	void setRotate(cvec3 _rotate) { m_Rotate = _rotate;  }
 	cvec3 getRotate() const { return m_Rotate; }
 
 	// Rotate Quaternion
-	void setRotateQuat(cquat _rotate, bool _calculateMatrix = true) { m_RotateQuat = _rotate; if (_calculateMatrix) CalculateLocalTransform(true); }
+	void setRotateQuat(cquat _rotate) { m_RotateQuat = _rotate; m_IsRotateQuat = true; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
 
 	// Scale
-	void setScale(cvec3 _scale, bool _calculateMatrix = true) { if (m_Scale == _scale) return; m_Scale = _scale; if (_calculateMatrix) CalculateLocalTransform(); }
+	void setScale(cvec3 _scale) { m_Scale = _scale; }
 	cvec3 getScale() const { return m_Scale; }
 
 	// Bounds
@@ -90,7 +90,7 @@ public:
 	/**
 	 * Allow a visitor to visit this node.
 	 */
-	virtual void Accept(IVisitor& visitor);
+	virtual bool Accept(IVisitor& visitor);
 
 	// Checks
 	bool checkFrustum(const Camera& _camera) const;
@@ -99,7 +99,7 @@ public:
 
 protected:
 	virtual mat4 GetParentWorldTransform() const;
-	virtual void CalculateLocalTransform(bool _isRotationQuat = false);
+	virtual void TransRotScaleToLocalTransform();
 
 private:
 	typedef std::vector<std::shared_ptr<SceneNode>> NodeList;
@@ -114,6 +114,7 @@ private:
 	vec3                m_Translate;
 	vec3				m_Rotate;
 	quat				m_RotateQuat;
+	bool                m_IsRotateQuat;
 	vec3                m_Scale;
 	BoundingBox         m_Bounds;
 	// This is the inverse of the local -> world transform.

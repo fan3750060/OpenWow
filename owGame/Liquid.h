@@ -29,8 +29,12 @@ struct MH2O_Header
 	uint32 offsetAttributes;
 };
 
-struct Liquid_Layer
+class Liquid_Layer : public MeshWrapper
 {
+public:
+	Liquid_Layer(std::shared_ptr<IMesh> _mesh);
+	virtual ~Liquid_Layer();
+
 	const DBC_LiquidTypeRecord* LiquidType;
 	uint16 VertexFormat;
 
@@ -54,8 +58,6 @@ struct Liquid_Layer
 	// Render
 	void InitTextures();
 
-	std::shared_ptr<IMesh>                   m_Mesh;
-	std::shared_ptr<Material>                m_Material;
 	std::vector<std::shared_ptr<Texture>>    m_Textures;
 };
 #include __PACK_END
@@ -69,19 +71,18 @@ protected:
 	void initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f);
 	void createBuffer();
 	
-
 public:
-	uint32						m_TilesX, m_TilesY;
-	uint32						m_TilesCount;
-	BoundingBox					m_Bounds;
+	uint32                                                              m_TilesX, m_TilesY;
+	uint32                                                              m_TilesCount;
+	BoundingBox                                                         m_Bounds;
 
-	std::vector<Liquid_Layer>	m_WaterLayers;
+	std::vector<std::shared_ptr<Liquid_Layer>>							m_WaterLayers;
 
-	float						ydir;
+	float                                                               ydir;
 
 private:
-	ISkyManager*				m_SkyManager;
-	const CGroupQuality& m_QualitySettings;
+	ISkyManager*                                                        m_SkyManager;
+	const CGroupQuality&                                                m_QualitySettings;
 
 private:
 	const vec3 defaultNormal = vec3(0.0f, 1.0f, 0.0f);

@@ -144,7 +144,7 @@ void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender
 
 void Character::Render3D()
 {
-	CM2_Base_Instance::Render3D();
+	//CM2_Base_Instance::Render3D();
 
 	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
 	{

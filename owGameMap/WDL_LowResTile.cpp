@@ -15,7 +15,7 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std
 	SetType(SN_TYPE_WDL_NODE);
 }
 
-void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
 	std::shared_ptr<const MapController> MapController = m_MapController.lock();
 	assert1(MapController != NULL);
@@ -30,8 +30,8 @@ void CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<C
 
 	if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
 	{
-		return;
+		return false;
 	}
 
-	base::Render(renderEventArgs, perObject);
+	return base::Render(renderEventArgs, perObject);
 }

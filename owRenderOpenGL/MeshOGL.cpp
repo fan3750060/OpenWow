@@ -72,7 +72,7 @@ std::shared_ptr<const Material> MeshOGL::GetMaterial() const
 	return m_pMaterial;
 }
 
-void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
 	if (m_pMaterial)
 	{
@@ -115,11 +115,13 @@ void MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer
 		}
 	}
 	glBindVertexArray(0);
+
+	return true;
 }
 
-void MeshOGL::Accept(IVisitor& visitor)
+bool MeshOGL::Accept(IVisitor& visitor)
 {
-	visitor.Visit(*this);
+	return visitor.Visit(*this);
 }
 
 void MeshOGL::Commit(std::weak_ptr<ShaderOGL> _shader)

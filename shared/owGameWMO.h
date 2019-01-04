@@ -17,3 +17,4 @@
 #include "../owGameWMO/WMOsManager.h"
 
 #include "../owGameWMO/CreatePasses.h"
+#include "../owGameWMO/WMO_Pass.h"

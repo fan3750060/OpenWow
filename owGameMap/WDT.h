@@ -32,14 +32,16 @@ struct WDT_MAIN
 class MapController;
 // FORWARD END
 
-class WDT
+class WDT : public ISceneNodeProvider
 {
 	friend MapController;
 public:
 	WDT(std::weak_ptr<MapController> _mapController);
 	virtual ~WDT();
 
-	void CreateInsances(std::weak_ptr<SceneNode> _parent);
+	// ISceneNodeProvider
+	void CreateInsances(std::weak_ptr<SceneNode> _parent) override;
+
 	void Load();
 
 	const WDT_MPHD_Flags* getFlags() const { return &m_Flag; }

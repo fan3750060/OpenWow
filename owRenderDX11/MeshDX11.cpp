@@ -63,7 +63,7 @@ std::shared_ptr<const Material> MeshDX11::GetMaterial() const
 	return m_pMaterial;
 }
 
-void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
 	if (m_pMaterial)
 	{
@@ -120,9 +120,11 @@ void MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 	}
 	else
 		fail1();
+
+	return true;
 }
 
-void MeshDX11::Accept(IVisitor& visitor)
+bool MeshDX11::Accept(IVisitor& visitor)
 {
-	visitor.Visit(*this);
+	return visitor.Visit(*this);
 }

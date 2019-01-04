@@ -29,7 +29,7 @@ void CWMO_Base_Instance::InitTransform()
 void CWMO_Base_Instance::EmptyTransformAndBounds()
 {
 	// Matrix
-	CalculateLocalTransform();
+	TransRotScaleToLocalTransform();
 
 	// Bounds
 	BoundingBox bbox;
@@ -41,7 +41,7 @@ void CWMO_Base_Instance::EmptyTransformAndBounds()
 
 #define WMO_DISABLE_PORTALS
 
-void CWMO_Base_Instance::Accept(IVisitor & visitor)
+bool CWMO_Base_Instance::Accept(IVisitor & visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
@@ -53,7 +53,7 @@ void CWMO_Base_Instance::Accept(IVisitor & visitor)
 
 	if (!checkFrustum(camera))
 	{
-		return;
+		return false;
 	}
 
 #ifndef WMO_DISABLE_PORTALS
@@ -63,5 +63,5 @@ void CWMO_Base_Instance::Accept(IVisitor & visitor)
 	}
 #endif
 
-	SceneNode::Accept(visitor);
+	return SceneNode::Accept(visitor);
 }

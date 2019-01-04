@@ -8,8 +8,8 @@ public:
 	void AddVisualEffect(std::shared_ptr<CM2_Base_Instance> _visualEffect);
 
 	// IRenderable3D
-	void Render3D() override;
+	void Render3D();
 
 private:
-	vector<std::shared_ptr<CM2_Base_Instance>> m_VisualEffects;
+	std::vector<std::shared_ptr<CM2_Base_Instance>> m_VisualEffects;
 };

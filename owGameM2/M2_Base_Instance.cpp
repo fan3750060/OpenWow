@@ -34,7 +34,7 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 // CM2_Base_Instance
 
-void CM2_Base_Instance::Load()
+void CM2_Base_Instance::CreateInstances()
 {
 	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode>(shared_from_this()));
 }
@@ -55,8 +55,8 @@ void CM2_Base_Instance::setM2(std::shared_ptr<M2> _model)
 	assert1(_model != nullptr);
 	m_M2 = _model;
 
-	InitLocal();
-	CalculateLocalTransform();
+	InitAnimator();
+	TransRotScaleToLocalTransform();
 }
 
 // Mesh & textures provider
@@ -93,7 +93,14 @@ void CM2_Base_Instance::Update(double _time, double _dTime)
 	m_M2->update(_time, _dTime);
 }
 
-void CM2_Base_Instance::Accept(IVisitor& visitor)
+void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
+{
+	SceneNode::SetParent(pNode);
+
+	TransRotScaleToLocalTransform();
+}
+
+bool CM2_Base_Instance::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
@@ -107,12 +114,12 @@ void CM2_Base_Instance::Accept(IVisitor& visitor)
 	// Check frustrum
 	if (!checkFrustum(camera))
 	{
-		return;
+		return false;
 	}
 
 	/*if (m_Attached != nullptr)
 	{
-		CalculateLocalTransform();
+		TransRotScaleToLocalTransform();
 	}
 
 	if (m_M2->isAnimated())
@@ -140,15 +147,10 @@ void CM2_Base_Instance::Accept(IVisitor& visitor)
 	//m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time)*/);
 
 	// SceneNode
-	SceneNode::Accept(visitor);
+	return SceneNode::Accept(visitor);
 }
 
-
-//-----------------
-// ISceneNode
-//-----------------
-
-void CM2_Base_Instance::InitLocal()
+void CM2_Base_Instance::InitAnimator()
 {
 	// Create animator
 	if (m_M2->isAnimated())
@@ -158,7 +160,7 @@ void CM2_Base_Instance::InitLocal()
 	}
 }
 
-void CM2_Base_Instance::CalculateLocalTransform(bool _isRotationQuat)
+void CM2_Base_Instance::TransRotScaleToLocalTransform()
 {
 	if (m_Attached != nullptr)
 	{
@@ -179,7 +181,7 @@ void CM2_Base_Instance::CalculateLocalTransform(bool _isRotationQuat)
 		return;
 	}
 
-	SceneNode::CalculateLocalTransform(_isRotationQuat);
+	SceneNode::TransRotScaleToLocalTransform(/*TRUE*/);
 
 	BoundingBox bbox = m_M2->m_Bounds;
 	bbox.transform(GetWorldTransfom());

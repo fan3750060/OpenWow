@@ -23,8 +23,6 @@
 #include "../owEngineNew/Passes/CopyBufferPass.h"
 #include "../owEngineNew/Passes/CopyTexturePass.h"
 #include "../owEngineNew/Passes/GenerateMipMapsPass.h"
-#include "../owEngineNew/Passes/OpaquePass.h"
-#include "../owEngineNew/Passes/TransparentPass.h"
 #include "../owEngineNew/Passes/PostprocessPass.h"
 #include "../owEngineNew/Passes/BeginQueryPass.h"
 #include "../owEngineNew/Passes/EndQueryPass.h"

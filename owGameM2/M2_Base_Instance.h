@@ -12,7 +12,7 @@ public:
 	void setM2(std::shared_ptr<M2> _model);
 	std::shared_ptr<M2> getM2() const { return m_M2; }
 
-	void Load();
+	void CreateInstances();
 
 	void Attach(const CM2_Part_Attachment* _attachment);
 	void Detach();
@@ -38,11 +38,12 @@ public:
 	void Update(double _time, double _dTime);
 
 	// SceneNode
-	void Accept(IVisitor& visitor) override;
+	void SetParent(std::weak_ptr<SceneNode> pNode);
+	bool Accept(IVisitor& visitor) override;
 
 protected:
-	void InitLocal();
-	virtual void CalculateLocalTransform(bool _isRotationQuat = false) override;
+	void InitAnimator();
+	virtual void TransRotScaleToLocalTransform() override;
 
 private:
 	// Color & Alpha

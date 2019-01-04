@@ -16,7 +16,7 @@ public:
 
 	uint32 getBlendMode() const { return m_WMOMaterial->getBlendMode(); }
 
-	void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
+	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
 
 private:
 	const SWMO_Group_BatchDef                   m_Proto;

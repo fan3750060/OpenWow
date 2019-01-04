@@ -15,10 +15,12 @@ CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::sha
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	m_TestMaterial = std::make_shared<M2_Material>();
+
 	SetType(SN_TYPE_M2);
+	SetMaterial(m_TestMaterial);
 }
 
-void CM2_Skin_Batch::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool CM2_Skin_Batch::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
 {
 	/*uint32 meshPartID = m_SkinSection->getProto().meshPartID;
 	if (!_instance->isMeshEnabled(meshPartID))
@@ -56,9 +58,8 @@ void CM2_Skin_Batch::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<C
 		pass->SetTextureAnimMatrix(m_TextureTransform->getValue());
 	}*/
 
-	SetMaterial(m_TestMaterial);
-	MeshWrapper::Render(renderEventArgs, perObject, 0, m_SkinSection->getProto().indexCount);
-	SetMaterial(nullptr);
+	
+	return MeshWrapper::Render(renderEventArgs, perObject, 0, m_SkinSection->getProto().indexCount);
 }
 
 /*void CM2_Skin_Batch::Render(CM2_Base_Instance* _instance)

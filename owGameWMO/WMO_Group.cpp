@@ -30,16 +30,17 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		_parent.lock()->AddMesh(batch);
 	}
 
-	/*if (m_WMOLiqiud != nullptr)
+	if (m_WMOLiqiud != nullptr)
 	{
 		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
-		std::shared_ptr<CWMO_Liquid_Instance> liquid = std::make_shared<CWMO_Liquid_Instance>(_parent, m_WMOLiqiud, realPos, weak_from_this());
+		std::shared_ptr<CWMO_Liquid_Instance> liquid = std::make_shared<CWMO_Liquid_Instance>(m_WMOLiqiud, realPos, weak_from_this());
+		liquid->SetParent(_parent);
 		_parent.lock()->addLiquidInstance(liquid);
-	}*/
+	}
 
-	for (const auto& index : m_DoodadsPlacementIndexes)
+	/*for (const auto& index : m_DoodadsPlacementIndexes)
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
@@ -47,11 +48,11 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		if (mdx)
 		{
 			std::shared_ptr<CWMO_Doodad_Instance> inst = std::make_shared<CWMO_Doodad_Instance>(mdx, weak_from_this(), index, placement);
-			inst->Load();
+			inst->CreateInstances();
 			inst->SetParent(_parent);
 			_parent.lock()->addDoodadInstance(inst);
 		}
-	}
+	}*/
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)

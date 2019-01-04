@@ -107,8 +107,8 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		const float x = 36;
-		const float y = 33;
+		const float x = 30;
+		const float y = 22;
 
 		new WMOsManager();
 		new CM2_Manager();
@@ -116,7 +116,7 @@ int main(int argumentCount, char* arguments[])
 		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
 
-		contr->MapPreLoad(*DBC_Map[1]);
+		contr->MapPreLoad(*DBC_Map[1/*571*/]);
 		contr->MapLoad();
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);
@@ -137,10 +137,11 @@ int main(int argumentCount, char* arguments[])
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-		AddMapPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
+		AddWDLPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
+		AddMCNKPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddWMOPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-		AddM2Passes(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddLiquidPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
+		AddM2Passes(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 
 		app.Run();
 	}
@@ -155,6 +156,9 @@ int main(int argumentCount, char* arguments[])
 void OnPreRender(RenderEventArgs& e)
 {
 	g_pFrameQuery->Begin(e.FrameCounter);
+
+	ADT_WMO_Instance::reset();
+	ADT_MDX_Instance::reset();
 }
 
 void OnRender(RenderEventArgs& e)

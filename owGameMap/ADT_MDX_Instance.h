@@ -21,7 +21,8 @@ public:
 	ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo);
 	virtual ~ADT_MDX_Instance();
 
-	void Accept(IVisitor& visitor) override;
+	// SceneNode
+	bool Accept(IVisitor& visitor) override;
 
 public: 
 	uint32				m_UniqueId;

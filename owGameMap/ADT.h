@@ -16,6 +16,10 @@ public:
 	ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ);
 	virtual ~ADT();
 
+	// SceneNode
+	void TransRotScaleToLocalTransform() override;
+
+
 	std::shared_ptr<ADT_MCNK> getChunk(int32 x, int32 z)
 	{
 		if (x < 0 || x >= C_ChunksInTile || z < 0 || z >= C_ChunksInTile)

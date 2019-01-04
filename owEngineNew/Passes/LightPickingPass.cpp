@@ -27,10 +27,12 @@ void LightPickingPass::PreRender(RenderEventArgs& e)
 	base::PreRender(e);
 }
 
-void LightPickingPass::Visit(IMesh& mesh)
+bool LightPickingPass::Visit(IMesh& mesh)
 {
 	m_pLightParams->m_LightIndex = GetCurrentLightIndex();
 	m_LightParamsCB->Set(*m_pLightParams);
 
 	mesh.Render(GetRenderEventArgs(), m_LightParamsCB);
+
+	return true;
 }

@@ -14,7 +14,7 @@ public:
 	typedef std::vector<std::shared_ptr<CWMO_Doodad_Instance>> DoodadInstances;
 	typedef std::vector<std::shared_ptr<CWMO_Liquid_Instance>> LuqidInstances;
 public:
-	CWMO_Group_Instance(const std::weak_ptr<const CWMO_Base_Instance> _parent, const std::shared_ptr<WMO_Group> _object);
+	CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _object);
 
 	const std::shared_ptr<WMO_Group> getObject() const { return m_Object; }
 
@@ -24,7 +24,7 @@ public:
 	void addLiquidInstance(std::shared_ptr<CWMO_Liquid_Instance> _liquid) { m_Liquids.push_back(_liquid); }
 	const LuqidInstances& getLiquidInstances() { return m_Liquids; }
 
-	void Accept(IVisitor& visitor) override;
+	bool Accept(IVisitor& visitor) override;
 
 	// Disable render
 	bool PreRender3D();

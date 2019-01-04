@@ -29,11 +29,14 @@ WMO::~WMO()
 	SafeDeleteArray(m_DoodadsFilenames);
 }
 
-void WMO::CreateInsances(std::weak_ptr<CWMO_Base_Instance> _parent)
+//
+// ISceneNodeProvider
+//
+void WMO::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
 	for (auto& it : m_Groups)
 	{
-		std::shared_ptr<CWMO_Group_Instance> groupInstance = std::make_shared<CWMO_Group_Instance>(_parent, it);
+		std::shared_ptr<CWMO_Group_Instance> groupInstance = std::make_shared<CWMO_Group_Instance>(it);
 		groupInstance->SetParent(_parent);
 
 		/*_parent.lock()->AddGroupInstance(groupInstance);

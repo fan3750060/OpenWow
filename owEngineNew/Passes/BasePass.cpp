@@ -60,7 +60,7 @@ void BasePass::PostRender(RenderEventArgs& e)
 
 // Inherited from Visitor
 
-void BasePass::Visit(SceneNode& node)
+bool BasePass::Visit(SceneNode& node)
 {
 	Camera* camera = GetRenderEventArgs().Camera;
 	if (camera)
@@ -75,16 +75,23 @@ void BasePass::Visit(SceneNode& node)
 		SetPerObjectConstantBufferData(perObjectData);
 
 		node.Update(camera);
+
+		return true;
 	}
+
+	return false;
 }
 
-void BasePass::Visit(IMesh& mesh)
+bool BasePass::Visit(IMesh& mesh)
 {
 	std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial && m_pRenderEventArgs)
 	{
 		mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
+		return true;
 	}
+
+	return false;
 }
 
 void BasePass::SetRenderEventArgs(RenderEventArgs& e)

@@ -16,7 +16,7 @@ class CM2_Skin_Batch : public MeshWrapper
 public:
 	CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::shared_ptr<IMesh> _mesh);
 
-	void Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
+	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0) override;
 
 	int32 getPriorityPlan() const { return m_PriorityPlan; }
 	const std::weak_ptr<CM2_SkinSection> getSkin() const { return m_SkinSection; }

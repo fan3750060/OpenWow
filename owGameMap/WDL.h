@@ -7,13 +7,15 @@
 class MapController;
 // FORWARD END
 
-class WDL
+class WDL : public ISceneNodeProvider
 {
 public:
 	WDL(std::weak_ptr<MapController> _mapController);
 	virtual ~WDL();
 
-	void CreateInsances(std::weak_ptr<SceneNode> _parent);
+	// ISceneNodeProvider
+	void CreateInsances(std::weak_ptr<SceneNode> _parent) override;
+
 	void Load();
 
 	std::shared_ptr<Texture> getMinimap() { return m_Minimap; }

@@ -49,6 +49,8 @@ void OnUpdate(UpdateEventArgs& e)
 
 void OnKeyPressed(KeyEventArgs& e)
 {
+	CGroupQuality& qualitySettings = GetSettingsGroup<CGroupQuality>();
+
 	switch (e.Key)
 	{
 	case KeyCode::W:
@@ -86,6 +88,12 @@ void OnKeyPressed(KeyEventArgs& e)
 		g_CameraMovement.TranslateFaster = true;
 		g_CameraMovement.RotateFaster = true;
 	}
+	break;
+	case KeyCode::D0:
+	{
+		qualitySettings.draw_mcnk = !qualitySettings.draw_mcnk;
+	}
+	break;
 	}
 
 }
