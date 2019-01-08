@@ -2,7 +2,7 @@
 
 #include "AbstractPass.h"
 
-class RenderDevice;
+class IRenderDevice;
 class Shader;
 class ConstantBuffer;
 class Camera;
@@ -42,10 +42,10 @@ public:
 	void SetRenderEventArgs(RenderEventArgs& e);
 	RenderEventArgs& GetRenderEventArgs() const;
 
-	RenderDevice* GetRenderDevice() const;
+	IRenderDevice* GetRenderDevice() const;
 
 	void SetPerObjectConstantBufferData(PerObject& perObjectData);
-	std::shared_ptr<ConstantBuffer> GetConstantBuffer() const;
+	std::shared_ptr<ConstantBuffer> GetPerObjectConstantBuffer() const;
 
 private:
 	PerObject* m_PerObjectData;
@@ -59,5 +59,5 @@ private:
 	// The scene to render.
 	std::shared_ptr< Scene > m_Scene;
 
-	RenderDevice* m_RenderDevice;
+	IRenderDevice* m_RenderDevice;
 };

@@ -41,7 +41,7 @@ private:
     // The light we are currently rendering.
     Light* m_pCurrentLight;
 
-    RenderDevice* m_RenderDevice;
+    IRenderDevice* m_RenderDevice;
 
     __declspec( align( 16 ) ) struct ScreenToViewParams
     {

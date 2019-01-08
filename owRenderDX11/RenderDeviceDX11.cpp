@@ -164,6 +164,22 @@ ATL::CComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
 }
 
 
+std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
+{
+	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
+	m_Buffers.push_back(buffer);
+
+	return buffer;
+}
+
+std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
+{
+	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
+	m_Buffers.push_back(buffer);
+
+	return buffer;
+}
+
 std::shared_ptr<Buffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
 {
 	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);

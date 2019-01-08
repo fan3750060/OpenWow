@@ -116,7 +116,7 @@ struct SLiquidFlag
 #include __PACK_END
 #pragma endregion
 
-void Liquid::initGeometry(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f)
+void Liquid::createLayers(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f)
 {
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
@@ -288,7 +288,7 @@ void Liquid::createBuffer()
 }
 
 Liquid_Layer::Liquid_Layer(std::shared_ptr<IMesh> _mesh) :
-	MeshWrapper(_mesh)
+	MeshWrapper(SN_TYPE_LQ, _mesh)
 {
 }
 

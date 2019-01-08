@@ -5,7 +5,7 @@
 class FontsManager : public CRefManager1Dim<Font>, public IFontsManager
 {
 public:
-	FontsManager(RenderDevice* _RenderDevice);
+	FontsManager(IRenderDevice* _RenderDevice);
 	virtual ~FontsManager() {}
 
 	SharedFontPtr Add(cstring _fontFileName, uint32 _fontSize);
@@ -26,5 +26,5 @@ private:
 	SharedFontPtr mainFont;
 
 private:
-	RenderDevice* m_RenderDevice;
+	IRenderDevice* m_RenderDevice;
 };

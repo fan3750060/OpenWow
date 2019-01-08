@@ -14,7 +14,7 @@ bool M2_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_M2)
 	{
-		return mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer());
 	}
 
 	return false;

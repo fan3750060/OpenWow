@@ -5,7 +5,7 @@
 
 //
 
-class EnvironmentManager : public CRenderable3DObject
+class EnvironmentManager 
 {
 public:
 	EnvironmentManager();
@@ -16,9 +16,9 @@ public:
 	void SetFog();
 
 	// IRenderable3D
-	bool PreRender3D() override;
-	void Render3D() override {}
-	void PostRender3D() override {}
+	bool PreRender3D() ;
+	void Render3D()  {}
+	void PostRender3D()  {}
 
 public:
 	vec4 m_OutdoorAmbientColor;

@@ -7,7 +7,7 @@ class MeshWrapper : public IMesh
 protected:
 	typedef MeshWrapper base;
 public:
-	MeshWrapper(std::shared_ptr<IMesh> _mesh);
+	MeshWrapper(SceneNodeTypes type, std::shared_ptr<IMesh> _mesh);
 	virtual ~MeshWrapper();
 
 	virtual SceneNodeTypes GetType() const;

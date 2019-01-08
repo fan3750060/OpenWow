@@ -18,7 +18,6 @@ public:
 	HANDLE& getThreadID() { return m_Thread_Loader; }
 	HANDLE& getEventID() { return m_Event_Add; }
 	HANDLE& getEventLoadedID() { return m_Event_Loaded; }
-	IOpenGLAdapter* getAdapter() { return m_OpenGLAdapter; }
 
 private:
 	std::queue<ILoadable*> m_QueueLoad;
@@ -26,5 +25,4 @@ private:
 	HANDLE m_Thread_Loader;
 	HANDLE m_Event_Add;
 	HANDLE m_Event_Loaded;
-	IOpenGLAdapter* m_OpenGLAdapter;
 };

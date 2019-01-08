@@ -9,7 +9,7 @@ CADT_Liquid::CADT_Liquid(uint32 _x, uint32 _y) :
 
 void CADT_Liquid::CreateFromMCLQ(std::shared_ptr<IFile> f, ADT_MCNK_Header header)
 {
-	initGeometry(header.getLiquidType(), f);
+	createLayers(header.getLiquidType(), f);
 }
 
 #pragma region Types

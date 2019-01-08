@@ -272,7 +272,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	for (auto& it : m_WMOsPlacementInfo)
+	/*for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
@@ -286,7 +286,7 @@ bool ADT::Load()
 			bbox.makeUnion(inst->getBounds());
 			setBounds(bbox);
 		}
-	}
+	}*/
 
 	//-- MDXs -------------------------------------------------------------------------
 	for (auto& it : m_MDXsPlacementInfo)

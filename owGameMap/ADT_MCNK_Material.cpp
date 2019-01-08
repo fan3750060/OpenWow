@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 // General
-#include "ADT_CHUNK_Material.h"
+#include "ADT_MCNK_Material.h"
 
 
-ADT_CHUNK_Material::ADT_CHUNK_Material() :
+ADT_MCNK_Material::ADT_MCNK_Material() :
 	Material(_RenderDevice)
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
@@ -35,7 +35,7 @@ ADT_CHUNK_Material::ADT_CHUNK_Material() :
 	SetShader(Shader::PixelShader, g_pPixelShader);
 }
 
-ADT_CHUNK_Material::~ADT_CHUNK_Material()
+ADT_MCNK_Material::~ADT_MCNK_Material()
 {
 	if (m_pProperties)
 	{
@@ -46,12 +46,12 @@ ADT_CHUNK_Material::~ADT_CHUNK_Material()
 
 //--
 
-uint32 ADT_CHUNK_Material::GetLayersCnt() const
+uint32 ADT_MCNK_Material::GetLayersCnt() const
 {
 	return m_pProperties->m_LayersCnt;
 }
 
-void ADT_CHUNK_Material::SetLayersCnt(uint32 value)
+void ADT_MCNK_Material::SetLayersCnt(uint32 value)
 {
 	m_pProperties->m_LayersCnt = value;
 	m_Dirty = true;
@@ -59,7 +59,7 @@ void ADT_CHUNK_Material::SetLayersCnt(uint32 value)
 
 //--
 
-void ADT_CHUNK_Material::UpdateConstantBuffer() const
+void ADT_MCNK_Material::UpdateConstantBuffer() const
 {
 	if (m_pConstantBuffer)
 	{

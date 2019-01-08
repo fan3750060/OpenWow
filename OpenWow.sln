@@ -10,6 +10,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owCore", "owCore\owCore.vcx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{7117DD40-5090-4982-B565-034F60A0D3B1}"
+	ProjectSection(SolutionItems) = preProject
+		owNsight.nvact = owNsight.nvact
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpq", "Externals\libmpq\libmpq.vcxproj", "{0CC7FA61-23DE-4D9F-A6F4-FDA327AB5984}"
 EndProject
@@ -21,6 +24,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owGUI", "owGUI\owGUI.vcxpro
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{40F2B85C-86FE-4D81-BFAB-D924C6DD9475}"
+	ProjectSection(SolutionItems) = preProject
+		owNsight.nvact = owNsight.nvact
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owIntfs", "owIntfs\owIntfs.vcxproj", "{69AEC773-3240-4644-A049-ABABD643DBEC}"
 EndProject
@@ -139,7 +145,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp", "TestApp\TestApp.
 		{C29C7FEE-86D9-4EEF-965F-68B89C516FAE} = {C29C7FEE-86D9-4EEF-965F-68B89C516FAE}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owEngineNew", "owEngineNew\owEngineNew.vcxproj", "{51252F60-B8DC-4090-BBA3-DD05942110F0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owEngine", "owEngine\owEngine.vcxproj", "{51252F60-B8DC-4090-BBA3-DD05942110F0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A4E6F769-0036-4128-A409-495D9207F587} = {A4E6F769-0036-4128-A409-495D9207F587}
 		{69AEC773-3240-4644-A049-ABABD643DBEC} = {69AEC773-3240-4644-A049-ABABD643DBEC}

@@ -40,7 +40,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		_parent.lock()->addLiquidInstance(liquid);
 	}
 
-	/*for (const auto& index : m_DoodadsPlacementIndexes)
+	for (const auto& index : m_DoodadsPlacementIndexes)
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
@@ -52,7 +52,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 			inst->SetParent(_parent);
 			_parent.lock()->addDoodadInstance(inst);
 		}
-	}*/
+	}
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)
@@ -259,7 +259,7 @@ void WMO_Group::Load()
 			}
 
 			// Buffer
-			//VB_Colors = _RenderDevice->CreateFloatVertexBuffer((const float*)vertexColorsConverted.data(), vertexColorsConverted.size(), sizeof(vec4));
+			VB_Colors = _RenderDevice->CreateFloatVertexBuffer((const float*)vertexColorsConverted.data(), vertexColorsConverted.size(), 0, sizeof(vec4));
 			m_IsMOCVExists = vertexColorsCount > 0;
 
 			delete[] mocv;
@@ -318,9 +318,11 @@ void WMO_Group::Load()
 		std::shared_ptr<IMesh> mesh = _RenderDevice->CreateMesh();
 		mesh->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
 		mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
-		mesh->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Normals);
+		if (VB_Colors != nullptr)
+			mesh->AddVertexBuffer(BufferBinding("COLOR", 0), VB_Colors);
 		mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords[0]);
-		mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 1), (VB_TextureCoords.size() == 2) ? VB_TextureCoords[1] : VB_TextureCoords[0]);
+		if (VB_TextureCoords.size() > 1)
+			mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 1), VB_TextureCoords[1]);
 		mesh->SetIndexBuffer(IB_Default);
 
 		for (const auto& batchProto : m_WMOBatchs)

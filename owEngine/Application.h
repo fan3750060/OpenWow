@@ -16,7 +16,7 @@ public:
 
 	RenderWindow* CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
 
-	RenderDevice* GetRenderDevice();
+	IRenderDevice* GetRenderDevice();
 	RenderWindow* GetRenderWindow();
 
 	HINSTANCE GetModuleHandle() const;
@@ -44,7 +44,7 @@ private:
 
 	// Handle to the module.
 	HINSTANCE       m_hInstance;
-	RenderDevice*   m_pRenderDevice;
+	IRenderDevice*   m_pRenderDevice;
 	RenderWindow*   m_Windows;
 };
 

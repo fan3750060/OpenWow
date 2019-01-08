@@ -15,13 +15,13 @@ CBaseManager* _BaseManager = nullptr;
 
 
 // Functions
-RenderDevice* CreateRenderDeviceDX11(CBaseManager* _baseManager)
+IRenderDevice* CreateRenderDeviceDX11(CBaseManager* _baseManager)
 {
 	_BaseManager = _baseManager;
 	return new RenderDeviceDX11();
 }
 
-RenderWindow* CreateRenderWindowDX11(HWND hWnd, RenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
+RenderWindow* CreateRenderWindowDX11(HWND hWnd, IRenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
 	RenderDeviceDX11* pDevice = dynamic_cast<RenderDeviceDX11*>(device);
 	assert1(pDevice != NULL);

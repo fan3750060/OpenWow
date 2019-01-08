@@ -87,12 +87,13 @@ bool BasePass::Visit(IMesh& mesh)
 	std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
 	if (pMaterial && m_pRenderEventArgs)
 	{
-		mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
-		return true;
+		return mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
 	}
 
 	return false;
 }
+
+//----------------------------------------------------------------------
 
 void BasePass::SetRenderEventArgs(RenderEventArgs& e)
 {
@@ -105,7 +106,9 @@ RenderEventArgs& BasePass::GetRenderEventArgs() const
 	return *m_pRenderEventArgs;
 }
 
-RenderDevice* BasePass::GetRenderDevice() const
+//----------------------------------------------------------------------
+
+IRenderDevice* BasePass::GetRenderDevice() const
 {
 	return m_RenderDevice;
 }
@@ -117,7 +120,7 @@ void BasePass::SetPerObjectConstantBufferData(PerObject& perObjectData)
 	m_PerObjectConstantBuffer->Set(perObjectData);
 }
 
-std::shared_ptr<ConstantBuffer> BasePass::GetConstantBuffer() const
+std::shared_ptr<ConstantBuffer> BasePass::GetPerObjectConstantBuffer() const
 {
 	return m_PerObjectConstantBuffer;
 }

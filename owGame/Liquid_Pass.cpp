@@ -15,7 +15,7 @@ bool Liquid_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_LQ)
 	{
-		return mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer());
 	}
 
 	return false;

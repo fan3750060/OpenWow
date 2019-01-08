@@ -1,10 +1,10 @@
 #pragma once
 
-class ADT_CHUNK_Material : public Material
+class ADT_MCNK_Material : public Material
 {
 public:
-	ADT_CHUNK_Material();
-	virtual ~ADT_CHUNK_Material();
+	ADT_MCNK_Material();
+	virtual ~ADT_MCNK_Material();
 
 	uint32 GetLayersCnt() const;
 	void SetLayersCnt(uint32 value);

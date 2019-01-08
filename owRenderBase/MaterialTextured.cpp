@@ -7,7 +7,7 @@
 // General
 #include "MaterialTextured.h"
 
-MaterialTextured::MaterialTextured(RenderDevice* renderDevice)
+MaterialTextured::MaterialTextured(IRenderDevice* renderDevice)
 	: Material(renderDevice)
 {
 }

@@ -37,9 +37,6 @@
     <Filter Include="RefManager\2 Dim">
       <UniqueIdentifier>{e6840d2f-52fd-4393-8f8e-ca1baa389a53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects bindings\Renderable3D">
-      <UniqueIdentifier>{eb9a2bbf-09a5-49c2-94f7-4f3c859e58a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Files\Common">
       <UniqueIdentifier>{71df8466-a98b-4ab6-bb46-76fcc364a41b}</UniqueIdentifier>
     </Filter>
@@ -87,9 +84,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Input.cpp">
-      <Filter>Input</Filter>
-    </ClCompile>
     <ClCompile Include="DebugOutput.cpp">
       <Filter>Log\DebugOutput</Filter>
     </ClCompile>
@@ -119,12 +113,6 @@
     </ClCompile>
     <ClCompile Include="UtilsConvert.cpp">
       <Filter>Common\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderable3DObject.cpp">
-      <Filter>Objects bindings\Renderable3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderable3DObjectCollection.cpp">
-      <Filter>Objects bindings\Renderable3D</Filter>
     </ClCompile>
     <ClCompile Include="BindingController.cpp">
       <Filter>Objects bindings</Filter>
@@ -227,12 +215,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Input.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="InputKeys.h">
-      <Filter>Input</Filter>
-    </ClInclude>
     <ClInclude Include="DebugOutput.h">
       <Filter>Log\DebugOutput</Filter>
     </ClInclude>
@@ -280,12 +262,6 @@
     </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Common\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderable3DObject.h">
-      <Filter>Objects bindings\Renderable3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderable3DObjectCollection.h">
-      <Filter>Objects bindings\Renderable3D</Filter>
     </ClInclude>
     <ClInclude Include="BindingController.h">
       <Filter>Objects bindings</Filter>

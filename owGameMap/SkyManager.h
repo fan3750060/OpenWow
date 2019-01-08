@@ -6,15 +6,18 @@
 class MapController;
 // FORWARD END
 
-class SkyManager : public CRenderable3DObject, public ISkyManager
+class SkyManager : public SceneNode, public ISkyManager
 {
 public:
 	SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord);
 	virtual ~SkyManager();
 
 public:
+	// SceneNode
+	void Update(Camera* camera) override;
+
 	// ISkyManager
-	void Calculate(uint32 _time) override;
+	void Calculate(Camera* camera, uint32 _time) override;
 	bool HasSkies() const override { return !skies.empty(); }
 
 	vec3  GetColor(LightColors::List _color) const override { return m_Interpolated.m_Colors[_color]; }
@@ -24,12 +27,6 @@ public:
 	float GetWaterDarkAlpha() const override { return m_Interpolated.m_waterDeepAlpha; }
 	float GetOceanShallowAlpha() const override { return m_Interpolated.m_oceanShallowAlpha; }
 	float GetOceanDarkAlpha() const override { return m_Interpolated.m_oceanDeepAlpha; }
-
-	// IRenderable3D
-	bool PreRender3D() override;
-	void Render3D() override;
-	void PostRender3D() override {};
-	bool DEBUG_Render();
 
 private:
 	void InitBuffer();

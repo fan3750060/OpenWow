@@ -7,7 +7,7 @@
 // General
 #include "Material.h"
 
-Material::Material(RenderDevice* renderDevice)
+Material::Material(IRenderDevice* renderDevice)
 	: m_RenderDevice(renderDevice)
 	, m_Dirty(false)
 {}

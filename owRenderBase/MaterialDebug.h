@@ -6,7 +6,7 @@ class ConstantBuffer;
 class MaterialDebug : public Material
 {
 public:
-	MaterialDebug(RenderDevice* renderDevice);
+	MaterialDebug(IRenderDevice* renderDevice);
 	virtual ~MaterialDebug();
 
 	cvec4 GetDiffuseColor() const;

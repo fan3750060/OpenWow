@@ -4,6 +4,7 @@ struct VertexShaderInput
 {
 	float3 position       : POSITION;
 	float3 normal         : NORMAL0;
+	float4 mccvColor      : COLOR0;
 	float2 texCoordDetail : TEXCOORD0;
 	float2 texCoordAlpha  : TEXCOORD1;
 };
@@ -12,6 +13,7 @@ struct VertexShaderOutput
 {
 	float4 position       : SV_POSITION;
 	float3 normal         : NORMAL0;
+	float4 mccvColor      : COLOR0;
 	float2 texCoordDetail : TEXCOORD0;
 	float2 texCoordAlpha  : TEXCOORD1;
 };
@@ -42,6 +44,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
 	OUT.normal = IN.normal;
+	OUT.mccvColor = IN.mccvColor;
 	OUT.texCoordDetail = IN.texCoordDetail;
 	OUT.texCoordAlpha = IN.texCoordAlpha;
 	
@@ -98,6 +101,8 @@ float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 		}
 		resultColor = layersColor;
 	}
+	
+	//resultColor *= (IN.mccvColor * 2.0f);
 
 	return float4(resultColor, 1.0f);
 }

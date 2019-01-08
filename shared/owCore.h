@@ -27,7 +27,6 @@
 // Log outputs
 
 #include "../owCore/Console.h"
-#include "../owCore/Input.h"
 
 // Objects bindings
 #include "../owCore/BaseManager.h"

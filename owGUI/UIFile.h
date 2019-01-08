@@ -35,6 +35,6 @@ private:
 	UIWindow* parent;
 	UIWindow* rootElement;
 
-	map<std::string, UIElement*> elements;
+	std::map<std::string, UIElement*> elements;
 	IUIMgr*		mUIMgr;
 };

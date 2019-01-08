@@ -1,6 +1,6 @@
 #pragma once
 
-class RenderDevice;
+class IRenderDevice;
 class Shader;
 
 // A material class is used to wrap the shaders and to manage the shader parameters.
@@ -11,7 +11,7 @@ public:
 	typedef std::map<uint8, std::shared_ptr<Texture> > TextureMap;
 
 public:
-	Material(RenderDevice* renderDevice);
+	Material(IRenderDevice* renderDevice);
 	virtual ~Material();
 
 	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader);
@@ -34,6 +34,6 @@ protected:
 	TextureMap                       m_Textures;
 	std::shared_ptr<ConstantBuffer>  m_pConstantBuffer;
 
-	RenderDevice*                    m_RenderDevice;
+	IRenderDevice*                    m_RenderDevice;
 	mutable bool                     m_Dirty;
 };

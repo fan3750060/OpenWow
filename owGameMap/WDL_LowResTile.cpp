@@ -7,12 +7,11 @@
 #include "WDL_LowResTile.h"
 
 CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std::shared_ptr<IMesh> _mesh, uint32 _indexX, uint32 _indexZ) :
-	MeshWrapper(_mesh),
+	MeshWrapper(SN_TYPE_WDL_NODE, _mesh),
 	m_MapController(_parent),
 	m_IndexX(_indexX),
 	m_IndexZ(_indexZ)
 {
-	SetType(SN_TYPE_WDL_NODE);
 }
 
 bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)

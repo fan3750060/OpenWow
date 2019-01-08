@@ -91,7 +91,7 @@ int main(int argumentCount, char* arguments[])
 		g_pRenderWindow->KeyPressed += &OnKeyPressed;
 		g_pRenderWindow->KeyReleased += &OnKeyReleased;
 
-		RenderDevice* renderDevice = app.GetRenderDevice();
+		IRenderDevice* renderDevice = app.GetRenderDevice();
 
 
 		/*renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
@@ -107,8 +107,8 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		const float x = 30;
-		const float y = 22;
+		const float x = 36;
+		const float y = 32;
 
 		new WMOsManager();
 		new CM2_Manager();
@@ -137,6 +137,7 @@ int main(int argumentCount, char* arguments[])
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
+		AddSkyPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddWDLPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddMCNKPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddWMOPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);

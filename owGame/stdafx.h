@@ -3,7 +3,7 @@
 #include <owIntfs.h>
 #include <owCore.h>
 #include <owRenderBase.h>
-#include <owEngineNew.h>
+#include <owEngine.h>
 
 #include <owGameDBC.h>
 

@@ -7,7 +7,7 @@
 // General
 #include "MaterialDebug.h"
 
-MaterialDebug::MaterialDebug(RenderDevice* renderDevice)
+MaterialDebug::MaterialDebug(IRenderDevice* renderDevice)
 	: Material(renderDevice)
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);

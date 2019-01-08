@@ -20,7 +20,7 @@ public:
 	};
 
 public:
-	MaterialBase(RenderDevice* renderDevice);
+	MaterialBase(IRenderDevice* renderDevice);
 	virtual ~MaterialBase();
 
 	cvec4 GetDiffuseColor() const;

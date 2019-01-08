@@ -7,7 +7,7 @@
 #include <freetype/config/ftheader.h>
 #include FT_FREETYPE_H
 
-FontsManager::FontsManager(RenderDevice* _RenderDevice)
+FontsManager::FontsManager(IRenderDevice* _RenderDevice)
 	: m_RenderDevice(_RenderDevice)
 {
 	mainFont = Add("Fonts\\FRIZQT__.TTF", 12);

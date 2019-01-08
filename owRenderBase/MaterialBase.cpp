@@ -10,7 +10,7 @@
 // General
 #include "MaterialBase.h"
 
-MaterialBase::MaterialBase(RenderDevice* renderDevice)
+MaterialBase::MaterialBase(IRenderDevice* renderDevice)
 	: Material(renderDevice)
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);

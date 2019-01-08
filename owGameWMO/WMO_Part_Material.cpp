@@ -26,6 +26,9 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 		Shader::PixelShader, "shaders_D3D/WMO/WMO.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
 	);
 
+	SetShader(Shader::VertexShader, g_pVertexShader);
+	SetShader(Shader::PixelShader, g_pPixelShader);
+
 	// Create samplers
 	std::shared_ptr<SamplerState> g_Sampler = _RenderDevice->CreateSamplerState();
 	g_Sampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
@@ -38,9 +41,11 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_Sampler);
 
 	// This
-	SetTexture(0, _RenderDevice->CreateTexture2D(_parentWMO.lock()->m_TexturesNames + m_Proto.diffuseNameIndex));
-	SetShader(Shader::VertexShader, g_pVertexShader);
-	SetShader(Shader::PixelShader, g_pPixelShader);
+	std::string textureName = _parentWMO.lock()->m_TexturesNames + m_Proto.diffuseNameIndex;
+	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(textureName);
+	SetTexture(0, texture);
+
+
 
 	//if (m_Proto.envNameIndex)
 	//{

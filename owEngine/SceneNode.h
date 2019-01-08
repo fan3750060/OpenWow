@@ -1,196 +1,129 @@
 #pragma once
 
-class SceneNode :
-	public IUpdatable,
-	public IRenderable3D
+class IMesh;
+class Camera;
+class RenderEventArgs;
+class IVisitor;
+
+class SceneNode : public Object, public std::enable_shared_from_this<SceneNode>
 {
+	typedef Object base;
 public:
-	SceneNode(SceneNode* _parent = nullptr);
+	explicit SceneNode(cmat4 localTransform = mat4(1.0f));
 	virtual ~SceneNode();
 
-	// ISceneNode
-	void setParent(SceneNode* _parent) { m_Parent = _parent; }
-	const SceneNode* getParent() { return m_Parent; }
-	void addChild(SceneNode* _child)
-	{
-		_ASSERT(std::find(m_Childs.begin(), m_Childs.end(), this) == m_Childs.end());
-		m_Childs.push_back(_child);
-	}
-	void removeChild(SceneNode* _child)
-	{
-		if (m_Childs.empty())
-		{
-			return;
-		}
-
-		_ASSERT(std::find(m_Childs.begin(), m_Childs.end(), _child) != m_Childs.end());
-		m_Childs.erase(std::remove(m_Childs.begin(), m_Childs.end(), _child), m_Childs.end());
-	}
-	vector<SceneNode*>& getChilds() { return m_Childs; }
+	/**
+	 * Assign a name to this scene node so that it can be searched for later.
+	 */
+	virtual cstring GetName() const;
+	virtual void SetName(cstring name);
 
 	// Translate
-	void setTranslate(cvec3 _translate, bool _calculateMatrix = true) 
-	{ 
-		if (m_Translate == _translate) return;
-		m_Translate = _translate; 
-		if (_calculateMatrix) CalculateLocalTransform();
-	}
+	void setTranslate(cvec3 _translate) { m_Translate = _translate;  }
 	cvec3 getTranslate() const { return m_Translate; }
 
 	// Rotate
-	void setRotate(cvec3 _rotate, bool _calculateMatrix = true)
-	{ 
-		if (m_Rotate == _rotate) return;
-		m_Rotate = _rotate; 
-		if (_calculateMatrix) CalculateLocalTransform();
-	}
+	void setRotate(cvec3 _rotate) { m_Rotate = _rotate;  }
 	cvec3 getRotate() const { return m_Rotate; }
-	
+
 	// Rotate Quaternion
-	void setRotateQuat(cquat _rotate, bool _calculateMatrix = true)
-	{
-		m_RotateQuat = _rotate;
-		if (_calculateMatrix) CalculateLocalTransform();
-	}
+	void setRotateQuat(cquat _rotate) { m_RotateQuat = _rotate; m_IsRotateQuat = true; }
 	cquat getRotateQuat() const { return m_RotateQuat; }
 
 	// Scale
-	void setScale(cvec3 _scale, bool _calculateMatrix = true)
-	{ 
-		if (m_Scale == _scale) return;
-		m_Scale = _scale; 
-		if (_calculateMatrix) CalculateLocalTransform();
-	}
+	void setScale(cvec3 _scale) { m_Scale = _scale; }
 	cvec3 getScale() const { return m_Scale; }
 
 	// Bounds
 	void setBounds(BoundingBox _bbox) { m_Bounds = _bbox; }
 	cbbox getBounds() const { return m_Bounds; }
 
-	// General transform
-	void setRelTrans(cmat4 _matrix) { m_RelTransform = _matrix; }
-	cmat4 getRelTrans() const { return m_RelTransform; }
+	/**
+	 * Gets the scene node's local transform (relative to it's parent world transform).
+	 */
+	mat4 GetLocalTransform() const;
+	void SetLocalTransform(cmat4 localTransform);
 
-	void setAbsTrans(cmat4 _matrix) { m_AbsTransform = _matrix; }
-	cmat4 GetWorldTransfom() const { return m_AbsTransform; }
+	/**
+	 * Gets the inverse of the local transform (relative to it's parent world transform).
+	 */
+	mat4 GetInverseLocalTransform() const;
 
-	// Checks
-	bool checkFrustum() const;
-	bool checkDistance2D(float _distance) const;
-	bool checkDistance(float _distance) const;
+	/**
+	 * Gets the scene node's world transform (concatenated with parents world transform)
+	 * This function should be used sparingly as it is computed every time
+	 * it is requested.
+	 */
+	mat4 GetWorldTransfom() const;
+	void SetWorldTransform(cmat4 worldTransform);
 
-	// ISceneNode::Selectable
-	void setSelectable() { m_Selectable = true; }
-	bool isSelectable() const { return m_Selectable; }
-	virtual std::string getObjectInfo() const { return "emp"; };
+	/**
+	 * Gets the inverse world transform of this scene node.
+	 * Use this function sparingly as it is computed every time it is requested.
+	 */
+	mat4 GetInverseWorldTransform() const;
 
-	// IUpdatable
-	virtual void Input(CInput* _input, double _time, double _dTime) override {};
-	virtual void Update(double _time, double _dTime) override {};
+	/**
+	 * Add a child node to this node.
+	 * NOTE: Circular references are not checked!
+	 * A scene node takes ownership of it's children.
+	 * If you delete the parent node, all of its children will also be deleted.
+	 */
+	virtual void AddChild(std::shared_ptr<SceneNode> pNode);
+	virtual void RemoveChild(std::shared_ptr<SceneNode> pNode);
+	virtual void SetParent(std::weak_ptr<SceneNode> pNode);
 
-	// IRenderable
-	virtual bool PreRender3D() override { return true; };
-	virtual void Render3D() override { /*override me*/ }
-	virtual void PostRender3D() override { /* override me*/ }
-	virtual void RenderDebug3D() { Render3D(); };
+	/**
+	 * Add a mesh to this scene node.
+	 * The scene node does not take ownership of a mesh that is set on a mesh
+	 * as it is possible that the same mesh is added to multiple scene nodes.
+	 * Deleting the scene node does not delete the meshes associated with it.
+	 */
+	virtual void AddMesh(std::shared_ptr<IMesh> mesh);
+	virtual void RemoveMesh(std::shared_ptr<IMesh> mesh);
 
-	void setVisible(bool _value) override { m_IsVisible = _value; }
-	bool isVisible() const override { return m_IsVisible; }
-	void setOpaque(bool _value) override { m_IsOpaque = _value; }
-	bool isOpaque() const override { return m_IsOpaque; }
-	void setDrawOrder(uint32 _order) override { m_DrawOrder = _order; _Bindings->m_Renderable3DObjectCollection->SetNeedSort(); }
-	uint32 getDrawOrder() const override { return m_DrawOrder; }
-	void setDebugColor(vec4 _value) { m_DebugColor = _value; }
-	vec4 getDebugColor() const { return m_DebugColor; }
+	/**
+	 * Called before all others calls
+	 */
+	virtual void Update(Camera* camera);
+
+	/**
+	 * Allow a visitor to visit this node.
+	 */
+	virtual bool Accept(IVisitor& visitor);
+
+	/**
+	 * Useful for culling
+	 */
+	bool checkFrustum(const Camera& _camera) const;
+	bool checkDistance2D(cvec3 _camPos, float _distance) const;
+	bool checkDistance(cvec3 _camPos, float _distance) const;
 
 protected:
-	virtual void CalculateLocalTransform(bool _isRotationQuat = false);
+	virtual mat4 GetParentWorldTransform() const;
+	virtual void TransRotScaleToLocalTransform();
 
 private:
-	SceneNode*			m_Parent;
-	vector<SceneNode*>  m_Childs;
+	typedef std::vector<std::shared_ptr<SceneNode>> NodeList;
+	typedef std::multimap<std::string, std::shared_ptr<SceneNode>> NodeNameMap;
+	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
 
+	std::string         m_Name;
+	SceneNodeTypes      m_Type;
+
+	// Transforms node from parent's space to world space for rendering.
+	mat4                m_LocalTransform;
 	vec3                m_Translate;
 	vec3				m_Rotate;
 	quat				m_RotateQuat;
+	bool                m_IsRotateQuat;
 	vec3                m_Scale;
 	BoundingBox         m_Bounds;
+	// This is the inverse of the local -> world transform.
+	mat4                m_InverseLocalTransform;
 
-private:
-	mat4				m_RelTransform;
-	mat4				m_AbsTransform;
-	bool				m_Selectable;
-
-private: // IRenderable
-	bool				m_IsVisible;
-	bool				m_IsOpaque;
-	uint32				m_DrawOrder;
-	vec4				m_DebugColor;
-
-protected:
-	const CGroupQuality&	m_QualitySettings;
-};
-
-class SceneNodeCompare
-{
-public:
-	SceneNodeCompare(Camera* _camera) :
-		m_Camera(_camera)
-	{}
-
-	/*bool operator() (const SceneNode* left, const SceneNode* right) const
-	{
-		if (left->getDrawOrder() < right->getDrawOrder())
-		{
-			return true;
-		}
-		else if (left->getDrawOrder() > right->getDrawOrder())
-		{
-			return false;
-		}
-		else
-		{
-			float distToCameraLeft = (m_Camera->Position - left->getBounds().getCenter()).length();
-			float distToCameraRight = (m_Camera->Position - right->getBounds().getCenter()).length();
-			return distToCameraLeft > distToCameraRight;
-		}
-	}*/
-
-	bool operator() (const SceneNode* left, const SceneNode* right) const
-	{
-		if (left->isOpaque() && right->isOpaque())
-		{
-			return left->getDrawOrder() < right->getDrawOrder();
-		}
-		else if (!(left->isOpaque()) && right->isOpaque())
-		{
-			return false;
-		}
-		else if (left->isOpaque() && !(right->isOpaque()))
-		{
-			return true;
-		}
-		else if (!(left->isOpaque()) && !(right->isOpaque()))
-		{
-			if (left->getDrawOrder() < right->getDrawOrder())
-			{
-				return true;
-			}
-			else if (left->getDrawOrder() > right->getDrawOrder())
-			{
-				return false;
-			}
-			else
-			{
-				float distToCameraLeft = glm::length(m_Camera->Position - left->getBounds().getCenter()) - left->getBounds().getRadius();
-				float distToCameraRight = glm::length(m_Camera->Position - right->getBounds().getCenter()) - right->getBounds().getRadius();
-				return distToCameraLeft > distToCameraRight;
-			}
-		}
-
-		return false;
-	}
-
-private:
-	Camera * m_Camera;
+	std::weak_ptr<SceneNode>  m_pParentNode;
+	NodeList                  m_Children;
+	NodeNameMap               m_ChildrenByName;
+	MeshList                  m_Meshes;
 };

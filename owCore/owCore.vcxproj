@@ -37,7 +37,6 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="DebugOutput.cpp" />
-    <ClCompile Include="Input.cpp" />
     <ClCompile Include="MPQArchiveManager.cpp" />
     <ClCompile Include="MPQFile.cpp" />
     <ClCompile Include="NEW_Random.cpp" />
@@ -46,8 +45,6 @@
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RefManager1DimAssync.cpp" />
-    <ClCompile Include="Renderable3DObject.cpp" />
-    <ClCompile Include="Renderable3DObjectCollection.cpp" />
     <ClCompile Include="RenderableUIObjectCollection.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="SHA1.cpp" />
@@ -93,7 +90,6 @@
     <ClInclude Include="FunctionSA.h" />
     <ClInclude Include="FunctionWA.h" />
     <ClInclude Include="INIFile.h" />
-    <ClInclude Include="InputKeys.h" />
     <ClInclude Include="InputListenerCollection.h" />
     <ClInclude Include="LocalFile.h" />
     <ClInclude Include="Macros.h" />
@@ -103,7 +99,6 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="DebugOutput.h" />
-    <ClInclude Include="Input.h" />
     <ClInclude Include="MPQArchiveManager.h" />
     <ClInclude Include="MPQFile.h" />
     <ClInclude Include="NEW_Random.h" />
@@ -115,8 +110,6 @@
     <ClInclude Include="RefManager1Dim.h" />
     <ClInclude Include="RefManager1DimAssync.h" />
     <ClInclude Include="RefManager2Dim.h" />
-    <ClInclude Include="Renderable3DObject.h" />
-    <ClInclude Include="Renderable3DObjectCollection.h" />
     <ClInclude Include="RenderableUIObjectCollection.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SHA1.h" />

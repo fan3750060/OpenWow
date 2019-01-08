@@ -1,13 +1,15 @@
-#include "..\\_gamedata\\shaders_D3D\\Debug\\Debug_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\Sky\\Sky_Material.h"
 
 struct VertexShaderInput
 {
-	float3 position       : POSITION;
+	float3 position : POSITION;
+	float4 color    : COLOR0;
 };
 
 struct VertexShaderOutput
 {
-	float4 position       : SV_POSITION;
+	float4 position : SV_POSITION;
+	float4 color    : COLOR0;
 };
 
 
@@ -18,19 +20,19 @@ cbuffer PerObject : register(b0)
 }
 cbuffer Material : register(b2)
 {
-    Debug_Material Material;
+   Sky_Material Material;
 };
+
 
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
-
 	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
-	
+	OUT.color = IN.color;
 	return OUT;
 }
 
 float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return Material.DiffuseColor;
+	return float4(IN.color.rgb, 1.0f);
 }

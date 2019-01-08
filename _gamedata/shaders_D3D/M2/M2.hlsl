@@ -3,15 +3,21 @@
 struct VertexShaderInput
 {
 	float3 position  : POSITION;
+	uint   boneWeight: BLENDINDICES0;
+	uint   boneIndex : BLENDINDICES1;
 	float3 normal    : NORMAL0;
 	float2 texCoord0 : TEXCOORD0;
+	float2 texCoord1 : TEXCOORD1;
 };
 
 struct VertexShaderOutput
 {
 	float4 position  : SV_POSITION;
+	uint   boneWeight: BLENDINDICES0;
+	uint   boneIndex : BLENDINDICES1;
 	float3 normal    : NORMAL0;
 	float2 texCoord0 : TEXCOORD0;
+	float2 texCoord1 : TEXCOORD1;
 };
 
 
@@ -36,6 +42,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
 	OUT.normal = IN.normal;
 	OUT.texCoord0 = IN.texCoord0;
+	OUT.texCoord1 = IN.texCoord1;
 	return OUT;
 }
 

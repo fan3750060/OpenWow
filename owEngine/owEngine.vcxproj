@@ -11,34 +11,68 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="OpenGLAdapterGLFW.cpp" />
-    <ClCompile Include="OpenGLAdapter_Native.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Passes\AbstractPass.cpp" />
+    <ClCompile Include="Passes\BasePass.cpp" />
+    <ClCompile Include="Passes\BeginQueryPass.cpp" />
+    <ClCompile Include="Passes\ClearRenderTargetPass.cpp" />
+    <ClCompile Include="Passes\CopyBufferPass.cpp" />
+    <ClCompile Include="Passes\CopyTexturePass.cpp" />
+    <ClCompile Include="Passes\DeferredLightingPass.cpp" />
+    <ClCompile Include="Passes\DispatchPass.cpp" />
+    <ClCompile Include="Passes\EndQueryPass.cpp" />
+    <ClCompile Include="Passes\GenerateMipMapsPass.cpp" />
+    <ClCompile Include="Passes\InvokeFunctionPass.cpp" />
+    <ClCompile Include="Passes\LightPickingPass.cpp" />
+    <ClCompile Include="Passes\LightsPass.cpp" />
+    <ClCompile Include="Passes\PostprocessPass.cpp" />
+    <ClCompile Include="Passes\RenderTechnique.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="TextureLoadersStorage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
+    <ClInclude Include="Application.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="Engine.h" />
+    <ClInclude Include="EngineTime.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Loader.h" />
-    <ClInclude Include="OpenGLAdapterGLFW.h" />
-    <ClInclude Include="OpenGLAdapter_Native.h" />
-    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Passes\AbstractPass.h" />
+    <ClInclude Include="Passes\BasePass.h" />
+    <ClInclude Include="Passes\BeginQueryPass.h" />
+    <ClInclude Include="Passes\ClearRenderTargetPass.h" />
+    <ClInclude Include="Passes\CopyBufferPass.h" />
+    <ClInclude Include="Passes\CopyTexturePass.h" />
+    <ClInclude Include="Passes\DeferredLightingPass.h" />
+    <ClInclude Include="Passes\DispatchPass.h" />
+    <ClInclude Include="Passes\EndQueryPass.h" />
+    <ClInclude Include="Passes\GenerateMipMapsPass.h" />
+    <ClInclude Include="Passes\InvokeFunctionPass.h" />
+    <ClInclude Include="Passes\LightPickingPass.h" />
+    <ClInclude Include="Passes\LightsPass.h" />
+    <ClInclude Include="Passes\PostprocessPass.h" />
+    <ClInclude Include="Passes\RenderPass.h" />
+    <ClInclude Include="Passes\RenderTechnique.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="TextureLoadersStorage.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B477451E-B90E-427E-9344-691BCA62D385}</ProjectGuid>
+    <ProjectGuid>{51252F60-B8DC-4090-BBA3-DD05942110F0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>owEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
@@ -84,7 +118,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -104,7 +138,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>

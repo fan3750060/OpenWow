@@ -3,9 +3,11 @@
 // General
 #include "MeshWrapper.h"
 
-MeshWrapper::MeshWrapper(std::shared_ptr<IMesh> _mesh) :
+MeshWrapper::MeshWrapper(SceneNodeTypes type, std::shared_ptr<IMesh> _mesh) :
 	m_Mesh(_mesh)
 {
+	assert1(m_Mesh != nullptr);
+	m_Mesh->SetType(type);
 }
 
 MeshWrapper::~MeshWrapper()

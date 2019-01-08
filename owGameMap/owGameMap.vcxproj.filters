@@ -22,6 +22,12 @@
     <Filter Include="RenderStuff">
       <UniqueIdentifier>{7cb4ca49-cc19-4521-b63c-875a194bd00e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map\ADT_MCNK">
+      <UniqueIdentifier>{47d8efda-9ea2-4fbb-96f8-1cdf4f28a5d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map\WDL">
+      <UniqueIdentifier>{33702109-edc7-4dcf-a921-d1413fa8219c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Map_Shared.cpp">
@@ -36,9 +42,6 @@
     <ClCompile Include="ADT_MDX_Instance.cpp">
       <Filter>Map\Instances</Filter>
     </ClCompile>
-    <ClCompile Include="WDL.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
     <ClCompile Include="WDT.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -49,12 +52,6 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="ADT_Liquid.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_MCNK.cpp">
-      <Filter>Map\Instances</Filter>
-    </ClCompile>
-    <ClCompile Include="WDL_LowResTile.cpp">
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="MinimapProvider.cpp">
@@ -78,20 +75,35 @@
     <ClCompile Include="ADT.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="WDL_Node_Pass.cpp">
-      <Filter>RenderStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_CHUNK_Pass.cpp">
-      <Filter>RenderStuff</Filter>
-    </ClCompile>
     <ClCompile Include="CreatePasses.cpp">
       <Filter>RenderStuff</Filter>
     </ClCompile>
-    <ClCompile Include="WDL_Node_Material.cpp">
-      <Filter>RenderStuff</Filter>
+    <ClCompile Include="ADT_MCNK.cpp">
+      <Filter>Map\ADT_MCNK</Filter>
     </ClCompile>
-    <ClCompile Include="ADT_CHUNK_Material.cpp">
-      <Filter>RenderStuff</Filter>
+    <ClCompile Include="ADT_MCNK_Material.cpp">
+      <Filter>Map\ADT_MCNK</Filter>
+    </ClCompile>
+    <ClCompile Include="ADT_MCNK_Pass.cpp">
+      <Filter>Map\ADT_MCNK</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL.cpp">
+      <Filter>Map\WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL_LowResTile.cpp">
+      <Filter>Map\WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL_Node_Material.cpp">
+      <Filter>Map\WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="WDL_Node_Pass.cpp">
+      <Filter>Map\WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky_Material.cpp">
+      <Filter>Map\Skies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky_Pass.cpp">
+      <Filter>Map\Skies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +125,6 @@
     <ClInclude Include="ADT.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="WDL.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="WDT.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -128,13 +137,7 @@
     <ClInclude Include="ADT_Liquid.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="ADT_MCNK.h">
-      <Filter>Map\Instances</Filter>
-    </ClInclude>
     <ClInclude Include="Map_Headers.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="WDL_LowResTile.h">
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="MinimapProvider.h">
@@ -158,20 +161,35 @@
     <ClInclude Include="SkyParams.h">
       <Filter>Map\Skies</Filter>
     </ClInclude>
-    <ClInclude Include="WDL_Node_Pass.h">
-      <Filter>RenderStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT_CHUNK_Pass.h">
-      <Filter>RenderStuff</Filter>
-    </ClInclude>
     <ClInclude Include="CreatePasses.h">
       <Filter>RenderStuff</Filter>
     </ClInclude>
-    <ClInclude Include="WDL_Node_Material.h">
-      <Filter>RenderStuff</Filter>
+    <ClInclude Include="ADT_MCNK.h">
+      <Filter>Map\ADT_MCNK</Filter>
     </ClInclude>
-    <ClInclude Include="ADT_CHUNK_Material.h">
-      <Filter>RenderStuff</Filter>
+    <ClInclude Include="ADT_MCNK_Material.h">
+      <Filter>Map\ADT_MCNK</Filter>
+    </ClInclude>
+    <ClInclude Include="ADT_MCNK_Pass.h">
+      <Filter>Map\ADT_MCNK</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL.h">
+      <Filter>Map\WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_LowResTile.h">
+      <Filter>Map\WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_Node_Material.h">
+      <Filter>Map\WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="WDL_Node_Pass.h">
+      <Filter>Map\WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky_Material.h">
+      <Filter>Map\Skies</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky_Pass.h">
+      <Filter>Map\Skies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

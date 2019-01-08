@@ -3,7 +3,7 @@
 // General
 #include "RenderDevice.h"
 
-std::shared_ptr<IMesh> RenderDevice::CreatePlane(cvec3 N)
+std::shared_ptr<IMesh> IRenderDevice::CreatePlane(cvec3 N)
 {
 	vec3 p[4];
 	p[0] = vec3(1.0f, 0, 1.0f);
@@ -43,7 +43,7 @@ std::shared_ptr<IMesh> RenderDevice::CreatePlane(cvec3 N)
 	return mesh;
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateScreenQuad(float left, float right, float bottom, float top, float z)
+std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, float bottom, float top, float z)
 {
 	vec3 p[4]; // Vertex position
 	vec3 n[4]; // Vertex normal (required for texture patch polygons)
@@ -76,7 +76,7 @@ std::shared_ptr<IMesh> RenderDevice::CreateScreenQuad(float left, float right, f
 	return mesh;
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateSphere()
+std::shared_ptr<IMesh> IRenderDevice::CreateSphere()
 {
 	vec3 spVerts[126] =
 	{  // x, y, z
@@ -131,7 +131,7 @@ std::shared_ptr<IMesh> RenderDevice::CreateSphere()
 	return mesh;
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateCube()
+std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 {
 	float cubeVerts[8 * 3] = {  // x, y, z
 		-0.5f, -0.5f,  0.5f,   0.5f, -0.5f,  0.5f,  0.5f, 0.5f,  0.5f,   -0.5f, 0.5f, 0.5f,
@@ -157,7 +157,7 @@ std::shared_ptr<IMesh> RenderDevice::CreateCube()
 	return mesh;
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
+std::shared_ptr<IMesh> IRenderDevice::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
 {
 	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
@@ -184,7 +184,7 @@ std::shared_ptr<IMesh> RenderDevice::CreateCylinder(float baseRadius, float apex
 	return nullptr;
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateCone()
+std::shared_ptr<IMesh> IRenderDevice::CreateCone()
 {
 	float coneVerts[13 * 3] = {  // x, y, z
 		0.f, 0.f, 0.f,
@@ -215,7 +215,7 @@ std::shared_ptr<IMesh> RenderDevice::CreateCone()
 	return mesh;
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateArrow(cvec3 tail, cvec3 head, float radius)
+std::shared_ptr<IMesh> IRenderDevice::CreateArrow(cvec3 tail, cvec3 head, float radius)
 {
 	/*std::shared_ptr<Scene> scene = CreateScene();
 	std::stringstream ss;
@@ -252,83 +252,83 @@ std::shared_ptr<IMesh> RenderDevice::CreateArrow(cvec3 tail, cvec3 head, float r
 
 }
 
-std::shared_ptr<IMesh> RenderDevice::CreateAxis(float radius, float length)
+std::shared_ptr<IMesh> IRenderDevice::CreateAxis(float radius, float length)
 {
 
 	return nullptr;
 }
 
-std::shared_ptr<MeshWrapper> RenderDevice::CreateMeshWrapper()
+std::shared_ptr<MeshWrapper> IRenderDevice::CreateMeshWrapper()
 {
-	return std::make_shared<MeshWrapper>(CreateMesh());
+	return std::make_shared<MeshWrapper>(SN_TYPE_NONE, CreateMesh());
 }
 
 // Template specializations for vertex buffers (with std::vector)
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
 {
 	return CreateFloatVertexBuffer(&(data[0]), (uint32)data.size(), 0, sizeof(float));
 }
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec2));
 }
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec3));
 }
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec4));
 }
 
 // Template specializations for vertex buffers (with common types)
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
 {
 	return CreateFloatVertexBuffer(data, count, 0, sizeof(float));
 }
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
 {
 	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec2));
 }
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
 {
 	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec3));
 }
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
+std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
 {
 	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec4));
 }
 
 // Template specializations for index buffers (with std::vector)
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer< std::vector<uint16> >(const std::vector<uint16>& data)
+std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer< std::vector<uint16> >(const std::vector<uint16>& data)
 {
 	return CreateUInt16IndexBuffer(&(data[0]), (uint16)data.size());
 }
 
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer< std::vector<uint32> >(const std::vector<uint32>& data)
+std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer< std::vector<uint32> >(const std::vector<uint32>& data)
 {
 	return CreateUInt32IndexBuffer(&(data[0]), (uint32)data.size());
 }
 
 // Template specializations for index buffers (with common types)
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count)
+std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count)
 {
 	return CreateUInt16IndexBuffer(data, count);
 }
 
 template<>
-std::shared_ptr<Buffer> RenderDevice::CreateIndexBuffer<uint32>(const uint32* data, uint32 count)
+std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint32>(const uint32* data, uint32 count)
 {
 	return CreateUInt32IndexBuffer(data, count);
 }

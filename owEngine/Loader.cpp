@@ -8,7 +8,7 @@ DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
 	CLoader* loader = (CLoader*)lpParam;
 	std::queue<ILoadable*>& lqueue = loader->getQueueLoad();
 
-	loader->getAdapter()->MakeMainContext();
+	//loader->getAdapter()->MakeMainContext();
 
 	while (true)
 	{
@@ -27,8 +27,7 @@ DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
 }
 
 CLoader::CLoader(IOpenGLAdapter* _openGLAdapter) :
-	m_Thread_Loader(nullptr),
-	m_OpenGLAdapter(_openGLAdapter)
+	m_Thread_Loader(nullptr)
 {
 	AddManager<ILoader>(this);
 }

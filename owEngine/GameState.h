@@ -1,7 +1,6 @@
 #pragma once
 
 class GameStateManager;
-class UIWindow;
 
 class CGameState : public IGameState, public IUpdatable, public IRenderableUI, public IInputListener
 {
@@ -21,9 +20,9 @@ public:
     bool IsCurrent() const override { return m_IsCurrent; }
 
 protected:
-    UIWindow*			m_Window;
-	IEngine*			m_Engine;
-	IUIMgr*             m_UIMgr;
+    //UIWindow*			m_Window;
+	//IEngine*			m_Engine;
+	//IUIMgr*             m_UIMgr;
 
 	CGroupQuality&		m_QualitySettings;
 	CGroupVideo&		m_VideoSettings;

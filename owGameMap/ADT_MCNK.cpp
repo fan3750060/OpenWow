@@ -11,7 +11,7 @@
 #include "ADT_Liquid.h"
 #include "MapController.h"
 #include "Map_Shared.h"
-#include "ADT_CHUNK_Material.h"
+#include "ADT_MCNK_Material.h"
 
 ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, std::shared_ptr<IFile> _file) :
 	m_MapController(_mapController),
@@ -68,12 +68,8 @@ bool ADT_MCNK::Load()
 
 	// Scene node params
 	{
-		//setOpaque(true);
-
 		// Set translate
 		setTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
-		// Matrix
-		//TransRotScaleToLocalTransform();
 		// Bounds
 		BoundingBox bbox
 		(
@@ -334,7 +330,7 @@ bool ADT_MCNK::Load()
 			}
 		}
 
-		//mccvBuffer = _Render->r.createVertexBuffer(C_MapBufferSize * sizeof(uint32), mccvColorsUINT8, false);
+		mccvBuffer = _RenderDevice->CreateUInt32VertexBuffer(mccvColorsUINT8, C_MapBufferSize, 0, sizeof(uint8));
 	}
 
 	m_File.reset();
@@ -364,7 +360,7 @@ bool ADT_MCNK::Load()
 
 
 	// Material
-	std::shared_ptr<ADT_CHUNK_Material> mat = std::make_shared<ADT_CHUNK_Material>();
+	std::shared_ptr<ADT_MCNK_Material> mat = std::make_shared<ADT_MCNK_Material>();
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
 		mat->SetTexture(i, m_DiffuseTextures[i]); // DXT1
@@ -379,6 +375,7 @@ bool ADT_MCNK::Load()
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
+		//__geomDefault->AddVertexBuffer(BufferBinding("COLOR", 0), mccvBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
 		__geomDefault->SetIndexBuffer(__ibDefault);

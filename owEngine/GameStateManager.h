@@ -16,5 +16,5 @@ public:
 
 private:
     IGameState*									m_CurrentGameState;
-    map<GameStatesNames::List, IGameState*>		m_GameStatesCollection;
+	std::map<GameStatesNames::List, IGameState*>		m_GameStatesCollection;
 };

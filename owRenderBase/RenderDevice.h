@@ -19,7 +19,7 @@ class PipelineState;
 /**
  * Render device encapsulates functions for creating resources on the GPU.
  */
-class RenderDevice : public Object
+class IRenderDevice : public Object
 {
 public:
 	// Get the name of the primary graphics device.
@@ -139,6 +139,8 @@ public:
 	virtual std::shared_ptr<PipelineState> CreatePipelineState() = 0;
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline) = 0;
 
+	virtual std::shared_ptr<Buffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride) = 0;
+	virtual std::shared_ptr<Buffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride) = 0;
 	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride) = 0;
 	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride) = 0;
 	virtual std::shared_ptr<Buffer> CreateUInt16IndexBuffer(const uint16* data, uint32 sizeInBytes) = 0;

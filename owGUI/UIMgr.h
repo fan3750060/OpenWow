@@ -60,8 +60,8 @@ protected:
     UIElement*          m_RootElement;
     UIElement*          m_FocusedElement;
 
-	vector<UIElement*>  m_ObjectsToDetach;
-	vector<UIElement*>  m_ObjectsToDelete;
+	std::vector<UIElement*>  m_ObjectsToDetach;
+	std::vector<UIElement*>  m_ObjectsToDelete;
 
 private:
 	FontsManager*		m_FontsMgr;

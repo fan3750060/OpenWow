@@ -15,7 +15,7 @@ bool WMO_Pass::Visit(IMesh& mesh)
 {
 	if (mesh.GetType() == SN_TYPE_WMO)
 	{
-		return mesh.Render(GetRenderEventArgs(), GetConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer());
 	}
 
 	return false;

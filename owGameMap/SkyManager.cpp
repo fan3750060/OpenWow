@@ -6,6 +6,9 @@
 // General
 #include "SkyManager.h"
 
+// Additional
+#include "Sky_Material.h"
+
 const float C_SkyRadius = 400.0f;
 const uint32 C_SkySegmentsCount = 32;
 
@@ -50,18 +53,29 @@ SkyManager::SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecor
 SkyManager::~SkyManager()
 {
 	ERASE_VECTOR(skies);
-
-	_Bindings->UnregisterRenderable3DObject(this);
 }
 
-void SkyManager::Calculate(uint32 _time)
+void SkyManager::Update(Camera* camera)
 {
 	if (skies.empty())
 	{
 		return;
 	}
 
-	//CalculateSkiesWeights(_Render->getCamera()->Position);
+	Calculate(camera, m_MapController.lock()->getTime()->GetTime());
+
+	setTranslate(camera->GetTranslation());
+	TransRotScaleToLocalTransform();
+}
+
+void SkyManager::Calculate(Camera* camera, uint32 _time)
+{
+	if (skies.empty())
+	{
+		return;
+	}
+
+	CalculateSkiesWeights(camera->GetTranslation());
 
 	// interpolation
 	m_Interpolated.Clear();
@@ -91,15 +105,16 @@ void SkyManager::Calculate(uint32 _time)
 		}
 	}
 
-	// Fill buffer with color
-	//colorsBuffer->updateBufferData(0, colors.size() * sizeof(vec4), colors.data());
+	std::shared_ptr<Buffer> colorsBufferNew = _RenderDevice->CreateVertexBuffer(colors);
+	colorsBuffer->Copy(colorsBufferNew);
+	_RenderDevice->DestroyVertexBuffer(colorsBufferNew);
 }
 
 
 
-bool SkyManager::DEBUG_Render()
+/*bool SkyManager::DEBUG_Render()
 {
-	/*_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
+	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
 	CDebug_GeometryPass* pass = _Render->getTechniquesMgr()->Debug_Pass.operator->();
 	pass->Bind();
@@ -121,47 +136,11 @@ bool SkyManager::DEBUG_Render()
 	pass->Unbind();
 
 
-	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);*/
+	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 
 	return false;
-}
+}*/
 
-bool SkyManager::PreRender3D()
-{
-	if (skies.empty())
-	{
-		return false;
-	}
-
-	Calculate(m_MapController.lock()->getTime()->GetTime());
-
-	return true;
-}
-
-void SkyManager::Render3D()
-{
-	/*_Render->r.setDepthTest(false);
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-
-	CSky_GeometryPass* pass = _Render->getTechniquesMgr()->Sky_Pass.operator->();
-	pass->Bind();
-	{
-		mat4 worldMatrix;
-		worldMatrix = glm::translate(worldMatrix, _Render->getCamera()->Position);
-		pass->setWorld(worldMatrix);
-
-		_Render->r.setGeometry(__geom);
-		_Render->r.draw(0, __vertsSize);
-	}
-	pass->Unbind();
-
-	//_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
-	_Render->r.setDepthTest(true);*/
-
-	//DEBUG_Render();
-}
 
 void SkyManager::InitBuffer()
 {
@@ -196,19 +175,19 @@ void SkyManager::InitBuffer()
 	std::shared_ptr<Buffer> vertexBuffer = _RenderDevice->CreateVertexBuffer(vertices);
 
 	// Colors buffer
-	//colorsBuffer = _RenderDevice->CreateFloatVertexBuffer(nullptr, vertices.size(), sizeof(vec4));
+	colorsBuffer = _RenderDevice->CreateFloatVertexBuffer((float*)vertices.data(), vertices.size(), 0, sizeof(vec4));
 
 	// Geometry
 	__geom = _RenderDevice->CreateMesh();
+	__geom->SetType(SN_TYPE_SKY);
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), vertexBuffer);
-	//__geom->AddVertexBuffer(BufferBinding("COLOR", 1), colorsBuffer);
+	__geom->AddVertexBuffer(BufferBinding("COLOR", 0), colorsBuffer);
 
-	//__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PC);
-	//__geom->setGeomVertexParams(vertexBuffer, R_DataType::T_FLOAT, 0, 0);
-	//__geom->setGeomVertexParams(colorsBuffer, R_DataType::T_FLOAT, 0, 0);
-	//__geom->finishCreatingGeometry();
+	// Material
+	std::shared_ptr<Material> material = std::make_shared<Sky_Material>();
+	__geom->SetMaterial(material);
 
-	_Bindings->RegisterRenderable3DObject(this, 15);
+	AddMesh(__geom);
 }
 
 void SkyManager::CalculateSkiesWeights(cvec3 pos)

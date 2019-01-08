@@ -18,12 +18,10 @@ EnvironmentManager::EnvironmentManager()
 	m_OutdoorNightDiffuseColor = vec4();
 	m_OutdoorSpecularColor = vec4();
 
-	_Bindings->RegisterRenderable3DObject(this, 5);
 }
 
 EnvironmentManager::~EnvironmentManager()
 {
-	_Bindings->UnregisterRenderable3DObject(this);
 }
 
 bool EnvironmentManager::PreRender3D()

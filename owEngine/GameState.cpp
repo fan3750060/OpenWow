@@ -4,25 +4,25 @@
 #include "GameState.h"
 
 CGameState::CGameState() : 
-	m_Window(nullptr),
+	//m_Window(nullptr),
 	m_IsInited(false), 
 	m_IsCurrent(false),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>()),
 	m_VideoSettings(GetSettingsGroup<CGroupVideo>())
 {
-	m_Engine = GetManager<IEngine>();
-	m_UIMgr = GetManager<IUIMgr>();
+	//m_Engine = GetManager<IEngine>();
+	//m_UIMgr = GetManager<IUIMgr>();
 }
 
 CGameState::~CGameState()
 {
-	SafeDelete(m_Window);
+	//SafeDelete(m_Window);
 }
 
 bool CGameState::Init()
 {
-    m_Window = new UIWindow(GetManager<IUIMgr>());
-    m_Window->Init(vec2(0.0f, 0.0f), vec2(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY), nullptr);
+    //m_Window = new UIWindow(GetManager<IUIMgr>());
+    //m_Window->Init(vec2(0.0f, 0.0f), vec2(m_VideoSettings.windowSizeX, m_VideoSettings.windowSizeY), nullptr);
 
     m_IsInited = true;
 
@@ -31,7 +31,7 @@ bool CGameState::Init()
 
 void CGameState::Destroy()
 {
-	delete m_Window;
+	//delete m_Window;
 }
 
 bool CGameState::Set()
@@ -40,7 +40,7 @@ bool CGameState::Set()
 	_Bindings->RegisterRenderableUIObject(this, 100);
 	_Bindings->RegisterInputListener(this);
 
-    GetManager<IUIMgr>()->SetRootElement(m_Window);
+  //  GetManager<IUIMgr>()->SetRootElement(m_Window);
 
     return true;
 }

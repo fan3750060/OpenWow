@@ -2,17 +2,19 @@
 
 class Material;
 
-class RenderDeviceDX11 : public RenderDevice
+class RenderDeviceDX11 : public IRenderDevice
 {
 public:
-	typedef RenderDevice base;
+	typedef IRenderDevice base;
 
 	RenderDeviceDX11();
 	virtual ~RenderDeviceDX11();
 
 	virtual cstring GetDeviceName() const;
 
-	// Inherited from RenderDevice
+	// Inherited from IRenderDevice
+	virtual std::shared_ptr<Buffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride);
+	virtual std::shared_ptr<Buffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride);
 	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride);
 	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride);
 	virtual std::shared_ptr<Buffer> CreateUInt16IndexBuffer(const uint16* data, uint32 count);

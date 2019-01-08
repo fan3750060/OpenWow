@@ -6,7 +6,7 @@ class Texture;
 class MaterialTextured : public Material
 {
 public:
-	MaterialTextured(RenderDevice* renderDevice);
+	MaterialTextured(IRenderDevice* renderDevice);
 	virtual ~MaterialTextured();
 
 	std::shared_ptr<Texture> GetTexture() const;

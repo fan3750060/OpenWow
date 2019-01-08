@@ -28,7 +28,7 @@
       <Filter>RenderStuff</Filter>
     </ClCompile>
     <ClCompile Include="Liquid_Pass.cpp">
-      <Filter>RenderStuff</Filter>
+      <Filter>Liquid</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +58,7 @@
       <Filter>RenderStuff</Filter>
     </ClInclude>
     <ClInclude Include="Liquid_Pass.h">
-      <Filter>RenderStuff</Filter>
+      <Filter>Liquid</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

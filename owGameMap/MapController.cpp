@@ -75,6 +75,7 @@ void MapController::MapLoad()
 
 	m_SkyManager.reset();
 	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()), m_DBC_Map);
+	m_SkyManager->SetParent(weak_from_this());
 
 	// Load data
 	m_WDT->Load();
