@@ -32,6 +32,8 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 		return false;
 	}
 
+	m_TestMaterial->SetBlendMode(m_Material->getBlendMode());
+
 	std::shared_ptr<CM2_Comp_Skeleton> skeleton = m_ParentM2.lock()->getSkeleton();
 
 	bool isAnimated = skeleton->hasBones() && m_ParentM2.lock()->m_IsAnimated;
@@ -44,10 +46,10 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 			skeleton->getBoneLookup(i)->SetNeedCalculate();
 
 		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
-			skeleton->getBoneLookup(i)->calcMatrix(sceneNodeAsM2Instance->getAnimator()->getSequenceIndex(), sceneNodeAsM2Instance->getAnimator()->getCurrentTime(), 0);
+			skeleton->getBoneLookup(i)->calcMatrix(sceneNodeAsM2Instance->getAnimator()->getSequenceIndex(), sceneNodeAsM2Instance->getAnimator()->getCurrentTime(), static_cast<uint32>(renderEventArgs.TotalTime));
 
-		//for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
-		//	skeleton->getBoneLookup(i)->calcBillboard(sceneNodeAsM2Instance->GetWorldTransfom());
+		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
+			skeleton->getBoneLookup(i)->calcBillboard(sceneNodeAsM2Instance->GetWorldTransfom());
 
 		std::vector<mat4> bones;
 		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)

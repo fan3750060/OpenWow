@@ -7,8 +7,10 @@ public:
 	virtual ~M2_Material();
 
 	void SetAnimated(uint32 value);
-	void SetBones(const std::vector<mat4>& bones);
 	void SetMaxInfluences(uint32 value);
+	void SetBlendMode(uint32 value);
+	void SetBones(const std::vector<mat4>& bones);
+	
 
 protected:
 	void UpdateConstantBuffer() const override;
@@ -22,7 +24,8 @@ private:
 		{}
 		uint32 gIsAnimated;
 		uint32 gBonesMaxInfluences;
-		vec2 pad;
+		uint32 gBlendMode;
+		float pad;
 		mat4 Bones[200];
 		//-------------------------- ( 32 bytes )
 	};

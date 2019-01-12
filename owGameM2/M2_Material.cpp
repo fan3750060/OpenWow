@@ -63,6 +63,12 @@ void M2_Material::SetMaxInfluences(uint32 value)
 	m_Dirty = true;
 }
 
+void M2_Material::SetBlendMode(uint32 value)
+{
+	m_pProperties->gBlendMode = value;
+	m_Dirty = true;
+}
+
 //--
 
 void M2_Material::UpdateConstantBuffer() const

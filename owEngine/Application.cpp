@@ -456,7 +456,7 @@ int Application::Run()
 			UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
 			OnUpdate(updateArgs);
 
-			RenderEventArgs renderArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
+			RenderEventArgs renderArgs(*this, g_GameDeltaTime * 1000.0f, g_ApplicationTime * 1000.0f, g_FrameCounter);
 			OnRender(renderArgs);
 		}
 	}

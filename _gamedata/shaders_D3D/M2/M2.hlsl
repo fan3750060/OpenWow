@@ -62,5 +62,20 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord0);
+	float4 resultColor = DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord0);
+	
+	if (Material.gBlendMode == 0) // GxBlend_Opaque
+	{
+		resultColor.a = 1.0f;
+	}
+	else if (Material.gBlendMode == 1) // GxBlend_AlphaKey
+	{
+		if (resultColor.a < (224.0f / 255.0f)) discard;
+	}
+	else 
+	{
+		if (resultColor.a < (1.0f / 255.0f)) discard;
+	}
+	
+	return resultColor;
 }
