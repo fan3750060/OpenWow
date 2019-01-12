@@ -10,9 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "owCore", "owCore\owCore.vcx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{7117DD40-5090-4982-B565-034F60A0D3B1}"
-	ProjectSection(SolutionItems) = preProject
-		owNsight.nvact = owNsight.nvact
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpq", "Externals\libmpq\libmpq.vcxproj", "{0CC7FA61-23DE-4D9F-A6F4-FDA327AB5984}"
 EndProject

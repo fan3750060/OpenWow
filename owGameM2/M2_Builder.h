@@ -42,7 +42,7 @@ private:
 	SM2_Bone*				m_M2Bones;
 
 	// Vertices
-	std::vector<SM2_Vertex>		m_Vertexes;
+	std::vector<SM2_Vertex>	m_Vertexes;
 
 	// Skins
 	SM2_SkinProfile*		m_Skins;

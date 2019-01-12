@@ -24,13 +24,14 @@ class RenderEventArgs : public EventArgs
 {
 public:
 	typedef EventArgs base;
-	RenderEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, Camera* camera = nullptr, PipelineState* pipelineState = nullptr)
+	RenderEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, Camera* camera = nullptr, PipelineState* pipelineState = nullptr, Object* node = nullptr)
 		: base(caller)
 		, ElapsedTime(fDeltaTime)
 		, TotalTime(fTotalTime)
 		, FrameCounter(frameCounter)
 		, Camera(camera)
 		, PipelineState(pipelineState)
+		, Node(node)
 	{}
 
 	float ElapsedTime;
@@ -38,6 +39,7 @@ public:
 	int64_t FrameCounter;
 	Camera* Camera;
 	PipelineState* PipelineState;
+	Object* Node;
 };
 typedef Delegate<RenderEventArgs> RenderEvent;
 

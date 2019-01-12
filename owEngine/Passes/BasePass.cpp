@@ -62,6 +62,9 @@ void BasePass::PostRender(RenderEventArgs& e)
 
 bool BasePass::Visit(SceneNode& node)
 {
+	Object& nodeAsObject = reinterpret_cast<Object&>(node);
+	m_pRenderEventArgs->Node = &nodeAsObject;
+
 	Camera* camera = GetRenderEventArgs().Camera;
 	if (camera)
 	{

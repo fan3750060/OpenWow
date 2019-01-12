@@ -68,64 +68,10 @@ void Camera::SetOrthographic(float left, float right, float top, float bottom)
 	m_bViewProjectionInverseDirty = true;
 }
 
-//--
 
-void Camera::AddPitch(float fPitch, Space space)
-{
-	switch (space)
-	{
-	case Space::Local:
-		m_Rotate = glm::angleAxis(glm::radians(fPitch), m_Rotate * vec3(1, 0, 0)) * m_Rotate;
-		break;
-	case Space::World:
-		m_Rotate = glm::angleAxis(glm::radians(fPitch), vec3(1, 0, 0)) * m_Rotate;
-	}
-
-	m_bViewDirty = true;
-}
-
-void Camera::AddYaw(float fYaw, Space space)
-{
-	switch (space)
-	{
-	case Space::Local:
-		m_Rotate = glm::angleAxis(glm::radians(fYaw), m_Rotate * vec3(0, 1, 0)) * m_Rotate;
-		break;
-	case Space::World:
-		m_Rotate = glm::angleAxis(glm::radians(fYaw), vec3(0, 1, 0)) * m_Rotate;
-		break;
-	}
-
-	m_bViewDirty = true;
-}
-
-void Camera::AddRoll(float fRoll, Space space)
-{
-	switch (space)
-	{
-	case Space::Local:
-		m_Rotate = glm::angleAxis(glm::radians(fRoll), m_Rotate * vec3(0, 0, 1)) * m_Rotate;
-		break;
-	case Space::World:
-		m_Rotate = glm::angleAxis(glm::radians(fRoll), vec3(0, 0, 1)) * m_Rotate;
-		break;
-	}
-	m_bViewDirty = true;
-}
-
-void Camera::SetEulerAngles(cvec3 eulerAngles)
-{
-	m_Rotate = glm::quat(glm::radians(eulerAngles));
-	m_bViewDirty = true;
-}
-
-void Camera::AddRotation(const glm::quat& deltaRot)
-{
-	m_Rotate = m_Rotate * deltaRot;
-	m_bViewDirty = true;
-}
-
-
+//
+// Translate
+//
 void Camera::TranslateX(float x, Space space)
 {
 	switch (space)
@@ -171,10 +117,78 @@ void Camera::TranslateZ(float z, Space space)
 	m_bViewDirty = true;
 }
 
-
 void Camera::SetTranslate(cvec3 translate)
 {
 	m_Translate = translate;
+	m_bViewDirty = true;
+}
+
+vec3 Camera::GetTranslation() const
+{
+	return m_Translate;
+}
+
+
+//
+// Rotate
+//
+void Camera::SetEulerAngles(cvec3 eulerAngles)
+{
+	m_Rotate = glm::quat(glm::radians(eulerAngles));
+	m_bViewDirty = true;
+}
+
+vec3 Camera::GetEulerAngles() const
+{
+	return glm::degrees(glm::eulerAngles(m_Rotate));
+}
+
+void Camera::AddPitch(float fPitch, Space space)
+{
+	switch (space)
+	{
+	case Space::Local:
+		m_Rotate = glm::angleAxis(glm::radians(fPitch), m_Rotate * vec3(1, 0, 0)) * m_Rotate;
+		break;
+	case Space::World:
+		m_Rotate = glm::angleAxis(glm::radians(fPitch), vec3(1, 0, 0)) * m_Rotate;
+	}
+
+	m_bViewDirty = true;
+}
+
+void Camera::AddYaw(float fYaw, Space space)
+{
+	switch (space)
+	{
+	case Space::Local:
+		m_Rotate = glm::angleAxis(glm::radians(fYaw), m_Rotate * vec3(0, 1, 0)) * m_Rotate;
+		break;
+	case Space::World:
+		m_Rotate = glm::angleAxis(glm::radians(fYaw), vec3(0, 1, 0)) * m_Rotate;
+		break;
+	}
+
+	m_bViewDirty = true;
+}
+
+void Camera::AddRoll(float fRoll, Space space)
+{
+	switch (space)
+	{
+	case Space::Local:
+		m_Rotate = glm::angleAxis(glm::radians(fRoll), m_Rotate * vec3(0, 0, 1)) * m_Rotate;
+		break;
+	case Space::World:
+		m_Rotate = glm::angleAxis(glm::radians(fRoll), vec3(0, 0, 1)) * m_Rotate;
+		break;
+	}
+	m_bViewDirty = true;
+}
+
+void Camera::AddRotation(const glm::quat& deltaRot)
+{
+	m_Rotate = m_Rotate * deltaRot;
 	m_bViewDirty = true;
 }
 
@@ -194,6 +208,13 @@ void Camera::SetRotate(const glm::quat& rot)
 	m_bViewDirty = true;
 }
 
+glm::quat Camera::GetRotation() const
+{
+	return m_Rotate;
+}
+
+// Pivot
+
 void Camera::SetPivotDistance(float pivotDistance)
 {
 	// Make sure pivot distance is always positive.
@@ -212,21 +233,11 @@ vec3 Camera::GetPivotPoint() const
 	return m_Translate;
 }
 
-
-vec3 Camera::GetTranslation() const
+bool Camera::IsDirty() const
 {
-	return m_Translate;
+	return m_bViewDirty;
 }
 
-glm::quat Camera::GetRotation() const
-{
-	return m_Rotate;
-}
-
-vec3 Camera::GetEulerAngles() const
-{
-	return glm::degrees(glm::eulerAngles(m_Rotate));
-}
 
 void Camera::UpdateViewMatrix()
 {

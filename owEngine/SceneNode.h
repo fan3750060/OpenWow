@@ -19,49 +19,53 @@ public:
 	virtual void SetName(cstring name);
 
 	// Translate
-	void setTranslate(cvec3 _translate) { m_Translate = _translate;  }
-	cvec3 getTranslate() const { return m_Translate; }
+	void setTranslate(cvec3 _translate);
+	cvec3 getTranslate() const;
 
 	// Rotate
-	void setRotate(cvec3 _rotate) { m_Rotate = _rotate;  }
-	cvec3 getRotate() const { return m_Rotate; }
+	void setRotate(cvec3 _rotate);
+	cvec3 getRotate() const;
 
 	// Rotate Quaternion
-	void setRotateQuat(cquat _rotate) { m_RotateQuat = _rotate; m_IsRotateQuat = true; }
-	cquat getRotateQuat() const { return m_RotateQuat; }
+	void setRotateQuat(cquat _rotate);
+	cquat getRotateQuat() const;
 
 	// Scale
-	void setScale(cvec3 _scale) { m_Scale = _scale; }
-	cvec3 getScale() const { return m_Scale; }
+	void setScale(cvec3 _scale);
+	cvec3 getScale() const;
 
 	// Bounds
-	void setBounds(BoundingBox _bbox) { m_Bounds = _bbox; }
-	cbbox getBounds() const { return m_Bounds; }
+	void setBounds(BoundingBox _bbox);
+	cbbox getBounds() const;
+
+	bool IsDirty() const;
 
 	/**
 	 * Gets the scene node's local transform (relative to it's parent world transform).
 	 */
-	mat4 GetLocalTransform() const;
-	void SetLocalTransform(cmat4 localTransform);
-
+	mat4 GetLocalTransform();
 	/**
 	 * Gets the inverse of the local transform (relative to it's parent world transform).
 	 */
-	mat4 GetInverseLocalTransform() const;
+	mat4 GetInverseLocalTransform();
+	void SetLocalTransform(cmat4 localTransform);
+
+
 
 	/**
 	 * Gets the scene node's world transform (concatenated with parents world transform)
 	 * This function should be used sparingly as it is computed every time
 	 * it is requested.
 	 */
-	mat4 GetWorldTransfom() const;
-	void SetWorldTransform(cmat4 worldTransform);
-
+	mat4 GetWorldTransfom();
 	/**
 	 * Gets the inverse world transform of this scene node.
 	 * Use this function sparingly as it is computed every time it is requested.
 	 */
-	mat4 GetInverseWorldTransform() const;
+	mat4 GetInverseWorldTransform();
+	void SetWorldTransform(cmat4 worldTransform);
+
+
 
 	/**
 	 * Add a child node to this node.
@@ -101,7 +105,10 @@ public:
 
 protected:
 	virtual mat4 GetParentWorldTransform() const;
-	virtual void TransRotScaleToLocalTransform();
+
+	virtual void UpdateLocalTransform();
+	virtual void UpdateWorldTransform();
+	void SetLocalUnderty();
 
 private:
 	typedef std::vector<std::shared_ptr<SceneNode>> NodeList;
@@ -113,14 +120,21 @@ private:
 
 	// Transforms node from parent's space to world space for rendering.
 	mat4                m_LocalTransform;
+	mat4                m_InverseLocalTransform;	// This is the inverse of the local -> world transform.
+	bool                m_IsLocalDirty;
+
+	mat4                m_WorldTransform;
+	mat4                m_InverseWorldTransform;
+	bool                m_IsWorldDirty;
+
 	vec3                m_Translate;
 	vec3				m_Rotate;
 	quat				m_RotateQuat;
 	bool                m_IsRotateQuat;
 	vec3                m_Scale;
 	BoundingBox         m_Bounds;
-	// This is the inverse of the local -> world transform.
-	mat4                m_InverseLocalTransform;
+	
+	
 
 	std::weak_ptr<SceneNode>  m_pParentNode;
 	NodeList                  m_Children;

@@ -8,8 +8,6 @@ CM2_Base_Instance::CM2_Base_Instance(std::shared_ptr<M2> _m2Object) :
 	m_Attached(nullptr),
 	m_Animator(nullptr),
 	m_NeedRecalcAnimation(true),
-	m_Time(0.0f),
-	m_DTime(0.0f),
 	m_Color(vec4(1.0f, 1.0f, 1.0f, 1.0f)),
 	m_Alpha(1.0f)
 {
@@ -56,7 +54,7 @@ void CM2_Base_Instance::setM2(std::shared_ptr<M2> _model)
 	m_M2 = _model;
 
 	InitAnimator();
-	TransRotScaleToLocalTransform();
+	UpdateLocalTransform();
 }
 
 // Mesh & textures provider
@@ -84,20 +82,15 @@ std::shared_ptr<Texture> CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type 
 
 
 
-// IUpdatable
-void CM2_Base_Instance::Update(double _time, double _dTime)
-{
-	m_Time = _time;
-	m_DTime = _dTime;
-	
-	m_M2->update(_time, _dTime);
-}
+//
+//	m_M2->update(_time, _dTime);
+//
 
 void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
 {
 	SceneNode::SetParent(pNode);
 
-	TransRotScaleToLocalTransform();
+	UpdateLocalTransform();
 }
 
 bool CM2_Base_Instance::Accept(IVisitor& visitor)
@@ -120,11 +113,11 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 	/*if (m_Attached != nullptr)
 	{
 		TransRotScaleToLocalTransform();
-	}
+	}*/
 
 	if (m_M2->isAnimated())
 	{
-		m_Animator->Update(m_Time, m_DTime);
+		m_Animator->Update(visitorAsBasePass.GetRenderEventArgs().TotalTime, visitorAsBasePass.GetRenderEventArgs().ElapsedTime);
 
 		//if (m_Object->isBillboard())
 		//{
@@ -134,17 +127,11 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 		//{
 		//if (!m_NeedRecalcAnimation)
 		//{
-		m_M2->calc(m_Animator->getSequenceIndex(), GetWorldTransfom(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
+		m_M2->calc(m_Animator->getSequenceIndex(), GetWorldTransfom(), m_Animator->getCurrentTime(), static_cast<uint32>(visitorAsBasePass.GetRenderEventArgs().TotalTime));
 		//	m_NeedRecalcAnimation = true;
 		//}
 		//}
-
-		//m_M2->Render(thisGetWorldTransfom(), m_MeshProvider, m_DoodadColor, m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(m_Time));
-	}*/
-
-	//_Render->DrawBoundingBox(getBounds());
-
-	//m_M2->Render(this/*GetWorldTransfom(), m_MeshProvider, m_DoodadColor, 0, 0, static_cast<uint32>(m_Time)*/);
+	}
 
 	// SceneNode
 	return SceneNode::Accept(visitor);
@@ -160,7 +147,7 @@ void CM2_Base_Instance::InitAnimator()
 	}
 }
 
-void CM2_Base_Instance::TransRotScaleToLocalTransform()
+void CM2_Base_Instance::UpdateLocalTransform()
 {
 	if (m_Attached != nullptr)
 	{
@@ -181,7 +168,7 @@ void CM2_Base_Instance::TransRotScaleToLocalTransform()
 		return;
 	}
 
-	SceneNode::TransRotScaleToLocalTransform(/*TRUE*/);
+	SceneNode::UpdateLocalTransform();
 
 	BoundingBox bbox = m_M2->m_Bounds;
 	bbox.transform(GetWorldTransfom());

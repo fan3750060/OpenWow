@@ -115,11 +115,15 @@ int main(int argumentCount, char* arguments[])
 
 		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
-
 		contr->MapPreLoad(*DBC_Map[1/*571*/]);
 		contr->MapLoad();
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);
+
+		//std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
+		//std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
+		//inst->CreateInstances();
+		//inst->SetParent(g_pScene->GetRootNode());
 
 
 		Viewport viewPort(0, 0, 1280.0f, 1024.0f);

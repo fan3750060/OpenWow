@@ -6,6 +6,10 @@
 LiquidMaterial::LiquidMaterial() :
 	Material(_RenderDevice)
 {
+	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
+	*m_pProperties = MaterialProperties();
+	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
+
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/Liquid/Liquid.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
@@ -29,4 +33,43 @@ LiquidMaterial::LiquidMaterial() :
 
 LiquidMaterial::~LiquidMaterial()
 {
+	if (m_pProperties)
+	{
+		_aligned_free(m_pProperties);
+		m_pProperties = nullptr;
+	}
+}
+
+void LiquidMaterial::SetShallowAlpha(float value)
+{
+	m_pProperties->gShallowAlpha = value;
+	m_Dirty = true;
+}
+
+void LiquidMaterial::SetDeepAlpha(float value)
+{
+	m_pProperties->gDeepAlpha = value;
+	m_Dirty = true;
+}
+
+void LiquidMaterial::SetColorLight(vec3 value)
+{
+	m_pProperties->gColorLight = value;
+	m_Dirty = true;
+}
+
+void LiquidMaterial::SetColorDark(vec3 value)
+{
+	m_pProperties->gColorDark = value;
+	m_Dirty = true;
+}
+
+//--
+
+void LiquidMaterial::UpdateConstantBuffer() const
+{
+	if (m_pConstantBuffer)
+	{
+		m_pConstantBuffer->Set(*m_pProperties);
+	}
 }

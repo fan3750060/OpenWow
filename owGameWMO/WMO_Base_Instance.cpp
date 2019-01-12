@@ -29,7 +29,7 @@ void CWMO_Base_Instance::InitTransform()
 void CWMO_Base_Instance::EmptyTransformAndBounds()
 {
 	// Matrix
-	TransRotScaleToLocalTransform();
+	UpdateLocalTransform();
 
 	// Bounds
 	BoundingBox bbox;

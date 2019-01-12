@@ -29,9 +29,9 @@ ADT_MCNK::~ADT_MCNK()
 	//Log::Info("ADT_MCNK Deleted");
 }
 
-void ADT_MCNK::TransRotScaleToLocalTransform()
+void ADT_MCNK::UpdateLocalTransform()
 {
-	assert1(false);
+	SetLocalUnderty();
 }
 
 //

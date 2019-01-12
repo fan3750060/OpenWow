@@ -6,6 +6,9 @@ public:
 	Liquid_Layer(std::shared_ptr<IMesh> _mesh);
 	virtual ~Liquid_Layer();
 
+
+
+public:
 	const DBC_LiquidTypeRecord* LiquidType;
 	uint16 VertexFormat;
 

@@ -31,11 +31,6 @@ public:
 
 	// Animations
 	std::shared_ptr<CM2_Animator> getAnimator() { return m_Animator; }
-	double m_Time;  // TODO: Delete me!!!
-	double m_DTime; // TODO: Delete me!!!
-
-	// IUpdatable
-	void Update(double _time, double _dTime);
 
 	// SceneNode
 	void SetParent(std::weak_ptr<SceneNode> pNode);
@@ -43,7 +38,7 @@ public:
 
 protected:
 	void InitAnimator();
-	virtual void TransRotScaleToLocalTransform() override;
+	virtual void UpdateLocalTransform() override;
 
 private:
 	// Color & Alpha

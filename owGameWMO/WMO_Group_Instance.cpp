@@ -15,7 +15,7 @@ CWMO_Group_Instance::CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _objec
 {
 	{
 		// Matrix
-		TransRotScaleToLocalTransform();
+		UpdateLocalTransform();
 
 		//BoundingBox bbox = _object->m_Bounds;
 		//bbox.calculateCenter();

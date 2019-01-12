@@ -65,7 +65,7 @@ void SkyManager::Update(Camera* camera)
 	Calculate(camera, m_MapController.lock()->getTime()->GetTime());
 
 	setTranslate(camera->GetTranslation());
-	TransRotScaleToLocalTransform();
+	UpdateLocalTransform();
 }
 
 void SkyManager::Calculate(Camera* camera, uint32 _time)

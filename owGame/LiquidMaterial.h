@@ -5,4 +5,27 @@ class LiquidMaterial : public Material
 public:
 	LiquidMaterial();
 	virtual ~LiquidMaterial();
+
+	void SetShallowAlpha(float value);
+	void SetDeepAlpha(float value);
+	void SetColorLight(vec3 value);
+	void SetColorDark(vec3 value);
+
+protected:
+	void UpdateConstantBuffer() const override;
+
+private:
+	__declspec(align(16)) struct MaterialProperties
+	{
+		MaterialProperties()
+			: gColorLight(1, 1, 1)
+			, gColorDark(1, 1, 1)
+		{}
+		float gShallowAlpha;
+		float gDeepAlpha;
+		vec3 gColorLight;
+		vec3 gColorDark;
+		//-------------------------- ( 32 bytes )
+	};
+	MaterialProperties* m_pProperties;
 };

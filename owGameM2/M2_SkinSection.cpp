@@ -14,83 +14,60 @@ CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<const M2> _model, const uin
 	m_ParentM2(_model),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-
 }
+
+struct SM2_Vertex_BoneWeight
+{
+	float weights[4];
+};
+
+struct SM2_Vertex_BoneIndex
+{
+	uint32 indexes[4];
+};
 
 void CM2_SkinSection::CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes)
 {
-	std::shared_ptr<Buffer> VB_Vertexes = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 0, sizeof(SM2_Vertex));
-	std::shared_ptr<Buffer> VB_BoneWeights = _RenderDevice->CreateUInt32VertexBuffer((const uint32*)_vertexes.data(), _vertexes.size(), 12, sizeof(SM2_Vertex));
-	std::shared_ptr<Buffer> VB_BoneIndices = _RenderDevice->CreateUInt32VertexBuffer((const uint32*)_vertexes.data(), _vertexes.size(), 16, sizeof(SM2_Vertex));
-	std::shared_ptr<Buffer> VB_Normals = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 20, sizeof(SM2_Vertex));
-	std::shared_ptr<Buffer> VB_TextureCoords0 = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 32, sizeof(SM2_Vertex));
-	std::shared_ptr<Buffer> VB_TextureCoords1 = _RenderDevice->CreateFloatVertexBuffer((const float*)_vertexes.data(), _vertexes.size(), 40, sizeof(SM2_Vertex));
+	std::vector<vec3> verts;
+	std::vector<SM2_Vertex_BoneWeight> weights;
+	std::vector<SM2_Vertex_BoneIndex> indexes;
+	std::vector<vec3> normals;
+	std::vector<vec2> tex0;
+	std::vector<vec2> tex1;
+
+	for (const auto& it : _vertexes)
+	{
+		SM2_Vertex_BoneWeight m2_weights;
+		SM2_Vertex_BoneIndex m2_indexes;
+		for (uint8 i = 0; i < 4; i++)
+		{
+			m2_weights.weights[i] = static_cast<float>(it.bone_weights[i]) / 255.0f;
+			m2_indexes.indexes[i] = it.bone_indices[i];
+		}
+
+		verts.push_back(it.pos);
+		weights.push_back(m2_weights);
+		indexes.push_back(m2_indexes);
+		normals.push_back(it.normal);
+		tex0.push_back(it.tex_coords[0]);
+		tex1.push_back(it.tex_coords[1]);
+	}
+
+	std::shared_ptr<Buffer> VB_Vertexes = _RenderDevice->CreateFloatVertexBuffer((float*)verts.data(), verts.size(), 0, sizeof(vec3));
+	std::shared_ptr<Buffer> VB_BoneWeights = _RenderDevice->CreateFloatVertexBuffer((float*)weights.data(), weights.size(), 0, sizeof(SM2_Vertex_BoneWeight));
+	std::shared_ptr<Buffer> VB_BoneIndices = _RenderDevice->CreateUInt32VertexBuffer((uint32*)indexes.data(), indexes.size(), 0, sizeof(SM2_Vertex_BoneIndex));
+	std::shared_ptr<Buffer> VB_Normals = _RenderDevice->CreateFloatVertexBuffer((float*)normals.data(), normals.size(), 0, sizeof(vec3));
+	std::shared_ptr<Buffer> VB_TextureCoords0 = _RenderDevice->CreateFloatVertexBuffer((float*)tex0.data(), tex0.size(), 0, sizeof(vec2));
+	std::shared_ptr<Buffer> VB_TextureCoords1 = _RenderDevice->CreateFloatVertexBuffer((float*)tex1.data(), tex1.size(), 0, sizeof(vec2));
 	std::shared_ptr<Buffer> IB_Indexes = _RenderDevice->CreateIndexBuffer(_indexes);
 
 	__geom = _RenderDevice->CreateMesh();
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
-	__geom->AddVertexBuffer(BufferBinding("BLENDINDICES", 0), VB_BoneWeights);
-	__geom->AddVertexBuffer(BufferBinding("BLENDINDICES", 1), VB_BoneIndices);
+	__geom->AddVertexBuffer(BufferBinding("BLENDWEIGHT", 0), VB_BoneWeights);
+	__geom->AddVertexBuffer(BufferBinding("BLENDINDICES", 0), VB_BoneIndices);
 	__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
 	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords0);
 	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), VB_TextureCoords1);
 	__geom->SetIndexBuffer(IB_Indexes);
-
-
-	//std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(static_cast<uint32>(_vertexes.size()) * sizeof(SM2_Vertex), _vertexes.data(), false);
-	//std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(_indexes);
-
-	//std::shared_ptr<Buffer> __vbPos = _RenderDevice->CreateFloatBuffer(
-
-	// Begin geometry
-	/*__geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PBNT2);
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 0 * sizeof(float), sizeof(SM2_Vertex)); // pos 0-2
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 3 * sizeof(float), sizeof(SM2_Vertex)); // blend 3
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 4 * sizeof(float), sizeof(SM2_Vertex)); // index 4
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 5 * sizeof(float), sizeof(SM2_Vertex)); // normal 5-7
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 8 * sizeof(float), sizeof(SM2_Vertex)); // tc0 8-9
-	__geom->setGeomVertexParams(__vb, R_DataType::T_FLOAT, 10 * sizeof(float), sizeof(SM2_Vertex)); // tc1 10-11
-	__geom->setGeomIndexParams(__ib, R_IndexFormat::IDXFMT_16);
-	__geom->finishCreatingGeometry();*/
 }
 
-void CM2_SkinSection::Draw(CM2_Base_Instance* _instance)
-{
-	/*CM2_Pass* pass = _Render->getTechniquesMgr()->M2_Pass.operator->();
-
-	CM2_Comp_Skeleton* skeleton = m_ParentM2->getSkeleton();
-
-	bool isAnimated = skeleton->hasBones() && m_ParentM2->m_IsAnimated;
-	pass->SetAnimated(isAnimated);
-	if (isAnimated)
-	{
-		pass->SetBonesMaxInfluences(m_Proto.boneInfluences);
-
-		//for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		//	skeleton->getBoneLookup(i)->SetNeedCalculate();
-
-		//for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		//	skeleton->getBoneLookup(i)->calcMatrix(_instance->getAnimator()->getSequenceIndex(), _instance->getAnimator()->getCurrentTime(), _instance->m_Time);
-
-		//for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		//	skeleton->getBoneLookup(i)->calcBillboard(_instance->GetWorldTransfom());
-
-		std::vector<mat4> bones;
-		for (uint16 i = m_Proto.bonesStartIndex; i < m_Proto.bonesStartIndex + m_Proto.boneCount; i++)
-		{
-			assert1(skeleton->isLookupBoneCorrect(i));
-			bones.push_back(skeleton->getBoneLookup(i)->getTransformMatrix());
-		}
-
-		pass->SetBones(bones);
-	}
-
-	_state->setGeometry(__geom);
-
-	_Render->r.drawIndexed
-	(
-		0, getProto().indexCount,
-		0, getProto().vertexCount,
-		_state,	true
-	);*/
-}

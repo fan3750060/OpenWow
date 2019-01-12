@@ -34,54 +34,45 @@ public:
 	// Set an orthographic projection using screen space coordinates.
 	void SetOrthographic(float left, float right, float top, float bottom);
 
-	// Add this pitch (rotation about the X-axis) in degrees to the current camera's pitch 
-	void AddPitch(float fPitch, Space space = Space::Local);
-	// Add this yaw (rotation about the Y-axis) in degrees to the current camera's yaw
-	void AddYaw(float fYaw, Space space = Space::Local);
-	// Add this roll (rotation about the Z-axis) in degrees to the current camera's roll
-	void AddRoll(float fRoll, Space space = Space::Local);
+	// Translate
 
-	// Set Euler angles (in degrees)
-	void SetEulerAngles(cvec3 eulerAngles);
-
-	// Add rotation to the current rotation (always in local space)
-	void AddRotation(const glm::quat& rot);
-
-	// Translate the the camera's X-axis
 	void TranslateX(float x, Space space = Space::Local);
-	// Translate the camera's Y-axis
 	void TranslateY(float y, Space space = Space::Local);
-	// Translate the camera's Z-axis
 	void TranslateZ(float z, Space space = Space::Local);
 
-	// Set the current translation of the camera, replacing the current translation.
 	void SetTranslate(cvec3 translate);
-	// Set the current rotation from Euler angles in degrees, replacing the current rotation.
+	vec3 GetTranslation() const;
+
+	// Rotate
+	
+	void SetEulerAngles(cvec3 eulerAngles);                         // Set Euler angles (in degrees)
+	vec3 GetEulerAngles() const;									// Get the current rotation of the camera in Euler angles (degrees)
+
+	void AddPitch(float fPitch, Space space = Space::Local);        // Add this pitch (rotation about the X-axis) in degrees to the current camera's pitch 
+	void AddYaw(float fYaw, Space space = Space::Local);            // Add this yaw (rotation about the Y-axis) in degrees to the current camera's yaw
+	void AddRoll(float fRoll, Space space = Space::Local);          // Add this roll (rotation about the Z-axis) in degrees to the current camera's roll
+
+	void AddRotation(const glm::quat& rot);                         // Add rotation to the current rotation (always in local space)
+
 	void SetRotate(float pitch, float yaw, float roll);
-	// Set the current rotation from Euler angles in degrees, replacing the current rotation.
 	void SetRotate(cvec3 rotate);
 	void SetRotate(const glm::quat& rot);
-
-	// If the pivot distance > 0 then the camera will rotate around a pivot point
-	// that is pivotDistance along the lookAt vector of the camera.
-	void SetPivotDistance(float pivotDistance);
-	float GetPivotDistance() const;
-
-	// Get the camera's pivot point in world space
-	vec3 GetPivotPoint() const;
-
-	vec3 GetTranslation() const;
 	glm::quat GetRotation() const;
 
-	// Get the current rotation of the camera in Euler angles (degrees)
-	vec3 GetEulerAngles() const;
+	// Pivot
+	
+	void SetPivotDistance(float pivotDistance);                     // If the pivot distance > 0 then the camera will rotate around a pivot point that is pivotDistance along the lookAt vector of the camera.
+	float GetPivotDistance() const;
+	vec3 GetPivotPoint() const;                                     // Get the camera's pivot point in world space
 
-	// Directly set the view matrix
-	void SetViewMatrix(cmat4 viewMatrix);
+	bool IsDirty() const;
+	
+	// Matrices
+
+	void SetViewMatrix(cmat4 viewMatrix);                           // Directly set the view matrix
 	mat4 GetViewMatrix() const;
 
-	// Directly set the projection matrix
-	void SetProjectionMatrix(cmat4 projectionMatrix);
+	void SetProjectionMatrix(cmat4 projectionMatrix);               // Directly set the projection matrix
 	mat4 GetProjectionMatrix() const;
 
 	// Get the view projection inverse matrix (useful for picking)

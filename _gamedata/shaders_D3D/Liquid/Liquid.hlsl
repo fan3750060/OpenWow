@@ -37,5 +37,11 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord);
+	float alpha = DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord).w;
+
+	float4 resultColor = float4(Material.gColorLight, (1.0 - IN.texCoord.z) * Material.gShallowAlpha) + float4(Material.gColorDark, IN.texCoord.z * Material.gDeepAlpha);
+	resultColor *= (1.0 - alpha);
+	resultColor += float4(1.0f, 1.0f, 1.0f, 1.0f) * alpha;
+
+	return resultColor;
 }

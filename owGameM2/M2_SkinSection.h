@@ -16,8 +16,6 @@ public:
 	CM2_SkinSection(const std::weak_ptr<const M2> _model, const uint16 _index, const SM2_SkinSection& _proto);
 	void CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes);
 
-	void Draw(/*RenderState* _state, */CM2_Base_Instance* _instance);
-
 	const SM2_SkinSection& getProto() const { return m_Proto; }
 
 

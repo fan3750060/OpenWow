@@ -15,6 +15,8 @@ SceneNode::SceneNode(cmat4 localTransform)
 	, m_Type(SN_TYPE_NONE)
 	, m_IsRotateQuat(false)
 	, m_Scale(1.0f, 1.0f, 1.0f)
+	, m_IsLocalDirty(true)
+	, m_IsWorldDirty(true)
 {
 	m_InverseLocalTransform = glm::inverse(m_LocalTransform);
 }
@@ -29,34 +31,109 @@ cstring SceneNode::GetName() const
 	return m_Name;
 }
 
-void  SceneNode::SetName(cstring name)
+void SceneNode::SetName(cstring name)
 {
 	m_Name = name;
 }
 
+// Translate
+void SceneNode::setTranslate(cvec3 _translate) 
+{ 
+	m_Translate = _translate;
+	m_IsLocalDirty = true;
+	m_IsWorldDirty = true;
+}
+cvec3 SceneNode::getTranslate() const 
+{ 
+	return m_Translate; 
+}
+
+// Rotate
+void SceneNode::setRotate(cvec3 _rotate) 
+{ 
+	m_Rotate = _rotate;
+	m_IsLocalDirty = true;
+	m_IsWorldDirty = true;
+}
+cvec3 SceneNode::getRotate() const 
+{ 
+	return m_Rotate; 
+}
+
+// Rotate Quaternion
+void SceneNode::setRotateQuat(cquat _rotate) 
+{ 
+	m_RotateQuat = _rotate; 
+	m_IsRotateQuat = true;
+	m_IsLocalDirty = true;
+	m_IsWorldDirty = true;
+}
+cquat SceneNode::getRotateQuat() const 
+{ 
+	return m_RotateQuat;
+}
+
+// Scale
+void SceneNode::setScale(cvec3 _scale) 
+{ 
+	m_Scale = _scale;
+	m_IsLocalDirty = true;
+	m_IsWorldDirty = true;
+}
+cvec3 SceneNode::getScale() const 
+{ 
+	return m_Scale; 
+}
+
+// Bounds
+void SceneNode::setBounds(BoundingBox _bbox) 
+{ 
+	m_Bounds = _bbox;
+}
+cbbox SceneNode::getBounds() const 
+{ 
+	return m_Bounds; 
+}
+
+bool SceneNode::IsDirty() const
+{
+	return m_IsLocalDirty || m_IsWorldDirty;
+}
+
 // Local transform
 
-mat4 SceneNode::GetLocalTransform() const
+mat4 SceneNode::GetLocalTransform()
 {
+	UpdateLocalTransform();
 	return m_LocalTransform;
+}
+
+mat4 SceneNode::GetInverseLocalTransform()
+{
+	UpdateLocalTransform();
+	return m_InverseLocalTransform;
 }
 
 void SceneNode::SetLocalTransform(cmat4 localTransform)
 {
 	m_LocalTransform = localTransform;
 	m_InverseLocalTransform = glm::inverse(localTransform);
-}
-
-mat4 SceneNode::GetInverseLocalTransform() const
-{
-	return m_InverseLocalTransform;
+	m_IsLocalDirty = true;
+	m_IsWorldDirty = true;
 }
 
 // World transform
 
-mat4 SceneNode::GetWorldTransfom() const
+mat4 SceneNode::GetWorldTransfom()
 {
-	return GetParentWorldTransform() * m_LocalTransform;
+	UpdateWorldTransform();
+	return m_WorldTransform;
+}
+
+mat4 SceneNode::GetInverseWorldTransform()
+{
+	UpdateWorldTransform();
+	return m_InverseWorldTransform;
 }
 
 void SceneNode::SetWorldTransform(cmat4 worldTransform)
@@ -65,10 +142,6 @@ void SceneNode::SetWorldTransform(cmat4 worldTransform)
 	SetLocalTransform(inverseParentTransform * worldTransform);
 }
 
-mat4 SceneNode::GetInverseWorldTransform() const
-{
-	return glm::inverse(GetWorldTransfom());
-}
 
 mat4 SceneNode::GetParentWorldTransform() const
 {
@@ -83,23 +156,43 @@ mat4 SceneNode::GetParentWorldTransform() const
 
 //
 
-void SceneNode::TransRotScaleToLocalTransform()
+void SceneNode::UpdateLocalTransform()
 {
-	m_LocalTransform = mat4();
+	if (m_IsLocalDirty)
+	{
+		m_LocalTransform = mat4();
 
-	m_LocalTransform = glm::translate(m_LocalTransform, m_Translate);
-	if (m_IsRotateQuat)
-	{
-		m_LocalTransform *= glm::toMat4(m_RotateQuat);
+		m_LocalTransform = glm::translate(m_LocalTransform, m_Translate);
+		if (m_IsRotateQuat)
+		{
+			m_LocalTransform *= glm::toMat4(m_RotateQuat);
+		}
+		else
+		{
+			m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.x, vec3(1, 0, 0));
+			m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.y, vec3(0, 1, 0));
+			m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.z, vec3(0, 0, 1));
+		}
+		m_LocalTransform = glm::scale(m_LocalTransform, m_Scale);
+		m_InverseLocalTransform = glm::inverse(m_LocalTransform);
+		m_IsLocalDirty = false;
+		m_IsWorldDirty = true;
 	}
-	else
+}
+
+void SceneNode::UpdateWorldTransform()
+{
+	if (m_IsWorldDirty)
 	{
-		m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.x, vec3(1, 0, 0));
-		m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.y, vec3(0, 1, 0));
-		m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.z, vec3(0, 0, 1));
+		m_WorldTransform = GetParentWorldTransform() * m_LocalTransform;
+		m_InverseWorldTransform = glm::inverse(m_WorldTransform);
+		m_IsWorldDirty = false;
 	}
-	m_LocalTransform = glm::scale(m_LocalTransform, m_Scale);
-	m_InverseLocalTransform = glm::inverse(m_LocalTransform);
+}
+
+void SceneNode::SetLocalUnderty()
+{
+	m_IsLocalDirty = false;
 }
 
 void SceneNode::AddChild(std::shared_ptr<SceneNode> pNode)
@@ -109,10 +202,9 @@ void SceneNode::AddChild(std::shared_ptr<SceneNode> pNode)
 		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
 		if (iter == m_Children.end())
 		{
-			//mat4 worldTransform = pNode->GetWorldTransfom();
 			pNode->m_pParentNode = shared_from_this();
-			//mat4 localTransform = GetInverseWorldTransform() * worldTransform;
-			//pNode->SetLocalTransform(localTransform);
+			pNode->m_IsWorldDirty = true;
+
 			m_Children.push_back(pNode);
 			if (!pNode->GetName().empty())
 			{

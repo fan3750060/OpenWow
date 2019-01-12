@@ -47,9 +47,24 @@ ADT::~ADT()
 //
 // SceneNode
 //
-void ADT::TransRotScaleToLocalTransform()
+void ADT::UpdateLocalTransform()
 {
-	assert1(false);
+	// Don't calculate local transform
+	SetLocalUnderty();
+}
+
+bool ADT::Accept(IVisitor& visitor)
+{
+	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+
+	// Check frustrum
+	if (!checkFrustum(camera))
+	{
+		return false;
+	}
+
+	return SceneNode::Accept(visitor);
 }
 
 bool ADT::Load()
@@ -272,7 +287,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	/*for (auto& it : m_WMOsPlacementInfo)
+	for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
@@ -286,7 +301,7 @@ bool ADT::Load()
 			bbox.makeUnion(inst->getBounds());
 			setBounds(bbox);
 		}
-	}*/
+	}
 
 	//-- MDXs -------------------------------------------------------------------------
 	for (auto& it : m_MDXsPlacementInfo)

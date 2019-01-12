@@ -19,8 +19,8 @@ ADT_WMO_Instance::ADT_WMO_Instance(std::shared_ptr<WMO> _wmoObject, ADT_MODF& _p
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - glm::half_pi<float>();
 		setRotate(vec3(rotate.z, rotate.y, rotate.x));
-		// Matrix
-		TransRotScaleToLocalTransform();
+		//
+		UpdateLocalTransform();
 		// Bounds
 		BoundingBox bbox(_placementInfo.boundingBox.min, _placementInfo.boundingBox.max);
 		setBounds(bbox);
