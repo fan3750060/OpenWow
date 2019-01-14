@@ -16,8 +16,8 @@ class RenderTarget;
 
 class RenderWindow : public Object
 {
-public:
 	typedef Object base;
+public:
 
 	void ShowWindow(); // Show this window if it is hidden.
 	void HideWindow(); // Hide the window. The window will not be destroyed and can be  shown again using the ShowWindow() function.
@@ -38,8 +38,7 @@ public:
 	virtual std::shared_ptr<RenderTarget> GetRenderTarget() = 0;
 
 	
-	// Update event is called when the application
-	// will be updated before rendering.
+	// Update event is called when the application will be updated before rendering.
 	// This this callback to update your game logic.
 	UpdateEvent			Update;
 
@@ -47,6 +46,7 @@ public:
 	RenderEvent         PreRender;
 	RenderEvent         Render;
 	RenderEvent         PostRender;
+	RenderUIEvent       RenderUI;
 
 	// Invoked when the window is initialized.
 	Event				Initialize;
@@ -88,6 +88,7 @@ public:
 	virtual void OnPreRender(RenderEventArgs& e);
 	virtual void OnRender(RenderEventArgs& e);
 	virtual void OnPostRender(RenderEventArgs& e);
+	virtual void OnRenderUI(RenderUIEventArgs& e);
 
 	virtual void OnTerminate(EventArgs& e);
 

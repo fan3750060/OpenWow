@@ -24,7 +24,7 @@ public:
 	Image(std::shared_ptr<Texture> _texture) :
 		m_Texture(_texture),
 		m_Start(vec2()),
-		m_Size(_texture->GetSize())
+		m_Size(vec2(_texture->GetWidth(), _texture->GetHeight()))
 	{
 		assert1((m_Texture != nullptr) && (m_Size != vec2()));
 		CalculateCoords();
@@ -105,8 +105,10 @@ public:
 private:
 	void CalculateCoords()
 	{
-		m_P0 = m_Start / m_Texture->GetSize();
-		m_P2 = m_P0 + m_Size / m_Texture->GetSize();
+		vec2 textureSize = vec2(m_Texture->GetWidth(), m_Texture->GetHeight());
+
+		m_P0 = m_Start / textureSize;
+		m_P2 = m_P0 + m_Size / textureSize;
 
 		m_P1 = vec2(m_P2.x, m_P0.y);
 		m_P3 = vec2(m_P0.x, m_P2.y);

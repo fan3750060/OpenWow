@@ -2,7 +2,7 @@
 
 class GameStateManager;
 
-class CGameState : public IGameState, public IUpdatable, public IRenderableUI, public IInputListener
+class CGameState : public IGameState
 {
 	friend GameStateManager;
 public:

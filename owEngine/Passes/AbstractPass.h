@@ -23,6 +23,7 @@ public:
 
 	// Inherited from Visitor
 	virtual bool Visit(SceneNode& node);
+	virtual bool Visit(UINode& node);
 	virtual bool Visit(IMesh& mesh);
 
 private:

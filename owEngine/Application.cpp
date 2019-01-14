@@ -87,7 +87,6 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	RECT windowRect = { 0, 0, windowWidth, windowHeight };
-
 	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	windowWidth = windowRect.right - windowRect.left;
@@ -111,7 +110,7 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 
 	if (!hWindow)
 	{
-		fail1("Failed to create render window.");
+		fail2("Failed to create render window.");
 	}
 
 #ifdef  IS_DX11
@@ -458,6 +457,11 @@ int Application::Run()
 
 			RenderEventArgs renderArgs(*this, g_GameDeltaTime * 1000.0f, g_ApplicationTime * 1000.0f, g_FrameCounter);
 			OnRender(renderArgs);
+
+			RenderUIEventArgs renderUIArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
+			OnRenderUI(renderUIArgs);
+
+			m_Windows->Present();
 		}
 	}
 
@@ -478,7 +482,8 @@ void Application::Stop()
 
 void Application::OnInitialize(EventArgs& e)
 {
-	if (m_bIsInitialized) return;
+	if (m_bIsInitialized) 
+		return;
 
 	Initialize(e);
 
@@ -495,6 +500,11 @@ void Application::OnRender(RenderEventArgs& e)
 	m_Windows->OnPreRender(e);
 	m_Windows->OnRender(e);
 	m_Windows->OnPostRender(e);
+}
+
+void Application::OnRenderUI(RenderUIEventArgs & e)
+{
+	m_Windows->OnRenderUI(e);
 }
 
 void Application::OnTerminate(EventArgs& e)
@@ -518,8 +528,7 @@ void Application::OnExit(EventArgs& e)
 	// Destroy any windows that are still hanging around.
 	DestroyWindow(gs_hWindow);
 
-	// Setting this to false will cause the main application's
-	// message pump to stop.
+	// Setting this to false will cause the main application's message pump to stop.
 	m_bIsRunning = false;
 }
 

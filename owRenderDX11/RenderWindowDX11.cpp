@@ -122,7 +122,6 @@ void RenderWindowDX11::CreateSwapChain()
 	}
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-
 	swapChainDesc.Width = windowWidth;
 	swapChainDesc.Height = windowHeight;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

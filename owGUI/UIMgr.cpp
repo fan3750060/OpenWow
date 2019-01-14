@@ -11,10 +11,6 @@ UIMgr::UIMgr()
 
     //
 
-	_Bindings->RegisterUpdatableObject(this);
-	_Bindings->RegisterRenderableUIObject(this, 500);
-	_Bindings->RegisterInputListener(this);
-
 	m_FontsMgr = new FontsManager(&_Render->r);
 
 	AddManager<IUIMgr>(this);
@@ -30,10 +26,6 @@ UIMgr::~UIMgr()
 	delete m_FontsMgr;
 
 	DelManager<IUIMgr>();
-
-	_Bindings->UnregisterInputListener(this);
-	_Bindings->UnregisterRenderableUIObject(this);
-	_Bindings->UnregisterUpdatableObject(this);
 }
 
 //
@@ -104,7 +96,7 @@ void UIMgr::RenderImage(vec2 _pos, Image* _image, vec2 _size)
 	worldTransform = glm::scale(worldTransform, vec3(_size.x / 2.0f, _size.y / 2.0f, 1.0f));
 
 	// Update buffer
-	vector<vec2> texCoordsQuad;
+	std::vector<vec2> texCoordsQuad;
 	texCoordsQuad.push_back(_image->GetP0());
 	texCoordsQuad.push_back(_image->GetP1());
 	texCoordsQuad.push_back(_image->GetP3());
@@ -233,7 +225,7 @@ void UIMgr::RenderUI()
 
 std::string UIMgr::GetNewName()
 {
-	std::string name = "UIElement_" + to_string(m_IDCounter);
+	std::string name = "UIElement_" + std::to_string(m_IDCounter);
 	m_IDCounter++;
 	return name;
 }

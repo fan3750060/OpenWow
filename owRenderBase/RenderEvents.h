@@ -2,6 +2,7 @@
 
 class Camera;
 class PipelineState;
+class Viewport;
 
 class UpdateEventArgs : public EventArgs
 {
@@ -42,6 +43,26 @@ public:
 	Object* Node;
 };
 typedef Delegate<RenderEventArgs> RenderEvent;
+
+
+class RenderUIEventArgs : public EventArgs
+{
+public:
+	typedef EventArgs base;
+	RenderUIEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, Viewport* viewport = nullptr)
+		: base(caller)
+		, ElapsedTime(fDeltaTime)
+		, TotalTime(fTotalTime)
+		, FrameCounter(frameCounter)
+		, Viewport(viewport)
+	{}
+
+	float ElapsedTime;
+	float TotalTime;
+	int64_t FrameCounter;
+	Viewport* Viewport;
+};
+typedef Delegate<RenderUIEventArgs> RenderUIEvent;
 
 
 

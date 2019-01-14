@@ -72,7 +72,7 @@ std::shared_ptr<const Material> MeshOGL::GetMaterial() const
 	return m_pMaterial;
 }
 
-bool MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	if (m_pMaterial)
 	{
@@ -105,13 +105,25 @@ bool MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer
 		}
 		else
 		{
-			UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
-			glDrawArrays
-			(
-				m_PrimitiveTopology,
-				0,
-				vertexCount
-			);
+			if (vertexCnt == 0)
+			{
+				UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
+				glDrawArrays
+				(
+					m_PrimitiveTopology,
+					0,
+					vertexCount
+				);
+			}
+			else
+			{
+				glDrawArrays
+				(
+					m_PrimitiveTopology,
+					vertexStartLocation,
+					vertexCnt
+				);
+			}
 		}
 	}
 	glBindVertexArray(0);

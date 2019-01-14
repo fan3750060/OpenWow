@@ -33,6 +33,7 @@ protected:
 	void OnInitialize(EventArgs& e);
 	void OnUpdate(UpdateEventArgs& e);
 	void OnRender(RenderEventArgs& e);
+	void OnRenderUI(RenderUIEventArgs& e);
 	void OnTerminate(EventArgs& e);
 	void OnTerminated(EventArgs& e);
 	void OnExit(EventArgs& e);

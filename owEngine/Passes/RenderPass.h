@@ -1,8 +1,10 @@
 #pragma once
 
 class RenderEventArgs;
+class RenderUIEventArgs;
 class Scene;
 class SceneNode;
+class UINode;
 class IMesh;
 
 // A render pass describes a single pass to render a scene.
@@ -26,5 +28,6 @@ public:
 
 	// Inherited from Visitor
 	virtual bool Visit(SceneNode& node) = 0;
+	virtual bool Visit(UINode& node) = 0;
 	virtual bool Visit(IMesh& mesh) = 0;
 };

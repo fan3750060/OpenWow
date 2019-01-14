@@ -46,11 +46,6 @@ ADT_MCNK_Material::~ADT_MCNK_Material()
 
 //--
 
-uint32 ADT_MCNK_Material::GetLayersCnt() const
-{
-	return m_pProperties->m_LayersCnt;
-}
-
 void ADT_MCNK_Material::SetLayersCnt(uint32 value)
 {
 	m_pProperties->m_LayersCnt = value;

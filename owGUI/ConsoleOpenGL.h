@@ -18,7 +18,7 @@ struct ConsoleMessage
 
 class CConsoleOpenGL : public IInputListener, public CDebugOutput
 {
-	typedef vector<ConsoleMessage> ConsoleMessages;
+	typedef std::vector<ConsoleMessage> ConsoleMessages;
 public:
 
 	CConsoleOpenGL();
@@ -56,7 +56,7 @@ private:
 	std::string inputString;
 
 	// Help commands
-	vector<IConsoleCommand*> commandsHelper;
+	std::vector<IConsoleCommand*> commandsHelper;
 	vec2 helperOffset;
 	int helperSelected;
 

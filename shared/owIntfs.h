@@ -10,7 +10,6 @@
 //---------------------------------------------------------//
 #include "../owIntfs/BaseManager.h"
 
-#include "../owIntfs/Bindings.h"
 #include "../owIntfs/Console.h"
 #include "../owIntfs/DebugOutput.h"
 #include "../owIntfs/Engine.h"

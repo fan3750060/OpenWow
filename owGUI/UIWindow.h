@@ -15,5 +15,5 @@ public:
     void AddContent(UIElement* _element);
 
 private:
-    vector<UIElement*> m_Content;
+    std::vector<UIElement*> m_Content;
 };

@@ -37,9 +37,6 @@
     <ClInclude Include="Engine.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Bindings.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\shared\owIntfs.h">
       <Filter>Common</Filter>
     </ClInclude>

@@ -7,9 +7,17 @@
 #include "CamContrTEMP.h"
 
 
+#include "UI_Pass.h"
+
+#include "UI_Color_Material.h"
+
+#include "FontsManager.h"
+
 extern Camera g_Camera;
+Viewport g_Viewport;
 
 std::shared_ptr<Scene> g_pScene = nullptr;
+std::shared_ptr<UIScene> g_pUIScene = nullptr;
 
 RenderWindow* g_pRenderWindow;
 std::shared_ptr<Query> g_pFrameQuery;
@@ -20,10 +28,11 @@ std::shared_ptr<MapController> contr;
 void OnPreRender(RenderEventArgs& e);
 void OnRender(RenderEventArgs& e);
 void OnPostRender(RenderEventArgs& e);
-
+void OnRenderUI(RenderUIEventArgs& e);
 
 // Techique
 RenderTechnique g_ForwardTechnique;
+RenderUITechnique g_UITechnique;
 
 std::shared_ptr<Query> g_pForwardOpaqueQuery;
 std::shared_ptr<Query> g_pForwardTransparentQuery;
@@ -43,9 +52,6 @@ int main(int argumentCount, char* arguments[])
 
 		CBaseManager baseManager;
 		_BaseManager = &baseManager;
-
-		CBindingController bindingController;
-		_Bindings = &bindingController;
 
 		CSettings settings;
 		settings.AddDefaults();
@@ -88,6 +94,7 @@ int main(int argumentCount, char* arguments[])
 		g_pRenderWindow->PreRender += &OnPreRender;
 		g_pRenderWindow->Render += &OnRender;
 		g_pRenderWindow->PostRender += &OnPostRender;
+		g_pRenderWindow->RenderUI += &OnRenderUI;
 		g_pRenderWindow->KeyPressed += &OnKeyPressed;
 		g_pRenderWindow->KeyReleased += &OnKeyReleased;
 
@@ -104,21 +111,23 @@ int main(int argumentCount, char* arguments[])
 		renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE*/
 
 		g_pScene = std::make_shared<SceneBase>();
+		g_pUIScene = std::make_shared<UISceneBase>();
 
 		OpenDBs();
 
 		const float x = 36;
 		const float y = 32;
 
+		new FontsManager(_RenderDevice);
 		new WMOsManager();
 		new CM2_Manager();
 
-		contr = std::make_shared<MapController>();
-		contr->SetParent(g_pScene->GetRootNode());
-		contr->MapPreLoad(*DBC_Map[1/*571*/]);
-		contr->MapLoad();
-		contr->MapPostLoad();
-		contr->EnterMap(x, y);
+		//contr = std::make_shared<MapController>();
+		//contr->SetParent(g_pScene->GetRootNode());
+		//contr->MapPreLoad(*DBC_Map[1/*571*/]);
+		//contr->MapLoad();
+		//contr->MapPostLoad();
+		//contr->EnterMap(x, y);
 
 		//std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
 		//std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
@@ -127,6 +136,7 @@ int main(int argumentCount, char* arguments[])
 
 
 		Viewport viewPort(0, 0, 1280.0f, 1024.0f);
+		g_Viewport = viewPort;
 
 		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
@@ -147,6 +157,56 @@ int main(int argumentCount, char* arguments[])
 		AddWMOPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddLiquidPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddM2Passes(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
+
+		//
+		// UI
+		//
+
+		std::vector<vec2> vecrtices;
+		vecrtices.push_back(vec2(-1.0f, -1.0f));
+		vecrtices.push_back(vec2(1.0f, -1.0f));
+		vecrtices.push_back(vec2(-1.0f, 1.0f));
+		vecrtices.push_back(vec2(1.0f, 1.0f));
+		std::shared_ptr<Buffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
+
+		uint16 indexes[6] = { 0, 1, 2, 2, 1, 3 };
+		std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(indexes, 6);
+
+		std::shared_ptr<UI_Color_Material> uiMaterial = std::make_shared<UI_Color_Material>();
+		uiMaterial->SetColor(vec4(0, 1, 0, 0.3f));
+
+		std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
+		__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+		__geom->SetIndexBuffer(__ib);
+		__geom->SetMaterial(uiMaterial);
+
+		// FONT BEGIN
+		std::shared_ptr<Font> defFont = GetManager<IFontsManager>()->GetMainFont();
+		// FONT END
+
+
+		std::shared_ptr<UINode> node = std::make_shared<UINode>();
+		node->AddMesh(__geom);
+		node->AddMesh(defFont);
+		node->setTranslate(vec2(80.0f, 80.0f));
+		//node->setScale(vec2(10.0f, 10.0f));
+		node->GetLocalTransform();
+		node->SetParent(g_pUIScene->GetRootNode());
+
+		BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
+		BlendState::BlendMode disableBlending;
+		DepthStencilState::DepthMode enableDepthWrites(true, DepthStencilState::DepthWrite::Enable);
+		DepthStencilState::DepthMode disableDepthWrites(false, DepthStencilState::DepthWrite::Disable);
+
+		std::shared_ptr<PipelineState> UIPipeline = renderDevice->CreatePipelineState();
+		UIPipeline->GetBlendState().SetBlendMode(alphaBlending);
+		UIPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
+		UIPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
+		UIPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
+		UIPipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
+		UIPipeline->GetRasterizerState().SetViewport(g_Viewport);
+
+		g_UITechnique.AddPass(std::make_shared<UI_Pass>(g_pUIScene, UIPipeline));
 
 		app.Run();
 	}
@@ -178,8 +238,8 @@ void OnPostRender(RenderEventArgs& e)
 {
 	g_pFrameQuery->End(e.FrameCounter);
 
-	RenderWindow& renderWindow = dynamic_cast<RenderWindow&>(const_cast<Object&>(e.Caller));
-	renderWindow.Present();
+	//RenderWindow& renderWindow = dynamic_cast<RenderWindow&>(const_cast<Object&>(e.Caller));
+	//renderWindow.Present();
 
 	// Retrieve GPU timer results.
 	// Don't retrieve the immediate query result, but from the previous frame.
@@ -213,4 +273,11 @@ void OnPostRender(RenderEventArgs& e)
 	{
 		g_ForwardTransparentStatistic.Sample(forwardTransparentResult.ElapsedTime * 1000.0);
 	}*/
+}
+
+void OnRenderUI(RenderUIEventArgs& e)
+{
+	e.Viewport = &g_Viewport;
+
+	g_UITechnique.Render(e);
 }

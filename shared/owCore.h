@@ -30,7 +30,6 @@
 
 // Objects bindings
 #include "../owCore/BaseManager.h"
-#include "../owCore/BindingController.h"
 #include "../owCore/Settings.h"
 #include "../owCore/Object.h"
 

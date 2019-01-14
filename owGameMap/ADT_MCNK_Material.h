@@ -6,7 +6,6 @@ public:
 	ADT_MCNK_Material();
 	virtual ~ADT_MCNK_Material();
 
-	uint32 GetLayersCnt() const;
 	void SetLayersCnt(uint32 value);
 
 protected:

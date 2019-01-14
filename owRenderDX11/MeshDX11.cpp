@@ -63,7 +63,7 @@ std::shared_ptr<const Material> MeshDX11::GetMaterial() const
 	return m_pMaterial;
 }
 
-bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	if (m_pMaterial)
 	{
@@ -99,8 +99,15 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 		}
 		else
 		{
-			UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
-			m_pDeviceContext->Draw(vertexCount, 0);
+			if (vertexCnt == 0)
+			{
+				UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
+				m_pDeviceContext->Draw(vertexCount, 0);
+			}
+			else
+			{
+				m_pDeviceContext->Draw(vertexCnt, vertexStartLocation);
+			}
 		}
 
 		if (pVS)

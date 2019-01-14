@@ -4,15 +4,6 @@
     <Filter Include="Objects bindings">
       <UniqueIdentifier>{680fac37-3ad8-4dee-8e50-970c2b108e10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects bindings\InputListener">
-      <UniqueIdentifier>{f400cd3d-efd4-46f3-8112-839652569195}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects bindings\RenderableUI">
-      <UniqueIdentifier>{ad7d491c-30d8-4ae5-87a9-05c22024d8b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects bindings\Updatable">
-      <UniqueIdentifier>{fff12d46-8046-4520-a392-ec2dd7cea339}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Files">
       <UniqueIdentifier>{96b64482-0656-4ab7-b92a-fc7b484b7a9d}</UniqueIdentifier>
     </Filter>
@@ -87,15 +78,6 @@
     <ClCompile Include="DebugOutput.cpp">
       <Filter>Log\DebugOutput</Filter>
     </ClCompile>
-    <ClCompile Include="InputListenerCollection.cpp">
-      <Filter>Objects bindings\InputListener</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableUIObjectCollection.cpp">
-      <Filter>Objects bindings\RenderableUI</Filter>
-    </ClCompile>
-    <ClCompile Include="UpdatableObjectCollection.cpp">
-      <Filter>Objects bindings\Updatable</Filter>
-    </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Log</Filter>
     </ClCompile>
@@ -113,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="UtilsConvert.cpp">
       <Filter>Common\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="BindingController.cpp">
-      <Filter>Objects bindings</Filter>
     </ClCompile>
     <ClCompile Include="FilesManager.cpp">
       <Filter>Files</Filter>
@@ -218,15 +197,6 @@
     <ClInclude Include="DebugOutput.h">
       <Filter>Log\DebugOutput</Filter>
     </ClInclude>
-    <ClInclude Include="InputListenerCollection.h">
-      <Filter>Objects bindings\InputListener</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableUIObjectCollection.h">
-      <Filter>Objects bindings\RenderableUI</Filter>
-    </ClInclude>
-    <ClInclude Include="UpdatableObjectCollection.h">
-      <Filter>Objects bindings\Updatable</Filter>
-    </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>Log</Filter>
     </ClInclude>
@@ -262,9 +232,6 @@
     </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Common\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="BindingController.h">
-      <Filter>Objects bindings</Filter>
     </ClInclude>
     <ClInclude Include="FilesManager.h">
       <Filter>Files</Filter>

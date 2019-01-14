@@ -9,7 +9,9 @@ struct Viewport
 		, Height(height)
 		, MinDepth(minDepth)
 		, MaxDepth(maxDepth)
-	{}
+	{
+		OrthoMatrix = glm::ortho(0.0f, Width, Height, 0.0f, -1.0f, 1.0f);
+	}
 
 	float X;
 	float Y;
@@ -17,4 +19,5 @@ struct Viewport
 	float Height;
 	float MinDepth;
 	float MaxDepth;
+	mat4 OrthoMatrix;
 };

@@ -57,7 +57,7 @@ private:
 	std::shared_ptr<PipelineState> m_Pipeline;
 
 	// The scene to render.
-	std::shared_ptr< Scene > m_Scene;
+	std::shared_ptr<Scene> m_Scene;
 
 	IRenderDevice* m_RenderDevice;
 };

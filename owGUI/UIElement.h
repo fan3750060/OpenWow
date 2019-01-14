@@ -47,7 +47,7 @@ public:
     // Parent & childs functional
 
     UIElement* GetParent() const { return m_Parent; }
-    vector<UIElement*>& GetChilds() { return m_Childs; }
+	std::vector<UIElement*>& GetChilds() { return m_Childs; }
     uint32 GetChildsCount() const { return static_cast<uint32>(m_Childs.size()); }
 	
 	// Show & Hide functional
@@ -120,7 +120,7 @@ private:
     uint32      m_Deep;
     uint32      m_DeepAdding;
     UIElement*  m_Parent;
-    vector<UIElement*> m_Childs;
+	std::vector<UIElement*> m_Childs;
 
     // internal states
 	bool        m_IsHided;

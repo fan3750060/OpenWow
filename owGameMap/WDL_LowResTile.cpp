@@ -14,7 +14,7 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std
 {
 }
 
-bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt)
+bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	std::shared_ptr<const MapController> MapController = m_MapController.lock();
 	assert1(MapController != NULL);

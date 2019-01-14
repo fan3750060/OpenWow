@@ -42,7 +42,7 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 	}
 
     
-    vector<uint32> charWidth;
+    std::vector<uint32> charWidth;
     charWidth.reserve(Font::NUM_CHARS);
 	uint32 charHeight = 0;
 
@@ -98,8 +98,8 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 		}
 		lineSpace -= charWidth[ch];
 
-		maxAscent = max(face->glyph->bitmap_top, maxAscent);
-		maxDescent = max((int)face->glyph->bitmap.rows - (int)face->glyph->bitmap_top, maxDescent);
+		maxAscent = std::max(face->glyph->bitmap_top, maxAscent);
+		maxDescent = std::max((int)face->glyph->bitmap.rows - (int)face->glyph->bitmap_top, maxDescent);
 	}
 
 	charHeight = maxAscent + maxDescent;
@@ -122,7 +122,7 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 	uint32_t x = 0;
 	uint32_t y = maxAscent;
 
-	vector<Texture_Vertex> fontVertices;
+	std::vector<Texture_Vertex> fontVertices;
 	float xOffset = 0.0f;
 
 	for (uint32 ch = 0; ch < Font::NUM_CHARS; ++ch)
@@ -188,7 +188,7 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 
 	//
 
-	SharedFontPtr font = make_shared<Font>(texture, __geom, charWidth, charHeight);
+	SharedFontPtr font = std::make_shared<Font>(texture, __geom, charWidth, charHeight);
 
 	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f->Path_Name().c_str(), fontSize);
 

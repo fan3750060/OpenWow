@@ -36,9 +36,6 @@ void CGameState::Destroy()
 
 bool CGameState::Set()
 {
-	_Bindings->RegisterUpdatableObject(this);
-	_Bindings->RegisterRenderableUIObject(this, 100);
-	_Bindings->RegisterInputListener(this);
 
   //  GetManager<IUIMgr>()->SetRootElement(m_Window);
 
@@ -47,7 +44,5 @@ bool CGameState::Set()
 
 void CGameState::Unset()
 {
-	_Bindings->UnregisterUpdatableObject(this);
-	_Bindings->UnregisterRenderableUIObject(this);
-	_Bindings->UnregisterInputListener(this);
+
 }

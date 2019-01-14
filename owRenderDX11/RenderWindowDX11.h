@@ -5,9 +5,8 @@ class RenderTargetDX11;
 
 class RenderWindowDX11 : public RenderWindow
 {
-public:
 	typedef RenderWindow base;
-
+public:
 	RenderWindowDX11(HWND hWnd, RenderDeviceDX11* device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
 	virtual ~RenderWindowDX11();
 

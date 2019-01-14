@@ -5,12 +5,22 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="CamContrTEMP.h" />
+    <ClInclude Include="UI_Color_Material.h" />
+    <ClInclude Include="UI_Pass.h" />
+    <ClInclude Include="UI_Font_Material.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontsManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Color_Material.cpp" />
+    <ClCompile Include="UI_Pass.cpp" />
+    <ClCompile Include="UI_Font_Material.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

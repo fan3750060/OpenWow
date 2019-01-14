@@ -31,9 +31,15 @@ void AbstractPass::Render(RenderEventArgs& e)
 void AbstractPass::PostRender(RenderEventArgs& e)
 {}
 
+
 // Inherited from Visitor
 
 bool AbstractPass::Visit(SceneNode& node)
+{
+	return false;
+}
+
+bool AbstractPass::Visit(UINode& node)
 {
 	return false;
 }

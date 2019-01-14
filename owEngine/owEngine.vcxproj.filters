@@ -25,6 +25,12 @@
     <Filter Include="Passes\_unused">
       <UniqueIdentifier>{deea5326-0821-4a14-84f7-617d872f1e1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{ceacde36-956d-4881-adbb-a5866bf95bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Passes\Base\UI">
+      <UniqueIdentifier>{74ee7c5c-d2a1-45dc-a095-f7e3bc51691b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -99,6 +105,18 @@
     </ClCompile>
     <ClCompile Include="Passes\GenerateMipMapsPass.cpp">
       <Filter>Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="UINode.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UISceneBase.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\RenderUITechnique.cpp">
+      <Filter>Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="Passes\BaseUIPass.cpp">
+      <Filter>Passes\Base\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +204,24 @@
     </ClInclude>
     <ClInclude Include="Passes\GenerateMipMapsPass.h">
       <Filter>Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="UINode.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScene.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UISceneBase.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\RenderUITechnique.h">
+      <Filter>Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\RenderUIPass.h">
+      <Filter>Passes\Base\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Passes\BaseUIPass.h">
+      <Filter>Passes\Base\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

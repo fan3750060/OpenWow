@@ -15,13 +15,10 @@ RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight
 	, m_PreviousMousePosition(0, 0)
 	, m_bInClientRect(false)
 	, m_bHasKeyboardFocus(false)
-{
-
-}
+{}
 
 RenderWindow::~RenderWindow()
-{
-}
+{}
 
 void RenderWindow::ShowWindow()
 {
@@ -155,6 +152,12 @@ void RenderWindow::OnPostRender(RenderEventArgs& e)
 {
 	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
 	PostRender(renderArgs);
+}
+
+void RenderWindow::OnRenderUI(RenderUIEventArgs& e)
+{
+	RenderUIEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter);
+	RenderUI(renderArgs);
 }
 
 // A keyboard key was pressed

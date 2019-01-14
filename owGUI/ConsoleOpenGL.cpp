@@ -24,14 +24,11 @@ CConsoleOpenGL::CConsoleOpenGL() :
     //
 
 	GetManager<ILog>()->AddDebugOutput(this);
-	_Bindings->RegisterInputListener(this);
 }
 
 CConsoleOpenGL::~CConsoleOpenGL()
 {
 	GetManager<ILog>()->DeleteDebugOutput(this);
-
-	_Bindings->UnregisterInputListener(this);
 }
 
 void CConsoleOpenGL::RenderUI()
