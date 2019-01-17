@@ -29,13 +29,13 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 {
 	// Scene node params
 	{
-		setTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
+		SetTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
 		BoundingBox bbox
 		(
-			vec3(getTranslate().x,              Math::MaxFloat, getTranslate().z),
-			vec3(getTranslate().x + C_TileSize, Math::MinFloat, getTranslate().z + C_TileSize)
+			vec3(GetTranslation().x,              Math::MaxFloat, GetTranslation().z),
+			vec3(GetTranslation().x + C_TileSize, Math::MinFloat, GetTranslation().z + C_TileSize)
 		);
-		setBounds(bbox);
+		SetBounds(bbox);
 	}
 }
 
@@ -240,7 +240,7 @@ bool ADT::Load()
 						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
 
 						// Create instance
-						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(liquid, vec3(getTranslate().x + j * C_ChunkSize, 0.0f, getTranslate().z + i * C_ChunkSize));
+						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(liquid, vec3(GetTranslation().x + j * C_ChunkSize, 0.0f, GetTranslation().z + i * C_ChunkSize));
 						instance->SetParent(weak_from_this());
 						m_LiquidsInstances.push_back(instance);
 					}
@@ -280,14 +280,14 @@ bool ADT::Load()
 		chunk->SetParent(m_MapController);
 		m_Chunks.push_back(chunk);
 
-		BoundingBox bbox = getBounds();
-		bbox.makeUnion(chunk->getBounds());
-		setBounds(bbox);
+		BoundingBox bbox = GetBounds();
+		bbox.makeUnion(chunk->GetBounds());
+		SetBounds(bbox);
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	for (auto& it : m_WMOsPlacementInfo)
+	/*for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
@@ -297,9 +297,9 @@ bool ADT::Load()
 			inst->SetParent(shared_from_this());
 			m_WMOsInstances.push_back(inst);
 
-			BoundingBox bbox = getBounds();
-			bbox.makeUnion(inst->getBounds());
-			setBounds(bbox);
+			BoundingBox bbox = GetBounds();
+			bbox.makeUnion(inst->GetBounds());
+			SetBounds(bbox);
 		}
 	}
 
@@ -314,11 +314,11 @@ bool ADT::Load()
 			inst->SetParent(shared_from_this());
 			m_MDXsInstances.push_back(inst);
 
-			BoundingBox bbox = getBounds();
-			bbox.makeUnion(inst->getBounds());
-			setBounds(bbox);
+			BoundingBox bbox = GetBounds();
+			bbox.makeUnion(inst->GetBounds());
+			SetBounds(bbox);
 		}
-	}
+	}*/
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

@@ -17,7 +17,8 @@ BaseUIPass::BaseUIPass()
 }
 
 BaseUIPass::BaseUIPass(std::shared_ptr<UIScene> uiScene, std::shared_ptr<PipelineState> pipeline)
-	: m_pRenderEventArgs(nullptr)
+	: m_Enabled(true)
+	, m_pRenderEventArgs(nullptr)
 	, m_UIScene(uiScene)
 	, m_Pipeline(pipeline)
 	, m_RenderDevice(_RenderDevice)
@@ -43,7 +44,7 @@ bool BaseUIPass::IsEnabled() const
 	return m_Enabled;
 }
 
-void BaseUIPass::RenderUI(RenderUIEventArgs & e)
+void BaseUIPass::RenderUI(RenderUIEventArgs& e)
 {
 	SetRenderUIEventArgs(e);
 
@@ -67,6 +68,7 @@ void BaseUIPass::RenderUI(RenderUIEventArgs & e)
 
 bool BaseUIPass::Visit(SceneNode & node)
 {
+	fail1();
 	return false;
 }
 
@@ -76,14 +78,13 @@ bool BaseUIPass::Visit(UINode& node)
 	if (viewport)
 	{
 		PerObject perObjectData;
-		// Update the constant buffer data for the node.
 		perObjectData.Model      = node.GetWorldTransfom();
 		perObjectData.ModelOrtho = viewport->OrthoMatrix * perObjectData.Model;
 
 		// Update the constant buffer data
 		SetPerObjectConstantBufferData(perObjectData);
 
-		node.Update(viewport);
+		node.UpdateViewport(viewport);
 
 		return true;
 	}

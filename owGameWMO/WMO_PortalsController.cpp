@@ -77,11 +77,11 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 
 	bool insideIndoor = false;
 
-	if (m_ParentWMO->getBounds().isPointInside(_InvWorldCamera))
+	if (m_ParentWMO->GetBounds().isPointInside(_InvWorldCamera))
 	{
 		for (auto& group : _localContr->getGroupInstances())
 		{
-			if (!(group->getBounds().isPointInside(_Render->getCamera()->Position)))
+			if (!(group->GetBounds().isPointInside(_Render->getCamera()->Position)))
 			{
 				continue;
 			}
@@ -128,7 +128,7 @@ bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_I
 		return false;
 	}
 
-	if (_Render->getCamera()->getFrustum().cullBox(_group->getBounds()))
+	if (_Render->getCamera()->getFrustum().cullBox(_group->GetBounds()))
 	{
 		return false;
 	}
@@ -138,7 +138,7 @@ bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_I
 	_group->m_Calculated = true;
 	for (auto& doodad : _group->getDoodadsInstances())
 	{
-		if (doodad && (_isFirstIteration || !_frustum.cullBox(doodad->getBounds())))
+		if (doodad && (_isFirstIteration || !_frustum.cullBox(doodad->GetBounds())))
 		{
 			doodad->setPortalVisibility(true);
 		}

@@ -3,12 +3,6 @@
 // General
 #include "UINode.h"
 
-/*UINode::UINode(std::weak_ptr<UINode> _parent)
-	: m_Name("UINode")
-{
-	SetParent(_parent);
-}*/
-
 UINode::UINode()
 	: m_Name("UINode")
 	, m_Scale(1.0f, 1.0f)
@@ -33,37 +27,37 @@ void UINode::SetName(cstring name)
 }
 
 // Translate
-void UINode::setTranslate(cvec2 _translate) 
+void UINode::SetTranslate(cvec2 _translate) 
 { 
 	m_Translate = _translate;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cvec2 UINode::getTranslate() const 
+cvec2 UINode::GetTranslation() const 
 { 
 	return m_Translate; 
 }
 
 // Rotate
-void UINode::setRotate(cvec3 _rotate) 
+void UINode::SetRotation(cvec3 _rotate) 
 { 
 	m_Rotate = _rotate;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cvec3 UINode::getRotate() const 
+cvec3 UINode::GetRotation() const 
 { 
 	return m_Rotate; 
 }
 
 // Scale
-void UINode::setScale(cvec2 _scale) 
+void UINode::SetScale(cvec2 _scale) 
 { 
 	m_Scale = _scale;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cvec2 UINode::getScale() const 
+cvec2 UINode::GetScale() const 
 { 
 	return m_Scale; 
 }
@@ -196,12 +190,6 @@ void UINode::RemoveChild(std::shared_ptr<UINode> pNode)
 
 void UINode::SetParent(std::weak_ptr<UINode> wpNode)
 {
-	// Parents own their children.. If this node is not owned
-	// by anyone else, it will cease to exist if we remove it from it's parent.
-	// As a precaution, store myself is a shared pointer so I don't get deleted
-	// half-way through this function!
-	// Technically self deletion shouldn't occur because the thing invoking this function
-	// should have a std::shared_ptr to it.
 	std::shared_ptr<UINode> me = shared_from_this();
 
 	if (std::shared_ptr<UINode> parent = wpNode.lock())
@@ -210,35 +198,23 @@ void UINode::SetParent(std::weak_ptr<UINode> wpNode)
 	}
 	else if (parent = m_pParentNode.lock())
 	{
-		// Setting parent to NULL.. remove from current parent and reset parent node.
-		//mat4 worldTransform = GetWorldTransfom();
 		parent->RemoveChild(me);
 		m_pParentNode.reset();
-		//SetLocalTransform(worldTransform);
 	}
 }
 
-void UINode::AddMesh(std::shared_ptr<IMesh> mesh)
+void UINode::SetMesh(std::shared_ptr<IMesh> mesh)
 {
-	assert(mesh);
-	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
-	if (iter == m_Meshes.end())
-	{
-		m_Meshes.push_back(mesh);
-	}
+	assert1(mesh != nullptr);
+	m_Mesh = mesh;
 }
 
-void UINode::RemoveMesh(std::shared_ptr<IMesh> mesh)
+std::shared_ptr<IMesh> UINode::GetMesh() const
 {
-	assert(mesh);
-	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
-	if (iter != m_Meshes.end())
-	{
-		m_Meshes.erase(iter);
-	}
+	return m_Mesh;
 }
 
-void UINode::Update(Viewport* viewport)
+void UINode::UpdateViewport(Viewport* viewport)
 {
 	// Do nothing...
 }
@@ -246,18 +222,87 @@ void UINode::Update(Viewport* viewport)
 bool UINode::Accept(IVisitor& visitor)
 {
 	bool visitResult = visitor.Visit(*this);
+	if (!visitResult)
+		return false;
 
-	// Visit meshes.
-	for (auto mesh : m_Meshes)
+	if (m_Mesh != nullptr)
 	{
-		mesh->Accept(visitor);
+		m_Mesh->Accept(visitor);
 	}
 
-	// Now visit children
 	for (auto child : m_Children)
 	{
 		child->Accept(visitor);
 	}
 
 	return visitResult;
+}
+
+bool UINode::OnKeyPressed(KeyEventArgs & e)
+{
+	// Childs
+	bool result = false;
+	for (auto it : m_Children)
+	{
+		if (it->OnKeyPressed(e))
+			result = true;
+	}
+	return result;
+}
+
+bool UINode::OnKeyReleased(KeyEventArgs & e)
+{
+	// Childs
+	bool result = false;
+	for (auto it : m_Children)
+	{
+		if (it->OnKeyPressed(e))
+			result = true;
+	}
+	return result;
+}
+
+void UINode::OnMouseMoved(MouseMotionEventArgs & e)
+{
+	// Childs
+	for (auto it : m_Children)
+	{
+		it->OnMouseMoved(e);
+	}
+}
+
+bool UINode::OnMouseButtonPressed(MouseButtonEventArgs & e)
+{
+	// Childs
+	bool result = false;
+	for (auto it : m_Children)
+	{
+		if (it->OnMouseButtonPressed(e))
+			result = true;
+	}
+	return result;
+}
+
+bool UINode::OnMouseButtonReleased(MouseButtonEventArgs & e)
+{
+	// Childs
+	bool result = false;
+	for (auto it : m_Children)
+	{
+		if (it->OnMouseButtonReleased(e))
+			result = true;
+	}
+	return result;
+}
+
+bool UINode::OnMouseWheel(MouseWheelEventArgs & e)
+{
+	// Childs
+	bool result = false;
+	for (auto it : m_Children)
+	{
+		if (it->OnMouseWheel(e))
+			result = true;
+	}
+	return result;
 }

@@ -1,7 +1,10 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 // General
 #include "FontsManager.h"
+
+// Additional
+#include "Application.h"
 
 // Additional
 #include <freetype/config/ftheader.h>
@@ -15,14 +18,14 @@ FontsManager::FontsManager(IRenderDevice* _renderDevice)
 	AddManager<IFontsManager>(this);
 }
 
-SharedFontPtr FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
+std::shared_ptr<Font> FontsManager::Add(cstring _fontFileName, uint32 _fontSize)
 {
 	return CRefManager1Dim::Add(_fontFileName + "__" + std::to_string(_fontSize));
 }
 
 //
 
-SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
+std::shared_ptr<Font> FontsManager::CreateAction(cstring _nameAndSize)
 {
 	uint32_t _delimIndex = static_cast<uint32>(_nameAndSize.find_last_of("__"));
 	if (_delimIndex == -1)
@@ -197,7 +200,7 @@ SharedFontPtr FontsManager::CreateAction(cstring _nameAndSize)
 
 	//
 
-	SharedFontPtr font = std::make_shared<Font>(texture, __geom, charWidth, charHeight);
+	std::shared_ptr<Font> font = std::make_shared<Font>(texture, __geom, charWidth, charHeight);
 
 	Log::Info("FontsManager[%s]: Font loaded. Size [%d].", f->Path_Name().c_str(), fontSize);
 

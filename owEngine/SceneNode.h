@@ -19,24 +19,24 @@ public:
 	virtual void SetName(cstring name);
 
 	// Translate
-	void setTranslate(cvec3 _translate);
-	cvec3 getTranslate() const;
+	void SetTranslate(cvec3 _translate);
+	cvec3 GetTranslation() const;
 
 	// Rotate
-	void setRotate(cvec3 _rotate);
-	cvec3 getRotate() const;
+	void SetRotation(cvec3 _rotate);
+	cvec3 GetRotation() const;
 
 	// Rotate Quaternion
-	void setRotateQuat(cquat _rotate);
-	cquat getRotateQuat() const;
+	void SetRotationQuaternion(cquat _rotate);
+	cquat GetRotationQuaternion() const;
 
 	// Scale
-	void setScale(cvec3 _scale);
-	cvec3 getScale() const;
+	void SetScale(cvec3 _scale);
+	cvec3 GetScale() const;
 
 	// Bounds
-	void setBounds(BoundingBox _bbox);
-	cbbox getBounds() const;
+	void SetBounds(BoundingBox _bbox);
+	cbbox GetBounds() const;
 
 	bool IsDirty() const;
 
@@ -89,12 +89,17 @@ public:
 	/**
 	 * Called before all others calls
 	 */
-	virtual void Update(Camera* camera);
+	virtual void UpdateCamera(Camera* camera);
 
 	/**
 	 * Allow a visitor to visit this node.
 	 */
 	virtual bool Accept(IVisitor& visitor);
+
+	/**
+	 * Updatable
+	 */
+	virtual void OnUpdate(UpdateEventArgs& e);
 
 	/**
 	 * Useful for culling

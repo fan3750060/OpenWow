@@ -16,16 +16,19 @@
 #include "../owEngine/SceneBase.h"
 #include "../owEngine/SceneNode.h"
 
-#include "../owEngine/UIScene.h"
-#include "../owEngine/UISceneBase.h"
-#include "../owEngine/UINode.h"
+#include "../owEngine/UI/UIScene.h"
+#include "../owEngine/UI/UISceneBase.h"
+#include "../owEngine/UI/UINode.h"
+
+// UI
+#include "../owEngine/UI/Fonts/FontsManager.h"
 
 // Passes
 #include "../owEngine/Passes/BasePass.h"
 #include "../owEngine/Passes/RenderTechnique.h"
 
-#include "../owEngine/Passes/BaseUIPass.h"
-#include "../owEngine/Passes/RenderUITechnique.h"
+#include "../owEngine/UI/Passes/BaseUIPass.h"
+#include "../owEngine/UI/Passes/RenderUITechnique.h"
 
 #include "../owEngine/Passes/ClearRenderTargetPass.h"
 #include "../owEngine/Passes/CopyBufferPass.h"

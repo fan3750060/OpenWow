@@ -29,7 +29,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getSkinTexture(Character* _ch
 				break;
 			}
 
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 
@@ -51,7 +51,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getSkinExtraTexture(Character
 				break;
 			}
 
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 
@@ -80,7 +80,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getFaceLowerTexture(Character
 				break;
 			}
 
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 	return nullptr;
@@ -104,7 +104,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getFaceUpperTexture(Character
 				break;
 			}
 
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 	return nullptr;
@@ -233,7 +233,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairTexture(Character* _ch
 			{
 				break;
 			}
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 	return nullptr;
@@ -256,7 +256,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpLowerTexture(Char
 			{
 				break;
 			}
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 	return nullptr;
@@ -279,7 +279,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpUpperTexture(Char
 			{
 				break;
 			}
-			return GetManager<ITexturesManager>()->Add(textureName);
+			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
 	return nullptr;

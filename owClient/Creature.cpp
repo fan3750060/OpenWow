@@ -15,9 +15,6 @@ Creature::Creature() :
 	{
 		m_MeshID[i] = 1;
 	}
-
-	setDebugColor(vec4(0.0f, 1.0f, 1.0f, 1.0f));
-	setSelectable();
 }
 
 void Creature::InitFromDisplayInfo(uint32 _id)
@@ -107,6 +104,6 @@ void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
 	setM2(m2);
 
 	setAlpha(static_cast<float>(_record->Get_Opacity()) / 255.0f);
-	//setScale(_record.Get_Scale());
+	//SetScale(_record.Get_Scale());
 }
 

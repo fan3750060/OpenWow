@@ -10,12 +10,12 @@ ADT_MDX_Instance::ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDX
 
 	// Scene node params
 	{
-		setTranslate(_placementInfo.position);
+		SetTranslate(_placementInfo.position);
 		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - glm::half_pi<float>();
-		setRotate(vec3(rotate.z, rotate.y, rotate.x));
-		setScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f));
+		SetRotation(vec3(rotate.z, rotate.y, rotate.x));
+		SetScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f));
 	}
 
 	InitAnimator();
@@ -40,7 +40,7 @@ bool ADT_MDX_Instance::Accept(IVisitor & visitor)
 	//	return false;
 	//}
 
-	/*float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	/*float distToCamera2D = (camera.GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
 	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	{
 		return;

@@ -55,7 +55,7 @@ SkyManager::~SkyManager()
 	ERASE_VECTOR(skies);
 }
 
-void SkyManager::Update(Camera* camera)
+void SkyManager::UpdateCamera(Camera* camera)
 {
 	if (skies.empty())
 	{
@@ -64,7 +64,7 @@ void SkyManager::Update(Camera* camera)
 
 	Calculate(camera, m_MapController.lock()->getTime()->GetTime());
 
-	setTranslate(camera->GetTranslation());
+	SetTranslate(camera->GetTranslation());
 	UpdateLocalTransform();
 }
 

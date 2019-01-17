@@ -7,11 +7,7 @@
 #include "CamContrTEMP.h"
 
 
-#include "UI_Pass.h"
-
 #include "UI_Color_Material.h"
-
-#include "FontsManager.h"
 
 extern Camera g_Camera;
 Viewport g_Viewport;
@@ -158,6 +154,20 @@ int main(int argumentCount, char* arguments[])
 		AddLiquidPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddM2Passes(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 
+		CharacterTemplate tempPala;
+		tempPala.TemplateFillDefaultPaladin();
+
+		CharacterTemplate tempShaman;
+		tempShaman.TemplateFillDefaultShaman();
+
+		std::shared_ptr<Character> character  = std::make_shared<Character>();
+		character->InitFromTemplate(tempPala);
+		character->CreateInstances();
+		character->SetParent(g_pScene->GetRootNode());
+		character->SetTranslate(vec3(x * C_TileSize, 100, y * C_TileSize));
+		character->SetScale(vec3(10.0f));
+		character->GetLocalTransform();
+
 		//
 		// UI
 		//
@@ -186,10 +196,9 @@ int main(int argumentCount, char* arguments[])
 
 
 		std::shared_ptr<UINode> node = std::make_shared<UINode>();
-		node->AddMesh(__geom);
-		node->AddMesh(defFont);
-		node->setTranslate(vec2(80.0f, 80.0f));
-		//node->setScale(vec2(10.0f, 10.0f));
+		node->SetMesh(defFont);
+		node->SetTranslate(vec2(80.0f, 80.0f));
+		//node->SetScale(vec2(10.0f, 10.0f));
 		node->GetLocalTransform();
 		node->SetParent(g_pUIScene->GetRootNode());
 
@@ -206,7 +215,7 @@ int main(int argumentCount, char* arguments[])
 		UIPipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
 		UIPipeline->GetRasterizerState().SetViewport(g_Viewport);
 
-		g_UITechnique.AddPass(std::make_shared<UI_Pass>(g_pUIScene, UIPipeline));
+		g_UITechnique.SetPass(std::make_shared<BaseUIPass>(g_pUIScene, UIPipeline));
 
 		app.Run();
 	}

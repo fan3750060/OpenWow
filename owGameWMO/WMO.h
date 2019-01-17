@@ -35,7 +35,7 @@ public:
 #pragma region Getters
 public:
 	std::string getFilename() const { return m_FileName; }
-	BoundingBox	getBounds() const { return m_Bounds; }
+	BoundingBox	GetBounds() const { return m_Bounds; }
 
 	bool useAmbColor() const { return !(m_Header.flags.skip_base_color); }
 	std::shared_ptr<M2> getSkybox() { return m_Skybox; }

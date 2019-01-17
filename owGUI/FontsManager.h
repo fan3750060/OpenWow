@@ -8,22 +8,22 @@ public:
 	FontsManager(IRenderDevice* _RenderDevice);
 	virtual ~FontsManager() {}
 
-	SharedFontPtr Add(cstring _fontFileName, uint32 _fontSize);
+	std::shared_ptr<Font> Add(cstring _fontFileName, uint32 _fontSize);
 
 	std::shared_ptr<Font> GetMainFont() const override { return mainFont; }
 
 	// CRefManager1Dim
-	SharedFontPtr CreateAction(cstring name) override;
+	std::shared_ptr<Font> CreateAction(cstring name) override;
 	bool DeleteAction(cstring name) override;
 
 	// IFontsManager
-	SharedFontPtr Add(cstring name) { return CRefManager1Dim::Add(name); }
+	std::shared_ptr<Font> Add(cstring name) { return CRefManager1Dim::Add(name); }
 	bool Exists(cstring name) const { return CRefManager1Dim::Exists(name); }
 	void Delete(cstring name) { CRefManager1Dim::Delete(name); }
-	void Delete(SharedFontPtr item) { CRefManager1Dim::Delete(item); }
+	void Delete(std::shared_ptr<Font> item) { CRefManager1Dim::Delete(item); }
 
 private:
-	SharedFontPtr mainFont;
+	std::shared_ptr<Font> mainFont;
 
 private:
 	IRenderDevice* m_RenderDevice;

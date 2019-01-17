@@ -41,7 +41,7 @@ protected:
 
 private:
 	vec2 windowSize;
-	SharedFontPtr consoleFont;
+	std::shared_ptr<Font> consoleFont;
 
 	bool m_IsOpened;
 	

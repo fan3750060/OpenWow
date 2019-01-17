@@ -97,6 +97,11 @@ public:
 	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
 	/**
+	 * Get texture data
+	 */
+	virtual const std::vector<uint8>& GetBuffer();
+
+	/**
 	 * Gets the OpenGL object associated to this texture
 	 */
 	uint32 GetGLObject();

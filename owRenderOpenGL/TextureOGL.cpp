@@ -384,6 +384,11 @@ void TextureOGL::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParamet
 	glBindTexture(m_TextureType, 0);
 }
 
+const std::vector<uint8>& TextureOGL::GetBuffer()
+{
+	return m_Buffer;
+}
+
 uint32 TextureOGL::GetGLObject()
 {
 	return m_GLObj;

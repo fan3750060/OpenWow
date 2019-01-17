@@ -26,9 +26,9 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::shared_ptr<M2> _mdxObject, const
 
 	// Scene node params
 	{
-		setTranslate(Fix_XZmY(_placement.position));
-		setRotateQuat(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y));
-		setScale(vec3(_placement.scale, -_placement.scale, -_placement.scale));
+		SetTranslate(Fix_XZmY(_placement.position));
+		SetRotationQuaternion(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y));
+		SetScale(vec3(_placement.scale, -_placement.scale, -_placement.scale));
 	}
 }
 
@@ -45,7 +45,7 @@ bool CWMO_Doodad_Instance::PreRender3D()
 	}
 
 	// Check distance to camera
-	//float distToCamera = glm::length(_Render->getCamera()->Position - getBounds().getCenter()) - getBounds().getRadius();
+	//float distToCamera = glm::length(_Render->getCamera()->Position - GetBounds().getCenter()) - GetBounds().getRadius();
 	//if (distToCamera > m_QualitySettings.WMO_MODD_Distance)
 	//{
 	//	return false;

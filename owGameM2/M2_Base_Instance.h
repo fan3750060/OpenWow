@@ -14,7 +14,7 @@ public:
 
 	void CreateInstances();
 
-	void Attach(const CM2_Part_Attachment* _attachment);
+	void Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment);
 	void Detach();
 
 	// Color & Alpha
@@ -54,5 +54,5 @@ private:
 
 private: // PARENT
 	std::shared_ptr<M2>             m_M2;
-	const CM2_Part_Attachment*      m_Attached;
+	std::shared_ptr<const CM2_Part_Attachment>      m_Attached;
 };

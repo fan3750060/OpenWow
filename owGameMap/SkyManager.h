@@ -14,7 +14,7 @@ public:
 
 public:
 	// SceneNode
-	void Update(Camera* camera) override;
+	void UpdateCamera(Camera* camera) override;
 
 	// ISkyManager
 	void Calculate(Camera* camera, uint32 _time) override;

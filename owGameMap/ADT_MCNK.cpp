@@ -42,7 +42,7 @@ bool ADT_MCNK::Accept(IVisitor& visitor)
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
 
-	float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	float distToCamera2D = (camera.GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
 	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	{
 		return false;
@@ -69,14 +69,14 @@ bool ADT_MCNK::Load()
 	// Scene node params
 	{
 		// Set translate
-		setTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
+		SetTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
 		// Bounds
 		BoundingBox bbox
 		(
-			vec3(getTranslate().x,               Math::MaxFloat, getTranslate().z), 
-			vec3(getTranslate().x + C_ChunkSize, Math::MinFloat, getTranslate().z + C_ChunkSize)
+			vec3(GetTranslation().x,               Math::MaxFloat, GetTranslation().z), 
+			vec3(GetTranslation().x + C_ChunkSize, Math::MinFloat, GetTranslation().z + C_ChunkSize)
 		);
-		setBounds(bbox);
+		SetBounds(bbox);
 	}
 
 	std::shared_ptr<Buffer> verticesBuffer = nullptr;
@@ -141,7 +141,7 @@ bool ADT_MCNK::Load()
 		vec3 tempVertexes[C_MapBufferSize];
 		vec3* ttv = tempVertexes;
 
-		BoundingBox bbox = getBounds();
+		BoundingBox bbox = GetBounds();
 
 		for (uint32 j = 0; j < 17; j++)
 		{
@@ -157,7 +157,7 @@ bool ADT_MCNK::Load()
 					xpos += C_UnitSize * 0.5f;
 				}
 
-				vec3 v = getTranslate() + vec3(xpos, h, zpos);
+				vec3 v = GetTranslation() + vec3(xpos, h, zpos);
 				*ttv++ = v;
 
 				bbox.setMinY(minf(v.y, bbox.getMin().y));
@@ -166,7 +166,7 @@ bool ADT_MCNK::Load()
 		}
 
 		bbox.calculateCenter();
-		setBounds(bbox);
+		SetBounds(bbox);
 
 		verticesBuffer = _RenderDevice->CreateVertexBuffer(tempVertexes, C_MapBufferSize);
 	}
@@ -298,7 +298,7 @@ bool ADT_MCNK::Load()
 			std::shared_ptr<CADT_Liquid> m_Liquid = std::make_shared<CADT_Liquid>(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = std::make_shared<Liquid_Instance>(m_Liquid, vec3(getTranslate().x, 0.0f, getTranslate().z));
+			m_LiquidInstance = std::make_shared<Liquid_Instance>(m_Liquid, vec3(GetTranslation().x, 0.0f, GetTranslation().z));
 			m_LiquidInstance->SetParent(weak_from_this());
 		}
 	}
@@ -405,7 +405,7 @@ bool ADT_MCNK::Delete()
 		return;
 	}
 
-	float distToCamera3D = glm::length(_Render->getCamera()->Position - getBounds().getCenter()) - getBounds().getRadius();
+	float distToCamera3D = glm::length(_Render->getCamera()->Position - GetBounds().getCenter()) - GetBounds().getRadius();
 	bool isDefaultGeom = distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low;
 
 	{

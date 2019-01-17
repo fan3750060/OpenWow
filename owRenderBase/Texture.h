@@ -198,6 +198,11 @@ public:
 	 */
 	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 
+	/**
+	 * Get texture data
+	 */
+	virtual const std::vector<uint8>& GetBuffer() = 0;
+
 protected:
 	virtual void Plot(glm::ivec2 coord, const uint8_t* pixel, size_t size) = 0;
 	virtual void FetchPixel(glm::ivec2 coord, uint8_t*& pixel, size_t size) = 0;

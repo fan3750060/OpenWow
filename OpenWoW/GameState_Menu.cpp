@@ -40,7 +40,7 @@ bool GameState_Menu::LoadWorld(vec3 _pos)
 
 	if (!_World->Map()->isTileBased())
 	{
-		_pos = _World->Map()->getGlobalInstance()->getBounds().getCenter();
+		_pos = _World->Map()->getGlobalInstance()->GetBounds().getCenter();
 	}
 	
 	_Render->getCamera()->setupViewParams(glm::pi<float>() / 4.0f, m_VideoSettings.aspectRatio, 2.0f, 3000.0f);

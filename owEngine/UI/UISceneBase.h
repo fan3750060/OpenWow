@@ -16,11 +16,18 @@ public:
 
 	virtual std::shared_ptr<UINode> GetRootNode() const;
 
-	virtual std::shared_ptr<UINode> CreateSceneNode(std::shared_ptr<UINode> parent = nullptr);
-
-	virtual void ImportSceneNode(std::shared_ptr<UINode> parent, std::shared_ptr<IMesh> _mesh);
-
 	virtual void Accept(IVisitor& visitor);
+
+	/**
+	 * Input events
+	 */
+	void OnKeyPressed(KeyEventArgs& e);
+	void OnKeyReleased(KeyEventArgs& e);
+
+	void OnMouseMoved(MouseMotionEventArgs& e);
+	void OnMouseButtonPressed(MouseButtonEventArgs& e);
+	void OnMouseButtonReleased(MouseButtonEventArgs& e);
+	void OnMouseWheel(MouseWheelEventArgs& e);
 
 private:
 	std::shared_ptr<UINode> m_pRootNode;

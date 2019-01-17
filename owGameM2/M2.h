@@ -38,7 +38,7 @@ public:
 	std::string getFilenameWithoutExt() const { return m_FileNameWithoutExt; }
 	std::string getFilePath() const { return m_FilePath; }
 	std::string getUniqueName() const { return m_UniqueName; }
-	cbbox getBounds() const { return m_Bounds; }
+	cbbox GetBounds() const { return m_Bounds; }
 	
 #pragma region Loops & Sequences
 public:

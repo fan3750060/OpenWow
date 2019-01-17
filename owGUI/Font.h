@@ -36,4 +36,4 @@ private:
 		}
 	}
 };*/
-typedef std::shared_ptr<Font> SharedFontPtr;
+typedef std::shared_ptr<Font> std::shared_ptr<Font>;

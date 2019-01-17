@@ -7,7 +7,7 @@ class CM2_Part_Camera
 public:
 	CM2_Part_Camera(std::shared_ptr<IFile> f, const SM2_Camera& _proto, cGlobalLoopSeq global);
 
-	vec3 getTranslate() const { return pResult; }
+	vec3 GetTranslation() const { return pResult; }
 	vec3 getTarget() const { return tResult; }
 
 	void calc(uint32 time, uint32 globalTime);

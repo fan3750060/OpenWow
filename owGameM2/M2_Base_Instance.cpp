@@ -37,7 +37,7 @@ void CM2_Base_Instance::CreateInstances()
 	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode>(shared_from_this()));
 }
 
-void CM2_Base_Instance::Attach(const CM2_Part_Attachment* _attachment)
+void CM2_Base_Instance::Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment)
 {
 	assert1(_attachment != nullptr);
 	m_Attached = _attachment;
@@ -98,7 +98,7 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
 
-	//float distToCamera2D = (camera.GetTranslation() - getBounds().getCenter()).length() - getBounds().getRadius();
+	//float distToCamera2D = (camera.GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
 	//if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	//{
 	//	return;
@@ -163,7 +163,7 @@ void CM2_Base_Instance::UpdateLocalTransform()
 
 		BoundingBox bbox = m_M2->m_Bounds;
 		bbox.transform(GetWorldTransfom());
-		setBounds(bbox);
+		SetBounds(bbox);
 
 		return;
 	}
@@ -172,5 +172,5 @@ void CM2_Base_Instance::UpdateLocalTransform()
 
 	BoundingBox bbox = m_M2->m_Bounds;
 	bbox.transform(GetWorldTransfom());
-	setBounds(bbox);
+	SetBounds(bbox);
 }

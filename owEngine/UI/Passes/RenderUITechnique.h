@@ -14,18 +14,12 @@ public:
 	RenderUITechnique();
 	virtual ~RenderUITechnique();
 
-	// Add a pass to the technique. The ID of the added pass is returned
-	// and can be used to retrieve the pass later.
-	virtual unsigned int AddPass(std::shared_ptr<IRenderUIPass> pass);
-	virtual std::shared_ptr<IRenderUIPass> GetPass(unsigned int ID) const;
+	virtual void SetPass(std::shared_ptr<IRenderUIPass> pass);
 
-	// Render the scene using the passes that have been configured.
 	virtual void Render(RenderUIEventArgs& renderEventArgs);
 
 protected:
 
 private:
-	typedef std::vector<std::shared_ptr<IRenderUIPass>> RenderUIPassList;
-	RenderUIPassList m_Passes;
-
+	std::shared_ptr<IRenderUIPass> m_Pass;
 };

@@ -12,24 +12,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CamContrTEMP.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="FontsManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UI_Color_Material.h" />
-    <ClInclude Include="UI_Font_Material.h" />
-    <ClInclude Include="UI_Pass.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FontsManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="UI_Color_Material.cpp" />
-    <ClCompile Include="UI_Font_Material.cpp" />
-    <ClCompile Include="UI_Pass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">

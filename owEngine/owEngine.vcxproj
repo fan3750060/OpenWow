@@ -18,7 +18,6 @@
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Passes\AbstractPass.cpp" />
     <ClCompile Include="Passes\BasePass.cpp" />
-    <ClCompile Include="Passes\BaseUIPass.cpp" />
     <ClCompile Include="Passes\BeginQueryPass.cpp" />
     <ClCompile Include="Passes\ClearRenderTargetPass.cpp" />
     <ClCompile Include="Passes\CopyBufferPass.cpp" />
@@ -32,7 +31,6 @@
     <ClCompile Include="Passes\LightsPass.cpp" />
     <ClCompile Include="Passes\PostprocessPass.cpp" />
     <ClCompile Include="Passes\RenderTechnique.cpp" />
-    <ClCompile Include="Passes\RenderUITechnique.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -41,8 +39,13 @@
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TextureLoadersStorage.cpp" />
-    <ClCompile Include="UINode.cpp" />
-    <ClCompile Include="UISceneBase.cpp" />
+    <ClCompile Include="UI\Fonts\Font.cpp" />
+    <ClCompile Include="UI\Fonts\FontsManager.cpp" />
+    <ClCompile Include="UI\Fonts\UI_Font_Material.cpp" />
+    <ClCompile Include="UI\Passes\BaseUIPass.cpp" />
+    <ClCompile Include="UI\Passes\RenderUITechnique.cpp" />
+    <ClCompile Include="UI\UINode.cpp" />
+    <ClCompile Include="UI\UISceneBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
@@ -54,7 +57,6 @@
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Passes\AbstractPass.h" />
     <ClInclude Include="Passes\BasePass.h" />
-    <ClInclude Include="Passes\BaseUIPass.h" />
     <ClInclude Include="Passes\BeginQueryPass.h" />
     <ClInclude Include="Passes\ClearRenderTargetPass.h" />
     <ClInclude Include="Passes\CopyBufferPass.h" />
@@ -69,17 +71,21 @@
     <ClInclude Include="Passes\PostprocessPass.h" />
     <ClInclude Include="Passes\RenderPass.h" />
     <ClInclude Include="Passes\RenderTechnique.h" />
-    <ClInclude Include="Passes\RenderUIPass.h" />
-    <ClInclude Include="Passes\RenderUITechnique.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TextureLoadersStorage.h" />
-    <ClInclude Include="UINode.h" />
-    <ClInclude Include="UIScene.h" />
-    <ClInclude Include="UISceneBase.h" />
+    <ClInclude Include="UI\Fonts\Font.h" />
+    <ClInclude Include="UI\Fonts\FontsManager.h" />
+    <ClInclude Include="UI\Fonts\UI_Font_Material.h" />
+    <ClInclude Include="UI\Passes\BaseUIPass.h" />
+    <ClInclude Include="UI\Passes\RenderUIPass.h" />
+    <ClInclude Include="UI\Passes\RenderUITechnique.h" />
+    <ClInclude Include="UI\UINode.h" />
+    <ClInclude Include="UI\UIScene.h" />
+    <ClInclude Include="UI\UISceneBase.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{51252F60-B8DC-4090-BBA3-DD05942110F0}</ProjectGuid>
@@ -128,7 +134,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;..\owEngine\UI;..\owEngine\Fonts;..\owEngine\Passes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -148,7 +154,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\glfw-3.2.1.bin.WIN64\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;..\owEngine\UI;..\owEngine\Fonts;..\owEngine\Passes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>

@@ -20,7 +20,7 @@ CWMO_Group_Instance::CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _objec
 		//BoundingBox bbox = _object->m_Bounds;
 		//bbox.calculateCenter();
 		//bbox.transform(_parent.lock()->GetWorldTransfom());
-		//setBounds(bbox);
+		//SetBounds(bbox);
 	}
 
 	//setDebugColor(vec4(0.0f, 0.0f, 1.0f, 0.9f));

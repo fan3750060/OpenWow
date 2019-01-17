@@ -80,7 +80,7 @@ void MinimapDir::Load()
 {
 	/*for (auto& it : data)
 	{
-		textures[it->X_Coord][it->Y_Coord] = GetManager<ITexturesManager>()->Add("textures\\Minimap\\" + it->filename);
+		textures[it->X_Coord][it->Y_Coord] = _RenderDevice->CreateTexture2D("textures\\Minimap\\" + it->filename);
 		delete it;
 		it = nullptr;
 	}

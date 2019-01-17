@@ -1,7 +1,10 @@
-#include "stdafx.h"
+#include <stdafx.h>
 
 // General
 #include "UI_Font_Material.h"
+
+// Additional
+#include "Application.h"
 
 UI_Font_Material::UI_Font_Material() :
 	Material(_RenderDevice)

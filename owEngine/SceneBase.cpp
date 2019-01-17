@@ -20,27 +20,14 @@ std::shared_ptr<SceneNode> SceneBase::GetRootNode() const
 	return m_pRootNode;
 }
 
-std::shared_ptr<SceneNode> SceneBase::CreateSceneNode(std::shared_ptr<SceneNode> parent)
-{
-	std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>();
-
-	node->SetParent(parent != nullptr ? parent : GetRootNode());
-
-	return node;
-}
-
-void SceneBase::ImportSceneNode(std::shared_ptr<SceneNode> parent, std::shared_ptr<IMesh> _mesh)
-{
-	std::shared_ptr<SceneNode> node = std::make_shared<SceneNode>();
-	node->AddMesh(_mesh);
-
-	node->SetParent(parent);
-}
-
 void SceneBase::Accept(IVisitor& visitor)
 {
 	if (m_pRootNode)
-	{
 		m_pRootNode->Accept(visitor);
-	}
+}
+
+void SceneBase::OnUpdate(UpdateEventArgs & e)
+{
+	if (m_pRootNode)
+		m_pRootNode->OnUpdate(e);
 }

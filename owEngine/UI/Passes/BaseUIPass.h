@@ -5,7 +5,6 @@
 class IRenderDevice;
 class Shader;
 class ConstantBuffer;
-class Camera;
 class UIScene;
 class PipelineState;
 class Query;

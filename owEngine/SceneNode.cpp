@@ -37,60 +37,60 @@ void SceneNode::SetName(cstring name)
 }
 
 // Translate
-void SceneNode::setTranslate(cvec3 _translate) 
+void SceneNode::SetTranslate(cvec3 _translate) 
 { 
 	m_Translate = _translate;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cvec3 SceneNode::getTranslate() const 
+cvec3 SceneNode::GetTranslation() const 
 { 
 	return m_Translate; 
 }
 
 // Rotate
-void SceneNode::setRotate(cvec3 _rotate) 
+void SceneNode::SetRotation(cvec3 _rotate) 
 { 
 	m_Rotate = _rotate;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cvec3 SceneNode::getRotate() const 
+cvec3 SceneNode::GetRotation() const 
 { 
 	return m_Rotate; 
 }
 
 // Rotate Quaternion
-void SceneNode::setRotateQuat(cquat _rotate) 
+void SceneNode::SetRotationQuaternion(cquat _rotate) 
 { 
 	m_RotateQuat = _rotate; 
 	m_IsRotateQuat = true;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cquat SceneNode::getRotateQuat() const 
+cquat SceneNode::GetRotationQuaternion() const 
 { 
 	return m_RotateQuat;
 }
 
 // Scale
-void SceneNode::setScale(cvec3 _scale) 
+void SceneNode::SetScale(cvec3 _scale) 
 { 
 	m_Scale = _scale;
 	m_IsLocalDirty = true;
 	m_IsWorldDirty = true;
 }
-cvec3 SceneNode::getScale() const 
+cvec3 SceneNode::GetScale() const 
 { 
 	return m_Scale; 
 }
 
 // Bounds
-void SceneNode::setBounds(BoundingBox _bbox) 
+void SceneNode::SetBounds(BoundingBox _bbox) 
 { 
 	m_Bounds = _bbox;
 }
-cbbox SceneNode::getBounds() const 
+cbbox SceneNode::GetBounds() const 
 { 
 	return m_Bounds; 
 }
@@ -287,7 +287,7 @@ void SceneNode::RemoveMesh(std::shared_ptr<IMesh> mesh)
 	}
 }
 
-void SceneNode::Update(Camera* camera)
+void SceneNode::UpdateCamera(Camera* camera)
 {
 	// Do nothing...
 }
@@ -295,6 +295,8 @@ void SceneNode::Update(Camera* camera)
 bool SceneNode::Accept(IVisitor& visitor)
 {
 	bool visitResult = visitor.Visit(*this);
+	if (!visitResult)
+		return false;
 
 	// Visit meshes.
 	for (auto mesh : m_Meshes)
@@ -311,21 +313,25 @@ bool SceneNode::Accept(IVisitor& visitor)
 	return visitResult;
 }
 
+void SceneNode::OnUpdate(UpdateEventArgs & e)
+{
+}
+
 bool SceneNode::checkFrustum(const Camera& _camera) const
 {
-	return !_camera.GetFrustum().cullBox(getBounds());
+	return !_camera.GetFrustum().cullBox(GetBounds());
 }
 
 bool SceneNode::checkDistance2D(cvec3 _camPos, float _distance) const
 {
 	// Check distance to camera
-	float distToCamera2D = glm::length(Fix_X0Z(_camPos) - Fix_X0Z(getBounds().getCenter())) - getBounds().getRadius();
+	float distToCamera2D = glm::length(Fix_X0Z(_camPos) - Fix_X0Z(GetBounds().getCenter())) - GetBounds().getRadius();
 	return distToCamera2D < _distance;
 }
 
 bool SceneNode::checkDistance(cvec3 _camPos, float _distance) const
 {
 	// Check distance to camera
-	float distToCamera = glm::length(_camPos - getBounds().getCenter()) - getBounds().getRadius();
+	float distToCamera = glm::length(_camPos - GetBounds().getCenter()) - GetBounds().getRadius();
 	return distToCamera < _distance;
 }

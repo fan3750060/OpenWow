@@ -19,16 +19,16 @@ public:
 	virtual void SetName(cstring name);
 
 	// Translate
-	void setTranslate(cvec2 _translate);
-	cvec2 getTranslate() const;
+	void SetTranslate(cvec2 _translate);
+	cvec2 GetTranslation() const;
 
 	// Rotate
-	void setRotate(cvec3 _rotate);
-	cvec3 getRotate() const;
+	void SetRotation(cvec3 _rotate);
+	cvec3 GetRotation() const;
 
 	// Scale
-	void setScale(cvec2 _scale);
-	cvec2 getScale() const;
+	void SetScale(cvec2 _scale);
+	cvec2 GetScale() const;
 
 	bool IsDirty() const;
 
@@ -68,23 +68,33 @@ public:
 	virtual void SetParent(std::weak_ptr<UINode> pNode);
 
 	/**
-	 * Add a mesh to this scene node.
-	 * The scene node does not take ownership of a mesh that is set on a mesh
+	 * Set a mesh to this ui node.
+	 * The ui node does not take ownership of a mesh that is set on a mesh
 	 * as it is possible that the same mesh is added to multiple scene nodes.
-	 * Deleting the scene node does not delete the meshes associated with it.
 	 */
-	virtual void AddMesh(std::shared_ptr<IMesh> mesh);
-	virtual void RemoveMesh(std::shared_ptr<IMesh> mesh);
+	virtual void SetMesh(std::shared_ptr<IMesh> mesh);
+	std::shared_ptr<IMesh> GetMesh() const;
 
 	/**
 	 * Called before all others calls
 	 */
-	virtual void Update(Viewport* viewport);
+	virtual void UpdateViewport(Viewport* viewport);
 
 	/**
 	 * Allow a visitor to visit this node.
 	 */
 	virtual bool Accept(IVisitor& visitor);
+
+	/**
+	 * Input events
+	 */
+	bool OnKeyPressed(KeyEventArgs& e);
+	bool OnKeyReleased(KeyEventArgs& e);
+
+	void OnMouseMoved(MouseMotionEventArgs& e);
+	bool OnMouseButtonPressed(MouseButtonEventArgs& e);
+	bool OnMouseButtonReleased(MouseButtonEventArgs& e);
+	bool OnMouseWheel(MouseWheelEventArgs& e);
 
 protected:
 	virtual mat4 GetParentWorldTransform() const;
@@ -112,8 +122,8 @@ private:
 	vec2                m_Scale;
 
 
-	std::weak_ptr<UINode>  m_pParentNode;
-	NodeList               m_Children;
-	NodeNameMap            m_ChildrenByName;
-	MeshList               m_Meshes;
+	std::weak_ptr<UINode>	m_pParentNode;
+	NodeList				m_Children;
+	NodeNameMap				m_ChildrenByName;
+	std::shared_ptr<IMesh>  m_Mesh;
 };

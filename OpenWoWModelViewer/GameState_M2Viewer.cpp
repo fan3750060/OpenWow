@@ -43,7 +43,7 @@ void GameState_M2Viewer::OpenFile(const char* _fname)
 
 	M2* m2 = GetManager<IM2Manager>()->Add(path);
 	m2_Model = new CM2_Viewer_Instance(m2);
-	m2_Model->setScale(vec3(10.0f));
+	m2_Model->SetScale(vec3(10.0f));
 }
 
 bool GameState_M2Viewer::Init()
@@ -69,7 +69,7 @@ bool GameState_M2Viewer::Init()
 		//M2* model = GetManager<IM2Manager>()->Add("PARTICLES\\LootFX.m2");
 		//M2* model = GetManager<IM2Manager>()->Add("Spells\\Enchantments\\RedGlow_High.m2");
 		m2_Model = new CM2_Viewer_Instance(model);
-		m2_Model->setScale(vec3(10.0f));
+		m2_Model->SetScale(vec3(10.0f));
 	}
 
 	//m_Char = new Character();
@@ -118,11 +118,11 @@ void GameState_M2Viewer::Update(double _time, double _dTime)
 	
 
 	//m2_Camera->getObject()->m_Cameras[0]->calc(_time * 3.0f, _dTime);
-	//m2_Model->setTranslate(m2_Camera->getObject()->m_Cameras[0]->getTranslate());
-	//m2_Model->setRotate(vec3(0, -Math::Pi / 2.0f, 0));
+	//m2_Model->SetTranslate(m2_Camera->getObject()->m_Cameras[0]->GetTranslation());
+	//m2_Model->SetRotation(vec3(0, -Math::Pi / 2.0f, 0));
 
-	//m2_Model->setTranslate(_Render->getCamera()->Position + _Render->getCamera()->Direction * 250.0f);
-	//m2_Model->setRotate(_Render->getCamera()->Direction);
+	//m2_Model->SetTranslate(_Render->getCamera()->Position + _Render->getCamera()->Direction * 250.0f);
+	//m2_Model->SetRotation(_Render->getCamera()->Direction);
 
 	//_Render->getCamera()->Position = 
 	_Render->getCamera()->Update(_time, _dTime);

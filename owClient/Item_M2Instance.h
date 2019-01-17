@@ -3,7 +3,7 @@
 class CItem_M2Instance : public CM2_Base_Instance
 {
 public:
-	CItem_M2Instance(CM2_Base_Instance* _parent, std::shared_ptr<M2> _model);
+	CItem_M2Instance(std::shared_ptr<M2> _model);
 
 	void AddVisualEffect(std::shared_ptr<CM2_Base_Instance> _visualEffect);
 

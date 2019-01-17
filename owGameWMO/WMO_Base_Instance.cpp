@@ -36,7 +36,7 @@ void CWMO_Base_Instance::EmptyTransformAndBounds()
 	bbox.setMin(vec3(-100000.0f, -100000.0f, -100000.0f));
 	bbox.setMax(vec3(100000.0f, 100000.0f, 100000.0f));
 	bbox.calculateCenter();
-	setBounds(bbox);
+	SetBounds(bbox);
 }
 
 #define WMO_DISABLE_PORTALS

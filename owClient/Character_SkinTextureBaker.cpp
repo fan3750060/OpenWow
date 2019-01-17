@@ -30,25 +30,15 @@ Character_SkinTextureBaker::Character_SkinTextureBaker()
 			region.Y = it.Get_Y();
 			region.Width = it.Get_Width();
 			region.Height = it.Get_Height();
-			m_Regions.insert(make_pair((DBC_CharComponent_Sections::List)it.Get_Section(), region));
+			m_Regions.insert(std::make_pair((DBC_CharComponent_Sections::List)it.Get_Section(), region));
 		}
 	}
 }
 
 std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _character)
 {
-	std::shared_ptr<Texture> bakedSkinTexture = _Render->r.createTexture
-	(
-		R_TextureTypes::Tex2D,
-		SkinTextureWidth,
-		SkinTextureHeight,
-		1,
-		R_TextureFormats::RGBA8,
-		true,
-		true,
-		false,
-		false
-	);
+	std::shared_ptr<Texture> bakedSkinTexture = Character_SectionWrapper::getSkinTexture(_character);// TODO:: _RenderDevice->CreateTexture();
+
 	m_Pixels = new PixelData[SkinTextureWidth * SkinTextureHeight];
 
 	// 1. Get skin texture as pattern
@@ -89,7 +79,7 @@ std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _c
 	}
 
 	// 4. Final
-	bakedSkinTexture->uploadTextureData(0, 0, m_Pixels);
+	//bakedSkinTexture->LoadTextureCustom(SkinTextureWidth, SkinTextureHeight, m_Pixels);
 	SafeDeleteArray(m_Pixels);
 
 	return bakedSkinTexture;
@@ -98,23 +88,20 @@ std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _c
 void Character_SkinTextureBaker::FillWithSkin(std::shared_ptr<Texture> _skinTexture)
 {
 	assert1(_skinTexture != nullptr);
-	assert1(_skinTexture->m_Width == (SkinTextureWidth / 2) || _skinTexture->m_Width == SkinTextureWidth);
+	assert1(_skinTexture->GetWidth() == (SkinTextureWidth / 2) || _skinTexture->GetWidth() == SkinTextureWidth);
 
-	PixelData* skinTexturePixels = new PixelData[_skinTexture->m_Width * _skinTexture->m_Height];
-	if (!_skinTexture->getTextureData(0, 0, skinTexturePixels))
-	{
-		fail1();
-	}
+	PixelData* skinTexturePixels = new PixelData[_skinTexture->GetWidth() * _skinTexture->GetWidth()];
+	//skinTexturePixels = (PixelData*)(_skinTexture->GetBuffer().data());
 
-	assert1(SkinTextureWidth >= _skinTexture->m_Width);
-	uint32 divSmall = SkinTextureWidth / _skinTexture->m_Width;
+	assert1(SkinTextureWidth >= _skinTexture->GetWidth());
+	uint32 divSmall = SkinTextureWidth / _skinTexture->GetWidth();
 
 	for (uint32 x = 0; x < SkinTextureWidth; x++)
 	{
 		for (uint32 y = 0; y < SkinTextureWidth; y++)
 		{
 			uint32 index = (x + (y * SkinTextureWidth));
-			uint32 indexLocal = ((x / divSmall) + ((y / divSmall) * _skinTexture->m_Width));
+			uint32 indexLocal = ((x / divSmall) + ((y / divSmall) * _skinTexture->GetWidth()));
 			m_Pixels[index] = skinTexturePixels[indexLocal];
 		}
 	}
@@ -124,7 +111,7 @@ void Character_SkinTextureBaker::FillWithSkin(std::shared_ptr<Texture> _skinText
 
 void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, std::string _name)
 {
-	std::shared_ptr<Texture> texture = GetManager<ITexturesManager>()->Add(_name);
+	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(_name);
 	if (texture == nullptr)
 	{
 		return;
@@ -140,16 +127,13 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 		return;
 	}
 
-	assert1(_compTexture->m_Width == 128 || _compTexture->m_Width == 256);
+	assert1(_compTexture->GetWidth() == 128 || _compTexture->GetWidth() == 256);
 
-	PixelData* texturePixels = new PixelData[_compTexture->m_Width * _compTexture->m_Height];
-	if (!_compTexture->getTextureData(0, 0, texturePixels))
-	{
-		fail1();
-	}
+	PixelData* texturePixels = new PixelData[_compTexture->GetWidth() * _compTexture->GetHeight()];
+	//texturePixels = (PixelData*)_compTexture->GetBuffer().data();
 
-	assert1(SkinComponentWidth >= _compTexture->m_Width);
-	uint32 divSmall = SkinComponentWidth / _compTexture->m_Width;
+	assert1(SkinComponentWidth >= _compTexture->GetWidth());
+	uint32 divSmall = SkinComponentWidth / _compTexture->GetWidth();
 
 	CharacterSkinRegion& region = m_Regions[_type];
 	for (uint32 x = 0; x < region.Width; x++)
@@ -157,7 +141,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 		for (uint32 y = 0; y < region.Height; y++)
 		{
 			uint32 index = (region.X + x) + ((region.Y + y) * SkinTextureWidth);
-			uint32 indexLocal = ((x / divSmall) + ((y / divSmall) * _compTexture->m_Width));
+			uint32 indexLocal = ((x / divSmall) + ((y / divSmall) * _compTexture->GetWidth()));
 
 			if (texturePixels[indexLocal].a > 0)
 			{

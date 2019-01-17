@@ -23,7 +23,7 @@ public:
 	void setFacial3Geoset(uint32 _value) { setMeshEnabled(MeshIDType::Facial3, _value); }
 
 	// Texture components helper
-	const CItem_VisualData* getItemTextureComponents(InventoryType::List _slot) const { return m_VisualItems[_slot]; }
+	std::shared_ptr<const CItem_VisualData> getItemTextureComponents(InventoryType::List _slot) const { return m_VisualItems[_slot]; }
 
 	// IRenderable
 	void Render3D();
@@ -38,5 +38,5 @@ private:
 
 private:
 	CharacterTemplate			m_Template;
-	std::vector<CItem_VisualData*>   m_VisualItems;
+	std::vector<std::shared_ptr<CItem_VisualData>>   m_VisualItems;
 };

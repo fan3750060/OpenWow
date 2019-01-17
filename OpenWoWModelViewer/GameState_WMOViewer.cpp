@@ -62,7 +62,7 @@ bool GameState_WMOViewer::Init()
 
 	SceneNode* root = new SceneNode();
 	root->setVisible(true);
-	root->setBounds(bb);
+	root->SetBounds(bb);
 
 	sceneManager = new CSceneManager(root);
 	sceneManager->setCamera(_Render->getCamera());

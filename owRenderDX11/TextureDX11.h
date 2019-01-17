@@ -103,6 +103,11 @@ public:
 	 */
 	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
+	/**
+	 * Get texture data
+	 */
+	const std::vector<uint8>& GetBuffer();
+
 	// Gets the texture resource associated to this texture
 	ID3D11Resource* GetTextureResource() const;
 
@@ -190,7 +195,6 @@ private:
 	bool     m_bIsTransparent;
 
 	typedef std::vector<uint8_t> ColorBuffer;
-	// A buffer for dynamic textures.
 	ColorBuffer m_Buffer;
 
 	std::string m_TextureFileName;

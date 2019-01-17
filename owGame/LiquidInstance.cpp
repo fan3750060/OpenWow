@@ -8,13 +8,13 @@ Liquid_Instance::Liquid_Instance(std::shared_ptr<Liquid> _liquidObject, vec3 _po
 {
 	// Scene node params
 	{
-		setTranslate(_position);
+		SetTranslate(_position);
 		//
 		UpdateLocalTransform();
 		//
 		BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
 		bbox.transform(GetWorldTransfom());
-		setBounds(bbox);
+		SetBounds(bbox);
 	}
 
 	for (const auto& it : _liquidObject->m_WaterLayers)

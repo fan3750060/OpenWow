@@ -99,7 +99,7 @@ void GameState_InWorld::Render3D()
 	SceneNode* intNode = GetManager<ISceneManager>()->getIntersectedNode();
 	if (intNode != nullptr)
 	{
-		_Render->DrawBoundingBox(intNode->getBounds(), vec4(1.0f, 0.2f, 0.2f, 0.8f));
+		_Render->DrawBoundingBox(intNode->GetBounds(), vec4(1.0f, 0.2f, 0.2f, 0.8f));
 	}
 
 	// tauren 1.58

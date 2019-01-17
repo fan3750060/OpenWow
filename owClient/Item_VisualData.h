@@ -13,9 +13,9 @@ class Creature_M2Instance;
 
 struct ObjectComponent
 {
-	CItem_M2Instance*           model;
+	std::shared_ptr<CItem_M2Instance>   model;
 	std::shared_ptr<Texture>            texture;
-	const CM2_Part_Attachment*	attach;
+	std::shared_ptr<const CM2_Part_Attachment>	attach;
 };
 
 struct GeosetComponent
@@ -28,7 +28,7 @@ struct GeosetComponent
 class CItem_VisualData : public ItemTemplate
 {
 public:
-	CItem_VisualData(Character* _owner);
+	CItem_VisualData(std::shared_ptr<Character> _owner);
 
 	void Load();
 
@@ -57,5 +57,5 @@ private:
 	std::shared_ptr<Texture>         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
 private: // PARENT
-	Character* m_ParentCharacter;
+	std::shared_ptr<Character> m_ParentCharacter;
 };

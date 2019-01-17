@@ -122,7 +122,7 @@ void UIMgr::RenderText(vec2 _pos, cstring _string, const Color& _color) const
 	RenderText(_pos, _string, TextAlignW::TEXT_ALIGNW_LEFT, TextAlignH::TEXT_ALIGNH_BOTTOM, m_FontsMgr->GetMainFont(), _color);
 }
 
-void UIMgr::RenderText(vec2 _pos, cstring _string, SharedFontPtr _font, const Color& _color) const
+void UIMgr::RenderText(vec2 _pos, cstring _string, std::shared_ptr<Font> _font, const Color& _color) const
 {
 	RenderText(_pos, _string, TextAlignW::TEXT_ALIGNW_LEFT, TextAlignH::TEXT_ALIGNH_BOTTOM, _font, _color);
 }
@@ -132,7 +132,7 @@ void UIMgr::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlign
 	RenderText(_pos, _string, _alignW, _alignH, m_FontsMgr->GetMainFont(), _color);
 }
 
-void UIMgr::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, SharedFontPtr _font, const Color& _color) const
+void UIMgr::RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, std::shared_ptr<Font> _font, const Color& _color) const
 {
 	auto stringWidth = _font->GetStringWidth(_string);
 	auto fontHeight = _font->GetHeight();

@@ -74,7 +74,7 @@ public:
 	void SetTextOffset(cvec2 _textOffset) { m_TextOffset = _textOffset; }
 	void SetTextAlignW(TextAlignW _textAlignW) { m_TextAlignW = _textAlignW; }
 	void SetTextAlignH(TextAlignH _textAlignH) { m_TextAlignH = _textAlignH; }
-	void SetTextFont(SharedFontPtr _font);
+	void SetTextFont(std::shared_ptr<Font> _font);
 	std::string GetText() const { return m_Text; };
 
 	// Common functional
@@ -131,7 +131,7 @@ private:
 protected:
 	bool        m_IsTextEnable;
 	std::string      m_Text;
-	SharedFontPtr       m_Font;
+	std::shared_ptr<Font>       m_Font;
 	vec2        m_TextOffset;
 	TextAlignW  m_TextAlignW;
 	TextAlignH  m_TextAlignH;

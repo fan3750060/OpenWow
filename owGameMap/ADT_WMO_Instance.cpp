@@ -13,17 +13,17 @@ ADT_WMO_Instance::ADT_WMO_Instance(std::shared_ptr<WMO> _wmoObject, ADT_MODF& _p
 	// Scene node params
 	{
 		// Translate
-		setTranslate(_placementInfo.position);
+		SetTranslate(_placementInfo.position);
 		// Rotate
 		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;
 		rotate.y = rotate.y - glm::half_pi<float>();
-		setRotate(vec3(rotate.z, rotate.y, rotate.x));
+		SetRotation(vec3(rotate.z, rotate.y, rotate.x));
 		//
 		UpdateLocalTransform();
 		// Bounds
 		BoundingBox bbox(_placementInfo.boundingBox.min, _placementInfo.boundingBox.max);
-		setBounds(bbox);
+		SetBounds(bbox);
 	}
 }
 

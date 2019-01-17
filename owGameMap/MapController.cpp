@@ -28,7 +28,7 @@ MapController::MapController() :
 			vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), 
 			vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat)
 		);
-		setBounds(bbox);
+		SetBounds(bbox);
 	}
 
 	/*time_t t = time(0);   // get time now
@@ -115,7 +115,7 @@ void MapController::Unload()
 
 // --
 
-void MapController::Update(Camera* camera)
+void MapController::UpdateCamera(Camera* camera)
 {
 	if (m_QualitySettings.timeEnable)
 	{
@@ -128,10 +128,10 @@ void MapController::Update(Camera* camera)
 	if (m_Current[midTile][midTile] != nullptr || m_IsOnInvalidTile)
 	{
 		if (m_IsOnInvalidTile ||
-			(camera->GetTranslation().x < m_Current[midTile][midTile]->getTranslate().x) ||
-			(camera->GetTranslation().x > (m_Current[midTile][midTile]->getTranslate().x + C_TileSize)) ||
-			(camera->GetTranslation().z < m_Current[midTile][midTile]->getTranslate().z) ||
-			(camera->GetTranslation().z > (m_Current[midTile][midTile]->getTranslate().z + C_TileSize)))
+			(camera->GetTranslation().x < m_Current[midTile][midTile]->GetTranslation().x) ||
+			(camera->GetTranslation().x > (m_Current[midTile][midTile]->GetTranslation().x + C_TileSize)) ||
+			(camera->GetTranslation().z < m_Current[midTile][midTile]->GetTranslation().z) ||
+			(camera->GetTranslation().z > (m_Current[midTile][midTile]->GetTranslation().z + C_TileSize)))
 		{
 
 			enteredTileX = static_cast<int>(camera->GetTranslation().x / C_TileSize);

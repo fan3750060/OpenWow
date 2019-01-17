@@ -68,7 +68,7 @@ bool GameState_CreaturesViewer::Init()
 				break;
 			}
 			
-			m_Char[index]->setTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
+			m_Char[index]->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
 		}
 	}
 	_Render->getCamera()->Position = vec3(50, 50, 50);

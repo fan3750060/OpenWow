@@ -24,7 +24,7 @@ public:
 	void ClearCache();
 	uint32 GetAreaID(Camera* camera);
 
-	void Update(Camera* camera) override;
+	void UpdateCamera(Camera* camera) override;
 
 public: // Getters
 	std::string getFilenameT() const { return m_MapFilenameT; }

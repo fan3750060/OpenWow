@@ -921,6 +921,26 @@ DXGI_SAMPLE_DESC TextureDX11::GetSupportedSampleCount(DXGI_FORMAT format, uint8_
 	return sampleDesc;
 }
 
+const std::vector<uint8>& TextureDX11::GetBuffer()
+{
+	if (((int)m_CPUAccess & (int)CPUAccess::Read) != 0 && m_pTexture2D)
+	{
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+		// Copy the texture data from the texture resource
+		if (FAILED(m_pDeviceContext->Map(m_pTexture2D, 0, D3D11_MAP_READ, 0, &mappedResource)))
+		{
+			Log::Error("Failed to map texture resource for reading.");
+		}
+
+		memcpy_s(m_Buffer.data(), m_Buffer.size(), mappedResource.pData, m_Buffer.size());
+
+		m_pDeviceContext->Unmap(m_pTexture2D, 0);
+	}
+
+	return m_Buffer;
+}
+
 ID3D11Resource* TextureDX11::GetTextureResource() const
 {
 	ID3D11Resource* resource = nullptr;

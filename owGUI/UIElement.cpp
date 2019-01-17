@@ -158,7 +158,7 @@ void UIElement::SetText(cstring _text)
     m_Text = _text;
 }
 
-void UIElement::SetTextFont(SharedFontPtr _font)
+void UIElement::SetTextFont(std::shared_ptr<Font> _font)
 {
     assert1(_font);
 

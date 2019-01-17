@@ -67,13 +67,13 @@ bool GameState_CharacterViewer::Init()
 				if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
 
 				m_CharExtra[index]->InitFromDisplayInfo(random);
-				m_CharExtra[index]->setScale(5.0f);
+				m_CharExtra[index]->SetScale(5.0f);
 
 				exists.push_back(random);
 				break;
 			}
 
-			m_CharExtra[index]->setTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
+			m_CharExtra[index]->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
 		}
 	}*/
 
@@ -85,17 +85,17 @@ bool GameState_CharacterViewer::Init()
 
 	m_Char[0] = new Character();
 	m_Char[0]->InitFromTemplate(tempPala);
-	m_Char[0]->setScale(vec3(10.0f));
+	m_Char[0]->SetScale(vec3(10.0f));
 
 	/*m_Char[1] = new Character();
-	m_Char[1]->setTranslate(vec3(0, 0, 25), false);
+	m_Char[1]->SetTranslate(vec3(0, 0, 25), false);
 	m_Char[1]->InitFromTemplate(tempShaman);
-	m_Char[1]->setScale(10.0f);
+	m_Char[1]->SetScale(10.0f);
 
 	m_Char[2] = new Character();
-	m_Char[2]->setTranslate(vec3(0, 0, 50), false);
+	m_Char[2]->SetTranslate(vec3(0, 0, 50), false);
 	m_Char[2]->InitFromDisplayInfo(2638);
-	m_Char[2]->setScale(10.0f);*/
+	m_Char[2]->SetScale(10.0f);*/
 
 	_Render->getCamera()->Position = vec3(50, 50, 50);
 	_Render->getCamera()->setViewMatrix(glm::lookAt(vec3(25, 25, 25), vec3(), vec3(0, 1, 0)));

@@ -16,5 +16,4 @@ bool Creature_M2Instance::isMeshEnabled(uint32 _index) const
 	uint32 mod100 = _index % 100;
 	
 	return (div100 == 0) && (mod100 == 0);
-	//return true;
 }

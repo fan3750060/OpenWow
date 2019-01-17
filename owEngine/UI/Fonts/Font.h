@@ -28,16 +28,3 @@ private:
 	std::vector<uint32>	        m_WidthArray;
 	uint32			            m_Height;
 };
-
-/*struct FontDeleter
-{
-	void operator()(Font* p)
-	{
-		IFontsManager* fontManager = GetManager<IFontsManager>();
-		if (fontManager != nullptr)
-		{
-			fontManager->Delete(p);
-		}
-	}
-};*/
-typedef std::shared_ptr<Font> SharedFontPtr;

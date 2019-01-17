@@ -68,7 +68,7 @@ void GameState_CreateCharacter::UpdateState()
 
 	m_Char = new Character();
 	m_Char->InitFromTemplate(tempPala);
-	m_Char->setScale(vec3(10.0f));
+	m_Char->SetScale(vec3(10.0f));
 
 
 	/*SafeDelete(m_Char);

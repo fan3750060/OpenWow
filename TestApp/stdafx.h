@@ -31,3 +31,6 @@
 
 #include <owGameMap.h>
 #pragma comment(lib, "owGameMap.lib")
+
+#include <owClient.h>
+#pragma comment(lib, "owClient.lib")

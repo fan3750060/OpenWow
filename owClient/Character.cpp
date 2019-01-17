@@ -7,13 +7,10 @@
 #include "Character_SectionWrapper.h"
 #include "Character_SkinTextureBaker.h"
 
-Character::Character() :
-	Creature()
+Character::Character() 
+	: Creature()
 {
-	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
-	{
-		m_VisualItems.push_back(new CItem_VisualData(this));
-	}
+
 
 	setMeshEnabled(MeshIDType::Ears, EarsStyles::Enabled);
 	setMeshEnabled(MeshIDType::Eyeglows, EyeglowsStyles::Racial);
@@ -21,6 +18,13 @@ Character::Character() :
 
 void Character::InitFromTemplate(const CharacterTemplate& b)
 {
+	// TODO: Move me outside construtor
+	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
+	{
+		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNode>(shared_from_this())));
+	}
+	// TODO: Move me outside construtor
+
 	// 1. Template
 	{
 		TemplateSet(b);
@@ -39,6 +43,14 @@ void Character::InitFromTemplate(const CharacterTemplate& b)
 
 void Character::InitFromDisplayInfo(uint32 _id)
 {
+	// TODO: Move me outside construtor
+	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
+	{
+		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNode>(shared_from_this())));
+	}
+	// TODO: Move me outside construtor
+
+
 	const DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
@@ -87,7 +99,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 		std::shared_ptr<Texture> bakedSkinTexture = nullptr;
 		if (!bakedTextureName.empty())
 		{
-			bakedSkinTexture = GetManager<ITexturesManager>()->Add("Textures\\BakedNpcTextures\\" + bakedTextureName);
+			bakedSkinTexture = _RenderDevice->CreateTexture2D("Textures\\BakedNpcTextures\\" + bakedTextureName);
 		}
 		else
 		{
@@ -103,6 +115,14 @@ void Character::InitFromDisplayInfo(uint32 _id)
 // Specific for character creation
 void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender::List _gender)
 {
+	// TODO: Move me outside construtor
+	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
+	{
+		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNode>(shared_from_this())));
+	}
+	// TODO: Move me outside construtor
+
+
 	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
@@ -220,7 +240,7 @@ void Character::RefreshTextures(std::shared_ptr<Texture> _skin)
 	setSpecialTexture(SM2_Texture::Type::CHAR_HAIR, Character_SectionWrapper::getHairTexture(this));
 
 	// Cloak
-	const CItem_VisualData* item = m_VisualItems[EQUIPMENT_SLOT_BACK];
+	std::shared_ptr<const CItem_VisualData> item = m_VisualItems[EQUIPMENT_SLOT_BACK];
 	if (item->InventoryType != InventoryType::NON_EQUIP)
 	{
 		assert1(item->getObjectComponents().size() == 1);
