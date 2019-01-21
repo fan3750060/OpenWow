@@ -1,7 +1,6 @@
 #pragma once
 
 // Forward
-class R_Texture;
 class Font;
 class WMO;
 class M2;
@@ -22,14 +21,6 @@ struct IRefManager : public IManager
 	virtual bool Exists(cstring name) const = 0;
 	virtual void Delete(cstring name) = 0;
 	virtual void Delete(std::shared_ptr<T> item) = 0;
-};
-
-
-struct
-	__declspec(uuid("5C02C392-FD7A-4013-AAB7-43C8E81602AB"))
-	ITexturesManager : public IRefManager<R_Texture>
-{
-	virtual ~ITexturesManager() {};
 };
 
 

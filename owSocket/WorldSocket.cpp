@@ -215,7 +215,7 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 void CWorldSocket::AddHandler(Opcodes _opcode, Function_WA<ByteBuffer&>* _func)
 {
 	assert1(_func != nullptr);
-	m_Handlers.insert(make_pair(_opcode, _func));
+	m_Handlers.insert(std::make_pair(_opcode, _func));
 }
 
 void CWorldSocket::ProcessHandler(Opcodes _handler, ByteBuffer _buffer)

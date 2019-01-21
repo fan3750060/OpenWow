@@ -19,7 +19,6 @@ public:
 	// ISkyManager
 	void Calculate(Camera* camera, uint32 _time) override;
 	bool HasSkies() const override { return !skies.empty(); }
-
 	vec3  GetColor(LightColors::List _color) const override { return m_Interpolated.m_Colors[_color]; }
 	float GetFog(LightFogs::List _fog) const override { return m_Interpolated.m_Fogs[_fog]; }
 	float GetGlow() const override { return m_Interpolated.m_glow; }

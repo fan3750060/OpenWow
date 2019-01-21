@@ -55,6 +55,9 @@ SkyManager::~SkyManager()
 	ERASE_VECTOR(skies);
 }
 
+//
+// SceneNode
+//
 void SkyManager::UpdateCamera(Camera* camera)
 {
 	if (skies.empty())
@@ -68,6 +71,10 @@ void SkyManager::UpdateCamera(Camera* camera)
 	UpdateLocalTransform();
 }
 
+
+//
+// ISkyManager
+//
 void SkyManager::Calculate(Camera* camera, uint32 _time)
 {
 	if (skies.empty())

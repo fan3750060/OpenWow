@@ -23,8 +23,13 @@ private:
 		{}
 		float gShallowAlpha;
 		float gDeepAlpha;
+		vec2 pad0;
+
 		vec3 gColorLight;
+		float pad1;
+
 		vec3 gColorDark;
+		float pad2;
 		//-------------------------- ( 32 bytes )
 	};
 	MaterialProperties* m_pProperties;

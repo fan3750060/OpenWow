@@ -7,9 +7,6 @@ public:
 
 	void AddVisualEffect(std::shared_ptr<CM2_Base_Instance> _visualEffect);
 
-	// IRenderable3D
-	void Render3D();
-
 private:
 	std::vector<std::shared_ptr<CM2_Base_Instance>> m_VisualEffects;
 };

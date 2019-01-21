@@ -34,7 +34,7 @@ public:
 	ByteBuffer& getData() { return m_Buffer; }
 
 private:
-	std::string getName() { return std::string(m_PacketType == PacketType::READ ? "PacketRead" : "PacketWrite") + "[" + to_string(m_Id) + "]"; }
+	std::string getName() { return std::string(m_PacketType == PacketType::READ ? "PacketRead" : "PacketWrite") + "[" + std::to_string(m_Id) + "]"; }
 
 private:
 	uint64				m_Id;

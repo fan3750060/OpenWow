@@ -34,7 +34,7 @@ public:
 
 	const std::vector<ObjectComponent>&  getObjectComponents() const { return m_ObjectComponents; }
 	const std::vector<GeosetComponent>&  getGeosetComponents() const { return m_GeosetComponents; }
-	std::shared_ptr<Texture>                getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
+	const std::shared_ptr<Texture>&      getTextureComponent(DBC_CharComponent_Sections::List _type) const { return m_TextureComponents[_type]; }
 
 	void Render3D();
 
@@ -43,7 +43,7 @@ private:
 	void InitGeosetComponents();
 	void InitTextureComponents();
 
-	std::shared_ptr<M2>        LoadObjectModel   (InventoryType::List _objectType, std::string _modelName);
+	std::shared_ptr<M2>      LoadObjectModel   (InventoryType::List _objectType, std::string _modelName);
 	std::shared_ptr<Texture> LoadObjectTexture (InventoryType::List _objectType, std::string _textureName);
 	std::shared_ptr<Texture> LoadSkinTexture   (DBC_CharComponent_Sections::List _type, std::string _textureName);
 	
@@ -54,8 +54,8 @@ private:
 private:
 	std::vector<ObjectComponent>  m_ObjectComponents;
 	std::vector<GeosetComponent>  m_GeosetComponents;
-	std::shared_ptr<Texture>         m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
+	std::shared_ptr<Texture>      m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
 private: // PARENT
-	std::shared_ptr<Character> m_ParentCharacter;
+	std::weak_ptr<Character> m_ParentCharacter;
 };

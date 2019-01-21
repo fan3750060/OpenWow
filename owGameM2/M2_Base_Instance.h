@@ -24,16 +24,16 @@ public:
 	float getAlpha() const { return m_Alpha; }
 
 	// Mesh & textures provider
-	virtual bool isMeshEnabled(uint32 _index) const;
-	void setSpecialTexture(SM2_Texture::Type _type, cstring _textureName);
-	void setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture);
-	std::shared_ptr<Texture> getSpecialTexture(SM2_Texture::Type _type) const;
+	virtual bool                          isMeshEnabled(uint32 _index) const;
+	void                                  setSpecialTexture(SM2_Texture::Type _type, cstring _textureName);
+	void                                  setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture);
+	std::shared_ptr<Texture>              getSpecialTexture(SM2_Texture::Type _type) const;
 
 	// Animations
 	std::shared_ptr<CM2_Animator> getAnimator() { return m_Animator; }
 
 	// SceneNode
-	void SetParent(std::weak_ptr<SceneNode> pNode);
+	void SetParent(std::weak_ptr<SceneNode> pNode) override;
 	bool Accept(IVisitor& visitor) override;
 
 protected:

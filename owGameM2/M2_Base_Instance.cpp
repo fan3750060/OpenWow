@@ -110,10 +110,10 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	/*if (m_Attached != nullptr)
+	if (m_Attached != nullptr)
 	{
-		TransRotScaleToLocalTransform();
-	}*/
+		UpdateLocalTransform();
+	}
 
 	if (m_M2->isAnimated())
 	{
@@ -143,7 +143,6 @@ void CM2_Base_Instance::InitAnimator()
 	if (m_M2->isAnimated())
 	{
 		m_Animator = std::make_shared<CM2_Animator>(m_M2);
-		//_Bindings->RegisterUpdatableObject(this);
 	}
 }
 
@@ -160,15 +159,11 @@ void CM2_Base_Instance::UpdateLocalTransform()
 		mat4 absMatrix;
 		absMatrix = GetParentWorldTransform() * bone->getTransformMatrix() * relMatrix;
 		SetWorldTransform(absMatrix);
-
-		BoundingBox bbox = m_M2->m_Bounds;
-		bbox.transform(GetWorldTransfom());
-		SetBounds(bbox);
-
-		return;
 	}
-
-	SceneNode::UpdateLocalTransform();
+	else
+	{
+		SceneNode::UpdateLocalTransform();
+	}
 
 	BoundingBox bbox = m_M2->m_Bounds;
 	bbox.transform(GetWorldTransfom());

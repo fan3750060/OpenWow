@@ -44,8 +44,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 	for (uint32 sectionIndex = 0; sectionIndex < m_SkinProfile.submeshes.size; sectionIndex++)
 	{
 		const SM2_SkinSection& section = t_sections[sectionIndex];
-		std::shared_ptr<CM2_SkinSection> skinSection = std::make_shared<CM2_SkinSection>(m_ParentM2, sectionIndex, section);
-
+		
 		std::vector<SM2_Vertex> vertexes;
 		for (uint32 vert = section.vertexStart; vert < section.vertexStart + section.vertexCount; vert++)
 		{
@@ -68,8 +67,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 			indexes.push_back(index - section.vertexStart);
 		}
 
-		skinSection->CreateGeometry(vertexes, indexes);
-
+		std::shared_ptr<CM2_SkinSection> skinSection = std::make_shared<CM2_SkinSection>(m_ParentM2, sectionIndex, section, vertexes, indexes);
 		Skin->m_Sections.push_back(skinSection);
 	}
 
@@ -96,7 +94,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 	{
 		std::shared_ptr<CM2_SkinSection> skinSection = Skin->m_Sections[it.skinSectionIndex];
 
-		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, skinSection->__geom);
+		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, skinSection->getMesh());
 
 		batch->newShader = GetPixel(it);
 

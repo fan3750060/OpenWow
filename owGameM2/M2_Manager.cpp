@@ -49,7 +49,7 @@ std::shared_ptr<M2> CM2_Manager::CreateAction(cstring name)
 	CM2_Builder builder(model);
 	if (!builder.Load())
 	{
-		//delete model;
+		model.reset();
 		return m_DefaultModel;
 	}
 

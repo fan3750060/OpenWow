@@ -230,9 +230,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairTexture(Character* _ch
 		{
 			std::string textureName = i.Get_Texture1();
 			if (textureName.empty())
-			{
 				break;
-			}
+
 			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
@@ -253,9 +252,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpLowerTexture(Char
 		{
 			std::string textureName = i.Get_Texture2();
 			if (textureName.empty())
-			{
 				break;
-			}
+
 			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
@@ -276,9 +274,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpUpperTexture(Char
 		{
 			std::string textureName = i.Get_Texture3();
 			if (textureName.empty())
-			{
 				break;
-			}
+
 			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}

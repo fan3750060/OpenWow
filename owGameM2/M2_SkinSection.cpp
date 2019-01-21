@@ -8,14 +8,6 @@
 // General
 #include "M2_SkinSection.h"
 
-CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<const M2> _model, const uint16 _index, const SM2_SkinSection& _proto) :
-	m_Index(_index),
-	m_Proto(_proto),
-	m_ParentM2(_model),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
-{
-}
-
 struct SM2_Vertex_BoneWeight
 {
 	float weights[4];
@@ -26,7 +18,10 @@ struct SM2_Vertex_BoneIndex
 	uint32 indexes[4];
 };
 
-void CM2_SkinSection::CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes)
+CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<const M2> _model, const uint16 _index, const SM2_SkinSection& _proto, const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes) :
+	m_Index(_index),
+	m_Proto(_proto),
+	m_ParentM2(_model)
 {
 	std::vector<vec3> verts;
 	std::vector<SM2_Vertex_BoneWeight> weights;
@@ -61,13 +56,12 @@ void CM2_SkinSection::CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, c
 	std::shared_ptr<Buffer> VB_TextureCoords1 = _RenderDevice->CreateFloatVertexBuffer((float*)tex1.data(), tex1.size(), 0, sizeof(vec2));
 	std::shared_ptr<Buffer> IB_Indexes = _RenderDevice->CreateIndexBuffer(_indexes);
 
-	__geom = _RenderDevice->CreateMesh();
-	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
-	__geom->AddVertexBuffer(BufferBinding("BLENDWEIGHT", 0), VB_BoneWeights);
-	__geom->AddVertexBuffer(BufferBinding("BLENDINDICES", 0), VB_BoneIndices);
-	__geom->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
-	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords0);
-	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 1), VB_TextureCoords1);
-	__geom->SetIndexBuffer(IB_Indexes);
+	m_Mesh = _RenderDevice->CreateMesh();
+	m_Mesh->AddVertexBuffer(BufferBinding("POSITION", 0), VB_Vertexes);
+	m_Mesh->AddVertexBuffer(BufferBinding("BLENDWEIGHT", 0), VB_BoneWeights);
+	m_Mesh->AddVertexBuffer(BufferBinding("BLENDINDICES", 0), VB_BoneIndices);
+	m_Mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), VB_Normals);
+	m_Mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), VB_TextureCoords0);
+	m_Mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 1), VB_TextureCoords1);
+	m_Mesh->SetIndexBuffer(IB_Indexes);
 }
-

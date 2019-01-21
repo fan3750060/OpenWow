@@ -16,7 +16,7 @@ CM2_Skin::CM2_Skin(const std::weak_ptr<const M2> _model) :
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
 
-void CM2_Skin::CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent)
+void CM2_Skin::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
 	for (const auto& batch : m_Batches)
 	{

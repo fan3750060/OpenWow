@@ -36,10 +36,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreatePlane(cvec3 N)
 	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(i, 6);
 	mesh->SetIndexBuffer(__ib);
 
-	//std::shared_ptr<Material> mat = CreateMaterial();
-	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	//mesh->SetMaterial(mat);
-
 	return mesh;
 }
 
@@ -68,10 +64,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, 
 
 	std::shared_ptr<Buffer> __nb = CreateVertexBuffer(n, 4);
 	mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), __nb);
-
-	//std::shared_ptr<Material> mat = CreateMaterial();
-	//mat->SetDiffuseColor(vec4(1, 1, 1, 1));
-	//mesh->SetMaterial(mat);
 
 	return mesh;
 }
@@ -124,10 +116,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateSphere()
 	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(spInds, 128 * 3);
 	mesh->SetIndexBuffer(__ib);
 
-	//std::shared_ptr<Material> mat = CreateMaterial();
-	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	//mesh->SetMaterial(mat);
-
 	return mesh;
 }
 
@@ -149,10 +137,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 
 	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(cubeInds, 36);
 	mesh->SetIndexBuffer(__ib);
-
-	//std::shared_ptr<Material> mat = CreateMaterial();
-	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	//mesh->SetMaterial(mat);
 
 	return mesh;
 }
@@ -207,10 +191,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCone()
 
 	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(coneInds, 22 * 3);
 	mesh->SetIndexBuffer(__ib);
-
-	//std::shared_ptr<Material> mat = CreateMaterial();
-	//mat->SetDiffuseColor(vec4(1, 0, 0, 1));
-	//mesh->SetMaterial(mat);
 
 	return mesh;
 }

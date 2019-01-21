@@ -46,6 +46,7 @@
     <ClCompile Include="UI\Passes\RenderUITechnique.cpp" />
     <ClCompile Include="UI\UINode.cpp" />
     <ClCompile Include="UI\UISceneBase.cpp" />
+    <ClCompile Include="UI\UIText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="UI\UINode.h" />
     <ClInclude Include="UI\UIScene.h" />
     <ClInclude Include="UI\UISceneBase.h" />
+    <ClInclude Include="UI\UIText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{51252F60-B8DC-4090-BBA3-DD05942110F0}</ProjectGuid>

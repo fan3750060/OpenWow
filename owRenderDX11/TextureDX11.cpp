@@ -284,6 +284,9 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 	m_NumSlices = 1;
 	m_Pitch = (m_TextureWidth) * 4;
 
+	m_Buffer.resize(m_TextureWidth * m_TextureHeight * m_BPP);
+	memcpy_s(m_Buffer.data(), m_Buffer.size(), blpView.MipData[0], m_Buffer.size());
+
 	m_ShaderResourceViewFormat = m_RenderTargetViewFormat = m_TextureResourceFormat;
 	m_SampleDesc = GetSupportedSampleCount(m_TextureResourceFormat, 1);
 
@@ -923,7 +926,7 @@ DXGI_SAMPLE_DESC TextureDX11::GetSupportedSampleCount(DXGI_FORMAT format, uint8_
 
 const std::vector<uint8>& TextureDX11::GetBuffer()
 {
-	if (((int)m_CPUAccess & (int)CPUAccess::Read) != 0 && m_pTexture2D)
+	/*if (((int)m_CPUAccess & (int)CPUAccess::Read) != 0 && m_pTexture2D)
 	{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -936,7 +939,7 @@ const std::vector<uint8>& TextureDX11::GetBuffer()
 		memcpy_s(m_Buffer.data(), m_Buffer.size(), mappedResource.pData, m_Buffer.size());
 
 		m_pDeviceContext->Unmap(m_pTexture2D, 0);
-	}
+	}*/
 
 	return m_Buffer;
 }

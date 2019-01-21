@@ -38,7 +38,7 @@ public:
 
 		std::string toString()
 		{
-			return to_string(MajorVersion) + "." + to_string(MinorVersion) + "." + to_string(BugfixVersion) + " (" + to_string(Build) + ")";
+			return std::to_string(MajorVersion) + "." + std::to_string(MinorVersion) + "." + std::to_string(BugfixVersion) + " (" + std::to_string(Build) + ")";
 		}
 	};
 

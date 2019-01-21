@@ -1,12 +1,15 @@
 #pragma once
 
+#include "LiquidMaterial.h"
+
 class Liquid_Layer : public MeshWrapper
 {
 public:
 	Liquid_Layer(std::shared_ptr<IMesh> _mesh);
 	virtual ~Liquid_Layer();
 
-
+	// SceneNode
+	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) override;
 
 public:
 	const DBC_LiquidTypeRecord* LiquidType;
@@ -32,7 +35,12 @@ public:
 	// Render
 	void InitTextures();
 
+	std::shared_ptr<LiquidMaterial> m_Material;
 	std::vector<std::shared_ptr<Texture>>    m_Textures;
+
+private:
+	ISkyManager*                                                        m_SkyManager;
+	const CGroupQuality&                                                m_QualitySettings;
 };
 
 class Liquid
@@ -52,10 +60,6 @@ public:
 	std::vector<std::shared_ptr<Liquid_Layer>>							m_WaterLayers;
 
 	float                                                               ydir;
-
-private:
-	ISkyManager*                                                        m_SkyManager;
-	const CGroupQuality&                                                m_QualitySettings;
 
 private:
 	const vec3 defaultNormal = vec3(0.0f, 1.0f, 0.0f);

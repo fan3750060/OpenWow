@@ -23,6 +23,7 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 	// TODO: Shit code. Delete me later
 	SceneNode* sceneNode = dynamic_cast<SceneNode*>(renderEventArgs.Node);
 	CM2_Base_Instance* sceneNodeAsM2Instance = dynamic_cast<CM2_Base_Instance*>(sceneNode);
+	assert1(sceneNodeAsM2Instance != nullptr);
 
 	const SM2_SkinSection& proto = m_SkinSection->getProto();
 
@@ -61,35 +62,38 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 		m_TestMaterial->SetBones(bones);
 	}
 
+	// Shader
+	m_TestMaterial->SetNewShader(newShader);
+
 	// Model color
-	/*bool isColorEnable = (m_Color != nullptr);
-	pass->SetColorEnable(isColorEnable);
+	bool isColorEnable = (m_Color != nullptr);
+	m_TestMaterial->SetColorEnable(isColorEnable);
 	if (isColorEnable)
 	{
-		pass->SetColor(m_Color->getValue());
-	}*/
+		m_TestMaterial->SetColor(m_Color->getValue());
+	}
 
 	// Textures
 	for (uint32 i = 0; i < m_Textures.size(); i++)
 	{
-		m_TestMaterial->SetTexture(i, m_Textures[i].lock()->getTexture());
+		m_TestMaterial->SetTexture(i, m_Textures[i].lock()->GetResultTexture(sceneNodeAsM2Instance));
 	}
 
 	// Texture alpha
-	/*bool isTextureWeightEnable = (m_TextureWeight != nullptr);
-	pass->SetTextureWeightEnable(isTextureWeightEnable);
+	bool isTextureWeightEnable = (m_TextureWeight != nullptr);
+	m_TestMaterial->SetTextureWeightEnable(isTextureWeightEnable);
 	if (isTextureWeightEnable)
 	{
-		pass->SetTextureWeight(m_TextureWeight->getValue());
-	}*/
+		m_TestMaterial->SetTextureWeight(m_TextureWeight->getValue());
+	}
 
 	// Texture transform
-	/*bool isTextureTransformEnable = (m_TextureTransform != nullptr);
-	pass->SetTextureAnimEnable(isTextureTransformEnable);
+	bool isTextureTransformEnable = (m_TextureTransform != nullptr);
+	m_TestMaterial->SetTextureAnimEnable(isTextureTransformEnable);
 	if (isTextureTransformEnable)
 	{
-		pass->SetTextureAnimMatrix(m_TextureTransform->getValue());
-	}*/
+		m_TestMaterial->SetTextureAnimMatrix(m_TextureTransform->getValue());
+	}
 
 	
 	return MeshWrapper::Render(renderEventArgs, perObject, 0, proto.indexCount);

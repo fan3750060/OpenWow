@@ -15,7 +15,7 @@
 struct
 {
 	InventoryType::List	        slot;
-	std::string						folder = "";
+	std::string					folder = "";
 	MeshIDType::List			modifiers[MESHID_MAX_MODS] = MESHID_ALLUNK;
 	uint32						count = 0;
 	M2_AttachmentType::List		attach[ATTACHS_MAX] = { M2_AttachmentType::Count, M2_AttachmentType::Count };
@@ -107,7 +107,7 @@ void CItem_VisualData::Render3D()
 
 	for (auto& com : m_ObjectComponents)
 	{
-		com.model->Render3D();
+		//com.model->Render3D();
 	}
 }
 
@@ -129,7 +129,7 @@ void CItem_VisualData::InitObjectComponents()
 		if (InventoryType == InventoryType::HEAD)
 		{
 			char modelPostfix[64];
-			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_ParentCharacter->Race]->Get_ClientPrefix(), getGenderLetter(m_ParentCharacter->Gender));
+			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_ParentCharacter.lock()->Race]->Get_ClientPrefix(), getGenderLetter(m_ParentCharacter.lock()->Gender));
 
 			int dotPosition = objectFileName.find_last_of('.');
 			assert1(dotPosition != -1);
@@ -145,10 +145,11 @@ void CItem_VisualData::InitObjectComponents()
 		// Fill data
 		std::shared_ptr<M2> model = LoadObjectModel(InventoryType, objectFileName);
 		std::shared_ptr<Texture> itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
-		std::shared_ptr<const CM2_Part_Attachment> itemObjectAttach = m_ParentCharacter->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
+		std::shared_ptr<const CM2_Part_Attachment> itemObjectAttach = m_ParentCharacter.lock()->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
 		std::shared_ptr<CItem_M2Instance> itemObjectInstance = std::make_shared<CItem_M2Instance>(model);
+		itemObjectInstance->CreateInstances();
 		itemObjectInstance->SetParent(m_ParentCharacter);
 		itemObjectInstance->Attach(itemObjectAttach);
 		itemObjectInstance->setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, itemObjectTexture);
@@ -175,7 +176,9 @@ void CItem_VisualData::InitObjectComponents()
 				std::shared_ptr<M2> visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
 
 				std::shared_ptr<CM2_Base_Instance> visInstance = std::make_shared<CM2_Base_Instance>(visModel);
+				visInstance->CreateInstances();
 				visInstance->SetParent(itemObjectInstance);
+				
 				std::shared_ptr<const CM2_Part_Attachment> visAttach = nullptr;
 
 				if (itemObjectInstance->getM2()->getMiscellaneous()->isAttachmentExists((M2_AttachmentType::List)j))

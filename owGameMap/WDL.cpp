@@ -111,7 +111,9 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		const std::string name = m_LowResolutionWMOsNames[it.nameIndex];
 
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(name);
-		m_LowResolutionWMOs.push_back(std::make_shared<ADT_WMO_Instance>(wmo, it));
+		std::shared_ptr<ADT_WMO_Instance> wmoInstance = std::make_shared<ADT_WMO_Instance>(wmo, it);
+		wmoInstance->SetParent(_parent);
+		m_LowResolutionWMOs.push_back(wmoInstance);
 	}
 }
 

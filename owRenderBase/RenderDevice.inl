@@ -31,7 +31,7 @@ std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer< std::vector<uint32> >(
 template<>
 std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count);
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count);
+std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint32>(const uint32* data, uint32 count);
 
 
 // Non-specialized template methods.

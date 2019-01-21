@@ -287,7 +287,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	/*for (auto& it : m_WMOsPlacementInfo)
+	for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
@@ -318,7 +318,7 @@ bool ADT::Load()
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);
 		}
-	}*/
+	}
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

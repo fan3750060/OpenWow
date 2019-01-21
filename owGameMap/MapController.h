@@ -24,6 +24,7 @@ public:
 	void ClearCache();
 	uint32 GetAreaID(Camera* camera);
 
+	// Scene node
 	void UpdateCamera(Camera* camera) override;
 
 public: // Getters
@@ -91,24 +92,16 @@ private: // PARENT
 inline static bool IsBadTileIndex(int i, int j)
 {
 	if (i < 0)
-	{
 		return true;
-	}
 
 	if (j < 0)
-	{
 		return true;
-	}
 
 	if (i >= C_TilesInMap)
-	{
 		return true;
-	}
 
 	if (j >= C_TilesInMap)
-	{
 		return true;
-	}
 
 	return false;
 }

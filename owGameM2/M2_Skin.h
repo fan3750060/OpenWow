@@ -11,13 +11,14 @@ class CM2_Base_Instance;
 class CM2_Skin_Builder;
 // FORWARD END
 
-class CM2_Skin
+class CM2_Skin : public ISceneNodeProvider
 {
 	friend CM2_Skin_Builder;
 public:
 	CM2_Skin(const std::weak_ptr<const M2> _model);
 
-	void CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent);
+	// ISceneNodeProvider
+	void CreateInsances(std::weak_ptr<SceneNode> _parent) override;
 
 private:
 	std::vector<std::shared_ptr<CM2_SkinSection>>	m_Sections;

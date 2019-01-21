@@ -1,9 +1,7 @@
 #pragma once
 
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "freetype28.lib")
+#pragma comment(lib, "freetype.lib")
 #pragma comment(lib, "libmpq.lib")
-#pragma comment(lib, "glfw3.lib")
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -18,11 +16,8 @@
 #include <owCore.h>
 #pragma comment(lib, "owCore.lib")
 
-#include <owRender.h>
-#pragma comment(lib, "owRender.lib")
-
-#include <owGUI.h>
-#pragma comment(lib, "owGUI.lib")
+#include <owRenderBase.h>
+#pragma comment(lib, "owRenderBase.lib")
 
 #include <owEngine.h>
 #pragma comment(lib, "owEngine.lib")
@@ -40,8 +35,6 @@
 
 #include <owGameWMO.h>
 #pragma comment(lib, "owGameWMO.lib")
-
-
 
 #include <owSocket.h>
 #pragma comment(lib, "owSocket.lib")

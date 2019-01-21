@@ -32,7 +32,7 @@ private:
 	std::string				m_Password;
 	BigNumber			m_Key;
 
-	vector<RealmInfo>	m_Realms;
+	std::vector<RealmInfo>	m_Realms;
 
 	CAuthSocket*		m_AuthSocket;
 	CWorldSocket*		m_WorldSocket;

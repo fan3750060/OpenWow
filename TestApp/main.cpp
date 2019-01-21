@@ -112,18 +112,18 @@ int main(int argumentCount, char* arguments[])
 		OpenDBs();
 
 		const float x = 36;
-		const float y = 32;
+		const float y = 34;
 
 		new FontsManager(_RenderDevice);
 		new WMOsManager();
 		new CM2_Manager();
 
-		//contr = std::make_shared<MapController>();
-		//contr->SetParent(g_pScene->GetRootNode());
-		//contr->MapPreLoad(*DBC_Map[1/*571*/]);
-		//contr->MapLoad();
-		//contr->MapPostLoad();
-		//contr->EnterMap(x, y);
+		contr = std::make_shared<MapController>();
+		contr->SetParent(g_pScene->GetRootNode());
+		contr->MapPreLoad(*DBC_Map[1]);
+		contr->MapLoad();
+		contr->MapPostLoad();
+		contr->EnterMap(x, y);
 
 		//std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
 		//std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
@@ -141,7 +141,7 @@ int main(int argumentCount, char* arguments[])
 		g_Camera.SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
 		g_Camera.SetViewport(viewPort);
-		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 0.5f, 2000.0f);
+		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 2.0f, 2000.0f);
 
 		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
@@ -164,7 +164,8 @@ int main(int argumentCount, char* arguments[])
 		character->InitFromTemplate(tempPala);
 		character->CreateInstances();
 		character->SetParent(g_pScene->GetRootNode());
-		character->SetTranslate(vec3(x * C_TileSize, 100, y * C_TileSize));
+		character->SetTranslate(vec3(0, 15, 0));
+		character->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		character->SetScale(vec3(10.0f));
 		character->GetLocalTransform();
 

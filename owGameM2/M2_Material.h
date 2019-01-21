@@ -9,6 +9,17 @@ public:
 	void SetAnimated(uint32 value);
 	void SetMaxInfluences(uint32 value);
 	void SetBlendMode(uint32 value);
+	void SetNewShader(uint32 value);
+
+	void SetTextureWeightEnable(uint32 value);
+	void SetTextureWeight(float value);
+
+	void SetTextureAnimEnable(uint32 value);
+	void SetTextureAnimMatrix(cmat4 value);
+
+	void SetColorEnable(uint32 value);
+	void SetColor(vec4 value);
+
 	void SetBones(const std::vector<mat4>& bones);
 	
 
@@ -25,7 +36,17 @@ private:
 		uint32 gIsAnimated;
 		uint32 gBonesMaxInfluences;
 		uint32 gBlendMode;
-		float pad;
+		uint32 gShader;
+		
+		uint32 gColorEnable;
+		uint32 gTextureWeightEnable;
+		float  gTextureWeight;
+		uint32 gTextureAnimEnable;
+
+		mat4 gTextureAnimMatrix;
+
+		vec4 gColor;
+
 		mat4 Bones[200];
 		//-------------------------- ( 32 bytes )
 	};

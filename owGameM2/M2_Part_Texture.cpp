@@ -23,6 +23,17 @@ CM2_Part_Texture::CM2_Part_Texture(std::shared_ptr<IFile> f, const SM2_Texture& 
 	}
 }
 
+std::shared_ptr<Texture> CM2_Part_Texture::GetResultTexture(const CM2_Base_Instance* _instance) const
+{
+	if (isTextureSpecial())
+	{
+		return _instance->getSpecialTexture(m_SpecialType);
+	}
+
+	return getTexture();
+}
+
+
 /*void CM2_Part_Texture::set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const
 {
 	uint16 sampler = m_QualitySettings.Texture_Sampler;

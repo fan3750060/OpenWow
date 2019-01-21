@@ -48,6 +48,18 @@ void M2_Material::SetAnimated(uint32 value)
 	m_Dirty = true;
 }
 
+void M2_Material::SetColorEnable(uint32 value)
+{
+	m_pProperties->gColorEnable = value;
+	m_Dirty = true;
+}
+
+void M2_Material::SetColor(vec4 value)
+{
+	m_pProperties->gColor = value;
+	m_Dirty = true;
+}
+
 void M2_Material::SetBones(const std::vector<mat4>& bones)
 {
 	for (uint8 i = 0; i < bones.size(); i++)
@@ -66,6 +78,36 @@ void M2_Material::SetMaxInfluences(uint32 value)
 void M2_Material::SetBlendMode(uint32 value)
 {
 	m_pProperties->gBlendMode = value;
+	m_Dirty = true;
+}
+
+void M2_Material::SetNewShader(uint32 value)
+{
+	m_pProperties->gShader = value;
+	m_Dirty = true;
+}
+
+void M2_Material::SetTextureWeightEnable(uint32 value)
+{
+	m_pProperties->gTextureWeightEnable = value;
+	m_Dirty = true;
+}
+
+void M2_Material::SetTextureWeight(float value)
+{
+	m_pProperties->gTextureWeight = value;
+	m_Dirty = true;
+}
+
+void M2_Material::SetTextureAnimEnable(uint32 value)
+{
+	m_pProperties->gTextureAnimEnable = value;
+	m_Dirty = true;
+}
+
+void M2_Material::SetTextureAnimMatrix(cmat4 value)
+{
+	m_pProperties->gTextureAnimMatrix = value;
 	m_Dirty = true;
 }
 

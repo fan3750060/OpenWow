@@ -13,19 +13,17 @@ class CM2_SkinSection
 {
 	friend class CM2_Skin_Builder;
 public:
-	CM2_SkinSection(const std::weak_ptr<const M2> _model, const uint16 _index, const SM2_SkinSection& _proto);
-	void CreateGeometry(const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes);
+	CM2_SkinSection(const std::weak_ptr<const M2> _model, const uint16 _index, const SM2_SkinSection& _proto, const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes);
 
-	const SM2_SkinSection& getProto() const { return m_Proto; }
-
+	uint16                        getIndex() const { return m_Index; }
+	const SM2_SkinSection&        getProto() const { return m_Proto; }
+	const std::shared_ptr<IMesh>  getMesh()  const { return m_Mesh; }
 
 private:
-	const uint16			m_Index;
-	const SM2_SkinSection	m_Proto;
-public:
-	std::shared_ptr<IMesh> __geom;
+	const uint16           m_Index;
+	const SM2_SkinSection  m_Proto;
+	std::shared_ptr<IMesh> m_Mesh;
 
-private: // PARENT
+private:
 	const std::weak_ptr<const M2> m_ParentM2;
-	CGroupQuality& m_QualitySettings;
 };

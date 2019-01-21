@@ -80,8 +80,8 @@ void Material::Bind() const
 			for (auto texture : m_Textures)
 			{
 				std::shared_ptr<Texture> pTexture = texture.second;
-				if (pTexture != nullptr)
-					pTexture->Bind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
+				//if (pTexture != nullptr)
+				pTexture->Bind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
 			}
 
 			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
@@ -104,8 +104,8 @@ void Material::Unbind() const
 			for (auto texture : m_Textures)
 			{
 				std::shared_ptr<Texture> pTexture = texture.second;
-				if (pTexture != nullptr)
-					pTexture->UnBind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
+				//if (pTexture != nullptr)
+				pTexture->UnBind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
 			}
 
 			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
