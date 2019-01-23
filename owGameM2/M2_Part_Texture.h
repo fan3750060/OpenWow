@@ -11,6 +11,9 @@ class CM2_Part_Texture
 public:
 	CM2_Part_Texture(std::shared_ptr<IFile> f, const SM2_Texture& _proto);
 
+	SamplerState::WrapMode GetTextureWrapX() const { return (m_WrapX ? SamplerState::WrapMode::Clamp : SamplerState::WrapMode::Repeat); }
+	SamplerState::WrapMode GetTextureWrapY() const { return (m_WrapY ? SamplerState::WrapMode::Clamp : SamplerState::WrapMode::Repeat); }
+
 	//void set(RenderState* _state, uint32 _slot, CM2_Base_Instance* _instance) const;
 	std::shared_ptr<Texture> GetResultTexture(const CM2_Base_Instance* _instance) const;
 

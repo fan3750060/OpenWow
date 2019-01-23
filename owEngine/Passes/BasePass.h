@@ -43,6 +43,7 @@ public:
 	RenderEventArgs& GetRenderEventArgs() const;
 
 	IRenderDevice* GetRenderDevice() const;
+	std::shared_ptr<PipelineState> GetPipelineState() const;
 
 	void SetPerObjectConstantBufferData(PerObject& perObjectData);
 	std::shared_ptr<ConstantBuffer> GetPerObjectConstantBuffer() const;
@@ -53,7 +54,6 @@ private:
 
 	RenderEventArgs* m_pRenderEventArgs;
 
-	// The pipeline state that should be used to render this pass.
 	std::shared_ptr<PipelineState> m_Pipeline;
 
 	// The scene to render.

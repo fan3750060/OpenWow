@@ -197,4 +197,6 @@ public:
 
 	virtual void SetStencilMode(const StencilMode& stencilMode) = 0;
 	virtual const StencilMode& GetStencilMode() const = 0;
+
+	virtual void Bind() = 0;
 };

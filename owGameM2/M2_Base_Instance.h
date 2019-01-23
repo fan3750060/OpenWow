@@ -33,8 +33,8 @@ public:
 	std::shared_ptr<CM2_Animator> getAnimator() { return m_Animator; }
 
 	// SceneNode
-	void SetParent(std::weak_ptr<SceneNode> pNode) override;
-	bool Accept(IVisitor& visitor) override;
+	virtual void SetParent(std::weak_ptr<SceneNode> pNode) override;
+	virtual bool Accept(IVisitor& visitor) override;
 
 protected:
 	void InitAnimator();

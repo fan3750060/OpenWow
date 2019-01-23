@@ -13,7 +13,6 @@ PipelineStateDX11::PipelineStateDX11(ID3D11Device2* pDevice)
 
 PipelineStateDX11::~PipelineStateDX11()
 {
-
 }
 
 

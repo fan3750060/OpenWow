@@ -3,7 +3,7 @@
 // General
 #include "M2_Material.h"
 
-M2_Material::M2_Material() :
+M2_Material::M2_Material(std::vector<std::weak_ptr<const CM2_Part_Texture>> m2Textures) :
 	Material(_RenderDevice)
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
@@ -21,12 +21,17 @@ M2_Material::M2_Material() :
 	);
 
 	// Create samplers
-	std::shared_ptr<SamplerState> g_Sampler = _RenderDevice->CreateSamplerState();
-	g_Sampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-	g_Sampler->SetWrapMode(SamplerState::WrapMode::Clamp, SamplerState::WrapMode::Clamp);
+	assert1(m2Textures.size() <= 2);
+	for (uint8 i = 0; i < m2Textures.size(); i++)
+	{
 
-	// Assign samplers
-	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_Sampler);
+		std::shared_ptr<SamplerState> g_Sampler = _RenderDevice->CreateSamplerState();
+		g_Sampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
+		g_Sampler->SetWrapMode(m2Textures[i].lock()->GetTextureWrapX(), m2Textures[i].lock()->GetTextureWrapY());
+
+		// Assign samplers
+		g_pPixelShader->GetShaderParameterByName("DiffuseTexture" + std::to_string(i) + "Sampler").Set(g_Sampler);
+	}
 
 	// Material
 	SetShader(Shader::VertexShader, g_pVertexShader);
@@ -42,13 +47,13 @@ M2_Material::~M2_Material()
 	}
 }
 
-void M2_Material::SetAnimated(uint32 value)
+void M2_Material::SetAnimated(bool value)
 {
 	m_pProperties->gIsAnimated = value;
 	m_Dirty = true;
 }
 
-void M2_Material::SetColorEnable(uint32 value)
+void M2_Material::SetColorEnable(bool value)
 {
 	m_pProperties->gColorEnable = value;
 	m_Dirty = true;
@@ -87,7 +92,7 @@ void M2_Material::SetNewShader(uint32 value)
 	m_Dirty = true;
 }
 
-void M2_Material::SetTextureWeightEnable(uint32 value)
+void M2_Material::SetTextureWeightEnable(bool value)
 {
 	m_pProperties->gTextureWeightEnable = value;
 	m_Dirty = true;
@@ -99,7 +104,7 @@ void M2_Material::SetTextureWeight(float value)
 	m_Dirty = true;
 }
 
-void M2_Material::SetTextureAnimEnable(uint32 value)
+void M2_Material::SetTextureAnimEnable(bool value)
 {
 	m_pProperties->gTextureAnimEnable = value;
 	m_Dirty = true;

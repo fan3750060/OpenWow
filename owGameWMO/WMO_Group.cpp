@@ -48,8 +48,8 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		if (mdx)
 		{
 			std::shared_ptr<CWMO_Doodad_Instance> inst = std::make_shared<CWMO_Doodad_Instance>(mdx, weak_from_this(), index, placement);
-			inst->CreateInstances();
 			inst->SetParent(_parent);
+			inst->CreateInstances();
 			_parent.lock()->addDoodadInstance(inst);
 		}
 	}

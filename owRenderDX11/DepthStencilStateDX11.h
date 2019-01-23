@@ -18,6 +18,7 @@ public:
 
 	// Can only be called by the pipeline state.
 	void Bind();
+
 protected:
 
 	D3D11_DEPTH_WRITE_MASK TranslateDepthWriteMask(DepthWrite depthWrite) const;

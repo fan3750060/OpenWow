@@ -270,7 +270,12 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 {
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)
+	{
+		Log::Error("TextureDX11: Can't load %s texture", fileName.c_str());
 		return false;
+	}
+
+	m_TextureFileName = fileName;
 
 	LIBBLP_PixelView blpView;
 	LIBBLP_Load(f->getData(), f->getSize(), &blpView);

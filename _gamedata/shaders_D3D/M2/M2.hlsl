@@ -31,7 +31,8 @@ cbuffer Material : register(b1)
 // Textures and samples
 Texture2D DiffuseTexture0        : register(t0);
 Texture2D DiffuseTexture1        : register(t1);
-sampler   DiffuseTextureSampler : register(s0);
+sampler   DiffuseTexture0Sampler : register(s0);
+sampler   DiffuseTexture1Sampler : register(s1);
 
 float4 Test(VertexShaderOutput IN);
 
@@ -39,7 +40,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	float4 newVertex = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	
-	if (Material.gIsAnimated == 1 && Material.gBonesMaxInfluences > 0u)
+	if (Material.gIsAnimated && Material.gBonesMaxInfluences > 0u)
 	{	
 		for (uint i = 0; i < Material.gBonesMaxInfluences; i++)
 		{
@@ -81,11 +82,11 @@ float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 	}
 	else if (Material.gBlendMode == 1) // GxBlend_AlphaKey
 	{
-		if (resultColor.a < (224.0f / 255.0f)) discard;
+		if (resultColor.a <= (224.0f / 255.0f)) discard;
 	}
 	else 
 	{
-		if (resultColor.a < (1.0f / 255.0f)) discard;
+		if (resultColor.a <= (1.0f / 255.0f)) discard;
 	}
 	
 	return resultColor;
@@ -93,10 +94,10 @@ float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 
 float4 Test(VertexShaderOutput IN)
 {
-	float4 tex0 = DiffuseTexture0.Sample(DiffuseTextureSampler, IN.texCoord0);
-	float4 tex1 = DiffuseTexture1.Sample(DiffuseTextureSampler, IN.texCoord1);
+	float4 tex0 = DiffuseTexture0.Sample(DiffuseTexture0Sampler, IN.texCoord0);
+	float4 tex1 = DiffuseTexture1.Sample(DiffuseTexture1Sampler, IN.texCoord1);
 
-	float4 _in = float4(1.0f, 1.0f, 1.0f, tex0.a);
+	float4 _in  = float4(1.0f, 1.0f, 1.0f, tex0.a);
 	float4 _out = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	if (Material.gColorEnable)
@@ -105,10 +106,10 @@ float4 Test(VertexShaderOutput IN)
 		_in.a *= Material.gColor.a;
 	}
 
-	if (Material.gTextureWeightEnable)
-	{
-		_in.a *= Material.gTextureWeight;
-	}
+	//if (Material.gTextureWeightEnable)
+	//{
+	//	_in.a *= Material.gTextureWeight;
+	//}
 
 	if (Material.gShader == 0)
 	{

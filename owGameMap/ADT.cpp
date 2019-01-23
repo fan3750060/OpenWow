@@ -58,6 +58,13 @@ bool ADT::Accept(IVisitor& visitor)
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
 
+	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	assert1(mapController != NULL);
+	if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	{
+		return false;
+	}
+
 	// Check frustrum
 	if (!checkFrustum(camera))
 	{
@@ -293,8 +300,8 @@ bool ADT::Load()
 		if (wmo)
 		{
 			std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(wmo, it);
-			inst->Load();
 			inst->SetParent(shared_from_this());
+			inst->Load();
 			m_WMOsInstances.push_back(inst);
 
 			BoundingBox bbox = GetBounds();
@@ -304,21 +311,21 @@ bool ADT::Load()
 	}
 
 	//-- MDXs -------------------------------------------------------------------------
-	for (auto& it : m_MDXsPlacementInfo)
+	/*for (auto& it : m_MDXsPlacementInfo)
 	{
 		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
 		{
 			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(mdx, it);
-			inst->CreateInstances();
 			inst->SetParent(shared_from_this());
+			inst->CreateInstances();
 			m_MDXsInstances.push_back(inst);
 
 			BoundingBox bbox = GetBounds();
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);
 		}
-	}
+	}*/
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
@@ -329,22 +336,4 @@ bool ADT::Load()
 bool ADT::Delete()
 {
 	return true;
-}
-
-void ADT::Render(RenderEventArgs& renderEventArgs)
-{
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
-	assert1(mapController != NULL);
-
-	PipelineState* state = renderEventArgs.PipelineState;
-	if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
-	{
-		return;
-	}
-
-	// Check frustrum
-	//if (!checkFrustum())
-	//{
-	//	return false;
-	//}
 }

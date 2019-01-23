@@ -30,6 +30,7 @@ void M2::CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent)
 	for (auto& it : m_Skins)
 	{
 		it->CreateInsances(_parent);
+		break;
 	}
 }
 

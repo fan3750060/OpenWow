@@ -12,6 +12,9 @@ public:
 
 	void setPortalVisibility(bool _visibility) { m_PortalVis = _visibility; }
 		
+	// SceneNode
+	bool Accept(IVisitor& visitor) override;
+
 	// IRenderable
 	bool PreRender3D();
 	void Render3D();

@@ -3,6 +3,8 @@
 // General
 #include "ADT_MDX_Instance.h"
 
+// Additional
+
 ADT_MDX_Instance::ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo) :
 	CM2_Base_Instance(_mdxObject)
 {
@@ -30,15 +32,19 @@ ADT_MDX_Instance::~ADT_MDX_Instance()
 //
 // SceneNode
 //
-bool ADT_MDX_Instance::Accept(IVisitor & visitor)
+bool ADT_MDX_Instance::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
 	
-	//if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
-	//{
-	//	return false;
-	//}
+	const M2_Pass* passAsM2Pass = dynamic_cast<const M2_Pass*>(&visitor);
+	if (passAsM2Pass)
+	{
+		if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+		{
+			return false;
+		}
+	}
 
 	/*float distToCamera2D = (camera.GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
 	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
@@ -49,7 +55,10 @@ bool ADT_MDX_Instance::Accept(IVisitor & visitor)
 	// SceneNode
 	if (CM2_Base_Instance::Accept(visitor))
 	{
-		//m_AlreadyDraw.insert(m_UniqueId);
+		if (passAsM2Pass)
+		{
+			m_AlreadyDraw.insert(m_UniqueId);
+		}
 		return true;
 	}
 

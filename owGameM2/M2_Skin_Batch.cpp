@@ -13,7 +13,12 @@ CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::sha
 	m_ParentM2(_parentM2),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	m_TestMaterial = std::make_shared<M2_Material>();
+
+}
+
+void CM2_Skin_Batch::PostInit()
+{
+	m_TestMaterial = std::make_shared<M2_Material>(m_Textures);
 
 	SetMaterial(m_TestMaterial);
 }
@@ -33,9 +38,11 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 		return false;
 	}
 
-	m_TestMaterial->SetBlendMode(m_Material->getBlendMode());
+	m_TestMaterial->SetBlendMode(static_cast<uint32>(m_Material->getBlendMode()));
 
 	std::shared_ptr<CM2_Comp_Skeleton> skeleton = m_ParentM2.lock()->getSkeleton();
+
+	//m_TestMaterial->SetAnimated(false);
 
 	bool isAnimated = skeleton->hasBones() && m_ParentM2.lock()->m_IsAnimated;
 	m_TestMaterial->SetAnimated(isAnimated ? 1 : 0);
@@ -96,5 +103,5 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 	}
 
 	
-	return MeshWrapper::Render(renderEventArgs, perObject, 0, proto.indexCount);
+	return MeshWrapper::Render(renderEventArgs, perObject, 0, proto.indexCount, 0, proto.vertexCount);
 }

@@ -35,9 +35,7 @@
     <ClCompile Include="PipelineStateDX11.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="SamplerStateDX11.cpp">
-      <Filter>Pipeline</Filter>
-    </ClCompile>
+    <ClCompile Include="SamplerStateDX11.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -77,10 +75,8 @@
     <ClInclude Include="PipelineStateDX11.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="SamplerStateDX11.h">
-      <Filter>Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="TextureDX11Translate.h" />
+    <ClInclude Include="SamplerStateDX11.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

@@ -189,6 +189,7 @@ void DepthStencilStateDX11::Bind()
 	{
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc = TranslateDepthStencilState(m_DepthMode, m_StencilMode);
 
+		m_pDepthStencilState = NULL;
 		if (FAILED(m_pDevice->CreateDepthStencilState(&depthStencilDesc, &m_pDepthStencilState)))
 		{
 			Log::Error("Failed to create depth stencil state.");

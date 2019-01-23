@@ -25,6 +25,9 @@ struct LIBBLP_PixelView
 			MipHeight[i] = 0;
 		}
 		MipCount = 0;
+
+		HasAlpha = false;
+		IsTexture3D = false;
 	}
 	~LIBBLP_PixelView()
 	{
@@ -42,6 +45,9 @@ struct LIBBLP_PixelView
 	uint32_t MipWidth[LIBBLP_MIPMAP_COUNT];
 	uint32_t MipHeight[LIBBLP_MIPMAP_COUNT];
 	uint32_t MipCount;
+
+	bool     HasAlpha;
+	bool     IsTexture3D;
 };
 
 int LIBBLP_Load(const uint8_t* inputBuffer, uint32_t inputBufferSize, LIBBLP_PixelView * view);

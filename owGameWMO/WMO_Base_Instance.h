@@ -22,17 +22,16 @@ public:
 	void AddOutdoorGroupInstance(std::shared_ptr<CWMO_Group_Instance> _group) { m_OutdoorGroupInstances.push_back(_group); }
 	std::vector<std::shared_ptr<CWMO_Group_Instance>>& getGroupOutdoorInstances() { return m_OutdoorGroupInstances; }
 
-	cmat4 getInvWorld() const { return m_InvWorld; }
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
 	// SceneNode
+	void UpdateCamera(Camera* camera) override;
 	bool Accept(IVisitor& visitor) override;
 
 protected:
 	const std::shared_ptr<WMO>                                          m_Object;
 	SWMO_Doodad_SetInfo                                                 m_DoodadSetInfo;
 
-	mat4                                                                m_InvWorld;
 	std::vector<vec3>                                                   m_ConvertedVerts;
 	
 	std::vector<std::shared_ptr<CWMO_Group_Instance>>                   m_GroupInstances;

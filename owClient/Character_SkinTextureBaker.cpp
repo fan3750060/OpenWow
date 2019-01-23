@@ -35,11 +35,12 @@ Character_SkinTextureBaker::Character_SkinTextureBaker()
 	}
 }
 
-std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _character)
+std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(const Character* _character)
 {
 	std::shared_ptr<Texture> bakedSkinTexture = _RenderDevice->CreateTexture();
 
 	m_Pixels = new PixelData[SkinTextureWidth * SkinTextureHeight];
+	memset(m_Pixels, 0x00, sizeof(PixelData) * SkinTextureWidth * SkinTextureHeight);
 
 	// 1. Get skin texture as pattern
 	{
@@ -51,9 +52,7 @@ std::shared_ptr<Texture> Character_SkinTextureBaker::createTexture(Character* _c
 		// Female
 		std::string nakedUpperTexture = Character_SectionWrapper::getNakedTorsoTexture(_character);
 		if (nakedUpperTexture.length() > 0)
-		{
 			FillPixels(DBC_CharComponent_Sections::TORSO_UPPER, nakedUpperTexture);
-		}
 
 		// Male + Female
 		std::string nakedLowerTexture = Character_SectionWrapper::getNakedPelvisTexture(_character);
@@ -108,9 +107,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 {
 	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(_name);
 	if (texture == nullptr)
-	{
 		return;
-	}
 
 	FillPixels(_type, texture);
 }
@@ -118,9 +115,7 @@ void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _ty
 void Character_SkinTextureBaker::FillPixels(DBC_CharComponent_Sections::List _type, std::shared_ptr<Texture> _compTexture)
 {
 	if (_compTexture == nullptr)
-	{
 		return;
-	}
 
 	assert1(_compTexture->GetWidth() == 128 || _compTexture->GetWidth() == 256);
 

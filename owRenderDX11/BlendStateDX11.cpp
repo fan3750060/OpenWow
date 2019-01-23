@@ -327,6 +327,7 @@ void BlendStateDX11::Bind()
 			rtBlendDesc.RenderTargetWriteMask = TranslateWriteMask(blendMode.WriteRed, blendMode.WriteGreen, blendMode.WriteBlue, blendMode.WriteAlpha);
 		}
 
+		m_pBlendState = NULL;
 		m_pDevice->CreateBlendState1(&blendDesc, &m_pBlendState);
 
 		m_bDirty = false;

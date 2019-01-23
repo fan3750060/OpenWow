@@ -18,7 +18,7 @@ class Character_SkinTextureBaker
 public:
 	Character_SkinTextureBaker();
 
-	std::shared_ptr<Texture> createTexture(Character* _character);
+	std::shared_ptr<Texture> createTexture(const Character* _character);
 
 private:
 	void FillWithSkin(std::shared_ptr<Texture> _texture);
@@ -28,16 +28,6 @@ private:
 private:
 	struct PixelData
 	{
-		PixelData& operator=(const PixelData& _other)
-		{
-			r = _other.r;
-			g = _other.g;
-			b = _other.b;
-			a = _other.a;
-
-			return *this;
-		}
-
 		uint8 r, g, b, a;
 	};
 

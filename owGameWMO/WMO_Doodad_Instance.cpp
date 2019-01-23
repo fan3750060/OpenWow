@@ -37,6 +37,16 @@ CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
 	//Log::Info("ADT_MDX Deleted");
 }
 
+bool CWMO_Doodad_Instance::Accept(IVisitor& visitor)
+{
+	if (!m_PortalVis)
+	{
+		return false;
+	}
+
+	return CM2_Base_Instance::Accept(visitor);
+}
+
 bool CWMO_Doodad_Instance::PreRender3D()
 {
 	if (!m_PortalVis)

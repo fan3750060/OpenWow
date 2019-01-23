@@ -111,25 +111,31 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		const float x = 36;
-		const float y = 34;
+		//const float x = 40;
+		//const float y = 29;
+
+		const float x = 29;
+		const float y = 21;
 
 		new FontsManager(_RenderDevice);
 		new WMOsManager();
 		new CM2_Manager();
 
+		std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D("TILESET\\Terrain Cube Maps\\TCB_CrystalSong_A.blp");
+
 		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
-		contr->MapPreLoad(*DBC_Map[1]);
+		contr->MapPreLoad(*DBC_Map[571]);
 		contr->MapLoad();
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);
 
-		//std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("creature\\PHOENIX\\Phoenix.m2");
-		//std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
-		//inst->CreateInstances();
-		//inst->SetParent(g_pScene->GetRootNode());
-
+		std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
+		std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
+		inst->CreateInstances();
+		inst->SetParent(g_pScene->GetRootNode());
+		inst->SetScale(vec3(15.0f));
+		inst->GetLocalTransform();
 
 		Viewport viewPort(0, 0, 1280.0f, 1024.0f);
 		g_Viewport = viewPort;
@@ -141,7 +147,7 @@ int main(int argumentCount, char* arguments[])
 		g_Camera.SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
 		g_Camera.SetViewport(viewPort);
-		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 2.0f, 2000.0f);
+		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 2000.0f);
 
 		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
@@ -154,7 +160,84 @@ int main(int argumentCount, char* arguments[])
 		AddLiquidPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 		AddM2Passes(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
 
-		CharacterTemplate tempPala;
+
+		
+		const uint32 cnt = 10;
+		/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
+
+		std::vector<uint32> exists;
+		for (int i = 0; i < cnt; i++)
+		{
+			for (int j = 0; j < cnt; j++)
+			{
+				int index = i + j * cnt;
+				m_CharExtra[index] = std::make_shared<Character>();
+
+				while (true)
+				{
+					int random = Random::GenerateMax(32000);
+
+					DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
+					if (rec == nullptr)	continue;
+
+					const DBC_CreatureDisplayInfoExtraRecord* exRec = rec->Get_HumanoidData();
+					if (exRec == nullptr) continue;
+
+					if (exRec->Get_Race()->Get_ID() > 10) continue;
+
+
+					if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
+
+					
+					m_CharExtra[index]->InitFromDisplayInfo(random);
+					m_CharExtra[index]->SetParent(g_pScene->GetRootNode());
+					m_CharExtra[index]->CreateInstances();
+					m_CharExtra[index]->SetScale(vec3(5.0f));
+
+					exists.push_back(random);
+					break;
+				}
+
+				m_CharExtra[index]->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
+				m_CharExtra[index]->GetLocalTransform();
+			}
+		}*/
+
+		/*std::shared_ptr<Creature> m_Char[cnt * cnt];
+		std::vector<uint32> exists;
+		for (int i = 0; i < cnt; i++)
+		{
+			for (int j = 0; j < cnt; j++)
+			{
+				int index = i + j * cnt;
+				m_Char[index] = std::make_shared<Creature>();
+				//m_Char->InitDefault();
+
+				while (true)
+				{
+					int random = Random::GenerateMax(32000);
+					DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
+					if (rec == nullptr)	continue;
+
+					if (rec->Get_HumanoidData() != nullptr) continue;
+					if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
+
+					m_Char[index]->InitFromDisplayInfo(random);
+					m_Char[index]->SetParent(g_pScene->GetRootNode());
+					m_Char[index]->CreateInstances();
+					m_Char[index]->SetTranslate(vec3(i * 15.0f, 0.0f, j * 15.0f));
+					m_Char[index]->GetLocalTransform();
+					exists.push_back(random);
+					break;
+				}
+			}
+		}*/
+
+		//
+		// Character
+		//
+
+		/*CharacterTemplate tempPala;
 		tempPala.TemplateFillDefaultPaladin();
 
 		CharacterTemplate tempShaman;
@@ -167,7 +250,7 @@ int main(int argumentCount, char* arguments[])
 		character->SetTranslate(vec3(0, 15, 0));
 		character->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		character->SetScale(vec3(10.0f));
-		character->GetLocalTransform();
+		character->GetLocalTransform();*/
 
 		//
 		// UI

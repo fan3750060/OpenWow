@@ -1,23 +1,25 @@
 #pragma once
 
+#include "M2_Part_Texture.h"
+
 class M2_Material : public Material
 {
 public:
-	M2_Material();
+	M2_Material(std::vector<std::weak_ptr<const CM2_Part_Texture>> m2Textures);
 	virtual ~M2_Material();
 
-	void SetAnimated(uint32 value);
+	void SetAnimated(bool value);
 	void SetMaxInfluences(uint32 value);
 	void SetBlendMode(uint32 value);
 	void SetNewShader(uint32 value);
 
-	void SetTextureWeightEnable(uint32 value);
+	void SetTextureWeightEnable(bool value);
 	void SetTextureWeight(float value);
 
-	void SetTextureAnimEnable(uint32 value);
+	void SetTextureAnimEnable(bool value);
 	void SetTextureAnimMatrix(cmat4 value);
 
-	void SetColorEnable(uint32 value);
+	void SetColorEnable(bool value);
 	void SetColor(vec4 value);
 
 	void SetBones(const std::vector<mat4>& bones);
@@ -31,17 +33,24 @@ private:
 	{
 		MaterialProperties()
 			: gIsAnimated(0)
+			, gColorEnable(0)
+			, gTextureWeightEnable(0)
+			, gTextureAnimEnable(0)
+
 			, gBonesMaxInfluences(0)
+			, gBlendMode(0)
+			, gShader(0)
+			, gTextureWeight(0.0f)
 		{}
 		uint32 gIsAnimated;
+		uint32 gColorEnable;
+		uint32 gTextureWeightEnable;
+		uint32 gTextureAnimEnable;
+
 		uint32 gBonesMaxInfluences;
 		uint32 gBlendMode;
 		uint32 gShader;
-		
-		uint32 gColorEnable;
-		uint32 gTextureWeightEnable;
 		float  gTextureWeight;
-		uint32 gTextureAnimEnable;
 
 		mat4 gTextureAnimMatrix;
 

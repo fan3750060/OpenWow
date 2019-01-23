@@ -8,27 +8,27 @@ class Character_SectionWrapper
 {
 public:
 	// Skin
-	static std::shared_ptr<Texture> getSkinTexture(Character* _character);
-	static std::shared_ptr<Texture> getSkinExtraTexture(Character* _character);
+	static std::shared_ptr<Texture> getSkinTexture(const Character* _character);
+	static std::shared_ptr<Texture> getSkinExtraTexture(const Character* _character);
 
 	// Face
-	static std::shared_ptr<Texture> getFaceLowerTexture(Character* _character);
-	static std::shared_ptr<Texture> getFaceUpperTexture(Character* _character);
+	static std::shared_ptr<Texture> getFaceLowerTexture(const Character* _character);
+	static std::shared_ptr<Texture> getFaceUpperTexture(const Character* _character);
 
 	// FacialHair
-	static std::string getFacialHairLowerTexture(Character* _character);
-	static std::string getFacialHairUpperTexture(Character* _character);
-	static uint32 getFacial1Geoset(Character* _character);
-	static uint32 getFacial2Geoset(Character* _character);
-	static uint32 getFacial3Geoset(Character* _character);
+	static std::string getFacialHairLowerTexture(const Character* _character);
+	static std::string getFacialHairUpperTexture(const Character* _character);
+	static uint32 getFacial1Geoset(const Character* _character);
+	static uint32 getFacial2Geoset(const Character* _character);
+	static uint32 getFacial3Geoset(const Character* _character);
 
 	// Hair
-	static uint32     getHairGeoset(Character* _character);
-	static std::shared_ptr<Texture> getHairTexture(Character* _character);
-	static std::shared_ptr<Texture> getHairScalpLowerTexture(Character* _character);
-	static std::shared_ptr<Texture> getHairScalpUpperTexture(Character* _character);
+	static uint32     getHairGeoset(const Character* _character);
+	static std::shared_ptr<Texture> getHairTexture(const Character* _character);
+	static std::shared_ptr<Texture> getHairScalpLowerTexture(const Character* _character);
+	static std::shared_ptr<Texture> getHairScalpUpperTexture(const Character* _character);
 
 	// Naked
-	static std::string getNakedPelvisTexture(Character* _character);
-	static std::string getNakedTorsoTexture(Character* _character);
+	static std::string getNakedPelvisTexture(const Character* _character);
+	static std::string getNakedTorsoTexture(const Character* _character);
 };

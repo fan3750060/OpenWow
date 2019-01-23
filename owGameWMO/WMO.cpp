@@ -39,11 +39,14 @@ void WMO::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		std::shared_ptr<CWMO_Group_Instance> groupInstance = std::make_shared<CWMO_Group_Instance>(it);
 		groupInstance->SetParent(_parent);
 
-		/*_parent.lock()->AddGroupInstance(groupInstance);
+		std::shared_ptr<CWMO_Base_Instance> parentAsWMOInstance = std::dynamic_pointer_cast<CWMO_Base_Instance, SceneNode>(_parent.lock());
+		assert1(parentAsWMOInstance != nullptr);
+
+		parentAsWMOInstance->AddGroupInstance(groupInstance);
 		if (it->m_Header.flags.IS_OUTDOOR)
 		{
-			_parent.lock()->AddOutdoorGroupInstance(groupInstance);
-		}*/
+			parentAsWMOInstance->AddOutdoorGroupInstance(groupInstance);
+		}
 
 		it->CreateInsances(groupInstance);
 	}

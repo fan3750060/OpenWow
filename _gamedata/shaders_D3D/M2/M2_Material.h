@@ -1,15 +1,15 @@
 struct M2_Material
 {
 	uint gIsAnimated;
+	uint gColorEnable;
+	uint gTextureWeightEnable;
+	uint gTextureAnimEnable;
+	// 16 bytes
+	
 	uint gBonesMaxInfluences;
 	uint gBlendMode;
 	uint gShader;
-	// 16 bytes
-	
-	uint  gColorEnable;
-	uint  gTextureWeightEnable;
 	float gTextureWeight;
-    uint  gTextureAnimEnable;
 	// 16 bytes
 	
     float4x4 gTextureAnimMatrix;

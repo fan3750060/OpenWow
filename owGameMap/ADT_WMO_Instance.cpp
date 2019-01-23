@@ -39,15 +39,23 @@ void ADT_WMO_Instance::Load()
 
 bool ADT_WMO_Instance::Accept(IVisitor& visitor)
 {
-	//if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
-	//{
-	//	return false;
-	//}
+	const WMO_Pass* passAsWMOPass = dynamic_cast<const WMO_Pass*>(&visitor);
+	if (passAsWMOPass)
+	{
+		if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
+		{
+			return false;
+		}
+	}
+
 
 	// SceneNode
 	if (CWMO_Base_Instance::Accept(visitor))
 	{
-		//m_AlreadyDraw.insert(m_UniqueId);
+		if (passAsWMOPass)
+		{
+			m_AlreadyDraw.insert(m_UniqueId);
+		}
 		return true;
 	}
 

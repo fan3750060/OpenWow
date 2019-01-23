@@ -16,12 +16,11 @@ void CWMO_Base_Instance::InitTransform()
 {
 	m_Object->CreateInsances(std::static_pointer_cast<CWMO_Base_Instance, SceneNode>(shared_from_this()));
 
-	m_InvWorld = glm::inverse(GetWorldTransfom());
 	if (m_Object->m_PortalController != nullptr)
 	{
 		for (auto& v : m_Object->m_PortalVertices)
 		{
-			m_ConvertedVerts.push_back(GetWorldTransfom() * vec4(v, 0));
+			m_ConvertedVerts.push_back(GetWorldTransfom() * vec4(v, 1.0f));
 		}
 	}
 }
@@ -39,9 +38,19 @@ void CWMO_Base_Instance::EmptyTransformAndBounds()
 	SetBounds(bbox);
 }
 
-#define WMO_DISABLE_PORTALS
+//#define WMO_DISABLE_PORTALS
 
-bool CWMO_Base_Instance::Accept(IVisitor & visitor)
+void CWMO_Base_Instance::UpdateCamera(Camera* camera)
+{
+#ifndef WMO_DISABLE_PORTALS
+	if (m_Object->m_PortalController != nullptr)
+	{
+		m_Object->m_PortalController->Update(std::dynamic_pointer_cast<CWMO_Base_Instance, SceneNode>(shared_from_this()), *camera);
+	}
+#endif
+}
+
+bool CWMO_Base_Instance::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
@@ -55,13 +64,6 @@ bool CWMO_Base_Instance::Accept(IVisitor & visitor)
 	{
 		return false;
 	}
-
-#ifndef WMO_DISABLE_PORTALS
-	if (m_Object->m_PortalController != nullptr)
-	{
-		m_Object->m_PortalController->Update(this, getInvWorld() * (_Render->getCamera()->Position));
-	}
-#endif
 
 	return SceneNode::Accept(visitor);
 }

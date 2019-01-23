@@ -16,6 +16,8 @@ public:
 public:
 	CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _object);
 
+	
+
 	const std::shared_ptr<WMO_Group> getObject() const { return m_Object; }
 
 	void addDoodadInstance(std::shared_ptr<CWMO_Doodad_Instance> _doodad) { m_Doodads.push_back(_doodad); }
@@ -24,11 +26,9 @@ public:
 	void addLiquidInstance(std::shared_ptr<CWMO_Liquid_Instance> _liquid) { m_Liquids.push_back(_liquid); }
 	const LuqidInstances& getLiquidInstances() { return m_Liquids; }
 
+	// SceneNode
+	void SetParent(std::weak_ptr<SceneNode> pNode) override;
 	bool Accept(IVisitor& visitor) override;
-
-	// Disable render
-	bool PreRender3D();
-	void Render3D();
 
 //private:
 	const std::shared_ptr<WMO_Group> m_Object;

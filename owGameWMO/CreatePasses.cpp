@@ -15,7 +15,7 @@ void AddWMOPasses(IRenderDevice* device, RenderWindow* window, RenderTechnique *
 
 	// PIPELINES
 	std::shared_ptr<PipelineState> WMOPipeline = device->CreatePipelineState();
-	WMOPipeline->GetBlendState().SetBlendMode(alphaBlending);
+	WMOPipeline->GetBlendState().SetBlendMode(disableBlending);
 	WMOPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 	WMOPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::Back);
 	WMOPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);

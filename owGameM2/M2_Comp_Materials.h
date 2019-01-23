@@ -39,7 +39,7 @@ private:
 public:
 	std::shared_ptr<CM2_Part_Texture> GetTexture(uint32 _index) const
 	{
-		//assert1(_index < m_TexturesLookup.size());
+		assert1(_index < m_TexturesLookup.size());
 		if (_index >= m_TexturesLookup.size())
 		{
 			//Log::Warn("M2[%s]: GetTexture [%d] not found in Lookup[%d]", m_FileName.c_str(), _index, m_TexturesLookup.size());

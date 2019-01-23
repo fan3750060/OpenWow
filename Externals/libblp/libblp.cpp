@@ -55,15 +55,15 @@ int LIBBLP_Load(const uint8_t* inputBuffer, uint32_t inputBufferSize, LIBBLP_Pix
 
 	if (header.width & (header.width - 1))
 	{
-		return LIBBLP_ERROR_SIZE;
+		view->IsTexture3D = true;
 	}
 	if (header.height & (header.height - 1))
 	{
 		return LIBBLP_ERROR_SIZE;
 	}
 
-	bool          hasalpha = (header.alphaChannelBitDepth != 0);
-	uint8_t mipmax = header.has_mips ? LIBBLP_MIPMAP_COUNT : 1;
+	view->HasAlpha = (header.alphaChannelBitDepth != 0);
+	uint8_t mipmax = (header.has_mips ? LIBBLP_MIPMAP_COUNT : 1);
 
 	for (uint8_t currentMip = 0; currentMip < mipmax; currentMip++)
 	{

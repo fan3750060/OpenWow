@@ -16,10 +16,15 @@ class CM2_Skin_Batch : public MeshWrapper
 public:
 	CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::shared_ptr<IMesh> _mesh);
 
+	void PostInit();
+
+	// IMesh
 	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) override;
 
-	int32 getPriorityPlan() const { return m_PriorityPlan; }
-	const std::weak_ptr<CM2_SkinSection> getSkin() const { return m_SkinSection; }
+	int32                                 getPriorityPlan()  const { return m_PriorityPlan; }
+	std::weak_ptr<const CM2_SkinSection>  getSkin()          const { return m_SkinSection; }
+
+	std::shared_ptr<const CM2_Part_Material> GetM2Material() const { return m_Material; }
 
 private:
 	int32												m_PriorityPlan;

@@ -13,8 +13,8 @@ public:
 
 	void GetPolyFrustum(const vec3* poly, uint32 num_verts, Frustum* frustum, vec3 eye, bool _isPositive = true);
 	
-	void Update(CWMO_Base_Instance* _localContr, cvec3 _InvWorldCamera);
-	bool Recur(CWMO_Base_Instance* _localContr, CWMO_Group_Instance* _group, cvec3 _InvWorldCamera, const Frustum& _frustum, bool _isFirstIteration);
+	void Update(std::shared_ptr<CWMO_Base_Instance> _localContr, const Camera& _camera);
+	bool Recur(std::shared_ptr<CWMO_Base_Instance> _localContr, std::shared_ptr<CWMO_Group_Instance> _group, const Camera& _camera, cvec3 _InvWorldCamera, const Frustum& _frustum, bool _isFirstIteration);
 
 
 private:

@@ -36,9 +36,6 @@ public:
 	void setLoaded() {}
 	bool isLoaded() const { return true; }
 
-	// SceneNode
-	void Render(RenderEventArgs& renderEventArgs);
-
 public:
 	const int										m_IndexX, m_IndexZ;
 	

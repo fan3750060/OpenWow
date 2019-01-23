@@ -142,6 +142,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 			}
 		}
 
+		batch->PostInit();
 		Skin->m_Batches.push_back(batch);
 	}
 

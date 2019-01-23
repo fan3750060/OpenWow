@@ -245,4 +245,5 @@ public:
 	virtual void SetIndependentBlend(bool enabled) = 0;
 	virtual bool GetIndependentBlend() const = 0;
 
+	virtual void Bind() = 0;
 };

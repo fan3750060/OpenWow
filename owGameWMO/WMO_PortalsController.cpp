@@ -59,13 +59,14 @@ void CWMO_PortalsController::GetPolyFrustum(const vec3* poly, uint32 num_verts, 
 	_frustum->buildCustomFrustrum(_portalPlanes, num_verts);
 }
 
-void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvWorldCamera)
+void CWMO_PortalsController::Update(std::shared_ptr<CWMO_Base_Instance> _localContr, const Camera& _camera)
 {
 	// Reset all flags
-	/*for (auto& group : _localContr->getGroupInstances())
+	for (auto& group : _localContr->getGroupInstances())
 	{
 		group->m_PortalsVis = false;
 		group->m_Calculated = false;
+
 		for (auto& doodad : group->getDoodadsInstances())
 		{
 			if (doodad)
@@ -75,13 +76,15 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 		}
 	}
 
+	vec3 _InvWorldCamera = _localContr->GetInverseWorldTransform() * vec4(_camera.GetTranslation(), 1.0f);
+
 	bool insideIndoor = false;
 
-	if (m_ParentWMO->GetBounds().isPointInside(_InvWorldCamera))
+	if (m_ParentWMO.lock()->GetBounds().isPointInside(_InvWorldCamera))
 	{
 		for (auto& group : _localContr->getGroupInstances())
 		{
-			if (!(group->GetBounds().isPointInside(_Render->getCamera()->Position)))
+			if (!(group->GetBounds().isPointInside(_camera.GetTranslation())))
 			{
 				continue;
 			}
@@ -96,7 +99,7 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 				continue;
 			}
 
-			bool recurResult = Recur(_localContr, group.operator->(), _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
+			bool recurResult = Recur(_localContr, group, _camera, _InvWorldCamera, _camera.GetFrustum(), true);
 			if (!recurResult)
 			{
 				continue;
@@ -116,19 +119,19 @@ void CWMO_PortalsController::Update(CWMO_Base_Instance* _localContr, cvec3 _InvW
 	{
 		for (auto& ogr : _localContr->getGroupOutdoorInstances())
 		{
-			Recur(_localContr, ogr.operator->(), _InvWorldCamera, _Render->getCamera()->getFrustum(), true);
+			Recur(_localContr, ogr, _camera, _InvWorldCamera, _camera.GetFrustum(), true);
 		}
-	}*/
+	}
 }
 
-bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_Instance* _group, cvec3 _InvWorldCamera, const Frustum& _frustum, bool _isFirstIteration)
+bool CWMO_PortalsController::Recur(std::shared_ptr<CWMO_Base_Instance> _localContr, std::shared_ptr<CWMO_Group_Instance> _group, const Camera& _camera, cvec3 _InvWorldCamera, const Frustum& _frustum, bool _isFirstIteration)
 {
-	/*if (_group == nullptr || _group->m_Calculated)
+	if (_group == nullptr || _group->m_Calculated)
 	{
 		return false;
 	}
 
-	if (_Render->getCamera()->getFrustum().cullBox(_group->GetBounds()))
+	if (_camera.GetFrustum().cullBox(_group->GetBounds()))
 	{
 		return false;
 	}
@@ -147,7 +150,7 @@ bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_I
 	for (auto& p : _group->getObject()->m_Portals)
 	{
 		// If we don't see portal // TODO: Don't use it on first step
-		if (_Render->getCamera()->getFrustum().cullPoly(_localContr->getVerts() + p->getStartVertex(), p->getCount()))
+		if (_camera.GetFrustum().cullPoly(_localContr->getVerts() + p->getStartVertex(), p->getCount()))
 		{
 			continue;
 		}
@@ -167,27 +170,28 @@ bool CWMO_PortalsController::Recur(CWMO_Base_Instance* _localContr, CWMO_Group_I
 			_localContr->getVerts() + p->getStartVertex(),
 			p->getCount(),
 			&portalFrustum,
-			_Render->getCamera()->Position,
+			_camera.GetTranslation(),
 			isPositive
 		);
 
 		// Find attached to portal group
-		CWMO_Group_Instance* groupInstance = nullptr;
+		std::shared_ptr<CWMO_Group_Instance> groupInstance = nullptr;
 		int32 groupIndex = isPositive ? p->getGrInner() : p->getGrOuter();
 		if (groupIndex >= 0 && groupIndex < _localContr->getGroupInstances().size())
 		{
-			groupInstance = _localContr->getGroupInstances()[groupIndex].operator->();
+			groupInstance = _localContr->getGroupInstances()[groupIndex];
 		}
 
 		Recur
 		(
 			_localContr,
 			groupInstance,
+			_camera,
 			_InvWorldCamera,
 			portalFrustum,
 			false
 		);
-	}*/
+	}
 
 	return true;
 }

@@ -69,7 +69,6 @@ bool BasePass::Visit(SceneNode& node)
 	if (camera)
 	{
 		PerObject perObjectData;
-		// Update the constant buffer data for the node.
 		perObjectData.Model               = node.GetWorldTransfom();
 		perObjectData.ModelView           = camera->GetViewMatrix()       * perObjectData.Model;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
@@ -114,6 +113,11 @@ RenderEventArgs& BasePass::GetRenderEventArgs() const
 IRenderDevice* BasePass::GetRenderDevice() const
 {
 	return m_RenderDevice;
+}
+
+std::shared_ptr<PipelineState> BasePass::GetPipelineState() const
+{
+	return m_Pipeline;
 }
 
 //----------------------------------------------------------------------

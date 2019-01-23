@@ -32,15 +32,13 @@
     <ClCompile Include="RasterizerStateOGL.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="SamplerStateOGL.cpp">
-      <Filter>Pipeline</Filter>
-    </ClCompile>
     <ClCompile Include="PipelineStateOGL.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="DepthStencilStateOGL.cpp">
       <Filter>Pipeline</Filter>
     </ClCompile>
+    <ClCompile Include="SamplerStateOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -78,9 +76,6 @@
     <ClInclude Include="RasterizerStateOGL.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="SamplerStateOGL.h">
-      <Filter>Pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="PipelineStateOGL.h">
       <Filter>Pipeline</Filter>
     </ClInclude>
@@ -90,6 +85,7 @@
     <ClInclude Include="OpenGLTypes.h">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="SamplerStateOGL.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

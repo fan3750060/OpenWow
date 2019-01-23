@@ -367,6 +367,7 @@ void RasterizerStateDX11::Bind()
 		rasterizerDesc.AntialiasedLineEnable = m_AntialiasedLineEnabled;
 		rasterizerDesc.ForcedSampleCount = m_ForcedSampleCount;
 
+		m_pRasterizerState = NULL;
 		if (FAILED(m_pDevice->CreateRasterizerState1(&rasterizerDesc, &m_pRasterizerState)))
 		{
 			Log::Error("Failed to create rasterizer state.");
