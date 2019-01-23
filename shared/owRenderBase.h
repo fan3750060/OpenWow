@@ -17,7 +17,6 @@
 
 #include "../owRenderBase/Light.h"
 #include "../owRenderBase/Mesh.h"
-#include "../owRenderBase/MeshWrapper.h"
 #include "../owRenderBase/ConstantBuffer.h"
 #include "../owRenderBase/StructuredBuffer.h"
 #include "../owRenderBase/Camera.h"

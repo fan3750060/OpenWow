@@ -40,7 +40,7 @@ void CWMO_Base_Instance::EmptyTransformAndBounds()
 
 //#define WMO_DISABLE_PORTALS
 
-void CWMO_Base_Instance::UpdateCamera(Camera* camera)
+void CWMO_Base_Instance::UpdateCamera(const Camera* camera)
 {
 #ifndef WMO_DISABLE_PORTALS
 	if (m_Object->m_PortalController != nullptr)
@@ -53,7 +53,7 @@ void CWMO_Base_Instance::UpdateCamera(Camera* camera)
 bool CWMO_Base_Instance::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
-	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
 	//if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
 	//{

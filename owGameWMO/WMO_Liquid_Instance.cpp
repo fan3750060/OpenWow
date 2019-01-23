@@ -11,10 +11,10 @@ CWMO_Liquid_Instance::CWMO_Liquid_Instance(std::shared_ptr<Liquid> _liquidObject
 
 bool CWMO_Liquid_Instance::PreRender3D()
 {
-	/*if (!m_Group->m_PortalsVis)
-	{
-		return false;
-	}*/
+	//if (!m_Group.lock()->m_PortalsVis)
+	//{
+	//	return false;
+	//}
 
 	return true;
 }

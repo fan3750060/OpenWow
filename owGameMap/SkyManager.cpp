@@ -58,7 +58,7 @@ SkyManager::~SkyManager()
 //
 // SceneNode
 //
-void SkyManager::UpdateCamera(Camera* camera)
+void SkyManager::UpdateCamera(const Camera* camera)
 {
 	if (skies.empty())
 	{
@@ -75,7 +75,7 @@ void SkyManager::UpdateCamera(Camera* camera)
 //
 // ISkyManager
 //
-void SkyManager::Calculate(Camera* camera, uint32 _time)
+void SkyManager::Calculate(const Camera* camera, uint32 _time)
 {
 	if (skies.empty())
 	{

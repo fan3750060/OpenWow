@@ -14,10 +14,10 @@ public:
 
 public:
 	// SceneNode
-	void UpdateCamera(Camera* camera) override;
+	void UpdateCamera(const Camera* camera) override;
 
 	// ISkyManager
-	void Calculate(Camera* camera, uint32 _time) override;
+	void Calculate(const Camera* camera, uint32 _time) override;
 	bool HasSkies() const override { return !skies.empty(); }
 	vec3  GetColor(LightColors::List _color) const override { return m_Interpolated.m_Colors[_color]; }
 	float GetFog(LightFogs::List _fog) const override { return m_Interpolated.m_Fogs[_fog]; }

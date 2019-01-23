@@ -1,5 +1,6 @@
 #pragma once
 
+class MeshWrapper;
 class UI_Font_Material;
 
 class Font : public MeshWrapper

@@ -85,7 +85,7 @@ bool LightsPass::Visit( Scene& scene )
 
 bool LightsPass::Visit( SceneNode& node )
 {
-    Camera* camera = GetRenderEventArgs().Camera;
+    const Camera* camera = GetRenderEventArgs().Camera;
 
     PerObject perObjectData;
 

@@ -25,7 +25,6 @@ public:
 	virtual void Unbind() const;
 
 protected:
-	virtual void CreateConstantBuffer();
 	virtual void UpdateConstantBuffer() const;
 
 protected:

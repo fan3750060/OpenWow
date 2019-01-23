@@ -65,7 +65,7 @@ bool BasePass::Visit(SceneNode& node)
 	Object& nodeAsObject = reinterpret_cast<Object&>(node);
 	m_pRenderEventArgs->Node = &nodeAsObject;
 
-	Camera* camera = GetRenderEventArgs().Camera;
+	const Camera* camera = GetRenderEventArgs().Camera;
 	if (camera)
 	{
 		PerObject perObjectData;

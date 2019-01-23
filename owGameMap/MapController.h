@@ -25,7 +25,7 @@ public:
 	uint32 GetAreaID(Camera* camera);
 
 	// Scene node
-	void UpdateCamera(Camera* camera) override;
+	void UpdateCamera(const Camera* camera) override;
 
 public: // Getters
 	std::string getFilenameT() const { return m_MapFilenameT; }

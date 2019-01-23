@@ -18,7 +18,8 @@ ConstantBufferDX11::ConstantBufferDX11(ID3D11Device2* pDevice, size_t size)
 
 	if (FAILED(m_pDevice->CreateBuffer(&bufferDesc, nullptr, &m_pBuffer)))
 	{
-		Log::Error("Failed to create constant buffer for shader.");
+		fail2("Failed to create constant buffer for shader.");
+		return;
 	}
 
 	m_pDevice->GetImmediateContext2(&m_pDeviceContext);
@@ -34,7 +35,7 @@ void ConstantBufferDX11::Set(const void* data, size_t size)
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	if (FAILED(m_pDeviceContext->Map(m_pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
-		Log::Error("Failed to map constant buffer.");
+		fail2("Failed to map constant buffer.");
 		return;
 	}
 

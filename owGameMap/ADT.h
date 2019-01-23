@@ -17,7 +17,7 @@ public:
 	virtual ~ADT();
 
 	// SceneNode
-	void UpdateLocalTransform() override;
+	void UpdateLocalTransform(bool _forced = false) override;
 	bool Accept(IVisitor& visitor) override;
 
 	std::shared_ptr<ADT_MCNK> getChunk(int32 x, int32 z)

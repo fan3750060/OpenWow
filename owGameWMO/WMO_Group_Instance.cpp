@@ -14,19 +14,18 @@ CWMO_Group_Instance::CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _objec
 	m_Calculated(false)
 {
 	{
-		// Matrix
 		UpdateLocalTransform();
 	}
 }
 
 void CWMO_Group_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
 {
+	SceneNode::SetParent(pNode);
+
 	BoundingBox bbox = m_Object->m_Bounds;
 	bbox.calculateCenter();
-	bbox.transform(pNode.lock()->GetWorldTransfom());
+	bbox.transform(GetParentWorldTransform());
 	SetBounds(bbox);
-
-	SceneNode::SetParent(pNode);
 }
 
 bool CWMO_Group_Instance::Accept(IVisitor& visitor)

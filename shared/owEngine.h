@@ -10,32 +10,38 @@
 
 // Base
 #include "../owEngine/Application.h"
+#include "../owEngine/MeshWrapper.h"
 
-// Scenes
-#include "../owEngine/Scene.h"
-#include "../owEngine/SceneBase.h"
-#include "../owEngine/SceneNode.h"
+//
+// UI
+//
 
 #include "../owEngine/UI/UIScene.h"
 #include "../owEngine/UI/UISceneBase.h"
 #include "../owEngine/UI/UINode.h"
 
-// UI
 #include "../owEngine/UI/Fonts/FontsManager.h"
-
-// Passes
-#include "../owEngine/Passes/BasePass.h"
-#include "../owEngine/Passes/RenderTechnique.h"
 
 #include "../owEngine/UI/Passes/BaseUIPass.h"
 #include "../owEngine/UI/Passes/RenderUITechnique.h"
 
-#include "../owEngine/Passes/ClearRenderTargetPass.h"
-#include "../owEngine/Passes/CopyBufferPass.h"
-#include "../owEngine/Passes/CopyTexturePass.h"
-#include "../owEngine/Passes/GenerateMipMapsPass.h"
-#include "../owEngine/Passes/PostprocessPass.h"
-#include "../owEngine/Passes/BeginQueryPass.h"
-#include "../owEngine/Passes/EndQueryPass.h"
-#include "../owEngine/Passes/DispatchPass.h"
-#include "../owEngine/Passes/InvokeFunctionPass.h"
+//
+// 3D
+//
+
+#include "../owEngine/3D/Scene.h"
+#include "../owEngine/3D/SceneBase.h"
+#include "../owEngine/3D/SceneNode.h"
+
+#include "../owEngine/3D/Passes/BasePass.h"
+#include "../owEngine/3D/Passes/RenderTechnique.h"
+
+#include "../owEngine/3D/Passes/ClearRenderTargetPass.h"
+#include "../owEngine/3D/Passes/CopyBufferPass.h"
+#include "../owEngine/3D/Passes/CopyTexturePass.h"
+#include "../owEngine/3D/Passes/GenerateMipMapsPass.h"
+#include "../owEngine/3D/Passes/PostprocessPass.h"
+#include "../owEngine/3D/Passes/BeginQueryPass.h"
+#include "../owEngine/3D/Passes/EndQueryPass.h"
+#include "../owEngine/3D/Passes/DispatchPass.h"
+#include "../owEngine/3D/Passes/InvokeFunctionPass.h"

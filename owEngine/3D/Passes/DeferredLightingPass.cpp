@@ -82,7 +82,7 @@ void DeferredLightingPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Sce
 // Render the pass. This should only be called by the RenderTechnique.
 void DeferredLightingPass::Render(RenderEventArgs& e)
 {
-	Camera* pCamera = e.Camera;
+	const Camera* pCamera = e.Camera;
 	assert(pCamera);
 
 	Viewport viewport = pCamera->GetViewport();
@@ -164,7 +164,7 @@ bool DeferredLightingPass::Visit(Scene& scene)
 
 bool DeferredLightingPass::Visit(SceneNode& node)
 {
-	Camera* camera = GetRenderEventArgs().Camera;
+	const Camera* camera = GetRenderEventArgs().Camera;
 
 	PerObject perObjectData;
 

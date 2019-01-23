@@ -121,10 +121,6 @@ void Material::Unbind() const
 
 //--
 
-void Material::CreateConstantBuffer()
-{
-}
-
 void Material::UpdateConstantBuffer() const
 {
 }

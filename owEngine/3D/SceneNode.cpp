@@ -15,8 +15,8 @@ SceneNode::SceneNode(cmat4 localTransform)
 	, m_Type(SN_TYPE_NONE)
 	, m_IsRotateQuat(false)
 	, m_Scale(1.0f, 1.0f, 1.0f)
-	, m_IsLocalDirty(true)
-	, m_IsWorldDirty(true)
+	, m_IsLocalDirty(false)
+	, m_IsWorldDirty(false)
 {
 	m_InverseLocalTransform = glm::inverse(m_LocalTransform);
 }
@@ -124,15 +124,13 @@ void SceneNode::SetLocalTransform(cmat4 localTransform)
 
 // World transform
 
-mat4 SceneNode::GetWorldTransfom()
+mat4 SceneNode::GetWorldTransfom() const
 {
-	UpdateWorldTransform();
 	return m_WorldTransform;
 }
 
-mat4 SceneNode::GetInverseWorldTransform()
+mat4 SceneNode::GetInverseWorldTransform() const
 {
-	UpdateWorldTransform();
 	return m_InverseWorldTransform;
 }
 
@@ -156,9 +154,9 @@ mat4 SceneNode::GetParentWorldTransform() const
 
 //
 
-void SceneNode::UpdateLocalTransform()
+void SceneNode::UpdateLocalTransform(bool _forced)
 {
-	if (m_IsLocalDirty)
+	if (m_IsLocalDirty || _forced)
 	{
 		m_LocalTransform = mat4();
 
@@ -180,10 +178,11 @@ void SceneNode::UpdateLocalTransform()
 	}
 }
 
-void SceneNode::UpdateWorldTransform()
+void SceneNode::UpdateWorldTransform(bool _forced)
 {
-	if (m_IsWorldDirty)
+	if (m_IsWorldDirty || _forced)
 	{
+		assert1(! m_IsLocalDirty);
 		m_WorldTransform = GetParentWorldTransform() * m_LocalTransform;
 		m_InverseWorldTransform = glm::inverse(m_WorldTransform);
 		m_IsWorldDirty = false;
@@ -195,76 +194,63 @@ void SceneNode::SetLocalUnderty()
 	m_IsLocalDirty = false;
 }
 
-void SceneNode::AddChild(std::shared_ptr<SceneNode> pNode)
+void SceneNode::AddChild(std::shared_ptr<SceneNode> childNode)
 {
-	if (pNode)
+	if (childNode)
 	{
-		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
+		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), childNode);
 		if (iter == m_Children.end())
 		{
-			pNode->m_pParentNode = shared_from_this();
-			pNode->m_IsWorldDirty = true;
+			childNode->m_pParentNode = shared_from_this();
+			childNode->m_IsWorldDirty = true;
+			childNode->UpdateWorldTransform();
 
-			m_Children.push_back(pNode);
-			if (!pNode->GetName().empty())
-			{
-				m_ChildrenByName.insert(NodeNameMap::value_type(pNode->GetName(), pNode));
-			}
+			m_Children.push_back(childNode);
+			if (! childNode->GetName().empty())
+				m_ChildrenByName.insert(NodeNameMap::value_type(childNode->GetName(), childNode));
 		}
 	}
 }
 
-void SceneNode::RemoveChild(std::shared_ptr<SceneNode> pNode)
+void SceneNode::RemoveChild(std::shared_ptr<SceneNode> childNode)
 {
-	if (pNode)
+	if (childNode)
 	{
-		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
+		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), childNode);
 		if (iter != m_Children.end())
 		{
-			pNode->SetParent(std::weak_ptr<SceneNode>());
+			childNode->SetParent(std::weak_ptr<SceneNode>());
+			childNode->UpdateWorldTransform();
 
 			m_Children.erase(iter);
-
-			// Also remove it from the name map.
-			NodeNameMap::iterator iter2 = m_ChildrenByName.find(pNode->GetName());
+			NodeNameMap::iterator iter2 = m_ChildrenByName.find(childNode->GetName());
 			if (iter2 != m_ChildrenByName.end())
-			{
 				m_ChildrenByName.erase(iter2);
-			}
 		}
 		else
 		{
 			// Maybe this node appears lower in the hierarchy...
 			for (auto child : m_Children)
 			{
-				child->RemoveChild(pNode);
+				child->RemoveChild(childNode);
 			}
 		}
 	}
 }
 
-void SceneNode::SetParent(std::weak_ptr<SceneNode> wpNode)
+void SceneNode::SetParent(std::weak_ptr<SceneNode> parentNode)
 {
-	// Parents own their children.. If this node is not owned
-	// by anyone else, it will cease to exist if we remove it from it's parent.
-	// As a precaution, store myself is a shared pointer so I don't get deleted
-	// half-way through this function!
-	// Technically self deletion shouldn't occur because the thing invoking this function
-	// should have a std::shared_ptr to it.
-	//std::shared_ptr<SceneNode> me = shared_from_this();
-
-	if (std::shared_ptr<SceneNode> parent = wpNode.lock())
+	// Remove from current parent
+	std::shared_ptr<SceneNode> currentParent = m_pParentNode.lock();
+	if (currentParent != nullptr)
 	{
-		parent->AddChild(shared_from_this());
-	}
-	else if (parent = m_pParentNode.lock())
-	{
-		// Setting parent to NULL.. remove from current parent and reset parent node.
-		//mat4 worldTransform = GetWorldTransfom();
-		parent->RemoveChild(shared_from_this());
+		currentParent->RemoveChild(shared_from_this());
 		m_pParentNode.reset();
-		//SetLocalTransform(worldTransform);
 	}
+
+	// Add to new parent
+	if (std::shared_ptr<SceneNode> newParent = parentNode.lock())
+		newParent->AddChild(shared_from_this());
 }
 
 void SceneNode::AddMesh(std::shared_ptr<IMesh> mesh)
@@ -272,9 +258,7 @@ void SceneNode::AddMesh(std::shared_ptr<IMesh> mesh)
 	assert(mesh);
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
 	if (iter == m_Meshes.end())
-	{
 		m_Meshes.push_back(mesh);
-	}
 }
 
 void SceneNode::RemoveMesh(std::shared_ptr<IMesh> mesh)
@@ -282,12 +266,10 @@ void SceneNode::RemoveMesh(std::shared_ptr<IMesh> mesh)
 	assert(mesh);
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
 	if (iter != m_Meshes.end())
-	{
 		m_Meshes.erase(iter);
-	}
 }
 
-void SceneNode::UpdateCamera(Camera* camera)
+void SceneNode::UpdateCamera(const Camera* camera)
 {
 	// Do nothing...
 }
@@ -317,9 +299,10 @@ void SceneNode::OnUpdate(UpdateEventArgs & e)
 {
 }
 
-bool SceneNode::checkFrustum(const Camera& _camera) const
+bool SceneNode::checkFrustum(const Camera* _camera) const
 {
-	return !_camera.GetFrustum().cullBox(GetBounds());
+	assert1(_camera != nullptr);
+	return !_camera->GetFrustum().cullBox(GetBounds());
 }
 
 bool SceneNode::checkDistance2D(cvec3 _camPos, float _distance) const

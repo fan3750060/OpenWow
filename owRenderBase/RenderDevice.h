@@ -7,7 +7,6 @@ class Buffer;
 class ConstantBuffer;
 class StructuredBuffer;
 #include "Mesh.h"
-#include "MeshWrapper.h"
 #include "Shader.h"
 #include "Texture.h"
 class RenderTarget;
@@ -147,9 +146,6 @@ public:
 	virtual std::shared_ptr<Buffer> CreateUInt32IndexBuffer(const uint32* data, uint32 sizeInBytes) = 0;
 	virtual std::shared_ptr<ConstantBuffer> CreateConstantBuffer(const void* data, size_t size) = 0;
 	virtual std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false) = 0;
-
-	// Wrappers
-	std::shared_ptr<MeshWrapper> CreateMeshWrapper();
 };
 
 #include "RenderDevice.inl"

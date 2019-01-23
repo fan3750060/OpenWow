@@ -78,7 +78,7 @@ public:
 	/**
 	 * Called before all others calls
 	 */
-	virtual void UpdateViewport(Viewport* viewport);
+	virtual void UpdateViewport(const Viewport* viewport);
 
 	/**
 	 * Allow a visitor to visit this node.

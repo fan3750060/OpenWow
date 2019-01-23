@@ -2,7 +2,7 @@
 
 class Camera;
 class PipelineState;
-class Viewport;
+struct Viewport;
 
 class UpdateEventArgs : public EventArgs
 {
@@ -25,7 +25,7 @@ class RenderEventArgs : public EventArgs
 {
 public:
 	typedef EventArgs base;
-	RenderEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, Camera* camera = nullptr, PipelineState* pipelineState = nullptr, Object* node = nullptr)
+	RenderEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, const Camera* camera = nullptr, const PipelineState* pipelineState = nullptr, const Object* node = nullptr)
 		: base(caller)
 		, ElapsedTime(fDeltaTime)
 		, TotalTime(fTotalTime)
@@ -38,9 +38,10 @@ public:
 	float ElapsedTime;
 	float TotalTime;
 	int64_t FrameCounter;
-	Camera* Camera;
-	PipelineState* PipelineState;
-	Object* Node;
+
+	const Camera* Camera;
+	const PipelineState* PipelineState;
+	const Object* Node;
 };
 typedef Delegate<RenderEventArgs> RenderEvent;
 
@@ -49,7 +50,7 @@ class RenderUIEventArgs : public EventArgs
 {
 public:
 	typedef EventArgs base;
-	RenderUIEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, Viewport* viewport = nullptr)
+	RenderUIEventArgs(const Object& caller, float fDeltaTime, float fTotalTime, uint64_t frameCounter, const Viewport* viewport = nullptr)
 		: base(caller)
 		, ElapsedTime(fDeltaTime)
 		, TotalTime(fTotalTime)
@@ -60,7 +61,8 @@ public:
 	float ElapsedTime;
 	float TotalTime;
 	int64_t FrameCounter;
-	Viewport* Viewport;
+
+	const Viewport* Viewport;
 };
 typedef Delegate<RenderUIEventArgs> RenderUIEvent;
 

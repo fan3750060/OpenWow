@@ -26,15 +26,15 @@ bool M2_Pass::Visit(IMesh& mesh)
 	if (pMesh)
 	{
 		GetPipelineState()->GetBlendState().SetBlendMode(pMesh->GetM2Material()->GetBlendMode());
-		//GetPipelineState()->GetBlendState().Bind();
+		GetPipelineState()->GetBlendState().Bind();
 
 		GetPipelineState()->GetDepthStencilState().SetDepthMode(pMesh->GetM2Material()->GetDepthMode());
-		//GetPipelineState()->GetDepthStencilState().Bind();
+		GetPipelineState()->GetDepthStencilState().Bind();
 
 		GetPipelineState()->GetRasterizerState().SetCullMode(pMesh->GetM2Material()->GetCullMode());
-		//GetPipelineState()->GetRasterizerState().Bind();
+		GetPipelineState()->GetRasterizerState().Bind();
 
-		GetPipelineState()->Bind();
+		//GetPipelineState()->Bind();
 	}
 
 

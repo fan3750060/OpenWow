@@ -214,7 +214,7 @@ std::shared_ptr<IMesh> UINode::GetMesh() const
 	return m_Mesh;
 }
 
-void UINode::UpdateViewport(Viewport* viewport)
+void UINode::UpdateViewport(const Viewport* viewport)
 {
 	// Do nothing...
 }

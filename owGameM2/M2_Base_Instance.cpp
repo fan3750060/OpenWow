@@ -9,7 +9,8 @@ CM2_Base_Instance::CM2_Base_Instance(std::shared_ptr<M2> _m2Object) :
 	m_Animator(nullptr),
 	m_NeedRecalcAnimation(true),
 	m_Color(vec4(1.0f, 1.0f, 1.0f, 1.0f)),
-	m_Alpha(1.0f)
+	m_Alpha(1.0f),
+	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	for (uint8 i = 0; i < SM2_Texture::Type::COUNT; i++)
 	{
@@ -96,13 +97,13 @@ void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
 bool CM2_Base_Instance::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
-	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	//float distToCamera2D = (camera.GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
-	//if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
-	//{
-	//	return;
-	//}
+	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MDX_Distance)
+	{
+		return false;
+	}
 
 	// Check frustrum
 	if (!checkFrustum(camera))
@@ -146,7 +147,7 @@ void CM2_Base_Instance::InitAnimator()
 	}
 }
 
-void CM2_Base_Instance::UpdateLocalTransform()
+void CM2_Base_Instance::UpdateLocalTransform(bool _forced)
 {
 	if (m_Attached != nullptr)
 	{
@@ -162,7 +163,7 @@ void CM2_Base_Instance::UpdateLocalTransform()
 	}
 	else
 	{
-		SceneNode::UpdateLocalTransform();
+		SceneNode::UpdateLocalTransform(_forced);
 	}
 
 	BoundingBox bbox = m_M2->m_Bounds;

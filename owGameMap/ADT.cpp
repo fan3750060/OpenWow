@@ -30,6 +30,9 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 	// Scene node params
 	{
 		SetTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
+
+		UpdateLocalTransform();
+
 		BoundingBox bbox
 		(
 			vec3(GetTranslation().x,              Math::MaxFloat, GetTranslation().z),
@@ -47,7 +50,7 @@ ADT::~ADT()
 //
 // SceneNode
 //
-void ADT::UpdateLocalTransform()
+void ADT::UpdateLocalTransform(bool _forced)
 {
 	// Don't calculate local transform
 	SetLocalUnderty();
@@ -56,7 +59,7 @@ void ADT::UpdateLocalTransform()
 bool ADT::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
-	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
@@ -283,8 +286,8 @@ bool ADT::Load()
 		assert1(size + 8 == chunks[i].size);
 
 		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f);
-		chunk->Load();
 		chunk->SetParent(m_MapController);
+		chunk->Load();
 		m_Chunks.push_back(chunk);
 
 		BoundingBox bbox = GetBounds();

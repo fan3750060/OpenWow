@@ -11,28 +11,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3D\Passes\AbstractPass.cpp" />
+    <ClCompile Include="3D\Passes\BasePass.cpp" />
+    <ClCompile Include="3D\Passes\BeginQueryPass.cpp" />
+    <ClCompile Include="3D\Passes\ClearRenderTargetPass.cpp" />
+    <ClCompile Include="3D\Passes\CopyBufferPass.cpp" />
+    <ClCompile Include="3D\Passes\CopyTexturePass.cpp" />
+    <ClCompile Include="3D\Passes\DeferredLightingPass.cpp" />
+    <ClCompile Include="3D\Passes\DispatchPass.cpp" />
+    <ClCompile Include="3D\Passes\EndQueryPass.cpp" />
+    <ClCompile Include="3D\Passes\GenerateMipMapsPass.cpp" />
+    <ClCompile Include="3D\Passes\InvokeFunctionPass.cpp" />
+    <ClCompile Include="3D\Passes\LightPickingPass.cpp" />
+    <ClCompile Include="3D\Passes\LightsPass.cpp" />
+    <ClCompile Include="3D\Passes\PostprocessPass.cpp" />
+    <ClCompile Include="3D\Passes\RenderTechnique.cpp" />
+    <ClCompile Include="3D\SceneBase.cpp" />
+    <ClCompile Include="3D\SceneNode.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="Passes\AbstractPass.cpp" />
-    <ClCompile Include="Passes\BasePass.cpp" />
-    <ClCompile Include="Passes\BeginQueryPass.cpp" />
-    <ClCompile Include="Passes\ClearRenderTargetPass.cpp" />
-    <ClCompile Include="Passes\CopyBufferPass.cpp" />
-    <ClCompile Include="Passes\CopyTexturePass.cpp" />
-    <ClCompile Include="Passes\DeferredLightingPass.cpp" />
-    <ClCompile Include="Passes\DispatchPass.cpp" />
-    <ClCompile Include="Passes\EndQueryPass.cpp" />
-    <ClCompile Include="Passes\GenerateMipMapsPass.cpp" />
-    <ClCompile Include="Passes\InvokeFunctionPass.cpp" />
-    <ClCompile Include="Passes\LightPickingPass.cpp" />
-    <ClCompile Include="Passes\LightsPass.cpp" />
-    <ClCompile Include="Passes\PostprocessPass.cpp" />
-    <ClCompile Include="Passes\RenderTechnique.cpp" />
-    <ClCompile Include="SceneBase.cpp" />
-    <ClCompile Include="SceneNode.cpp" />
+    <ClCompile Include="MeshWrapper.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -50,31 +51,32 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
+    <ClInclude Include="3D\Passes\AbstractPass.h" />
+    <ClInclude Include="3D\Passes\BasePass.h" />
+    <ClInclude Include="3D\Passes\BeginQueryPass.h" />
+    <ClInclude Include="3D\Passes\ClearRenderTargetPass.h" />
+    <ClInclude Include="3D\Passes\CopyBufferPass.h" />
+    <ClInclude Include="3D\Passes\CopyTexturePass.h" />
+    <ClInclude Include="3D\Passes\DeferredLightingPass.h" />
+    <ClInclude Include="3D\Passes\DispatchPass.h" />
+    <ClInclude Include="3D\Passes\EndQueryPass.h" />
+    <ClInclude Include="3D\Passes\GenerateMipMapsPass.h" />
+    <ClInclude Include="3D\Passes\InvokeFunctionPass.h" />
+    <ClInclude Include="3D\Passes\LightPickingPass.h" />
+    <ClInclude Include="3D\Passes\LightsPass.h" />
+    <ClInclude Include="3D\Passes\PostprocessPass.h" />
+    <ClInclude Include="3D\Passes\RenderPass.h" />
+    <ClInclude Include="3D\Passes\RenderTechnique.h" />
+    <ClInclude Include="3D\Scene.h" />
+    <ClInclude Include="3D\SceneBase.h" />
+    <ClInclude Include="3D\SceneNode.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Loader.h" />
-    <ClInclude Include="Passes\AbstractPass.h" />
-    <ClInclude Include="Passes\BasePass.h" />
-    <ClInclude Include="Passes\BeginQueryPass.h" />
-    <ClInclude Include="Passes\ClearRenderTargetPass.h" />
-    <ClInclude Include="Passes\CopyBufferPass.h" />
-    <ClInclude Include="Passes\CopyTexturePass.h" />
-    <ClInclude Include="Passes\DeferredLightingPass.h" />
-    <ClInclude Include="Passes\DispatchPass.h" />
-    <ClInclude Include="Passes\EndQueryPass.h" />
-    <ClInclude Include="Passes\GenerateMipMapsPass.h" />
-    <ClInclude Include="Passes\InvokeFunctionPass.h" />
-    <ClInclude Include="Passes\LightPickingPass.h" />
-    <ClInclude Include="Passes\LightsPass.h" />
-    <ClInclude Include="Passes\PostprocessPass.h" />
-    <ClInclude Include="Passes\RenderPass.h" />
-    <ClInclude Include="Passes\RenderTechnique.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneBase.h" />
-    <ClInclude Include="SceneNode.h" />
+    <ClInclude Include="MeshWrapper.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TextureLoadersStorage.h" />
@@ -136,7 +138,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;..\owEngine\UI;..\owEngine\Fonts;..\owEngine\Passes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;..\owEngine\UI;..\owEngine\UI\Passes;..\owEngine\3D;..\owEngine\3D\Passes;..\owEngine\Fonts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -156,7 +158,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;..\owEngine\UI;..\owEngine\Fonts;..\owEngine\Passes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL-Win64\include;..\owEngine\;..\owEngine\UI;..\owEngine\UI\Passes;..\owEngine\3D;..\owEngine\3D\Passes;..\owEngine\Fonts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>

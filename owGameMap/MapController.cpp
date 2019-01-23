@@ -114,7 +114,7 @@ void MapController::Unload()
 
 // --
 
-void MapController::UpdateCamera(Camera* camera)
+void MapController::UpdateCamera(const Camera* camera)
 {
 	if (m_QualitySettings.timeEnable)
 	{

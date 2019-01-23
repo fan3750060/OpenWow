@@ -111,11 +111,11 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		//const float x = 40;
-		//const float y = 29;
+		const float x = 40;
+		const float y = 29;
 
-		const float x = 29;
-		const float y = 21;
+		//const float x = 29;
+		//const float y = 21;
 
 		new FontsManager(_RenderDevice);
 		new WMOsManager();
@@ -125,7 +125,7 @@ int main(int argumentCount, char* arguments[])
 
 		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
-		contr->MapPreLoad(*DBC_Map[571]);
+		contr->MapPreLoad(*DBC_Map[1]);
 		contr->MapLoad();
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);

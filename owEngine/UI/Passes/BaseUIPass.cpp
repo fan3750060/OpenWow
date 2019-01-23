@@ -74,7 +74,7 @@ bool BaseUIPass::Visit(SceneNode & node)
 
 bool BaseUIPass::Visit(UINode& node)
 {
-	Viewport* viewport = GetRenderUIEventArgs().Viewport;
+	const Viewport* viewport = GetRenderUIEventArgs().Viewport;
 	if (viewport)
 	{
 		PerObject perObjectData;

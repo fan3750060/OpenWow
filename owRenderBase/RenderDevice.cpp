@@ -238,10 +238,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateAxis(float radius, float length)
 	return nullptr;
 }
 
-std::shared_ptr<MeshWrapper> IRenderDevice::CreateMeshWrapper()
-{
-	return std::make_shared<MeshWrapper>(SN_TYPE_NONE, CreateMesh());
-}
 
 // Template specializations for vertex buffers (with std::vector)
 template<>

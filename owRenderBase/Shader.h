@@ -67,11 +67,6 @@ public:
 	 */
 	virtual ShaderParameter& GetShaderParameterByName(cstring name) const;
 	
-	// Get a parameter defined in the shader by its name by using in index operator.
-	virtual ShaderParameter& operator[](cstring name) const
-	{
-		return GetShaderParameterByName(name);
-	}
 
 	// Check to see if this shader supports a given semantic.
 	virtual bool                 HasSemantic(const BufferBinding& binding) const;

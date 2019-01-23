@@ -29,7 +29,7 @@ ADT_MCNK::~ADT_MCNK()
 	//Log::Info("ADT_MCNK Deleted");
 }
 
-void ADT_MCNK::UpdateLocalTransform()
+void ADT_MCNK::UpdateLocalTransform(bool _forced)
 {
 	SetLocalUnderty();
 }
@@ -40,9 +40,9 @@ void ADT_MCNK::UpdateLocalTransform()
 bool ADT_MCNK::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
-	const Camera& camera = *(visitorAsBasePass.GetRenderEventArgs().Camera);
+	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	float distToCamera2D = (camera.GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
+	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
 	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
 	{
 		return false;
@@ -70,6 +70,7 @@ bool ADT_MCNK::Load()
 	{
 		// Set translate
 		SetTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
+		UpdateLocalTransform();
 		// Bounds
 		BoundingBox bbox
 		(
@@ -335,29 +336,9 @@ bool ADT_MCNK::Load()
 
 	m_File.reset();
 
-	{ // Geom High
-		/*vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
-		__ibHigh = _RenderDevice->CreateUInt16IndexBuffer((const uint16*)mapArrayHigh.data(), mapArrayHigh.size());
-
-		__geomHigh = _RenderDevice->CreateMesh();
-		__geomHigh->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
-		__geomHigh->SetIndexBuffer(__ibHigh);
-		__geomHigh->SetMaterial(_RenderDevice->GetDefaultMaterial());
-
-
-		AddMesh(__geomHigh);*/
-
-		/*__geomHigh = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PNCT2);
-		__geomHigh->setGeomVertexParams(verticesBuffer, R_DataType::T_FLOAT, 0, 0);
-		__geomHigh->setGeomVertexParams(normalsBuffer, R_DataType::T_INT8, 0, 0);
-		__geomHigh->setGeomVertexParams(mccvBuffer, R_DataType::T_UINT8, 0, 0, true);
-		__geomHigh->setGeomVertexParams(_MapShared->BufferTextureCoordDetail, R_DataType::T_FLOAT, 0, 0);
-		__geomHigh->setGeomVertexParams(_MapShared->BufferTextureCoordAlpha, R_DataType::T_FLOAT, 0, 0);
-		__geomHigh->setGeomIndexParams(__ibHigh, R_IndexFormat::IDXFMT_16);
-		__geomHigh->finishCreatingGeometry();*/
-	}
-
-
+	// All chunk is holes
+	if (header.holes == UINT16_MAX)
+		return true;
 
 	// Material
 	std::shared_ptr<ADT_MCNK_Material> mat = std::make_shared<ADT_MCNK_Material>();
@@ -368,7 +349,25 @@ bool ADT_MCNK::Load()
 	mat->SetTexture(4, m_BlendRBGShadowATexture);
 	mat->SetLayersCnt(header.nLayers);
 
-	{ // Geom Default
+	{ // Geom High
+		std::vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
+		std::shared_ptr<Buffer> __ibHigh = _RenderDevice->CreateIndexBuffer(mapArrayHigh);
+
+		__geomDefault = _RenderDevice->CreateMesh();
+		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
+		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
+		//__geomDefault->AddVertexBuffer(BufferBinding("COLOR", 0), mccvBuffer);
+		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);
+		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
+		__geomDefault->SetIndexBuffer(__ibHigh);
+		__geomDefault->SetMaterial(mat);
+		__geomDefault->SetType(SN_TYPE_ADT_CHUNK);
+
+		AddMesh(__geomDefault);
+	}
+
+
+	/*{ // Geom Default
 		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
 		std::shared_ptr<Buffer> __ibDefault = _RenderDevice->CreateIndexBuffer(mapArrayDefault);
 
@@ -383,7 +382,7 @@ bool ADT_MCNK::Load()
 		__geomDefault->SetType(SN_TYPE_ADT_CHUNK);
 
 		AddMesh(__geomDefault);
-	}
+	}*/
 
 	return true;
 }

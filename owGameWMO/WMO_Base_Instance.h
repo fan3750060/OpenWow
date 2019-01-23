@@ -25,7 +25,7 @@ public:
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
 	// SceneNode
-	void UpdateCamera(Camera* camera) override;
+	void UpdateCamera(const Camera* camera) override;
 	bool Accept(IVisitor& visitor) override;
 
 protected:

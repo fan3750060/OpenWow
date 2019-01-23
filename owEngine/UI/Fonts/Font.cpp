@@ -1,6 +1,7 @@
 #include <stdafx.h>
 
-// Include 
+
+// Include
 #include "UI_Font_Material.h"
 
 // General

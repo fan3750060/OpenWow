@@ -27,7 +27,8 @@ BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data,
 
 	if (FAILED(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pBuffer)))
 	{
-		Log::Error("Failed to create buffer.");
+		fail2("Failed to create buffer.");
+		return;
 	}
 
 	m_pDevice->GetImmediateContext2(&m_pDeviceContext);

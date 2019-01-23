@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Mesh.h"
 
 class MeshWrapper : public IMesh 
 {

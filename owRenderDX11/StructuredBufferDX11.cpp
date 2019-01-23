@@ -61,7 +61,7 @@ StructuredBufferDX11::StructuredBufferDX11(ID3D11Device2* pDevice, UINT bindFlag
 
 	if (FAILED(m_pDevice->CreateBuffer(&bufferDesc, &subResourceData, &m_pBuffer)))
 	{
-		Log::Error("Failed to create read/write buffer.");
+		fail2("Failed to create read/write buffer.");
 		return;
 	}
 
@@ -75,7 +75,7 @@ StructuredBufferDX11::StructuredBufferDX11(ID3D11Device2* pDevice, UINT bindFlag
 
 		if (FAILED(m_pDevice->CreateShaderResourceView(m_pBuffer, &srvDesc, &m_pSRV)))
 		{
-			Log::Error("Failed to create shader resource view.");
+			fail2("Failed to create shader resource view.");
 			return;
 		}
 	}
@@ -91,7 +91,7 @@ StructuredBufferDX11::StructuredBufferDX11(ID3D11Device2* pDevice, UINT bindFlag
 
 		if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pBuffer, &uavDesc, &m_pUAV)))
 		{
-			Log::Error("Failed to create unordered access view.");
+			fail2("Failed to create unordered access view.");
 			return;
 		}
 	}

@@ -48,65 +48,14 @@
     <ClCompile Include="Loader.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Passes\ClearRenderTargetPass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\CopyBufferPass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\CopyTexturePass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\DispatchPass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\InvokeFunctionPass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\PostprocessPass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\RenderTechnique.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Passes\AbstractPass.cpp">
-      <Filter>3D\Passes\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\BasePass.cpp">
-      <Filter>3D\Passes\Base</Filter>
-    </ClCompile>
     <ClCompile Include="TextureLoadersStorage.cpp">
       <Filter>TextureLoaders</Filter>
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
       <Filter>TextureLoaders</Filter>
     </ClCompile>
-    <ClCompile Include="Passes\BeginQueryPass.cpp">
-      <Filter>3D\Passes\Query</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\EndQueryPass.cpp">
-      <Filter>3D\Passes\Query</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\LightPickingPass.cpp">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\LightsPass.cpp">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\DeferredLightingPass.cpp">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClCompile>
-    <ClCompile Include="Passes\GenerateMipMapsPass.cpp">
-      <Filter>3D\Passes</Filter>
-    </ClCompile>
     <ClCompile Include="EngineTime.cpp" />
-    <ClCompile Include="SceneBase.cpp">
-      <Filter>3D</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneNode.cpp">
-      <Filter>3D</Filter>
-    </ClCompile>
     <ClCompile Include="UI\Passes\BaseUIPass.cpp">
       <Filter>UI\Passes</Filter>
     </ClCompile>
@@ -131,6 +80,60 @@
     <ClCompile Include="UI\UIText.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="3D\SceneBase.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\SceneNode.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\BeginQueryPass.cpp">
+      <Filter>3D\Passes\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\EndQueryPass.cpp">
+      <Filter>3D\Passes\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\AbstractPass.cpp">
+      <Filter>3D\Passes\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\BasePass.cpp">
+      <Filter>3D\Passes\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\RenderTechnique.cpp">
+      <Filter>3D\Passes\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\DeferredLightingPass.cpp">
+      <Filter>3D\Passes\_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\LightPickingPass.cpp">
+      <Filter>3D\Passes\_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\LightsPass.cpp">
+      <Filter>3D\Passes\_unused</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\ClearRenderTargetPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\CopyBufferPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\CopyTexturePass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\DispatchPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\GenerateMipMapsPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\InvokeFunctionPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\PostprocessPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshWrapper.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -151,71 +154,14 @@
     <ClInclude Include="..\shared\owEngine.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Passes\ClearRenderTargetPass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\CopyBufferPass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\CopyTexturePass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\DispatchPass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\InvokeFunctionPass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\PostprocessPass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\RenderTechnique.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Passes\AbstractPass.h">
-      <Filter>3D\Passes\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\BasePass.h">
-      <Filter>3D\Passes\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\RenderPass.h">
-      <Filter>3D\Passes\Base</Filter>
-    </ClInclude>
     <ClInclude Include="TextureLoadersStorage.h">
       <Filter>TextureLoaders</Filter>
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>TextureLoaders</Filter>
     </ClInclude>
-    <ClInclude Include="Passes\BeginQueryPass.h">
-      <Filter>3D\Passes\Query</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\EndQueryPass.h">
-      <Filter>3D\Passes\Query</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\LightsPass.h">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\LightPickingPass.h">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\DeferredLightingPass.h">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClInclude>
-    <ClInclude Include="Passes\GenerateMipMapsPass.h">
-      <Filter>3D\Passes</Filter>
-    </ClInclude>
     <ClInclude Include="EngineTime.h" />
-    <ClInclude Include="Scene.h">
-      <Filter>3D</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneBase.h">
-      <Filter>3D</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneNode.h">
-      <Filter>3D</Filter>
-    </ClInclude>
     <ClInclude Include="UI\Passes\BaseUIPass.h">
       <Filter>UI\Passes</Filter>
     </ClInclude>
@@ -245,6 +191,66 @@
     </ClInclude>
     <ClInclude Include="UI\UIText.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Scene.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\SceneBase.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\SceneNode.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\BeginQueryPass.h">
+      <Filter>3D\Passes\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\EndQueryPass.h">
+      <Filter>3D\Passes\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\AbstractPass.h">
+      <Filter>3D\Passes\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\BasePass.h">
+      <Filter>3D\Passes\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\RenderPass.h">
+      <Filter>3D\Passes\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\RenderTechnique.h">
+      <Filter>3D\Passes\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\DeferredLightingPass.h">
+      <Filter>3D\Passes\_unused</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\LightPickingPass.h">
+      <Filter>3D\Passes\_unused</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\LightsPass.h">
+      <Filter>3D\Passes\_unused</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\ClearRenderTargetPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\CopyBufferPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\CopyTexturePass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\DispatchPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\GenerateMipMapsPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\InvokeFunctionPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\PostprocessPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshWrapper.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

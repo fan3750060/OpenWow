@@ -57,12 +57,12 @@ public:
 	 * This function should be used sparingly as it is computed every time
 	 * it is requested.
 	 */
-	mat4 GetWorldTransfom();
+	mat4 GetWorldTransfom() const;
 	/**
 	 * Gets the inverse world transform of this scene node.
 	 * Use this function sparingly as it is computed every time it is requested.
 	 */
-	mat4 GetInverseWorldTransform();
+	mat4 GetInverseWorldTransform() const;
 	void SetWorldTransform(cmat4 worldTransform);
 
 
@@ -73,9 +73,9 @@ public:
 	 * A scene node takes ownership of it's children.
 	 * If you delete the parent node, all of its children will also be deleted.
 	 */
-	virtual void AddChild(std::shared_ptr<SceneNode> pNode);
-	virtual void RemoveChild(std::shared_ptr<SceneNode> pNode);
-	virtual void SetParent(std::weak_ptr<SceneNode> pNode);
+	virtual void AddChild(std::shared_ptr<SceneNode> childNode);
+	virtual void RemoveChild(std::shared_ptr<SceneNode> childNode);
+	virtual void SetParent(std::weak_ptr<SceneNode> parentNode);
 
 	/**
 	 * Add a mesh to this scene node.
@@ -89,7 +89,7 @@ public:
 	/**
 	 * Called before all others calls
 	 */
-	virtual void UpdateCamera(Camera* camera);
+	virtual void UpdateCamera(const Camera* camera);
 
 	/**
 	 * Allow a visitor to visit this node.
@@ -104,15 +104,15 @@ public:
 	/**
 	 * Useful for culling
 	 */
-	bool checkFrustum(const Camera& _camera) const;
+	bool checkFrustum(const Camera* _camera) const;
 	bool checkDistance2D(cvec3 _camPos, float _distance) const;
 	bool checkDistance(cvec3 _camPos, float _distance) const;
 
 protected:
 	virtual mat4 GetParentWorldTransform() const;
 
-	virtual void UpdateLocalTransform();
-	virtual void UpdateWorldTransform();
+	virtual void UpdateLocalTransform(bool _forced = false);
+	virtual void UpdateWorldTransform(bool _forced = false);
 	void SetLocalUnderty();
 
 private:

@@ -37,7 +37,7 @@ CameraMovement g_CameraMovement;
 
 void OnUpdate(UpdateEventArgs& e)
 {
-	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 600 : 300;
+	float moveMultiplier = (g_CameraMovement.TranslateFaster) ? 100 : 50;
 	//float rotateMultiplier = (g_CameraMovement.RotateFaster) ? 600 : 300;
 
 	g_Camera.TranslateX((g_CameraMovement.Right - g_CameraMovement.Left) * e.ElapsedTime * moveMultiplier);

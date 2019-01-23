@@ -30,7 +30,7 @@ public:
 	std::shared_ptr<Texture>              getSpecialTexture(SM2_Texture::Type _type) const;
 
 	// Animations
-	std::shared_ptr<CM2_Animator> getAnimator() { return m_Animator; }
+	std::shared_ptr<CM2_Animator> getAnimator() const { return m_Animator; }
 
 	// SceneNode
 	virtual void SetParent(std::weak_ptr<SceneNode> pNode) override;
@@ -38,7 +38,9 @@ public:
 
 protected:
 	void InitAnimator();
-	virtual void UpdateLocalTransform() override;
+
+	// SceneNode
+	virtual void UpdateLocalTransform(bool _forced = false) override;
 
 private:
 	// Color & Alpha
@@ -55,4 +57,5 @@ private:
 private: // PARENT
 	std::shared_ptr<M2>             m_M2;
 	std::shared_ptr<const CM2_Part_Attachment>      m_Attached;
+	CGroupQuality&									m_QualitySettings;
 };
