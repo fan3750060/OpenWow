@@ -80,12 +80,12 @@ void WMO_Group::Load()
 
 	// Buffer
 	uint16* dataFromMOVI = nullptr;
-	std::shared_ptr<Buffer>	IB_Default = nullptr;
+	std::shared_ptr<IBuffer>	IB_Default = nullptr;
 	dataFromMOVT = nullptr;
-	std::shared_ptr<Buffer>	VB_Vertexes = nullptr;
-	std::vector<std::shared_ptr<Buffer>>	VB_TextureCoords;
-	std::shared_ptr<Buffer>	VB_Normals = nullptr;
-	std::shared_ptr<Buffer>	VB_Colors = nullptr;
+	std::shared_ptr<IBuffer>	VB_Vertexes = nullptr;
+	std::vector<std::shared_ptr<IBuffer>>	VB_TextureCoords;
+	std::shared_ptr<IBuffer>	VB_Normals = nullptr;
+	std::shared_ptr<IBuffer>	VB_Colors = nullptr;
 
 	// CollisionTEMP
 	uint32 collisionCount = 0;

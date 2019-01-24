@@ -3,7 +3,7 @@
 #include "BufferBinding.h"
 #include "PrimitiveTopology.h"
 
-class Buffer;
+class IBuffer;
 class Shader;
 class Material;
 class RenderEventArgs;
@@ -30,8 +30,8 @@ public:
 	virtual SceneNodeTypes GetType() const;
 	virtual void SetType(SceneNodeTypes type);
 
-	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<Buffer> buffer) = 0;
-	virtual void SetIndexBuffer(std::shared_ptr<Buffer> buffer) = 0;
+	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer) = 0;
+	virtual void SetIndexBuffer(std::shared_ptr<IBuffer> buffer) = 0;
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology) = 0;
 

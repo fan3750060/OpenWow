@@ -117,9 +117,9 @@ int main(int argumentCount, char* arguments[])
 		//const float x = 29;
 		//const float y = 21;
 
-		new FontsManager(_RenderDevice);
-		new WMOsManager();
-		new CM2_Manager();
+		//new FontsManager(_RenderDevice);
+		//new WMOsManager();
+		//new CM2_Manager();
 
 		std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D("TILESET\\Terrain Cube Maps\\TCB_CrystalSong_A.blp");
 
@@ -130,12 +130,12 @@ int main(int argumentCount, char* arguments[])
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);
 
-		std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
+		/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
 		std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
 		inst->CreateInstances();
 		inst->SetParent(g_pScene->GetRootNode());
 		inst->SetScale(vec3(15.0f));
-		inst->GetLocalTransform();
+		inst->GetLocalTransform();*/
 
 		Viewport viewPort(0, 0, 1280.0f, 1024.0f);
 		g_Viewport = viewPort;
@@ -256,15 +256,15 @@ int main(int argumentCount, char* arguments[])
 		// UI
 		//
 
-		std::vector<vec2> vecrtices;
+		/*std::vector<vec2> vecrtices;
 		vecrtices.push_back(vec2(-1.0f, -1.0f));
 		vecrtices.push_back(vec2(1.0f, -1.0f));
 		vecrtices.push_back(vec2(-1.0f, 1.0f));
 		vecrtices.push_back(vec2(1.0f, 1.0f));
-		std::shared_ptr<Buffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
+		std::shared_ptr<IBuffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
 
 		uint16 indexes[6] = { 0, 1, 2, 2, 1, 3 };
-		std::shared_ptr<Buffer> __ib = _RenderDevice->CreateIndexBuffer(indexes, 6);
+		std::shared_ptr<IBuffer> __ib = _RenderDevice->CreateIndexBuffer(indexes, 6);
 
 		std::shared_ptr<UI_Color_Material> uiMaterial = std::make_shared<UI_Color_Material>();
 		uiMaterial->SetColor(vec4(0, 1, 0, 0.3f));
@@ -299,7 +299,7 @@ int main(int argumentCount, char* arguments[])
 		UIPipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
 		UIPipeline->GetRasterizerState().SetViewport(g_Viewport);
 
-		g_UITechnique.SetPass(std::make_shared<BaseUIPass>(g_pUIScene, UIPipeline));
+		g_UITechnique.SetPass(std::make_shared<BaseUIPass>(g_pUIScene, UIPipeline));*/
 
 		app.Run();
 	}

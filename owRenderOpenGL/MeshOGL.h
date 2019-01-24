@@ -8,8 +8,8 @@ public:
 	MeshOGL();
 	virtual ~MeshOGL();
 
-	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<Buffer> buffer);
-	virtual void SetIndexBuffer(std::shared_ptr<Buffer> buffer);
+	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer);
+	virtual void SetIndexBuffer(std::shared_ptr<IBuffer> buffer);
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology);
 
@@ -27,10 +27,10 @@ private:
 	void Commit(std::weak_ptr<ShaderOGL> _shader);
 
 private:
-	typedef std::map<BufferBinding, std::shared_ptr<Buffer> > BufferMap;
+	typedef std::map<BufferBinding, std::shared_ptr<IBuffer> > BufferMap;
 	BufferMap m_VertexBuffers;
 	size_t m_VertexCount;
-	std::shared_ptr<Buffer> m_pIndexBuffer;
+	std::shared_ptr<IBuffer> m_pIndexBuffer;
 	GLuint m_PrimitiveTopology;
 	std::shared_ptr<const Material> m_pMaterial;
 

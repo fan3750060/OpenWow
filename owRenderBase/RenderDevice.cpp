@@ -27,13 +27,13 @@ std::shared_ptr<IMesh> IRenderDevice::CreatePlane(cvec3 N)
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(p, 4);
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(p, 4);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __tb = CreateVertexBuffer(t, 4);
+	std::shared_ptr<IBuffer> __tb = CreateVertexBuffer(t, 4);
 	mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __tb);
 
-	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(i, 6);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(i, 6);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
@@ -56,13 +56,13 @@ std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, 
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(p, 4);
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(p, 4);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __tb = CreateVertexBuffer(t, 4);
+	std::shared_ptr<IBuffer> __tb = CreateVertexBuffer(t, 4);
 	mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __tb);
 
-	std::shared_ptr<Buffer> __nb = CreateVertexBuffer(n, 4);
+	std::shared_ptr<IBuffer> __nb = CreateVertexBuffer(n, 4);
 	mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), __nb);
 
 	return mesh;
@@ -110,10 +110,10 @@ std::shared_ptr<IMesh> IRenderDevice::CreateSphere()
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(spVerts, 126);
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(spVerts, 126);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(spInds, 128 * 3);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(spInds, 128 * 3);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
@@ -132,10 +132,10 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(cubeVerts, 8 * 3);
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(cubeVerts, 8 * 3);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(cubeInds, 36);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(cubeInds, 36);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
@@ -186,10 +186,10 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCone()
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<Buffer> __vb = CreateVertexBuffer(coneVerts, 13 * 3);
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(coneVerts, 13 * 3);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
-	std::shared_ptr<Buffer> __ib = CreateIndexBuffer(coneInds, 22 * 3);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(coneInds, 22 * 3);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
@@ -241,70 +241,70 @@ std::shared_ptr<IMesh> IRenderDevice::CreateAxis(float radius, float length)
 
 // Template specializations for vertex buffers (with std::vector)
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
 {
 	return CreateFloatVertexBuffer(&(data[0]), (uint32)data.size(), 0, sizeof(float));
 }
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec2));
 }
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec3));
 }
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
 {
 	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec4));
 }
 
 // Template specializations for vertex buffers (with common types)
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
 {
 	return CreateFloatVertexBuffer(data, count, 0, sizeof(float));
 }
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
 {
 	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec2));
 }
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
 {
 	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec3));
 }
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
+std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
 {
 	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec4));
 }
 
 // Template specializations for index buffers (with std::vector)
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer< std::vector<uint16> >(const std::vector<uint16>& data)
+std::shared_ptr<IBuffer> IRenderDevice::CreateIndexBuffer< std::vector<uint16> >(const std::vector<uint16>& data)
 {
 	return CreateUInt16IndexBuffer(&(data[0]), (uint16)data.size());
 }
 
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer< std::vector<uint32> >(const std::vector<uint32>& data)
+std::shared_ptr<IBuffer> IRenderDevice::CreateIndexBuffer< std::vector<uint32> >(const std::vector<uint32>& data)
 {
 	return CreateUInt32IndexBuffer(&(data[0]), (uint32)data.size());
 }
 
 // Template specializations for index buffers (with common types)
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count)
+std::shared_ptr<IBuffer> IRenderDevice::CreateIndexBuffer<uint16>(const uint16* data, uint32 count)
 {
 	return CreateUInt16IndexBuffer(data, count);
 }
 
 template<>
-std::shared_ptr<Buffer> IRenderDevice::CreateIndexBuffer<uint32>(const uint32* data, uint32 count)
+std::shared_ptr<IBuffer> IRenderDevice::CreateIndexBuffer<uint32>(const uint32* data, uint32 count)
 {
 	return CreateUInt32IndexBuffer(data, count);
 }

@@ -91,7 +91,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 				}
 
 				// Vertex buffer
-				std::shared_ptr<Buffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
+				std::shared_ptr<IBuffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
 
 				std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);

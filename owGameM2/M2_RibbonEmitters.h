@@ -30,7 +30,7 @@ private:
 	std::shared_ptr<Texture>					m_Texture;
 	std::weak_ptr<const CM2_Part_Material>		m_Material;
 
-	//std::shared_ptr<Buffer>								__vb;
+	//std::shared_ptr<IBuffer>								__vb;
 	//std::shared_ptr<Mesh>								__geom;
 
 	M2_Animated<vec3>							m_Color;

@@ -122,7 +122,7 @@ void StructuredBufferOGL::Copy(std::shared_ptr<StructuredBuffer> other)
 	}
 }
 
-void StructuredBufferOGL::Copy(std::shared_ptr<Buffer> other)
+void StructuredBufferOGL::Copy(std::shared_ptr<IBuffer> other)
 {
 	Copy(std::dynamic_pointer_cast<StructuredBuffer>(other));
 }
@@ -136,9 +136,9 @@ void StructuredBufferOGL::Clear()
 	}*/
 }
 
-Buffer::BufferType StructuredBufferOGL::GetType() const
+IBuffer::BufferType StructuredBufferOGL::GetType() const
 {
-	return Buffer::StructuredBuffer;
+	return IBuffer::StructuredBuffer;
 }
 
 uint32 StructuredBufferOGL::GetElementCount() const

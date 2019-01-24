@@ -2,7 +2,7 @@
 
 #include "M2_Part_Texture.h"
 
-class M2_Material : public Material
+class M2_Material : public MaterialWrapper
 {
 public:
 	M2_Material(std::vector<std::weak_ptr<const CM2_Part_Texture>> m2Textures);

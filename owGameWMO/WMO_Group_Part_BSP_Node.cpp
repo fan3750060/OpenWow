@@ -18,7 +18,7 @@ CWMO_Group_Part_BSP_Node::CWMO_Group_Part_BSP_Node(const std::weak_ptr<const WMO
 		collisionVertices.push_back(_parentGroup->dataFromMOVT[_parentGroup->collisionIndexes[3 * i + 2]]);
 	}*/
 
-	/*std::shared_ptr<Buffer> vb = _Render->r.createVertexBuffer(collisionVertices.size() * sizeof(vec3), collisionVertices.data(), false);
+	/*std::shared_ptr<IBuffer> vb = _Render->r.createVertexBuffer(collisionVertices.size() * sizeof(vec3), collisionVertices.data(), false);
 
 	m_GEOM_Collision = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_P);
 	m_GEOM_Collision->setGeomVertexParams(vb, R_DataType::T_FLOAT, 0, sizeof(vec3));

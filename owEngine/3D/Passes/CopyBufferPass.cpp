@@ -3,7 +3,7 @@
 // General
 #include "CopyBufferPass.h"
 
-CopyBufferPass::CopyBufferPass(std::shared_ptr<Buffer> destinationBuffer, std::shared_ptr<Buffer> sourceBuffer)
+CopyBufferPass::CopyBufferPass(std::shared_ptr<IBuffer> destinationBuffer, std::shared_ptr<IBuffer> sourceBuffer)
 	: m_DestinationBuffer(destinationBuffer)
 	, m_SourceBuffer(sourceBuffer)
 {}

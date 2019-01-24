@@ -34,6 +34,9 @@
     <Filter Include="UI\Fonts">
       <UniqueIdentifier>{00c4ea61-0dd2-4232-9832-90fe44d96dda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{99989cb3-00f0-4dc1-986e-75a12990548f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -133,6 +136,15 @@
     </ClCompile>
     <ClCompile Include="MeshWrapper.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Materials\MaterialDebug.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Materials\MaterialTextured.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Materials\MaterialWrapper.cpp">
+      <Filter>Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +263,15 @@
     </ClInclude>
     <ClInclude Include="MeshWrapper.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Materials\MaterialDebug.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Materials\MaterialTextured.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Materials\MaterialWrapper.h">
+      <Filter>Materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #include "RenderEvents.h"
 
 class Camera;
-class Buffer;
+class IBuffer;
 class StructuredBuffer;
 class Scene;
 class IMesh;

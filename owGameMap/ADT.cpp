@@ -63,16 +63,16 @@ bool ADT::Accept(IVisitor& visitor)
 
 	std::shared_ptr<MapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
-	if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
-	{
-		return false;
-	}
+	//if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	//{
+	//	return false;
+	//}
 
 	// Check frustrum
-	if (!checkFrustum(camera))
-	{
-		return false;
-	}
+	//if (!checkFrustum(camera))
+	//{
+	//	return false;
+	//}
 
 	return SceneNode::Accept(visitor);
 }
@@ -229,7 +229,7 @@ bool ADT::Load()
 	}
 
 	// Liquids
-	if (header.MH20 != 0)
+	/*if (header.MH20 != 0)
 	{
 		f->seek(startPos + header.MH20);
 		{
@@ -258,7 +258,7 @@ bool ADT::Load()
 				}
 			}
 		}
-	}
+	}*/
 
 	//-- Load Textures -------------------------------------------------------------------
 
@@ -297,7 +297,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	for (auto& it : m_WMOsPlacementInfo)
+	/*for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
@@ -311,7 +311,7 @@ bool ADT::Load()
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);
 		}
-	}
+	}*/
 
 	//-- MDXs -------------------------------------------------------------------------
 	/*for (auto& it : m_MDXsPlacementInfo)

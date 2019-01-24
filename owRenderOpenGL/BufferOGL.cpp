@@ -39,7 +39,7 @@ void BufferOGL::UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter:
 	glBindBuffer(m_BindFlags, 0);
 }
 
-void BufferOGL::Copy(std::shared_ptr<Buffer> other)
+void BufferOGL::Copy(std::shared_ptr<IBuffer> other)
 {
 	std::shared_ptr<BufferOGL> srcBuffer = std::dynamic_pointer_cast<BufferOGL>(other);
 	assert1(srcBuffer->m_GLObj != 0);
@@ -66,23 +66,23 @@ void BufferOGL::Copy(std::shared_ptr<Buffer> other)
 	}
 }
 
-Buffer::BufferType BufferOGL::GetType() const
+IBuffer::BufferType BufferOGL::GetType() const
 {
 	switch (m_BindFlags)
 	{
 	case GL_ARRAY_BUFFER:
-		return Buffer::VertexBuffer;
+		return IBuffer::VertexBuffer;
 	case GL_ELEMENT_ARRAY_BUFFER:
-		return Buffer::IndexBuffer;
+		return IBuffer::IndexBuffer;
 	case GL_SHADER_STORAGE_BUFFER:
-		return Buffer::StructuredBuffer;
+		return IBuffer::StructuredBuffer;
 	case GL_UNIFORM_BUFFER:
-		return Buffer::ConstantBuffer;
+		return IBuffer::ConstantBuffer;
 	default:
 		std::exception("Unknown buffer type");
 	}
 
-	return Buffer::Unknown;
+	return IBuffer::Unknown;
 }
 
 uint32 BufferOGL::GetElementCount() const

@@ -1,19 +1,17 @@
 #pragma once
 
-#include "Material.h"
-class ConstantBuffer;
+#include "MaterialWrapper.h"
 
-class MaterialDebug : public Material
+class MaterialDebug : public MaterialWrapper
 {
 public:
-	MaterialDebug(IRenderDevice* renderDevice);
+	MaterialDebug(std::shared_ptr<Material> _material);
 	virtual ~MaterialDebug();
 
 	cvec4 GetDiffuseColor() const;
 	void SetDiffuseColor(cvec4 diffuse);
 
-private:
-	void UpdateConstantBuffer() const;
+	void UpdateConstantBuffer() const override;
 
 	__declspec(align(16)) struct MaterialProperties
 	{

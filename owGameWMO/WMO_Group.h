@@ -63,7 +63,7 @@ public:
 	// MOBN chunk
 	// MOBR chunk
 	std::vector<uint16>                     collisionIndexes;
-	std::shared_ptr<Buffer>                 VB_Collision;
+	std::shared_ptr<IBuffer>                 VB_Collision;
 	std::vector<std::shared_ptr<CWMO_Group_Part_BSP_Node>>	m_CollisionNodes;
 
 	//-- Liquid --//

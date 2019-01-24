@@ -112,7 +112,7 @@ void SkyManager::Calculate(const Camera* camera, uint32 _time)
 		}
 	}
 
-	std::shared_ptr<Buffer> colorsBufferNew = _RenderDevice->CreateVertexBuffer(colors);
+	std::shared_ptr<IBuffer> colorsBufferNew = _RenderDevice->CreateVertexBuffer(colors);
 	colorsBuffer->Copy(colorsBufferNew);
 	_RenderDevice->DestroyVertexBuffer(colorsBufferNew);
 }
@@ -179,7 +179,7 @@ void SkyManager::InitBuffer()
 	}
 
 	// Vertex buffer
-	std::shared_ptr<Buffer> vertexBuffer = _RenderDevice->CreateVertexBuffer(vertices);
+	std::shared_ptr<IBuffer> vertexBuffer = _RenderDevice->CreateVertexBuffer(vertices);
 
 	// Colors buffer
 	colorsBuffer = _RenderDevice->CreateFloatVertexBuffer((float*)vertices.data(), vertices.size(), 0, sizeof(vec4));

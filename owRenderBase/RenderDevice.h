@@ -3,7 +3,7 @@
 #include "RenderEvents.h"
 #include "CPUAccess.h"
 
-class Buffer;
+class IBuffer;
 class ConstantBuffer;
 class StructuredBuffer;
 #include "Mesh.h"
@@ -26,17 +26,17 @@ public:
 
 	// Create an vertex buffer (with std::vector)
 	template<typename T>
-	std::shared_ptr<Buffer> CreateVertexBuffer(const T& data);
+	std::shared_ptr<IBuffer> CreateVertexBuffer(const T& data);
 	template<typename T>
-	std::shared_ptr<Buffer> CreateVertexBuffer(const T* data, uint32 count);
-	virtual void DestroyVertexBuffer(std::shared_ptr<Buffer> buffer) = 0;
+	std::shared_ptr<IBuffer> CreateVertexBuffer(const T* data, uint32 count);
+	virtual void DestroyVertexBuffer(std::shared_ptr<IBuffer> buffer) = 0;
 
 	// Create an index buffer.
 	template<typename T>
-	std::shared_ptr<Buffer> CreateIndexBuffer(const T& data);
+	std::shared_ptr<IBuffer> CreateIndexBuffer(const T& data);
 	template<typename T>
-	std::shared_ptr<Buffer> CreateIndexBuffer(const T* data, uint32 count);
-	virtual void DestroyIndexBuffer(std::shared_ptr<Buffer> buffer) = 0;
+	std::shared_ptr<IBuffer> CreateIndexBuffer(const T* data, uint32 count);
+	virtual void DestroyIndexBuffer(std::shared_ptr<IBuffer> buffer) = 0;
 
 	// Create a constant buffer (or Uniform buffer)
 	template<typename T>
@@ -123,6 +123,10 @@ public:
 	virtual std::shared_ptr<Texture> CreateTexture() = 0;
 	virtual void DestroyTexture(std::shared_ptr<Texture> texture) = 0;
 
+	// Create an material
+	virtual std::shared_ptr<Material> CreateMaterial() = 0;
+	virtual void DestroyMaterial(std::shared_ptr<Material> material) = 0;
+
 	// Create a render target
 	virtual std::shared_ptr<RenderTarget> CreateRenderTarget() = 0;
 	virtual void DestroyRenderTarget(std::shared_ptr<RenderTarget> renderTarget) = 0;
@@ -138,12 +142,12 @@ public:
 	virtual std::shared_ptr<PipelineState> CreatePipelineState() = 0;
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline) = 0;
 
-	virtual std::shared_ptr<Buffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<Buffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<Buffer> CreateUInt16IndexBuffer(const uint16* data, uint32 sizeInBytes) = 0;
-	virtual std::shared_ptr<Buffer> CreateUInt32IndexBuffer(const uint32* data, uint32 sizeInBytes) = 0;
+	virtual std::shared_ptr<IBuffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride) = 0;
+	virtual std::shared_ptr<IBuffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride) = 0;
+	virtual std::shared_ptr<IBuffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride) = 0;
+	virtual std::shared_ptr<IBuffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride) = 0;
+	virtual std::shared_ptr<IBuffer> CreateUInt16IndexBuffer(const uint16* data, uint32 sizeInBytes) = 0;
+	virtual std::shared_ptr<IBuffer> CreateUInt32IndexBuffer(const uint32* data, uint32 sizeInBytes) = 0;
 	virtual std::shared_ptr<ConstantBuffer> CreateConstantBuffer(const void* data, size_t size) = 0;
 	virtual std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false) = 0;
 };

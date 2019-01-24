@@ -4,6 +4,7 @@
 #include "ConstantBufferDX11.h"
 #include "StructuredBufferDX11.h"
 #include "RenderTargetDX11.h"
+#include "MaterialDX11.h"
 #include "MeshDX11.h"
 #include "ShaderDX11.h"
 #include "TextureDX11.h"
@@ -164,55 +165,55 @@ ATL::CComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
 }
 
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr <Buffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr <IBuffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
+std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint16));
+	std::shared_ptr <IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint16));
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceDX11::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
+std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint32));
+	std::shared_ptr <IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint32));
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-void RenderDeviceDX11::DestroyBuffer(std::shared_ptr<Buffer> buffer)
+void RenderDeviceDX11::DestroyBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	BufferList::iterator iter = std::find(m_Buffers.begin(), m_Buffers.end(), buffer);
 	if (iter != m_Buffers.end())
@@ -221,12 +222,12 @@ void RenderDeviceDX11::DestroyBuffer(std::shared_ptr<Buffer> buffer)
 	}
 }
 
-void RenderDeviceDX11::DestroyVertexBuffer(std::shared_ptr<Buffer> buffer)
+void RenderDeviceDX11::DestroyVertexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	DestroyBuffer(buffer);
 }
 
-void RenderDeviceDX11::DestroyIndexBuffer(std::shared_ptr<Buffer> buffer)
+void RenderDeviceDX11::DestroyIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	DestroyBuffer(buffer);
 }
@@ -390,6 +391,22 @@ void RenderDeviceDX11::DestroyTexture(std::shared_ptr<Texture> texture)
 	if (iter2 != m_TexturesByName.end())
 	{
 		m_TexturesByName.erase(iter2);
+	}
+}
+
+std::shared_ptr<Material> RenderDeviceDX11::CreateMaterial()
+{
+	std::shared_ptr<Material> pMaterial = std::make_shared<MaterialDX11>(this);
+	m_Materials.push_back(pMaterial);
+	return pMaterial;
+}
+
+void RenderDeviceDX11::DestroyMaterial(std::shared_ptr<Material> material)
+{
+	MaterialList::iterator iter = std::find(m_Materials.begin(), m_Materials.end(), material);
+	if (iter != m_Materials.end())
+	{
+		m_Materials.erase(iter);
 	}
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-class Sky_Material : public Material
+class Sky_Material : public MaterialWrapper
 {
 public:
 	Sky_Material();

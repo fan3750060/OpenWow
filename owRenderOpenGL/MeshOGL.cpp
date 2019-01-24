@@ -26,13 +26,13 @@ MeshOGL::~MeshOGL()
 	}
 }
 
-void MeshOGL::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<Buffer> buffer)
+void MeshOGL::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer)
 {
 	m_VertexBuffers[binding] = buffer;
 	m_bIsDirty = true;
 }
 
-void MeshOGL::SetIndexBuffer(std::shared_ptr<Buffer> buffer)
+void MeshOGL::SetIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	m_pIndexBuffer = buffer;
 	m_bIsDirty = true;
@@ -80,13 +80,15 @@ bool MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer
 
 		std::shared_ptr<ShaderOGL> pVS = std::dynamic_pointer_cast<ShaderOGL>(m_pMaterial->GetShader(Shader::VertexShader));
 
+		if (pVS)
+			pVS->GetShaderParameterByName("PerObject").Set(perObject);
+
 		if (m_bIsDirty)
 		{
 			Commit(pVS);
 			m_bIsDirty = false;
 		}
 	}
-	assert1(m_bIsDirty);
 
 	glBindVertexArray(m_GLObj);
 	{

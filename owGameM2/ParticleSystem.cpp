@@ -370,11 +370,11 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 
 	// Vertex buffer
 	/*assert1(vertices.data() != nullptr);
-	std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
+	std::shared_ptr<IBuffer> __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(ParticleVertex), vertices.data(), false);
 
 	// Index buffer
 	assert1(m_Indices.data() != nullptr);
-	std::shared_ptr<Buffer> __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
+	std::shared_ptr<IBuffer> __ib = _Render->r.createIndexBuffer(m_Indices.size() * sizeof(uint16), m_Indices.data(), false);
 
 	// Geometry
 	std::shared_ptr<IMesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRILIST, _Render->getRenderStorage()->__layout_GxVBF_PCT);

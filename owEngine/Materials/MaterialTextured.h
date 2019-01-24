@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Material.h"
-class Texture;
+#include "MaterialWrapper.h"
 
-class MaterialTextured : public Material
+class MaterialTextured : public MaterialWrapper
 {
 public:
-	MaterialTextured(IRenderDevice* renderDevice);
+	MaterialTextured(std::shared_ptr<Material> _material);
 	virtual ~MaterialTextured();
 
 	std::shared_ptr<Texture> GetTexture() const;

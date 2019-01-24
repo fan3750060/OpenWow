@@ -24,12 +24,12 @@ void MeshWrapper::SetType(SceneNodeTypes type)
 	m_Mesh->SetType(type);
 }
 
-void MeshWrapper::AddVertexBuffer(const BufferBinding & binding, std::shared_ptr<Buffer> buffer)
+void MeshWrapper::AddVertexBuffer(const BufferBinding & binding, std::shared_ptr<IBuffer> buffer)
 {
 	m_Mesh->AddVertexBuffer(binding, buffer);
 }
 
-void MeshWrapper::SetIndexBuffer(std::shared_ptr<Buffer> buffer)
+void MeshWrapper::SetIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	m_Mesh->SetIndexBuffer(buffer);
 }

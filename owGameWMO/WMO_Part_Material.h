@@ -6,7 +6,7 @@
 class WMO;
 // FORWARD END
 
-class WMO_Part_Material : public Material
+class WMO_Part_Material : public MaterialWrapper
 {
 public:
 	WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, const SWMO_MaterialDef& _proto);

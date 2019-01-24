@@ -1,6 +1,6 @@
 #pragma once
 
-class ADT_MCNK_Material : public Material
+class ADT_MCNK_Material : public MaterialWrapper
 {
 public:
 	ADT_MCNK_Material();

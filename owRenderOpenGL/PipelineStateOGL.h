@@ -25,11 +25,6 @@ public:
 	virtual void Bind();
 	virtual void UnBind();
 
-protected:
-
-private: // OpenGL
-	uint32 m_GLProgramPipeline;
-
 private:
 	BlendStateOGL m_BlendState;
 	RasterizerStateOGL m_RasterizerState;

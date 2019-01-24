@@ -1,6 +1,6 @@
 #pragma once
 
-class BufferDX11 : public Buffer
+class BufferDX11 : public IBuffer
 {
 public:
 	BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data, size_t count, UINT offset, UINT stride);
@@ -9,7 +9,7 @@ public:
 	virtual bool Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 	virtual void UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
-	virtual void Copy(std::shared_ptr<Buffer> other);
+	virtual void Copy(std::shared_ptr<IBuffer> other);
 
 	virtual BufferType GetType() const;
 	virtual uint32 GetElementCount() const;

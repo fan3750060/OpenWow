@@ -518,8 +518,8 @@ void CM2_Builder::Step8Skins()
 
 void CM2_Builder::Step9Collision()
 {
-	std::shared_ptr<Buffer> collisonVB = nullptr;
-	std::shared_ptr<Buffer> collisonIB = nullptr;
+	std::shared_ptr<IBuffer> collisonVB = nullptr;
+	std::shared_ptr<IBuffer> collisonIB = nullptr;
 
 	if (m_Header.collisionVertices.size > 0)
 	{

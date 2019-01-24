@@ -42,17 +42,17 @@ bool ADT_MCNK::Accept(IVisitor& visitor)
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
-	{
-		return false;
-	}
+	//float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
+	//if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
+	//{
+	//	return false;
+	//}
 
 	// Check frustrum
-	if (!checkFrustum(camera))
-	{
-		return false;
-	}
+	//if (!checkFrustum(camera))
+	//{
+	//	return false;
+	//}
 
 	return SceneNode::Accept(visitor);
 }
@@ -80,9 +80,9 @@ bool ADT_MCNK::Load()
 		SetBounds(bbox);
 	}
 
-	std::shared_ptr<Buffer> verticesBuffer = nullptr;
-	std::shared_ptr<Buffer> normalsBuffer = nullptr;
-	std::shared_ptr<Buffer> mccvBuffer = nullptr;
+	std::shared_ptr<IBuffer> verticesBuffer = nullptr;
+	std::shared_ptr<IBuffer> normalsBuffer = nullptr;
+	std::shared_ptr<IBuffer> mccvBuffer = nullptr;
 
 	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
@@ -351,7 +351,7 @@ bool ADT_MCNK::Load()
 
 	{ // Geom High
 		std::vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);
-		std::shared_ptr<Buffer> __ibHigh = _RenderDevice->CreateIndexBuffer(mapArrayHigh);
+		std::shared_ptr<IBuffer> __ibHigh = _RenderDevice->CreateIndexBuffer(mapArrayHigh);
 
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
@@ -369,7 +369,7 @@ bool ADT_MCNK::Load()
 
 	/*{ // Geom Default
 		std::vector<uint16>& mapArrayDefault = _MapShared->GenarateDefaultMapArray(header.holes);
-		std::shared_ptr<Buffer> __ibDefault = _RenderDevice->CreateIndexBuffer(mapArrayDefault);
+		std::shared_ptr<IBuffer> __ibDefault = _RenderDevice->CreateIndexBuffer(mapArrayDefault);
 
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);

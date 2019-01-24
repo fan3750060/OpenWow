@@ -1,19 +1,15 @@
 #include "stdafx.h"
 
-// Include
-#include "RenderDevice.h"
-#include "ConstantBuffer.h"
-
 // General
 #include "MaterialDebug.h"
 
-MaterialDebug::MaterialDebug(IRenderDevice* renderDevice)
-	: Material(renderDevice)
+MaterialDebug::MaterialDebug(std::shared_ptr<Material> _material)
+	: MaterialWrapper(_material)
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
 
-	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
+	MaterialWrapper::CreateConstantBuffer(m_pProperties);
 }
 
 MaterialDebug::~MaterialDebug()
@@ -35,13 +31,10 @@ cvec4 MaterialDebug::GetDiffuseColor() const
 void MaterialDebug::SetDiffuseColor(cvec4 diffuse)
 {
 	m_pProperties->m_DiffuseColor = diffuse;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void MaterialDebug::UpdateConstantBuffer() const
 {
-	if (m_pConstantBuffer)
-	{
-		m_pConstantBuffer->Set(*m_pProperties);
-	}
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
 }

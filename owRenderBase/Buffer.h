@@ -3,7 +3,7 @@
 #include "Shader.h"
 #include "ShaderParameter.h"
 
-class Buffer : public Object
+class IBuffer : public Object
 {
 public:
 	typedef Object base;
@@ -20,7 +20,7 @@ public:
 	virtual bool Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 	virtual void UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
 
-	virtual void Copy(std::shared_ptr<Buffer> other) = 0;
+	virtual void Copy(std::shared_ptr<IBuffer> other) = 0;
 
 	virtual BufferType GetType() const = 0;
 	virtual uint32 GetElementCount() const = 0;

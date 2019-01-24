@@ -5,19 +5,21 @@
 
 
 ADT_MCNK_Material::ADT_MCNK_Material() :
-	Material(_RenderDevice)
+	MaterialWrapper(_RenderDevice->CreateMaterial())
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
+	CreateConstantBuffer(m_pProperties);
 
 	// CreateShaders
+#ifdef  IS_DX11
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
 		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
 	);
+
 
 	// Create samplers
 	std::shared_ptr<SamplerState> g_LinearClampSampler = _RenderDevice->CreateSamplerState();
@@ -30,6 +32,14 @@ ADT_MCNK_Material::ADT_MCNK_Material() :
 
 	g_pPixelShader->GetShaderParameterByName("ColorMapSampler").Set(g_LinearRepeatSampler);
 	g_pPixelShader->GetShaderParameterByName("AlphaMapSampler").Set(g_LinearClampSampler);
+#else
+	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
+		Shader::VertexShader, "shaders_OGL/Map/MapChunk.vs", Shader::ShaderMacros(), "", ""
+	);
+	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
+		Shader::PixelShader, "shaders_OGL/Map/MapChunk.fs", Shader::ShaderMacros(), "", ""
+	);
+#endif
 
 	SetShader(Shader::VertexShader, g_pVertexShader);
 	SetShader(Shader::PixelShader, g_pPixelShader);
@@ -49,15 +59,12 @@ ADT_MCNK_Material::~ADT_MCNK_Material()
 void ADT_MCNK_Material::SetLayersCnt(uint32 value)
 {
 	m_pProperties->m_LayersCnt = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 //--
 
 void ADT_MCNK_Material::UpdateConstantBuffer() const
 {
-	if (m_pConstantBuffer)
-	{
-		m_pConstantBuffer->Set(*m_pProperties);
-	}
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
 }

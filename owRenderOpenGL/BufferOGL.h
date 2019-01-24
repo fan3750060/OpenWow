@@ -1,6 +1,6 @@
 #pragma once
 
-class BufferOGL : public Buffer
+class BufferOGL : public IBuffer
 {
 public:
 	BufferOGL(UINT bindFlags, const void* data, size_t count, UINT stride);
@@ -11,7 +11,7 @@ public:
 	virtual void UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
 
 	// Copy the contents of another buffer into this one. Buffers must be the same size (in bytes).
-	virtual void Copy(std::shared_ptr<Buffer> other);
+	virtual void Copy(std::shared_ptr<IBuffer> other);
 
 	virtual BufferType GetType() const;
 	virtual uint32 GetElementCount() const;

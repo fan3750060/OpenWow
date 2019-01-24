@@ -204,13 +204,17 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 		GLsizei length, size;
 		GLenum type;
 		glGetActiveAttrib(m_GLObj, j, attribNameMaxLenght, &length, &size, &type, name);
+		OGLCheckError();
 
 		GLenum newType;
 		GLint newSize;
 		GLTranslateAttribType(type, size, &newType, &newSize);
-
 		OGLCheckError();
-		m_InputSemantics.insert(SemanticMap::value_type(InputSemantic(name, j, newType, newSize), j));
+
+		GLint slot = glGetAttribLocation(m_GLObj, name);
+		OGLCheckError();
+
+		m_InputSemantics.insert(SemanticMap::value_type(InputSemantic(name, slot, newType, newSize), slot));
 	}
 
 	GLint uniformsCount;

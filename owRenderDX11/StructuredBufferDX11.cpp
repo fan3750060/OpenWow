@@ -264,7 +264,7 @@ void StructuredBufferDX11::Copy(std::shared_ptr<StructuredBuffer> other)
 	}
 }
 
-void StructuredBufferDX11::Copy(std::shared_ptr<Buffer> other)
+void StructuredBufferDX11::Copy(std::shared_ptr<IBuffer> other)
 {
 	Copy(std::dynamic_pointer_cast<StructuredBuffer>(other));
 }
@@ -278,9 +278,9 @@ void StructuredBufferDX11::Clear()
 	}
 }
 
-Buffer::BufferType StructuredBufferDX11::GetType() const
+IBuffer::BufferType StructuredBufferDX11::GetType() const
 {
-	return Buffer::StructuredBuffer;
+	return IBuffer::StructuredBuffer;
 }
 
 uint32 StructuredBufferDX11::GetElementCount() const

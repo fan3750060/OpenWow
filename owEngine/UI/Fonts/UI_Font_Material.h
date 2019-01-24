@@ -1,6 +1,8 @@
 #pragma once
 
-class UI_Font_Material : public Material
+#include "Materials/MaterialWrapper.h"
+
+class UI_Font_Material : public MaterialWrapper
 {
 public:
 	UI_Font_Material();

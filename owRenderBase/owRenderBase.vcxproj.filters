@@ -17,17 +17,8 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Types</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialBase.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialDebug.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MaterialTextured.cpp">
+    <ClCompile Include="MaterialImpl.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
   </ItemGroup>
@@ -112,16 +103,10 @@
     <ClInclude Include="Material.h">
       <Filter>Materials</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialBase.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialDebug.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialTextured.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
     <ClInclude Include="SamplerState.h" />
+    <ClInclude Include="MaterialImpl.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

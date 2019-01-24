@@ -2,7 +2,7 @@
 
 #include "Buffer.h"
 
-class ConstantBuffer : public Buffer
+class ConstantBuffer : public IBuffer
 {
 public:
 

@@ -59,7 +59,7 @@ void ConstantBufferDX11::Copy(std::shared_ptr<ConstantBuffer> other)
 	}
 }
 
-void ConstantBufferDX11::Copy(std::shared_ptr<Buffer> other)
+void ConstantBufferDX11::Copy(std::shared_ptr<IBuffer> other)
 {
 	Copy(std::dynamic_pointer_cast<ConstantBuffer>(other));
 }

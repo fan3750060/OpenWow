@@ -4,8 +4,9 @@
 #include "WDL_Node_Material.h"
 
 WDL_Node_Material::WDL_Node_Material() :
-	MaterialDebug(_RenderDevice)
+	MaterialDebug(_RenderDevice->CreateMaterial())
 {
+#ifdef IS_DX11
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
@@ -18,6 +19,7 @@ WDL_Node_Material::WDL_Node_Material() :
 	SetDiffuseColor(vec4(0, 0.2, 0.8, 1.0));
 	SetShader(Shader::VertexShader, g_pVertexShader);
 	SetShader(Shader::PixelShader, g_pPixelShader);
+#endif
 }
 
 WDL_Node_Material::~WDL_Node_Material()

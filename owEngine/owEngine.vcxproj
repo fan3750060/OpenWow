@@ -33,6 +33,9 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="Materials\MaterialDebug.cpp" />
+    <ClCompile Include="Materials\MaterialTextured.cpp" />
+    <ClCompile Include="Materials\MaterialWrapper.cpp" />
     <ClCompile Include="MeshWrapper.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -76,6 +79,9 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Loader.h" />
+    <ClInclude Include="Materials\MaterialDebug.h" />
+    <ClInclude Include="Materials\MaterialTextured.h" />
+    <ClInclude Include="Materials\MaterialWrapper.h" />
     <ClInclude Include="MeshWrapper.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextureLoader.h" />

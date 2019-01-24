@@ -4,11 +4,11 @@
 #include "M2_Material.h"
 
 M2_Material::M2_Material(std::vector<std::weak_ptr<const CM2_Part_Texture>> m2Textures) :
-	Material(_RenderDevice)
+	MaterialWrapper(_RenderDevice->CreateMaterial())
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
+	CreateConstantBuffer(m_pProperties);
 	memset(m_pProperties, 0x00, sizeof(MaterialProperties));
 
 
@@ -50,19 +50,19 @@ M2_Material::~M2_Material()
 void M2_Material::SetAnimated(bool value)
 {
 	m_pProperties->gIsAnimated = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetColorEnable(bool value)
 {
 	m_pProperties->gColorEnable = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetColor(vec4 value)
 {
 	m_pProperties->gColor = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetBones(const std::vector<mat4>& bones)
@@ -71,57 +71,54 @@ void M2_Material::SetBones(const std::vector<mat4>& bones)
 	{
 		m_pProperties->Bones[i] = bones[i];
 	}
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetMaxInfluences(uint32 value)
 {
 	m_pProperties->gBonesMaxInfluences = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetBlendMode(uint32 value)
 {
 	m_pProperties->gBlendMode = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetNewShader(uint32 value)
 {
 	m_pProperties->gShader = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetTextureWeightEnable(bool value)
 {
 	m_pProperties->gTextureWeightEnable = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetTextureWeight(float value)
 {
 	m_pProperties->gTextureWeight = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetTextureAnimEnable(bool value)
 {
 	m_pProperties->gTextureAnimEnable = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void M2_Material::SetTextureAnimMatrix(cmat4 value)
 {
 	m_pProperties->gTextureAnimMatrix = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 //--
 
 void M2_Material::UpdateConstantBuffer() const
 {
-	if (m_pConstantBuffer)
-	{
-		m_pConstantBuffer->Set(*m_pProperties);
-	}
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
 }

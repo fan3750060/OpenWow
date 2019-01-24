@@ -1,6 +1,6 @@
 #pragma once
 
-#define IS_DX11 1
+//#define IS_DX11 1
 
 class Application : public Object
 {

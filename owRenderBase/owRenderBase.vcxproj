@@ -83,10 +83,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="MaterialBase.cpp" />
-    <ClCompile Include="MaterialDebug.cpp" />
-    <ClCompile Include="MaterialTextured.cpp" />
+    <ClCompile Include="MaterialImpl.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderDevice.cpp" />
@@ -109,9 +106,7 @@
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="CPUAccess.h" />
     <ClInclude Include="DepthStencilState.h" />
-    <ClInclude Include="MaterialBase.h" />
-    <ClInclude Include="MaterialDebug.h" />
-    <ClInclude Include="MaterialTextured.h" />
+    <ClInclude Include="MaterialImpl.h" />
     <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="InputSemantic.h" />
     <ClInclude Include="Light.h" />

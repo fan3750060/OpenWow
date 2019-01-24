@@ -12,7 +12,7 @@ public:
 	virtual void Copy(std::shared_ptr<ConstantBuffer> other) override;
 
 protected:
-	virtual void Copy(std::shared_ptr<Buffer> other) override;
+	virtual void Copy(std::shared_ptr<IBuffer> other) override;
 	void Set(const void* data, size_t size) override;
 
 private:

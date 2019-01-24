@@ -5,8 +5,8 @@ class CMapShared
 public:
 	CMapShared();
 
-	std::shared_ptr<Buffer> BufferTextureCoordDetail;
-	std::shared_ptr<Buffer> BufferTextureCoordAlpha;
+	std::shared_ptr<IBuffer> BufferTextureCoordDetail;
+	std::shared_ptr<IBuffer> BufferTextureCoordAlpha;
 
 	static std::string getMapFolder(const DBC_MapRecord& _map);
 

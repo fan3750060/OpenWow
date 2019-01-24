@@ -4,11 +4,11 @@
 #include "LiquidMaterial.h"
 
 LiquidMaterial::LiquidMaterial() :
-	Material(_RenderDevice)
+	MaterialWrapper(_RenderDevice->CreateMaterial())
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(*m_pProperties);
+	CreateConstantBuffer(m_pProperties);
 
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
@@ -43,33 +43,30 @@ LiquidMaterial::~LiquidMaterial()
 void LiquidMaterial::SetShallowAlpha(float value)
 {
 	m_pProperties->gShallowAlpha = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void LiquidMaterial::SetDeepAlpha(float value)
 {
 	m_pProperties->gDeepAlpha = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void LiquidMaterial::SetColorLight(vec3 value)
 {
 	m_pProperties->gColorLight = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 void LiquidMaterial::SetColorDark(vec3 value)
 {
 	m_pProperties->gColorDark = value;
-	m_Dirty = true;
+	MarkConstantBufferDirty();
 }
 
 //--
 
 void LiquidMaterial::UpdateConstantBuffer() const
 {
-	if (m_pConstantBuffer)
-	{
-		m_pConstantBuffer->Set(*m_pProperties);
-	}
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
 }

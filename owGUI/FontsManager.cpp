@@ -168,7 +168,7 @@ std::shared_ptr<Font> FontsManager::CreateAction(cstring _nameAndSize)
 	}
 
 
-    std::shared_ptr<Buffer> __vb = m_RenderDevice->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
+    std::shared_ptr<IBuffer> __vb = m_RenderDevice->createVertexBuffer(fontVertices.size() * sizeof(Texture_Vertex), fontVertices.data());
 
 	//
 

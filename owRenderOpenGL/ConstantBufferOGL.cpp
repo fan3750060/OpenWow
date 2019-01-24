@@ -59,7 +59,7 @@ void ConstantBufferOGL::Copy(std::shared_ptr<ConstantBuffer> other)
 	}
 }
 
-void ConstantBufferOGL::Copy(std::shared_ptr<Buffer> other)
+void ConstantBufferOGL::Copy(std::shared_ptr<IBuffer> other)
 {
 	Copy(std::dynamic_pointer_cast<ConstantBuffer>(other));
 }

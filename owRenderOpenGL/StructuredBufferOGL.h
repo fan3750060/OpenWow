@@ -18,7 +18,7 @@ public:
 	virtual void Clear(); // Clear the contents of the buffer.
 
 protected:
-	virtual void Copy(std::shared_ptr<Buffer> other);
+	virtual void Copy(std::shared_ptr<IBuffer> other);
 	virtual void SetData(void* data, size_t elementSize, size_t offset, size_t numElements);
 
 	void Commit(); // Commit the data from system memory to device memory.

@@ -1,6 +1,6 @@
 #pragma once
 
-class LiquidMaterial : public Material
+class LiquidMaterial : public MaterialWrapper
 {
 public:
 	LiquidMaterial();

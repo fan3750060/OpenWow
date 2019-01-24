@@ -209,7 +209,7 @@ void CM2_RibbonEmitters::Render(cmat4 _world)
 
 
 	// Vertex buffer
-	/*std::shared_ptr<Buffer> __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
+	/*std::shared_ptr<IBuffer> __vb = _Render->r.createVertexBuffer(vertices.size() * sizeof(RibbonVertex), vertices.data());
 
 	// Geometry
 	std::shared_ptr<IMesh> __geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_PT);

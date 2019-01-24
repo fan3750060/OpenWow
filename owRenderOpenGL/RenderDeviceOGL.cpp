@@ -5,6 +5,7 @@
 #include "ConstantBufferOGL.h"
 #include "StructuredBufferOGL.h"
 #include "RenderTargetOGL.h"
+#include "MaterialOGL.h"
 #include "MeshOGL.h"
 #include "ShaderOGL.h"
 #include "TextureOGL.h"
@@ -198,55 +199,55 @@ cstring RenderDeviceOGL::GetDeviceName() const
 	return m_DeviceName;
 }
 
-std::shared_ptr<Buffer> RenderDeviceOGL::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceOGL::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceOGL::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr <Buffer> RenderDeviceOGL::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr <IBuffer> RenderDeviceOGL::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
 {
-	std::shared_ptr<Buffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
+	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceOGL::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferOGL>(GL_ELEMENT_ARRAY_BUFFER, data, count, (UINT)sizeof(uint16));
+	std::shared_ptr <IBuffer> buffer = std::make_shared<BufferOGL>(GL_ELEMENT_ARRAY_BUFFER, data, count, (UINT)sizeof(uint16));
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-std::shared_ptr<Buffer> RenderDeviceOGL::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
 {
-	std::shared_ptr <Buffer> buffer = std::make_shared<BufferOGL>(GL_ELEMENT_ARRAY_BUFFER, data, count, (UINT)sizeof(uint32));
+	std::shared_ptr <IBuffer> buffer = std::make_shared<BufferOGL>(GL_ELEMENT_ARRAY_BUFFER, data, count, (UINT)sizeof(uint32));
 	m_Buffers.push_back(buffer);
 
 	return buffer;
 }
 
-void RenderDeviceOGL::DestroyBuffer(std::shared_ptr<Buffer> buffer)
+void RenderDeviceOGL::DestroyBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	BufferList::iterator iter = std::find(m_Buffers.begin(), m_Buffers.end(), buffer);
 	if (iter != m_Buffers.end())
@@ -255,12 +256,12 @@ void RenderDeviceOGL::DestroyBuffer(std::shared_ptr<Buffer> buffer)
 	}
 }
 
-void RenderDeviceOGL::DestroyVertexBuffer(std::shared_ptr<Buffer> buffer)
+void RenderDeviceOGL::DestroyVertexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	DestroyBuffer(buffer);
 }
 
-void RenderDeviceOGL::DestroyIndexBuffer(std::shared_ptr<Buffer> buffer)
+void RenderDeviceOGL::DestroyIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	DestroyBuffer(buffer);
 }
@@ -421,6 +422,22 @@ void RenderDeviceOGL::DestroyTexture(std::shared_ptr<Texture> texture)
 	if (iter2 != m_TexturesByName.end())
 	{
 		m_TexturesByName.erase(iter2);
+	}
+}
+
+std::shared_ptr<Material> RenderDeviceOGL::CreateMaterial()
+{
+	std::shared_ptr<Material> pMaterial = std::make_shared<MaterialOGL>(this);
+	m_Materials.push_back(pMaterial);
+	return pMaterial;
+}
+
+void RenderDeviceOGL::DestroyMaterial(std::shared_ptr<Material> material)
+{
+	MaterialList::iterator iter = std::find(m_Materials.begin(), m_Materials.end(), material);
+	if (iter != m_Materials.end())
+	{
+		m_Materials.erase(iter);
 	}
 }
 

@@ -21,12 +21,12 @@ MeshDX11::MeshDX11(ID3D11Device2* pDevice)
 MeshDX11::~MeshDX11()
 {}
 
-void MeshDX11::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<Buffer> buffer)
+void MeshDX11::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer)
 {
 	m_VertexBuffers[binding] = buffer;
 }
 
-void MeshDX11::SetIndexBuffer(std::shared_ptr<Buffer> buffer)
+void MeshDX11::SetIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	m_pIndexBuffer = buffer;
 }

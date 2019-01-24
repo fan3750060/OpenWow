@@ -3,9 +3,9 @@
 // General
 #include "ConstantBuffer.h"
 
-Buffer::BufferType ConstantBuffer::GetType() const
+IBuffer::BufferType ConstantBuffer::GetType() const
 {
-	return Buffer::ConstantBuffer;
+	return IBuffer::ConstantBuffer;
 }
 
 uint32 ConstantBuffer::GetElementCount() const

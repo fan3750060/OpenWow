@@ -1,6 +1,6 @@
 #pragma once
 
-class UI_Color_Material : public Material
+class UI_Color_Material : public MaterialWrapper
 {
 public:
 	UI_Color_Material();

@@ -11,9 +11,7 @@
 
 // Standart materials
 #include "../owRenderBase/Material.h"
-#include "../owRenderBase/MaterialBase.h"
-#include "../owRenderBase/MaterialDebug.h"
-#include "../owRenderBase/MaterialTextured.h"
+#include "../owRenderBase/MaterialImpl.h"
 
 #include "../owRenderBase/Light.h"
 #include "../owRenderBase/Mesh.h"

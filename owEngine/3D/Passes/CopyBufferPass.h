@@ -2,7 +2,7 @@
 
 #include "AbstractPass.h"
 
-class Buffer;
+class IBuffer;
 
 /**
  * A render pass that copies a GPU buffer to another.
@@ -12,12 +12,12 @@ class Buffer;
 class CopyBufferPass : public AbstractPass
 {
 public:
-	CopyBufferPass(std::shared_ptr<Buffer> destinationBuffer, std::shared_ptr<Buffer> sourceBuffer);
+	CopyBufferPass(std::shared_ptr<IBuffer> destinationBuffer, std::shared_ptr<IBuffer> sourceBuffer);
 	virtual ~CopyBufferPass();
 
 	virtual void Render(RenderEventArgs& e);
 
 private:
-	std::shared_ptr<Buffer> m_SourceBuffer;
-	std::shared_ptr<Buffer> m_DestinationBuffer;
+	std::shared_ptr<IBuffer> m_SourceBuffer;
+	std::shared_ptr<IBuffer> m_DestinationBuffer;
 };

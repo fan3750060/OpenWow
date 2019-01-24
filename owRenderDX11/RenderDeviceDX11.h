@@ -13,18 +13,18 @@ public:
 	virtual cstring GetDeviceName() const;
 
 	// Inherited from IRenderDevice
-	virtual std::shared_ptr<Buffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride);
-	virtual std::shared_ptr<Buffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride);
-	virtual std::shared_ptr<Buffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride);
-	virtual std::shared_ptr<Buffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride);
-	virtual std::shared_ptr<Buffer> CreateUInt16IndexBuffer(const uint16* data, uint32 count);
-	virtual std::shared_ptr<Buffer> CreateUInt32IndexBuffer(const uint32* data, uint32 count);
+	virtual std::shared_ptr<IBuffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride);
+	virtual std::shared_ptr<IBuffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride);
+	virtual std::shared_ptr<IBuffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride);
+	virtual std::shared_ptr<IBuffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride);
+	virtual std::shared_ptr<IBuffer> CreateUInt16IndexBuffer(const uint16* data, uint32 count);
+	virtual std::shared_ptr<IBuffer> CreateUInt32IndexBuffer(const uint32* data, uint32 count);
 	virtual std::shared_ptr<ConstantBuffer> CreateConstantBuffer(const void* data, size_t size);
 	virtual std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false);
 
-	virtual void DestroyBuffer(std::shared_ptr<Buffer> buffer);
-	virtual void DestroyVertexBuffer(std::shared_ptr<Buffer> buffer);
-	virtual void DestroyIndexBuffer(std::shared_ptr<Buffer> buffer);
+	virtual void DestroyBuffer(std::shared_ptr<IBuffer> buffer);
+	virtual void DestroyVertexBuffer(std::shared_ptr<IBuffer> buffer);
+	virtual void DestroyIndexBuffer(std::shared_ptr<IBuffer> buffer);
 	virtual void DestroyConstantBuffer(std::shared_ptr<ConstantBuffer> buffer);
 	virtual void DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> buffer);
 
@@ -43,6 +43,9 @@ public:
 	virtual std::shared_ptr<Texture> GetDefaultTexture() const;
 
 	virtual void DestroyTexture(std::shared_ptr<Texture> texture);
+
+	virtual std::shared_ptr<Material> CreateMaterial();
+	virtual void DestroyMaterial(std::shared_ptr<Material> material);
 
 	virtual std::shared_ptr<Query> CreateQuery(Query::QueryType queryType = Query::QueryType::Timer, uint8_t numBuffers = 3);
 	virtual void DestoryQuery(std::shared_ptr<Query> query);
@@ -74,7 +77,7 @@ private:
 	typedef std::vector< std::shared_ptr<Scene> > SceneList;
 	SceneList m_Scenes;
 
-	typedef std::vector< std::shared_ptr<Buffer> > BufferList;
+	typedef std::vector< std::shared_ptr<IBuffer> > BufferList;
 	BufferList m_Buffers;
 
 	typedef std::vector< std::shared_ptr<IMesh> > MeshList;
@@ -90,6 +93,9 @@ private:
 	TextureList m_Textures;
 	TextureMap m_TexturesByName;
 	std::shared_ptr<Texture> m_pDefaultTexture;
+
+	typedef std::vector< std::shared_ptr<Material> > MaterialList;
+	MaterialList m_Materials;
 
 	typedef std::vector< std::shared_ptr<RenderTarget> > RenderTargetList;
 	RenderTargetList m_RenderTargets;

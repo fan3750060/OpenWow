@@ -85,7 +85,7 @@ void BufferDX11::UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter
 	}
 }
 
-void BufferDX11::Copy(std::shared_ptr<Buffer> other)
+void BufferDX11::Copy(std::shared_ptr<IBuffer> other)
 {
 	std::shared_ptr<BufferDX11> srcBuffer = std::dynamic_pointer_cast<BufferDX11>(other);
 
@@ -100,21 +100,21 @@ void BufferDX11::Copy(std::shared_ptr<Buffer> other)
 	}
 }
 
-Buffer::BufferType BufferDX11::GetType() const
+IBuffer::BufferType BufferDX11::GetType() const
 {
 	switch (m_BindFlags)
 	{
 	case D3D11_BIND_VERTEX_BUFFER:
-		return Buffer::VertexBuffer;
+		return IBuffer::VertexBuffer;
 		break;
 	case D3D11_BIND_INDEX_BUFFER:
-		return Buffer::IndexBuffer;
+		return IBuffer::IndexBuffer;
 		break;
 	case D3D11_BIND_CONSTANT_BUFFER:
-		return Buffer::ConstantBuffer;
+		return IBuffer::ConstantBuffer;
 		break;
 	default:
-		return Buffer::Unknown;
+		return IBuffer::Unknown;
 		break;
 	}
 }

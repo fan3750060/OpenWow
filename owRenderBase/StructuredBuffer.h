@@ -6,7 +6,7 @@
 
 #include "Buffer.h"
 
-class StructuredBuffer : public Buffer
+class StructuredBuffer : public IBuffer
 {
 public:
 	// Bind the buffer for rendering.

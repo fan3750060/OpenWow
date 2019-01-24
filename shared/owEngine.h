@@ -10,6 +10,12 @@
 
 // Base
 #include "../owEngine/Application.h"
+
+//
+// Wrappers
+//
+#include "../owEngine/Materials/MaterialWrapper.h"
+#include "../owEngine/Materials/MaterialDebug.h"
 #include "../owEngine/MeshWrapper.h"
 
 //

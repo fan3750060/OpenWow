@@ -39,6 +39,7 @@
       <Filter>Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="SamplerStateOGL.cpp" />
+    <ClCompile Include="MaterialOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -86,6 +87,7 @@
       <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="SamplerStateOGL.h" />
+    <ClInclude Include="MaterialOGL.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
