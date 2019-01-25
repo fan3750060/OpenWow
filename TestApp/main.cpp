@@ -147,7 +147,7 @@ int main(int argumentCount, char* arguments[])
 		g_Camera.SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		g_Camera.SetRotate(vec3(0, 0, 0));
 		g_Camera.SetViewport(viewPort);
-		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 2000.0f);
+		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 4000.0f);
 
 		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);

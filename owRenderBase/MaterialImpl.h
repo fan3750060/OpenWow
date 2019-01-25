@@ -21,10 +21,11 @@ public:
 	virtual void Bind() const;
 	virtual void Unbind() const;
 
-	virtual void CreateConstantBuffer(void* _data);
-	virtual void UpdateConstantBuffer() const;
-	virtual void UpdateConstantBuffer(void* _data) const;
-	virtual void MarkConstantBufferDirty();
+	virtual void SetWrapper(std::weak_ptr<Material> _wrapper) override;
+	virtual void CreateConstantBuffer(const void* data, size_t size) override;
+	virtual void UpdateConstantBuffer() const override;
+	virtual void UpdateConstantBuffer(const void* _data, size_t size) const override;
+	virtual void MarkConstantBufferDirty() override;
 
 protected:
 	ShaderMap                        m_Shaders;
@@ -32,6 +33,7 @@ protected:
 	TextureMap                       m_Textures;
 	std::shared_ptr<ConstantBuffer>  m_pConstantBuffer;
 
+	std::weak_ptr<Material>          m_Wrapper;
 	IRenderDevice*                   m_RenderDevice;
 	mutable bool                     m_Dirty;
 };

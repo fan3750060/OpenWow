@@ -69,6 +69,7 @@ void SkyManager::UpdateCamera(const Camera* camera)
 
 	SetTranslate(camera->GetTranslation());
 	UpdateLocalTransform();
+	UpdateWorldTransform();
 }
 
 
@@ -192,6 +193,7 @@ void SkyManager::InitBuffer()
 
 	// Material
 	std::shared_ptr<Material> material = std::make_shared<Sky_Material>();
+	material->SetWrapper(material);
 	__geom->SetMaterial(material);
 
 	AddMesh(__geom);

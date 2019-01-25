@@ -18,6 +18,7 @@ ADT_MDX_Instance::ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDX
 		rotate.y = rotate.y - glm::half_pi<float>();
 		SetRotation(vec3(rotate.z, rotate.y, rotate.x));
 		SetScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f));
+		UpdateLocalTransform();
 	}
 
 	InitAnimator();

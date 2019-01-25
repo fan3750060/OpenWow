@@ -66,7 +66,9 @@ void MaterialImpl::Bind() const
 {
 	if (m_Dirty)
 	{
-		UpdateConstantBuffer();
+		std::shared_ptr<Material> wrapper = m_Wrapper.lock();
+		if (wrapper)
+			wrapper->UpdateConstantBuffer();
 		m_Dirty = false;
 	}
 
@@ -84,7 +86,7 @@ void MaterialImpl::Bind() const
 				pTexture->Bind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
 			}
 
-			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("MaterialImpl");
+			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
 			if (materialParameter.IsValid() && m_pConstantBuffer != nullptr)
 			{
 				materialParameter.Set<ConstantBuffer>(m_pConstantBuffer);
@@ -108,7 +110,7 @@ void MaterialImpl::Unbind() const
 				pTexture->UnBind((uint32_t)texture.first, pShader, ShaderParameter::Type::Texture);
 			}
 
-			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("MaterialImpl");
+			ShaderParameter& materialParameter = pShader->GetShaderParameterByName("Material");
 			if (materialParameter.IsValid() && m_pConstantBuffer != nullptr)
 			{
 				materialParameter.UnBind();
@@ -121,9 +123,14 @@ void MaterialImpl::Unbind() const
 
 //--
 
-void MaterialImpl::CreateConstantBuffer(void* _data)
+void MaterialImpl::SetWrapper(std::weak_ptr<Material> _wrapper)
 {
-	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(_data);
+	m_Wrapper = _wrapper;
+}
+
+void MaterialImpl::CreateConstantBuffer(const void* data, size_t size)
+{
+	m_pConstantBuffer = m_RenderDevice->CreateConstantBuffer(data, size);
 }
 
 void MaterialImpl::UpdateConstantBuffer() const
@@ -131,11 +138,11 @@ void MaterialImpl::UpdateConstantBuffer() const
 	// It's empty
 }
 
-void MaterialImpl::UpdateConstantBuffer(void* _data) const
+void MaterialImpl::UpdateConstantBuffer(const void* _data, size_t size) const
 {
 	if (m_pConstantBuffer)
 	{
-		m_pConstantBuffer->Set(_data);
+		m_pConstantBuffer->Set(_data, size);
 	}
 }
 

@@ -8,7 +8,7 @@ M2_Material::M2_Material(std::vector<std::weak_ptr<const CM2_Part_Texture>> m2Te
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	CreateConstantBuffer(m_pProperties);
+	CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 	memset(m_pProperties, 0x00, sizeof(MaterialProperties));
 
 
@@ -120,5 +120,5 @@ void M2_Material::SetTextureAnimMatrix(cmat4 value)
 
 void M2_Material::UpdateConstantBuffer() const
 {
-	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 }

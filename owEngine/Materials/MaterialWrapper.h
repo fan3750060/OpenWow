@@ -16,9 +16,10 @@ public:
 	virtual void Bind() const;
 	virtual void Unbind() const;
 
-	virtual void CreateConstantBuffer(void* _data);
+	virtual void SetWrapper(std::weak_ptr<Material> _wrapper);
+	virtual void CreateConstantBuffer(const void* data, size_t size);
 	virtual void UpdateConstantBuffer() const;
-	virtual void UpdateConstantBuffer(void* _data) const;
+	virtual void UpdateConstantBuffer(const void* _data, size_t size) const;
 	virtual void MarkConstantBufferDirty();
 
 private:

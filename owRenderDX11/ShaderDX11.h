@@ -10,6 +10,13 @@ public:
 	virtual bool LoadShaderFromString(ShaderType type, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 	virtual bool LoadShaderFromFile(ShaderType type, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 
+	ShaderParameter& GetShaderParameterByName(cstring name) const;
+
+	// Check to see if this shader supports a given semantic.
+	virtual bool                 HasSemantic(const BufferBinding& binding) const;
+	virtual const InputSemantic& GetSemantic(const BufferBinding& binding) const;
+	virtual UINT                 GetSemanticSlot(const BufferBinding& binding) const;
+
 	// Query for the latest supported shader profile
 	virtual std::string GetLatestProfile(ShaderType type);
 

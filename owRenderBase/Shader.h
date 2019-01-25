@@ -65,13 +65,13 @@ public:
 	 * is not found in the shader, then this function will return an invalid shader parameter.
 	 * You can check for validity using the ShaderParameter::IsValid method.
 	 */
-	virtual ShaderParameter& GetShaderParameterByName(cstring name) const;
+	virtual ShaderParameter& GetShaderParameterByName(cstring name) const = 0;
 	
 
 	// Check to see if this shader supports a given semantic.
-	virtual bool                 HasSemantic(const BufferBinding& binding) const;
-	virtual const InputSemantic& GetSemantic(const BufferBinding& binding) const;
-	virtual UINT                 GetSemanticSlot(const BufferBinding& binding) const;
+	virtual bool                 HasSemantic(const BufferBinding& binding) const = 0;
+	virtual const InputSemantic& GetSemantic(const BufferBinding& binding) const = 0;
+	virtual UINT                 GetSemanticSlot(const BufferBinding& binding) const = 0;
 
 	/**
 	 * Bind this shader for use in the rendering pipeline.

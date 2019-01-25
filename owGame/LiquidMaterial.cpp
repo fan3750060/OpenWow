@@ -8,7 +8,7 @@ LiquidMaterial::LiquidMaterial() :
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	CreateConstantBuffer(m_pProperties);
+	CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
@@ -68,5 +68,5 @@ void LiquidMaterial::SetColorDark(vec3 value)
 
 void LiquidMaterial::UpdateConstantBuffer() const
 {
-	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 }

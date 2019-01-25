@@ -16,7 +16,7 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	(*m_pProperties) = MaterialProperties();
 	(*m_pProperties).m_BlendMode = m_Proto.blendMode;
-	CreateConstantBuffer(m_pProperties);
+	CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(

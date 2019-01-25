@@ -1,4 +1,5 @@
-#version 330
+#version 440
+#extension GL_ARB_explicit_uniform_location : enable
 
 // Vertex attrib
 layout(location = 0) in vec3 POSITION;

@@ -19,6 +19,7 @@ CM2_Skin_Batch::CM2_Skin_Batch(const std::weak_ptr<const M2> _parentM2, std::sha
 void CM2_Skin_Batch::PostInit()
 {
 	m_TestMaterial = std::make_shared<M2_Material>(m_Textures);
+	m_TestMaterial->SetWrapper(m_TestMaterial);
 
 	SetMaterial(m_TestMaterial);
 }

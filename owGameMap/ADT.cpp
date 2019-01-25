@@ -32,6 +32,7 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 		SetTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
 
 		UpdateLocalTransform();
+		UpdateWorldTransform();
 
 		BoundingBox bbox
 		(

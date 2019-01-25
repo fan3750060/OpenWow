@@ -8,7 +8,7 @@ UI_Color_Material::UI_Color_Material() :
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	CreateConstantBuffer(m_pProperties);
+	CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
@@ -40,5 +40,5 @@ void UI_Color_Material::SetColor(vec4 color)
 
 void UI_Color_Material::UpdateConstantBuffer() const
 {
-	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 }

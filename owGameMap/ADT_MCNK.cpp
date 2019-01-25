@@ -71,6 +71,7 @@ bool ADT_MCNK::Load()
 		// Set translate
 		SetTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
 		UpdateLocalTransform();
+		UpdateWorldTransform();
 		// Bounds
 		BoundingBox bbox
 		(
@@ -342,6 +343,7 @@ bool ADT_MCNK::Load()
 
 	// Material
 	std::shared_ptr<ADT_MCNK_Material> mat = std::make_shared<ADT_MCNK_Material>();
+	mat->SetWrapper(mat);
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
 		mat->SetTexture(i, m_DiffuseTextures[i]); // DXT1
@@ -356,7 +358,7 @@ bool ADT_MCNK::Load()
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
-		//__geomDefault->AddVertexBuffer(BufferBinding("COLOR", 0), mccvBuffer);
+		__geomDefault->AddVertexBuffer(BufferBinding("COLOR", 0), mccvBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
 		__geomDefault->SetIndexBuffer(__ibHigh);

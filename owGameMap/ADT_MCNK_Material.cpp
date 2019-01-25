@@ -9,7 +9,7 @@ ADT_MCNK_Material::ADT_MCNK_Material() :
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
-	CreateConstantBuffer(m_pProperties);
+	CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 
 	// CreateShaders
 #ifdef  IS_DX11
@@ -66,5 +66,5 @@ void ADT_MCNK_Material::SetLayersCnt(uint32 value)
 
 void ADT_MCNK_Material::UpdateConstantBuffer() const
 {
-	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 }

@@ -6,6 +6,9 @@
 // Forward declarations
 DXGI_FORMAT GetDXGIFormat(const D3D11_SIGNATURE_PARAMETER_DESC& paramDesc);
 
+static ShaderParameter gs_InvalidShaderParameter;
+static InputSemantic gs_InvalidShaderSemantic;
+
 ShaderDX11::ShaderDX11(ID3D11Device2* pDevice)
 	: m_pDevice(pDevice)
 {
@@ -368,6 +371,59 @@ bool ShaderDX11::LoadShaderFromFile(ShaderType shaderType, cstring fileName, con
 	}
 
 	return result;
+}
+
+ShaderParameter& ShaderDX11::GetShaderParameterByName(cstring name) const
+{
+	ParameterMap::const_iterator iter = m_ShaderParameters.find(name);
+	if (iter != m_ShaderParameters.end())
+	{
+		return *(iter->second);
+	}
+
+	//assert1(false);
+	return gs_InvalidShaderParameter;
+}
+
+bool ShaderDX11::HasSemantic(const BufferBinding& binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+const InputSemantic& ShaderDX11::GetSemantic(const BufferBinding& binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
+		{
+			return it.first;
+		}
+	}
+
+	assert1(false);
+	return gs_InvalidShaderSemantic;
+}
+
+UINT ShaderDX11::GetSemanticSlot(const BufferBinding& binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
+		{
+			return it.second;
+		}
+	}
+
+	assert1(false);
+	return UINT_MAX;
 }
 
 void ShaderDX11::Bind()

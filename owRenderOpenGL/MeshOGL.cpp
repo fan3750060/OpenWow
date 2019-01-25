@@ -86,7 +86,7 @@ bool MeshOGL::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer
 		if (m_bIsDirty)
 		{
 			Commit(pVS);
-			m_bIsDirty = false;
+			//m_bIsDirty = false;
 		}
 	}
 

@@ -9,7 +9,7 @@ MaterialDebug::MaterialDebug(std::shared_ptr<Material> _material)
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
 	*m_pProperties = MaterialProperties();
 
-	MaterialWrapper::CreateConstantBuffer(m_pProperties);
+	MaterialWrapper::CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 }
 
 MaterialDebug::~MaterialDebug()
@@ -36,5 +36,5 @@ void MaterialDebug::SetDiffuseColor(cvec4 diffuse)
 
 void MaterialDebug::UpdateConstantBuffer() const
 {
-	MaterialWrapper::UpdateConstantBuffer(m_pProperties);
+	MaterialWrapper::UpdateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
 }

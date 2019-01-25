@@ -5,7 +5,7 @@
 
 
 // A material class is used to wrap the shaders and to manage the shader parameters.
-class Material : public Object
+class Material : public Object, public std::enable_shared_from_this<Material>
 {
 public:
 	typedef std::map<Shader::ShaderType, std::shared_ptr<Shader> > ShaderMap;
@@ -22,8 +22,9 @@ public:
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
 
-	virtual void CreateConstantBuffer(void* _data) = 0;
+	virtual void SetWrapper(std::weak_ptr<Material> _wrapper) = 0;
+	virtual void CreateConstantBuffer(const void* data, size_t size) = 0;
 	virtual void UpdateConstantBuffer() const = 0;
-	virtual void UpdateConstantBuffer(void* _data) const = 0;
+	virtual void UpdateConstantBuffer(const void* _data, size_t size) const = 0;
 	virtual void MarkConstantBufferDirty() = 0;
 };

@@ -5,7 +5,8 @@
 
 MaterialWrapper::MaterialWrapper(std::shared_ptr<Material> _materal)
 	: m_Material(_materal)
-{}
+{
+}
 
 MaterialWrapper::~MaterialWrapper()
 {
@@ -46,9 +47,14 @@ void MaterialWrapper::Unbind() const
 	m_Material->Unbind();
 }
 
-void MaterialWrapper::CreateConstantBuffer(void * _data)
+void MaterialWrapper::SetWrapper(std::weak_ptr<Material> _wrapper)
 {
-	m_Material->CreateConstantBuffer(_data);
+	m_Material->SetWrapper(weak_from_this());
+}
+
+void MaterialWrapper::CreateConstantBuffer(const void* data, size_t size)
+{
+	m_Material->CreateConstantBuffer(data, size);
 }
 
 void MaterialWrapper::UpdateConstantBuffer() const
@@ -56,9 +62,9 @@ void MaterialWrapper::UpdateConstantBuffer() const
 	m_Material->UpdateConstantBuffer();
 }
 
-void MaterialWrapper::UpdateConstantBuffer(void * _data) const
+void MaterialWrapper::UpdateConstantBuffer(const void* _data, size_t size) const
 {
-	m_Material->UpdateConstantBuffer(_data);
+	m_Material->UpdateConstantBuffer(_data, size);
 }
 
 void MaterialWrapper::MarkConstantBufferDirty()

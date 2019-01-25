@@ -126,11 +126,13 @@ void SceneNode::SetLocalTransform(cmat4 localTransform)
 
 mat4 SceneNode::GetWorldTransfom() const
 {
+	assert1(!m_IsWorldDirty);
 	return m_WorldTransform;
 }
 
 mat4 SceneNode::GetInverseWorldTransform() const
 {
+	assert1(!m_IsWorldDirty);
 	return m_InverseWorldTransform;
 }
 

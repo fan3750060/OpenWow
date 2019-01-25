@@ -51,6 +51,7 @@ std::string RecursionInclude(std::shared_ptr<IFile> f)
 
 // This parameter will be returned if an invalid shader parameter is requested.
 static ShaderParameter gs_InvalidShaderParameter;
+static InputSemantic gs_InvalidShaderSemantic;
 
 GLenum GLTranslateShaderType(Shader::ShaderType _type)
 {
@@ -185,6 +186,7 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 	m_GLObj = glCreateShaderProgramv(GLTranslateShaderType(shaderType), 1, &source);
 	assert1(m_GLObj != 0);
 	OGLCheckError();
+
 	std::string errMsg;
 	if (false == GetShaderProgramLog(m_GLObj, &errMsg))
 	{
@@ -280,12 +282,77 @@ bool ShaderOGL::LoadShaderFromFile(ShaderType shaderType, cstring fileName, cons
 		// (GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName);
 		glGetActiveUniformBlockName(m_GLObj, j, uniformsBlocksNameMaxLenght, &length, name);
 		OGLCheckError();
-	
-		std::shared_ptr<ShaderParameter> shaderParameter = std::make_shared<ShaderParameter>(name, j, shared_from_this(), ShaderParameter::Type::Buffer);
+
+		GLuint index = glGetUniformBlockIndex(m_GLObj, name);
+		OGLCheckError();
+
+		std::shared_ptr<ShaderParameter> shaderParameter = std::make_shared<ShaderParameter>(name, index, shared_from_this(), ShaderParameter::Type::Buffer);
 		m_ShaderParameters.insert(ParameterMap::value_type(name, shaderParameter));
 	}
 
 	return true;
+}
+
+ShaderParameter& ShaderOGL::GetShaderParameterByName(cstring name) const
+{
+	ParameterMap::const_iterator iter = m_ShaderParameters.find(name);
+	if (iter != m_ShaderParameters.end())
+	{
+		return *(iter->second);
+	}
+
+	//assert1(false);
+	return gs_InvalidShaderParameter;
+}
+
+bool ShaderOGL::HasSemantic(const BufferBinding& binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		std::string newName = binding.Name;
+		if (binding.Name != "POSITION")
+			newName += std::to_string(binding.Index);
+		if (it.first.Name == newName)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+const InputSemantic& ShaderOGL::GetSemantic(const BufferBinding& binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		std::string newName = binding.Name;
+		if (binding.Name != "POSITION")
+			newName += std::to_string(binding.Index);
+		if (it.first.Name == newName)
+		{
+			return it.first;
+		}
+	}
+
+	assert1(false);
+	return gs_InvalidShaderSemantic;
+}
+
+UINT ShaderOGL::GetSemanticSlot(const BufferBinding& binding) const
+{
+	for (auto& it : m_InputSemantics)
+	{
+		std::string newName = binding.Name;
+		if (binding.Name != "POSITION")
+			newName += std::to_string(binding.Index);
+		if (it.first.Name == newName)
+		{
+			return it.second;
+		}
+	}
+
+	assert1(false);
+	return UINT_MAX;
 }
 
 void ShaderOGL::Bind()

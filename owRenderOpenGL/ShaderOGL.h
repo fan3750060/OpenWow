@@ -7,13 +7,19 @@ public:
 	virtual ~ShaderOGL();
 
 	// Shader loading
-	virtual bool LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
-	virtual bool LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
+	bool LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
+	bool LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 
-	virtual void Bind();
-	virtual void UnBind();
+	ShaderParameter& GetShaderParameterByName(cstring name) const;
 
-	virtual void Dispatch(const glm::uvec3& numGroups);
+	virtual bool                 HasSemantic(const BufferBinding& binding) const;
+	virtual const InputSemantic& GetSemantic(const BufferBinding& binding) const;
+	virtual UINT                 GetSemanticSlot(const BufferBinding& binding) const;
+
+	void Bind();
+	void UnBind();
+
+	void Dispatch(const glm::uvec3& numGroups);
 
 public:
 	uint32 GetGLObject();
