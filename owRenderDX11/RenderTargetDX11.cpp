@@ -12,7 +12,7 @@ RenderTargetDX11::RenderTargetDX11(ID3D11Device2* pDevice)
 	, m_bCheckValidity(false)
 {
 	m_pDevice->GetImmediateContext2(&m_pDeviceContext);
-	m_Textures.resize((size_t)RenderTarget::AttachmentPoint::NumAttachmentPoints + 1);
+	m_Textures.resize((size_t)IRenderTarget::AttachmentPoint::NumAttachmentPoints + 1);
 	m_StructuredBuffers.resize(8);
 }
 

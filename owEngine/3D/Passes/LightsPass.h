@@ -30,7 +30,7 @@ private:
     Light* m_pCurrentLight;
     uint32_t m_uiLightIndex;
 
-    IRenderDevice* m_RenderDevice;
+    std::weak_ptr<IRenderDevice> m_RenderDevice;
 
     // A material that can be used to render the lights as geometry in the scene.
     std::shared_ptr<Material> m_LightMaterial;

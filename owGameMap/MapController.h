@@ -31,7 +31,7 @@ public: // Getters
 	std::string getFilenameT() const { return m_MapFilenameT; }
 	const DBC_MapRecord& GetDBCMap() const { return m_DBC_Map; }
 
-	bool isUncompressedAlpha() const { return m_WDT->getFlags()->Flag_8bitMCAL; }
+	bool isUncompressedAlpha() const { return m_WDT->getFlags().Flag_8bitMCAL; }
 	bool isTileBased() const { return m_WDT->MapHasTiles(); }
 	const std::shared_ptr<ADT_WMO_Instance> getGlobalInstance() const { return m_WDT->GetGlobalWMOInstance(); }
 	int GetCurrentX() const { return m_CurrentTileX; }

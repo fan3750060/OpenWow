@@ -98,7 +98,6 @@ bool ADT::Load()
 	}
 
 	// MHDR + size (8)
-	ADT_MHDR header;
 	f->seekRelative(8);
 	{
 		f->readBytes(&header, sizeof(ADT_MHDR));
@@ -230,7 +229,7 @@ bool ADT::Load()
 	}
 
 	// Liquids
-	/*if (header.MH20 != 0)
+	if (header.MH20 != 0)
 	{
 		f->seek(startPos + header.MH20);
 		{
@@ -259,7 +258,7 @@ bool ADT::Load()
 				}
 			}
 		}
-	}*/
+	}
 
 	//-- Load Textures -------------------------------------------------------------------
 
@@ -298,7 +297,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	/*for (auto& it : m_WMOsPlacementInfo)
+	for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
 		if (wmo)
@@ -312,10 +311,10 @@ bool ADT::Load()
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);
 		}
-	}*/
+	}
 
 	//-- MDXs -------------------------------------------------------------------------
-	/*for (auto& it : m_MDXsPlacementInfo)
+	for (auto& it : m_MDXsPlacementInfo)
 	{
 		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
 		if (mdx)
@@ -329,7 +328,7 @@ bool ADT::Load()
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);
 		}
-	}*/
+	}
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

@@ -8,12 +8,12 @@ class RenderWindowOGL : public RenderWindow
 public:
 	typedef RenderWindow base;
 
-	RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
+	RenderWindowOGL(HWND hWnd, std::shared_ptr<RenderDeviceOGL> device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
 	virtual ~RenderWindowOGL();
 
 	virtual void Present();
 
-	virtual std::shared_ptr<RenderTarget> GetRenderTarget();
+	virtual std::shared_ptr<IRenderTarget> GetRenderTarget();
 
 protected:
 	virtual void OnPreRender(RenderEventArgs& e);
@@ -40,5 +40,5 @@ private:
 	bool m_bResizePending;
 
 	//--
-	RenderDeviceOGL* m_RenderDevice;
+	std::weak_ptr<RenderDeviceOGL> m_RenderDevice;
 };

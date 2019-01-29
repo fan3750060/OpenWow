@@ -1,4 +1,5 @@
 #include "..\\_gamedata\\shaders_D3D\\Map\\MapWDL_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
 
 struct VertexShaderInput
 {
@@ -30,7 +31,9 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	return OUT;
 }
 
-float4 PS_main(VertexShaderOutput IN) : SV_TARGET
+PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return Material.DiffuseColor;
+	PixelShaderOutput OUT;
+	OUT.Diffuse = Material.DiffuseColor;
+	return OUT;
 }

@@ -6,6 +6,10 @@
 // General
 #include "ParticleSystem.h"
 
+// Additionals
+#include "ParticleEmitter_Plane.h"
+#include "ParticleEmitter_Sphere.h"
+
 CM2_ParticleSystem::CM2_ParticleSystem(const std::weak_ptr<M2> _parentM2, std::shared_ptr<IFile> f, const SM2_Particle& _proto, cGlobalLoopSeq globals) :
 	m_ParentM2(_parentM2),
 	m_Emitter(nullptr), 
@@ -402,7 +406,6 @@ void CM2_ParticleSystem::Render3D(cmat4 _worldMatrix)
 
 void CM2_ParticleSystem::initTile(vec2 *tc, int num)
 {
-	
 	vec2 a, b;
 	int x = num % cols;
 	int y = num / cols;

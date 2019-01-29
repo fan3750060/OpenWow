@@ -1,5 +1,6 @@
 #include <stdafx.h>
 
+// Include
 #include <Application.h>
 #include <Scene.h>
 #include <SceneNode.h>
@@ -12,7 +13,7 @@ BasePass::BasePass()
 	, m_RenderDevice(_RenderDevice)
 {
 	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
-	m_PerObjectConstantBuffer = m_RenderDevice->CreateConstantBuffer(PerObject());
+	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
 }
 
 BasePass::BasePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
@@ -22,13 +23,13 @@ BasePass::BasePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> 
 	, m_RenderDevice(_RenderDevice)
 {
 	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
-	m_PerObjectConstantBuffer = m_RenderDevice->CreateConstantBuffer(PerObject());
+	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
 }
 
 BasePass::~BasePass()
 {
 	_aligned_free(m_PerObjectData);
-	m_RenderDevice->DestroyConstantBuffer(m_PerObjectConstantBuffer);
+	m_RenderDevice.lock()->DestroyConstantBuffer(m_PerObjectConstantBuffer);
 }
 
 void BasePass::PreRender(RenderEventArgs& e)
@@ -108,11 +109,19 @@ RenderEventArgs& BasePass::GetRenderEventArgs() const
 	return *m_pRenderEventArgs;
 }
 
+void BasePass::BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader)
+{
+	if (shader)
+	{
+		shader->GetShaderParameterByName("PerObject").Set(m_PerObjectConstantBuffer);
+	}
+}
+
 //----------------------------------------------------------------------
 
-IRenderDevice* BasePass::GetRenderDevice() const
+std::shared_ptr<IRenderDevice> BasePass::GetRenderDevice() const
 {
-	return m_RenderDevice;
+	return m_RenderDevice.lock();
 }
 
 std::shared_ptr<PipelineState> BasePass::GetPipelineState() const

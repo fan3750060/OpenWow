@@ -10,6 +10,7 @@
 
 // Base
 #include "../owEngine/Application.h"
+#include "../owEngine/EngineTime.h"
 
 //
 // Wrappers
@@ -45,6 +46,7 @@
 #include "../owEngine/3D/Passes/ClearRenderTargetPass.h"
 #include "../owEngine/3D/Passes/CopyBufferPass.h"
 #include "../owEngine/3D/Passes/CopyTexturePass.h"
+#include "../owEngine/3D/Passes/DeferredPass.h"
 #include "../owEngine/3D/Passes/GenerateMipMapsPass.h"
 #include "../owEngine/3D/Passes/PostprocessPass.h"
 #include "../owEngine/3D/Passes/BeginQueryPass.h"

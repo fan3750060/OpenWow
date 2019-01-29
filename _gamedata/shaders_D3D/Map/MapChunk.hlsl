@@ -1,4 +1,10 @@
 #include "..\\_gamedata\\shaders_D3D\\Map\\MapChunk_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
+
+#ifndef _IS_NORTREND
+#pragma message( "_IS_NORTREND undefined. Default to 0.")
+#define _IS_NORTREND 0 // should be defined by the application.
+#endif
 
 struct VertexShaderInput
 {
@@ -51,58 +57,61 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	return OUT;
 }
 
-float4 PS_main(VertexShaderOutput IN) : SV_TARGET
+PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	float3 layersColor = float3(0,0,0);
 	float3 resultColor = float3(0,0,0);
 	
-	/* NORTREND
+#if _IS_NORTREND == 1
+
+	/* NORTREND */
+	float alphaSumma = 0.0;
+	if (Material.LayersCnt >= 2)
 	{
-		float alphaSumma = 0.0;
-		if (Material.LayersCnt >= 2)
-		{
-			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
-			alphaSumma += alphaCurrent;
-			layersColor += ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
-		}
-		if (Material.LayersCnt >= 3)
-		{
-			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
-			alphaSumma += alphaCurrent;
-			layersColor += ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
-		}
-		if (Material.LayersCnt >= 4)
-		{
-			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
-			alphaSumma += alphaCurrent;
-			layersColor += ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
-		}
-		resultColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
+		alphaSumma += alphaCurrent;
+		layersColor += ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
 	}
-	*/
+	if (Material.LayersCnt >= 3)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
+		alphaSumma += alphaCurrent;
+		layersColor += ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+	}
+	if (Material.LayersCnt >= 4)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
+		alphaSumma += alphaCurrent;
+		layersColor += ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+	}
+	resultColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
 	
+#else
+
 	/* NOT NORTREND */
+	layersColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb;
+	if (Material.LayersCnt >= 2)
 	{
-		layersColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb;
-		if (Material.LayersCnt >= 2)
-		{
-			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
-			layersColor = lerp(layersColor, ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
-		}
-		if (Material.LayersCnt >= 3)
-		{
-			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
-			layersColor = lerp(layersColor, ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
-		}
-		if (Material.LayersCnt >= 4)
-		{
-			float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
-			layersColor = lerp(layersColor, ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
-		}
-		resultColor = layersColor;
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
+		layersColor = lerp(layersColor, ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
 	}
+	if (Material.LayersCnt >= 3)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
+		layersColor = lerp(layersColor, ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+	}
+	if (Material.LayersCnt >= 4)
+	{
+		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
+		layersColor = lerp(layersColor, ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+	}
+	resultColor = layersColor;
+	
+#endif
 	
 	//resultColor *= (IN.mccvColor * 2.0f);
 
-	return float4(resultColor, 1.0f);
+	PixelShaderOutput OUT;
+	OUT.Diffuse = float4(resultColor, 1.0f);
+	return OUT;
 }

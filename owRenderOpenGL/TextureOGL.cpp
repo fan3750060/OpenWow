@@ -373,6 +373,11 @@ void TextureOGL::Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter
 
 }
 
+void TextureOGL::Bind(uint32_t ID, Shader::ShaderType _shaderType, ShaderParameter::Type parameterType)
+{
+	fail1();
+}
+
 void TextureOGL::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {
 	std::shared_ptr<ShaderOGL> pShader = std::dynamic_pointer_cast<ShaderOGL>(shader.lock());
@@ -382,6 +387,11 @@ void TextureOGL::UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParamet
 
 	glActiveTexture(GL_TEXTURE0 + ID);
 	glBindTexture(m_TextureType, 0);
+}
+
+void TextureOGL::UnBind(uint32_t ID, Shader::ShaderType _shaderType, ShaderParameter::Type parameterType)
+{
+	fail1();
 }
 
 const std::vector<uint8>& TextureOGL::GetBuffer()

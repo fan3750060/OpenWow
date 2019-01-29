@@ -9,16 +9,16 @@
 
 CBaseManager* _BaseManager = nullptr;
 
-IRenderDevice* CreateRenderDeviceOGL(CBaseManager* _baseManager)
+std::shared_ptr<IRenderDevice> CreateRenderDeviceOGL(CBaseManager* _baseManager)
 {
 	_BaseManager = _baseManager;
-	return new RenderDeviceOGL();
+	return std::make_shared<RenderDeviceOGL>();
 }
 
-RenderWindow* CreateRenderWindowOGL(HWND hWnd, IRenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
+std::shared_ptr<RenderWindow> CreateRenderWindowOGL(HWND hWnd, std::shared_ptr<IRenderDevice> device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
-	RenderDeviceOGL* pDevice = dynamic_cast<RenderDeviceOGL*>(device);
+	std::shared_ptr<RenderDeviceOGL> pDevice = std::dynamic_pointer_cast<RenderDeviceOGL, IRenderDevice>(device);
 	assert1(pDevice != NULL);
 
-	return new RenderWindowOGL(hWnd, pDevice, windowName, windowWidth, windowHeight, vSync);
+	return std::make_shared<RenderWindowOGL>(hWnd, pDevice, windowName, windowWidth, windowHeight, vSync);
 }

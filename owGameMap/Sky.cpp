@@ -31,8 +31,7 @@ Sky::Sky(const DBC_LightRecord& _record) :
 }
 
 Sky::~Sky()
-{ 
-}
+{}
 
 
 class SkyParam_Color : public Sky::SkyParam<vec3>

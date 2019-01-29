@@ -3,12 +3,12 @@
 #include "BasePass.h"
 
 // Use this pass to render the lights as geometry in the scene.
-class DeferredLightingPass : public BasePass
+class DeferredPass : public BasePass
 {
 public:
     typedef BasePass base;
 
-    DeferredLightingPass( std::vector<Light>& lights,
+	DeferredPass( std::vector<Light>& lights,
                           std::shared_ptr<Scene> pointLight,
                           std::shared_ptr<Scene> spotLight,
                           std::shared_ptr<PipelineState> lightPipeline0,
@@ -20,7 +20,7 @@ public:
                           std::shared_ptr<Texture> depthTexture
                         );
 
-    virtual ~DeferredLightingPass();
+    virtual ~DeferredPass();
 
     // Render the pass. This should only be called by the RenderTechnique.
     virtual void PreRender( RenderEventArgs& e );
@@ -51,12 +51,15 @@ private:
     ScreenToViewParams* m_pScreenToViewParams;
     std::shared_ptr<ConstantBuffer> m_ScreenToViewParamsCB;
 
+
+
     __declspec( align( 16 ) ) struct LightParams
     {
         uint32_t m_LightIndex;
     };
     LightParams* m_pLightParams;
     std::shared_ptr<ConstantBuffer> m_LightParamsCB;
+
 
     // First pipeline to mark lit pixels.
     std::shared_ptr<PipelineState> m_LightPipeline0;
@@ -74,6 +77,8 @@ private:
     std::shared_ptr<Texture> m_SpecularTexture;
     std::shared_ptr<Texture> m_NormalTexture;
     std::shared_ptr<Texture> m_DepthTexture;
+
+
 
     __declspec( align( 16 ) ) struct AlignedProperties
     {

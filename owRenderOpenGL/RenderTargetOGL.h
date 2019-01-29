@@ -4,7 +4,7 @@ class RenderDeviceOGL;
 class TextureOGL;
 class StructuredBufferOGL;
 
-class RenderTargetOGL : public RenderTarget
+class RenderTargetOGL : public IRenderTarget
 {
 public:
 	RenderTargetOGL(RenderDeviceOGL* _device);

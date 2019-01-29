@@ -146,6 +146,9 @@
     <ClCompile Include="Materials\MaterialWrapper.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
+    <ClCompile Include="3D\Passes\DeferredPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -272,6 +275,9 @@
     </ClInclude>
     <ClInclude Include="Materials\MaterialWrapper.h">
       <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\DeferredPass.h">
+      <Filter>3D\Passes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

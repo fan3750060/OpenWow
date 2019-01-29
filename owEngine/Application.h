@@ -1,6 +1,6 @@
 #pragma once
 
-//#define IS_DX11 1
+#define IS_DX11 1
 
 class Application : public Object
 {
@@ -14,10 +14,10 @@ public:
 	int Run();
 	void Stop();
 
-	RenderWindow* CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
+	std::shared_ptr<RenderWindow> CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
 
-	IRenderDevice* GetRenderDevice();
-	RenderWindow* GetRenderWindow();
+	std::shared_ptr<IRenderDevice> GetRenderDevice();
+	std::shared_ptr<RenderWindow> GetRenderWindow();
 
 	HINSTANCE GetModuleHandle() const;
 
@@ -45,8 +45,9 @@ private:
 
 	// Handle to the module.
 	HINSTANCE       m_hInstance;
-	IRenderDevice*   m_pRenderDevice;
-	RenderWindow*   m_Windows;
+
+	std::shared_ptr<IRenderDevice> m_pRenderDevice;
+	std::shared_ptr<RenderWindow>  m_Windows;
 };
 
 #define _RenderDevice Application::Get().GetRenderDevice()

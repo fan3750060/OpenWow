@@ -9,12 +9,16 @@ CWMO_Liquid_Instance::CWMO_Liquid_Instance(std::shared_ptr<Liquid> _liquidObject
 {
 }
 
-bool CWMO_Liquid_Instance::PreRender3D()
+CWMO_Liquid_Instance::~CWMO_Liquid_Instance()
+{
+}
+
+bool CWMO_Liquid_Instance::Accept(IVisitor & visitor)
 {
 	//if (!m_Group.lock()->m_PortalsVis)
 	//{
 	//	return false;
 	//}
 
-	return true;
+	return Liquid_Instance::Accept(visitor);
 }

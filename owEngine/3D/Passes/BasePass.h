@@ -42,11 +42,13 @@ public:
 	void SetRenderEventArgs(RenderEventArgs& e);
 	RenderEventArgs& GetRenderEventArgs() const;
 
-	IRenderDevice* GetRenderDevice() const;
+	std::shared_ptr<IRenderDevice> GetRenderDevice() const;
 	std::shared_ptr<PipelineState> GetPipelineState() const;
 
 	void SetPerObjectConstantBufferData(PerObject& perObjectData);
 	std::shared_ptr<ConstantBuffer> GetPerObjectConstantBuffer() const;
+
+	void BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader);
 
 private:
 	PerObject* m_PerObjectData;
@@ -59,5 +61,5 @@ private:
 	// The scene to render.
 	std::shared_ptr<Scene> m_Scene;
 
-	IRenderDevice* m_RenderDevice;
+	std::weak_ptr<IRenderDevice> m_RenderDevice;
 };

@@ -1,4 +1,5 @@
 #include "..\\_gamedata\\shaders_D3D\\Liquid\\Liquid_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
 
 struct VertexShaderInput
 {
@@ -35,7 +36,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	return OUT;
 }
 
-float4 PS_main(VertexShaderOutput IN) : SV_TARGET
+PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	float alpha = DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord).w;
 
@@ -43,5 +44,7 @@ float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 	resultColor *= (1.0 - alpha);
 	resultColor += float4(1.0f, 1.0f, 1.0f, 1.0f) * alpha;
 
-	return resultColor;
+	PixelShaderOutput OUT;
+	OUT.Diffuse = resultColor;
+	return OUT;
 }

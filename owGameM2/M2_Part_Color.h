@@ -10,6 +10,7 @@ public:
 	void calc(uint16 anim, uint32 time, uint32 globalTime);
 
 	vec4 getValue() const { return vec4(vColor, vAlpha); }
+
 	cvec3 getValueColor() const { return vColor; }
 	float getValueAlpha() const { return vAlpha; }
 

@@ -3,7 +3,7 @@
 // General
 #include "GenerateMipMapsPass.h"
 
-GenerateMipMapPass::GenerateMipMapPass(std::shared_ptr<RenderTarget> renderTarget)
+GenerateMipMapPass::GenerateMipMapPass(std::shared_ptr<IRenderTarget> renderTarget)
 	: m_RenderTarget(renderTarget)
 {}
 

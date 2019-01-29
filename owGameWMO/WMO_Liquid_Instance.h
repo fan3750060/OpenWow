@@ -8,10 +8,11 @@ class CWMO_Liquid_Instance : public Liquid_Instance
 {
 public:
 	CWMO_Liquid_Instance(std::shared_ptr<Liquid> _liquidObject, vec3 _position, const std::weak_ptr<const WMO_Group> _group);
+	virtual ~CWMO_Liquid_Instance();
 
-	// IRenderable3D
-	bool PreRender3D();
+	// SceneNode
+	bool Accept(IVisitor& visitor) override;
 
 private:
-	const std::weak_ptr<const WMO_Group>	m_Group;					// used for visibility
+	const std::weak_ptr<const WMO_Group> m_Group; // used for visibility
 };

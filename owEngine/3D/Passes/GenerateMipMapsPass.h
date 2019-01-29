@@ -2,7 +2,7 @@
 
 #include "AbstractPass.h"
 
-class RenderTarget;
+class IRenderTarget;
 class Textre;
 
 /**
@@ -11,13 +11,13 @@ class Textre;
 class GenerateMipMapPass : public AbstractPass
 {
 public:
-	GenerateMipMapPass(std::shared_ptr<RenderTarget> renderTarget);
+	GenerateMipMapPass(std::shared_ptr<IRenderTarget> renderTarget);
 	GenerateMipMapPass(std::shared_ptr<Texture> texture);
 	virtual ~GenerateMipMapPass();
 
 	virtual void Render(RenderEventArgs& e);
 
 private:
-	std::shared_ptr<RenderTarget> m_RenderTarget;
+	std::shared_ptr<IRenderTarget> m_RenderTarget;
 	std::shared_ptr<Texture> m_Texture;
 };

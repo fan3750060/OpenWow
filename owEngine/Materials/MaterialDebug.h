@@ -13,6 +13,7 @@ public:
 
 	void UpdateConstantBuffer() const override;
 
+private:
 	__declspec(align(16)) struct MaterialProperties
 	{
 		MaterialProperties()

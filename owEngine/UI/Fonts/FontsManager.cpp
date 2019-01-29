@@ -181,11 +181,11 @@ std::shared_ptr<Font> FontsManager::CreateAction(cstring _nameAndSize)
 	}
 
 
-	std::shared_ptr<IBuffer> __vbPos = m_RenderDevice->CreateVertexBuffer(fontVertices);
-	std::shared_ptr<IBuffer> __vbTex = m_RenderDevice->CreateVertexBuffer(fontTextures);
+	std::shared_ptr<IBuffer> __vbPos = m_RenderDevice.lock()->CreateVertexBuffer(fontVertices);
+	std::shared_ptr<IBuffer> __vbTex = m_RenderDevice.lock()->CreateVertexBuffer(fontTextures);
 	//
 
-	std::shared_ptr<IMesh> __geom = m_RenderDevice->CreateMesh();
+	std::shared_ptr<IMesh> __geom = m_RenderDevice.lock()->CreateMesh();
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vbPos);
 	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __vbTex);
 

@@ -50,8 +50,8 @@ public:
 	virtual std::shared_ptr<Query> CreateQuery(Query::QueryType queryType = Query::QueryType::Timer, uint8_t numBuffers = 3);
 	virtual void DestoryQuery(std::shared_ptr<Query> query);
 
-	virtual std::shared_ptr<RenderTarget> CreateRenderTarget();
-	virtual void DestroyRenderTarget(std::shared_ptr<RenderTarget> renderTarget);
+	virtual std::shared_ptr<IRenderTarget> CreateRenderTarget();
+	virtual void DestroyRenderTarget(std::shared_ptr<IRenderTarget> renderTarget);
 
 	virtual std::shared_ptr<SamplerState> CreateSamplerState();
 	virtual void DestroySampler(std::shared_ptr<SamplerState> sampler);
@@ -96,7 +96,7 @@ private:
 	typedef std::vector< std::shared_ptr<Material> > MaterialList;
 	MaterialList m_Materials;
 
-	typedef std::vector< std::shared_ptr<RenderTarget> > RenderTargetList;
+	typedef std::vector< std::shared_ptr<IRenderTarget> > RenderTargetList;
 	RenderTargetList m_RenderTargets;
 
 	typedef std::vector< std::shared_ptr<SamplerState> > SamplerList;

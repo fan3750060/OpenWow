@@ -30,6 +30,9 @@
     <ClCompile Include="Liquid_Pass.cpp">
       <Filter>Liquid</Filter>
     </ClCompile>
+    <ClCompile Include="LiquidLayer.cpp">
+      <Filter>Liquid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Liquid.h">
@@ -58,6 +61,9 @@
       <Filter>RenderStuff</Filter>
     </ClInclude>
     <ClInclude Include="Liquid_Pass.h">
+      <Filter>Liquid</Filter>
+    </ClInclude>
+    <ClInclude Include="LiquidLayer.h">
       <Filter>Liquid</Filter>
     </ClInclude>
   </ItemGroup>

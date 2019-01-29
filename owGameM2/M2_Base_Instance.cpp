@@ -92,6 +92,11 @@ void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
 	SceneNode::SetParent(pNode);
 
 	UpdateLocalTransform();
+	UpdateWorldTransform();
+
+	BoundingBox bbox = m_M2->m_Bounds;
+	bbox.transform(GetWorldTransfom());
+	SetBounds(bbox);
 }
 
 bool CM2_Base_Instance::Accept(IVisitor& visitor)
@@ -165,8 +170,4 @@ void CM2_Base_Instance::UpdateLocalTransform(bool _forced)
 	{
 		SceneNode::UpdateLocalTransform(_forced);
 	}
-
-	BoundingBox bbox = m_M2->m_Bounds;
-	bbox.transform(GetWorldTransfom());
-	SetBounds(bbox);
 }

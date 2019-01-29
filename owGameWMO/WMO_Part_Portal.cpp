@@ -20,13 +20,14 @@ CWMO_Part_Portal::CWMO_Part_Portal(const std::weak_ptr<const WMO> _parentWMO, co
 	m_Plane.normal = Fix_XZmY(_proto.plane.normal);
 	m_Plane.dist = _proto.plane.distance;
 
+
+
 	/*m_Geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_P);
 	m_Geom->setGeomVertexParams(m_ParentWMO->m_PortalVB, R_DataType::T_FLOAT, 0, sizeof(vec3));
 	m_Geom->finishCreatingGeometry();*/
 }
 
-void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
-{
+
 	/*_Render->r.setCullMode(R_CullMode::RS_CULL_BACK);
 	_Render->r.setFillMode(R_FillMode::RS_FILL_WIREFRAME);
 
@@ -54,7 +55,7 @@ void CWMO_Part_Portal::Render(cmat4 _worldMatrix)
 
 	_Render->r.setFillMode(R_FillMode::RS_FILL_SOLID);
 	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);*/
-}
+
 
 void CWMO_Part_Portal::setGroup(int32 _group, int16 side)
 {
@@ -75,9 +76,7 @@ void CWMO_Part_Portal::setGroup(int32 _group, int16 side)
 bool CWMO_Part_Portal::IsVisible(std::shared_ptr<CWMO_Base_Instance> _localContr, const Plane* _planes, uint32 _planesCount) const
 {
 	if (_planes == nullptr || _planesCount == 0)
-	{
 		return false;
-	}
 
 	return !cullPolyByPlanes
 	(

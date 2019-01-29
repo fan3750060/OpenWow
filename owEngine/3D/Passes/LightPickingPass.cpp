@@ -10,12 +10,12 @@ LightPickingPass::LightPickingPass(std::vector<Light>& lights, std::shared_ptr<S
 	, m_RenderDevice(_RenderDevice)
 {
 	m_pLightParams = (LightParams*)_aligned_malloc(sizeof(LightParams), 16);
-	m_LightParamsCB = m_RenderDevice->CreateConstantBuffer(LightParams());
+	m_LightParamsCB = m_RenderDevice.lock()->CreateConstantBuffer(LightParams());
 }
 
 LightPickingPass::~LightPickingPass()
 {
-	m_RenderDevice->DestroyConstantBuffer(m_LightParamsCB);
+	m_RenderDevice.lock()->DestroyConstantBuffer(m_LightParamsCB);
 	_aligned_free(m_pLightParams);
 }
 

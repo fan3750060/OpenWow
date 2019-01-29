@@ -10,7 +10,7 @@
 #include "RenderTargetOGL.h"
 #include "TextureOGL.h"
 
-RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
+RenderWindowOGL::RenderWindowOGL(HWND hWnd, std::shared_ptr<RenderDeviceOGL> device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 	: RenderWindow(windowName, windowWidth, windowHeight, hWnd, vSync)
 	, m_bIsMouseTracking(false)
 	, m_RenderDevice(device)
@@ -18,11 +18,11 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 {
 	m_HDC = GetDC(hWnd);
 
-	m_RenderDevice->CreateDevice(m_HDC);
-	m_RenderDevice->LoadDefaultResources();
+	m_RenderDevice.lock()->CreateDevice(m_HDC);
+	m_RenderDevice.lock()->LoadDefaultResources();
 
 	// Create a render target for the back buffer and depth/stencil buffers.
-	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetOGL>(m_RenderDevice->CreateRenderTarget());
+	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetOGL>(m_RenderDevice.lock()->CreateRenderTarget());
 
 	// Create the device and swap chain before the window is shown.
 	UINT windowWidth2 = GetWindowWidth();
@@ -37,7 +37,7 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 		Texture::Type::UnsignedNormalized,
 		1, //m_SampleDesc.Count,
 		0, 0, 0, 0, 24, 0);
-	std::shared_ptr<Texture> depthStencilTexture = m_RenderDevice->CreateTexture2D(windowWidth2, windowHeight2, 1, depthStencilTextureFormat);
+	std::shared_ptr<Texture> depthStencilTexture = m_RenderDevice.lock()->CreateTexture2D(windowWidth2, windowHeight2, 1, depthStencilTextureFormat);
 
 	// Color buffer (Color0)
 	Texture::TextureFormat colorTextureFormat
@@ -47,10 +47,10 @@ RenderWindowOGL::RenderWindowOGL(HWND hWnd, RenderDeviceOGL* device, cstring win
 		1, //m_SampleDesc.Count,
 		8, 8, 8, 8, 0, 0
 	);
-	std::shared_ptr<Texture> colorTexture = m_RenderDevice->CreateTexture2D(windowWidth2, windowHeight2, 1, colorTextureFormat);
+	std::shared_ptr<Texture> colorTexture = m_RenderDevice.lock()->CreateTexture2D(windowWidth2, windowHeight2, 1, colorTextureFormat);
 
-	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Color0, colorTexture);
-	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Depth, depthStencilTexture);
+	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::Color0, colorTexture);
+	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::Depth, depthStencilTexture);
 }
 
 RenderWindowOGL::~RenderWindowOGL()
@@ -97,7 +97,7 @@ void RenderWindowOGL::Present()
 	//m_RenderTarget->Bind();
 
 	// Copy the render target's color buffer to the swap chain's back buffer.
-	std::shared_ptr<TextureOGL> colorBuffer = std::dynamic_pointer_cast<TextureOGL>(m_RenderTarget->GetTexture(RenderTarget::AttachmentPoint::Color0));
+	std::shared_ptr<TextureOGL> colorBuffer = std::dynamic_pointer_cast<TextureOGL>(m_RenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color0));
 	if (colorBuffer)
 	{
 		//m_pDeviceContext->CopyResource(m_pBackBuffer, colorBuffer->GetTextureResource());
@@ -115,7 +115,7 @@ void RenderWindowOGL::Present()
 	}
 }
 
-std::shared_ptr<RenderTarget> RenderWindowOGL::GetRenderTarget()
+std::shared_ptr<IRenderTarget> RenderWindowOGL::GetRenderTarget()
 {
 	return m_RenderTarget;
 }
@@ -126,7 +126,7 @@ void RenderWindowOGL::OnPreRender(RenderEventArgs& e)
 	GLint defaultRB = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultRB);
 	OGLCheckError();
-	m_RenderDevice->SetDefaultRB(defaultRB);
+	m_RenderDevice.lock()->SetDefaultRB(defaultRB);
 
 	if (m_bResizePending)
 	{

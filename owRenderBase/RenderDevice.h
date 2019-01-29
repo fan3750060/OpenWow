@@ -9,7 +9,7 @@ class StructuredBuffer;
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
-class RenderTarget;
+class IRenderTarget;
 #include "Query.h"
 class SamplerState;
 #include "Material.h"
@@ -128,8 +128,8 @@ public:
 	virtual void DestroyMaterial(std::shared_ptr<Material> material) = 0;
 
 	// Create a render target
-	virtual std::shared_ptr<RenderTarget> CreateRenderTarget() = 0;
-	virtual void DestroyRenderTarget(std::shared_ptr<RenderTarget> renderTarget) = 0;
+	virtual std::shared_ptr<IRenderTarget> CreateRenderTarget() = 0;
+	virtual void DestroyRenderTarget(std::shared_ptr<IRenderTarget> renderTarget) = 0;
 
 	// Create a GPU query object. Used for performance profiling, occlusion queries,
 	// or primitive output queries.

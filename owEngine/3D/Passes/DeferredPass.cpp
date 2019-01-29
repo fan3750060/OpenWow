@@ -5,9 +5,9 @@
 #include <SceneNode.h>
 
 // General
-#include "DeferredLightingPass.h"
+#include "DeferredPass.h"
 
-DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
+DeferredPass::DeferredPass(std::vector<Light>& lights,
 	std::shared_ptr<Scene> pointLight,
 	std::shared_ptr<Scene> spotLight,
 	std::shared_ptr<PipelineState> lightPipeline0,
@@ -44,7 +44,7 @@ DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
 	//m_pDirectionalLightScene = m_RenderDevice->CreateScreenQuad( -1, 1, -1, 1, -1 );
 }
 
-DeferredLightingPass::~DeferredLightingPass()
+DeferredPass::~DeferredPass()
 {
 	m_RenderDevice.lock()->DestroyConstantBuffer(m_LightParamsCB);
 	m_RenderDevice.lock()->DestroyConstantBuffer(m_ScreenToViewParamsCB);
@@ -54,7 +54,7 @@ DeferredLightingPass::~DeferredLightingPass()
 	_aligned_free(m_pLightParams);
 }
 
-void DeferredLightingPass::PreRender(RenderEventArgs& e)
+void DeferredPass::PreRender(RenderEventArgs& e)
 {
 	// Bind the G-buffer textures to the pixel shader pipeline stage.
 	m_DiffuseTexture->Bind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
@@ -63,7 +63,7 @@ void DeferredLightingPass::PreRender(RenderEventArgs& e)
 	m_DepthTexture->Bind(3, Shader::PixelShader, ShaderParameter::Type::Texture);
 }
 
-void DeferredLightingPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+void DeferredPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
 {
 	e.PipelineState = pipeline.get();
 
@@ -78,7 +78,7 @@ void DeferredLightingPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Sce
 }
 
 // Render the pass. This should only be called by the RenderTechnique.
-void DeferredLightingPass::Render(RenderEventArgs& e)
+void DeferredPass::Render(RenderEventArgs& e)
 {
 	const Camera* pCamera = e.Camera;
 	assert(pCamera);
@@ -98,7 +98,7 @@ void DeferredLightingPass::Render(RenderEventArgs& e)
 	std::vector< PipelineState* > pipelines = { m_LightPipeline0.get(), m_LightPipeline1.get(), m_DirectionalLightPipeline.get() };
 	for (auto pipeline : pipelines)
 	{
-		/*std::shared_ptr<Shader> vertexShader = pipeline->GetShader(Shader::VertexShader);
+		std::shared_ptr<Shader> vertexShader = pipeline->GetShader(Shader::VertexShader);
 		BindPerObjectConstantBuffer(vertexShader);
 
 		std::shared_ptr<Shader> pixelShader = pipeline->GetShader(Shader::PixelShader);
@@ -107,7 +107,7 @@ void DeferredLightingPass::Render(RenderEventArgs& e)
 			// Bind the per-light & deferred lighting properties constant buffers to the pixel shader.
 			pixelShader->GetShaderParameterByName("LightIndexBuffer").Set(m_LightParamsCB);
 			pixelShader->GetShaderParameterByName("ScreenToViewParams").Set(m_ScreenToViewParamsCB);
-		}*/
+		}
 	}
 
 	m_pLightParams->m_LightIndex = 0;
@@ -143,7 +143,7 @@ void DeferredLightingPass::Render(RenderEventArgs& e)
 	}
 }
 
-void DeferredLightingPass::PostRender(RenderEventArgs& e)
+void DeferredPass::PostRender(RenderEventArgs& e)
 {
 	// Explicitly unbind these textures so they can be used as render target textures.
 	m_DiffuseTexture->UnBind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
@@ -153,12 +153,12 @@ void DeferredLightingPass::PostRender(RenderEventArgs& e)
 }
 
 // Inherited from Visitor
-bool DeferredLightingPass::Visit(Scene& scene)
+bool DeferredPass::Visit(Scene& scene)
 {
 	return false;
 }
 
-bool DeferredLightingPass::Visit(SceneNode& node)
+bool DeferredPass::Visit(SceneNode& node)
 {
 	const Camera* camera = GetRenderEventArgs().Camera;
 

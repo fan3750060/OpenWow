@@ -10,6 +10,9 @@ public:
 	PipelineStateOGL();
 	virtual ~PipelineStateOGL();
 
+	virtual void SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader);
+	virtual std::shared_ptr<Shader> GetShader(Shader::ShaderType type) const;
+
 	virtual void SetBlendState(const BlendState& blendState);
 	virtual BlendState& GetBlendState();
 
@@ -19,15 +22,16 @@ public:
 	virtual void SetDepthStencilState(const DepthStencilState& depthStencilState);
 	virtual DepthStencilState& GetDepthStencilState();
 
-	virtual void SetRenderTarget(std::shared_ptr<RenderTarget> renderTarget);
-	virtual std::shared_ptr<RenderTarget> GetRenderTarget() const;
+	virtual void SetRenderTarget(std::shared_ptr<IRenderTarget> renderTarget);
+	virtual std::shared_ptr<IRenderTarget> GetRenderTarget() const;
 
 	virtual void Bind();
 	virtual void UnBind();
 
 private:
+	ShaderMap m_Shaders;
 	BlendStateOGL m_BlendState;
 	RasterizerStateOGL m_RasterizerState;
 	DepthStencilStateOGL m_DepthStencilState;
-	std::shared_ptr<RenderTarget> m_RenderTarget;
+	std::shared_ptr<IRenderTarget> m_RenderTarget;
 };

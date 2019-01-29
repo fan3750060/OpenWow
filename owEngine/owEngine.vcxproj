@@ -18,6 +18,7 @@
     <ClCompile Include="3D\Passes\CopyBufferPass.cpp" />
     <ClCompile Include="3D\Passes\CopyTexturePass.cpp" />
     <ClCompile Include="3D\Passes\DeferredLightingPass.cpp" />
+    <ClCompile Include="3D\Passes\DeferredPass.cpp" />
     <ClCompile Include="3D\Passes\DispatchPass.cpp" />
     <ClCompile Include="3D\Passes\EndQueryPass.cpp" />
     <ClCompile Include="3D\Passes\GenerateMipMapsPass.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="3D\Passes\CopyBufferPass.h" />
     <ClInclude Include="3D\Passes\CopyTexturePass.h" />
     <ClInclude Include="3D\Passes\DeferredLightingPass.h" />
+    <ClInclude Include="3D\Passes\DeferredPass.h" />
     <ClInclude Include="3D\Passes\DispatchPass.h" />
     <ClInclude Include="3D\Passes\EndQueryPass.h" />
     <ClInclude Include="3D\Passes\GenerateMipMapsPass.h" />

@@ -1,10 +1,13 @@
 #include "stdafx.h"
 
+// Include
+#include "ADT.h"
+
 // General
 #include "ADT_MCNK_Material.h"
 
 
-ADT_MCNK_Material::ADT_MCNK_Material() :
+ADT_MCNK_Material::ADT_MCNK_Material(const std::weak_ptr<ADT> _parentADT) :
 	MaterialWrapper(_RenderDevice->CreateMaterial())
 {
 	m_pProperties = (MaterialProperties*)_aligned_malloc(sizeof(MaterialProperties), 16);
@@ -16,8 +19,12 @@ ADT_MCNK_Material::ADT_MCNK_Material() :
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
+
+	Shader::ShaderMacros macros;
+	macros["_IS_NORTREND"] = _parentADT.lock()->header.flags.IsNortrend ? "1" : "0";
+
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
-		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", macros, "PS_main", "latest"
 	);
 
 

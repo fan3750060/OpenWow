@@ -2,7 +2,7 @@
 
 #include "AbstractPass.h"
 
-class RenderTarget;
+class IRenderTarget;
 class Texture;
 
 /**
@@ -11,7 +11,7 @@ class Texture;
 class ClearRenderTargetPass : public AbstractPass
 {
 public:
-	ClearRenderTargetPass(std::shared_ptr<RenderTarget> renderTarget,
+	ClearRenderTargetPass(std::shared_ptr<IRenderTarget> renderTarget,
 		ClearFlags clearFlags = ClearFlags::All,
 		const glm::vec4& color = glm::vec4(0),
 		float depth = 1.0f,
@@ -26,7 +26,7 @@ public:
 	virtual void Render(RenderEventArgs& e);
 
 private:
-	std::shared_ptr<RenderTarget> m_RenderTarget;
+	std::shared_ptr<IRenderTarget> m_RenderTarget;
 	std::shared_ptr<Texture> m_Texture;
 	ClearFlags m_ClearFlags;
 	glm::vec4 m_ClearColor;

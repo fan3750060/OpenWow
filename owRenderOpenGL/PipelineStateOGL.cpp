@@ -14,6 +14,22 @@ PipelineStateOGL::PipelineStateOGL()
 PipelineStateOGL::~PipelineStateOGL()
 {}
 
+void PipelineStateOGL::SetShader(Shader::ShaderType type, std::shared_ptr<Shader> pShader)
+{
+	m_Shaders[type] = pShader;
+}
+
+std::shared_ptr<Shader> PipelineStateOGL::GetShader(Shader::ShaderType type) const
+{
+	ShaderMap::const_iterator iter = m_Shaders.find(type);
+	if (iter != m_Shaders.end())
+	{
+		return iter->second;
+	}
+
+	return nullptr;
+}
+
 void PipelineStateOGL::SetBlendState(const BlendState& blendState)
 {
 	m_BlendState = dynamic_cast<const BlendStateOGL&>(blendState);
@@ -44,12 +60,12 @@ DepthStencilState& PipelineStateOGL::GetDepthStencilState()
 	return m_DepthStencilState;
 }
 
-void PipelineStateOGL::SetRenderTarget(std::shared_ptr<RenderTarget> renderTarget)
+void PipelineStateOGL::SetRenderTarget(std::shared_ptr<IRenderTarget> renderTarget)
 {
 	m_RenderTarget = renderTarget;
 }
 
-std::shared_ptr<RenderTarget> PipelineStateOGL::GetRenderTarget() const
+std::shared_ptr<IRenderTarget> PipelineStateOGL::GetRenderTarget() const
 {
 	return m_RenderTarget;
 }

@@ -7,12 +7,12 @@ class RenderWindowDX11 : public RenderWindow
 {
 	typedef RenderWindow base;
 public:
-	RenderWindowDX11(HWND hWnd, RenderDeviceDX11* device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
+	RenderWindowDX11(HWND hWnd, std::shared_ptr<RenderDeviceDX11> device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
 	virtual ~RenderWindowDX11();
 
 	virtual void Present();
 
-	virtual std::shared_ptr<RenderTarget> GetRenderTarget();
+	virtual std::shared_ptr<IRenderTarget> GetRenderTarget();
 
 protected:
 	virtual void CreateSwapChain();
@@ -31,7 +31,7 @@ protected:
 private:
 	bool m_bIsMouseTracking; // Used to capture mouse enter/leave events.
 
-	RenderDeviceDX11* m_Device;
+	std::weak_ptr<RenderDeviceDX11> m_Device;
 
 	// Used to enable multisampling AA
 	DXGI_SAMPLE_DESC m_SampleDesc; // = { 1, 0 };

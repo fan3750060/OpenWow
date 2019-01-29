@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+// Include
+#include <Application.h>
+
 // General
 #include "MaterialDebug.h"
 
@@ -10,6 +13,16 @@ MaterialDebug::MaterialDebug(std::shared_ptr<Material> _material)
 	*m_pProperties = MaterialProperties();
 
 	MaterialWrapper::CreateConstantBuffer(m_pProperties, sizeof(MaterialProperties));
+
+	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
+		Shader::VertexShader, "shaders_D3D/Debug/Debug.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+	);
+	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
+		Shader::PixelShader, "shaders_D3D/Debug/Debug.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+	);
+
+	SetShader(Shader::ShaderType::VertexShader, g_pVertexShader);
+	SetShader(Shader::ShaderType::PixelShader, g_pPixelShader);
 }
 
 MaterialDebug::~MaterialDebug()

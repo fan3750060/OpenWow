@@ -15,7 +15,7 @@ Viewport g_Viewport;
 std::shared_ptr<Scene> g_pScene = nullptr;
 std::shared_ptr<UIScene> g_pUIScene = nullptr;
 
-RenderWindow* g_pRenderWindow;
+std::shared_ptr<RenderWindow> g_pRenderWindow;
 std::shared_ptr<Query> g_pFrameQuery;
 double g_FrameTime = 0.0;
 std::shared_ptr<MapController> contr;
@@ -34,7 +34,10 @@ std::shared_ptr<Query> g_pForwardOpaqueQuery;
 std::shared_ptr<Query> g_pForwardTransparentQuery;
 
 glm::vec4 g_ClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+uint32 g_Config_WindowWidth = 1280;
+uint32 g_Config_WindowHeight = 1024;
 
+std::shared_ptr<IRenderTarget> g_pGBufferRenderTarget;
 
 
 int main(int argumentCount, char* arguments[])
@@ -57,12 +60,6 @@ int main(int argumentCount, char* arguments[])
 		CConsole console;
 		console.AddCommonCommands();
 
-		HANDLE hProcess = GetCurrentProcess();
-		if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
-			Log::Info("Process priority class set to HIGH");
-		else
-			Log::Error("Can't set process priority class.");
-
 		CMPQArchiveManager mpqArchiveManager;
 		CFilesManager filesManager;
 
@@ -73,13 +70,10 @@ int main(int argumentCount, char* arguments[])
 		Application app;
 
 		g_pRenderWindow = app.CreateRenderWindow("Name", 1280, 1024);
-
 		// Register initialize/terminate events.
 		app.Initialize += boost::bind(&RenderWindow::OnInitialize, g_pRenderWindow, _1);
 		app.Terminate += boost::bind(&RenderWindow::OnTerminate, g_pRenderWindow, _1);
 		app.Update += boost::bind(&RenderWindow::OnUpdate, g_pRenderWindow, _1);
-
-
 		g_pRenderWindow->ShowWindow();
 
 		g_pRenderWindow->Update += &OnUpdate;
@@ -94,7 +88,7 @@ int main(int argumentCount, char* arguments[])
 		g_pRenderWindow->KeyPressed += &OnKeyPressed;
 		g_pRenderWindow->KeyReleased += &OnKeyReleased;
 
-		IRenderDevice* renderDevice = app.GetRenderDevice();
+		std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
 
 		/*renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
@@ -111,21 +105,21 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		const float x = 40;
-		const float y = 29;
+		//const float x = 40;
+		//const float y = 29;
 
-		//const float x = 29;
-		//const float y = 21;
+		const float x = 29;
+		const float y = 21;
 
 		//new FontsManager(_RenderDevice);
-		//new WMOsManager();
-		//new CM2_Manager();
+		new WMOsManager();
+		new CM2_Manager();
 
 		std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D("TILESET\\Terrain Cube Maps\\TCB_CrystalSong_A.blp");
 
 		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
-		contr->MapPreLoad(*DBC_Map[1]);
+		contr->MapPreLoad(*DBC_Map[571]);
 		contr->MapLoad();
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);
@@ -153,15 +147,20 @@ int main(int argumentCount, char* arguments[])
 		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
 
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-		AddSkyPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-		AddWDLPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-		AddMCNKPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-		AddWMOPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-		AddLiquidPasses(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
-		AddM2Passes(renderDevice, g_pRenderWindow, &g_ForwardTechnique, &viewPort, g_pScene);
+		AddSkyPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+		AddWDLPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+		AddMCNKPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+		AddWMOPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+		AddLiquidPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+		AddM2Passes(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+
+		//std::shared_ptr<Texture> depthStencilBuffer = g_pRenderWindow->GetRenderTarget()->GetTexture(RenderTarget::AttachmentPoint::DepthStencil);
+		//g_ForwardTechnique.AddPass(std::make_shared<CopyTexturePass>(depthStencilBuffer, depthStencilTexture));
 
 
-		
+		//g_ForwardTechnique.AddPass(std::make_shared<DeferredPass>(g_Config.Lights, g_Sphere, g_Cone, g_pDeferredLightingPipeline1, g_pDeferredLightingPipeline2, g_pDirectionalLightsPipeline, diffuseTexture, specularTexture, normalTexture, depthStencilTexture));
+
+
 		const uint32 cnt = 10;
 		/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
 

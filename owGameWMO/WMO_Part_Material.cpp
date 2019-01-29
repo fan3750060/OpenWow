@@ -53,10 +53,6 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, 
 	//}
 
 	//Log::Warn("Shader = [%d], Blend mode [%d]", m_Proto.shader, m_Proto.blendMode);
-	if (m_Proto.blendMode > 1)
-	{
-		int x = 0;
-	}
 
 	vec4 color = fromARGB(m_Proto.diffColor);
 }

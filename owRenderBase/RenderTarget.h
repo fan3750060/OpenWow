@@ -5,7 +5,7 @@
 class Texture;
 class StructuredBuffer;
 
-class RenderTarget : public Object
+class IRenderTarget : public Object
 {
 public:
 	enum class AttachmentPoint : uint8_t

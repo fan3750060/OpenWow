@@ -90,11 +90,13 @@ public:
 	 * Bind this texture for use by the shaders.
 	 */
 	virtual void Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
+	virtual void Bind(uint32_t ID, Shader::ShaderType _shaderType, ShaderParameter::Type parameterType);
 
 	/**
 	 * Unbind the texture.
 	 */
 	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType);
+	virtual void UnBind(uint32_t ID, Shader::ShaderType _shaderType, ShaderParameter::Type parameterType);
 
 	/**
 	 * Get texture data

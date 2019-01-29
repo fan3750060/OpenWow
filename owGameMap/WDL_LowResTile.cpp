@@ -22,10 +22,10 @@ bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<C
 	int32 currentX = MapController->GetCurrentX();
 	int32 currentZ = MapController->GetCurrentZ();
 
-	/*if (m_MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	if (MapController->getTileIsCurrent(m_IndexX, m_IndexZ))
 	{
-		return;
-	}*/
+		return false;
+	}
 
 	if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
 	{

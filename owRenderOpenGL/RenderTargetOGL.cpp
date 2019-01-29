@@ -8,38 +8,38 @@
 // General
 #include "RenderTargetOGL.h"
 
-GLenum TranslateAttachmentPoint(RenderTarget::AttachmentPoint _attach)
+GLenum TranslateAttachmentPoint(IRenderTarget::AttachmentPoint _attach)
 {
 	switch (_attach)
 	{
-	case RenderTarget::AttachmentPoint::Color0:
+	case IRenderTarget::AttachmentPoint::Color0:
 		return GL_COLOR_ATTACHMENT0;
 
-	case RenderTarget::AttachmentPoint::Color1:
+	case IRenderTarget::AttachmentPoint::Color1:
 		return GL_COLOR_ATTACHMENT1;
 
-	case RenderTarget::AttachmentPoint::Color2:
+	case IRenderTarget::AttachmentPoint::Color2:
 		return GL_COLOR_ATTACHMENT2;
 
-	case RenderTarget::AttachmentPoint::Color3:
+	case IRenderTarget::AttachmentPoint::Color3:
 		return GL_COLOR_ATTACHMENT3;
 
-	case RenderTarget::AttachmentPoint::Color4:
+	case IRenderTarget::AttachmentPoint::Color4:
 		return GL_COLOR_ATTACHMENT4;
 
-	case RenderTarget::AttachmentPoint::Color5:
+	case IRenderTarget::AttachmentPoint::Color5:
 		return GL_COLOR_ATTACHMENT5;
 
-	case RenderTarget::AttachmentPoint::Color6:
+	case IRenderTarget::AttachmentPoint::Color6:
 		return GL_COLOR_ATTACHMENT6;
 
-	case RenderTarget::AttachmentPoint::Color7:
+	case IRenderTarget::AttachmentPoint::Color7:
 		return GL_COLOR_ATTACHMENT7;
 
-	case RenderTarget::AttachmentPoint::Depth:
+	case IRenderTarget::AttachmentPoint::Depth:
 		return GL_DEPTH_ATTACHMENT;
 
-	case RenderTarget::AttachmentPoint::DepthStencil:
+	case IRenderTarget::AttachmentPoint::DepthStencil:
 		return GL_DEPTH_ATTACHMENT | GL_STENCIL_ATTACHMENT;
 	}
 
@@ -52,7 +52,7 @@ RenderTargetOGL::RenderTargetOGL(RenderDeviceOGL* _device)
 	, m_Height(0)
 	, m_bCheckValidity(false)
 {
-	m_Textures.resize((size_t)RenderTarget::AttachmentPoint::NumAttachmentPoints + 1);
+	m_Textures.resize((size_t)IRenderTarget::AttachmentPoint::NumAttachmentPoints + 1);
 	m_StructuredBuffers.resize(8);
 
 	glGenFramebuffers(1, &m_GLObj);

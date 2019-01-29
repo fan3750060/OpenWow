@@ -15,16 +15,16 @@ CBaseManager* _BaseManager = nullptr;
 
 
 // Functions
-IRenderDevice* CreateRenderDeviceDX11(CBaseManager* _baseManager)
+std::shared_ptr<IRenderDevice> CreateRenderDeviceDX11(CBaseManager* _baseManager)
 {
 	_BaseManager = _baseManager;
-	return new RenderDeviceDX11();
+	return std::make_shared<RenderDeviceDX11>();
 }
 
-RenderWindow* CreateRenderWindowDX11(HWND hWnd, IRenderDevice* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
+std::shared_ptr<RenderWindow> CreateRenderWindowDX11(HWND hWnd, std::shared_ptr<IRenderDevice> device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
-	RenderDeviceDX11* pDevice = dynamic_cast<RenderDeviceDX11*>(device);
+	std::shared_ptr<RenderDeviceDX11> pDevice = std::dynamic_pointer_cast<RenderDeviceDX11, IRenderDevice>(device);
 	assert1(pDevice != NULL);
 
-	return new RenderWindowDX11(hWnd, pDevice, windowName, windowWidth, windowHeight, vSync);
+	return std::make_shared<RenderWindowDX11>(hWnd, pDevice, windowName, windowWidth, windowHeight, vSync);
 }

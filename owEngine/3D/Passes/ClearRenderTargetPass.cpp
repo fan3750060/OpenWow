@@ -3,7 +3,7 @@
 // General
 #include "ClearRenderTargetPass.h"
 
-ClearRenderTargetPass::ClearRenderTargetPass(std::shared_ptr<RenderTarget> renderTarget, ClearFlags clearFlags, const glm::vec4& color, float depth, uint8_t stencil)
+ClearRenderTargetPass::ClearRenderTargetPass(std::shared_ptr<IRenderTarget> renderTarget, ClearFlags clearFlags, const glm::vec4& color, float depth, uint8_t stencil)
 	: m_RenderTarget(renderTarget)
 	, m_ClearFlags(clearFlags)
 	, m_ClearColor(color)

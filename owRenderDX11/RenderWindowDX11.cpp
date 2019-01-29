@@ -10,12 +10,12 @@
 #include "RenderTargetDX11.h"
 #include "TextureDX11.h"
 
-RenderWindowDX11::RenderWindowDX11(HWND hWnd, RenderDeviceDX11* device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
+RenderWindowDX11::RenderWindowDX11(HWND hWnd, std::shared_ptr<RenderDeviceDX11> device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
 	: RenderWindow(windowName, windowWidth, windowHeight, hWnd, vSync)
 	, m_bIsMouseTracking(false)
 	, m_Device(device)
-	, m_pDevice(m_Device->GetDevice())
-	, m_pDeviceContext(m_Device->GetDeviceContext())
+	, m_pDevice(m_Device.lock()->GetDevice())
+	, m_pDeviceContext(m_Device.lock()->GetDeviceContext())
 	, m_pSwapChain(nullptr)
 	, m_bResizePending(false)
 {
@@ -35,7 +35,7 @@ RenderWindowDX11::RenderWindowDX11(HWND hWnd, RenderDeviceDX11* device, cstring 
 	}
 
 	// Create a render target for the back buffer and depth/stencil buffers.
-	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetDX11>(m_Device->CreateRenderTarget());
+	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetDX11>(m_Device.lock()->CreateRenderTarget());
 
 	// Create the device and swap chain before the window is shown.
 	CreateSwapChain();
@@ -163,7 +163,7 @@ void RenderWindowDX11::CreateSwapChain()
 		Texture::Type::UnsignedNormalized,
 		m_SampleDesc.Count,
 		0, 0, 0, 0, 24, 8);
-	std::shared_ptr<Texture> depthStencilTexture = m_Device->CreateTexture2D(windowWidth, windowHeight, 1, depthStencilTextureFormat);
+	std::shared_ptr<Texture> depthStencilTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, depthStencilTextureFormat);
 
 	// Color buffer (Color0)
 	Texture::TextureFormat colorTextureFormat
@@ -173,10 +173,10 @@ void RenderWindowDX11::CreateSwapChain()
 		m_SampleDesc.Count,
 		8, 8, 8, 8, 0, 0
 	);
-	std::shared_ptr<Texture> colorTexture = m_Device->CreateTexture2D(windowWidth, windowHeight, 1, colorTextureFormat);
+	std::shared_ptr<Texture> colorTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, colorTextureFormat);
 
-	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::Color0, colorTexture);
-	m_RenderTarget->AttachTexture(RenderTarget::AttachmentPoint::DepthStencil, depthStencilTexture);
+	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::Color0, colorTexture);
+	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::DepthStencil, depthStencilTexture);
 }
 
 void RenderWindowDX11::ResizeSwapChainBuffers(uint32_t width, uint32_t height)
@@ -217,7 +217,7 @@ void RenderWindowDX11::Present()
 	//TwDraw();
 
 	// Copy the render target's color buffer to the swap chain's back buffer.
-	std::shared_ptr<TextureDX11> colorBuffer = std::dynamic_pointer_cast<TextureDX11>(m_RenderTarget->GetTexture(RenderTarget::AttachmentPoint::Color0));
+	std::shared_ptr<TextureDX11> colorBuffer = std::dynamic_pointer_cast<TextureDX11>(m_RenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color0));
 	if (colorBuffer)
 	{
 		m_pDeviceContext->CopyResource(m_pBackBuffer, colorBuffer->GetTextureResource());
@@ -234,7 +234,7 @@ void RenderWindowDX11::Present()
 
 }
 
-std::shared_ptr<RenderTarget> RenderWindowDX11::GetRenderTarget()
+std::shared_ptr<IRenderTarget> RenderWindowDX11::GetRenderTarget()
 {
 	return m_RenderTarget;
 }

@@ -26,5 +26,5 @@ private:
 	std::shared_ptr<Font> mainFont;
 
 private:
-	IRenderDevice* m_RenderDevice;
+	std::weak_ptr<IRenderDevice> m_RenderDevice;
 };

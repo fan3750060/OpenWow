@@ -3,7 +3,7 @@
 class TextureDX11;
 class StructuredBufferDX11;
 
-class RenderTargetDX11 : public RenderTarget
+class RenderTargetDX11 : public IRenderTarget
 {
 public:
 	RenderTargetDX11(ID3D11Device2* pDevice);

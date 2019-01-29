@@ -442,7 +442,7 @@ void RenderDeviceOGL::DestroyMaterial(std::shared_ptr<Material> material)
 }
 
 
-std::shared_ptr<RenderTarget> RenderDeviceOGL::CreateRenderTarget()
+std::shared_ptr<IRenderTarget> RenderDeviceOGL::CreateRenderTarget()
 {
 	std::shared_ptr<RenderTargetOGL> renderTarget = std::make_shared<RenderTargetOGL>(this);
 	m_RenderTargets.push_back(renderTarget);
@@ -450,7 +450,7 @@ std::shared_ptr<RenderTarget> RenderDeviceOGL::CreateRenderTarget()
 	return renderTarget;
 }
 
-void RenderDeviceOGL::DestroyRenderTarget(std::shared_ptr<RenderTarget> renderTarget)
+void RenderDeviceOGL::DestroyRenderTarget(std::shared_ptr<IRenderTarget> renderTarget)
 {
 	RenderTargetList::iterator iter = std::find(m_RenderTargets.begin(), m_RenderTargets.end(), renderTarget);
 	if (iter != m_RenderTargets.end())

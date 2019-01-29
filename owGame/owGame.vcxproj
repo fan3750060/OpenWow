@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CreatePasses.cpp" />
+    <ClCompile Include="LiquidLayer.cpp" />
     <ClCompile Include="Liquid_Pass.cpp" />
     <ClCompile Include="LiquidInstance.cpp" />
     <ClCompile Include="Liquid.cpp" />
@@ -25,6 +26,7 @@
     <ClInclude Include="..\shared\owGame.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="CreatePasses.h" />
+    <ClInclude Include="LiquidLayer.h" />
     <ClInclude Include="Liquid_Pass.h" />
     <ClInclude Include="LiquidInstance.h" />
     <ClInclude Include="Liquid.h" />

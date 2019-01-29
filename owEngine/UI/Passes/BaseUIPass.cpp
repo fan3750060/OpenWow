@@ -13,7 +13,7 @@ BaseUIPass::BaseUIPass()
 	, m_RenderDevice(_RenderDevice)
 {
 	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
-	m_PerObjectConstantBuffer = m_RenderDevice->CreateConstantBuffer(PerObject());
+	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
 }
 
 BaseUIPass::BaseUIPass(std::shared_ptr<UIScene> uiScene, std::shared_ptr<PipelineState> pipeline)
@@ -24,13 +24,13 @@ BaseUIPass::BaseUIPass(std::shared_ptr<UIScene> uiScene, std::shared_ptr<Pipelin
 	, m_RenderDevice(_RenderDevice)
 {
 	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
-	m_PerObjectConstantBuffer = m_RenderDevice->CreateConstantBuffer(PerObject());
+	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
 }
 
 BaseUIPass::~BaseUIPass()
 {
 	_aligned_free(m_PerObjectData);
-	m_RenderDevice->DestroyConstantBuffer(m_PerObjectConstantBuffer);
+	m_RenderDevice.lock()->DestroyConstantBuffer(m_PerObjectConstantBuffer);
 }
 
 // Enable or disable the pass. If a pass is disabled, the technique will skip it.
@@ -119,9 +119,9 @@ RenderUIEventArgs& BaseUIPass::GetRenderUIEventArgs() const
 
 //----------------------------------------------------------------------
 
-IRenderDevice* BaseUIPass::GetRenderDevice() const
+std::shared_ptr<IRenderDevice> BaseUIPass::GetRenderDevice() const
 {
-	return m_RenderDevice;
+	return m_RenderDevice.lock();
 }
 
 //----------------------------------------------------------------------

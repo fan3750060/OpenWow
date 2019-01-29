@@ -18,7 +18,7 @@ int64_t g_FrameCounter = 0L;
 // Global Window Procedure callback function
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-static RenderWindow* gs_WindowHandle = nullptr;
+static std::shared_ptr<RenderWindow> gs_WindowHandle = nullptr;
 static HWND gs_hWindow = 0;
 static Application* gs_pApplicationInstance = nullptr;
 
@@ -51,6 +51,12 @@ Application::Application()
 		fail2("Failed to register the render window class.");
 	}
 
+	HANDLE hProcess = GetCurrentProcess();
+	if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
+		Log::Info("Process priority class set to HIGH");
+	else
+		Log::Error("Can't set process priority class.");
+
 #ifdef  IS_DX11
 	m_pRenderDevice = CreateRenderDeviceDX11(_BaseManager);
 #else
@@ -81,7 +87,7 @@ HINSTANCE Application::GetModuleHandle() const
 	return m_hInstance;
 }
 
-RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync)
+std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -134,13 +140,13 @@ RenderWindow* Application::CreateRenderWindow(cstring windowName, int windowWidt
 }
 
 
-IRenderDevice* Application::GetRenderDevice()
+std::shared_ptr<IRenderDevice> Application::GetRenderDevice()
 {
 	assert1(m_pRenderDevice);
 	return m_pRenderDevice;
 }
 
-RenderWindow* Application::GetRenderWindow()
+std::shared_ptr<RenderWindow> Application::GetRenderWindow()
 {
 	return m_Windows;
 }

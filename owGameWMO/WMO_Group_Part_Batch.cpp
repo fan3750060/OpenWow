@@ -14,6 +14,7 @@ WMO_Group_Part_Batch::WMO_Group_Part_Batch(const std::weak_ptr<const WMO> _paren
 	m_Quality(GetSettingsGroup<CGroupQuality>())
 {
 	m_WMOMaterial = m_ParentWMO.lock()->m_Materials[m_Proto.material_id];
+	
 
 	m_Bounds.setMin(vec3(_proto.bx, _proto.by, _proto.bz));
 	m_Bounds.setMax(vec3(_proto.tx, _proto.ty, _proto.tz));

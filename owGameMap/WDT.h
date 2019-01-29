@@ -28,10 +28,6 @@ struct WDT_MAIN
 	uint32_t asyncId;
 };
 
-// FORWARD BEGIN
-class MapController;
-// FORWARD END
-
 class WDT : public ISceneNodeProvider
 {
 	friend MapController;
@@ -44,7 +40,7 @@ public:
 
 	void Load();
 
-	const WDT_MPHD_Flags* getFlags() const { return &m_Flag; }
+	const WDT_MPHD_Flags& getFlags() const { return m_Flag; }
 	bool MapHasTiles() { return m_IsTileBased; }
 	bool MapHasGlobalWMO() { return !m_GlobalWMOName.empty(); }
 	const std::shared_ptr<ADT_WMO_Instance> GetGlobalWMOInstance() const { return m_GlobalWMO; }

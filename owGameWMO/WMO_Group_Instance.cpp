@@ -13,9 +13,11 @@ CWMO_Group_Instance::CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _objec
 	m_PortalsVis(true),
 	m_Calculated(false)
 {
-	{
-		UpdateLocalTransform();
-	}
+	UpdateLocalTransform();
+}
+
+CWMO_Group_Instance::~CWMO_Group_Instance()
+{
 }
 
 void CWMO_Group_Instance::SetParent(std::weak_ptr<SceneNode> pNode)

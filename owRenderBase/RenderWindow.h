@@ -12,7 +12,7 @@ class Texture;
 class SamplerState;
 class Rect;
 class Material;
-class RenderTarget;
+class IRenderTarget;
 
 class RenderWindow : public Object
 {
@@ -35,7 +35,7 @@ public:
 	virtual void Present() = 0;
 
 	// Get the render target of this render window.
-	virtual std::shared_ptr<RenderTarget> GetRenderTarget() = 0;
+	virtual std::shared_ptr<IRenderTarget> GetRenderTarget() = 0;
 
 	
 	// Update event is called when the application will be updated before rendering.

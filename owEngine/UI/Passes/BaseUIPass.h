@@ -43,7 +43,7 @@ public:
 	void SetRenderUIEventArgs(RenderUIEventArgs& e);
 	RenderUIEventArgs& GetRenderUIEventArgs() const;
 
-	IRenderDevice* GetRenderDevice() const;
+	std::shared_ptr<IRenderDevice> GetRenderDevice() const;
 
 	void SetPerObjectConstantBufferData(PerObject& perObjectData);
 	std::shared_ptr<ConstantBuffer> GetPerObjectConstantBuffer() const;
@@ -61,5 +61,5 @@ private:
 	// The scene to render.
 	std::shared_ptr<UIScene> m_UIScene;
 
-	IRenderDevice* m_RenderDevice;
+	std::weak_ptr<IRenderDevice> m_RenderDevice;
 };

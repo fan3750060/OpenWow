@@ -127,9 +127,7 @@ bool WMO::Load()
 
 				std::string groupName = groupFile->Name();
 				if (groupInfos[i].nameoffset > 0)
-				{
 					groupName = std::string(groupsNames + groupInfos[i].nameoffset);
-				}
 
 				std::shared_ptr<WMO_Group> group = std::make_shared<WMO_Group>(shared_from_this(), i, groupName, groupFile);
 				m_Groups.push_back(group);
@@ -230,7 +228,8 @@ bool WMO::Load()
 				m_DoodadsPlacementInfos.push_back(doodadsPlacements[i]);
 			}
 
-			m_Header.nDoodadDefs = doodadsPlacementsCount; // HACK! INCORRECT SIZE
+			// HACK! INCORRECT SIZE
+			m_Header.nDoodadDefs = doodadsPlacementsCount; 
 		}
 		else if (strcmp(fourcc, "MFOG") == 0)
 		{

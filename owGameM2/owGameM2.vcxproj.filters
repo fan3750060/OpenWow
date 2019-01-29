@@ -37,6 +37,9 @@
     <Filter Include="RenderStuff">
       <UniqueIdentifier>{b831f8ee-734b-484b-a78d-387e3f758afd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Parts_Miscellaneous\Particle\Emitters">
+      <UniqueIdentifier>{3746cc1f-6189-4246-bd32-0a343d2b7c01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="M2_Builder.cpp">
@@ -53,12 +56,6 @@
     </ClCompile>
     <ClCompile Include="M2_RibbonEmitters.cpp">
       <Filter>Components\Parts_Miscellaneous\Ribbon</Filter>
-    </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Components\Parts_Miscellaneous\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleEmitters.cpp">
-      <Filter>Components\Parts_Miscellaneous\Particle</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Components\Parts_Miscellaneous\Particle</Filter>
@@ -129,6 +126,15 @@
     <ClCompile Include="M2_Material.cpp">
       <Filter>RenderStuff</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleEmitters.cpp">
+      <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter_Plane.cpp">
+      <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter_Sphere.cpp">
+      <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="M2_SkinTypes.h">
@@ -165,9 +171,6 @@
       <Filter>Components\Parts_Miscellaneous\Ribbon</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
-      <Filter>Components\Parts_Miscellaneous\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleEmitters.h">
       <Filter>Components\Parts_Miscellaneous\Particle</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
@@ -244,6 +247,15 @@
     </ClInclude>
     <ClInclude Include="M2_Material.h">
       <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitters.h">
+      <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter_Plane.h">
+      <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter_Sphere.h">
+      <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

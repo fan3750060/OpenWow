@@ -1,4 +1,5 @@
 #include "..\\_gamedata\\shaders_D3D\\M2\\M2_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
 
 struct VertexShaderInput
 {
@@ -72,7 +73,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	return OUT;
 }
 
-float4 PS_main(VertexShaderOutput IN) : SV_TARGET
+PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	float4 resultColor = Test(IN);
 	
@@ -89,7 +90,9 @@ float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 		if (resultColor.a <= (1.0f / 255.0f)) discard;
 	}
 	
-	return resultColor;
+	PixelShaderOutput OUT;
+	OUT.Diffuse = resultColor;
+	return OUT;
 }
 
 float4 Test(VertexShaderOutput IN)

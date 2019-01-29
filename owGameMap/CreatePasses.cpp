@@ -10,7 +10,7 @@
 
 
 
-void AddSkyPasses(IRenderDevice * device, RenderWindow * window, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
+void AddSkyPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
 {
 	BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
 	BlendState::BlendMode disableBlending;
@@ -24,12 +24,12 @@ void AddSkyPasses(IRenderDevice * device, RenderWindow * window, RenderTechnique
 	WDLPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
 	WDLPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
 	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
-	WDLPipeline->SetRenderTarget(window->GetRenderTarget());
+	WDLPipeline->SetRenderTarget(_renderTarget);
 	WDLPipeline->GetRasterizerState().SetViewport(*viewport);
 	technique->AddPass(std::make_shared<Sky_Pass>(scene, WDLPipeline));
 }
 
-void AddWDLPasses(IRenderDevice* device, RenderWindow* window, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
+void AddWDLPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
 {
 	BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
 	BlendState::BlendMode disableBlending;
@@ -43,13 +43,13 @@ void AddWDLPasses(IRenderDevice* device, RenderWindow* window, RenderTechnique *
 	WDLPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
 	WDLPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::Back);
 	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
-	WDLPipeline->SetRenderTarget(window->GetRenderTarget());
+	WDLPipeline->SetRenderTarget(_renderTarget);
 	WDLPipeline->GetRasterizerState().SetViewport(*viewport);
 	technique->AddPass(std::make_shared<WDL_Node_Pass>(scene, WDLPipeline));
 
 }
 
-void AddMCNKPasses(IRenderDevice* device, RenderWindow* window, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
+void AddMCNKPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
 {
 	BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
 	BlendState::BlendMode disableBlending;
@@ -63,7 +63,7 @@ void AddMCNKPasses(IRenderDevice* device, RenderWindow* window, RenderTechnique 
 	ADTPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 	ADTPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::Back);
 	ADTPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
-	ADTPipeline->SetRenderTarget(window->GetRenderTarget());
+	ADTPipeline->SetRenderTarget(_renderTarget);
 	ADTPipeline->GetRasterizerState().SetViewport(*viewport);
 	technique->AddPass(std::make_shared<ADT_MCNK_Pass>(scene, ADTPipeline));
 }

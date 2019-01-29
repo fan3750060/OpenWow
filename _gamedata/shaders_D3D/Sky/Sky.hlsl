@@ -1,4 +1,5 @@
 #include "..\\_gamedata\\shaders_D3D\\Sky\\Sky_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
 
 struct VertexShaderInput
 {
@@ -32,7 +33,9 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	return OUT;
 }
 
-float4 PS_main(VertexShaderOutput IN) : SV_TARGET
+PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return float4(IN.color.rgb, 1.0f);
+	PixelShaderOutput OUT;
+	OUT.Diffuse = float4(IN.color.rgb, 1.0f);
+	return OUT;
 }

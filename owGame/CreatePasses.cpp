@@ -6,7 +6,7 @@
 // Additional
 #include "Liquid_Pass.h"
 
-void AddLiquidPasses(IRenderDevice* device, RenderWindow* window, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
+void AddLiquidPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene> scene)
 {
 	// STATES
 	BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
@@ -19,7 +19,7 @@ void AddLiquidPasses(IRenderDevice* device, RenderWindow* window, RenderTechniqu
 	WMOPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 	WMOPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
 	WMOPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
-	WMOPipeline->SetRenderTarget(window->GetRenderTarget());
+	WMOPipeline->SetRenderTarget(_renderTarget);
 	WMOPipeline->GetRasterizerState().SetViewport(*viewport);
 
 	technique->AddPass(std::make_shared<Liquid_Pass>(scene, WMOPipeline));

@@ -39,6 +39,7 @@ public:
 public:
 	const int										m_IndexX, m_IndexZ;
 	
+	ADT_MHDR                                        header;
 	std::vector<std::shared_ptr<ADT_TextureInfo>>	m_Textures;
 
 	// Instances

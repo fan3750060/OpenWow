@@ -1,15 +1,7 @@
-#include "..\\_gamedata\\shaders_D3D\\Debug\\Debug_Material.h"
-
-struct VertexShaderInput
+struct Debug_Material
 {
-	float3 position       : POSITION;
+    float4 DiffuseColor;
 };
-
-struct VertexShaderOutput
-{
-	float4 position       : SV_POSITION;
-};
-
 
 // Uniforms
 cbuffer PerObject : register(b0)
@@ -21,16 +13,12 @@ cbuffer Material : register(b2)
     Debug_Material Material;
 };
 
-VertexShaderOutput VS_main(VertexShaderInput IN)
+float4 VS_main(float3 position)
 {
-	VertexShaderOutput OUT;
-
-	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
-	
-	return OUT;
+	return mul(ModelViewProjection, float4(position, 1.0f));
 }
 
-float4 PS_main(VertexShaderOutput IN) : SV_TARGET
+float4 PS_main(float4 pos) : SV_TARGET
 {
 	return Material.DiffuseColor;
 }

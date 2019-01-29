@@ -15,8 +15,11 @@ public:
 	typedef std::vector<std::shared_ptr<CWMO_Liquid_Instance>> LuqidInstances;
 public:
 	CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _object);
+	virtual ~CWMO_Group_Instance();
 
-	
+	// SceneNode
+	void SetParent(std::weak_ptr<SceneNode> pNode) override;
+	bool Accept(IVisitor& visitor) override;
 
 	const std::shared_ptr<WMO_Group> getObject() const { return m_Object; }
 
@@ -26,9 +29,7 @@ public:
 	void addLiquidInstance(std::shared_ptr<CWMO_Liquid_Instance> _liquid) { m_Liquids.push_back(_liquid); }
 	const LuqidInstances& getLiquidInstances() { return m_Liquids; }
 
-	// SceneNode
-	void SetParent(std::weak_ptr<SceneNode> pNode) override;
-	bool Accept(IVisitor& visitor) override;
+
 
 //private:
 	const std::shared_ptr<WMO_Group> m_Object;

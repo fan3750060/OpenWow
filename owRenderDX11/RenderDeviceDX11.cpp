@@ -411,7 +411,7 @@ void RenderDeviceDX11::DestroyMaterial(std::shared_ptr<Material> material)
 }
 
 
-std::shared_ptr<RenderTarget> RenderDeviceDX11::CreateRenderTarget()
+std::shared_ptr<IRenderTarget> RenderDeviceDX11::CreateRenderTarget()
 {
 	std::shared_ptr<RenderTargetDX11> renderTarget = std::make_shared<RenderTargetDX11>(m_pDevice);
 	m_RenderTargets.push_back(renderTarget);
@@ -419,7 +419,7 @@ std::shared_ptr<RenderTarget> RenderDeviceDX11::CreateRenderTarget()
 	return renderTarget;
 }
 
-void RenderDeviceDX11::DestroyRenderTarget(std::shared_ptr<RenderTarget> renderTarget)
+void RenderDeviceDX11::DestroyRenderTarget(std::shared_ptr<IRenderTarget> renderTarget)
 {
 	RenderTargetList::iterator iter = std::find(m_RenderTargets.begin(), m_RenderTargets.end(), renderTarget);
 	if (iter != m_RenderTargets.end())

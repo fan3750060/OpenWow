@@ -31,6 +31,6 @@ private:
     LightParams* m_pLightParams;
     std::shared_ptr<ConstantBuffer> m_LightParamsCB;
 
-    IRenderDevice* m_RenderDevice;
+	std::weak_ptr<IRenderDevice> m_RenderDevice;
 
 };

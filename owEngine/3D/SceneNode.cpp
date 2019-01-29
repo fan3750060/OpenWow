@@ -118,7 +118,7 @@ void SceneNode::SetLocalTransform(cmat4 localTransform)
 {
 	m_LocalTransform = localTransform;
 	m_InverseLocalTransform = glm::inverse(localTransform);
-	m_IsLocalDirty = true;
+	m_IsLocalDirty = false;
 	m_IsWorldDirty = true;
 }
 
