@@ -14,7 +14,7 @@ public:
 	virtual ~ADT_MCNK();
 
 	// SceneNode
-	void UpdateLocalTransform(bool _forced = false) override;
+	void UpdateLocalTransform() override;
 	bool Accept(IVisitor& visitor) override;
 
 	// ILoadable

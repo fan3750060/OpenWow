@@ -14,6 +14,10 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std
 {
 }
 
+
+//
+// IMesh
+//
 bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	std::shared_ptr<const MapController> MapController = m_MapController.lock();
@@ -27,7 +31,7 @@ bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<C
 		return false;
 	}
 
-	if (abs(m_IndexX - currentX) > 7 || abs(m_IndexZ - currentZ) > 7)
+	if (abs(m_IndexX - currentX) > 3 || abs(m_IndexZ - currentZ) > 3)
 	{
 		return false;
 	}

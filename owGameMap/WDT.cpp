@@ -6,7 +6,7 @@
 // General
 #include "WDT.h"
 
-WDT::WDT(std::weak_ptr<MapController> _mapController) :
+WDT::WDT(std::weak_ptr<const MapController> _mapController) :
 	m_IsTileBased(false),
 	m_GlobalWMO(nullptr),
 	m_MapController(_mapController)
@@ -24,12 +24,13 @@ void WDT::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
 		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(wmo, m_GlobalWMOPlacementInfo);
 		m_GlobalWMO->SetParent(_parent);
+		m_GlobalWMO->Load();
 	}
 }
 
 void WDT::Load()
 {
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	std::shared_ptr<const MapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdt";
@@ -63,7 +64,7 @@ void WDT::Load()
 		}
 		else if (strcmp(fourcc, "MPHD") == 0)
 		{
-			f->readBytes(&m_Flag, 4);
+			f->readBytes(&m_MPHD, sizeof(WDT_MPHD));
 		}
 		else if (strcmp(fourcc, "MAIN") == 0) // Map tile table. Contains 64x64 = 4096 records of 8 bytes each.
 		{
@@ -71,13 +72,10 @@ void WDT::Load()
 			{
 				for (int j = 0; j < 64; j++)
 				{
-					// Flag
 					f->readBytes(&m_TileFlag[j][i], sizeof(WDT_MAIN));
 
 					if (m_TileFlag[j][i].flags.Flag_HasADT)
-					{
 						m_IsTileBased = true;
-					}
 				}
 			}
 		}
@@ -93,7 +91,7 @@ void WDT::Load()
 		}
 		else if (strcmp(fourcc, "MODF") == 0)
 		{
-			assert1(m_Flag.Flag_GlobalWMO);
+			assert1(m_MPHD.flags.Flag_GlobalWMO);
 			assert1((size / sizeof(ADT_MODF)) == 1);
 			f->readBytes(&m_GlobalWMOPlacementInfo, sizeof(ADT_MODF));
 		}

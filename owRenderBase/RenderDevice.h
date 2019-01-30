@@ -86,20 +86,6 @@ public:
 	// @param height The height of the cone.
 	std::shared_ptr<IMesh> CreateCone();
 
-	// Create a 3D arrow.
-	// Arrows can be used to represent the direction an object or light is pointing.
-	// @param tail The tail (begin point) of the arrow.
-	// @param head The head (end point) of the arrow.
-	// @param radius The radius of the body of the arrow.
-	std::shared_ptr<IMesh> CreateArrow(cvec3 tail = vec3(0, 0, 0), cvec3 head = vec3(0, 0, 1), float radius = 0.05f);
-
-	// Create a 3D axis with X, -X, Y, -Y, Z, -Z axes.
-	// Primarily used to debug an object's position and direction in 3D space.
-	// The axis is aligned to 0,0,0 and the global X, Y, Z axes.
-	// @param radius is the radius of the axis arms.
-	// @param length is the length is the length of each axis arm.
-	std::shared_ptr<IMesh> CreateAxis(float radius = 0.05f, float length = 0.5f);
-
 	//
 	// ABSTRACT
 	//

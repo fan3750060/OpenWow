@@ -37,6 +37,9 @@
     <Filter Include="Materials">
       <UniqueIdentifier>{99989cb3-00f0-4dc1-986e-75a12990548f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderStuff">
+      <UniqueIdentifier>{61ff063b-287f-4ae6-84e4-ab15b88e3880}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -148,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="3D\Passes\DeferredPass.cpp">
       <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatePasses.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug_Pass.cpp">
+      <Filter>RenderStuff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +287,12 @@
     </ClInclude>
     <ClInclude Include="3D\Passes\DeferredPass.h">
       <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="CreatePasses.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug_Pass.h">
+      <Filter>RenderStuff</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

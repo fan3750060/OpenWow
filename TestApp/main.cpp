@@ -63,10 +63,6 @@ int main(int argumentCount, char* arguments[])
 		CMPQArchiveManager mpqArchiveManager;
 		CFilesManager filesManager;
 
-
-
-
-
 		Application app;
 
 		g_pRenderWindow = app.CreateRenderWindow("Name", 1280, 1024);
@@ -105,11 +101,11 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
-		//const float x = 40;
-		//const float y = 29;
+		const float x = 40;
+		const float y = 29;
 
-		const float x = 29;
-		const float y = 21;
+		//const float x = 29;
+		//const float y = 21;
 
 		//new FontsManager(_RenderDevice);
 		new WMOsManager();
@@ -119,10 +115,24 @@ int main(int argumentCount, char* arguments[])
 
 		contr = std::make_shared<MapController>();
 		contr->SetParent(g_pScene->GetRootNode());
-		contr->MapPreLoad(*DBC_Map[571]);
+		contr->MapPreLoad(*DBC_Map[1]);
 		contr->MapLoad();
 		contr->MapPostLoad();
 		contr->EnterMap(x, y);
+
+
+		std::shared_ptr<IMesh> cube = _RenderDevice->CreateCube();
+		cube->SetType(SceneNodeTypes::SN_TYPE_DEBUG);
+		std::shared_ptr<MaterialDebug> mat = std::make_shared<MaterialDebug>(_RenderDevice->CreateMaterial());
+		mat->SetWrapper(mat);
+		mat->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		cube->SetMaterial(mat);
+
+		std::shared_ptr<SceneNode> cubeNode = std::make_shared<SceneNode>();
+		cubeNode->AddMesh(cube);
+		cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
+		cubeNode->SetScale(vec3(15, 15, 15));
+		cubeNode->SetParent(g_pScene->GetRootNode());
 
 		/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
 		std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
@@ -149,6 +159,9 @@ int main(int argumentCount, char* arguments[])
 		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
 		AddSkyPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
 		AddWDLPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+
+		AddDebugPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
+
 		AddMCNKPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
 		AddWMOPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
 		AddLiquidPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);

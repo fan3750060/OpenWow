@@ -17,7 +17,7 @@
 #pragma comment(lib, "owCore.lib")
 
 #include <owRenderBase.h>
-#pragma comment(lib, "owRenderBase.lib")
+#pragma comment(lib, "owRender.lib")
 
 #include <owEngine.h>
 #pragma comment(lib, "owEngine.lib")

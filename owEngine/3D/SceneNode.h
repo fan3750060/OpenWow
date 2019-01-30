@@ -38,16 +38,15 @@ public:
 	void SetBounds(BoundingBox _bbox);
 	cbbox GetBounds() const;
 
-	bool IsDirty() const;
 
 	/**
 	 * Gets the scene node's local transform (relative to it's parent world transform).
 	 */
-	mat4 GetLocalTransform();
+	mat4 GetLocalTransform() const;
 	/**
 	 * Gets the inverse of the local transform (relative to it's parent world transform).
 	 */
-	mat4 GetInverseLocalTransform();
+	mat4 GetInverseLocalTransform() const;
 	void SetLocalTransform(cmat4 localTransform);
 
 
@@ -111,9 +110,8 @@ public:
 protected:
 	virtual mat4 GetParentWorldTransform() const;
 
-	virtual void UpdateLocalTransform(bool _forced = false);
-	virtual void UpdateWorldTransform(bool _forced = false);
-	void SetLocalUnderty();
+	virtual void UpdateLocalTransform();
+	virtual void UpdateWorldTransform();
 
 private:
 	typedef std::vector<std::shared_ptr<SceneNode>> NodeList;
@@ -126,11 +124,9 @@ private:
 	// Transforms node from parent's space to world space for rendering.
 	mat4                m_LocalTransform;
 	mat4                m_InverseLocalTransform;	// This is the inverse of the local -> world transform.
-	bool                m_IsLocalDirty;
 
 	mat4                m_WorldTransform;
 	mat4                m_InverseWorldTransform;
-	bool                m_IsWorldDirty;
 
 	vec3                m_Translate;
 	vec3				m_Rotate;

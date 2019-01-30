@@ -8,10 +8,6 @@ SkyParams::SkyParams()
 	Clear();
 }
 
-SkyParams::~SkyParams()
-{
-}
-
 void SkyParams::Clear()
 {
 	for (uint8 i = 0; i < LightColors::COUNT; i++)
@@ -26,7 +22,7 @@ void SkyParams::Clear()
 	m_oceanDeepAlpha = 0.0f;
 }
 
-SkyParams& SkyParams::operator+=(const SkyParams& _s)
+const SkyParams& SkyParams::operator+=(const SkyParams& _s)
 {
 	for (uint8 i = 0; i < LightColors::COUNT; i++)
 		this->m_Colors[i] += _s.m_Colors[i];
@@ -43,7 +39,7 @@ SkyParams& SkyParams::operator+=(const SkyParams& _s)
 	return *this;
 }
 
-SkyParams& SkyParams::operator*=(float _weight)
+const SkyParams& SkyParams::operator*=(float _weight)
 {
 	for (uint8 i = 0; i < LightColors::COUNT; i++)
 		this->m_Colors[i] *= _weight;

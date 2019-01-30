@@ -27,9 +27,6 @@ void CWMO_Base_Instance::InitTransform()
 
 void CWMO_Base_Instance::EmptyTransformAndBounds()
 {
-	// Matrix
-	UpdateLocalTransform();
-
 	// Bounds
 	BoundingBox bbox;
 	bbox.setMin(vec3(-100000.0f, -100000.0f, -100000.0f));

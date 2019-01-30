@@ -30,6 +30,8 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 	const SceneNode* sceneNode = dynamic_cast<const SceneNode*>(renderEventArgs.Node);
 	const CM2_Base_Instance* sceneNodeAsM2Instance = dynamic_cast<const CM2_Base_Instance*>(sceneNode);
 	assert1(sceneNodeAsM2Instance != nullptr);
+	const Camera* camera = renderEventArgs.Camera;
+	assert1(camera != nullptr);
 
 	const SM2_SkinSection& proto = m_SkinSection->getProto();
 
@@ -51,14 +53,14 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 	{
 		m_TestMaterial->SetMaxInfluences(proto.boneInfluences);
 
-		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
-			skeleton->getBoneLookup(i)->SetNeedCalculate();
+		//for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
+		//	skeleton->getBoneLookup(i)->SetNeedCalculate();
 
-		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
-			skeleton->getBoneLookup(i)->calcMatrix(sceneNodeAsM2Instance->getAnimator()->getSequenceIndex(), sceneNodeAsM2Instance->getAnimator()->getCurrentTime(), static_cast<uint32>(renderEventArgs.TotalTime));
+		//for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
+		//	skeleton->getBoneLookup(i)->calcMatrix(sceneNodeAsM2Instance->getAnimator()->getSequenceIndex(), sceneNodeAsM2Instance->getAnimator()->getCurrentTime(), static_cast<uint32>(renderEventArgs.TotalTime));
 
-		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
-			skeleton->getBoneLookup(i)->calcBillboard(sceneNodeAsM2Instance->GetWorldTransfom());
+		//for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)
+		//	skeleton->getBoneLookup(i)->calcBillboard(camera->GetViewMatrix(), sceneNodeAsM2Instance->GetWorldTransfom());
 
 		std::vector<mat4> bones;
 		for (uint16 i = proto.bonesStartIndex; i < proto.bonesStartIndex + proto.boneCount; i++)

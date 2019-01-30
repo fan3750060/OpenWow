@@ -31,9 +31,6 @@ ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ
 	{
 		SetTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
 
-		UpdateLocalTransform();
-		UpdateWorldTransform();
-
 		BoundingBox bbox
 		(
 			vec3(GetTranslation().x,              Math::MaxFloat, GetTranslation().z),
@@ -51,10 +48,9 @@ ADT::~ADT()
 //
 // SceneNode
 //
-void ADT::UpdateLocalTransform(bool _forced)
+void ADT::UpdateLocalTransform()
 {
-	// Don't calculate local transform
-	SetLocalUnderty();
+	// do nothing
 }
 
 bool ADT::Accept(IVisitor& visitor)
@@ -290,6 +286,7 @@ bool ADT::Load()
 		chunk->Load();
 		m_Chunks.push_back(chunk);
 
+		// Update THIS bounds
 		BoundingBox bbox = GetBounds();
 		bbox.makeUnion(chunk->GetBounds());
 		SetBounds(bbox);
@@ -307,6 +304,7 @@ bool ADT::Load()
 			inst->Load();
 			m_WMOsInstances.push_back(inst);
 
+			// Update THIS bounds
 			BoundingBox bbox = GetBounds();
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);
@@ -324,6 +322,7 @@ bool ADT::Load()
 			inst->CreateInstances();
 			m_MDXsInstances.push_back(inst);
 
+			// Update THIS bounds
 			BoundingBox bbox = GetBounds();
 			bbox.makeUnion(inst->GetBounds());
 			SetBounds(bbox);

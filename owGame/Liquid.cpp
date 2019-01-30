@@ -12,65 +12,6 @@ Liquid::Liquid(uint32 x, uint32 y)
 	m_TilesCount = (m_TilesX + 1) * (m_TilesY + 1);
 }
 
-//--
-
-/*void Liquid::Render(cmat4 _worldMatrix)
-{
-	_Render->r.setBlendMode(true, R_BlendFunc::BS_BLEND_SRC_ALPHA, R_BlendFunc::BS_BLEND_INV_SRC_ALPHA);
-	_Render->r.setCullMode(R_CullMode::RS_CULL_NONE);
-	_Render->r.setDepthTest(true);
-	_Render->r.setDepthMask(true);
-
-	for (auto& layer : m_WaterLayers)
-	{
-		_Render->r.setGeometry(layer->m_Mesh);
-
-		if (layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
-		{
-			_Render->getTechniquesMgr()->m_Water->Bind();
-			_Render->getTechniquesMgr()->m_Water->setWorld(_worldMatrix);
-		}
-		else
-		{
-			_Render->getTechniquesMgr()->m_Magma->Bind();
-			_Render->getTechniquesMgr()->m_Magma->setWorld(_worldMatrix);
-		}
-
-		uint32_t texidx = (uint32_t)(_World->EnvM()->animtime 0.0f / 60.0f) % layer->m_Textures.size();
-		_Render->r.setTexture(Material::C_DiffuseTextureIndex, layer->m_Textures[texidx], m_QualitySettings.Texture_Sampler | SS_ADDR_WRAP, 0);
-
-		if (layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
-		{
-			if (m_SkyManager != nullptr)
-			{
-				_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_LIGHT));
-				_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_DARK));
-				_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
-				_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
-			}
-			else
-			{
-				_Render->getTechniquesMgr()->m_Water->SetWaterColorLight(vec3(0.0f, 0.0f, 1.0f));
-				_Render->getTechniquesMgr()->m_Water->SetWaterColorDark(vec3(0.0f, 0.0f, 1.0f));
-				_Render->getTechniquesMgr()->m_Water->SetShallowAlpha(1.0f);
-				_Render->getTechniquesMgr()->m_Water->SetDeepAlpha(1.0f);
-			}
-		}
-
-		_Render->r.drawIndexed(0, layer->m_IndicesCnt, 0, layer->m_VerticesCnt, nullptr, false);
-
-		if (layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::water || layer->LiquidType->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
-		{
-			_Render->getTechniquesMgr()->m_Water->Unbind();
-		}
-		else
-		{
-			_Render->getTechniquesMgr()->m_Magma->Unbind();
-		}
-	}
-}*/
-//--
-
 #pragma region Types
 #include __PACK_BEGIN
 struct SLiquidVertex

@@ -26,7 +26,7 @@ DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
 	ExitThread(0);
 }
 
-CLoader::CLoader(IOpenGLAdapter* _openGLAdapter) :
+CLoader::CLoader() :
 	m_Thread_Loader(nullptr)
 {
 	AddManager<ILoader>(this);

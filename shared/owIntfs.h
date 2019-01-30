@@ -12,7 +12,6 @@
 
 #include "../owIntfs/Console.h"
 #include "../owIntfs/DebugOutput.h"
-#include "../owIntfs/Engine.h"
 #include "../owIntfs/Files.h"
 #include "../owIntfs/GameState.h"
 #include "../owIntfs/GameStateManager.h"

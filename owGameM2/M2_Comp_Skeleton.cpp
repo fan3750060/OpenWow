@@ -10,7 +10,7 @@ CM2_Comp_Skeleton::CM2_Comp_Skeleton()	:
 {
 }
 
-void CM2_Comp_Skeleton::calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat)
+void CM2_Comp_Skeleton::calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _viewMat, cmat4 _worldMat)
 {
 	// Bones
 	if (m_HasBones)
@@ -27,7 +27,7 @@ void CM2_Comp_Skeleton::calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 
 
 		for (uint32 i = 0; i < m_Bones.size(); i++)
 		{
-			m_Bones[i]->calcBillboard(_worldMat);
+			m_Bones[i]->calcBillboard(_viewMat, _worldMat);
 		}
 	}
 }

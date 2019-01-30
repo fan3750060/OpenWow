@@ -2,14 +2,12 @@
 
 // Include
 #include "MapController.h"
+#include "WDL_Node_Material.h"
 
 // General
 #include "WDL.h"
 
-// Additonal
-#include "WDL_Node_Material.h"
-
-WDL::WDL(std::weak_ptr<MapController> _mapController) :
+WDL::WDL(std::weak_ptr<const MapController> _mapController) :
 	m_MapController(_mapController),
 	m_Minimap(nullptr)
 {}
@@ -25,7 +23,7 @@ WDL::~WDL()
 //
 void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	std::shared_ptr<const MapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdl";
@@ -39,7 +37,8 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 	}
 
 	// Material
-	std::shared_ptr<WDL_Node_Material> mat = std::make_shared<WDL_Node_Material>();
+	m_LowResilutionTileMaterial = std::make_shared<WDL_Node_Material>();
+	m_LowResilutionTileMaterial->SetWrapper(m_LowResilutionTileMaterial);
 
 	// Heightmap
 	vec3 lowres[17][17];
@@ -98,7 +97,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 
 				std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 				__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
-				__geom->SetMaterial(mat);
+				__geom->SetMaterial(m_LowResilutionTileMaterial);
 				
 				std::shared_ptr<CWDL_LowResTile> lowResTile = std::make_shared<CWDL_LowResTile>(m_MapController, __geom, i, j);
 				_parent.lock()->AddMesh(lowResTile);
@@ -116,13 +115,20 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
 		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(name);
 		std::shared_ptr<ADT_WMO_Instance> wmoInstance = std::make_shared<ADT_WMO_Instance>(wmo, it);
 		wmoInstance->SetParent(_parent);
+		wmoInstance->Load();
 		m_LowResolutionWMOs.push_back(wmoInstance);
 	}
 }
 
+void WDL::UpdateCamera(const Camera * camera)
+{
+	if (m_LowResilutionTileMaterial)
+		m_LowResilutionTileMaterial->SetDiffuseColor(vec4(GetManager<ISkyManager>()->GetColor(LightColors::LIGHT_COLOR_FOG), 1.0f));
+}
+
 void WDL::Load()
 {
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	std::shared_ptr<const MapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdl";
@@ -281,7 +287,7 @@ void WDL::Load()
 	}
 
 	// Finish minimap
-	//m_Minimap = _Render->r.createTexture(R_TextureTypes::Tex2D, 512, 512, 1, R_TextureFormats::RGBA8, false, false, false, false);
-	//m_Minimap->uploadTextureData(0, 0, texbuf);
-	//delete[] texbuf;
+	m_Minimap = _RenderDevice->CreateTexture();
+	m_Minimap->LoadTextureCustom(512, 512, texbuf);
+	delete[] texbuf;
 }

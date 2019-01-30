@@ -40,7 +40,7 @@ protected:
 	void InitAnimator();
 
 	// SceneNode
-	virtual void UpdateLocalTransform(bool _forced = false) override;
+	virtual void UpdateLocalTransform() override;
 
 private:
 	// Color & Alpha

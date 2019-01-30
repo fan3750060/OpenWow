@@ -12,7 +12,7 @@ class CM2_Comp_Skeleton
 public:
 	CM2_Comp_Skeleton();
 
-	void calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _worldMat);
+	void calc(uint16 anim, uint32 time, uint32 globalTime, cmat4 _viewMat, cmat4 _worldMat);
 
 	const bool hasBones() const { return m_HasBones; }
 	const bool isAnimBones() const { return m_IsAnimBones; }

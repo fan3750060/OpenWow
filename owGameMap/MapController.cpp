@@ -19,18 +19,6 @@ MapController::MapController() :
 
 	ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
-	// Scene node
-	{
-		//setOpaque(true);
-
-		BoundingBox bbox
-		(
-			vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), 
-			vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat)
-		);
-		SetBounds(bbox);
-	}
-
 	/*time_t t = time(0);   // get time now
 	tm* now = localtime(&t);
 	m_GameTime.Set(now->tm_hour, now->tm_min);*/
@@ -64,7 +52,6 @@ void MapController::MapPreLoad(const DBC_MapRecord& _map)
 	m_WDL = std::make_shared<WDL>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 	m_WDL->Load();
 
-	// Delete if exists
 	m_WDT.reset();
 	m_WDT = std::make_shared<WDT>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
 }
@@ -85,7 +72,6 @@ void MapController::MapPostLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
-	// Create all instances
 	m_WDT->CreateInsances(weak_from_this());
 	m_WDL->CreateInsances(weak_from_this());
 }
@@ -94,6 +80,7 @@ void MapController::Unload()
 {
 	m_WDL.reset();
 	m_WDT.reset();
+	m_SkyManager.reset();
 
 	for (int i = 0; i < C_TilesCacheSize; i++)
 	{
@@ -149,13 +136,16 @@ void MapController::UpdateCamera(const Camera* camera)
 			loading = false;
 		}
 	}
+
+	if (m_WDL)
+		m_WDL->UpdateCamera(camera);
 }
 
 //--
 
 void MapController::EnterMap(int32 x, int32 z)
 {
-	if (IsBadTileIndex(x, z) || !m_WDT->m_TileFlag[x][z].flags.Flag_HasADT)
+	if (IsBadTileIndex(x, z) || !m_WDT->getTileFlags(x, z).Flag_HasADT)
 	{
 		m_IsOnInvalidTile = true;
 		return;
@@ -180,7 +170,7 @@ std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
 		return nullptr;
 	}
 
-	if (!m_WDT->m_TileFlag[x][z].flags.Flag_HasADT)
+	if (!m_WDT->getTileFlags(x, z).Flag_HasADT)
 	{
 		return nullptr;
 	}
@@ -239,8 +229,7 @@ void MapController::ClearCache()
 	{
 		if (m_ADTCache[i] != nullptr && !IsTileInCurrent(m_ADTCache[i]))
 		{
-			//delete m_ADTCache[i];
-			m_ADTCache[i] = nullptr;
+			m_ADTCache[i].reset();
 		}
 	}
 }

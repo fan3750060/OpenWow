@@ -3,7 +3,7 @@
 class CLoader : public ILoader
 {
 public:
-	CLoader(IOpenGLAdapter* _openGLAdapter);
+	CLoader();
 	~CLoader();
 
 	void AddToLoadQueue(ILoadable* _item) override;

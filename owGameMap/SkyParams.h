@@ -1,17 +1,14 @@
 #pragma once
 
-class SkyParams
+struct SkyParams
 {
-public:
 	SkyParams();
-	virtual ~SkyParams();
 
-	SkyParams& operator+=(const SkyParams& _s);
-	SkyParams& operator*=(float _weight);
+	const SkyParams& operator+=(const SkyParams& _s);
+	const SkyParams& operator*=(float _weight);
 
 	void Clear();
 
-public:
 	vec3                      m_Colors[LightColors::COUNT];
 	float                     m_Fogs[LightFogs::COUNT];
 
@@ -22,6 +19,4 @@ public:
 	float                     m_waterDeepAlpha;
 	float                     m_oceanShallowAlpha;
 	float                     m_oceanDeepAlpha;
-
-
 };

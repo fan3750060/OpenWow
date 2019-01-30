@@ -15,6 +15,14 @@
 // General
 #include "RenderDeviceDX11.h"
 
+std::string ShaderMacrosToString(const Shader::ShaderMacros& _shaderMacros)
+{
+	std::string value = "";
+	for (const auto& it : _shaderMacros)
+		value += it.first + "_" + it.second;
+	return value;
+}
+
 RenderDeviceDX11::RenderDeviceDX11()
 {
 	CreateDevice();
@@ -289,7 +297,7 @@ void RenderDeviceDX11::DestroyMesh(std::shared_ptr<IMesh> mesh)
 
 std::shared_ptr<Shader> RenderDeviceDX11::CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
-	std::string fullName = fileName + entryPoint + profile;
+	std::string fullName = fileName + ShaderMacrosToString(shaderMacros) + entryPoint + profile;
 
 	ShaderMap::iterator iter = m_ShadersByName.find(fullName);
 	if (iter != m_ShadersByName.end())

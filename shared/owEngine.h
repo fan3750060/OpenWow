@@ -11,6 +11,7 @@
 // Base
 #include "../owEngine/Application.h"
 #include "../owEngine/EngineTime.h"
+#include "../owEngine/CreatePasses.h"
 
 //
 // Wrappers

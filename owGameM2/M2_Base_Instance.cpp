@@ -91,10 +91,7 @@ void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
 {
 	SceneNode::SetParent(pNode);
 
-	UpdateLocalTransform();
-	UpdateWorldTransform();
-
-	BoundingBox bbox = m_M2->m_Bounds;
+	BoundingBox bbox = m_M2->GetBounds();
 	bbox.transform(GetWorldTransfom());
 	SetBounds(bbox);
 }
@@ -133,7 +130,7 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 		//{
 		//if (!m_NeedRecalcAnimation)
 		//{
-		m_M2->calc(m_Animator->getSequenceIndex(), GetWorldTransfom(), m_Animator->getCurrentTime(), static_cast<uint32>(visitorAsBasePass.GetRenderEventArgs().TotalTime));
+		m_M2->calc(m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(visitorAsBasePass.GetRenderEventArgs().TotalTime), camera->GetViewMatrix(), GetWorldTransfom());
 		//	m_NeedRecalcAnimation = true;
 		//}
 		//}
@@ -152,7 +149,7 @@ void CM2_Base_Instance::InitAnimator()
 	}
 }
 
-void CM2_Base_Instance::UpdateLocalTransform(bool _forced)
+void CM2_Base_Instance::UpdateLocalTransform()
 {
 	if (m_Attached != nullptr)
 	{
@@ -168,6 +165,6 @@ void CM2_Base_Instance::UpdateLocalTransform(bool _forced)
 	}
 	else
 	{
-		SceneNode::UpdateLocalTransform(_forced);
+		SceneNode::UpdateLocalTransform();
 	}
 }

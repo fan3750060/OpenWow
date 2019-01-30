@@ -42,7 +42,7 @@ void AddWDLPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRender
 	WDLPipeline->GetBlendState().SetBlendMode(disableBlending);
 	WDLPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
 	WDLPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::Back);
-	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
+	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	WDLPipeline->SetRenderTarget(_renderTarget);
 	WDLPipeline->GetRasterizerState().SetViewport(*viewport);
 	technique->AddPass(std::make_shared<WDL_Node_Pass>(scene, WDLPipeline));

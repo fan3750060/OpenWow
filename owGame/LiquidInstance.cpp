@@ -10,9 +10,6 @@ Liquid_Instance::Liquid_Instance(std::shared_ptr<Liquid> _liquidObject, vec3 _po
 	{
 		SetTranslate(_position);
 		//
-		UpdateLocalTransform();
-		UpdateWorldTransform();
-		//
 		BoundingBox bbox(vec3(Math::MinFloat, Math::MinFloat, Math::MinFloat), vec3(Math::MaxFloat, Math::MaxFloat, Math::MaxFloat));
 		bbox.transform(GetWorldTransfom());
 		SetBounds(bbox);

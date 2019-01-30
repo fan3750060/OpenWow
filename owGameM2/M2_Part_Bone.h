@@ -66,7 +66,7 @@ public:
 	uint16 getSubmesh() const { return submesh; };
 
 	void calcMatrix(uint16 anim, uint32 time, uint32 globalTime);
-	void calcBillboard(cmat4 _worldMatrix);
+	void calcBillboard(cmat4 _viewMatrix, cmat4 _worldMatrix);
 
 	bool IsInterpolated(uint16 anim) const
 	{

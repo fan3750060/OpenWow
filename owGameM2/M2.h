@@ -18,20 +18,18 @@ class CM2_Builder;
 class CM2_Skin_Builder;
 // FORWARD END
 
-class M2
+class M2 : public ISceneNodeProvider
 {
 	friend class CM2_Builder;
 	friend class CM2_Skin_Builder;
 public:
 	M2(cstring name);
 
-	void CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent);
-
-	//void Render(CM2_Base_Instance* _instance);
-	//void RenderCollision(cmat4 _worldMatrix);
+	// ISceneNodeProvider
+	void CreateInsances(std::weak_ptr<SceneNode> _parent);
 
 	void update(double _time, double _dTime);
-	void calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime);
+	void calc(uint16 _animationIndex, uint32 _time, uint32 globalTime, cmat4 _viewMatrix, cmat4 _worldMatrix);
 
 public:
 	std::string getFilename() const { return m_FileName; }
@@ -67,7 +65,7 @@ public:
 	std::shared_ptr<CM2_Comp_Skeleton> getSkeleton() const { return m_Skeleton; }
 	std::shared_ptr<CM2_Comp_Skeleton> m_Skeleton;
 
-public:
+private:
 	std::string							m_FileName;
 	std::string							m_FileNameWithoutExt;
 	std::string							m_FilePath;

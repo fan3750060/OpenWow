@@ -29,8 +29,6 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::shared_ptr<M2> _mdxObject, const
 		SetTranslate(Fix_XZmY(_placement.position));
 		SetRotationQuaternion(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y));
 		SetScale(vec3(_placement.scale, -_placement.scale, -_placement.scale));
-
-		UpdateLocalTransform();
 	}
 }
 

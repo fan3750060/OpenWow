@@ -121,18 +121,35 @@ std::shared_ptr<IMesh> IRenderDevice::CreateSphere()
 
 std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 {
-	float cubeVerts[8 * 3] = {  // x, y, z
-		-0.5f, -0.5f,  0.5f,   0.5f, -0.5f,  0.5f,  0.5f, 0.5f,  0.5f,   -0.5f, 0.5f, 0.5f,
-		-0.5f, -0.5f, -0.5f,   0.5f, -0.5f, -0.5f,  0.5f, 0.5f, -0.5f,   -0.5f, 0.5f, -0.5f
+	vec3 cubeVerts[8] = {  // x, y, z
+		vec3(-0.5f, 0.5f, -0.5f),
+		vec3(0.5f, 0.5f, -0.5f),
+		 vec3(-0.5f, -0.5f, -0.5f),
+		 vec3(0.5f, -0.5f, -0.5f),
+		 vec3(-0.5f, 0.5f, 0.5f),
+		 vec3(0.5f, 0.5f, 0.5f),
+		 vec3(-0.5f, -0.5f, 0.5f),
+		 vec3(0.5f, -0.5f, 0.5f)
 	};
 	uint16 cubeInds[36] = {
-		0, 1, 2, 2, 3, 0,   1, 5, 6, 6, 2, 1,   5, 4, 7, 7, 6, 5,
-		4, 0, 3, 3, 7, 4,   3, 2, 6, 6, 7, 3,   4, 5, 1, 1, 0, 4
+		0, 1, 2,    // side 1
+		2, 1, 3,
+		4, 0, 6,    // side 2
+		6, 0, 2,
+		7, 5, 6,    // side 3
+		6, 5, 4,
+		3, 1, 7,    // side 4
+		7, 1, 5,
+		4, 5, 0,    // side 5
+		0, 5, 1,
+		3, 7, 2,    // side 6
+		2, 7, 6
 	};
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
+	mesh->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
 
-	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(cubeVerts, 8 * 3);
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(cubeVerts, 8);
 	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
 
 	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(cubeInds, 36);
@@ -194,50 +211,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCone()
 
 	return mesh;
 }
-
-std::shared_ptr<IMesh> IRenderDevice::CreateArrow(cvec3 tail, cvec3 head, float radius)
-{
-	/*std::shared_ptr<Scene> scene = CreateScene();
-	std::stringstream ss;
-
-	vec3 dir = head - tail;
-	vec3 apex = head + (dir * 0.5f);
-
-	// Create a white diffuse material for the arrow.
-	// f red green blue Kd Ks Shine transmittance indexOfRefraction
-	ss << "f 1 1 1 1 0 0 0 0" << std::endl;
-
-	// Create a cylinder for the arrow body.
-	ss << "c" << std::endl;
-	// base.x base.y base.z baseRadius
-	ss << tail.x << " " << tail.y << " " << tail.z << " " << radius << std::endl;
-	// apex.x apex.y apex.z apexRadius
-	ss << head.x << " " << head.y << " " << head.z << " " << radius << std::endl;
-
-	// Create a cone for the arrow head.
-	ss << "c" << std::endl;
-	// base.x base.y base.z baseRadius
-	ss << head.x << " " << head.y << " " << head.z << " " << radius * 2.0f << std::endl;
-
-	// apex.x apex.y apex.z apexRadius
-	ss << apex.x << " " << apex.y << " " << apex.z << " 0" << std::endl;
-
-	if (scene->LoadFromString(ss.str(), "nff"))
-	{
-	return scene;
-	}*/
-
-	// An error occurred while loading the scene.
-	return nullptr;
-
-}
-
-std::shared_ptr<IMesh> IRenderDevice::CreateAxis(float radius, float length)
-{
-
-	return nullptr;
-}
-
 
 // Template specializations for vertex buffers (with std::vector)
 template<>

@@ -25,7 +25,7 @@ M2::M2(cstring name) :
 	Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 }
 
-void M2::CreateInsances(std::weak_ptr<CM2_Base_Instance> _parent)
+void M2::CreateInsances(std::weak_ptr<SceneNode> _parent)
 {
 	for (auto& it : m_Skins)
 	{
@@ -73,11 +73,11 @@ void M2::update(double _time, double _dTime)
 	}
 }
 
-void M2::calc(uint16 _animationIndex, cmat4 _worldMatrix, uint32 _time, uint32 globalTime)
+void M2::calc(uint16 _animationIndex, uint32 _time, uint32 globalTime, cmat4 _viewMatrix, cmat4 _worldMatrix)
 {
 	if (m_Skeleton)
 	{
-		m_Skeleton->calc(_animationIndex, _time, globalTime, _worldMatrix);
+		m_Skeleton->calc(_animationIndex, _time, globalTime, _viewMatrix, _worldMatrix);
 	}
 
 	if (m_Materials)

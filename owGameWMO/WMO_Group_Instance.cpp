@@ -13,7 +13,6 @@ CWMO_Group_Instance::CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _objec
 	m_PortalsVis(true),
 	m_Calculated(false)
 {
-	UpdateLocalTransform();
 }
 
 CWMO_Group_Instance::~CWMO_Group_Instance()

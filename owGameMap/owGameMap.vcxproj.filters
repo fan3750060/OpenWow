@@ -16,9 +16,6 @@
     <Filter Include="Minimap">
       <UniqueIdentifier>{7d9e72bb-61cb-4a47-8d81-10fca7c4523f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map\Skies">
-      <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RenderStuff">
       <UniqueIdentifier>{7cb4ca49-cc19-4521-b63c-875a194bd00e}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Map\WDL">
       <UniqueIdentifier>{33702109-edc7-4dcf-a921-d1413fa8219c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Skies">
+      <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,10 +58,10 @@
       <Filter>Minimap</Filter>
     </ClCompile>
     <ClCompile Include="Sky.cpp">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClCompile>
     <ClCompile Include="SkyManager.cpp">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClCompile>
     <ClCompile Include="DayNightCycle.cpp">
       <Filter>Environment</Filter>
@@ -70,7 +70,7 @@
       <Filter>Environment</Filter>
     </ClCompile>
     <ClCompile Include="SkyParams.cpp">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClCompile>
     <ClCompile Include="ADT.cpp">
       <Filter>Map</Filter>
@@ -100,10 +100,10 @@
       <Filter>Map\WDL</Filter>
     </ClCompile>
     <ClCompile Include="Sky_Material.cpp">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClCompile>
     <ClCompile Include="Sky_Pass.cpp">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,10 +147,10 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Sky.h">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClInclude>
     <ClInclude Include="SkyManager.h">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClInclude>
     <ClInclude Include="DayNightCycle.h">
       <Filter>Environment</Filter>
@@ -159,7 +159,7 @@
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="SkyParams.h">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClInclude>
     <ClInclude Include="CreatePasses.h">
       <Filter>RenderStuff</Filter>
@@ -186,15 +186,15 @@
       <Filter>Map\WDL</Filter>
     </ClInclude>
     <ClInclude Include="Sky_Material.h">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClInclude>
     <ClInclude Include="Sky_Pass.h">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Sky.inl">
-      <Filter>Map\Skies</Filter>
+      <Filter>Skies</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -91,14 +91,14 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 	m_IsCalculated = true;
 }
 
-void CM2_Part_Bone::calcBillboard(cmat4 _worldMatrix)
+void CM2_Part_Bone::calcBillboard(cmat4 _viewMatrix, cmat4 _worldMatrix)
 {
-	/*if (IsBillboard())
+	if (IsBillboard())
 	{
 		m_TransformMatrix = glm::translate(m_TransformMatrix, pivot);
 		{
 			mat4 W = _worldMatrix * m_TransformMatrix;
-			mat4 VW = _Render->getCamera()->getViewMat() * W;
+			mat4 VW = _viewMatrix * W;
 
 			// Set vectors default
 			vec3 worldScale = extractScale(W);
@@ -133,5 +133,5 @@ void CM2_Part_Bone::calcBillboard(cmat4 _worldMatrix)
 			m_TransformMatrix[2][2] = vRight.z;
 		}
 		m_TransformMatrix = glm::translate(m_TransformMatrix, pivot * -1.0f);
-	}*/
+	}
 }

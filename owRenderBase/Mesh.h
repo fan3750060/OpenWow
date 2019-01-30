@@ -13,6 +13,8 @@ class ConstantBuffer;
 enum SceneNodeTypes : uint8
 {
 	SN_TYPE_NONE = 0,
+	SN_TYPE_DEBUG,
+
 	SN_TYPE_SKY,
 	SN_TYPE_WDL_NODE,
 	SN_TYPE_ADT_CHUNK,

@@ -24,12 +24,12 @@ SkyManager::SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecor
 	{
 		if (_mapRecord.Get_ID() == it.Get_MapID()->Get_ID())
 		{
-			Sky* sky = new Sky(it);
+			std::shared_ptr<Sky> sky = std::make_shared<Sky>(it);
 			skies.push_back(sky);
 		}
 	}
 
-	std::sort(skies.begin(), skies.end(), [](const Sky* lhs, const Sky* rhs)
+	std::sort(skies.begin(), skies.end(), [](const std::shared_ptr<Sky>& lhs, const std::shared_ptr<Sky>& rhs)
 	{
 		if (lhs->m_IsGlobalSky)
 			return false;
@@ -52,7 +52,6 @@ SkyManager::SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecor
 
 SkyManager::~SkyManager()
 {
-	ERASE_VECTOR(skies);
 }
 
 //
@@ -61,15 +60,11 @@ SkyManager::~SkyManager()
 void SkyManager::UpdateCamera(const Camera* camera)
 {
 	if (skies.empty())
-	{
 		return;
-	}
 
 	Calculate(camera, m_MapController.lock()->getTime()->GetTime());
 
 	SetTranslate(camera->GetTranslation());
-	UpdateLocalTransform();
-	UpdateWorldTransform();
 }
 
 
@@ -79,9 +74,7 @@ void SkyManager::UpdateCamera(const Camera* camera)
 void SkyManager::Calculate(const Camera* camera, uint32 _time)
 {
 	if (skies.empty())
-	{
 		return;
-	}
 
 	CalculateSkiesWeights(camera->GetTranslation());
 
@@ -152,7 +145,6 @@ void SkyManager::Calculate(const Camera* camera, uint32 _time)
 
 void SkyManager::InitBuffer()
 {
-	// Draw sky
 	vec3 basepos1[C_SkycolorsCount];
 	vec3 basepos2[C_SkycolorsCount];
 
@@ -186,7 +178,7 @@ void SkyManager::InitBuffer()
 	colorsBuffer = _RenderDevice->CreateFloatVertexBuffer((float*)vertices.data(), vertices.size(), 0, sizeof(vec4));
 
 	// Geometry
-	__geom = _RenderDevice->CreateMesh();
+	std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 	__geom->SetType(SN_TYPE_SKY);
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), vertexBuffer);
 	__geom->AddVertexBuffer(BufferBinding("COLOR", 0), colorsBuffer);
@@ -206,7 +198,7 @@ void SkyManager::CalculateSkiesWeights(cvec3 pos)
 
 	for (int i = skies.size() - 2; i >= 0; i--)
 	{
-		Sky* s = skies[i];
+		std::shared_ptr<Sky> s = skies[i];
 		const float dist = glm::length(pos - s->m_Position);
 
 		if (dist < s->m_Range.min)

@@ -29,35 +29,36 @@ ADT_MCNK::~ADT_MCNK()
 	//Log::Info("ADT_MCNK Deleted");
 }
 
-void ADT_MCNK::UpdateLocalTransform(bool _forced)
-{
-	SetLocalUnderty();
-}
 
 //
 // SceneNode
 //
+
+void ADT_MCNK::UpdateLocalTransform()
+{
+	// do nothing
+}
+
 bool ADT_MCNK::Accept(IVisitor& visitor)
 {
-	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const BasePass& visitorAsBasePass = reinterpret_cast<const BasePass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	//float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
-	//if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
-	//{
-	//	return false;
-	//}
+	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
+	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
+	{
+		return false;
+	}
 
 	// Check frustrum
-	//if (!checkFrustum(camera))
-	//{
-	//	return false;
-	//}
+	if (!checkFrustum(camera))
+	{
+		return false;
+	}
 
 	return SceneNode::Accept(visitor);
 }
 
-//
 
 bool ADT_MCNK::Load()
 {
@@ -70,8 +71,6 @@ bool ADT_MCNK::Load()
 	{
 		// Set translate
 		SetTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
-		UpdateLocalTransform();
-		UpdateWorldTransform();
 		// Bounds
 		BoundingBox bbox
 		(
