@@ -22,6 +22,7 @@ struct
 CM2_Part_Material::CM2_Part_Material(const SM2_Material& _proto)
 {
 	m_IsLightingDisable = _proto.flags.UNLIT;
+
 	m_IsFogDisable = _proto.flags.UNFOGGED;
 	m_CullMode = (_proto.flags.TWOSIDED != 0) ? RasterizerState::CullMode::None : RasterizerState::CullMode::Back;
 	m_DepthTest = (_proto.flags.DEPTHTEST == 0);
@@ -42,6 +43,55 @@ DepthStencilState::DepthMode CM2_Part_Material::GetDepthMode() const
 {
 	return DepthStencilState::DepthMode(m_DepthTest, m_DepthWrite);
 }
+
+/*BlendState::BlendMode CM2_Part_Material::GetBlendMode() const
+{
+	switch (m_M2BlendMode)
+	{
+	case 0: // Opaque
+		return BlendState::BlendMode(false, false,
+			BlendState::BlendFactor::One,
+			BlendState::BlendFactor::Zero);
+		break;
+
+	case 1: // Combiners_Mod
+		return BlendState::BlendMode(true, false,
+			BlendState::BlendFactor::One, BlendState::BlendFactor::Zero);
+		break;
+
+	case 2: // Combiners_Decal 
+		return BlendState::BlendMode(true, false,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha,
+			BlendState::BlendOperation::Add,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
+		break;
+
+	case 3: // Combiners_Add 
+		return BlendState::BlendMode(true, false,
+			BlendState::BlendFactor::SrcColor, BlendState::BlendFactor::DstColor,
+			BlendState::BlendOperation::Add,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::DstAlpha);
+		break;
+
+	case 4: // Combiners_Mod2x 
+		return BlendState::BlendMode(true, false,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::One,
+			BlendState::BlendOperation::Add,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::One);
+		break;
+
+	case 5: // Combiners_Fade 
+		return BlendState::BlendMode(true, false,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha,
+			BlendState::BlendOperation::Add,
+			BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
+		break;
+
+
+	default:
+		fail1();
+	}
+}*/
 
 BlendState::BlendMode CM2_Part_Material::GetBlendMode() const
 {
