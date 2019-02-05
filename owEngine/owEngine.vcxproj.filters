@@ -48,9 +48,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="GameStateManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Loader.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -173,9 +170,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Loader.h">

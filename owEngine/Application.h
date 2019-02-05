@@ -2,7 +2,9 @@
 
 #define IS_DX11 1
 
-class Application : public Object
+#include "GameState.h"
+
+class Application : public Object, public IGameStateManager
 {
 public:
 	Application();
@@ -10,6 +12,7 @@ public:
 
 	static Application& Get();
 
+	// IApplication
 	bool Load();
 	int Run();
 	void Stop();
@@ -20,6 +23,12 @@ public:
 	std::shared_ptr<RenderWindow> GetRenderWindow();
 
 	HINSTANCE GetModuleHandle() const;
+
+	// IGameStateManager
+	void AddGameState(GameStatesNames::List _name, std::shared_ptr<IGameState> _gameState) override;
+	bool SetGameState(GameStatesNames::List _name) override;
+	bool SetGameState(std::shared_ptr<IGameState> _newGameState) override;
+	std::shared_ptr<IGameState> GetGameState() override;
 
 	// Application execution events
 	Event           Initialize;
@@ -49,6 +58,10 @@ private:
 
 	std::shared_ptr<IRenderDevice> m_pRenderDevice;
 	std::shared_ptr<RenderWindow>  m_pWindow;
+
+	// IGameStateManager
+	std::shared_ptr<IGameState>                                     m_CurrentGameState;
+	std::map<GameStatesNames::List, std::shared_ptr<IGameState>>    m_GameStatesCollection;
 
 private:
 	const char* c_RenderWindow_ClassName = "RenderWindowClass";

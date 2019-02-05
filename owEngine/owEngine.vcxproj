@@ -35,7 +35,6 @@
     <ClCompile Include="Debug_Pass.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="Materials\MaterialDebug.cpp" />
     <ClCompile Include="Materials\MaterialTextured.cpp" />
@@ -86,7 +85,6 @@
     <ClInclude Include="Debug_Pass.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="GameState.h" />
-    <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="Materials\MaterialDebug.h" />
     <ClInclude Include="Materials\MaterialTextured.h" />

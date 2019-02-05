@@ -38,10 +38,8 @@ int main(int argumentCount, char* arguments[])
 		Application app;
 		app.Load();
 
-		std::shared_ptr<CGameStateManager> gsManager = std::make_shared<CGameStateManager>();
-		AddManager<IGameStateManager>(gsManager);
-		gsManager->AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
-		gsManager->SetGameState(GameStatesNames::GAME_STATE_WORLD);
+		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
+		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
 		
 		app.Run();
 

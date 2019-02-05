@@ -22,6 +22,7 @@ public:
 	void SetCurrent(bool _value) override { m_IsCurrent = _value; }
     bool IsCurrent() const override { return m_IsCurrent; }
 
+	//
 	virtual void OnPreRender(RenderEventArgs& e) = 0;
 	virtual void OnRender(RenderEventArgs& e) = 0;
 	virtual void OnPostRender(RenderEventArgs& e) = 0;
