@@ -1,11 +1,11 @@
 #pragma once
 
 // Forward BEGIN
-__interface IManager;
-__interface IDebugOutput;
+struct IManager;
+struct IDebugOutput;
 // Forward END
 
-__interface 
+struct 
 	__declspec(uuid("114337A3-0FD0-4AB4-9CBC-40B6FE4E1796"))
 	ILog : IManager
 {
@@ -16,6 +16,6 @@ __interface
 	void Error(const char* _message, ...);
 	void Fatal(const char* _message, ...);*/
 
-	bool AddDebugOutput(IDebugOutput* _debugOutput);
-	bool DeleteDebugOutput(IDebugOutput* _debugOutput);
+	virtual bool AddDebugOutput(std::shared_ptr<IDebugOutput> _debugOutput) = 0;
+	virtual bool DeleteDebugOutput(std::shared_ptr<IDebugOutput> _debugOutput) = 0;
 };

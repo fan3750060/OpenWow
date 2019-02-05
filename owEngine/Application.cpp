@@ -6,20 +6,17 @@
 // Additional
 #include "EngineTime.h"
 
+// Additional renders
 #include "..\\owRenderDX11\\owRenderDX11.h"
 #include "..\\owRenderOpenGL\\owRenderOpenGL.h"
-
-#define RENDER_WINDOW_CLASS_NAME "RenderWindowClass"
 
 float g_GameDeltaTime = 0.0f;
 float g_ApplicationTime = 0.0f;
 int64_t g_FrameCounter = 0L;
 
-// Global Window Procedure callback function
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 static std::shared_ptr<RenderWindow> gs_WindowHandle = nullptr;
-static HWND gs_hWindow = 0;
 static Application* gs_pApplicationInstance = nullptr;
 
 Application::Application()
@@ -43,7 +40,7 @@ Application::Application()
 	renderWindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	renderWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	renderWindowClass.lpszMenuName = NULL;
-	renderWindowClass.lpszClassName = RENDER_WINDOW_CLASS_NAME;
+	renderWindowClass.lpszClassName = c_RenderWindow_ClassName;
 	renderWindowClass.hIconSm = LoadIcon(hDll, MAKEINTRESOURCE(2));
 
 	if (!RegisterClassEx(&renderWindowClass))
@@ -51,8 +48,8 @@ Application::Application()
 		fail2("Failed to register the render window class.");
 	}
 
-	HANDLE hProcess = GetCurrentProcess();
-	if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
+	HANDLE hProcess = ::GetCurrentProcess();
+	if (::SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
 		Log::Info("Process priority class set to HIGH");
 	else
 		Log::Error("Can't set process priority class.");
@@ -66,15 +63,9 @@ Application::Application()
 	gs_pApplicationInstance = this;
 }
 
-Application& Application::Get()
-{
-	assert(gs_pApplicationInstance != nullptr);
-	return *gs_pApplicationInstance;
-}
-
 Application::~Application()
 {
-	if (!UnregisterClass(RENDER_WINDOW_CLASS_NAME, m_hInstance))
+	if (!UnregisterClass(c_RenderWindow_ClassName, m_hInstance))
 	{
 		fail1("Failed to unregister render window class");
 	}
@@ -82,18 +73,86 @@ Application::~Application()
 	gs_pApplicationInstance = nullptr;
 }
 
-HINSTANCE Application::GetModuleHandle() const
+Application& Application::Get()
 {
-	return m_hInstance;
+	assert(gs_pApplicationInstance != nullptr);
+	return *gs_pApplicationInstance;
 }
+
+bool Application::Load()
+{
+	Random::SetSeed(static_cast<unsigned long>(time(0)));
+
+	// Create window
+	CreateRenderWindow("Name", 1280, 1024);
+	Initialize += boost::bind(&RenderWindow::OnInitialize, m_pWindow, _1);
+	Terminate += boost::bind(&RenderWindow::OnTerminate, m_pWindow, _1);
+	Update += boost::bind(&RenderWindow::OnUpdate, m_pWindow, _1);
+	m_pWindow->ShowWindow();
+
+	return true;
+}
+
+int Application::Run()
+{
+	static Timer elapsedTime;
+
+	OnInitialize(EventArgs(*this));
+
+	m_bIsRunning = true;
+
+	MSG msg;
+	while (m_bIsRunning)
+	{
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+			{
+				EventArgs eventArgs(*this);
+				OnExit(eventArgs);
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		{
+			g_GameDeltaTime = elapsedTime.GetElapsedTime();
+			g_ApplicationTime += g_GameDeltaTime;
+			++g_FrameCounter;
+
+			UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
+			OnUpdate(updateArgs);
+
+			RenderEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
+			OnRender(renderArgs);
+
+			RenderUIEventArgs renderUIArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
+			OnRenderUI(renderUIArgs);
+
+			m_pWindow->Present();
+		}
+	}
+
+	OnTerminate(EventArgs(*this));
+	OnTerminated(EventArgs(*this));
+
+	return static_cast<int>(msg.wParam);
+}
+
+void Application::Stop()
+{
+	PostQuitMessage(0);
+}
+
 
 std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync)
 {
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
 
 	RECT windowRect = { 0, 0, windowWidth, windowHeight };
-	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+	::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	windowWidth = windowRect.right - windowRect.left;
 	windowHeight = windowRect.bottom - windowRect.top;
@@ -104,7 +163,7 @@ std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName
 	HWND hWindow = CreateWindowEx
 	(
 		NULL,
-		RENDER_WINDOW_CLASS_NAME,
+		c_RenderWindow_ClassName,
 		windowName.c_str(),
 		WS_OVERLAPPEDWINDOW,
 		windowX, windowY, windowWidth, windowHeight,
@@ -120,25 +179,24 @@ std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName
 	}
 
 #ifdef  IS_DX11
-	m_Windows = CreateRenderWindowDX11(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+	m_pWindow = CreateRenderWindowDX11(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
 #else
-	m_Windows = CreateRenderWindowOGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+	m_pWindow = CreateRenderWindowOGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
 #endif
 
-	gs_hWindow = hWindow;
-	gs_WindowHandle = m_Windows;
+	m_hWindow = hWindow;
+	gs_WindowHandle = m_pWindow;
 
 	if (m_bIsRunning)
 	{
 		EventArgs eventArgs(*this);
-		m_Windows->OnInitialize(eventArgs);
+		m_pWindow->OnInitialize(eventArgs);
 	}
 
-	UpdateWindow(hWindow);
+	::UpdateWindow(hWindow);
 
-	return m_Windows;
+	return m_pWindow;
 }
-
 
 std::shared_ptr<IRenderDevice> Application::GetRenderDevice()
 {
@@ -148,8 +206,15 @@ std::shared_ptr<IRenderDevice> Application::GetRenderDevice()
 
 std::shared_ptr<RenderWindow> Application::GetRenderWindow()
 {
-	return m_Windows;
+	assert1(m_pWindow);
+	return m_pWindow;
 }
+
+HINSTANCE Application::GetModuleHandle() const
+{
+	return m_hInstance;
+}
+
 
 // Convert the message ID into a MouseButton ID
 static MouseButtonEventArgs::MouseButton DecodeMouseButton(UINT messageID)
@@ -229,6 +294,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 			// Get the unicode character (UTF-16)
 			unsigned int c = 0;
+
 			// For printable characters, the next message will be WM_CHAR.
 			// This message contains the character code we need to send the KeyPressed event.
 			// Inspired by the SDL 1.2 implementation.
@@ -250,9 +316,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 		break;
 		case WM_KEYUP:
 		{
-			bool shift = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
-			bool control = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
-			bool alt = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
+			bool shift = (::GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
+			bool control = (::GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
+			bool alt = (::GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
 
 			KeyCode key = (KeyCode)wParam;
 			unsigned int c = 0;
@@ -262,9 +328,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			// to a printable character (if possible).
 			// Inspired by the SDL 1.2 implementation.
 			unsigned char keyboardState[256];
-			GetKeyboardState(keyboardState);
+			::GetKeyboardState(keyboardState);
 			wchar_t translatedCharacters[4];
-			if (int result = ToUnicodeEx((UINT)wParam, scanCode, keyboardState, translatedCharacters, 4, 0, NULL) > 0)
+			if (int result = ::ToUnicodeEx((UINT)wParam, scanCode, keyboardState, translatedCharacters, 4, 0, NULL) > 0)
 			{
 				c = translatedCharacters[0];
 			}
@@ -356,7 +422,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			POINT clientToScreenPoint;
 			clientToScreenPoint.x = x;
 			clientToScreenPoint.y = y;
-			ScreenToClient(hwnd, &clientToScreenPoint);
+			::ScreenToClient(hwnd, &clientToScreenPoint);
 
 			MouseWheelEventArgs mouseWheelEventArgs(*gs_WindowHandle, zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
 			gs_WindowHandle->OnMouseWheel(mouseWheelEventArgs);
@@ -399,7 +465,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 			if (windowCloseEventArgs.ConfirmClose)
 			{
-				//DestroyWindow( hwnd );
 				// Just hide the window.
 				// Windows will be destroyed when the application quits.
 				ShowWindow(hwnd, SW_HIDE);
@@ -430,65 +495,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 	return 0;
 }
 
-int Application::Run()
-{
-	static Timer elapsedTime;
-
-	OnInitialize(EventArgs(*this));
-
-	m_bIsRunning = true;
-
-	MSG msg;
-	while (m_bIsRunning)
-	{
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				EventArgs eventArgs(*this);
-				OnExit(eventArgs);
-			}
-
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		{
-			g_GameDeltaTime = elapsedTime.GetElapsedTime();
-			g_ApplicationTime += g_GameDeltaTime;
-			++g_FrameCounter;
-
-			UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
-			OnUpdate(updateArgs);
-
-			RenderEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
-			OnRender(renderArgs);
-
-			RenderUIEventArgs renderUIArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
-			OnRenderUI(renderUIArgs);
-
-			m_Windows->Present();
-		}
-	}
-
-	OnTerminate(EventArgs(*this));
-	OnTerminated(EventArgs(*this));
-
-	return static_cast<int>(msg.wParam);
-}
-
-void Application::Stop()
-{
-	PostQuitMessage(0);
-}
-
 //---------------------------------------------------------------
 //-- EVENTS
 //---------------------------------------------------------------
 
 void Application::OnInitialize(EventArgs& e)
 {
-	if (m_bIsInitialized) 
+	if (m_bIsInitialized)
 		return;
 
 	Initialize(e);
@@ -503,21 +516,21 @@ void Application::OnUpdate(UpdateEventArgs& e)
 
 void Application::OnRender(RenderEventArgs& e)
 {
-	m_Windows->OnPreRender(e);
-	m_Windows->OnRender(e);
-	m_Windows->OnPostRender(e);
+	m_pWindow->OnPreRender(e);
+	m_pWindow->OnRender(e);
+	m_pWindow->OnPostRender(e);
 }
 
 void Application::OnRenderUI(RenderUIEventArgs & e)
 {
-	m_Windows->OnRenderUI(e);
+	m_pWindow->OnRenderUI(e);
 }
 
 void Application::OnTerminate(EventArgs& e)
 {
 	Terminate(e);
 
-	//delete m_Windows;
+	m_pWindow.reset();
 }
 
 void Application::OnTerminated(EventArgs& e)
@@ -532,7 +545,7 @@ void Application::OnExit(EventArgs& e)
 	Exit(e);
 
 	// Destroy any windows that are still hanging around.
-	DestroyWindow(gs_hWindow);
+	DestroyWindow(m_hWindow);
 
 	// Setting this to false will cause the main application's message pump to stop.
 	m_bIsRunning = false;

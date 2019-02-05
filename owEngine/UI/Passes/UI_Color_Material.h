@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Materials/MaterialWrapper.h"
+
 class UI_Color_Material : public MaterialWrapper
 {
 public:

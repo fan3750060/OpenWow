@@ -17,9 +17,6 @@
 #include <owEngine.h>
 #pragma comment(lib, "owEngine.lib")
 
-#include <owGameDBC.h>
-#pragma comment(lib, "owGameDBC.lib")
-
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
 

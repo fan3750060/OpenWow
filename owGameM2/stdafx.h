@@ -5,5 +5,4 @@
 #include <owRenderBase.h>
 #include <owEngine.h>
 
-#include <owGameDBC.h>
 #include <owGame.h>

@@ -1,44 +1,10 @@
 #include "stdafx.h"
 
-// Additional
+// Additional (OW)
+#include "GameState_World.h"
+
+// Additional (Windows)
 #include <ctime>
-
-
-#include "CamContrTEMP.h"
-
-
-#include "UI_Color_Material.h"
-
-extern Camera g_Camera;
-Viewport g_Viewport;
-
-std::shared_ptr<Scene> g_pScene = nullptr;
-std::shared_ptr<UIScene> g_pUIScene = nullptr;
-
-std::shared_ptr<RenderWindow> g_pRenderWindow;
-std::shared_ptr<Query> g_pFrameQuery;
-double g_FrameTime = 0.0;
-std::shared_ptr<MapController> contr;
-//--
-
-void OnPreRender(RenderEventArgs& e);
-void OnRender(RenderEventArgs& e);
-void OnPostRender(RenderEventArgs& e);
-void OnRenderUI(RenderUIEventArgs& e);
-
-// Techique
-RenderTechnique g_ForwardTechnique;
-RenderUITechnique g_UITechnique;
-
-std::shared_ptr<Query> g_pForwardOpaqueQuery;
-std::shared_ptr<Query> g_pForwardTransparentQuery;
-
-glm::vec4 g_ClearColor(0.39f, 0.58f, 0.93f, 1.0f);
-uint32 g_Config_WindowWidth = 1280;
-uint32 g_Config_WindowHeight = 1024;
-
-std::shared_ptr<IRenderTarget> g_pGBufferRenderTarget;
-
 
 int main(int argumentCount, char* arguments[])
 {
@@ -47,127 +13,41 @@ int main(int argumentCount, char* arguments[])
 	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 	{
-		Random::SetSeed(static_cast<unsigned long>(time(0)));
+		_BaseManager = std::make_shared<CBaseManager>();
 
-		CBaseManager baseManager;
-		_BaseManager = &baseManager;
+		std::shared_ptr<CSettings> settings = std::make_shared<CSettings>();
+		AddManager<ISettings>(settings);
+		settings->AddDefaults();
+		
 
-		CSettings settings;
-		settings.AddDefaults();
+		std::shared_ptr<CLog> log = std::make_shared<CLog>();
+		AddManager<ILog>(log);
 
-		CLog log;
+		std::shared_ptr<CConsole> console = std::make_shared<CConsole>();
+		AddManager<IConsole>(console);
+		console->AddCommonCommands();
+		
+		std::shared_ptr<IMPQArchiveManager> mpqArchiveManager = std::make_shared<CMPQArchiveManager>();
+		AddManager<IMPQArchiveManager>(mpqArchiveManager);
 
-		CConsole console;
-		console.AddCommonCommands();
-
-		CMPQArchiveManager mpqArchiveManager;
-		CFilesManager filesManager;
-
-		Application app;
-
-		g_pRenderWindow = app.CreateRenderWindow("Name", 1280, 1024);
-		// Register initialize/terminate events.
-		app.Initialize += boost::bind(&RenderWindow::OnInitialize, g_pRenderWindow, _1);
-		app.Terminate += boost::bind(&RenderWindow::OnTerminate, g_pRenderWindow, _1);
-		app.Update += boost::bind(&RenderWindow::OnUpdate, g_pRenderWindow, _1);
-		g_pRenderWindow->ShowWindow();
-
-		g_pRenderWindow->Update += &OnUpdate;
-		g_pRenderWindow->MouseButtonPressed += &OnMouseButtonPressed;
-		g_pRenderWindow->MouseButtonReleased += &OnMouseButtonReleased;
-		g_pRenderWindow->MouseMoved += &OnMouseMoved;
-		g_pRenderWindow->MouseWheel += &OnMouseWheel;
-		g_pRenderWindow->PreRender += &OnPreRender;
-		g_pRenderWindow->Render += &OnRender;
-		g_pRenderWindow->PostRender += &OnPostRender;
-		g_pRenderWindow->RenderUI += &OnRenderUI;
-		g_pRenderWindow->KeyPressed += &OnKeyPressed;
-		g_pRenderWindow->KeyReleased += &OnKeyReleased;
-
-		std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
-
-
-		/*renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
-		renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
-		renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
-		renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
-		renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
-		renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
-		renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
-		renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE*/
-
-		g_pScene = std::make_shared<SceneBase>();
-		g_pUIScene = std::make_shared<UISceneBase>();
+		std::shared_ptr<IFilesManager> filesManager = std::make_shared<CFilesManager>();
+		AddManager<IFilesManager>(filesManager);
 
 		OpenDBs();
 
-		const float x = 40;
-		const float y = 29;
+		Application app;
+		app.Load();
 
-		//const float x = 29;
-		//const float y = 21;
-
-		//new FontsManager(_RenderDevice);
-		new WMOsManager();
-		new CM2_Manager();
-
-		std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D("TILESET\\Terrain Cube Maps\\TCB_CrystalSong_A.blp");
-
-		contr = std::make_shared<MapController>();
-		contr->SetParent(g_pScene->GetRootNode());
-		contr->MapPreLoad(*DBC_Map[1]);
-		contr->MapLoad();
-		contr->MapPostLoad();
-		contr->EnterMap(x, y);
+		std::shared_ptr<CGameStateManager> gsManager = std::make_shared<CGameStateManager>();
+		AddManager<IGameStateManager>(gsManager);
+		gsManager->AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
+		gsManager->SetGameState(GameStatesNames::GAME_STATE_WORLD);
+		
+		app.Run();
 
 
-		std::shared_ptr<IMesh> cube = _RenderDevice->CreateCube();
-		cube->SetType(SceneNodeTypes::SN_TYPE_DEBUG);
-		std::shared_ptr<MaterialDebug> mat = std::make_shared<MaterialDebug>(_RenderDevice->CreateMaterial());
-		mat->SetWrapper(mat);
-		mat->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		cube->SetMaterial(mat);
 
-		std::shared_ptr<SceneNode> cubeNode = std::make_shared<SceneNode>();
-		cubeNode->AddMesh(cube);
-		cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-		cubeNode->SetScale(vec3(15, 15, 15));
-		cubeNode->SetParent(g_pScene->GetRootNode());
-
-		/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
-		std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
-		inst->CreateInstances();
-		inst->SetParent(g_pScene->GetRootNode());
-		inst->SetScale(vec3(15.0f));
-		inst->GetLocalTransform();*/
-
-		Viewport viewPort(0, 0, 1280.0f, 1024.0f);
-		g_Viewport = viewPort;
-
-		g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
-
-		// CAMERA
-		g_Camera.SetTranslate(vec3(0, 0, 0));
-		g_Camera.SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-		g_Camera.SetRotate(vec3(0, 0, 0));
-		g_Camera.SetViewport(viewPort);
-		g_Camera.SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 4000.0f);
-
-		g_pForwardOpaqueQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
-		g_pForwardTransparentQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 2);
-
-		g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(g_pRenderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-		AddSkyPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-		AddWDLPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-
-		AddDebugPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-
-		AddMCNKPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-		AddWMOPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-		AddLiquidPasses(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-		AddM2Passes(renderDevice, g_pRenderWindow->GetRenderTarget(), &g_ForwardTechnique, &viewPort, g_pScene);
-
-		//std::shared_ptr<Texture> depthStencilBuffer = g_pRenderWindow->GetRenderTarget()->GetTexture(RenderTarget::AttachmentPoint::DepthStencil);
+		//std::shared_ptr<Texture> depthStencilBuffer = app.GetRenderWindow()->GetRenderTarget()->GetTexture(RenderTarget::AttachmentPoint::DepthStencil);
 		//g_ForwardTechnique.AddPass(std::make_shared<CopyTexturePass>(depthStencilBuffer, depthStencilTexture));
 
 
@@ -308,81 +188,13 @@ int main(int argumentCount, char* arguments[])
 		UIPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 		UIPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
 		UIPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
-		UIPipeline->SetRenderTarget(g_pRenderWindow->GetRenderTarget());
+		UIPipeline->SetRenderTarget(app.GetRenderWindow()->GetRenderTarget());
 		UIPipeline->GetRasterizerState().SetViewport(g_Viewport);
 
 		g_UITechnique.SetPass(std::make_shared<BaseUIPass>(g_pUIScene, UIPipeline));*/
 
-		app.Run();
+
 	}
 
 	return 0;
-}
-
-//--------------------------------------------
-
-
-
-void OnPreRender(RenderEventArgs& e)
-{
-	g_pFrameQuery->Begin(e.FrameCounter);
-
-	ADT_WMO_Instance::reset();
-	ADT_MDX_Instance::reset();
-}
-
-void OnRender(RenderEventArgs& e)
-{
-	// Render the scene from the perspective of this camera.
-	e.Camera = &g_Camera;
-
-	g_ForwardTechnique.Render(e);
-}
-
-void OnPostRender(RenderEventArgs& e)
-{
-	g_pFrameQuery->End(e.FrameCounter);
-
-	//RenderWindow& renderWindow = dynamic_cast<RenderWindow&>(const_cast<Object&>(e.Caller));
-	//renderWindow.Present();
-
-	// Retrieve GPU timer results.
-	// Don't retrieve the immediate query result, but from the previous frame.
-	// Checking previous frame counters will alleviate GPU stalls.
-	Query::QueryResult frameResult = g_pFrameQuery->GetQueryResult(e.FrameCounter - (g_pFrameQuery->GetBufferCount() - 1));
-	if (frameResult.IsValid)
-	{
-		// Frame time in milliseconds
-#ifdef  IS_DX11
-		g_FrameTime = frameResult.ElapsedTime * 1000.0;
-#else
-		g_FrameTime = frameResult.ElapsedTime / 1000000.0;
-#endif
-
-		std::string title = std::to_string(g_FrameTime);
-		if (contr != nullptr)
-			title += "_" + std::to_string(contr->GetCurrentX()) + "_" + std::to_string(contr->GetCurrentZ());
-
-		g_pRenderWindow->SetWindowName(title);
-	}
-
-	// Query results for forward rendering technique.
-	//Query::QueryResult forwardOpaqueResult = g_pForwardOpaqueQuery->GetQueryResult(e.FrameCounter - (g_pForwardOpaqueQuery->GetBufferCount() - 1));
-	//Query::QueryResult forwardTransparentResult = g_pForwardTransparentQuery->GetQueryResult(e.FrameCounter - (g_pForwardTransparentQuery->GetBufferCount() - 1));
-
-	/*if (forwardOpaqueResult.IsValid)
-	{
-		g_ForwardOpaqueStatistic.Sample(forwardOpaqueResult.ElapsedTime * 1000.0);
-	}
-	if (forwardTransparentResult.IsValid)
-	{
-		g_ForwardTransparentStatistic.Sample(forwardTransparentResult.ElapsedTime * 1000.0);
-	}*/
-}
-
-void OnRenderUI(RenderUIEventArgs& e)
-{
-	e.Viewport = &g_Viewport;
-
-	g_UITechnique.Render(e);
 }

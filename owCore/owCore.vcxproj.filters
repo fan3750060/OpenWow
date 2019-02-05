@@ -371,6 +371,7 @@
     <ClInclude Include="Timer_OLD.h">
       <Filter>Timers</Filter>
     </ClInclude>
+    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RefManager2Dim.inl">

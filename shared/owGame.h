@@ -9,6 +9,9 @@
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
 
+// DBC
+#include "../owGame/DBC/Core/DBC__Storage.h"
+
 // Liquid
 #include "../owGame/LiquidInstance.h"
 #include "../owGame/CreatePasses.h"

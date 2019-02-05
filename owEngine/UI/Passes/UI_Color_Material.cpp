@@ -3,6 +3,9 @@
 // General
 #include "UI_Color_Material.h"
 
+// Additional
+#include "Application.h"
+
 UI_Color_Material::UI_Color_Material() :
 	MaterialWrapper(_RenderDevice->CreateMaterial())
 {

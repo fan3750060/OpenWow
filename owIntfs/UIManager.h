@@ -31,7 +31,7 @@ struct
 	virtual void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, std::shared_ptr<Font> _font, const Color& _color) const = 0;
 };
 
-__interface	IUIMgrEx
+struct	IUIMgrEx
 {
 	std::string GetNewName();
 	void SetForDetach(UIElement* _element);

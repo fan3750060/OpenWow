@@ -39,11 +39,11 @@ void RenderWindow::CloseWindow()
 void RenderWindow::SetMousePosition(vec2 _position)
 {
 	RECT rc;
-	GetClientRect(m_hWindow, &rc); // get client coords
-	ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
-	ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
+	::GetClientRect(m_hWindow, &rc); // get client coords
+	::ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
+	::ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
 
-	SetCursorPos(rc.left + _position.x, rc.top + _position.y);
+	::SetCursorPos(rc.left + _position.x, rc.top + _position.y);
 }
 
 
@@ -72,7 +72,7 @@ void RenderWindow::SetWindowName(cstring _name)
 {
 	m_sWindowName = _name;
 
-	::SetWindowTextA(m_hWindow, m_sWindowName.c_str());
+	::SetWindowText(m_hWindow, m_sWindowName.c_str());
 }
 
 cstring RenderWindow::GetWindowName() const
@@ -80,52 +80,14 @@ cstring RenderWindow::GetWindowName() const
 	return m_sWindowName;
 }
 
+
+
+//
+// Engine events
+//
 void RenderWindow::OnInitialize(EventArgs& e)
 {
 	Initialize(e);
-}
-
-void RenderWindow::OnTerminate(EventArgs& e)
-{
-	Terminate(e);
-}
-// The window has received focus
-void RenderWindow::OnInputFocus(EventArgs& e)
-{
-	InputFocus(e);
-}
-
-// The RenderWindow window has lost focus
-void RenderWindow::OnInputBlur(EventArgs& e)
-{
-	InputBlur(e);
-}
-
-// The RenderWindow window has been minimized
-void RenderWindow::OnMinimize(EventArgs& e)
-{
-	Minimize(e);
-}
-
-// The RenderWindow window has been restored
-void RenderWindow::OnRestore(EventArgs& e)
-{
-	Restore(e);
-}
-
-// The RenderWindow window has be resized
-void RenderWindow::OnResize(ResizeEventArgs& e)
-{
-	m_iWindowWidth = e.Width;
-	m_iWindowHeight = e.Height;
-
-	Resize(e);
-}
-
-// The window contents should be repainted
-void RenderWindow::OnExpose(EventArgs& e)
-{
-	Expose(e);
 }
 
 void RenderWindow::OnUpdate(UpdateEventArgs& e)
@@ -133,21 +95,18 @@ void RenderWindow::OnUpdate(UpdateEventArgs& e)
 	Update(e);
 }
 
-// The prepare the window for redraw (update shader parameters)
 void RenderWindow::OnPreRender(RenderEventArgs& e)
 {
 	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
 	PreRender(renderArgs);
 }
 
-// The window should be redrawn.
 void RenderWindow::OnRender(RenderEventArgs& e)
 {
 	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
 	Render(renderArgs);
 }
 
-// Handle any post-drawing events (like GUI)
 void RenderWindow::OnPostRender(RenderEventArgs& e)
 {
 	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
@@ -160,34 +119,87 @@ void RenderWindow::OnRenderUI(RenderUIEventArgs& e)
 	RenderUI(renderArgs);
 }
 
-// A keyboard key was pressed
-void RenderWindow::OnKeyPressed(KeyEventArgs& e)
+void RenderWindow::OnTerminate(EventArgs& e)
+{
+	Terminate(e);
+}
+
+
+
+//
+// Window events
+//
+void RenderWindow::OnInputFocus(EventArgs& e) // The window has received focus
+{
+	InputFocus(e);
+}
+
+void RenderWindow::OnInputBlur(EventArgs& e) // The RenderWindow window has lost focus
+{
+	InputBlur(e);
+}
+
+void RenderWindow::OnMinimize(EventArgs& e) // The RenderWindow window has been minimized
+{
+	Minimize(e);
+}
+
+void RenderWindow::OnRestore(EventArgs& e) // The RenderWindow window has been restored
+{
+	Restore(e);
+}
+
+void RenderWindow::OnResize(ResizeEventArgs& e) // The RenderWindow window has be resized
+{
+	m_iWindowWidth = e.Width;
+	m_iWindowHeight = e.Height;
+
+	Resize(e);
+}
+
+void RenderWindow::OnExpose(EventArgs& e) // The window contents should be repainted
+{
+	Expose(e);
+}
+
+void RenderWindow::OnClose(WindowCloseEventArgs& e)
+{
+	Close(e);
+}
+
+
+
+//
+// Keyboard events
+//
+void RenderWindow::OnKeyPressed(KeyEventArgs& e) // A keyboard key was pressed
 {
 	KeyPressed(e);
 }
 
-// A keyboard key was released
-void RenderWindow::OnKeyReleased(KeyEventArgs& e)
+void RenderWindow::OnKeyReleased(KeyEventArgs& e) // A keyboard key was released
 {
 	KeyReleased(e);
 }
 
-// Window gained keyboard focus
-void RenderWindow::OnKeyboardFocus(EventArgs& e)
+void RenderWindow::OnKeyboardFocus(EventArgs& e) // Window gained keyboard focus
 {
 	m_bHasKeyboardFocus = true;
 	KeyboardFocus(e);
 }
 
-// Window lost keyboard focus
-void RenderWindow::OnKeyboardBlur(EventArgs& e)
+void RenderWindow::OnKeyboardBlur(EventArgs& e) // Window lost keyboard focus
 {
 	m_bHasKeyboardFocus = false;
 	KeyboardBlur(e);
 }
 
-// The mouse was moved
-void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e)
+
+//
+// The mouse events
+//
+
+void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e) // The mouse was moved
 {
 	if (!m_bInClientRect)
 	{
@@ -203,14 +215,13 @@ void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e)
 	MouseMoved(e);
 }
 
-// A button on the mouse was pressed
-void RenderWindow::OnMouseButtonPressed(MouseButtonEventArgs& e)
+
+void RenderWindow::OnMouseButtonPressed(MouseButtonEventArgs& e) // A button on the mouse was pressed
 {
 	MouseButtonPressed(e);
 }
 
-// A button on the mouse was released
-void RenderWindow::OnMouseButtonReleased(MouseButtonEventArgs& e)
+void RenderWindow::OnMouseButtonReleased(MouseButtonEventArgs& e) // A button on the mouse was released
 {
 	MouseButtonReleased(e);
 }
@@ -226,19 +237,13 @@ void RenderWindow::OnMouseLeave(EventArgs& e)
 	MouseLeave(e);
 }
 
-// The window has received mouse focus
-void RenderWindow::OnMouseFocus(EventArgs& e)
+void RenderWindow::OnMouseFocus(EventArgs& e) // The window has received mouse focus
 {
 	MouseFocus(e);
 }
 
-// The window has lost mouse focus
-void RenderWindow::OnMouseBlur(EventArgs& e)
+void RenderWindow::OnMouseBlur(EventArgs& e) // The window has lost mouse focus
 {
 	MouseBlur(e);
 }
 
-void RenderWindow::OnClose(WindowCloseEventArgs& e)
-{
-	Close(e);
-}

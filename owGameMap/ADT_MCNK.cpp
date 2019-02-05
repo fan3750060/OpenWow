@@ -50,7 +50,6 @@ bool ADT_MCNK::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	// Check frustrum
 	if (!checkFrustum(camera))
 	{
 		return false;

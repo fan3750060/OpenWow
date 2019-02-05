@@ -158,6 +158,12 @@
     <ClCompile Include="Debug_Pass.cpp">
       <Filter>RenderStuff</Filter>
     </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Passes\UI_Color_Material.cpp">
+      <Filter>UI\Passes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -293,6 +299,12 @@
     </ClInclude>
     <ClInclude Include="Debug_Pass.h">
       <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Passes\UI_Color_Material.h">
+      <Filter>UI\Passes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

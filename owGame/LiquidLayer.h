@@ -2,6 +2,8 @@
 
 #include "LiquidMaterial.h"
 
+#include "DBC\\Core\DBC__Storage.h"
+
 class Liquid_Layer : public MeshWrapper
 {
 public:
@@ -32,6 +34,7 @@ public:
 
 	std::vector<bool> renderTiles;
 
+
 	// Render
 	void InitTextures();
 
@@ -39,6 +42,6 @@ public:
 	std::vector<std::shared_ptr<Texture>>    m_Textures;
 
 private:
-	ISkyManager*                                                        m_SkyManager;
+	std::weak_ptr<ISkyManager>                                          m_SkyManager;
 	const CGroupQuality&                                                m_QualitySettings;
 };

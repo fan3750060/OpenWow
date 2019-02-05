@@ -22,12 +22,14 @@ bool Liquid_Layer::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<Con
 	uint32_t texidx = (uint32_t)(EngineTime::GetTotalTime() * 1000.0f / 60.0f) % m_Textures.size();
 	m_Material->SetTexture(0, m_Textures[texidx]);
 
-	if (m_SkyManager != nullptr)
+	std::shared_ptr<ISkyManager> SkyManager = m_SkyManager.lock();
+
+	if (SkyManager != nullptr)
 	{
-		m_Material->SetColorLight(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_LIGHT));
-		m_Material->SetColorDark(m_SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_DARK));
-		m_Material->SetShallowAlpha(m_SkyManager->GetWaterShallowAlpha());
-		m_Material->SetDeepAlpha(m_SkyManager->GetWaterDarkAlpha());
+		m_Material->SetColorLight(SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_LIGHT));
+		m_Material->SetColorDark(SkyManager->GetColor(LightColors::LIGHT_COLOR_RIVER_DARK));
+		m_Material->SetShallowAlpha(SkyManager->GetWaterShallowAlpha());
+		m_Material->SetDeepAlpha(SkyManager->GetWaterDarkAlpha());
 	}
 	else
 	{

@@ -18,8 +18,6 @@ const char* archives = "C:/Data_3.3.5/";
 
 CMPQArchiveManager::CMPQArchiveManager()
 {
-	AddManager<IMPQArchiveManager>(this);
-
 	// Files 1.12
 #if (VERSION == VERSION_Vanila)
 	AddArchive(std::string("backup.MPQ"));

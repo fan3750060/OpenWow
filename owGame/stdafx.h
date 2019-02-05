@@ -5,7 +5,5 @@
 #include <owRenderBase.h>
 #include <owEngine.h>
 
-#include <owGameDBC.h>
-
 #include "common.h"
 

@@ -10,7 +10,6 @@
 
 CFilesManager::CFilesManager()
 {
-	AddManager<IFilesManager>(this);
 }
 
 CFilesManager::~CFilesManager()

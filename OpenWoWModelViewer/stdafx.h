@@ -20,9 +20,6 @@
 
 // GAME
 
-#include <owGameDBC.h>
-#pragma comment(lib, "owGameDBC.lib")
-
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
 

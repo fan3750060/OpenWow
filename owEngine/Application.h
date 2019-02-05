@@ -8,9 +8,9 @@ public:
 	Application();
 	virtual ~Application();
 
-	// Get the singleton instance to the application.
 	static Application& Get();
 
+	bool Load();
 	int Run();
 	void Stop();
 
@@ -45,9 +45,13 @@ private:
 
 	// Handle to the module.
 	HINSTANCE       m_hInstance;
+	HWND            m_hWindow;
 
 	std::shared_ptr<IRenderDevice> m_pRenderDevice;
-	std::shared_ptr<RenderWindow>  m_Windows;
+	std::shared_ptr<RenderWindow>  m_pWindow;
+
+private:
+	const char* c_RenderWindow_ClassName = "RenderWindowClass";
 };
 
 #define _RenderDevice Application::Get().GetRenderDevice()

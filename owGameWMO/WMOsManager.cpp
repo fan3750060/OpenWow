@@ -5,8 +5,6 @@
 
 WMOsManager::WMOsManager()
 {
-	AddManager<IWMOManager>(this);
-
 	ADDCONSOLECOMMAND_CLASS("wmo_info", WMOsManager, PrintAllInfo);
 }
 

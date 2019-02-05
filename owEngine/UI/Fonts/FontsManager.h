@@ -5,8 +5,8 @@
 class FontsManager : public CRefManager1Dim<Font>, public IFontsManager
 {
 public:
-	FontsManager(IRenderDevice* _renderDevice);
-	virtual ~FontsManager() {}
+	FontsManager();
+	virtual ~FontsManager();
 
 	std::shared_ptr<Font> Add(cstring _fontFileName, uint32 _fontSize);
 

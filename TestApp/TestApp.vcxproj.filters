@@ -4,15 +4,14 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="CamContrTEMP.h" />
-    <ClInclude Include="UI_Color_Material.h" />
+    <ClInclude Include="GameState_World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Color_Material.cpp" />
+    <ClCompile Include="GameState_World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

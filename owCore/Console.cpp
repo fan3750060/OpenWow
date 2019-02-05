@@ -30,7 +30,6 @@ void Test2() { Log::Print("TEST2"); }
 
 CConsole::CConsole()
 {
-	AddManager<IConsole>(this);
 }
 
 CConsole::~CConsole()

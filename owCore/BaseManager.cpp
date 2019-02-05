@@ -6,7 +6,7 @@
 // Additional
 #include "FilesManager.h"
 
-CBaseManager* _BaseManager;
+std::shared_ptr<CBaseManager> _BaseManager;
 
 CBaseManager::CBaseManager() :
 	m_CurrentPhase(Phase_NONE)
@@ -17,7 +17,7 @@ CBaseManager::~CBaseManager()
 	OutputDebugString("CBaseManager destroyed.\n");
 }
 
-void CBaseManager::RegisterManager(GUID _type, IManager* _manager)
+void CBaseManager::RegisterManager(GUID _type, std::shared_ptr<IManager> _manager)
 {
 	if (m_Managers.find(_type) != m_Managers.end())
 	{
@@ -32,7 +32,7 @@ void CBaseManager::UnregisterManager(GUID _type)
 	//m_Managers.erase(std::remove(m_Managers.begin(), m_Managers.end(), _type), m_Managers.end());
 }
 
-IManager* CBaseManager::GetManager(GUID _type)
+std::shared_ptr<IManager> CBaseManager::GetManager(GUID _type)
 {
 	if (m_Managers.find(_type) == m_Managers.end())
 	{

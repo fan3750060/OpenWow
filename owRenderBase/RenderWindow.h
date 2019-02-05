@@ -37,28 +37,29 @@ public:
 	// Get the render target of this render window.
 	virtual std::shared_ptr<IRenderTarget> GetRenderTarget() = 0;
 
-	
-	// Update event is called when the application will be updated before rendering.
-	// This this callback to update your game logic.
+public:
+	// Engine events
+	Event				Initialize;
 	UpdateEvent			Update;
-
-	// Invoked when the window needs to be redrawn.
 	RenderEvent         PreRender;
 	RenderEvent         Render;
 	RenderEvent         PostRender;
 	RenderUIEvent       RenderUI;
-
-	// Invoked when the window is initialized.
-	Event				Initialize;
 	Event				Terminate;
+
+	virtual void OnInitialize(EventArgs& e);
+	virtual void OnUpdate(UpdateEventArgs& e);
+	virtual void OnPreRender(RenderEventArgs& e);
+	virtual void OnRender(RenderEventArgs& e);
+	virtual void OnPostRender(RenderEventArgs& e);
+	virtual void OnRenderUI(RenderUIEventArgs& e);
+	virtual void OnTerminate(EventArgs& e);
 
 	// Window events
 	Event				InputFocus;// Window gets input focus
 	Event				InputBlur; // Window loses input focus
-
 	Event				Minimize; // Window is minimized.
 	Event				Restore;// Window is restored.
-
 	ResizeEvent         Resize;
 	Event				Expose;
 
@@ -80,42 +81,33 @@ public:
 	Event               MouseFocus;
 	Event               MouseBlur;
 
-	
-
-	virtual void OnInitialize(EventArgs& e);
-
-	virtual void OnUpdate(UpdateEventArgs& e);
-	virtual void OnPreRender(RenderEventArgs& e);
-	virtual void OnRender(RenderEventArgs& e);
-	virtual void OnPostRender(RenderEventArgs& e);
-	virtual void OnRenderUI(RenderUIEventArgs& e);
-
-	virtual void OnTerminate(EventArgs& e);
-
 protected:
 	friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	RenderWindow(cstring windowName, int windowWidth, int windowHeight, HWND _hwnd, bool vSync = false);
 	virtual ~RenderWindow();
 
+
+
+	// Window events
 	virtual void OnInputFocus(EventArgs& e);
 	virtual void OnInputBlur(EventArgs& e);
-
 	virtual void OnMinimize(EventArgs& e);
 	virtual void OnRestore(EventArgs& e);
-
 	virtual void OnResize(ResizeEventArgs& e);
 	virtual void OnExpose(EventArgs& e);
 
+	// Window is closing
 	virtual void OnClose(WindowCloseEventArgs& e);
 
-	// Input
 
+	// Keyboard events
 	virtual void OnKeyPressed(KeyEventArgs& e);
 	virtual void OnKeyReleased(KeyEventArgs& e);
 	virtual void OnKeyboardFocus(EventArgs& e);
 	virtual void OnKeyboardBlur(EventArgs& e);
 
+	// The mouse events
 	virtual void OnMouseMoved(MouseMotionEventArgs& e);
 	virtual void OnMouseButtonPressed(MouseButtonEventArgs& e);
 	virtual void OnMouseButtonReleased(MouseButtonEventArgs& e);

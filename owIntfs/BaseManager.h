@@ -5,7 +5,7 @@ class Font;
 class WMO;
 class M2;
 
-struct 
+struct
 	__declspec(uuid("BDC2768B-055D-42EA-ABE3-CF17CD21178D"))
 	IManager
 {
@@ -61,15 +61,15 @@ enum SBaseManagerPhases : uint8
 	Phase_NONE
 };
 
-__interface 
+struct 
 	__declspec(uuid("BB9FD479-C7AD-4F57-837B-E299A04AF171"))
 	IBaseManager
 {
-	void RegisterManager(GUID _type, IManager* _manager);
-	void UnregisterManager(GUID _type);
+	virtual void RegisterManager(GUID _type, std::shared_ptr<IManager> _manager) = 0;
+	virtual void UnregisterManager(GUID _type) = 0;
 
-	IManager* GetManager(GUID _type);
+	virtual std::shared_ptr<IManager> GetManager(GUID _type) = 0;
 
-	void SetPhase(SBaseManagerPhases _phase);
-	SBaseManagerPhases GetPhase();
+	virtual void SetPhase(SBaseManagerPhases _phase) = 0;
+	virtual SBaseManagerPhases GetPhase() = 0;
 };

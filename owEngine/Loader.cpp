@@ -29,7 +29,6 @@ DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
 CLoader::CLoader() :
 	m_Thread_Loader(nullptr)
 {
-	AddManager<ILoader>(this);
 }
 
 CLoader::~CLoader()

@@ -1,18 +1,18 @@
 #pragma once
 
-__interface IByteBuffer
+struct IByteBuffer
 {
-	uint64 getSize() const;
-	uint64 getPos() const;
-	const uint8* getData() const;
-	const uint8* getDataFromCurrent() const;
-	bool isEof() const;
+	virtual uint64 getSize() const = 0;
+	virtual uint64 getPos() const = 0;
+	virtual const uint8* getData() const = 0;
+	virtual const uint8* getDataFromCurrent() const = 0;
+	virtual bool isEof() const = 0;
 
-	void seek(uint64 _bufferOffsetAbsolute);
-	void seekRelative(uint64 _bufferOffsetRelative);
-	bool readLine(std::string* _string);
-	void readBytes(void* _destination, uint64 _size = 1);
-	void readString(std::string* _string);
+	virtual void seek(uint64 _bufferOffsetAbsolute) = 0;
+	virtual void seekRelative(uint64 _bufferOffsetRelative) = 0;
+	virtual bool readLine(std::string* _string) = 0;
+	virtual void readBytes(void* _destination, uint64 _size = 1) = 0;
+	virtual void readString(std::string* _string) = 0;
 };
 
 

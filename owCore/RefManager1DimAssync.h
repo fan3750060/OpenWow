@@ -44,7 +44,7 @@ public:
 public:
 	//static HANDLE m_Thread_Loader;
 	//static HANDLE m_Event_Add;
-	MapAssync<std::string, T*> m_ObjectsToLoad;
+	MapAssync<std::string, std::shared_ptr<T>> m_ObjectsToLoad;
 #endif
 };
 

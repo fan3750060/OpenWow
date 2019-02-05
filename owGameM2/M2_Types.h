@@ -129,8 +129,7 @@ struct SM2_Texture
 		ITEM_ICON,			// Item Icon // Used on inventory art M2s(2) : ui - button.m2 and forcedbackpackitem.m2(CSimpleModel_ReplaceIconTexture("texture"))
 		
 		COUNT
-	};
-	Type type;
+	} type;
 
 	struct Flags
 	{

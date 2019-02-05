@@ -11,17 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CamContrTEMP.h" />
+    <ClInclude Include="GameState_World.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="UI_Color_Material.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameState_World.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="UI_Color_Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">

@@ -9,7 +9,7 @@ class CSettings : public ISettings
 {
 public:
 	CSettings();
-	~CSettings();
+	virtual ~CSettings();
 
 	void AddDefaults();
 

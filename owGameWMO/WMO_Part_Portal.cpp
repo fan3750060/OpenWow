@@ -20,11 +20,9 @@ CWMO_Part_Portal::CWMO_Part_Portal(const std::weak_ptr<const WMO> _parentWMO, co
 	m_Plane.normal = Fix_XZmY(_proto.plane.normal);
 	m_Plane.dist = _proto.plane.distance;
 
-
-
-	/*m_Geom = _Render->r.beginCreatingGeometry(PRIM_TRISTRIP, _Render->getRenderStorage()->__layout_GxVBF_P);
-	m_Geom->setGeomVertexParams(m_ParentWMO->m_PortalVB, R_DataType::T_FLOAT, 0, sizeof(vec3));
-	m_Geom->finishCreatingGeometry();*/
+	m_Geom = _RenderDevice->CreateMesh();
+	m_Geom->SetType(SN_TYPE_DEBUG);
+	m_Geom->AddVertexBuffer(BufferBinding("POSITION", 0), m_ParentWMO.lock()->m_PortalVB);
 }
 
 

@@ -224,7 +224,7 @@ void SceneNode::SetParent(std::weak_ptr<SceneNode> parentNode)
 
 	// Add to new parent
 	if (std::shared_ptr<SceneNode> newParent = parentNode.lock())
-		newParent->AddChild(shared_from_this());
+		newParent->AddChild(SceneNode::shared_from_this());
 }
 
 void SceneNode::AddMesh(std::shared_ptr<IMesh> mesh)

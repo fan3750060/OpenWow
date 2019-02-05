@@ -2,19 +2,19 @@
 
 #include "GameState.h"
 
-class GameStateManager : public IGameStateManager
+class CGameStateManager : public IGameStateManager
 {
 public:
-	GameStateManager();
-	~GameStateManager();
+	CGameStateManager();
+	virtual ~CGameStateManager();
 
 	// IGameStateManager
-    void AddGameState(GameStatesNames::List _name, IGameState* _gameState) override;
+    void AddGameState(GameStatesNames::List _name, std::shared_ptr<IGameState> _gameState) override;
     bool SetGameState(GameStatesNames::List _name) override;
-	bool SetGameState(IGameState* _newGameState) override;
-    IGameState* GetGameState() override { return m_CurrentGameState; }
+	bool SetGameState(std::shared_ptr<IGameState> _newGameState) override;
+    std::shared_ptr<IGameState> GetGameState() override { return m_CurrentGameState; }
 
 private:
-    IGameState*									m_CurrentGameState;
-	std::map<GameStatesNames::List, IGameState*>		m_GameStatesCollection;
+	std::shared_ptr<IGameState>                                     m_CurrentGameState;
+	std::map<GameStatesNames::List, std::shared_ptr<IGameState>>    m_GameStatesCollection;
 };

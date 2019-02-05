@@ -7,8 +7,6 @@
 class Camera : public Object
 {
 public:
-	typedef Object base;
-
 	enum class Space
 	{
 		Local,

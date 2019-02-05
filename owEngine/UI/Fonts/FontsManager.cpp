@@ -10,12 +10,14 @@
 #include <freetype/config/ftheader.h>
 #include FT_FREETYPE_H
 
-FontsManager::FontsManager(IRenderDevice* _renderDevice)
+FontsManager::FontsManager()
 	: m_RenderDevice(_RenderDevice)
 {
 	mainFont = Add("Fonts\\FRIZQT__.TTF", 12);
+}
 
-	AddManager<IFontsManager>(this);
+FontsManager::~FontsManager()
+{
 }
 
 std::shared_ptr<Font> FontsManager::Add(cstring _fontFileName, uint32 _fontSize)

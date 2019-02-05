@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 class CLog : public ILog
 {
 	friend class Log;
@@ -15,17 +17,17 @@ public:
     void Fatal(const char* _message, ...);
 
 	// ILog
-	bool AddDebugOutput(IDebugOutput* _debugOutput) override;
-	bool DeleteDebugOutput(IDebugOutput* _debugOutput) override;
+	bool AddDebugOutput(std::shared_ptr<IDebugOutput> _debugOutput) override;
+	bool DeleteDebugOutput(std::shared_ptr<IDebugOutput> _debugOutput) override;
 
 private:
     void PushMessageToAllDebugOutputs(const char* _message, IDebugOutput::DebugMessageType _type, va_list& _vaList);
 
 private:
-	IDebugOutput* m_DebugOutput_ConsoleWindows;
+	std::shared_ptr<IDebugOutput> m_DebugOutput_ConsoleWindows;
 
-	std::vector<IDebugOutput*> m_DebugOutputs;
-    CRITICAL_SECTION debugCS;
+	std::vector<std::shared_ptr<IDebugOutput>> m_DebugOutputs;
+	std::mutex m_Mutex;
 };
 
 // Helper class to fast access

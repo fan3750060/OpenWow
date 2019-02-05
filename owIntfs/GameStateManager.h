@@ -18,7 +18,7 @@ struct GameStatesNames
 };
 
 // Forward BEGIN
-__interface IManager;
+struct IManager;
 // Forward END
 
 struct 
@@ -27,10 +27,10 @@ struct
 {
 	virtual ~IGameStateManager() = 0 {};
 
-	virtual void AddGameState(GameStatesNames::List _name, IGameState* _gameState) = 0;
+	virtual void AddGameState(GameStatesNames::List _name, std::shared_ptr<IGameState> _gameState) = 0;
 
 	virtual bool SetGameState(GameStatesNames::List _name) = 0;
-	virtual bool SetGameState(IGameState* _newGameState) = 0;
+	virtual bool SetGameState(std::shared_ptr<IGameState> _newGameState) = 0;
 
-	virtual IGameState* GetGameState() = 0;
+	virtual std::shared_ptr<IGameState> GetGameState() = 0;
 };

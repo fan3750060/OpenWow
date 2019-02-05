@@ -8,7 +8,6 @@
 
 CSettings::CSettings()
 {
-	AddManager<ISettings>(this);
 }
 
 CSettings::~CSettings()

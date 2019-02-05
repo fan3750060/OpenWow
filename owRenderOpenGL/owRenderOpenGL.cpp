@@ -7,9 +7,9 @@
 #include "RenderDeviceOGL.h"
 #include "RenderWindowOGL.h"
 
-CBaseManager* _BaseManager = nullptr;
+std::shared_ptr<CBaseManager> _BaseManager = nullptr;
 
-std::shared_ptr<IRenderDevice> CreateRenderDeviceOGL(CBaseManager* _baseManager)
+std::shared_ptr<IRenderDevice> CreateRenderDeviceOGL(std::shared_ptr<CBaseManager> _baseManager)
 {
 	_BaseManager = _baseManager;
 	return std::make_shared<RenderDeviceOGL>();

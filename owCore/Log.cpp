@@ -13,21 +13,15 @@
 
 CLog::CLog()
 {
-	InitializeCriticalSection(&debugCS);
-
-	AddManager<ILog>(this);
-
-	m_DebugOutput_ConsoleWindows = new DebugOutput_ConsoleWindows;
+	m_DebugOutput_ConsoleWindows = std::make_shared<DebugOutput_ConsoleWindows>();
 	AddDebugOutput(m_DebugOutput_ConsoleWindows);
+
+	OutputDebugString("Log created.\n");
 }
 
 CLog::~CLog()
 {
-	delete m_DebugOutput_ConsoleWindows;
-
 	DelManager<ILog>();
-
-	DeleteCriticalSection(&debugCS);
 
 	OutputDebugString("Log destroyed.\n");
 }
@@ -81,7 +75,7 @@ void CLog::Fatal(const char* _message, ...)
 
 //--
 
-bool CLog::AddDebugOutput(IDebugOutput* _debugOutput)
+bool CLog::AddDebugOutput(std::shared_ptr<IDebugOutput> _debugOutput)
 {
 	assert1(_debugOutput != nullptr);
 
@@ -95,7 +89,7 @@ bool CLog::AddDebugOutput(IDebugOutput* _debugOutput)
 	return true;
 }
 
-bool CLog::DeleteDebugOutput(IDebugOutput* _debugOutput)
+bool CLog::DeleteDebugOutput(std::shared_ptr<IDebugOutput> _debugOutput)
 {
 	assert1(_debugOutput != nullptr);
 
@@ -114,23 +108,21 @@ bool CLog::DeleteDebugOutput(IDebugOutput* _debugOutput)
 
 void CLog::PushMessageToAllDebugOutputs(const char* _message, IDebugOutput::DebugMessageType _type, va_list& _vaList)
 {
-	EnterCriticalSection(&debugCS); // THREAD
+	std::unique_lock<std::mutex> lck(m_Mutex, std::defer_lock);
 
 	for (auto it : m_DebugOutputs)
 	{
 		it->PushMessage(_type, _message, _vaList);
 	}
-
-	LeaveCriticalSection(&debugCS); // THREAD
 }
 
 //---------------------------------------------
 //-- Static Log
 //---------------------------------------------
 
-inline CLog* getLog()
+inline std::shared_ptr<CLog> getLog()
 {
-	return dynamic_cast<CLog*>(GetManager<ILog>());
+	return std::dynamic_pointer_cast<CLog, ILog>(GetManager<ILog>());
 }
 
 void Log::Info(const char* _message, ...)

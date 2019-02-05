@@ -3,17 +3,18 @@
 // General
 #include "GameStateManager.h"
 
-GameStateManager::GameStateManager() :
+CGameStateManager::CGameStateManager() :
 	m_CurrentGameState(nullptr)
 {
-	AddManager<IGameStateManager>(this);
+
 }
 
-GameStateManager::~GameStateManager()
+CGameStateManager::~CGameStateManager()
 {
+	DelManager<IGameStateManager>();
 }
 
-void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _gameState)
+void CGameStateManager::AddGameState(GameStatesNames::List _name, std::shared_ptr<IGameState> _gameState)
 {
     assert1(_gameState != nullptr);
     assert1(m_GameStatesCollection.find(_name) == m_GameStatesCollection.end());
@@ -21,15 +22,15 @@ void GameStateManager::AddGameState(GameStatesNames::List _name, IGameState* _ga
     m_GameStatesCollection.insert(std::make_pair(_name, _gameState));
 }
 
-bool GameStateManager::SetGameState(GameStatesNames::List _name)
+bool CGameStateManager::SetGameState(GameStatesNames::List _name)
 {
     assert1(m_GameStatesCollection.find(_name) != m_GameStatesCollection.end());
 
-    IGameState* gameState = m_GameStatesCollection[_name];
+	std::shared_ptr<IGameState> gameState = m_GameStatesCollection[_name];
     return SetGameState(gameState);
 }
 
-bool GameStateManager::SetGameState(IGameState* _newGameState)
+bool CGameStateManager::SetGameState(std::shared_ptr<IGameState> _newGameState)
 {
     assert1(_newGameState);
 
@@ -58,7 +59,7 @@ bool GameStateManager::SetGameState(IGameState* _newGameState)
     }
 
     // 3. Set new GameState
-    m_CurrentGameState = dynamic_cast<CGameState*>(_newGameState);
+    m_CurrentGameState = std::dynamic_pointer_cast<CGameState, IGameState>(_newGameState);
     if (m_CurrentGameState->Set())
     {
 		Log::Green("GameStateManager[]: New CGameState is current now.");

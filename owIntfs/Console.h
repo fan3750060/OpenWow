@@ -13,7 +13,7 @@ struct
 };
 
 // Forward BEGIN
-__interface IManager;
+struct IManager;
 // Forward END
 
 typedef std::vector<IConsoleCommand*> ConsoleCommands;

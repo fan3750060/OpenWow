@@ -16,6 +16,7 @@ public:
 
 protected:
 	virtual void CreateSwapChain();
+
 	virtual void OnPreRender(RenderEventArgs& e);
 	virtual void OnPostRender(RenderEventArgs& e);
 

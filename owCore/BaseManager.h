@@ -12,23 +12,23 @@ public:
 	~CBaseManager();
 
 	// IBaseManager
-	void RegisterManager(GUID _type, IManager* _manager) override;
+	void RegisterManager(GUID _type, std::shared_ptr<IManager> _manager) override;
 	void UnregisterManager(GUID _type) override;
-	IManager* GetManager(GUID _type) override;
+	std::shared_ptr<IManager> GetManager(GUID _type) override;
 	void SetPhase(SBaseManagerPhases _phase) override;
 	SBaseManagerPhases GetPhase() override;
 
 private:
-	std::map<GUID, IManager*> m_Managers;
+	std::map<GUID, std::shared_ptr<IManager>> m_Managers;
 	SBaseManagerPhases m_CurrentPhase;
 };
 
-extern CBaseManager* _BaseManager;
+extern std::shared_ptr<CBaseManager> _BaseManager;
 
 // Helpers
 
 template<class T>
-static inline void AddManager(IManager* _manager)
+static inline void AddManager(std::shared_ptr<IManager> _manager)
 {
 	_BaseManager->RegisterManager(__uuidof(T), _manager);
 }
@@ -40,7 +40,7 @@ static inline void DelManager()
 }
 
 template<class T>
-static inline T* GetManager()
+static inline std::shared_ptr<T> GetManager()
 {
-	return (T*)(_BaseManager->GetManager(__uuidof(T)));
+	return std::dynamic_pointer_cast<T, IManager>(_BaseManager->GetManager(__uuidof(T)));
 }
