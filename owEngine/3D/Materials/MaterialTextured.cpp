@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+// Include
+#include "MaterialWrapper.h"
+
 // General
 #include "MaterialTextured.h"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-
 class CGameState_World : public CGameState
 {
 	typedef CGameState base;
@@ -27,7 +26,7 @@ private:
 
 	std::shared_ptr<Query>               m_FrameQuery;
 	double                               m_FrameTime;
-	std::shared_ptr<Scene3D>               m_3DScene;
+	std::shared_ptr<Scene3D>             m_3DScene;
 	std::shared_ptr<SceneUI>             m_UIScene;
 
 

@@ -59,7 +59,7 @@ public:
 	// to render full-screen post-process effects. If you want more control over the area of the screen the quad covers, 
 	// you can specify your own screen coordinates and supply an appropriate orthographic projection matrix to align the 
 	// screen quad appropriately.
-	std::shared_ptr<IMesh> CreateScreenQuad(float left = -1.0f, float right = 1.0f, float bottom = -1.0f, float top = 1.0f, float z = 0.0f);
+	std::shared_ptr<IMesh> CreateScreenQuad(float left = -0.0f, float right = 1.0f, float bottom = -0.0f, float top = 1.0f, float z = 0.0f);
 
 	// Create a sphere in 3D
 	// @param radius Radius of the sphere.

@@ -34,11 +34,14 @@
     <Filter Include="UI\Fonts">
       <UniqueIdentifier>{00c4ea61-0dd2-4232-9832-90fe44d96dda}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Materials">
-      <UniqueIdentifier>{99989cb3-00f0-4dc1-986e-75a12990548f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RenderStuff">
       <UniqueIdentifier>{61ff063b-287f-4ae6-84e4-ab15b88e3880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Materials">
+      <UniqueIdentifier>{e65e5a5f-806d-4408-9cea-a0307a9b5e84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D\Materials">
+      <UniqueIdentifier>{2bdba825-b205-4fb9-a50e-4418e1419057}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,15 +128,6 @@
     <ClCompile Include="MeshWrapper.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Materials\MaterialDebug.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="Materials\MaterialTextured.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="Materials\MaterialWrapper.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
     <ClCompile Include="3D\Passes\DeferredPass.cpp">
       <Filter>3D\Passes</Filter>
     </ClCompile>
@@ -146,9 +140,6 @@
     <ClCompile Include="CameraController.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Passes\UI_Color_Material.cpp">
-      <Filter>UI\Passes</Filter>
-    </ClCompile>
     <ClCompile Include="3D\Scene3D.cpp">
       <Filter>3D</Filter>
     </ClCompile>
@@ -160,6 +151,24 @@
     </ClCompile>
     <ClCompile Include="3D\SceneNode3D.cpp">
       <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UITexture.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Materials\UI_Color_Material.cpp">
+      <Filter>UI\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Materials\UI_Texture_Material.cpp">
+      <Filter>UI\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Materials\MaterialDebug.cpp">
+      <Filter>3D\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Materials\MaterialTextured.cpp">
+      <Filter>3D\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialWrapper.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,15 +267,6 @@
     <ClInclude Include="MeshWrapper.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Materials\MaterialDebug.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="Materials\MaterialTextured.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="Materials\MaterialWrapper.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
     <ClInclude Include="3D\Passes\DeferredPass.h">
       <Filter>3D\Passes</Filter>
     </ClInclude>
@@ -279,9 +279,6 @@
     <ClInclude Include="CameraController.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Passes\UI_Color_Material.h">
-      <Filter>UI\Passes</Filter>
-    </ClInclude>
     <ClInclude Include="3D\Scene3D.h">
       <Filter>3D</Filter>
     </ClInclude>
@@ -293,6 +290,24 @@
     </ClInclude>
     <ClInclude Include="3D\SceneNode3D.h">
       <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UITexture.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Materials\UI_Color_Material.h">
+      <Filter>UI\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Materials\UI_Texture_Material.h">
+      <Filter>UI\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Materials\MaterialDebug.h">
+      <Filter>3D\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Materials\MaterialTextured.h">
+      <Filter>3D\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialWrapper.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

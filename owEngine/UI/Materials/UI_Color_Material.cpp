@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // Include
-#include "Materials/MaterialWrapper.h"
+#include "MaterialWrapper.h"
 
 // General
 #include "UI_Color_Material.h"

@@ -53,6 +53,13 @@ std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, 
 	p[2] = vec3(left, top, z);       n[2] = vec3(0, 0, 1);    t[2] = vec2(0, 1);
 	p[3] = vec3(right, top, z);      n[3] = vec3(0, 0, 1);    t[3] = vec2(1, 1);
 
+	uint16 i[6];
+	i[0] = 0;
+	i[1] = 1;
+	i[2] = 2;
+	i[3] = 2;
+	i[4] = 3;
+	i[5] = 0;
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
@@ -64,6 +71,9 @@ std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, 
 
 	std::shared_ptr<IBuffer> __nb = CreateVertexBuffer(n, 4);
 	mesh->AddVertexBuffer(BufferBinding("NORMAL", 0), __nb);
+
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(i, 6);
+	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
 }

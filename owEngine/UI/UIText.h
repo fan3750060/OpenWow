@@ -9,9 +9,9 @@ public:
 	UIText();
 	virtual ~UIText();
 
+	// UIText
 	void                        SetFont(std::shared_ptr<Font> _font);
 	void                        SetText(const std::string& _text);
-
 
 	// SceneNodeUI
 	void                        SetMesh(std::shared_ptr<IMesh> mesh) override;

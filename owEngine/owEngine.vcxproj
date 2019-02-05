@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3D\Materials\MaterialDebug.cpp" />
+    <ClCompile Include="3D\Materials\MaterialTextured.cpp" />
     <ClCompile Include="3D\Passes\AbstractPass.cpp" />
     <ClCompile Include="3D\Passes\BasePass.cpp" />
     <ClCompile Include="3D\Passes\BeginQueryPass.cpp" />
@@ -36,9 +38,7 @@
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Loader.cpp" />
-    <ClCompile Include="Materials\MaterialDebug.cpp" />
-    <ClCompile Include="Materials\MaterialTextured.cpp" />
-    <ClCompile Include="Materials\MaterialWrapper.cpp" />
+    <ClCompile Include="MaterialWrapper.cpp" />
     <ClCompile Include="MeshWrapper.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -49,15 +49,19 @@
     <ClCompile Include="UI\Fonts\Font.cpp" />
     <ClCompile Include="UI\Fonts\FontsManager.cpp" />
     <ClCompile Include="UI\Fonts\UI_Font_Material.cpp" />
+    <ClCompile Include="UI\Materials\UI_Color_Material.cpp" />
+    <ClCompile Include="UI\Materials\UI_Texture_Material.cpp" />
     <ClCompile Include="UI\Passes\BaseUIPass.cpp" />
     <ClCompile Include="UI\Passes\RenderUITechnique.cpp" />
-    <ClCompile Include="UI\Passes\UI_Color_Material.cpp" />
     <ClCompile Include="UI\SceneNodeUI.cpp" />
     <ClCompile Include="UI\SceneUI.cpp" />
     <ClCompile Include="UI\UIText.cpp" />
+    <ClCompile Include="UI\UITexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
+    <ClInclude Include="3D\Materials\MaterialDebug.h" />
+    <ClInclude Include="3D\Materials\MaterialTextured.h" />
     <ClInclude Include="3D\Passes\AbstractPass.h" />
     <ClInclude Include="3D\Passes\BasePass.h" />
     <ClInclude Include="3D\Passes\BeginQueryPass.h" />
@@ -85,9 +89,7 @@
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Loader.h" />
-    <ClInclude Include="Materials\MaterialDebug.h" />
-    <ClInclude Include="Materials\MaterialTextured.h" />
-    <ClInclude Include="Materials\MaterialWrapper.h" />
+    <ClInclude Include="MaterialWrapper.h" />
     <ClInclude Include="MeshWrapper.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextureLoader.h" />
@@ -95,13 +97,15 @@
     <ClInclude Include="UI\Fonts\Font.h" />
     <ClInclude Include="UI\Fonts\FontsManager.h" />
     <ClInclude Include="UI\Fonts\UI_Font_Material.h" />
+    <ClInclude Include="UI\Materials\UI_Color_Material.h" />
+    <ClInclude Include="UI\Materials\UI_Texture_Material.h" />
     <ClInclude Include="UI\Passes\BaseUIPass.h" />
     <ClInclude Include="UI\Passes\RenderUIPass.h" />
     <ClInclude Include="UI\Passes\RenderUITechnique.h" />
-    <ClInclude Include="UI\Passes\UI_Color_Material.h" />
     <ClInclude Include="UI\SceneNodeUI.h" />
     <ClInclude Include="UI\SceneUI.h" />
     <ClInclude Include="UI\UIText.h" />
+    <ClInclude Include="UI\UITexture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{51252F60-B8DC-4090-BBA3-DD05942110F0}</ProjectGuid>

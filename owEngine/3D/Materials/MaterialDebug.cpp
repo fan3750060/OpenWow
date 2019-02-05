@@ -1,10 +1,13 @@
 #include "stdafx.h"
 
 // Include
-#include <Application.h>
+#include "MaterialWrapper.h"
 
 // General
 #include "MaterialDebug.h"
+
+// Additional
+#include <Application.h>
 
 MaterialDebug::MaterialDebug(std::shared_ptr<Material> _material)
 	: MaterialWrapper(_material)

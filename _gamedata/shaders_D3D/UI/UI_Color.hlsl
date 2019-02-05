@@ -1,10 +1,12 @@
-#include "..\\_gamedata\\shaders_D3D\\UI\\UI_Color_Material.h"
+struct UI_Color_Material
+{
+    float4 Color;
+};
 
 struct VertexShaderInput
 {
-	float2 position : POSITION;
+	float3 position : POSITION;
 };
-
 struct VertexShaderOutput
 {
 	float4 position : SV_POSITION;
@@ -22,7 +24,7 @@ cbuffer Material : register(b2)
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
-	OUT.position = mul(ModelOrtho, float4(IN.position, 0.0f, 1.0f));
+	OUT.position = mul(ModelOrtho, float4(IN.position, 1.0f));
 	return OUT;
 }
 

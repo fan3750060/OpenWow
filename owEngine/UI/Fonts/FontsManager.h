@@ -24,7 +24,4 @@ public:
 
 private:
 	std::shared_ptr<Font> mainFont;
-
-private:
-	std::weak_ptr<IRenderDevice> m_RenderDevice;
 };

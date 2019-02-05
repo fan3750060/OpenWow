@@ -1,19 +1,19 @@
-struct UI_Font_Material
+struct UI_Texture_Material
 {
-	float4 Color;
-    float2 Offset;
+    float4 Color;
 };
 
 struct VertexShaderInput
 {
 	float3 position : POSITION;
 	float2 texCoord : TEXCOORD0;
+	float3 normal   : NORMAL0;
 };
-
 struct VertexShaderOutput
 {
 	float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD0;
+	float3 normal   : NORMAL0;
 };
 
 cbuffer PerObject : register(b0)
@@ -22,7 +22,7 @@ cbuffer PerObject : register(b0)
 }
 cbuffer Material : register(b2)
 {
-    UI_Font_Material Material;
+    UI_Texture_Material Material;
 };
 
 Texture2D DiffuseTexture : register(t0);
@@ -31,12 +31,13 @@ sampler DiffuseTextureSampler : register(s0);
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
-	OUT.position = mul(ModelOrtho, (float4(IN.position, 1.0f) + float4(Material.Offset, 0.0f, 0.0f)));
+	OUT.position = mul(ModelOrtho, float4(IN.position, 1.0f));
 	OUT.texCoord = IN.texCoord;
+	OUT.normal = IN.normal;
 	return OUT;
 }
 
 float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return float4(Material.Color.rgb, Material.Color.a * DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord).a);
+	return DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord) * Material.Color;
 }

@@ -11,7 +11,6 @@
 #include FT_FREETYPE_H
 
 FontsManager::FontsManager()
-	: m_RenderDevice(_RenderDevice)
 {
 	mainFont = Add("Fonts\\FRIZQT__.TTF", 12);
 }
@@ -127,7 +126,7 @@ std::shared_ptr<Font> FontsManager::CreateAction(cstring _nameAndSize)
 	uint32_t x = 0;
 	uint32_t y = maxAscent;
 
-	std::vector<vec2> fontVertices;
+	std::vector<vec3> fontVertices;
 	std::vector<vec2> fontTextures;
 	float xOffset = 0.0f;
 
@@ -150,13 +149,13 @@ std::shared_ptr<Font> FontsManager::CreateAction(cstring _nameAndSize)
 		float texY1 = (float)(y - maxAscent) / imageHeight;
 		float texY2 = texY1 + (float)(charHeight) / imageHeight;
 
-		fontVertices.push_back(vec2(0.0f,          0.0f       ));
-		fontVertices.push_back(vec2(charWidth[ch], 0.0f       ));
-		fontVertices.push_back(vec2(0.0f,          charHeight ));
+		fontVertices.push_back(vec3(0.0f,          0.0f,       0.0f));
+		fontVertices.push_back(vec3(charWidth[ch], 0.0f,       0.0f));
+		fontVertices.push_back(vec3(0.0f,          charHeight, 0.0f));
 
-		fontVertices.push_back(vec2(0.0f,          charHeight ));
-		fontVertices.push_back(vec2(charWidth[ch], 0.0f       ));
-		fontVertices.push_back(vec2(charWidth[ch], charHeight ));
+		fontVertices.push_back(vec3(0.0f,          charHeight, 0.0f));
+		fontVertices.push_back(vec3(charWidth[ch], 0.0f,       0.0f));
+		fontVertices.push_back(vec3(charWidth[ch], charHeight, 0.0f));
 
 
 		fontTextures.push_back(vec2(texX1, texY1));
@@ -183,11 +182,11 @@ std::shared_ptr<Font> FontsManager::CreateAction(cstring _nameAndSize)
 	}
 
 
-	std::shared_ptr<IBuffer> __vbPos = m_RenderDevice.lock()->CreateVertexBuffer(fontVertices);
-	std::shared_ptr<IBuffer> __vbTex = m_RenderDevice.lock()->CreateVertexBuffer(fontTextures);
+	std::shared_ptr<IBuffer> __vbPos = _RenderDevice->CreateVertexBuffer(fontVertices);
+	std::shared_ptr<IBuffer> __vbTex = _RenderDevice->CreateVertexBuffer(fontTextures);
 	//
 
-	std::shared_ptr<IMesh> __geom = m_RenderDevice.lock()->CreateMesh();
+	std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vbPos);
 	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __vbTex);
 

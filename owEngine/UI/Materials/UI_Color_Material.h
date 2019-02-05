@@ -1,15 +1,14 @@
 #pragma once
 
-#include "MaterialWrapper.h"
+class MaterialWrapper;
 
-class UI_Font_Material : public MaterialWrapper
+class UI_Color_Material : public MaterialWrapper
 {
 public:
-	UI_Font_Material();
-	virtual ~UI_Font_Material();
+	UI_Color_Material();
+	virtual ~UI_Color_Material();
 
 	void SetColor(vec4 color);
-	void SetOffset(vec2 offset);
 
 protected:
 	void UpdateConstantBuffer() const override;
@@ -18,12 +17,10 @@ private:
 	__declspec(align(16)) struct MaterialProperties
 	{
 		MaterialProperties()
-			: Color(1.0f, 1.0f, 1.0f, 1.0f)
-			, Offset(0.0f, 0.0f)
+			: Color(1, 1, 1, 1)
 		{}
 		vec4 Color;
-		vec2 Offset;
-		vec2 Padding;
+		//-------------------------- ( 32 bytes )
 	};
 	MaterialProperties* m_pProperties;
 };

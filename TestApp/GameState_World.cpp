@@ -71,7 +71,7 @@ bool CGameState_World::Init()
 	cubeNode->AddMesh(cube);
 	cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 	cubeNode->SetScale(vec3(15, 15, 15));
-	cubeNode->SetParent(m_3DScene->GetRootNode());
+	//cubeNode->SetParent(m_3DScene->GetRootNode());
 
 	// M2 Model
 	/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
@@ -84,10 +84,10 @@ bool CGameState_World::Init()
 	// Map
 	m_MapController = std::make_shared<MapController>();
 	m_MapController->SetParent(m_3DScene->GetRootNode());
-	//m_MapController->MapPreLoad(*DBC_Map[1]);
-	//m_MapController->MapLoad();
-	//m_MapController->MapPostLoad();
-	//m_MapController->EnterMap(x, y);
+	m_MapController->MapPreLoad(*DBC_Map[1]);
+	m_MapController->MapLoad();
+	m_MapController->MapPostLoad();
+	m_MapController->EnterMap(x, y);
 
 	//
 	// UI
@@ -114,17 +114,41 @@ bool CGameState_World::Init()
 
 	// Font
 	std::shared_ptr<UIText> node = std::make_shared<UIText>();
-	node->SetText("Privet, mir!!!");
-	node->SetTranslate(vec2(80.0f, 80.0f));
 	node->SetParent(m_UIScene->GetRootNode());
+	node->SetText("Privet, mir!!!");
+	node->SetTranslate(vec2(00.0f, 00.0f));
+	
+
+	// Texture
+	std::shared_ptr<UITexture> node3 = std::make_shared<UITexture>();
+	node3->SetParent(m_UIScene->GetRootNode());
+	node3->SetTexture(m_MapController->getMinimap());
+	node3->SetTranslate(vec2(100.0f, 100.0f));
+	node3->SetScale(vec2(512.0f, 512.0f));
+	
+	// Texture 2
+	//std::shared_ptr<UITexture> node4 = std::make_shared<UITexture>();
+	//node4->SetParent(m_UIScene->GetRootNode());
+	//node4->SetTexture(renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"));
+	//node4->SetTranslate(vec2(200.0f, 000.0f));
+	//node4->SetScale(vec2(100.0f, 100.0f));
+	
+
+	// Texture 3
+	//std::shared_ptr<UITexture> node5 = std::make_shared<UITexture>();
+	//node5->SetParent(m_UIScene->GetRootNode());
+	//node5->SetTexture(renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"));
+	//node5->SetTranslate(vec2(000.0f, 200.0f));
+	//node5->SetScale(vec2(100.0f, 100.0f));
+
 
 	// Color quad
-	std::shared_ptr<SceneNodeUI> node2 = std::make_shared<SceneNodeUI>();
-	node2->SetMesh(__geom);
-	node2->SetTranslate(vec2(180.0f, 180.0f));
-	node2->SetScale(vec2(10.0f, 10.0f));
-	node2->SetParent(m_UIScene->GetRootNode());
-
+	//std::shared_ptr<SceneNodeUI> node2 = std::make_shared<SceneNodeUI>();
+	//node2->SetParent(m_UIScene->GetRootNode());
+	//node2->SetMesh(__geom);
+	//node2->SetTranslate(vec2(180.0f, 180.0f));
+	//node2->SetScale(vec2(10.0f, 10.0f));
+	
 
 	m_FrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 

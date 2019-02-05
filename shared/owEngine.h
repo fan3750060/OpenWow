@@ -12,38 +12,55 @@
 #include "../owEngine/CreatePasses.h"
 #include "../owEngine/EngineTime.h"
 #include "../owEngine/Loader.h"
+#include "../owEngine/UI/Fonts/FontsManager.h"
 
 //
 // Wrappers
 //
-#include "../owEngine/Materials/MaterialWrapper.h"
-#include "../owEngine/Materials/MaterialDebug.h"
+#include "../owEngine/MaterialWrapper.h"
 #include "../owEngine/MeshWrapper.h"
+
 
 //
 // UI
 //
 
+// base nodes
 #include "../owEngine/UI/SceneUI.h"
 #include "../owEngine/UI/SceneNodeUI.h"
 
-#include "../owEngine/UI/Fonts/FontsManager.h"
+// additional nodes
 #include "../owEngine/UI/UIText.h"
-#include "../owEngine/UI/Passes/UI_Color_Material.h"
+#include "../owEngine/UI/UITexture.h"
 
+// materials
+#include "../owEngine/UI/Materials/UI_Color_Material.h"
+#include "../owEngine/UI/Materials/UI_Texture_Material.h"
+
+// base passes
 #include "../owEngine/UI/Passes/BaseUIPass.h"
 #include "../owEngine/UI/Passes/RenderUITechnique.h"
+
+
 
 //
 // 3D
 //
 
+// base nodes
 #include "../owEngine/3D/Scene3D.h"
 #include "../owEngine/3D/SceneNode3D.h"
 
+// additional nodes
+
+// materials
+#include "../owEngine/3D/Materials/MaterialDebug.h"
+
+// base passes
 #include "../owEngine/3D/Passes/BasePass.h"
 #include "../owEngine/3D/Passes/RenderTechnique.h"
 
+// other passes
 #include "../owEngine/3D/Passes/ClearRenderTargetPass.h"
 #include "../owEngine/3D/Passes/CopyBufferPass.h"
 #include "../owEngine/3D/Passes/CopyTexturePass.h"

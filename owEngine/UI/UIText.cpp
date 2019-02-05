@@ -10,14 +10,16 @@ UIText::UIText()
 }
 
 UIText::~UIText()
-{
-}
+{}
 
 
 
+//
+// UIText
+//
 void UIText::SetFont(std::shared_ptr<Font> _font)
 {
-	SetMesh(_font);
+	m_Font = _font;
 }
 
 void UIText::SetText(const std::string& _text)
@@ -32,11 +34,12 @@ void UIText::SetText(const std::string& _text)
 //
 void UIText::SetMesh(std::shared_ptr<IMesh> mesh)
 {
-	//m_Font = mesh;
+	fail1();
 }
 std::shared_ptr<IMesh> UIText::GetMesh() const
 {
-	return m_Font;
+	fail1();
+	return nullptr;
 }
 
 bool UIText::RenderMesh(RenderUIEventArgs& renderEventArgs)

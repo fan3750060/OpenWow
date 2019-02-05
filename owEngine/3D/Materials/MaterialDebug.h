@@ -1,6 +1,8 @@
 #pragma once
 
-#include "MaterialWrapper.h"
+// FORWARD BEGIN
+class MaterialWrapper;
+// FORWARD END
 
 class MaterialDebug : public MaterialWrapper
 {

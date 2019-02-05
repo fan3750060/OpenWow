@@ -1,17 +1,17 @@
 #pragma once
 
-// FORWARD BEGIN
 class MaterialWrapper;
-// FORWARD END
 
-class UI_Color_Material : public MaterialWrapper
+class UI_Texture_Material : public MaterialWrapper
 {
+	typedef MaterialWrapper base;
 public:
-	UI_Color_Material();
-	virtual ~UI_Color_Material();
+	UI_Texture_Material();
+	virtual ~UI_Texture_Material();
 
+	void SetTexture(std::shared_ptr<Texture> _texture);
 	void SetColor(vec4 color);
-
+	
 protected:
 	void UpdateConstantBuffer() const override;
 
