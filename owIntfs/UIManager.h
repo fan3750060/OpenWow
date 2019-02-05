@@ -5,8 +5,8 @@ class Image;
 class UIElement;
 // FORWARD END
 
-struct 
-	__declspec(uuid("30C0C1B9-6B0B-4D0B-A4DB-8AEB1F1FD6C3"))
+struct
+	__declspec(novtable, uuid("30C0C1B9-6B0B-4D0B-A4DB-8AEB1F1FD6C3"))
 	IUIMgr : public IManager
 {
 	virtual ~IUIMgr() = 0 {};

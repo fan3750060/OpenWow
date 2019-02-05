@@ -5,7 +5,7 @@
 // General
 #include "LightPickingPass.h"
 
-LightPickingPass::LightPickingPass(std::vector<Light>& lights, std::shared_ptr<Scene> pointLight, std::shared_ptr<Scene> spotLight, std::shared_ptr<Scene> directionalLight, std::shared_ptr<PipelineState> pipeline)
+LightPickingPass::LightPickingPass(std::vector<Light>& lights, std::shared_ptr<Scene3D> pointLight, std::shared_ptr<Scene3D> spotLight, std::shared_ptr<Scene3D> directionalLight, std::shared_ptr<PipelineState> pipeline)
 	: base(lights, pointLight, spotLight, directionalLight, pipeline)
 	, m_RenderDevice(_RenderDevice)
 {
@@ -19,7 +19,7 @@ LightPickingPass::~LightPickingPass()
 	_aligned_free(m_pLightParams);
 }
 
-void LightPickingPass::PreRender(RenderEventArgs& e)
+void LightPickingPass::PreRender(Render3DEventArgs& e)
 {
 	// Make sure the light index is bound to the pixel shader stage.
 	//e.PipelineState->GetShader(Shader::PixelShader)->GetShaderParameterByName("LightIndexBuffer").Set(m_LightParamsCB);

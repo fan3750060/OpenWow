@@ -34,7 +34,7 @@ ADT_MDX_Instance::~ADT_MDX_Instance()
 
 
 //
-// SceneNode
+// SceneNode3D
 //
 bool ADT_MDX_Instance::Accept(IVisitor& visitor)
 {
@@ -56,7 +56,7 @@ bool ADT_MDX_Instance::Accept(IVisitor& visitor)
 		return;
 	}*/
 
-	// SceneNode
+	// SceneNode3D
 	if (CM2_Base_Instance::Accept(visitor))
 	{
 		if (passAsM2Pass)

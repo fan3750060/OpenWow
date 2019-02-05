@@ -49,11 +49,11 @@ void MapController::MapPreLoad(const DBC_MapRecord& _map)
 	Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	m_WDL.reset();
-	m_WDL = std::make_shared<WDL>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
+	m_WDL = std::make_shared<WDL>(std::static_pointer_cast<MapController, SceneNode3D>(shared_from_this()));
 	m_WDL->Load();
 
 	m_WDT.reset();
-	m_WDT = std::make_shared<WDT>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()));
+	m_WDT = std::make_shared<WDT>(std::static_pointer_cast<MapController, SceneNode3D>(shared_from_this()));
 }
 
 void MapController::MapLoad()
@@ -63,7 +63,7 @@ void MapController::MapLoad()
 	DelManager<ISkyManager>();
 	m_SkyManager.reset();
 
-	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNode>(shared_from_this()), m_DBC_Map);
+	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNode3D>(shared_from_this()), m_DBC_Map);
 	m_SkyManager->SetParent(weak_from_this());
 	AddManager<ISkyManager>(m_SkyManager);
 

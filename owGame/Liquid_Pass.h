@@ -6,7 +6,7 @@ class Liquid_Pass : public BasePass
 public:
 	typedef BasePass base;
 
-	Liquid_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
+	Liquid_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~Liquid_Pass();
 
 	virtual bool Visit(IMesh& mesh);

@@ -10,7 +10,7 @@ EndQueryPass::EndQueryPass( std::shared_ptr<Query> query )
 EndQueryPass::~EndQueryPass()
 {}
 
-void EndQueryPass::Render( RenderEventArgs& e )
+void EndQueryPass::Render( Render3DEventArgs& e )
 {
     if ( m_pQuery )
     {

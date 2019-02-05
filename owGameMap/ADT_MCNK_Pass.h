@@ -4,7 +4,7 @@
 class ADT_MCNK_Pass : public BasePass
 {
 public:
-	ADT_MCNK_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
+	ADT_MCNK_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~ADT_MCNK_Pass();
 
 	virtual bool Visit(IMesh& mesh) override;

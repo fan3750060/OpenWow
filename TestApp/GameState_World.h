@@ -8,29 +8,30 @@ public:
 	CGameState_World();
 	virtual ~CGameState_World();
 
+	// IGameState
 	bool Init();
 	void Destroy();
 
-	virtual void OnPreRender(RenderEventArgs& e);
-	virtual void OnRender(RenderEventArgs& e);
-	virtual void OnPostRender(RenderEventArgs& e);
+	virtual void OnPreRender(Render3DEventArgs& e);
+	virtual void OnRender(Render3DEventArgs& e);
+	virtual void OnPostRender(Render3DEventArgs& e);
 	virtual void OnRenderUI(RenderUIEventArgs& e);
 
 private:
-	Viewport g_Viewport;
+	Viewport                             m_Viewport;
 
-	RenderTechnique g_ForwardTechnique;
-	RenderUITechnique g_UITechnique;
+	RenderTechnique                      m_ForwardTechnique;
+	RenderUITechnique                    m_UITechnique;
 
-	std::shared_ptr<CCameraController> g_CameraController;
+	std::shared_ptr<CCameraController>   m_CameraController;
 
-	std::shared_ptr<Query> g_pFrameQuery;
-	double g_FrameTime;
-	std::shared_ptr<Scene> g_pScene;
-	std::shared_ptr<UIScene> g_pUIScene;
+	std::shared_ptr<Query>               m_FrameQuery;
+	double                               m_FrameTime;
+	std::shared_ptr<Scene3D>               m_3DScene;
+	std::shared_ptr<SceneUI>             m_UIScene;
 
 
-	std::shared_ptr<MapController> m_MapController;
+	std::shared_ptr<MapController>       m_MapController;
 
 private:
 	const vec4 g_ClearColor = vec4(0.39f, 0.58f, 0.93f, 1.0f);

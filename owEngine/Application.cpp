@@ -124,7 +124,7 @@ int Application::Run()
 			UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
 			OnUpdate(updateArgs);
 
-			RenderEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
+			Render3DEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
 			OnRender(renderArgs);
 
 			RenderUIEventArgs renderUIArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
@@ -210,9 +210,14 @@ std::shared_ptr<RenderWindow> Application::GetRenderWindow()
 	return m_pWindow;
 }
 
-HINSTANCE Application::GetModuleHandle() const
+HINSTANCE Application::Get_HINSTANCE() const
 {
 	return m_hInstance;
+}
+
+HWND Application::Get_HWND() const
+{
+	return m_hWindow;
 }
 
 
@@ -585,7 +590,7 @@ void Application::OnUpdate(UpdateEventArgs& e)
 	Update(e);
 }
 
-void Application::OnRender(RenderEventArgs& e)
+void Application::OnRender(Render3DEventArgs& e)
 {
 	m_pWindow->OnPreRender(e);
 	m_pWindow->OnRender(e);

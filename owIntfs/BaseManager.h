@@ -1,12 +1,7 @@
 #pragma once
 
-// Forward
-class Font;
-class WMO;
-class M2;
-
 struct
-	__declspec(uuid("BDC2768B-055D-42EA-ABE3-CF17CD21178D"))
+	__declspec(novtable, uuid("BDC2768B-055D-42EA-ABE3-CF17CD21178D"))
 	IManager
 {
 	virtual ~IManager() = 0 {};
@@ -24,8 +19,13 @@ struct IRefManager : public IManager
 };
 
 
+
+// FORWARD BEGIN
+class Font;
+// FORWARD END
+
 struct
-	__declspec(uuid("1427E242-CCB8-4AEC-ABC8-17DE58A96B05"))
+	__declspec(novtable, uuid("1427E242-CCB8-4AEC-ABC8-17DE58A96B05"))
 	IFontsManager : public IRefManager<Font>
 {
 	virtual ~IFontsManager() {};
@@ -34,15 +34,25 @@ struct
 };
 
 
+
+// FORWARD BEGIN
+class WMO;
+// FORWARD END
+
 struct 
-	__declspec(uuid("42D47100-B825-47F1-BE2F-6F7C78443884"))
+	__declspec(novtable, uuid("42D47100-B825-47F1-BE2F-6F7C78443884"))
 	IWMOManager : public IRefManager<WMO>
 {
 	virtual ~IWMOManager() {};
 };
 
+
+// FORWARD BEGIN
+class M2;
+// FORWARD END
+
 struct
-	__declspec(uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))
+	__declspec(novtable, uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))
 	IM2Manager : public IRefManager<M2>
 {
 	virtual ~IM2Manager() {};
@@ -62,7 +72,7 @@ enum SBaseManagerPhases : uint8
 };
 
 struct 
-	__declspec(uuid("BB9FD479-C7AD-4F57-837B-E299A04AF171"))
+	__declspec(novtable, uuid("BB9FD479-C7AD-4F57-837B-E299A04AF171"))
 	IBaseManager
 {
 	virtual void RegisterManager(GUID _type, std::shared_ptr<IManager> _manager) = 0;

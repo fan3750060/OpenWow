@@ -24,5 +24,5 @@ Liquid_Instance::Liquid_Instance(std::shared_ptr<Liquid> _liquidObject, vec3 _po
 bool Liquid_Instance::Accept(IVisitor & visitor)
 {
 
-	return SceneNode::Accept(visitor);
+	return SceneNode3D::Accept(visitor);
 }

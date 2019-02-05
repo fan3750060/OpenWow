@@ -14,7 +14,7 @@ GenerateMipMapPass::GenerateMipMapPass(std::shared_ptr<Texture> texture)
 GenerateMipMapPass::~GenerateMipMapPass()
 {}
 
-void GenerateMipMapPass::Render(RenderEventArgs& e)
+void GenerateMipMapPass::Render(Render3DEventArgs& e)
 {
 	if (m_RenderTarget)
 	{

@@ -12,17 +12,17 @@ DispatchPass::~DispatchPass()
 {}
 
 // Render the pass. This should only be called by the RenderTechnique.
-void DispatchPass::PreRender(RenderEventArgs& e)
+void DispatchPass::PreRender(Render3DEventArgs& e)
 {
 	m_pComputeShader->Bind();
 }
 
-void DispatchPass::Render(RenderEventArgs& e)
+void DispatchPass::Render(Render3DEventArgs& e)
 {
 	m_pComputeShader->Dispatch(m_NumGroups);
 }
 
-void DispatchPass::PostRender(RenderEventArgs& e)
+void DispatchPass::PostRender(Render3DEventArgs& e)
 {
 	m_pComputeShader->UnBind();
 }

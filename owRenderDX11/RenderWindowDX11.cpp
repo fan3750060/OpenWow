@@ -239,7 +239,7 @@ std::shared_ptr<IRenderTarget> RenderWindowDX11::GetRenderTarget()
 	return m_RenderTarget;
 }
 
-void RenderWindowDX11::OnPreRender(RenderEventArgs& e)
+void RenderWindowDX11::OnPreRender(Render3DEventArgs& e)
 {
 	if (m_bResizePending)
 	{
@@ -251,7 +251,7 @@ void RenderWindowDX11::OnPreRender(RenderEventArgs& e)
 	base::OnPreRender(e);
 }
 
-void RenderWindowDX11::OnPostRender(RenderEventArgs& e)
+void RenderWindowDX11::OnPostRender(Render3DEventArgs& e)
 {
 	base::OnPostRender(e);
 }

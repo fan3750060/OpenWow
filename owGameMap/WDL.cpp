@@ -21,7 +21,7 @@ WDL::~WDL()
 //
 // ISceneNodeProvider
 //
-void WDL::CreateInsances(std::weak_ptr<SceneNode> _parent)
+void WDL::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 {
 	std::shared_ptr<const MapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);

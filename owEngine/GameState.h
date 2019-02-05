@@ -23,9 +23,9 @@ public:
     bool IsCurrent() const override { return m_IsCurrent; }
 
 	//
-	virtual void OnPreRender(RenderEventArgs& e) = 0;
-	virtual void OnRender(RenderEventArgs& e) = 0;
-	virtual void OnPostRender(RenderEventArgs& e) = 0;
+	virtual void OnPreRender(Render3DEventArgs& e) = 0;
+	virtual void OnRender(Render3DEventArgs& e) = 0;
+	virtual void OnPostRender(Render3DEventArgs& e) = 0;
 	virtual void OnRenderUI(RenderUIEventArgs& e) = 0;
 
 protected:

@@ -1,14 +1,14 @@
 #include <stdafx.h>
 
 #include <Application.h>
-#include <Scene.h>
-#include <SceneNode.h>
+#include <Scene3D.h>
+#include <SceneNode3D.h>
 
 // General
 #include "LightsPass.h"
 
-LightsPass::LightsPass( std::vector<Light>& lights, std::shared_ptr<Scene> pointLight, std::shared_ptr<Scene> spotLight, std::shared_ptr<Scene> directionalLight, std::shared_ptr<PipelineState> pipeline )
-    : base( std::shared_ptr<Scene>(), pipeline )
+LightsPass::LightsPass( std::vector<Light>& lights, std::shared_ptr<Scene3D> pointLight, std::shared_ptr<Scene3D> spotLight, std::shared_ptr<Scene3D> directionalLight, std::shared_ptr<PipelineState> pipeline )
+    : base( std::shared_ptr<Scene3D>(), pipeline )
     , m_Lights( lights )
     , m_pCurrentLight( nullptr )
     , m_uiLightIndex( (uint32_t)-1 )
@@ -26,7 +26,7 @@ LightsPass::~LightsPass()
 
 }
 
-//void LightsPass::PreRender( RenderEventArgs& e )
+//void LightsPass::PreRender( Render3DEventArgs& e )
 //{
 //    e.PipelineState = m_Pipeline.get();
 //    SetRenderEventArgs( e );
@@ -40,7 +40,7 @@ LightsPass::~LightsPass()
 //}
 
 // Render the pass. This should only be called by the RenderTechnique.
-void LightsPass::Render( RenderEventArgs& e )
+void LightsPass::Render( Render3DEventArgs& e )
 {
     m_uiLightIndex = 0;
 
@@ -78,12 +78,12 @@ void LightsPass::Render( RenderEventArgs& e )
 }
 
 // Inherited from Visitor
-bool LightsPass::Visit( Scene& scene )
+bool LightsPass::Visit( Scene3D& scene )
 {
 	return false;
 }
 
-bool LightsPass::Visit( SceneNode& node )
+bool LightsPass::Visit( SceneNode3D& node )
 {
     const Camera* camera = GetRenderEventArgs().Camera;
 

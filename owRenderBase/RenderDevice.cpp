@@ -160,7 +160,7 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 
 std::shared_ptr<IMesh> IRenderDevice::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
 {
-	/*std::shared_ptr<Scene> scene = CreateScene();
+	/*std::shared_ptr<Scene3D> scene = CreateScene();
 	std::stringstream ss;
 
 	// Create a white diffuse material for the cylinder.

@@ -17,13 +17,12 @@ public:
 	virtual bool IsEnabled() const;
 
 	// Render the pass. This should only be called by the RenderTechnique.
-	virtual void PreRender(RenderEventArgs& e);
-	virtual void Render(RenderEventArgs& e) = 0;
-	virtual void PostRender(RenderEventArgs& e);
+	virtual void PreRender(Render3DEventArgs& e);
+	virtual void Render(Render3DEventArgs& e) = 0;
+	virtual void PostRender(Render3DEventArgs& e);
 
 	// Inherited from Visitor
-	virtual bool Visit(SceneNode& node);
-	virtual bool Visit(UINode& node);
+	virtual bool Visit(SceneNode3D& node);
 	virtual bool Visit(IMesh& mesh);
 
 private:

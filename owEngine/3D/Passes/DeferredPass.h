@@ -9,8 +9,8 @@ public:
     typedef BasePass base;
 
 	DeferredPass( std::vector<Light>& lights,
-                          std::shared_ptr<Scene> pointLight,
-                          std::shared_ptr<Scene> spotLight,
+                          std::shared_ptr<Scene3D> pointLight,
+                          std::shared_ptr<Scene3D> spotLight,
                           std::shared_ptr<PipelineState> lightPipeline0,
                           std::shared_ptr<PipelineState> lightPipeline1,
                           std::shared_ptr<PipelineState> directionalLightPipeline,
@@ -23,18 +23,18 @@ public:
     virtual ~DeferredPass();
 
     // Render the pass. This should only be called by the RenderTechnique.
-    virtual void PreRender( RenderEventArgs& e );
-    virtual void Render( RenderEventArgs& e );
-    virtual void PostRender( RenderEventArgs& e );
+    virtual void PreRender( Render3DEventArgs& e );
+    virtual void Render( Render3DEventArgs& e );
+    virtual void PostRender( Render3DEventArgs& e );
 
     // Inherited from Visitor
-    virtual bool Visit( Scene& scene );
-    virtual bool Visit( SceneNode& node );
+    virtual bool Visit( Scene3D& scene );
+    virtual bool Visit( SceneNode3D& node );
 
 protected:
 
     // Render a subpass of the this pass using a specific pipeline.
-    void RenderSubPass( RenderEventArgs& e, std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline );
+    void RenderSubPass( Render3DEventArgs& e, std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline );
 
 private:
     std::vector<Light>& m_Lights;
@@ -68,9 +68,9 @@ private:
     // Pipeline for directional lights
     std::shared_ptr<PipelineState> m_DirectionalLightPipeline;
 
-    std::shared_ptr<Scene> m_pPointLightScene;
-    std::shared_ptr<Scene> m_pSpotLightScene;
-    std::shared_ptr<Scene> m_pDirectionalLightScene;
+    std::shared_ptr<Scene3D> m_pPointLightScene;
+    std::shared_ptr<Scene3D> m_pSpotLightScene;
+    std::shared_ptr<Scene3D> m_pDirectionalLightScene;
 
     // Textures
     std::shared_ptr<Texture> m_DiffuseTexture;

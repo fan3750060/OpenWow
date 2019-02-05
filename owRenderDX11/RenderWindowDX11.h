@@ -17,8 +17,8 @@ public:
 protected:
 	virtual void CreateSwapChain();
 
-	virtual void OnPreRender(RenderEventArgs& e);
-	virtual void OnPostRender(RenderEventArgs& e);
+	virtual void OnPreRender(Render3DEventArgs& e);
+	virtual void OnPostRender(Render3DEventArgs& e);
 
 	virtual void OnMouseMoved(MouseMotionEventArgs& e);
 	virtual void OnMouseLeave(EventArgs& e);

@@ -5,7 +5,7 @@
 class Camera;
 class IBuffer;
 class StructuredBuffer;
-class Scene;
+class Scene3D;
 class IMesh;
 class Shader;
 class Texture;
@@ -41,17 +41,17 @@ public:
 	// Engine events
 	Event				Initialize;
 	UpdateEvent			Update;
-	RenderEvent         PreRender;
-	RenderEvent         Render;
-	RenderEvent         PostRender;
+	Render3DEvent       PreRender;
+	Render3DEvent       Render;
+	Render3DEvent       PostRender;
 	RenderUIEvent       RenderUI;
 	Event				Terminate;
 
 	virtual void OnInitialize(EventArgs& e);
 	virtual void OnUpdate(UpdateEventArgs& e);
-	virtual void OnPreRender(RenderEventArgs& e);
-	virtual void OnRender(RenderEventArgs& e);
-	virtual void OnPostRender(RenderEventArgs& e);
+	virtual void OnPreRender(Render3DEventArgs& e);
+	virtual void OnRender(Render3DEventArgs& e);
+	virtual void OnPostRender(Render3DEventArgs& e);
 	virtual void OnRenderUI(RenderUIEventArgs& e);
 	virtual void OnTerminate(EventArgs& e);
 

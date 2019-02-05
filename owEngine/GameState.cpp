@@ -49,8 +49,8 @@ void CGameState::Unset()
 {
 	std::shared_ptr<RenderWindow> renderWindow = Application::Get().GetRenderWindow();
 	
-	renderWindow->PreRender -= boost::bind(&CGameState::OnPreRender, this, _1);
-	renderWindow->Render -= boost::bind(&CGameState::OnRender, this, _1);
-	renderWindow->PostRender -= boost::bind(&CGameState::OnPostRender, this, _1);
-	renderWindow->RenderUI -= boost::bind(&CGameState::OnRenderUI, this, _1);
+	//renderWindow->PreRender -= boost::bind(&CGameState::OnPreRender, this, _1);
+	//renderWindow->Render -= boost::bind(&CGameState::OnRender, this, _1);
+	//renderWindow->PostRender -= boost::bind(&CGameState::OnPostRender, this, _1);
+	//renderWindow->RenderUI -= boost::bind(&CGameState::OnRenderUI, this, _1);
 }

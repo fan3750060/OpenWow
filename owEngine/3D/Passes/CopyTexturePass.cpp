@@ -11,7 +11,7 @@ CopyTexturePass::CopyTexturePass(std::shared_ptr<Texture> destinationTexture, st
 CopyTexturePass::~CopyTexturePass()
 {}
 
-void CopyTexturePass::Render(RenderEventArgs& e)
+void CopyTexturePass::Render(Render3DEventArgs& e)
 {
 	if (m_DestinationTexture)
 	{

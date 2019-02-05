@@ -120,7 +120,7 @@ std::shared_ptr<IRenderTarget> RenderWindowOGL::GetRenderTarget()
 	return m_RenderTarget;
 }
 
-void RenderWindowOGL::OnPreRender(RenderEventArgs& e)
+void RenderWindowOGL::OnPreRender(Render3DEventArgs& e)
 {
 	// Get the currently bound frame buffer object to avoid reset to invalid FBO
 	GLint defaultRB = 0;
@@ -139,7 +139,7 @@ void RenderWindowOGL::OnPreRender(RenderEventArgs& e)
 	base::OnPreRender(e);
 }
 
-void RenderWindowOGL::OnPostRender(RenderEventArgs& e)
+void RenderWindowOGL::OnPostRender(Render3DEventArgs& e)
 {
 	base::OnPostRender(e);
 }

@@ -21,7 +21,7 @@ struct ADT_MCIN
 
 #include __PACK_END
 
-ADT::ADT(std::weak_ptr<SceneNode> _mapController, uint32 _intexX, uint32 _intexZ) :
+ADT::ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _intexZ) :
 	m_MapController(std::dynamic_pointer_cast<MapController>(_mapController.lock())),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
@@ -46,7 +46,7 @@ ADT::~ADT()
 }
 
 //
-// SceneNode
+// SceneNode3D
 //
 void ADT::UpdateLocalTransform()
 {
@@ -71,7 +71,7 @@ bool ADT::Accept(IVisitor& visitor)
 	//	return false;
 	//}
 
-	return SceneNode::Accept(visitor);
+	return SceneNode3D::Accept(visitor);
 }
 
 bool ADT::Load()
@@ -281,7 +281,7 @@ bool ADT::Load()
 		f->readBytes(&size, sizeof(uint32_t));
 		assert1(size + 8 == chunks[i].size);
 
-		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode>(shared_from_this()), f);
+		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode3D>(shared_from_this()), f);
 		chunk->SetParent(m_MapController);
 		chunk->Load();
 		m_Chunks.push_back(chunk);

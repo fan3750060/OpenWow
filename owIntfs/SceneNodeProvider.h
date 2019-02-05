@@ -1,11 +1,11 @@
 #pragma once
 
 // FORWARD BEGIN
-class SceneNode;
+class SceneNode3D;
 // FORWARD END
 
 class ISceneNodeProvider
 {
 public:
-	virtual void CreateInsances(std::weak_ptr<SceneNode> _parent) = 0;
+	virtual void CreateInsances(std::weak_ptr<SceneNode3D> _parent) = 0;
 };

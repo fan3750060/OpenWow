@@ -3,7 +3,7 @@
 // General
 #include "Liquid_Pass.h"
 
-Liquid_Pass::Liquid_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+Liquid_Pass::Liquid_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: base(scene, pipeline)
 {
 }

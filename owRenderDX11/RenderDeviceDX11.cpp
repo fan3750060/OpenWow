@@ -31,7 +31,6 @@ RenderDeviceDX11::RenderDeviceDX11()
 
 RenderDeviceDX11::~RenderDeviceDX11()
 {
-	m_Scenes.clear();
 	m_Meshes.clear();
 	m_Buffers.clear();
 	m_Shaders.clear();

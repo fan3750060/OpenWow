@@ -1,7 +1,7 @@
 #pragma once
 
 struct 
-	__declspec(uuid("DBB1D38E-CE3F-4C05-8625-313BFC524C5A"))
+	__declspec(novtable, uuid("DBB1D38E-CE3F-4C05-8625-313BFC524C5A"))
 	IDebugOutput
 {
 	enum DebugMessageType

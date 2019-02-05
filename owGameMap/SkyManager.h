@@ -6,14 +6,14 @@
 class MapController;
 // FORWARD END
 
-class SkyManager : public SceneNode, public ISkyManager
+class SkyManager : public SceneNode3D, public ISkyManager
 {
 public:
 	SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord);
 	virtual ~SkyManager();
 
 public:
-	// SceneNode
+	// SceneNode3D
 	void UpdateCamera(const Camera* camera) override;
 
 	// ISkyManager

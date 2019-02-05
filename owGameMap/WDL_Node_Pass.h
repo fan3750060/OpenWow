@@ -6,7 +6,7 @@ class WDL_Node_Pass : public BasePass
 public:
 	typedef BasePass base;
 
-	WDL_Node_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
+	WDL_Node_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~WDL_Node_Pass();
 
 	virtual bool Visit(IMesh& mesh) override;

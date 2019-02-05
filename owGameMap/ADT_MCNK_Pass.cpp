@@ -3,7 +3,7 @@
 // General
 #include "ADT_MCNK_Pass.h"
 
-ADT_MCNK_Pass::ADT_MCNK_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+ADT_MCNK_Pass::ADT_MCNK_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: BasePass(scene, pipeline)
 	, m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {

@@ -6,7 +6,7 @@ struct IDebugOutput;
 // Forward END
 
 struct 
-	__declspec(uuid("114337A3-0FD0-4AB4-9CBC-40B6FE4E1796"))
+	__declspec(novtable, uuid("114337A3-0FD0-4AB4-9CBC-40B6FE4E1796"))
 	ILog : IManager
 {
 	/*void Info(const char* _message, ...);

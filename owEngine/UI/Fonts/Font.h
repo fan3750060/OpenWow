@@ -1,7 +1,9 @@
 #pragma once
 
+// FORWARD BEGIN
 class MeshWrapper;
 class UI_Font_Material;
+// FORWARD END
 
 class Font : public MeshWrapper
 {
@@ -9,15 +11,11 @@ public:
 	Font(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _fontGeometry, std::vector<uint32> _widthArray, uint32 _height);
 	~Font();
 
-	// MeshWrapper
-	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt) override;
-
 	// Getters
+	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text);
 	uint32 GetStringWidth(cstring _string) const;
-	std::shared_ptr<Texture> getTexture() const { return m_Texture; }
-	std::shared_ptr<IMesh> getGeometry() const { return m_Geometry; }
-	uint32 GetHeight() const { return m_Height; }
-
+	uint32 GetHeight() const;
+	 
 public:
 	static const uint32 SPACE = 32;
 	static const uint32 NUM_CHARS = 256;
@@ -29,3 +27,4 @@ private:
 	std::vector<uint32>	        m_WidthArray;
 	uint32			            m_Height;
 };
+

@@ -74,9 +74,6 @@ private:
 	// The name of the graphics device used for rendering.
 	std::string m_DeviceName;
 
-	typedef std::vector< std::shared_ptr<Scene> > SceneList;
-	SceneList m_Scenes;
-
 	typedef std::vector< std::shared_ptr<IBuffer> > BufferList;
 	BufferList m_Buffers;
 

@@ -6,7 +6,7 @@ class IRenderDevice;
 class Shader;
 class ConstantBuffer;
 class Camera;
-class Scene;
+class Scene3D;
 class PipelineState;
 class Query;
 
@@ -17,16 +17,16 @@ public:
 	typedef AbstractPass base;
 
 	BasePass();
-	BasePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
+	BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~BasePass();
 
 	// Render the pass. This should only be called by the RenderTechnique.
-	virtual void PreRender(RenderEventArgs& e);
-	virtual void Render(RenderEventArgs& e);
-	virtual void PostRender(RenderEventArgs& e);
+	virtual void PreRender(Render3DEventArgs& e);
+	virtual void Render(Render3DEventArgs& e);
+	virtual void PostRender(Render3DEventArgs& e);
 
 	// Inherited from Visitor
-	virtual bool Visit(SceneNode& node);
+	virtual bool Visit(SceneNode3D& node);
 	virtual bool Visit(IMesh& mesh);
 
 protected:
@@ -39,8 +39,8 @@ protected:
 	};
 
 public:
-	void SetRenderEventArgs(RenderEventArgs& e);
-	RenderEventArgs& GetRenderEventArgs() const;
+	void SetRenderEventArgs(Render3DEventArgs& e);
+	Render3DEventArgs& GetRenderEventArgs() const;
 
 	std::shared_ptr<IRenderDevice> GetRenderDevice() const;
 	std::shared_ptr<PipelineState> GetPipelineState() const;
@@ -54,12 +54,12 @@ private:
 	PerObject* m_PerObjectData;
 	std::shared_ptr<ConstantBuffer> m_PerObjectConstantBuffer;
 
-	RenderEventArgs* m_pRenderEventArgs;
+	Render3DEventArgs* m_pRenderEventArgs;
 
 	std::shared_ptr<PipelineState> m_Pipeline;
 
 	// The scene to render.
-	std::shared_ptr<Scene> m_Scene;
+	std::shared_ptr<Scene3D> m_Scene;
 
 	std::weak_ptr<IRenderDevice> m_RenderDevice;
 };

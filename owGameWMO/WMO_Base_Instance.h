@@ -5,7 +5,7 @@
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
 
-class CWMO_Base_Instance : public SceneNode
+class CWMO_Base_Instance : public SceneNode3D
 {
 public:
 	CWMO_Base_Instance(std::shared_ptr<WMO> _wmoObject);
@@ -24,7 +24,7 @@ public:
 
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
-	// SceneNode
+	// SceneNode3D
 	void UpdateCamera(const Camera* camera) override;
 	bool Accept(IVisitor& visitor) override;
 

@@ -16,7 +16,7 @@ public:
 
 	virtual void SetPass(std::shared_ptr<IRenderUIPass> pass);
 
-	virtual void Render(RenderUIEventArgs& renderEventArgs);
+	virtual void RenderUI(RenderUIEventArgs& renderEventArgs);
 
 protected:
 

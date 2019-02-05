@@ -15,7 +15,7 @@ void RenderUITechnique::SetPass(std::shared_ptr<IRenderUIPass> pass)
 }
 
 // Render the scene using the passes that have been configured.
-void RenderUITechnique::Render(RenderUIEventArgs& renderEventArgs)
+void RenderUITechnique::RenderUI(RenderUIEventArgs& renderEventArgs)
 {
 	if (m_Pass != nullptr)
 	{

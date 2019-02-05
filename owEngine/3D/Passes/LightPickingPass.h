@@ -15,10 +15,10 @@ class LightPickingPass : public LightsPass
 public:
     typedef LightsPass base;
 
-    LightPickingPass( std::vector<Light>& lights, std::shared_ptr<Scene> pointLight, std::shared_ptr<Scene> spotLight, std::shared_ptr<Scene> directionalLight, std::shared_ptr<PipelineState> pipeline );
+    LightPickingPass( std::vector<Light>& lights, std::shared_ptr<Scene3D> pointLight, std::shared_ptr<Scene3D> spotLight, std::shared_ptr<Scene3D> directionalLight, std::shared_ptr<PipelineState> pipeline );
     virtual ~LightPickingPass();
 
-    virtual void PreRender( RenderEventArgs& e );
+    virtual void PreRender( Render3DEventArgs& e );
 
     virtual bool Visit( IMesh& mesh );
 

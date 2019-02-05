@@ -13,7 +13,7 @@
 
 #include "M2_Skin_Batch.h"
 
-M2_Pass::M2_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+M2_Pass::M2_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: BasePass(scene, pipeline)
 {}
 

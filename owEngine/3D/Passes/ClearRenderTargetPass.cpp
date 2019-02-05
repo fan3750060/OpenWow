@@ -22,7 +22,7 @@ ClearRenderTargetPass::ClearRenderTargetPass(std::shared_ptr<Texture> texture, C
 ClearRenderTargetPass::~ClearRenderTargetPass()
 {}
 
-void ClearRenderTargetPass::Render(RenderEventArgs& e)
+void ClearRenderTargetPass::Render(Render3DEventArgs& e)
 {
 	if (m_RenderTarget)
 	{

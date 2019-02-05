@@ -22,24 +22,19 @@ bool AbstractPass::IsEnabled() const
 }
 
 // Render the pass. This should only be called by the RenderTechnique.
-void AbstractPass::PreRender(RenderEventArgs& e)
+void AbstractPass::PreRender(Render3DEventArgs& e)
 {}
 
-void AbstractPass::Render(RenderEventArgs& e)
+void AbstractPass::Render(Render3DEventArgs& e)
 {}
 
-void AbstractPass::PostRender(RenderEventArgs& e)
+void AbstractPass::PostRender(Render3DEventArgs& e)
 {}
 
 
 // Inherited from Visitor
 
-bool AbstractPass::Visit(SceneNode& node)
-{
-	return false;
-}
-
-bool AbstractPass::Visit(UINode& node)
+bool AbstractPass::Visit(SceneNode3D& node)
 {
 	return false;
 }

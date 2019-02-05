@@ -6,7 +6,7 @@ class WMO_Pass : public BasePass
 public:
 	typedef BasePass base;
 
-	WMO_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline);
+	WMO_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
 	virtual ~WMO_Pass();
 
 	virtual bool Visit(IMesh& mesh);

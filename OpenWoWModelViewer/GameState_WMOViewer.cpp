@@ -60,7 +60,7 @@ bool GameState_WMOViewer::Init()
 	bb.setMax(vec3(Math::MaxFloat));
 	bb.calculateCenter();
 
-	SceneNode* root = new SceneNode();
+	SceneNode3D* root = new SceneNode3D();
 	root->setVisible(true);
 	root->SetBounds(bb);
 

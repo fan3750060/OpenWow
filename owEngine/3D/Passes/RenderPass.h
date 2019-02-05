@@ -1,10 +1,10 @@
 #pragma once
 
-class RenderEventArgs;
+class Render3DEventArgs;
 class RenderUIEventArgs;
-class Scene;
-class SceneNode;
-class UINode;
+class Scene3D;
+class SceneNode3D;
+class SceneNodeUI;
 class IMesh;
 
 // A render pass describes a single pass to render a scene.
@@ -22,12 +22,11 @@ public:
 	virtual bool IsEnabled() const = 0;
 
 	// Render the pass. This should only be called by the RenderTechnique.
-	virtual void PreRender(RenderEventArgs& e) = 0;
-	virtual void Render(RenderEventArgs& e) = 0;
-	virtual void PostRender(RenderEventArgs& e) = 0;
+	virtual void PreRender(Render3DEventArgs& e) = 0;
+	virtual void Render(Render3DEventArgs& e) = 0;
+	virtual void PostRender(Render3DEventArgs& e) = 0;
 
 	// Inherited from Visitor
-	virtual bool Visit(SceneNode& node) = 0;
-	virtual bool Visit(UINode& node) = 0;
+	virtual bool Visit(SceneNode3D& node) = 0;
 	virtual bool Visit(IMesh& mesh) = 0;
 };

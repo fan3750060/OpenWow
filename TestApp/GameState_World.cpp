@@ -3,12 +3,14 @@
 // General
 #include "GameState_World.h"
 
+// Additional
+
 CGameState_World::CGameState_World()
 {
-	g_Viewport = Viewport(0, 0, 1280.0f, 1024.0f);
+	m_Viewport = Viewport(0, 0, 1280.0f, 1024.0f);
 
-	g_pScene = std::make_shared<SceneBase>();
-	g_pUIScene = std::make_shared<UISceneBase>();
+	m_3DScene = std::make_shared<Scene3D>();
+	m_UIScene = std::make_shared<SceneUI>();
 }
 
 CGameState_World::~CGameState_World()
@@ -30,6 +32,8 @@ bool CGameState_World::Init()
 	std::shared_ptr<IM2Manager> m2Manager = std::make_shared<CM2_Manager>();
 	AddManager<IM2Manager>(m2Manager);
 
+	//
+
 	Application& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
@@ -41,21 +45,20 @@ bool CGameState_World::Init()
 	//
 	// Camera controller
 	//
-	g_CameraController = std::make_shared<CCameraController>();
-	g_CameraController->Init(app.GetRenderWindow());
-	g_CameraController->GetCamera()->SetTranslate(vec3(0, 0, 0));
-	g_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-	g_CameraController->GetCamera()->SetRotate(vec3(0, 0, 0));
-	g_CameraController->GetCamera()->SetViewport(g_Viewport);
-	g_CameraController->GetCamera()->SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 4000.0f);
+	m_CameraController = std::make_shared<CCameraController>();
+	m_CameraController->Init(app.GetRenderWindow());
+	m_CameraController->GetCamera()->SetTranslate(vec3(0, 0, 0));
+	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
+	m_CameraController->GetCamera()->SetRotate(vec3(0, 0, 0));
+	m_CameraController->GetCamera()->SetViewport(m_Viewport);
+	m_CameraController->GetCamera()->SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 4000.0f);
 
 
 	//
 	// World
 	//
 
-	// Cube
-
+	// Cube Mesh
 	std::shared_ptr<IMesh> cube = renderDevice->CreateCube();
 	cube->SetType(SceneNodeTypes::SN_TYPE_DEBUG);
 	std::shared_ptr<MaterialDebug> mat = std::make_shared<MaterialDebug>(renderDevice->CreateMaterial());
@@ -63,41 +66,87 @@ bool CGameState_World::Init()
 	mat->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	cube->SetMaterial(mat);
 
-	std::shared_ptr<SceneNode> cubeNode = std::make_shared<SceneNode>();
+	// Cube SN
+	std::shared_ptr<SceneNode3D> cubeNode = std::make_shared<SceneNode3D>();
 	cubeNode->AddMesh(cube);
 	cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 	cubeNode->SetScale(vec3(15, 15, 15));
-	cubeNode->SetParent(g_pScene->GetRootNode());
+	cubeNode->SetParent(m_3DScene->GetRootNode());
 
 	// M2 Model
 	/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
 	std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
 	inst->CreateInstances();
-	inst->SetParent(g_pScene->GetRootNode());
+	inst->SetParent(m_3DScene->GetRootNode());
 	inst->SetScale(vec3(15.0f));
 	inst->GetLocalTransform();*/
 
+	// Map
 	m_MapController = std::make_shared<MapController>();
-	m_MapController->SetParent(g_pScene->GetRootNode());
-	m_MapController->MapPreLoad(*DBC_Map[1]);
-	m_MapController->MapLoad();
-	m_MapController->MapPostLoad();
-	m_MapController->EnterMap(x, y);
-
-
-	g_pFrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
+	m_MapController->SetParent(m_3DScene->GetRootNode());
+	//m_MapController->MapPreLoad(*DBC_Map[1]);
+	//m_MapController->MapLoad();
+	//m_MapController->MapPostLoad();
+	//m_MapController->EnterMap(x, y);
 
 	//
-	// Passes
+	// UI
 	//
-	g_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(app.GetRenderWindow()->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-	AddSkyPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
-	AddWDLPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
-	AddDebugPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
-	AddMCNKPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
-	AddWMOPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
-	AddLiquidPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
-	AddM2Passes(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &g_ForwardTechnique, &g_Viewport, g_pScene);
+
+	std::vector<vec2> vecrtices;
+	vecrtices.push_back(vec2(-1.0f, -1.0f));
+	vecrtices.push_back(vec2(1.0f, -1.0f));
+	vecrtices.push_back(vec2(-1.0f, 1.0f));
+	vecrtices.push_back(vec2(1.0f, 1.0f));
+	std::shared_ptr<IBuffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
+	uint16 indexes[6] = { 0, 1, 2, 2, 1, 3 };
+	std::shared_ptr<IBuffer> __ib = _RenderDevice->CreateIndexBuffer(indexes, 6);
+
+
+	std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
+	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+	__geom->SetIndexBuffer(__ib);
+
+	std::shared_ptr<UI_Color_Material> uiMaterial = std::make_shared<UI_Color_Material>();
+	uiMaterial->SetWrapper(uiMaterial);
+	uiMaterial->SetColor(vec4(0, 1, 0, 0.3f));
+	__geom->SetMaterial(uiMaterial);
+
+	// Font
+	std::shared_ptr<UIText> node = std::make_shared<UIText>();
+	node->SetText("Privet, mir!!!");
+	node->SetTranslate(vec2(80.0f, 80.0f));
+	node->SetParent(m_UIScene->GetRootNode());
+
+	// Color quad
+	std::shared_ptr<SceneNodeUI> node2 = std::make_shared<SceneNodeUI>();
+	node2->SetMesh(__geom);
+	node2->SetTranslate(vec2(180.0f, 180.0f));
+	node2->SetScale(vec2(10.0f, 10.0f));
+	node2->SetParent(m_UIScene->GetRootNode());
+
+
+	m_FrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
+
+
+	//
+	// 3D Passes
+	//
+	m_ForwardTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(app.GetRenderWindow()->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
+	AddSkyPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	AddWDLPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	AddDebugPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	AddMCNKPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	AddWMOPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	AddLiquidPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	AddM2Passes(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_ForwardTechnique, &m_Viewport, m_3DScene);
+	
+	
+	//
+	// UI Passes
+	//
+	AddUIPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_UITechnique, &m_Viewport, m_UIScene);
+
 
 	return base::Init();
 }
@@ -112,46 +161,45 @@ void CGameState_World::Destroy()
 	renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
 	renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
 	renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE*/
+
+	base::Destroy();
 }
 
 
 //
 //
 //
-void CGameState_World::OnPreRender(RenderEventArgs& e)
+void CGameState_World::OnPreRender(Render3DEventArgs& e)
 {
-	g_pFrameQuery->Begin(e.FrameCounter);
+	m_FrameQuery->Begin(e.FrameCounter);
 
 	ADT_WMO_Instance::reset();
 	ADT_MDX_Instance::reset();
 }
 
-void CGameState_World::OnRender(RenderEventArgs& e)
+void CGameState_World::OnRender(Render3DEventArgs& e)
 {
-	e.Camera = g_CameraController->GetCameraConst().operator->(); // TODO: Shit code. Refactor me.
+	e.Camera = m_CameraController->GetCameraConst().operator->(); // TODO: Shit code. Refactor me.
 
-	g_ForwardTechnique.Render(e);
+	m_ForwardTechnique.Render(e);
 }
 
-void CGameState_World::OnPostRender(RenderEventArgs& e)
+void CGameState_World::OnPostRender(Render3DEventArgs& e)
 {
-	g_pFrameQuery->End(e.FrameCounter);
+	m_FrameQuery->End(e.FrameCounter);
 
 
-	// Retrieve GPU timer results.
-	// Don't retrieve the immediate query result, but from the previous frame.
-	// Checking previous frame counters will alleviate GPU stalls.
-	Query::QueryResult frameResult = g_pFrameQuery->GetQueryResult(e.FrameCounter - (g_pFrameQuery->GetBufferCount() - 1));
+	Query::QueryResult frameResult = m_FrameQuery->GetQueryResult(e.FrameCounter - (m_FrameQuery->GetBufferCount() - 1));
 	if (frameResult.IsValid)
 	{
 		// Frame time in milliseconds
 #ifdef  IS_DX11
-		g_FrameTime = frameResult.ElapsedTime * 1000.0;
+		m_FrameTime = frameResult.ElapsedTime * 1000.0;
 #else
-		g_FrameTime = frameResult.ElapsedTime / 1000000.0;
+		m_FrameTime = frameResult.ElapsedTime / 1000000.0;
 #endif
 
-		std::string title = std::to_string(g_FrameTime);
+		std::string title = std::to_string(m_FrameTime);
 		if (m_MapController != nullptr)
 			title += "_" + std::to_string(m_MapController->GetCurrentX()) + "_" + std::to_string(m_MapController->GetCurrentZ());
 
@@ -173,7 +221,7 @@ void CGameState_World::OnPostRender(RenderEventArgs& e)
 
 void CGameState_World::OnRenderUI(RenderUIEventArgs& e)
 {
-	e.Viewport = &g_Viewport;
+	e.Viewport = &m_Viewport;
 
-	g_UITechnique.Render(e);
+	m_UITechnique.RenderUI(e);
 }

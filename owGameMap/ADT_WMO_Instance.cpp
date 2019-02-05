@@ -47,7 +47,7 @@ bool ADT_WMO_Instance::Accept(IVisitor& visitor)
 	}
 
 
-	// SceneNode
+	// SceneNode3D
 	if (CWMO_Base_Instance::Accept(visitor))
 	{
 		if (passAsWMOPass)

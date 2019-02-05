@@ -3,7 +3,7 @@
 // General
 #include "Sky_Pass.h"
 
-Sky_Pass::Sky_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+Sky_Pass::Sky_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: base(scene, pipeline)
 {
 }

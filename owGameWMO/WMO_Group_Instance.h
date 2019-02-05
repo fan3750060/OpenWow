@@ -8,7 +8,7 @@ class CWMO_Doodad_Instance;
 class CWMO_Liquid_Instance;
 // FORWARD END
 
-class CWMO_Group_Instance : public SceneNode
+class CWMO_Group_Instance : public SceneNode3D
 {
 public:
 	typedef std::vector<std::shared_ptr<CWMO_Doodad_Instance>> DoodadInstances;
@@ -17,8 +17,8 @@ public:
 	CWMO_Group_Instance(const std::shared_ptr<WMO_Group> _object);
 	virtual ~CWMO_Group_Instance();
 
-	// SceneNode
-	void SetParent(std::weak_ptr<SceneNode> pNode) override;
+	// SceneNode3D
+	void SetParent(std::weak_ptr<SceneNode3D> pNode) override;
 	bool Accept(IVisitor& visitor) override;
 
 	const std::shared_ptr<WMO_Group> getObject() const { return m_Object; }

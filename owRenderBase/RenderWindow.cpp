@@ -95,21 +95,21 @@ void RenderWindow::OnUpdate(UpdateEventArgs& e)
 	Update(e);
 }
 
-void RenderWindow::OnPreRender(RenderEventArgs& e)
+void RenderWindow::OnPreRender(Render3DEventArgs& e)
 {
-	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
+	Render3DEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
 	PreRender(renderArgs);
 }
 
-void RenderWindow::OnRender(RenderEventArgs& e)
+void RenderWindow::OnRender(Render3DEventArgs& e)
 {
-	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
+	Render3DEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
 	Render(renderArgs);
 }
 
-void RenderWindow::OnPostRender(RenderEventArgs& e)
+void RenderWindow::OnPostRender(Render3DEventArgs& e)
 {
-	RenderEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
+	Render3DEventArgs renderArgs(*this, e.ElapsedTime, e.TotalTime, e.FrameCounter, e.Camera, e.PipelineState);
 	PostRender(renderArgs);
 }
 

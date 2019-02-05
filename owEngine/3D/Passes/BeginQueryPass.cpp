@@ -10,7 +10,7 @@ BeginQueryPass::BeginQueryPass( std::shared_ptr<Query> query )
 BeginQueryPass::~BeginQueryPass()
 {}
 
-void BeginQueryPass::Render( RenderEventArgs& e )
+void BeginQueryPass::Render( Render3DEventArgs& e )
 {
     if ( m_pQuery )
     {

@@ -53,7 +53,7 @@ SkyManager::~SkyManager()
 }
 
 //
-// SceneNode
+// SceneNode3D
 //
 void SkyManager::UpdateCamera(const Camera* camera)
 {

@@ -2,15 +2,15 @@
 
 class IMesh;
 class Camera;
-class RenderEventArgs;
+class Render3DEventArgs;
 class IVisitor;
 
-class SceneNode : public Object, public std::enable_shared_from_this<SceneNode>
+class SceneNode3D : public Object, public std::enable_shared_from_this<SceneNode3D>
 {
 	typedef Object base;
 public:
-	explicit SceneNode(cmat4 localTransform = mat4(1.0f));
-	virtual ~SceneNode();
+	explicit SceneNode3D(cmat4 localTransform = mat4(1.0f));
+	virtual ~SceneNode3D();
 
 	/**
 	 * Assign a name to this scene node so that it can be searched for later.
@@ -72,9 +72,9 @@ public:
 	 * A scene node takes ownership of it's children.
 	 * If you delete the parent node, all of its children will also be deleted.
 	 */
-	virtual void AddChild(std::shared_ptr<SceneNode> childNode);
-	virtual void RemoveChild(std::shared_ptr<SceneNode> childNode);
-	virtual void SetParent(std::weak_ptr<SceneNode> parentNode);
+	virtual void AddChild(std::shared_ptr<SceneNode3D> childNode);
+	virtual void RemoveChild(std::shared_ptr<SceneNode3D> childNode);
+	virtual void SetParent(std::weak_ptr<SceneNode3D> parentNode);
 
 	/**
 	 * Add a mesh to this scene node.
@@ -114,8 +114,8 @@ protected:
 	virtual void UpdateWorldTransform();
 
 private:
-	typedef std::vector<std::shared_ptr<SceneNode>> NodeList;
-	typedef std::multimap<std::string, std::shared_ptr<SceneNode>> NodeNameMap;
+	typedef std::vector<std::shared_ptr<SceneNode3D>> NodeList;
+	typedef std::multimap<std::string, std::shared_ptr<SceneNode3D>> NodeNameMap;
 	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
 
 	std::string         m_Name;
@@ -137,7 +137,7 @@ private:
 	
 	
 
-	std::weak_ptr<SceneNode>  m_pParentNode;
+	std::weak_ptr<SceneNode3D>  m_pParentNode;
 	NodeList                  m_Children;
 	NodeNameMap               m_ChildrenByName;
 	MeshList                  m_Meshes;

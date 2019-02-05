@@ -1,15 +1,15 @@
 #include <stdafx.h>
 
 #include <Application.h>
-#include <Scene.h>
-#include <SceneNode.h>
+#include <Scene3D.h>
+#include <SceneNode3D.h>
 
 // General
 #include "DeferredPass.h"
 
 DeferredPass::DeferredPass(std::vector<Light>& lights,
-	std::shared_ptr<Scene> pointLight,
-	std::shared_ptr<Scene> spotLight,
+	std::shared_ptr<Scene3D> pointLight,
+	std::shared_ptr<Scene3D> spotLight,
 	std::shared_ptr<PipelineState> lightPipeline0,
 	std::shared_ptr<PipelineState> lightPipeline1,
 	std::shared_ptr<PipelineState> directionalLightPipeline,
@@ -54,7 +54,7 @@ DeferredPass::~DeferredPass()
 	_aligned_free(m_pLightParams);
 }
 
-void DeferredPass::PreRender(RenderEventArgs& e)
+void DeferredPass::PreRender(Render3DEventArgs& e)
 {
 	// Bind the G-buffer textures to the pixel shader pipeline stage.
 	m_DiffuseTexture->Bind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
@@ -63,7 +63,7 @@ void DeferredPass::PreRender(RenderEventArgs& e)
 	m_DepthTexture->Bind(3, Shader::PixelShader, ShaderParameter::Type::Texture);
 }
 
-void DeferredPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+void DeferredPass::RenderSubPass(Render3DEventArgs& e, std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 {
 	e.PipelineState = pipeline.get();
 
@@ -78,7 +78,7 @@ void DeferredPass::RenderSubPass(RenderEventArgs& e, std::shared_ptr<Scene> scen
 }
 
 // Render the pass. This should only be called by the RenderTechnique.
-void DeferredPass::Render(RenderEventArgs& e)
+void DeferredPass::Render(Render3DEventArgs& e)
 {
 	const Camera* pCamera = e.Camera;
 	assert(pCamera);
@@ -143,7 +143,7 @@ void DeferredPass::Render(RenderEventArgs& e)
 	}
 }
 
-void DeferredPass::PostRender(RenderEventArgs& e)
+void DeferredPass::PostRender(Render3DEventArgs& e)
 {
 	// Explicitly unbind these textures so they can be used as render target textures.
 	m_DiffuseTexture->UnBind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
@@ -153,12 +153,12 @@ void DeferredPass::PostRender(RenderEventArgs& e)
 }
 
 // Inherited from Visitor
-bool DeferredPass::Visit(Scene& scene)
+bool DeferredPass::Visit(Scene3D& scene)
 {
 	return false;
 }
 
-bool DeferredPass::Visit(SceneNode& node)
+bool DeferredPass::Visit(SceneNode3D& node)
 {
 	const Camera* camera = GetRenderEventArgs().Camera;
 

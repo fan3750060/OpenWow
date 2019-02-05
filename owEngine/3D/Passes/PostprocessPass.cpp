@@ -3,13 +3,13 @@
 // General
 #include "PostprocessPass.h"
 
-PostprocessPass::PostprocessPass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline, const glm::mat4& projectionMatrix, std::shared_ptr<Texture> texture)
+PostprocessPass::PostprocessPass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline, const glm::mat4& projectionMatrix, std::shared_ptr<Texture> texture)
 	: base(scene, pipeline)
 	, m_ProjectionMatrix(projectionMatrix)
 	, m_Texture(texture)
 {}
 
-void PostprocessPass::Render(RenderEventArgs& e)
+void PostprocessPass::Render(Render3DEventArgs& e)
 {
 	PerObject perObjectData;
 	perObjectData.ModelView = glm::mat4(1.0f); // Identity
@@ -33,7 +33,7 @@ void PostprocessPass::Render(RenderEventArgs& e)
 	}*/
 }
 
-bool PostprocessPass::Visit(SceneNode& node)
+bool PostprocessPass::Visit(SceneNode3D& node)
 {
 	// Do nothing in this case
 	return false;

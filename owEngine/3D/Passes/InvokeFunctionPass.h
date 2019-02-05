@@ -13,7 +13,7 @@ public:
 	InvokeFunctionPass(std::function<void(void)> func);
 	virtual ~InvokeFunctionPass();
 
-	virtual void Render(RenderEventArgs& e);
+	virtual void Render(Render3DEventArgs& e);
 
 private:
 	std::function<void(void)> m_Func;

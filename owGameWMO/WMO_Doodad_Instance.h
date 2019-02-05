@@ -12,7 +12,7 @@ public:
 
 	void setPortalVisibility(bool _visibility) { m_PortalVis = _visibility; }
 		
-	// SceneNode
+	// SceneNode3D
 	bool Accept(IVisitor& visitor) override;
 
 	// IRenderable

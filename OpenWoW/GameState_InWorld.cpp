@@ -96,7 +96,7 @@ void GameState_InWorld::Update(double _time, double _dTime)
 
 void GameState_InWorld::Render3D()
 {
-	SceneNode* intNode = GetManager<ISceneManager>()->getIntersectedNode();
+	SceneNode3D* intNode = GetManager<ISceneManager>()->getIntersectedNode();
 	if (intNode != nullptr)
 	{
 		_Render->DrawBoundingBox(intNode->GetBounds(), vec4(1.0f, 0.2f, 0.2f, 0.8f));

@@ -2,8 +2,8 @@
 
 // Include
 #include <Application.h>
-#include <Scene.h>
-#include <SceneNode.h>
+#include <Scene3D.h>
+#include <SceneNode3D.h>
 
 // General
 #include "BasePass.h"
@@ -16,7 +16,7 @@ BasePass::BasePass()
 	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
 }
 
-BasePass::BasePass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+BasePass::BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: m_pRenderEventArgs(nullptr)
 	, m_Scene(scene)
 	, m_Pipeline(pipeline)
@@ -32,7 +32,7 @@ BasePass::~BasePass()
 	m_RenderDevice.lock()->DestroyConstantBuffer(m_PerObjectConstantBuffer);
 }
 
-void BasePass::PreRender(RenderEventArgs& e)
+void BasePass::PreRender(Render3DEventArgs& e)
 {
 	e.PipelineState = m_Pipeline.get();
 	SetRenderEventArgs(e);
@@ -43,7 +43,7 @@ void BasePass::PreRender(RenderEventArgs& e)
 	}
 }
 
-void BasePass::Render(RenderEventArgs& e)
+void BasePass::Render(Render3DEventArgs& e)
 {
 	if (m_Scene)
 	{
@@ -51,7 +51,7 @@ void BasePass::Render(RenderEventArgs& e)
 	}
 }
 
-void BasePass::PostRender(RenderEventArgs& e)
+void BasePass::PostRender(Render3DEventArgs& e)
 {
 	if (m_Pipeline)
 	{
@@ -61,7 +61,7 @@ void BasePass::PostRender(RenderEventArgs& e)
 
 // Inherited from Visitor
 
-bool BasePass::Visit(SceneNode& node)
+bool BasePass::Visit(SceneNode3D& node)
 {
 	Object& nodeAsObject = reinterpret_cast<Object&>(node);
 	m_pRenderEventArgs->Node = &nodeAsObject;
@@ -98,12 +98,12 @@ bool BasePass::Visit(IMesh& mesh)
 
 //----------------------------------------------------------------------
 
-void BasePass::SetRenderEventArgs(RenderEventArgs& e)
+void BasePass::SetRenderEventArgs(Render3DEventArgs& e)
 {
 	m_pRenderEventArgs = &e;
 }
 
-RenderEventArgs& BasePass::GetRenderEventArgs() const
+Render3DEventArgs& BasePass::GetRenderEventArgs() const
 {
 	assert(m_pRenderEventArgs);
 	return *m_pRenderEventArgs;

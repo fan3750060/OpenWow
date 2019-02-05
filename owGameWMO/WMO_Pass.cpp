@@ -3,7 +3,7 @@
 // General
 #include "WMO_Pass.h"
 
-WMO_Pass::WMO_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+WMO_Pass::WMO_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: base(scene, pipeline)
 {
 }

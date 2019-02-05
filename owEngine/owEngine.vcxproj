@@ -27,8 +27,8 @@
     <ClCompile Include="3D\Passes\LightsPass.cpp" />
     <ClCompile Include="3D\Passes\PostprocessPass.cpp" />
     <ClCompile Include="3D\Passes\RenderTechnique.cpp" />
-    <ClCompile Include="3D\SceneBase.cpp" />
-    <ClCompile Include="3D\SceneNode.cpp" />
+    <ClCompile Include="3D\Scene3D.cpp" />
+    <ClCompile Include="3D\SceneNode3D.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CreatePasses.cpp" />
@@ -52,8 +52,8 @@
     <ClCompile Include="UI\Passes\BaseUIPass.cpp" />
     <ClCompile Include="UI\Passes\RenderUITechnique.cpp" />
     <ClCompile Include="UI\Passes\UI_Color_Material.cpp" />
-    <ClCompile Include="UI\UINode.cpp" />
-    <ClCompile Include="UI\UISceneBase.cpp" />
+    <ClCompile Include="UI\SceneNodeUI.cpp" />
+    <ClCompile Include="UI\SceneUI.cpp" />
     <ClCompile Include="UI\UIText.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -75,9 +75,8 @@
     <ClInclude Include="3D\Passes\PostprocessPass.h" />
     <ClInclude Include="3D\Passes\RenderPass.h" />
     <ClInclude Include="3D\Passes\RenderTechnique.h" />
-    <ClInclude Include="3D\Scene.h" />
-    <ClInclude Include="3D\SceneBase.h" />
-    <ClInclude Include="3D\SceneNode.h" />
+    <ClInclude Include="3D\Scene3D.h" />
+    <ClInclude Include="3D\SceneNode3D.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="common.h" />
@@ -100,9 +99,8 @@
     <ClInclude Include="UI\Passes\RenderUIPass.h" />
     <ClInclude Include="UI\Passes\RenderUITechnique.h" />
     <ClInclude Include="UI\Passes\UI_Color_Material.h" />
-    <ClInclude Include="UI\UINode.h" />
-    <ClInclude Include="UI\UIScene.h" />
-    <ClInclude Include="UI\UISceneBase.h" />
+    <ClInclude Include="UI\SceneNodeUI.h" />
+    <ClInclude Include="UI\SceneUI.h" />
     <ClInclude Include="UI\UIText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

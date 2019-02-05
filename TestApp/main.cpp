@@ -80,7 +80,7 @@ int main(int argumentCount, char* arguments[])
 
 					
 					m_CharExtra[index]->InitFromDisplayInfo(random);
-					m_CharExtra[index]->SetParent(g_pScene->GetRootNode());
+					m_CharExtra[index]->SetParent(m_3DScene->GetRootNode());
 					m_CharExtra[index]->CreateInstances();
 					m_CharExtra[index]->SetScale(vec3(5.0f));
 
@@ -113,7 +113,7 @@ int main(int argumentCount, char* arguments[])
 					if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
 
 					m_Char[index]->InitFromDisplayInfo(random);
-					m_Char[index]->SetParent(g_pScene->GetRootNode());
+					m_Char[index]->SetParent(m_3DScene->GetRootNode());
 					m_Char[index]->CreateInstances();
 					m_Char[index]->SetTranslate(vec3(i * 15.0f, 0.0f, j * 15.0f));
 					m_Char[index]->GetLocalTransform();
@@ -136,7 +136,7 @@ int main(int argumentCount, char* arguments[])
 		std::shared_ptr<Character> character  = std::make_shared<Character>();
 		character->InitFromTemplate(tempPala);
 		character->CreateInstances();
-		character->SetParent(g_pScene->GetRootNode());
+		character->SetParent(m_3DScene->GetRootNode());
 		character->SetTranslate(vec3(0, 15, 0));
 		character->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 		character->SetScale(vec3(10.0f));
@@ -169,27 +169,14 @@ int main(int argumentCount, char* arguments[])
 		// FONT END
 
 
-		std::shared_ptr<UINode> node = std::make_shared<UINode>();
+		std::shared_ptr<SceneNodeUI> node = std::make_shared<SceneNodeUI>();
 		node->SetMesh(defFont);
 		node->SetTranslate(vec2(80.0f, 80.0f));
 		//node->SetScale(vec2(10.0f, 10.0f));
 		node->GetLocalTransform();
-		node->SetParent(g_pUIScene->GetRootNode());
+		node->SetParent(m_UIScene->GetRootNode());
 
-		BlendState::BlendMode alphaBlending(true, false, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha, BlendState::BlendOperation::Add, BlendState::BlendFactor::SrcAlpha, BlendState::BlendFactor::OneMinusSrcAlpha);
-		BlendState::BlendMode disableBlending;
-		DepthStencilState::DepthMode enableDepthWrites(true, DepthStencilState::DepthWrite::Enable);
-		DepthStencilState::DepthMode disableDepthWrites(false, DepthStencilState::DepthWrite::Disable);
-
-		std::shared_ptr<PipelineState> UIPipeline = renderDevice->CreatePipelineState();
-		UIPipeline->GetBlendState().SetBlendMode(alphaBlending);
-		UIPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
-		UIPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
-		UIPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
-		UIPipeline->SetRenderTarget(app.GetRenderWindow()->GetRenderTarget());
-		UIPipeline->GetRasterizerState().SetViewport(g_Viewport);
-
-		g_UITechnique.SetPass(std::make_shared<BaseUIPass>(g_pUIScene, UIPipeline));*/
+*/
 
 
 	}

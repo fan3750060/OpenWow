@@ -19,9 +19,9 @@ CWMO_Group_Instance::~CWMO_Group_Instance()
 {
 }
 
-void CWMO_Group_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
+void CWMO_Group_Instance::SetParent(std::weak_ptr<SceneNode3D> pNode)
 {
-	SceneNode::SetParent(pNode);
+	SceneNode3D::SetParent(pNode);
 
 	BoundingBox bbox = m_Object->m_Bounds;
 	bbox.calculateCenter();
@@ -36,5 +36,5 @@ bool CWMO_Group_Instance::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	return SceneNode::Accept(visitor);
+	return SceneNode3D::Accept(visitor);
 }

@@ -20,7 +20,7 @@ public:
 	virtual std::shared_ptr<IRenderPass> GetPass(unsigned int ID) const;
 
 	// Render the scene using the passes that have been configured.
-	virtual void Render(RenderEventArgs& renderEventArgs);
+	virtual void Render(Render3DEventArgs& renderEventArgs);
 
 protected:
 

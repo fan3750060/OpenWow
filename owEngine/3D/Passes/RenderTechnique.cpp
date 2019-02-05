@@ -27,7 +27,7 @@ std::shared_ptr<IRenderPass> RenderTechnique::GetPass(unsigned int ID) const
 }
 
 // Render the scene using the passes that have been configured.
-void RenderTechnique::Render(RenderEventArgs& renderEventArgs)
+void RenderTechnique::Render(Render3DEventArgs& renderEventArgs)
 {
 	for (auto pass : m_Passes)
 	{

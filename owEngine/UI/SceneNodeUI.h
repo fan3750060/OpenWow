@@ -2,15 +2,15 @@
 
 class IMesh;
 class Camera;
-class RenderEventArgs;
+class Render3DEventArgs;
 class IVisitor;
 
-class UINode : public Object, public std::enable_shared_from_this<UINode>
+class SceneNodeUI : public Object, public std::enable_shared_from_this<SceneNodeUI>
 {
 	typedef Object base;
 public:
-	explicit UINode();
-	virtual ~UINode();
+	explicit SceneNodeUI();
+	virtual ~SceneNodeUI();
 
 	/**
 	 * Assign a name to this scene node so that it can be searched for later.
@@ -30,12 +30,10 @@ public:
 	void SetScale(cvec2 _scale);
 	cvec2 GetScale() const;
 
-	bool IsDirty() const;
-
 	/**
 	 * Gets the scene node's local transform (relative to it's parent world transform).
 	 */
-	mat4 GetLocalTransform();
+	mat4 GetLocalTransform() const;
 	/**
 	 * Gets the inverse of the local transform (relative to it's parent world transform).
 	 */
@@ -48,7 +46,7 @@ public:
 	 * This function should be used sparingly as it is computed every time
 	 * it is requested.
 	 */
-	mat4 GetWorldTransfom();
+	mat4 GetWorldTransfom() const;
 	/**
 	 * Gets the inverse world transform of this scene node.
 	 * Use this function sparingly as it is computed every time it is requested.
@@ -63,9 +61,9 @@ public:
 	 * A scene node takes ownership of it's children.
 	 * If you delete the parent node, all of its children will also be deleted.
 	 */
-	virtual void AddChild(std::shared_ptr<UINode> pNode);
-	virtual void RemoveChild(std::shared_ptr<UINode> pNode);
-	virtual void SetParent(std::weak_ptr<UINode> pNode);
+	virtual void AddChild(std::shared_ptr<SceneNodeUI> pNode);
+	virtual void RemoveChild(std::shared_ptr<SceneNodeUI> pNode);
+	virtual void SetParent(std::weak_ptr<SceneNodeUI> pNode);
 
 	/**
 	 * Set a mesh to this ui node.
@@ -73,7 +71,7 @@ public:
 	 * as it is possible that the same mesh is added to multiple scene nodes.
 	 */
 	virtual void SetMesh(std::shared_ptr<IMesh> mesh);
-	std::shared_ptr<IMesh> GetMesh() const;
+	virtual std::shared_ptr<IMesh> GetMesh() const;
 
 	/**
 	 * Called before all others calls
@@ -81,9 +79,10 @@ public:
 	virtual void UpdateViewport(const Viewport* viewport);
 
 	/**
-	 * Allow a visitor to visit this node.
+	 * Render this node and it's childs
 	 */
-	virtual bool Accept(IVisitor& visitor);
+	virtual bool Render(RenderUIEventArgs& renderEventArgs);
+	virtual bool RenderMesh(RenderUIEventArgs& renderEventArgs);
 
 	/**
 	 * Input events
@@ -101,28 +100,33 @@ protected:
 
 	virtual void UpdateLocalTransform();
 	virtual void UpdateWorldTransform();
-	void SetLocalUnderty();
+
+	// PerObject constant buffer data.
+	__declspec(align(16)) struct PerObject
+	{
+		glm::mat4 ModelOrtho;
+		glm::mat4 Model;
+	};
+	PerObject* m_PerObjectData;
+	std::shared_ptr<ConstantBuffer> m_PerObjectConstantBuffer;
 
 private:
-	typedef std::vector<std::shared_ptr<UINode>> NodeList;
-	typedef std::multimap<std::string, std::shared_ptr<UINode>> NodeNameMap;
+	typedef std::vector<std::shared_ptr<SceneNodeUI>> NodeList;
+	typedef std::multimap<std::string, std::shared_ptr<SceneNodeUI>> NodeNameMap;
 	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
 
 	std::string         m_Name;
 
 	// Transforms node from parent's space to world space for rendering.
 	mat4                m_LocalTransform;
-	bool                m_IsLocalDirty;
-
 	mat4                m_WorldTransform;
-	bool                m_IsWorldDirty;
 
 	vec2                m_Translate;
 	vec3				m_Rotate;
 	vec2                m_Scale;
 
 
-	std::weak_ptr<UINode>	m_pParentNode;
+	std::weak_ptr<SceneNodeUI>	m_pParentNode;
 	NodeList				m_Children;
 	NodeNameMap				m_ChildrenByName;
 	std::shared_ptr<IMesh>  m_Mesh;

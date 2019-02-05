@@ -23,7 +23,7 @@ public:
 	virtual ~WMO();
 
 	// ISceneNodeProvider
-	void CreateInsances(std::weak_ptr<SceneNode> _parent) override;
+	void CreateInsances(std::weak_ptr<SceneNode3D> _parent) override;
 
 
 	bool Load();

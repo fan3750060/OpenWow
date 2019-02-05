@@ -14,7 +14,7 @@ CWMO_Base_Instance::~CWMO_Base_Instance()
 
 void CWMO_Base_Instance::InitTransform()
 {
-	m_Object->CreateInsances(std::static_pointer_cast<CWMO_Base_Instance, SceneNode>(shared_from_this()));
+	m_Object->CreateInsances(std::static_pointer_cast<CWMO_Base_Instance, SceneNode3D>(shared_from_this()));
 
 	if (m_Object->m_PortalController != nullptr)
 	{
@@ -42,7 +42,7 @@ void CWMO_Base_Instance::UpdateCamera(const Camera* camera)
 #ifndef WMO_DISABLE_PORTALS
 	if (m_Object->m_PortalController != nullptr)
 	{
-		m_Object->m_PortalController->Update(std::dynamic_pointer_cast<CWMO_Base_Instance, SceneNode>(shared_from_this()), *camera);
+		m_Object->m_PortalController->Update(std::dynamic_pointer_cast<CWMO_Base_Instance, SceneNode3D>(shared_from_this()), *camera);
 	}
 #endif
 }
@@ -62,5 +62,5 @@ bool CWMO_Base_Instance::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	return SceneNode::Accept(visitor);
+	return SceneNode3D::Accept(visitor);
 }

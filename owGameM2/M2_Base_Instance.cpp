@@ -35,7 +35,7 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 void CM2_Base_Instance::CreateInstances()
 {
-	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode>(shared_from_this()));
+	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode3D>(shared_from_this()));
 }
 
 void CM2_Base_Instance::Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment)
@@ -87,9 +87,9 @@ std::shared_ptr<Texture> CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type 
 //	m_M2->update(_time, _dTime);
 //
 
-void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode> pNode)
+void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode3D> pNode)
 {
-	SceneNode::SetParent(pNode);
+	SceneNode3D::SetParent(pNode);
 
 	BoundingBox bbox = m_M2->GetBounds();
 	bbox.transform(GetWorldTransfom());
@@ -136,8 +136,8 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 		//}
 	}
 
-	// SceneNode
-	return SceneNode::Accept(visitor);
+	// SceneNode3D
+	return SceneNode3D::Accept(visitor);
 }
 
 void CM2_Base_Instance::InitAnimator()
@@ -165,6 +165,6 @@ void CM2_Base_Instance::UpdateLocalTransform()
 	}
 	else
 	{
-		SceneNode::UpdateLocalTransform();
+		SceneNode3D::UpdateLocalTransform();
 	}
 }

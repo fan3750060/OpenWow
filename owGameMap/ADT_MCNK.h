@@ -7,13 +7,13 @@ class ADT;
 class MapController;
 // FORWARD END
 
-class ADT_MCNK : public SceneNode, public ILoadable
+class ADT_MCNK : public SceneNode3D, public ILoadable
 {
 public:
 	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, std::shared_ptr<IFile> _file);
 	virtual ~ADT_MCNK();
 
-	// SceneNode
+	// SceneNode3D
 	void UpdateLocalTransform() override;
 	bool Accept(IVisitor& visitor) override;
 

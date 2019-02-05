@@ -3,7 +3,7 @@
 // General
 #include "Debug_Pass.h"
 
-Debug_Pass::Debug_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+Debug_Pass::Debug_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: BasePass(scene, pipeline)
 {}
 

@@ -24,11 +24,12 @@
 // UI
 //
 
-#include "../owEngine/UI/UIScene.h"
-#include "../owEngine/UI/UISceneBase.h"
-#include "../owEngine/UI/UINode.h"
+#include "../owEngine/UI/SceneUI.h"
+#include "../owEngine/UI/SceneNodeUI.h"
 
 #include "../owEngine/UI/Fonts/FontsManager.h"
+#include "../owEngine/UI/UIText.h"
+#include "../owEngine/UI/Passes/UI_Color_Material.h"
 
 #include "../owEngine/UI/Passes/BaseUIPass.h"
 #include "../owEngine/UI/Passes/RenderUITechnique.h"
@@ -37,9 +38,8 @@
 // 3D
 //
 
-#include "../owEngine/3D/Scene.h"
-#include "../owEngine/3D/SceneBase.h"
-#include "../owEngine/3D/SceneNode.h"
+#include "../owEngine/3D/Scene3D.h"
+#include "../owEngine/3D/SceneNode3D.h"
 
 #include "../owEngine/3D/Passes/BasePass.h"
 #include "../owEngine/3D/Passes/RenderTechnique.h"

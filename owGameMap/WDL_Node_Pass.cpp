@@ -3,7 +3,7 @@
 // General
 #include "WDL_Node_Pass.h"
 
-WDL_Node_Pass::WDL_Node_Pass(std::shared_ptr<Scene> scene, std::shared_ptr<PipelineState> pipeline)
+WDL_Node_Pass::WDL_Node_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: base(scene, pipeline)
 {
 }

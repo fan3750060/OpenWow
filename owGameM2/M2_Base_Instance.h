@@ -2,7 +2,7 @@
 
 #include "M2.h"
 
-class CM2_Base_Instance : public SceneNode
+class CM2_Base_Instance : public SceneNode3D
 {
 public:
 	CM2_Base_Instance(std::shared_ptr<M2> _m2Object = nullptr);
@@ -32,14 +32,14 @@ public:
 	// Animations
 	std::shared_ptr<CM2_Animator> getAnimator() const { return m_Animator; }
 
-	// SceneNode
-	virtual void SetParent(std::weak_ptr<SceneNode> pNode) override;
+	// SceneNode3D
+	virtual void SetParent(std::weak_ptr<SceneNode3D> pNode) override;
 	virtual bool Accept(IVisitor& visitor) override;
 
 protected:
 	void InitAnimator();
 
-	// SceneNode
+	// SceneNode3D
 	virtual void UpdateLocalTransform() override;
 
 private:

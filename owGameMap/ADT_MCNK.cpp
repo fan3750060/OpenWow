@@ -31,7 +31,7 @@ ADT_MCNK::~ADT_MCNK()
 
 
 //
-// SceneNode
+// SceneNode3D
 //
 
 void ADT_MCNK::UpdateLocalTransform()
@@ -55,7 +55,7 @@ bool ADT_MCNK::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	return SceneNode::Accept(visitor);
+	return SceneNode3D::Accept(visitor);
 }
 
 

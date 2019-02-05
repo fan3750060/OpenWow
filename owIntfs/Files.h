@@ -1,6 +1,8 @@
 #pragma once
 
-struct IByteBuffer
+struct
+	__declspec(novtable)
+	IByteBuffer
 {
 	virtual uint64 getSize() const = 0;
 	virtual uint64 getPos() const = 0;
@@ -16,7 +18,9 @@ struct IByteBuffer
 };
 
 
-struct IFile : public IByteBuffer
+struct
+	__declspec(novtable)
+	IFile : public IByteBuffer
 {
 	virtual ~IFile() {}
 
@@ -29,7 +33,7 @@ struct IFile : public IByteBuffer
 };
 
 struct 
-	__declspec(uuid("5DC32EB8-9A63-4FAD-A4BF-81916B8EF86A"))
+	__declspec(novtable, uuid("5DC32EB8-9A63-4FAD-A4BF-81916B8EF86A"))
 	IFilesManager : public IManager
 {
 	virtual ~IFilesManager() {}
@@ -65,7 +69,7 @@ struct SMPQFileLocation
 };
 
 struct
-	__declspec(uuid("6658FDFF-48AB-4712-8FAE-A1C32DFF8815"))
+	__declspec(novtable, uuid("6658FDFF-48AB-4712-8FAE-A1C32DFF8815"))
 	IMPQArchiveManager : public IManager
 {
 	virtual ~IMPQArchiveManager() {};
