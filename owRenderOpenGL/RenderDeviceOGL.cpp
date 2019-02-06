@@ -299,6 +299,14 @@ void RenderDeviceOGL::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> 
 	DestroyBuffer(buffer);
 }
 
+void RenderDeviceOGL::Lock()
+{
+}
+
+void RenderDeviceOGL::Unlock()
+{
+}
+
 
 std::shared_ptr<IMesh> RenderDeviceOGL::CreateMesh()
 {

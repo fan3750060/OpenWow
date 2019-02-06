@@ -5,6 +5,7 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="GameState_World.h" />
+    <ClInclude Include="GameState_Client.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -12,6 +13,7 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="GameState_World.cpp" />
+    <ClCompile Include="GameState_Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

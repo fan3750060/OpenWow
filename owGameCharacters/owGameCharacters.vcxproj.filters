@@ -65,9 +65,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\owClient.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Character</Filter>
     </ClInclude>
@@ -109,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="Character_SkinTextureBaker.h">
       <Filter>Character\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\owGameCharacters.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

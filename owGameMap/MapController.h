@@ -19,6 +19,7 @@ public:
 	void Unload();
 
 	//
+	void EnterMap(vec3 _cameraPosition);
 	void EnterMap(int32 x, int32 z);
 	std::shared_ptr<ADT> LoadTile(int32 x, int32 z);
 	void ClearCache();

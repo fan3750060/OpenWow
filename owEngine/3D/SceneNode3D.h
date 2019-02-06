@@ -112,6 +112,7 @@ protected:
 
 	virtual void UpdateLocalTransform();
 	virtual void UpdateWorldTransform();
+	virtual void UpdateBounds();
 
 private:
 	typedef std::vector<std::shared_ptr<SceneNode3D>> NodeList;

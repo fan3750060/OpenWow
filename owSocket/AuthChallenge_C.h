@@ -26,9 +26,9 @@ struct AuthChallenge_C : public ISendable
 		bb << version2;
 		bb << version3;
 		bb << build;
-		bb.Append((const uint8*)"68x", 4);
-		bb.Append((const uint8*)"niW", 4);
-		bb.Append((const uint8*)"URur", 4);
+		bb.Append((const uint8*)"68x", 4);   // x86
+		bb.Append((const uint8*)"niW", 4);   // Win
+		bb.Append((const uint8*)"URur", 4);  // ruRU
 		bb << (uint32)180;
 		bb << ip;
 		bb << (uint8)username.size();
@@ -41,7 +41,7 @@ struct AuthChallenge_C : public ISendable
 
 	uint8   cmd;
 	uint16  size;
-	uint8   gamename[4];
+	uint8   gamename[4] = {};
 	uint8   version1;
 	uint8   version2;
 	uint8   version3;

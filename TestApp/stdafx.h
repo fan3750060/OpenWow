@@ -29,5 +29,10 @@
 #include <owGameMap.h>
 #pragma comment(lib, "owGameMap.lib")
 
-#include <owClient.h>
-#pragma comment(lib, "owClient.lib")
+#include <owGameCharacters.h>
+#pragma comment(lib, "owGameCharacters.lib")
+
+// Socket
+
+#include <owSocket.h>
+#pragma comment(lib, "owSocket.lib")

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 // Additional (OW)
+#include "GameState_Client.h"
 #include "GameState_World.h"
 
 // Additional (Windows)
@@ -35,150 +36,14 @@ int main(int argumentCount, char* arguments[])
 
 		OpenDBs();
 
+		//--
+
 		Application app;
 		app.Load();
-
 		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
-		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
-		
+		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>());
+		app.SetGameState(GameStatesNames::GAME_STATE_CLIENT);
 		app.Run();
-
-
-
-		//std::shared_ptr<Texture> depthStencilBuffer = app.GetRenderWindow()->GetRenderTarget()->GetTexture(RenderTarget::AttachmentPoint::DepthStencil);
-		//g_ForwardTechnique.AddPass(std::make_shared<CopyTexturePass>(depthStencilBuffer, depthStencilTexture));
-
-
-		//g_ForwardTechnique.AddPass(std::make_shared<DeferredPass>(g_Config.Lights, g_Sphere, g_Cone, g_pDeferredLightingPipeline1, g_pDeferredLightingPipeline2, g_pDirectionalLightsPipeline, diffuseTexture, specularTexture, normalTexture, depthStencilTexture));
-
-
-		const uint32 cnt = 10;
-		/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
-
-		std::vector<uint32> exists;
-		for (int i = 0; i < cnt; i++)
-		{
-			for (int j = 0; j < cnt; j++)
-			{
-				int index = i + j * cnt;
-				m_CharExtra[index] = std::make_shared<Character>();
-
-				while (true)
-				{
-					int random = Random::GenerateMax(32000);
-
-					DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
-					if (rec == nullptr)	continue;
-
-					const DBC_CreatureDisplayInfoExtraRecord* exRec = rec->Get_HumanoidData();
-					if (exRec == nullptr) continue;
-
-					if (exRec->Get_Race()->Get_ID() > 10) continue;
-
-
-					if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
-
-					
-					m_CharExtra[index]->InitFromDisplayInfo(random);
-					m_CharExtra[index]->SetParent(m_3DScene->GetRootNode());
-					m_CharExtra[index]->CreateInstances();
-					m_CharExtra[index]->SetScale(vec3(5.0f));
-
-					exists.push_back(random);
-					break;
-				}
-
-				m_CharExtra[index]->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
-				m_CharExtra[index]->GetLocalTransform();
-			}
-		}*/
-
-		/*std::shared_ptr<Creature> m_Char[cnt * cnt];
-		std::vector<uint32> exists;
-		for (int i = 0; i < cnt; i++)
-		{
-			for (int j = 0; j < cnt; j++)
-			{
-				int index = i + j * cnt;
-				m_Char[index] = std::make_shared<Creature>();
-				//m_Char->InitDefault();
-
-				while (true)
-				{
-					int random = Random::GenerateMax(32000);
-					DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
-					if (rec == nullptr)	continue;
-
-					if (rec->Get_HumanoidData() != nullptr) continue;
-					if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
-
-					m_Char[index]->InitFromDisplayInfo(random);
-					m_Char[index]->SetParent(m_3DScene->GetRootNode());
-					m_Char[index]->CreateInstances();
-					m_Char[index]->SetTranslate(vec3(i * 15.0f, 0.0f, j * 15.0f));
-					m_Char[index]->GetLocalTransform();
-					exists.push_back(random);
-					break;
-				}
-			}
-		}*/
-
-		//
-		// Character
-		//
-
-		/*CharacterTemplate tempPala;
-		tempPala.TemplateFillDefaultPaladin();
-
-		CharacterTemplate tempShaman;
-		tempShaman.TemplateFillDefaultShaman();
-
-		std::shared_ptr<Character> character  = std::make_shared<Character>();
-		character->InitFromTemplate(tempPala);
-		character->CreateInstances();
-		character->SetParent(m_3DScene->GetRootNode());
-		character->SetTranslate(vec3(0, 15, 0));
-		character->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-		character->SetScale(vec3(10.0f));
-		character->GetLocalTransform();*/
-
-		//
-		// UI
-		//
-
-		/*std::vector<vec2> vecrtices;
-		vecrtices.push_back(vec2(-1.0f, -1.0f));
-		vecrtices.push_back(vec2(1.0f, -1.0f));
-		vecrtices.push_back(vec2(-1.0f, 1.0f));
-		vecrtices.push_back(vec2(1.0f, 1.0f));
-		std::shared_ptr<IBuffer> __vb = _RenderDevice->CreateVertexBuffer(vecrtices);
-
-		uint16 indexes[6] = { 0, 1, 2, 2, 1, 3 };
-		std::shared_ptr<IBuffer> __ib = _RenderDevice->CreateIndexBuffer(indexes, 6);
-
-		std::shared_ptr<UI_Color_Material> uiMaterial = std::make_shared<UI_Color_Material>();
-		uiMaterial->SetColor(vec4(0, 1, 0, 0.3f));
-
-		std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
-		__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
-		__geom->SetIndexBuffer(__ib);
-		__geom->SetMaterial(uiMaterial);
-
-		// FONT BEGIN
-		std::shared_ptr<Font> defFont = GetManager<IFontsManager>()->GetMainFont();
-		// FONT END
-
-
-		std::shared_ptr<SceneNodeUI> node = std::make_shared<SceneNodeUI>();
-		node->SetMesh(defFont);
-		node->SetTranslate(vec2(80.0f, 80.0f));
-		//node->SetScale(vec2(10.0f, 10.0f));
-		node->GetLocalTransform();
-		node->SetParent(m_UIScene->GetRootNode());
-
-*/
-
-
 	}
 
 	return 0;

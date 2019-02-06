@@ -3,11 +3,11 @@
 //---------------------------------------------------------//
 //--                    Common                           --//
 //---------------------------------------------------------//
-#include "../owClient/common.h"
+#include "../owGameCharacters/common.h"
 
 
 //---------------------------------------------------------//
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
-#include "../owClient/Character.h"
-#include "../owClient/Creature.h"
+#include "../owGameCharacters/Character.h"
+#include "../owGameCharacters/Creature.h"

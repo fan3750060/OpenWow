@@ -146,6 +146,11 @@ void MapController::UpdateCamera(const Camera* camera)
 
 //--
 
+void MapController::EnterMap(vec3 _cameraPosition)
+{
+	EnterMap(_cameraPosition.x / C_TileSize, _cameraPosition.z / C_TileSize);
+}
+
 void MapController::EnterMap(int32 x, int32 z)
 {
 	if (IsBadTileIndex(x, z) || !m_WDT->getTileFlags(x, z).Flag_HasADT)

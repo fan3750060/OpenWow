@@ -1,11 +1,13 @@
 #pragma once
 
-class CGameState_World : public CGameState
+class CGameState_Client : public CGameState
 {
 	typedef CGameState base;
 public:
-	CGameState_World();
-	virtual ~CGameState_World();
+	CGameState_Client();
+	virtual ~CGameState_Client();
+
+	void S_CharEnum(ByteBuffer& _buff);
 
 	// IGameState
 	bool Init();
@@ -36,6 +38,7 @@ private:
 
 
 	std::shared_ptr<MapController>       m_MapController;
+	std::shared_ptr<CAuthWorldController>m_authWorldController;
 
 	std::shared_ptr<UIText>              m_CameraPosText;
 	std::shared_ptr<UIText>              m_CameraRotText;

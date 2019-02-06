@@ -107,6 +107,7 @@ void SceneNode3D::SetLocalTransform(cmat4 localTransform)
 	m_LocalTransform = localTransform;
 	m_InverseLocalTransform = glm::inverse(localTransform);
 
+	// Don't forget to update world transform
 	UpdateWorldTransform();
 }
 
@@ -160,6 +161,7 @@ void SceneNode3D::UpdateLocalTransform()
 	m_LocalTransform = glm::scale(m_LocalTransform, m_Scale);
 	m_InverseLocalTransform = glm::inverse(m_LocalTransform);
 
+	// Don't forget to update world transform
 	UpdateWorldTransform();
 }
 
@@ -167,6 +169,13 @@ void SceneNode3D::UpdateWorldTransform()
 {
 	m_WorldTransform = GetParentWorldTransform() * m_LocalTransform;
 	m_InverseWorldTransform = glm::inverse(m_WorldTransform);
+
+	UpdateBounds();
+}
+
+void SceneNode3D::UpdateBounds()
+{
+	// do nothing
 }
 
 void SceneNode3D::AddChild(std::shared_ptr<SceneNode3D> childNode)
@@ -193,7 +202,7 @@ void SceneNode3D::RemoveChild(std::shared_ptr<SceneNode3D> childNode)
 		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), childNode);
 		if (iter != m_Children.end())
 		{
-			childNode->SetParent(std::weak_ptr<SceneNode3D>());
+			childNode->m_pParentNode.reset();
 			childNode->UpdateWorldTransform();
 
 			m_Children.erase(iter);

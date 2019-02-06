@@ -28,6 +28,9 @@ public:
 	virtual void DestroyConstantBuffer(std::shared_ptr<ConstantBuffer> buffer);
 	virtual void DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> buffer);
 
+	virtual void Lock();
+	virtual void Unlock();
+
 	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 	virtual void DestroyShader(std::shared_ptr<Shader> shader);
 	

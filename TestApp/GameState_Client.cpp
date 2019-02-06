@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 // General
-#include "GameState_World.h"
+#include "GameState_Client.h"
 
 // Additional
 
-CGameState_World::CGameState_World()
+CGameState_Client::CGameState_Client()
 {
 	m_Viewport = Viewport(0, 0, 1280.0f, 1024.0f);
 
@@ -13,15 +13,70 @@ CGameState_World::CGameState_World()
 	m_UIScene = std::make_shared<SceneUI>();
 }
 
-CGameState_World::~CGameState_World()
+CGameState_Client::~CGameState_Client()
 {
+}
+
+
+void CGameState_Client::S_CharEnum(ByteBuffer& _buff)
+{
+	uint8 charCnt;
+	_buff.readBytes(&charCnt);
+
+	CharacterTemplate* chars = new CharacterTemplate[charCnt];
+	for (uint8 i = 0; i < charCnt; i++)
+	{
+		chars[i].TemplateFill(_buff);
+		chars[i].TemplatePrint();
+	}
+
+	// Select character
+	CharacterTemplate& charTemplate = chars[0];
+	vec3 charPosition = fromGameToReal(vec3(charTemplate.Y, charTemplate.X, charTemplate.Z));
+
+	ByteBuffer bb;
+	bb << (uint64)charTemplate.GUID;
+	m_authWorldController->getWorldSocket()->SendData(CMSG_PLAYER_LOGIN, bb);
+
+	m_CameraController->GetCamera()->SetTranslate(charPosition);
+
+	_RenderDevice->Lock();
+
+	// Create character
+	std::shared_ptr<Character> character = std::make_shared<Character>();
+	character->InitFromTemplate(charTemplate);
+	character->CreateInstances();
+	character->SetParent(m_3DScene->GetRootNode());
+	character->SetTranslate(charPosition);
+
+	m_MapController->MapPreLoad(*DBC_Map[charTemplate.MapId]);
+	m_MapController->MapLoad();
+	m_MapController->MapPostLoad();
+	m_MapController->EnterMap(charPosition);
+
+	_RenderDevice->Unlock();
+
+	//Orc
+	/*ByteBuffer bb;
+	bb.Write("Txtyryer", 9);
+	bb.Write((uint8)2);
+	bb.Write((uint8)1);
+	bb.Write((uint8)0);
+	bb.Write((uint8)15);
+	bb.Write((uint8)6);
+	bb.Write((uint8)3);
+	bb.Write((uint8)6);
+	bb.Write((uint8)5);
+	bb.Write((uint8)0);
+	SendData(CMSG_CHAR_CREATE, bb);*/
+
 }
 
 
 //
 // IGameState
 //
-bool CGameState_World::Init()
+bool CGameState_Client::Init()
 {
 	std::shared_ptr<IFontsManager> fontsManager = std::make_shared<FontsManager>();
 	AddManager<IFontsManager>(fontsManager);
@@ -35,6 +90,18 @@ bool CGameState_World::Init()
 
 	Application& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
+
+
+	//
+	// Socket controller
+	//
+
+	m_authWorldController = std::make_shared<CAuthWorldController>();
+	m_authWorldController->StartAuth();
+
+	m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, ByteBuffer&));
+
+
 
 	//
 	// Camera controller
@@ -56,7 +123,7 @@ bool CGameState_World::Init()
 	return base::Init();
 }
 
-void CGameState_World::Destroy()
+void CGameState_Client::Destroy()
 {
 	/*renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
 	renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
@@ -74,7 +141,7 @@ void CGameState_World::Destroy()
 //
 //
 //
-void CGameState_World::OnPreRender(Render3DEventArgs& e)
+void CGameState_Client::OnPreRender(Render3DEventArgs& e)
 {
 	m_FrameQuery->Begin(e.FrameCounter);
 
@@ -82,14 +149,14 @@ void CGameState_World::OnPreRender(Render3DEventArgs& e)
 	ADT_MDX_Instance::reset();
 }
 
-void CGameState_World::OnRender(Render3DEventArgs& e)
+void CGameState_Client::OnRender(Render3DEventArgs& e)
 {
 	e.Camera = m_CameraController->GetCameraConst().operator->(); // TODO: Shit code. Refactor me.
 
 	m_3DTechnique.Render(e);
 }
 
-void CGameState_World::OnPostRender(Render3DEventArgs& e)
+void CGameState_Client::OnPostRender(Render3DEventArgs& e)
 {
 	m_FrameQuery->End(e.FrameCounter);
 
@@ -117,7 +184,7 @@ void CGameState_World::OnPostRender(Render3DEventArgs& e)
 	}
 }
 
-void CGameState_World::OnRenderUI(RenderUIEventArgs& e)
+void CGameState_Client::OnRenderUI(RenderUIEventArgs& e)
 {
 	e.Viewport = &m_Viewport;
 
@@ -128,7 +195,7 @@ void CGameState_World::OnRenderUI(RenderUIEventArgs& e)
 //
 //
 
-void CGameState_World::Load3D()
+void CGameState_Client::Load3D()
 {
 	Application& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
@@ -137,6 +204,21 @@ void CGameState_World::Load3D()
 	const float y = 29;
 	//const float x = 29;
 	//const float y = 21;
+
+	// Cube Mesh
+	std::shared_ptr<IMesh> cube = renderDevice->CreateCube();
+	cube->SetType(SceneNodeTypes::SN_TYPE_DEBUG);
+	std::shared_ptr<MaterialDebug> mat = std::make_shared<MaterialDebug>(renderDevice->CreateMaterial());
+	mat->SetWrapper(mat);
+	mat->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	cube->SetMaterial(mat);
+
+	// Cube SN
+	std::shared_ptr<SceneNode3D> cubeNode = std::make_shared<SceneNode3D>();
+	cubeNode->AddMesh(cube);
+	cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
+	cubeNode->SetScale(vec3(15, 15, 15));
+	cubeNode->SetParent(m_3DScene->GetRootNode());
 
 	// M2 Model
 	/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
@@ -147,101 +229,14 @@ void CGameState_World::Load3D()
 	inst->GetLocalTransform();*/
 
 	// Map
-	/*m_MapController = std::make_shared<MapController>();
+	m_MapController = std::make_shared<MapController>();
 	m_MapController->SetParent(m_3DScene->GetRootNode());
-	m_MapController->MapPreLoad(*DBC_Map[1]);
-	m_MapController->MapLoad();
-	m_MapController->MapPostLoad();
-	m_MapController->EnterMap(x, y);
+	//m_MapController->MapPreLoad(*DBC_Map[1]);
+	//m_MapController->MapLoad();
+	//m_MapController->MapPostLoad();
+	//m_MapController->EnterMap(x, y);
 
-	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));*/
-
-
-	const uint32 cnt = 10;
-	/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
-
-	std::vector<uint32> exists;
-	for (int i = 0; i < cnt; i++)
-	{
-		for (int j = 0; j < cnt; j++)
-		{
-			int index = i + j * cnt;
-			m_CharExtra[index] = std::make_shared<Character>();
-
-			while (true)
-			{
-				int random = Random::GenerateMax(32000);
-
-				DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
-				if (rec == nullptr)	continue;
-
-				const DBC_CreatureDisplayInfoExtraRecord* exRec = rec->Get_HumanoidData();
-				if (exRec == nullptr) continue;
-
-				if (exRec->Get_Race()->Get_ID() > 10) continue;
-
-
-				if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
-
-
-				m_CharExtra[index]->InitFromDisplayInfo(random);
-				m_CharExtra[index]->SetParent(m_3DScene->GetRootNode());
-				m_CharExtra[index]->CreateInstances();
-				m_CharExtra[index]->SetScale(vec3(5.0f));
-
-				exists.push_back(random);
-				break;
-			}
-
-			m_CharExtra[index]->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
-		}
-	}*/
-
-	std::shared_ptr<Creature> m_Char[cnt * cnt];
-	std::vector<uint32> exists;
-	for (int i = 0; i < cnt; i++)
-	{
-		for (int j = 0; j < cnt; j++)
-		{
-			int index = i + j * cnt;
-			m_Char[index] = std::make_shared<Creature>();
-			//m_Char->InitDefault();
-
-			while (true)
-			{
-				int random = Random::GenerateMax(32000);
-				DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
-				if (rec == nullptr)	continue;
-
-				if (rec->Get_HumanoidData() != nullptr) continue;
-				if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
-
-				m_Char[index]->InitFromDisplayInfo(random);
-				m_Char[index]->SetParent(m_3DScene->GetRootNode());
-				m_Char[index]->CreateInstances();
-				m_Char[index]->SetTranslate(vec3(i * 15.0f, 0.0f, j * 15.0f));
-				//m_Char[index]->SetScale(vec3(5.0f));
-				exists.push_back(random);
-				break;
-			}
-		}
-	}
-
-
-	/*CharacterTemplate tempPala;
-	tempPala.TemplateFillDefaultPaladin();
-
-	CharacterTemplate tempShaman;
-	tempShaman.TemplateFillDefaultShaman();
-
-	std::shared_ptr<Character> character  = std::make_shared<Character>();
-	character->InitFromTemplate(tempPala);
-	character->CreateInstances();
-	character->SetParent(m_3DScene->GetRootNode());
-	character->SetTranslate(vec3(0, 15, 0));
-	character->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-	character->SetScale(vec3(10.0f));
-	character->GetLocalTransform();*/
+	//m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 
 	//
 	// 3D Passes
@@ -255,7 +250,7 @@ void CGameState_World::Load3D()
 	AddM2Passes(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
 }
 
-void CGameState_World::LoadUI()
+void CGameState_Client::LoadUI()
 {
 	Application& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
@@ -274,29 +269,14 @@ void CGameState_World::LoadUI()
 
 
 	// Texture
-	if (m_MapController != nullptr)
+	/*if (m_MapController != nullptr)
 	{
 		std::shared_ptr<UITexture> node3 = std::make_shared<UITexture>();
 		node3->SetParent(m_UIScene->GetRootNode());
 		node3->SetTexture(m_MapController->getMinimap());
 		node3->SetTranslate(vec2(100.0f, 100.0f));
 		node3->SetScale(vec2(512.0f, 512.0f));
-	}
-
-	// Texture 2
-	//std::shared_ptr<UITexture> node4 = std::make_shared<UITexture>();
-	//node4->SetParent(m_UIScene->GetRootNode());
-	//node4->SetTexture(renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"));
-	//node4->SetTranslate(vec2(200.0f, 000.0f));
-	//node4->SetScale(vec2(100.0f, 100.0f));
-
-
-	// Color quad
-	//std::shared_ptr<SceneNodeUI> node2 = std::make_shared<SceneNodeUI>();
-	//node2->SetParent(m_UIScene->GetRootNode());
-	//node2->SetMesh(__geom);
-	//node2->SetTranslate(vec2(180.0f, 180.0f));
-	//node2->SetScale(vec2(10.0f, 10.0f));
+	}*/
 
 	//
 	// UI Passes

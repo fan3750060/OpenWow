@@ -56,6 +56,7 @@ void CCameraController::OnUpdate(UpdateEventArgs& e)
 	m_Camera->TranslateX((Right - Left) * e.ElapsedTime * moveMultiplier);
 	m_Camera->TranslateY((Up - Down) * e.ElapsedTime * moveMultiplier);
 	m_Camera->TranslateZ((Back - Forward) * e.ElapsedTime * moveMultiplier);
+
 	//m_Camera->AddPitch(Pitch * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::Local);
 	//m_Camera->AddYaw(Yaw * 60.0f * e.ElapsedTime * rotateMultiplier, Camera::Space::World);
 }

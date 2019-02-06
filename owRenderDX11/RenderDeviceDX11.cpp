@@ -111,6 +111,14 @@ void RenderDeviceDX11::CreateDevice()
 	// Now get the immediate device context.
 	m_pDevice->GetImmediateContext2(&m_pDeviceContext);
 
+	// Need to explitly set the multithreaded mode for this device
+	if (FAILED(m_pDeviceContext->QueryInterface(__uuidof(ID3D10Multithread), (void**)&m_pMultiThread)))
+	{
+		Log::Error("Failed to create DirectX 11.2 device");
+	}
+
+	m_pMultiThread->SetMultithreadProtected(FALSE);
+
 	if (SUCCEEDED(m_pDevice->QueryInterface<ID3D11Debug>(&m_pDebugLayer)))
 	{
 		ATL::CComPtr<ID3D11InfoQueue> d3dInfoQueue;
@@ -273,6 +281,16 @@ std::shared_ptr<StructuredBuffer> RenderDeviceDX11::CreateStructuredBuffer(void*
 void RenderDeviceDX11::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> buffer)
 {
 	DestroyBuffer(buffer);
+}
+
+void RenderDeviceDX11::Lock()
+{
+	m_pMultiThread->Enter();
+}
+
+void RenderDeviceDX11::Unlock()
+{
+	m_pMultiThread->Leave();
 }
 
 //--

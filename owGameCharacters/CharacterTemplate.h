@@ -20,7 +20,7 @@ struct CharacterTemplate
 
 	// System
 	uint64						GUID;
-	std::string						Name;
+	std::string					Name;
 	// Race
 	Race::List					Race;
 	Class::List					Class;

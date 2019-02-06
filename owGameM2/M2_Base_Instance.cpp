@@ -87,15 +87,6 @@ std::shared_ptr<Texture> CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type 
 //	m_M2->update(_time, _dTime);
 //
 
-void CM2_Base_Instance::SetParent(std::weak_ptr<SceneNode3D> pNode)
-{
-	SceneNode3D::SetParent(pNode);
-
-	BoundingBox bbox = m_M2->GetBounds();
-	bbox.transform(GetWorldTransfom());
-	SetBounds(bbox);
-}
-
 bool CM2_Base_Instance::Accept(IVisitor& visitor)
 {
 	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
@@ -167,4 +158,11 @@ void CM2_Base_Instance::UpdateLocalTransform()
 	{
 		SceneNode3D::UpdateLocalTransform();
 	}
+}
+
+void CM2_Base_Instance::UpdateBounds()
+{
+	BoundingBox bbox = m_M2->GetBounds();
+	bbox.transform(GetWorldTransfom());
+	SetBounds(bbox);
 }

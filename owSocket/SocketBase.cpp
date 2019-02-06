@@ -144,7 +144,7 @@ void CSocketBase::SocketReadThread(std::future<void> _future)
 	tv.tv_sec = 0;
 	tv.tv_usec = 0;
 
-	while (_future.wait_for(std::chrono::milliseconds(0)) == std::future_status::timeout)
+	while (_future.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
 	{
 		FD_ZERO(&fdRead);
 		FD_SET(m_SocketObj, &fdRead);
@@ -199,7 +199,7 @@ void CSocketBase::SocketReadThread(std::future<void> _future)
 
 void CSocketBase::SocketWriteThread(std::future<void> _future)
 {
-	while (_future.wait_for(std::chrono::milliseconds(0)) == std::future_status::timeout)
+	while (_future.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
 	{
 		if (getWriteCache()->isReady())
 		{

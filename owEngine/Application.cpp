@@ -48,11 +48,11 @@ Application::Application()
 		fail2("Failed to register the render window class.");
 	}
 
-	HANDLE hProcess = ::GetCurrentProcess();
+	/*HANDLE hProcess = ::GetCurrentProcess();
 	if (::SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
 		Log::Info("Process priority class set to HIGH");
 	else
-		Log::Error("Can't set process priority class.");
+		Log::Error("Can't set process priority class.");*/
 
 #ifdef  IS_DX11
 	m_pRenderDevice = CreateRenderDeviceDX11(_BaseManager);

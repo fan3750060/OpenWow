@@ -90,6 +90,9 @@ public:
 	// ABSTRACT
 	//
 
+	virtual void Lock() = 0;
+	virtual void Unlock() = 0;
+
 	virtual std::shared_ptr<IMesh> CreateMesh() = 0;
 	virtual void DestroyMesh(std::shared_ptr<IMesh> mesh) = 0;
 

@@ -12,7 +12,7 @@
 
 FontsManager::FontsManager()
 {
-	mainFont = Add("Fonts\\FRIZQT__.TTF", 12);
+	mainFont = Add("Fonts\\consola.TTF", 12);
 }
 
 FontsManager::~FontsManager()

@@ -33,7 +33,6 @@ public:
 	std::shared_ptr<CM2_Animator> getAnimator() const { return m_Animator; }
 
 	// SceneNode3D
-	virtual void SetParent(std::weak_ptr<SceneNode3D> pNode) override;
 	virtual bool Accept(IVisitor& visitor) override;
 
 protected:
@@ -41,6 +40,7 @@ protected:
 
 	// SceneNode3D
 	virtual void UpdateLocalTransform() override;
+	virtual void UpdateBounds() override;
 
 private:
 	// Color & Alpha
