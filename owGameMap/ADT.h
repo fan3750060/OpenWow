@@ -33,8 +33,8 @@ public:
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
-	void setLoaded() {}
-	bool isLoaded() const { return true; }
+	void setLoaded() override;
+	bool isLoaded() const override;
 
 public:
 	const int										m_IndexX, m_IndexZ;
@@ -48,6 +48,9 @@ public:
 
 	std::vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
 	std::vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
+
+private:
+	std::atomic<bool>								m_IsLoaded;
 
 private: // PARENT
 	const std::weak_ptr<MapController>				m_MapController;

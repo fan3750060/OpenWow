@@ -182,6 +182,8 @@ void SceneNode3D::AddChild(std::shared_ptr<SceneNode3D> childNode)
 {
 	if (childNode)
 	{
+		std::lock_guard<std::mutex> lg(m_ChildMutex);
+
 		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), childNode);
 		if (iter == m_Children.end())
 		{
@@ -199,6 +201,8 @@ void SceneNode3D::RemoveChild(std::shared_ptr<SceneNode3D> childNode)
 {
 	if (childNode)
 	{
+		std::lock_guard<std::mutex> lg(m_ChildMutex);
+
 		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), childNode);
 		if (iter != m_Children.end())
 		{
@@ -236,9 +240,18 @@ void SceneNode3D::SetParent(std::weak_ptr<SceneNode3D> parentNode)
 		newParent->AddChild(SceneNode3D::shared_from_this());
 }
 
+SceneNode3D::NodeList SceneNode3D::GetChilds()
+{
+	std::lock_guard<std::mutex> lg(m_ChildMutex);
+
+	return m_Children;
+}
+
 void SceneNode3D::AddMesh(std::shared_ptr<IMesh> mesh)
 {
 	assert(mesh);
+	std::lock_guard<std::mutex> lg(m_MeshMutex);
+
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
 	if (iter == m_Meshes.end())
 		m_Meshes.push_back(mesh);
@@ -247,9 +260,18 @@ void SceneNode3D::AddMesh(std::shared_ptr<IMesh> mesh)
 void SceneNode3D::RemoveMesh(std::shared_ptr<IMesh> mesh)
 {
 	assert(mesh);
+	std::lock_guard<std::mutex> lg(m_MeshMutex);
+
 	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
 	if (iter != m_Meshes.end())
 		m_Meshes.erase(iter);
+}
+
+const SceneNode3D::MeshList& SceneNode3D::GetMeshes()
+{
+	std::lock_guard<std::mutex> lg(m_MeshMutex);
+
+	return m_Meshes;
 }
 
 void SceneNode3D::UpdateCamera(const Camera* camera)
@@ -264,14 +286,18 @@ bool SceneNode3D::Accept(IVisitor& visitor)
 		return false;
 
 	// Visit meshes.
-	for (auto mesh : m_Meshes)
+	for (auto mesh : GetMeshes())
 	{
 		mesh->Accept(visitor);
 	}
 
 	// Now visit children
-	for (auto child : m_Children)
+	for (auto child : GetChilds())
 	{
+		std::shared_ptr<ILoadable> loadable = std::dynamic_pointer_cast<ILoadable, SceneNode3D>(child);
+		if (loadable != nullptr && ! loadable->isLoaded())
+			continue;
+
 		child->Accept(visitor);
 	}
 

@@ -44,14 +44,10 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
-		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_ParentWMO.lock()->m_DoodadsFilenames + placement.flags.nameIndex);
-		if (mdx)
-		{
-			std::shared_ptr<CWMO_Doodad_Instance> inst = std::make_shared<CWMO_Doodad_Instance>(mdx, weak_from_this(), index, placement);
-			inst->SetParent(_parent);
-			inst->CreateInstances();
-			_parent.lock()->addDoodadInstance(inst);
-		}
+		std::shared_ptr<CWMO_Doodad_Instance> inst = std::make_shared<CWMO_Doodad_Instance>(m_ParentWMO.lock()->m_DoodadsFilenames + placement.flags.nameIndex, weak_from_this(), index, placement);
+		inst->SetParent(_parent);
+		Application::Get().GetLoader()->AddToLoadQueue(inst);
+		_parent.lock()->addDoodadInstance(inst);
 	}
 }
 

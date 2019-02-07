@@ -147,14 +147,14 @@ void CGameState_World::Load3D()
 	inst->GetLocalTransform();*/
 
 	// Map
-	/*m_MapController = std::make_shared<MapController>();
+	m_MapController = std::make_shared<MapController>();
 	m_MapController->SetParent(m_3DScene->GetRootNode());
 	m_MapController->MapPreLoad(*DBC_Map[1]);
 	m_MapController->MapLoad();
 	m_MapController->MapPostLoad();
 	m_MapController->EnterMap(x, y);
 
-	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));*/
+	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 
 
 	const uint32 cnt = 10;
@@ -197,7 +197,7 @@ void CGameState_World::Load3D()
 		}
 	}*/
 
-	std::shared_ptr<Creature> m_Char[cnt * cnt];
+	/*std::shared_ptr<Creature> m_Char[cnt * cnt];
 	std::vector<uint32> exists;
 	for (int i = 0; i < cnt; i++)
 	{
@@ -225,7 +225,7 @@ void CGameState_World::Load3D()
 				break;
 			}
 		}
-	}
+	}*/
 
 
 	/*CharacterTemplate tempPala;
@@ -276,11 +276,11 @@ void CGameState_World::LoadUI()
 	// Texture
 	if (m_MapController != nullptr)
 	{
-		std::shared_ptr<UITexture> node3 = std::make_shared<UITexture>();
+		/*std::shared_ptr<UITexture> node3 = std::make_shared<UITexture>();
 		node3->SetParent(m_UIScene->GetRootNode());
 		node3->SetTexture(m_MapController->getMinimap());
 		node3->SetTranslate(vec2(100.0f, 100.0f));
-		node3->SetScale(vec2(512.0f, 512.0f));
+		node3->SetScale(vec2(512.0f, 512.0f));*/
 	}
 
 	// Texture 2

@@ -131,3 +131,8 @@ SMPQFileLocation CMPQArchiveManager::GetFileLocation(cstring filename)
 
 	return SMPQFileLocation();
 }
+
+std::mutex& CMPQArchiveManager::Guard()
+{
+	return m_Lock;
+}

@@ -50,7 +50,7 @@ void CFilesManager::Unlock()
 	m_Lock.unlock();
 }
 
-void CFilesManager::Guard()
+std::mutex& CFilesManager::Guard()
 {
-	std::lock_guard<std::mutex> lock(m_Lock);
+	return m_Lock;
 }

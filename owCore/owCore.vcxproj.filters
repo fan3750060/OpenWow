@@ -73,6 +73,9 @@
     <Filter Include="Common\Helpers">
       <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Threads">
+      <UniqueIdentifier>{94a88278-a0a3-4d93-8432-ca705b1e488d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugOutput.cpp">
@@ -320,12 +323,6 @@
     <ClInclude Include="RefManager1DimAssync.h">
       <Filter>RefManager\1 Dim Assync</Filter>
     </ClInclude>
-    <ClInclude Include="MapAssync.h">
-      <Filter>RefManager\1 Dim Assync</Filter>
-    </ClInclude>
-    <ClInclude Include="LockedQueue.h">
-      <Filter>RefManager\1 Dim Assync</Filter>
-    </ClInclude>
     <ClInclude Include="DebugOutputConsole.h">
       <Filter>Log\DebugOutput</Filter>
     </ClInclude>
@@ -371,7 +368,15 @@
     <ClInclude Include="Timer_OLD.h">
       <Filter>Timers</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Common\Threads</Filter>
+    </ClInclude>
+    <ClInclude Include="MapAssync.h">
+      <Filter>Common\Threads</Filter>
+    </ClInclude>
+    <ClInclude Include="LockedQueue.h">
+      <Filter>Common\Threads</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="RefManager2Dim.inl">

@@ -143,14 +143,14 @@ void CItem_VisualData::InitObjectComponents()
 		}
 
 		// Fill data
-		std::shared_ptr<M2> model = LoadObjectModel(InventoryType, objectFileName);
+		std::string modelName = GetObjectModelName(InventoryType, objectFileName);
 		std::shared_ptr<Texture> itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
 		std::shared_ptr<const CM2_Part_Attachment> itemObjectAttach = m_ParentCharacter.lock()->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
-		std::shared_ptr<CItem_M2Instance> itemObjectInstance = std::make_shared<CItem_M2Instance>(model);
-		itemObjectInstance->CreateInstances();
+		std::shared_ptr<CItem_M2Instance> itemObjectInstance = std::make_shared<CItem_M2Instance>(modelName);
 		itemObjectInstance->SetParent(m_ParentCharacter);
+		Application::Get().GetLoader()->AddToLoadQueue(itemObjectInstance);
 		itemObjectInstance->Attach(itemObjectAttach);
 		itemObjectInstance->setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, itemObjectTexture);
 
@@ -173,12 +173,10 @@ void CItem_VisualData::InitObjectComponents()
 					continue;
 				}
 
-				std::shared_ptr<M2> visModel = GetManager<IM2Manager>()->Add(visEffectModelName);
-
-				std::shared_ptr<CM2_Base_Instance> visInstance = std::make_shared<CM2_Base_Instance>(visModel);
-				visInstance->CreateInstances();
+				std::shared_ptr<CM2_Base_Instance> visInstance = std::make_shared<CM2_Base_Instance>(visEffectModelName);
 				visInstance->SetParent(itemObjectInstance);
-				
+				Application::Get().GetLoader()->AddToLoadQueue(visInstance);
+
 				std::shared_ptr<const CM2_Part_Attachment> visAttach = nullptr;
 
 				if (itemObjectInstance->getM2()->getMiscellaneous()->isAttachmentExists((M2_AttachmentType::List)j))
@@ -234,10 +232,15 @@ void CItem_VisualData::InitTextureComponents()
 	}
 }
 
-std::shared_ptr<M2> CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, std::string _modelName)
+std::string CItem_VisualData::GetObjectModelName(InventoryType::List _objectType, std::string _modelName)
+{
+	return "Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _modelName;
+}
+
+/*std::shared_ptr<M2> CItem_VisualData::LoadObjectModel(InventoryType::List _objectType, std::string _modelName)
 {
 	return GetManager<IM2Manager>()->Add("Item\\ObjectComponents\\" + ItemObjectComponents[_objectType].folder + "\\" + _modelName);
-}
+}*/
 
 std::shared_ptr<Texture> CItem_VisualData::LoadObjectTexture(InventoryType::List _objectType, std::string _textureName)
 {

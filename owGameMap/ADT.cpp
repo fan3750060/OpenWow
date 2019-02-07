@@ -9,22 +9,11 @@
 // Additional
 #include "ADT_Liquid.h"
 
-#include __PACK_BEGIN
-
-struct ADT_MCIN
-{
-	uint32_t offset;               // absolute offset.
-	uint32_t size;                 // the size of the MCNK chunk, this is refering to.
-	uint32_t flags;                // always 0. only set in the client., FLAG_LOADED = 1
-	uint32_t asyncId;
-};
-
-#include __PACK_END
-
 ADT::ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _intexZ) :
 	m_MapController(std::dynamic_pointer_cast<MapController>(_mapController.lock())),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
+	m_IsLoaded(false),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	// Scene node params
@@ -273,60 +262,44 @@ bool ADT::Load()
 
 	for (uint32_t i = 0; i < C_ChunksInTileGlobal; i++)
 	{
-		f->seek(chunks[i].offset);
-
-		// Chunk + size (8)
-		f->seekRelative(4); // MCNK
-		uint32_t size;
-		f->readBytes(&size, sizeof(uint32_t));
-		assert1(size + 8 == chunks[i].size);
-
-		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode3D>(shared_from_this()), f);
+		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode3D>(shared_from_this()), f->Path_Name(), chunks[i]);
 		chunk->SetParent(m_MapController);
-		chunk->Load();
+		Application::Get().GetLoader()->AddToLoadQueue(chunk);
 		m_Chunks.push_back(chunk);
 
 		// Update THIS bounds
-		BoundingBox bbox = GetBounds();
-		bbox.makeUnion(chunk->GetBounds());
-		SetBounds(bbox);
+		//BoundingBox bbox = GetBounds();
+		//bbox.makeUnion(chunk->GetBounds());
+		//SetBounds(bbox);
 	}
 
 	//-- WMOs --------------------------------------------------------------------------
 
 	for (auto& it : m_WMOsPlacementInfo)
 	{
-		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOsNames[it.nameIndex]);
-		if (wmo)
-		{
-			std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(wmo, it);
-			inst->SetParent(shared_from_this());
-			inst->Load();
-			m_WMOsInstances.push_back(inst);
+		std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(m_WMOsNames[it.nameIndex], it);
+		inst->SetParent(shared_from_this());
+		Application::Get().GetLoader()->AddToLoadQueue(inst);
+		m_WMOsInstances.push_back(inst);
 
-			// Update THIS bounds
-			BoundingBox bbox = GetBounds();
-			bbox.makeUnion(inst->GetBounds());
-			SetBounds(bbox);
-		}
+		// Update THIS bounds
+		//BoundingBox bbox = GetBounds();
+		//bbox.makeUnion(inst->GetBounds());
+		//SetBounds(bbox);
 	}
 
 	//-- MDXs -------------------------------------------------------------------------
 	for (auto& it : m_MDXsPlacementInfo)
 	{
-		std::shared_ptr<M2> mdx = GetManager<IM2Manager>()->Add(m_MDXsNames[it.nameIndex]);
-		if (mdx)
-		{
-			std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(mdx, it);
-			inst->SetParent(shared_from_this());
-			inst->CreateInstances();
-			m_MDXsInstances.push_back(inst);
+		std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(m_MDXsNames[it.nameIndex], it);
+		inst->SetParent(shared_from_this());
+		Application::Get().GetLoader()->AddToLoadQueue(inst);
+		m_MDXsInstances.push_back(inst);
 
-			// Update THIS bounds
-			BoundingBox bbox = GetBounds();
-			bbox.makeUnion(inst->GetBounds());
-			SetBounds(bbox);
-		}
+		// Update THIS bounds
+		//BoundingBox bbox = GetBounds();
+		//bbox.makeUnion(inst->GetBounds());
+		//SetBounds(bbox);
 	}
 	//---------------------------------------------------------------------------------
 
@@ -338,4 +311,14 @@ bool ADT::Load()
 bool ADT::Delete()
 {
 	return true;
+}
+
+void ADT::setLoaded()
+{
+	m_IsLoaded = true;
+}
+
+bool ADT::isLoaded() const
+{
+	return m_IsLoaded;
 }

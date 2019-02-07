@@ -17,7 +17,6 @@ CM2_Animator::CM2_Animator(const std::weak_ptr<const M2> _m2) :
 	std::shared_ptr<const M2> M2 = m_M2.lock();
 	assert1(M2 != nullptr);
 
-	uint16 u = 0;
 	for (auto& i : DBC_AnimationData)
 	{
 		const DBC_AnimationDataRecord* record = (&i);

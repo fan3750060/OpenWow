@@ -12,6 +12,9 @@ public:
 	void AddArchive(std::string _filename);
 	SMPQFileLocation GetFileLocation(cstring _filename);
 
+	std::mutex& Guard();
+
 private:
 	std::vector<mpq_archive_s*> m_OpenArchives;
+	std::mutex                  m_Lock;
 };

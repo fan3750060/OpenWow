@@ -79,6 +79,7 @@ class Color;
 #include <sstream>
 #include <queue>
 #include <unordered_map>
+#include <mutex>
 
 typedef const std::string& cstring;
 

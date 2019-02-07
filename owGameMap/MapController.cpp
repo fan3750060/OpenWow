@@ -227,7 +227,7 @@ std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
 	// Create new tile
 	m_ADTCache[firstnull] = std::make_shared<ADT>(shared_from_this(), x, z);
 	m_ADTCache[firstnull]->SetParent(weak_from_this());
-	m_ADTCache[firstnull]->Load();
+	Application::Get().GetLoader()->AddToLoadQueue(m_ADTCache[firstnull]);
 	return m_ADTCache[firstnull];
 }
 

@@ -42,7 +42,7 @@ struct
 
 	virtual void Lock() = 0;
 	virtual void Unlock() = 0;
-	virtual void Guard() = 0;
+	virtual std::mutex& Guard() = 0;
 };
 
 // FORWARD BEGIN
@@ -76,4 +76,6 @@ struct
 
 	virtual void AddArchive(std::string _filename) = 0;
 	virtual SMPQFileLocation GetFileLocation(cstring _filename) = 0;
+
+	virtual std::mutex& Guard() = 0;
 };

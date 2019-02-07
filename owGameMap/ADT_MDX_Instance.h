@@ -18,7 +18,7 @@ struct ADT_MDXDef
 class ADT_MDX_Instance : public CM2_Base_Instance
 {
 public:
-	ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo);
+	ADT_MDX_Instance(std::string _m2Name, const ADT_MDXDef& _placementInfo);
 	virtual ~ADT_MDX_Instance();
 
 	// SceneNode3D

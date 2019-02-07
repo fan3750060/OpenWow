@@ -19,7 +19,6 @@
 #ifndef _AUTH_HMAC_H
 #define _AUTH_HMAC_H
 
-#include <string>
 #include <openssl/hmac.h>
 #include <openssl/sha.h>
 

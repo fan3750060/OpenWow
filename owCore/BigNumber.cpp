@@ -18,12 +18,11 @@
 
 #include "stdafx.h"
 
+// General
 #include "BigNumber.h"
 
+// Additional
 #include <openssl/bn.h>
-#include <cstring>
-#include <algorithm>
-#include <memory>
 
 BigNumber::BigNumber()
     : _bn(BN_new())

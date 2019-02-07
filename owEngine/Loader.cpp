@@ -3,64 +3,37 @@
 // General
 #include "Loader.h"
 
-DWORD WINAPI ThreadProcLoader(LPVOID lpParam)
+CLoader::CLoader()
 {
-	CLoader* loader = (CLoader*)lpParam;
-	std::queue<ILoadable*>& lqueue = loader->getQueueLoad();
-
-	//loader->getAdapter()->MakeMainContext();
-
-	while (true)
+	for (int i = 0; i < c_PoolSize; i++)
 	{
-		WaitForSingleObject(loader->getEventID(), INFINITE);
-
-		ILoadable* objectToLoad = lqueue.back();
-		lqueue.pop();
-
-		objectToLoad->Load();
-		objectToLoad->setLoaded();
-
-		ResetEvent(loader->getEventID());
+		std::future<void> futureObj = m_ThreadPromise[i].get_future();
+		m_Thread_Loader[i] = std::thread(&CLoader::LoaderThread, this, std::move(futureObj));
+		m_Thread_Loader[i].detach();
 	}
-
-	ExitThread(0);
-}
-
-CLoader::CLoader() :
-	m_Thread_Loader(nullptr)
-{
+	//m_ThreadPool = std::make_shared<ThreadPool>(4);
 }
 
 CLoader::~CLoader()
 {
-	ResetEvent(m_Event_Add);
-	CloseHandle(m_Event_Add);
-
-	TerminateThread(m_Thread_Loader, 1);
-	CloseHandle(m_Thread_Loader);
+	for (int i = 0; i < c_PoolSize; i++)
+	{
+		m_ThreadPromise[i].set_value();
+		if (m_Thread_Loader[i].joinable())
+			m_Thread_Loader[i].join();
+	}
 }
 
-void CLoader::AddToLoadQueue(ILoadable* _item)
+void CLoader::AddToLoadQueue(std::shared_ptr<ILoadable> _item)
 {
-	if (m_Thread_Loader == nullptr)
-	{
-		m_Event_Add = CreateEventW(NULL, TRUE, TRUE, NULL);
-		m_Thread_Loader = CreateThread(NULL, 0, &ThreadProcLoader, this, NULL, NULL);
-		//SetThreadPriority(m_TextureLoader, THREAD_PRIORITY_TIME_CRITICAL);
-	}
-
-	m_QueueLoad.push(_item);
-	SetEvent(m_Event_Add);
-
-	//_item->Load();
-	//m_QueueLoad.push(_item);
+	m_QueueLoad.add(_item);
 }
 
 void CLoader::LoadAll()
 {
 	while (!m_QueueLoad.empty())
 	{
-		ILoadable* obj = m_QueueLoad.front();
+		std::shared_ptr<ILoadable> obj = m_QueueLoad.peek();
 
 		obj->Load();
 		obj->setLoaded();
@@ -69,21 +42,39 @@ void CLoader::LoadAll()
 	}
 }
 
-void CLoader::AddToDeleteQueue(ILoadable* _item)
+void CLoader::AddToDeleteQueue(std::shared_ptr<ILoadable> _item)
 {
-	m_QueueDelete.push(_item);
+	m_QueueDelete.add(_item);
 }
 
 void CLoader::DeleteAll()
 {
 	while (!m_QueueDelete.empty())
 	{
-		ILoadable* obj = m_QueueDelete.front();
+		std::shared_ptr<ILoadable> obj = m_QueueDelete.peek();
 
 		obj->Delete();
-		delete obj;
-		obj = nullptr;
+		obj.reset();
 
 		m_QueueDelete.pop();
+	}
+}
+
+void CLoader::LoaderThread(std::future<void> futureObj)
+{
+	while (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
+	{
+		if (m_QueueLoad.empty())
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+			continue;
+		}
+
+		std::shared_ptr<ILoadable> objectToLoad;
+		if (!m_QueueLoad.next(objectToLoad))
+			continue;
+
+		objectToLoad->Load();
+		objectToLoad->setLoaded();
 	}
 }

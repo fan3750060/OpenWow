@@ -5,8 +5,8 @@
 
 // Additional
 
-ADT_MDX_Instance::ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDXDef& _placementInfo) :
-	CM2_Base_Instance(_mdxObject)
+ADT_MDX_Instance::ADT_MDX_Instance(std::string _m2Name, const ADT_MDXDef& _placementInfo) :
+	CM2_Base_Instance(_m2Name)
 {
 	m_UniqueId = _placementInfo.uniqueId;
 
@@ -19,8 +19,6 @@ ADT_MDX_Instance::ADT_MDX_Instance(std::shared_ptr<M2> _mdxObject, const ADT_MDX
 		SetRotation(vec3(rotate.z, rotate.y, rotate.x));
 		SetScale(vec3(static_cast<float>(_placementInfo.scale) / 1024.0f));
 	}
-
-	InitAnimator();
 }
 
 ADT_MDX_Instance::~ADT_MDX_Instance()

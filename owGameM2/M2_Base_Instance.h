@@ -2,17 +2,17 @@
 
 #include "M2.h"
 
-class CM2_Base_Instance : public SceneNode3D
+class CM2_Base_Instance : public SceneNode3D, public ILoadable
 {
 public:
-	CM2_Base_Instance(std::shared_ptr<M2> _m2Object = nullptr);
+	CM2_Base_Instance(std::string _m2Name);
 	virtual ~CM2_Base_Instance();
+
+	void CreateInstances();
 
 	// CM2_Base_Instance
 	void setM2(std::shared_ptr<M2> _model);
 	std::shared_ptr<M2> getM2() const { return m_M2; }
-
-	void CreateInstances();
 
 	void Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment);
 	void Detach();
@@ -31,6 +31,12 @@ public:
 
 	// Animations
 	std::shared_ptr<CM2_Animator> getAnimator() const { return m_Animator; }
+
+	// ILoadable
+	bool Load() override;
+	bool Delete() override;
+	void setLoaded() override;
+	bool isLoaded() const override;
 
 	// SceneNode3D
 	virtual bool Accept(IVisitor& visitor) override;
@@ -54,8 +60,12 @@ private:
 	std::shared_ptr<CM2_Animator>   m_Animator;
 	bool                            m_NeedRecalcAnimation;
 
-private: // PARENT
-	std::shared_ptr<M2>             m_M2;
+private:
+	std::shared_ptr<M2>                             m_M2;
+	std::string                                     m_M2Name;
 	std::shared_ptr<const CM2_Part_Attachment>      m_Attached;
-	CGroupQuality&									m_QualitySettings;
+	const CGroupQuality&							m_QualitySettings;
+
+private: // ILoadable
+	std::atomic<bool>								m_IsLoaded;
 };

@@ -3,6 +3,7 @@
 #define IS_DX11 1
 
 #include "GameState.h"
+#include "Loader.h"
 
 class Application : public Object, public IGameStateManager
 {
@@ -19,6 +20,7 @@ public:
 
 	std::shared_ptr<RenderWindow>   CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
 
+	CLoader*						GetLoader();
 	std::shared_ptr<IRenderDevice>  GetRenderDevice();
 	std::shared_ptr<RenderWindow>   GetRenderWindow();
 	HINSTANCE                       Get_HINSTANCE() const;
@@ -62,6 +64,9 @@ private:
 	// IGameStateManager
 	std::shared_ptr<IGameState>                                     m_CurrentGameState;
 	std::map<GameStatesNames::List, std::shared_ptr<IGameState>>    m_GameStatesCollection;
+
+	// Loader
+	CLoader m_Loader;
 
 private:
 	const char* c_RenderWindow_ClassName = "RenderWindowClass";

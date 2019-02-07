@@ -10,7 +10,7 @@ class MapController;
 class ADT_MCNK : public SceneNode3D, public ILoadable
 {
 public:
-	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, std::shared_ptr<IFile> _file);
+	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, cstring _fileName, const ADT_MCIN& _mcin);
 	virtual ~ADT_MCNK();
 
 	// SceneNode3D
@@ -20,11 +20,12 @@ public:
 	// ILoadable
 	bool Load() override;
 	bool Delete() override;
-	void setLoaded() {}
-	bool isLoaded() const { return true; } // TODO FIXME
+	void setLoaded() override;
+	bool isLoaded() const override;
 
 public:
-	std::shared_ptr<IFile> m_File;
+	std::string m_FileName;
+	const ADT_MCIN mcin;
 	ADT_MCNK_Header header;
 
 	ADT_MCNK_MCLY mcly[4];
@@ -38,6 +39,9 @@ public:
 	// Qulity
 	std::shared_ptr<IMesh> __geomHigh;
 	std::shared_ptr<IMesh> __geomDefault;
+
+private: // ILoadable
+	std::atomic<bool>					m_IsLoaded;
 
 private: // PARENT
 	const std::weak_ptr<MapController>	m_MapController;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <mutex>
 
 class CFilesManager : public IFilesManager
 {
@@ -12,7 +11,7 @@ public:
 	std::shared_ptr<IFile> Open(cstring _fileName) override;
 	void Lock() override;
 	void Unlock() override;
-	void Guard() override;
+	std::mutex& Guard() override;
 
 private:
 	std::mutex m_Lock;

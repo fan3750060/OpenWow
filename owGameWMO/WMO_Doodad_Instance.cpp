@@ -3,8 +3,8 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
-CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::shared_ptr<M2> _mdxObject, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
-	CM2_Base_Instance(_mdxObject),
+CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::string _m2Name, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
+	CM2_Base_Instance(_m2Name),
 	m_ParentGroup(_parentGroup),
 	m_Index(_index),
 	m_PortalVis(true)

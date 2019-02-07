@@ -15,6 +15,25 @@
 // General
 #include "RenderDeviceDX11.h"
 
+class D3DMultithreadLocker
+{
+public:
+	D3DMultithreadLocker(ID3D10Multithread * locker)
+		: m_Locker(locker)
+	{
+		m_Locker->Enter();
+	}
+
+	~D3DMultithreadLocker()
+	{
+		m_Locker->Leave();
+	}
+
+private:
+	ATL::CComPtr<ID3D10Multithread> m_Locker;
+};
+
+
 std::string ShaderMacrosToString(const Shader::ShaderMacros& _shaderMacros)
 {
 	std::string value = "";
@@ -182,6 +201,8 @@ ATL::CComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
 
 std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
@@ -190,6 +211,8 @@ std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt8VertexBuffer(const uint8 *
 
 std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
@@ -198,6 +221,8 @@ std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt32VertexBuffer(const uint32
 
 std::shared_ptr<IBuffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
@@ -206,6 +231,8 @@ std::shared_ptr<IBuffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* 
 
 std::shared_ptr <IBuffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
 	m_Buffers.push_back(buffer);
 
@@ -214,6 +241,8 @@ std::shared_ptr <IBuffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const doubl
 
 std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16* data, uint32 count)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr <IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint16));
 	m_Buffers.push_back(buffer);
 
@@ -222,6 +251,8 @@ std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt16IndexBuffer(const uint16*
 
 std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt32IndexBuffer(const uint32* data, uint32 count)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr <IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_INDEX_BUFFER, data, count, 0, (UINT)sizeof(uint32));
 	m_Buffers.push_back(buffer);
 
@@ -251,6 +282,8 @@ void RenderDeviceDX11::DestroyIndexBuffer(std::shared_ptr<IBuffer> buffer)
 
 std::shared_ptr<ConstantBuffer> RenderDeviceDX11::CreateConstantBuffer(const void* data, size_t size)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<ConstantBuffer> buffer = std::make_shared<ConstantBufferDX11>(m_pDevice, size);
 
 	if (data)
@@ -272,6 +305,8 @@ void RenderDeviceDX11::DestroyConstantBuffer(std::shared_ptr<ConstantBuffer> buf
 
 std::shared_ptr<StructuredBuffer> RenderDeviceDX11::CreateStructuredBuffer(void* data, uint32 count, uint32 stride, CPUAccess cpuAccess, bool gpuWrite)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<StructuredBuffer> buffer = std::make_shared<StructuredBufferDX11>(m_pDevice, 0, data, count, stride, cpuAccess, gpuWrite);
 	m_Buffers.push_back(buffer);
 
@@ -297,6 +332,8 @@ void RenderDeviceDX11::Unlock()
 
 std::shared_ptr<IMesh> RenderDeviceDX11::CreateMesh()
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<IMesh> mesh = std::make_shared<MeshDX11>(m_pDevice);
 	m_Meshes.push_back(mesh);
 
@@ -314,6 +351,8 @@ void RenderDeviceDX11::DestroyMesh(std::shared_ptr<IMesh> mesh)
 
 std::shared_ptr<Shader> RenderDeviceDX11::CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::string fullName = fileName + ShaderMacrosToString(shaderMacros) + entryPoint + profile;
 
 	ShaderMap::iterator iter = m_ShadersByName.find(fullName);
@@ -341,6 +380,8 @@ void RenderDeviceDX11::DestroyShader(std::shared_ptr<Shader> shader)
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(cstring fileName)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	TextureMap::iterator iter = m_TexturesByName.find(fileName);
 	if (iter != m_TexturesByName.end())
 	{
@@ -359,6 +400,8 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(cstring fileName)
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(cstring fileName)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	TextureMap::iterator iter = m_TexturesByName.find(fileName);
 	if (iter != m_TexturesByName.end())
 	{
@@ -377,6 +420,8 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(cstring fileName)
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(uint16_t width, uint16_t height, uint16_t slices, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice, width, height, slices, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
@@ -385,6 +430,8 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture2D(uint16_t width, uint1
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(uint16_t size, uint16_t numCubes, const Texture::TextureFormat& format, CPUAccess cpuAccess, bool gpuWrite)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice, size, numCubes, format, cpuAccess, gpuWrite);
 	m_Textures.push_back(texture);
 
@@ -393,6 +440,8 @@ std::shared_ptr<Texture> RenderDeviceDX11::CreateTextureCube(uint16_t size, uint
 
 std::shared_ptr<Texture> RenderDeviceDX11::CreateTexture()
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<Texture> texture = std::make_shared<TextureDX11>(m_pDevice);
 	m_Textures.push_back(texture);
 
@@ -421,6 +470,8 @@ void RenderDeviceDX11::DestroyTexture(std::shared_ptr<Texture> texture)
 
 std::shared_ptr<Material> RenderDeviceDX11::CreateMaterial()
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<Material> pMaterial = std::make_shared<MaterialDX11>(this);
 	m_Materials.push_back(pMaterial);
 	return pMaterial;
@@ -438,6 +489,8 @@ void RenderDeviceDX11::DestroyMaterial(std::shared_ptr<Material> material)
 
 std::shared_ptr<IRenderTarget> RenderDeviceDX11::CreateRenderTarget()
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<RenderTargetDX11> renderTarget = std::make_shared<RenderTargetDX11>(m_pDevice);
 	m_RenderTargets.push_back(renderTarget);
 
@@ -456,6 +509,8 @@ void RenderDeviceDX11::DestroyRenderTarget(std::shared_ptr<IRenderTarget> render
 
 std::shared_ptr<SamplerState> RenderDeviceDX11::CreateSamplerState()
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<SamplerState> sampler = std::make_shared<SamplerStateDX11>(m_pDevice);
 	m_Samplers.push_back(sampler);
 
@@ -474,6 +529,8 @@ void RenderDeviceDX11::DestroySampler(std::shared_ptr<SamplerState> sampler)
 
 std::shared_ptr<PipelineState> RenderDeviceDX11::CreatePipelineState()
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<PipelineState> pPipeline = std::make_shared<PipelineStateDX11>(m_pDevice);
 	m_Pipelines.push_back(pPipeline);
 
@@ -492,6 +549,8 @@ void RenderDeviceDX11::DestoryPipelineState(std::shared_ptr<PipelineState> pipel
 
 std::shared_ptr<Query> RenderDeviceDX11::CreateQuery(Query::QueryType queryType, uint8_t numBuffers)
 {
+	D3DMultithreadLocker locker(m_pMultiThread);
+
 	std::shared_ptr<Query> query = std::make_shared<QueryDX11>(m_pDevice, queryType, numBuffers);
 	m_Queries.push_back(query);
 

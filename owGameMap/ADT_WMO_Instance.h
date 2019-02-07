@@ -20,10 +20,8 @@ struct ADT_MODF
 class ADT_WMO_Instance : public CWMO_Base_Instance
 {
 public:
-	ADT_WMO_Instance(std::shared_ptr<WMO> _wmoObject, ADT_MODF& _placementInfo);
+	ADT_WMO_Instance(std::string _wmoName, ADT_MODF& _placementInfo);
 	virtual ~ADT_WMO_Instance();
-
-	void Load();
 
 	// Scene node
 	bool Accept(IVisitor& visitor) override;

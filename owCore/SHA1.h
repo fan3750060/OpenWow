@@ -19,7 +19,6 @@
 #ifndef _AUTH_SHA1_H
 #define _AUTH_SHA1_H
 
-#include <string>
 #include <openssl/sha.h>
 
 class BigNumber;

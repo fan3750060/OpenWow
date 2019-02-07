@@ -110,12 +110,9 @@ void WDL::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
 	for (auto it : m_LowResolutionWMOsPlacementInfo)
 	{
-		const std::string name = m_LowResolutionWMOsNames[it.nameIndex];
-
-		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(name);
-		std::shared_ptr<ADT_WMO_Instance> wmoInstance = std::make_shared<ADT_WMO_Instance>(wmo, it);
+		std::shared_ptr<ADT_WMO_Instance> wmoInstance = std::make_shared<ADT_WMO_Instance>(m_LowResolutionWMOsNames[it.nameIndex], it);
 		wmoInstance->SetParent(_parent);
-		wmoInstance->Load();
+		Application::Get().GetLoader()->AddToLoadQueue(wmoInstance);
 		m_LowResolutionWMOs.push_back(wmoInstance);
 	}
 }

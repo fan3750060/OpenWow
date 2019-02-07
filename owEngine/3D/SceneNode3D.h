@@ -9,6 +9,11 @@ class SceneNode3D : public Object, public std::enable_shared_from_this<SceneNode
 {
 	typedef Object base;
 public:
+	typedef std::vector<std::shared_ptr<SceneNode3D>> NodeList;
+	typedef std::multimap<std::string, std::shared_ptr<SceneNode3D>> NodeNameMap;
+	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
+
+public:
 	explicit SceneNode3D(cmat4 localTransform = mat4(1.0f));
 	virtual ~SceneNode3D();
 
@@ -75,6 +80,7 @@ public:
 	virtual void AddChild(std::shared_ptr<SceneNode3D> childNode);
 	virtual void RemoveChild(std::shared_ptr<SceneNode3D> childNode);
 	virtual void SetParent(std::weak_ptr<SceneNode3D> parentNode);
+	virtual NodeList GetChilds();
 
 	/**
 	 * Add a mesh to this scene node.
@@ -84,6 +90,7 @@ public:
 	 */
 	virtual void AddMesh(std::shared_ptr<IMesh> mesh);
 	virtual void RemoveMesh(std::shared_ptr<IMesh> mesh);
+	virtual const MeshList&  GetMeshes();
 
 	/**
 	 * Called before all others calls
@@ -115,10 +122,6 @@ protected:
 	virtual void UpdateBounds();
 
 private:
-	typedef std::vector<std::shared_ptr<SceneNode3D>> NodeList;
-	typedef std::multimap<std::string, std::shared_ptr<SceneNode3D>> NodeNameMap;
-	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
-
 	std::string         m_Name;
 	SceneNodeTypes      m_Type;
 
@@ -141,5 +144,7 @@ private:
 	std::weak_ptr<SceneNode3D>  m_pParentNode;
 	NodeList                  m_Children;
 	NodeNameMap               m_ChildrenByName;
+	std::mutex                m_ChildMutex;
 	MeshList                  m_Meshes;
+	std::mutex                m_MeshMutex;
 };

@@ -124,6 +124,8 @@ int Application::Run()
 			UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
 			OnUpdate(updateArgs);
 
+			m_pRenderDevice->Lock();
+
 			Render3DEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
 			OnRender(renderArgs);
 
@@ -131,6 +133,8 @@ int Application::Run()
 			OnRenderUI(renderUIArgs);
 
 			m_pWindow->Present();
+
+			m_pRenderDevice->Unlock();
 		}
 	}
 
@@ -196,6 +200,11 @@ std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName
 	::UpdateWindow(hWindow);
 
 	return m_pWindow;
+}
+
+CLoader* Application::GetLoader()
+{
+	return &m_Loader;
 }
 
 std::shared_ptr<IRenderDevice> Application::GetRenderDevice()

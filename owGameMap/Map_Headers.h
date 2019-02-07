@@ -30,6 +30,14 @@ struct ADT_TextureInfo
 	std::shared_ptr<Texture> specularTexture;
 };
 
+struct ADT_MCIN
+{
+	uint32_t offset;               // absolute offset.
+	uint32_t size;                 // the size of the MCNK chunk, this is refering to.
+	uint32_t flags;                // always 0. only set in the client., FLAG_LOADED = 1
+	uint32_t asyncId;
+};
+
 struct ADT_MCNK_Header
 {
 	struct Flags

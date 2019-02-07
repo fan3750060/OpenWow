@@ -13,12 +13,12 @@
 #include "Map_Shared.h"
 #include "ADT_MCNK_Material.h"
 
-ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, std::shared_ptr<IFile> _file) :
+ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, cstring _fileName, const ADT_MCIN& _mcin) :
 	m_MapController(_mapController),
 	m_ParentADT(_parentTile),
-	m_File(_file),
-	m_BlendRBGShadowATexture(0),
-	m_LiquidInstance(nullptr),
+	m_FileName(_fileName),
+	mcin(_mcin),
+	m_IsLoaded(false),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	memset(mcly, 0x00, sizeof(ADT_MCNK_MCLY) * 4);
@@ -61,10 +61,22 @@ bool ADT_MCNK::Accept(IVisitor& visitor)
 
 bool ADT_MCNK::Load()
 {
-	uint32_t startPos = m_File->getPos();
+	std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(m_FileName);
+	if (file == nullptr)
+		return false;
+
+	file->seek(mcin.offset);
+
+	// Chunk + size (8)
+	file->seekRelative(4); // MCNK
+	uint32_t size;
+	file->readBytes(&size, sizeof(uint32_t));
+	assert1(size + 8 == mcin.size);
+
+	uint32_t startPos = file->getPos();
 
 	// Read header
-	m_File->readBytes(&header, sizeof(ADT_MCNK_Header));
+	file->readBytes(&header, sizeof(ADT_MCNK_Header));
 
 	// Scene node params
 	{
@@ -87,7 +99,7 @@ bool ADT_MCNK::Load()
 	memset(blendbuf, 0, 64 * 64 * 4);
 
 	// Normals
-	m_File->seek(startPos + header.ofsNormal);
+	file->seek(startPos + header.ofsNormal);
 	{
 		struct int24
 		{
@@ -120,7 +132,7 @@ bool ADT_MCNK::Load()
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				int24 nor;
-				m_File->readBytes(&nor, sizeof(int24));
+				file->readBytes(&nor, sizeof(int24));
 
 				*ttn++ = vec3(-(float)nor.y / 127.0f, (float)nor.z / 127.0f, -(float)nor.x / 127.0f);
 				//*t_normals_INT24++ = nor;
@@ -133,7 +145,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Heights
-	m_File->seek(startPos + header.ofsHeight);
+	file->seek(startPos + header.ofsHeight);
 	{
 		float heights[C_MapBufferSize];
 		float* t_heights = heights;
@@ -148,7 +160,7 @@ bool ADT_MCNK::Load()
 			for (uint32 i = 0; i < ((j % 2) ? 8 : 9); i++)
 			{
 				float h;
-				m_File->readBytes(&h, sizeof(float));
+				file->readBytes(&h, sizeof(float));
 
 				float xpos = i * C_UnitSize;
 				float zpos = j * 0.5f * C_UnitSize;
@@ -172,14 +184,14 @@ bool ADT_MCNK::Load()
 	}
 
 	// Textures
-	m_File->seek(startPos + header.ofsLayer);
+	file->seek(startPos + header.ofsLayer);
 	{
 		std::shared_ptr<ADT> parentADT = m_ParentADT.lock();
 		assert1(parentADT != NULL);
 
 		for (uint32 i = 0; i < header.nLayers; i++)
 		{
-			m_File->readBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
+			file->readBytes(&mcly[i], sizeof(ADT_MCNK_MCLY));
 
 			m_DiffuseTextures[i] = parentADT->m_Textures.at(mcly[i].textureIndex)->diffuseTexture;
 			m_SpecularTextures[i] = parentADT->m_Textures.at(mcly[i].textureIndex)->specularTexture;
@@ -187,7 +199,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Shadows
-	m_File->seek(startPos + header.ofsShadow);
+	file->seek(startPos + header.ofsShadow);
 	{
 		uint8 sbuf[64 * 64];
 		uint8* p;
@@ -195,7 +207,7 @@ bool ADT_MCNK::Load()
 		p = sbuf;
 		for (int j = 0; j < 64; j++)
 		{
-			m_File->readBytes(c, 8);
+			file->readBytes(c, 8);
 			for (int i = 0; i < 8; i++)
 			{
 				for (int b = 0x01; b != 0x100; b <<= 1)
@@ -212,7 +224,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// Alpha
-	m_File->seek(startPos + header.ofsAlpha);
+	file->seek(startPos + header.ofsAlpha);
 	{
 		std::shared_ptr<MapController> mapController = m_MapController.lock();
 		assert1(mapController != NULL);
@@ -221,7 +233,7 @@ bool ADT_MCNK::Load()
 		{
 			uint8 amap[64 * 64];
 			memset(amap, 0x00, 64 * 64);
-			const uint8* abuf = m_File->getDataFromCurrent() + mcly[i].offsetInMCAL;
+			const uint8* abuf = file->getDataFromCurrent() + mcly[i].offsetInMCAL;
 
 			if (mcly[i].flags.alpha_map_compressed) // Compressed: MPHD is only about bit depth!
 			{
@@ -284,19 +296,22 @@ bool ADT_MCNK::Load()
 			}
 		}
 	}
+
+	_RenderDevice->Lock();
 	m_BlendRBGShadowATexture = _RenderDevice->CreateTexture();
 	m_BlendRBGShadowATexture->LoadTextureCustom(64, 64, blendbuf);
+	_RenderDevice->Unlock();
 
 	// Liquids
-	m_File->seek(startPos + header.ofsLiquid);
+	file->seek(startPos + header.ofsLiquid);
 	{
 		if (header.sizeLiquid > 8)
 		{
 			CRange height;
-			m_File->readBytes(&height, 8);
+			file->readBytes(&height, 8);
 
 			std::shared_ptr<CADT_Liquid> m_Liquid = std::make_shared<CADT_Liquid>(8, 8);
-			m_Liquid->CreateFromMCLQ(m_File, header);
+			m_Liquid->CreateFromMCLQ(file, header);
 
 			m_LiquidInstance = std::make_shared<Liquid_Instance>(m_Liquid, vec3(GetTranslation().x, 0.0f, GetTranslation().z));
 			m_LiquidInstance->SetParent(weak_from_this());
@@ -304,7 +319,7 @@ bool ADT_MCNK::Load()
 	}
 
 	// MCCV colors
-	m_File->seek(startPos + header.ofsMCCV);
+	file->seek(startPos + header.ofsMCCV);
 	{
 		uint32 mccvColorsUINT8[C_MapBufferSize];
 		memset(mccvColorsUINT8, 0x00, sizeof(uint32) * C_MapBufferSize);
@@ -318,7 +333,7 @@ bool ADT_MCNK::Load()
 				for (uint32 i = 0; i < ((j % 2u) ? 8u : 9u); i++)
 				{
 					uint8 nor[4];
-					m_File->readBytes(&nor, sizeof(uint32));
+					file->readBytes(&nor, sizeof(uint32));
 
 					*t_mccvColorsUINT8++ = uint32(
 						(uint8)(nor[3]) << 24 |
@@ -333,7 +348,7 @@ bool ADT_MCNK::Load()
 		mccvBuffer = _RenderDevice->CreateUInt32VertexBuffer(mccvColorsUINT8, C_MapBufferSize, 0, sizeof(uint8));
 	}
 
-	m_File.reset();
+	//m_File.reset();
 
 	// All chunk is holes
 	if (header.holes == UINT16_MAX)
@@ -390,6 +405,17 @@ bool ADT_MCNK::Load()
 bool ADT_MCNK::Delete()
 {
 	return true;
+}
+
+void ADT_MCNK::setLoaded()
+{
+	assert(! m_IsLoaded);
+	m_IsLoaded = true;
+}
+
+bool ADT_MCNK::isLoaded() const
+{
+	return m_IsLoaded;
 }
 
 /*

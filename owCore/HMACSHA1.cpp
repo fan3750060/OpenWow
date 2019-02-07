@@ -18,10 +18,11 @@
 
 #include "stdafx.h"
 
+// General
 #include "HMACSHA1.h"
 
+ // Additional
 #include "BigNumber.h"
-#include "Errors.h"
 
 #if defined(OPENSSL_VERSION_NUMBER) && OPENSSL_VERSION_NUMBER < 0x10100000L
 HMAC_CTX* HMAC_CTX_new()

@@ -19,9 +19,6 @@
 #ifndef _AUTH_BIGNUMBER_H
 #define _AUTH_BIGNUMBER_H
 
-#include <memory>
-#include <string>
-
 struct bignum_st;
 
 class BigNumber

@@ -6,23 +6,25 @@ public:
 	CLoader();
 	~CLoader();
 
-	void AddToLoadQueue(ILoadable* _item) override;
+	void AddToLoadQueue(std::shared_ptr<ILoadable> _item) override;
 	void LoadAll() override;
 
-	void AddToDeleteQueue(ILoadable* _item) override;
+	void AddToDeleteQueue(std::shared_ptr<ILoadable> _item) override;
 	void DeleteAll() override;
 
-public:
-	std::queue<ILoadable*>& getQueueLoad() { return m_QueueLoad; }
-	std::queue<ILoadable*>& getQueueDelete() { return m_QueueDelete; }
-	HANDLE& getThreadID() { return m_Thread_Loader; }
-	HANDLE& getEventID() { return m_Event_Add; }
-	HANDLE& getEventLoadedID() { return m_Event_Loaded; }
+	void LoaderThread(std::future<void> futureObj);
 
 private:
-	std::queue<ILoadable*> m_QueueLoad;
-	std::queue<ILoadable*> m_QueueDelete;
-	HANDLE m_Thread_Loader;
-	HANDLE m_Event_Add;
-	HANDLE m_Event_Loaded;
+	const static uint32                    c_PoolSize = 16;
+
+private:
+	LockedQueue<std::shared_ptr<ILoadable>> m_QueueLoad;
+	LockedQueue<std::shared_ptr<ILoadable>> m_QueueDelete;
+
+	std::promise<void>					   m_ThreadPromise[c_PoolSize];
+	std::thread                            m_Thread_Loader[c_PoolSize];
+
+	std::shared_ptr<ThreadPool>            m_ThreadPool;
+
+
 };

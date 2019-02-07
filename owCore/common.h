@@ -7,6 +7,11 @@
 #include <cmath>
 #include <memory>
 
+#include <mutex>
+#include <atomic>
+#include <future>
+#include <chrono>
+
 // Macros
 #include "Debug.h"
 #include "Macros.h"
@@ -30,5 +35,8 @@
 // Utils
 #include "Random.h"
 #include "NEW_Random.h"
+#include "ThreadPool.h"
+#include "MapAssync.h"
+#include "LockedQueue.h"
 #include "Utils.h"
 #include "Log.h"

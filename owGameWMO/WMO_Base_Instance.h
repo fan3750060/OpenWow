@@ -5,16 +5,17 @@
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
 
-class CWMO_Base_Instance : public SceneNode3D
+class CWMO_Base_Instance : public SceneNode3D, public ILoadable
 {
 public:
-	CWMO_Base_Instance(std::shared_ptr<WMO> _wmoObject);
+	CWMO_Base_Instance(std::string _wmoName);
 	virtual ~CWMO_Base_Instance();
 
-	// WMO_Base_Instance
-	std::shared_ptr<WMO> getObject() { return m_Object; }
-	void InitTransform();
-	void EmptyTransformAndBounds();
+	void CreateInstances();
+
+	// CWMO_Base_Instance
+	void setWMO(std::shared_ptr<WMO> _model);
+	std::shared_ptr<WMO> getWMO() const;
 
 	void AddGroupInstance(std::shared_ptr<CWMO_Group_Instance> _group) { m_GroupInstances.push_back(_group); }
 	std::vector<std::shared_ptr<CWMO_Group_Instance>>& getGroupInstances() { return m_GroupInstances; }
@@ -24,16 +25,26 @@ public:
 
 	const vec3* getVerts() const { return m_ConvertedVerts.data(); }
 
+	// ILoadable
+	bool Load() override;
+	bool Delete() override;
+	void setLoaded() override;
+	bool isLoaded() const override;
+
 	// SceneNode3D
 	void UpdateCamera(const Camera* camera) override;
 	bool Accept(IVisitor& visitor) override;
 
 protected:
-	const std::shared_ptr<WMO>                                          m_Object;
-	SWMO_Doodad_SetInfo                                                 m_DoodadSetInfo;
+	std::string                                        m_WMOName;
+	std::shared_ptr<WMO>                               m_WMO;
+	//SWMO_Doodad_SetInfo                                m_DoodadSetInfo;
 
-	std::vector<vec3>                                                   m_ConvertedVerts;
+	std::vector<vec3>                                  m_ConvertedVerts;
 	
-	std::vector<std::shared_ptr<CWMO_Group_Instance>>                   m_GroupInstances;
-	std::vector<std::shared_ptr<CWMO_Group_Instance>>                   m_OutdoorGroupInstances;
+	std::vector<std::shared_ptr<CWMO_Group_Instance>>  m_GroupInstances;
+	std::vector<std::shared_ptr<CWMO_Group_Instance>>  m_OutdoorGroupInstances;
+
+private: // ILoadable
+	std::atomic<bool>					m_IsLoaded;
 };

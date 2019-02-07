@@ -17,9 +17,9 @@ struct
 	__declspec(uuid("18A045EF-D291-45E5-8F61-E223C4AFEF83"))
 	ILoader : public IManager
 {
-	virtual void AddToLoadQueue(ILoadable* _item) = 0;
+	virtual void AddToLoadQueue(std::shared_ptr<ILoadable> _item) = 0;
 	virtual void LoadAll() = 0;
 
-	virtual void AddToDeleteQueue(ILoadable* _item) = 0;
+	virtual void AddToDeleteQueue(std::shared_ptr<ILoadable> _item) = 0;
 	virtual void DeleteAll() = 0;
 };

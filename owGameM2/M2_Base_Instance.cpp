@@ -3,8 +3,9 @@
 // General
 #include "M2_Base_Instance.h"
 
-CM2_Base_Instance::CM2_Base_Instance(std::shared_ptr<M2> _m2Object) :
+CM2_Base_Instance::CM2_Base_Instance(std::string _m2Name) :
 	m_M2(nullptr),
+	m_M2Name(_m2Name),
 	m_Attached(nullptr),
 	m_Animator(nullptr),
 	m_NeedRecalcAnimation(true),
@@ -15,11 +16,6 @@ CM2_Base_Instance::CM2_Base_Instance(std::shared_ptr<M2> _m2Object) :
 	for (uint8 i = 0; i < SM2_Texture::Type::COUNT; i++)
 	{
 		m_SpecialTextures[i] = _RenderDevice->GetDefaultTexture();
-	}
-
-	if (_m2Object != nullptr)
-	{
-		setM2(_m2Object);
 	}
 }
 
@@ -55,7 +51,7 @@ void CM2_Base_Instance::setM2(std::shared_ptr<M2> _model)
 	m_M2 = _model;
 
 	InitAnimator();
-	UpdateLocalTransform();
+	//UpdateLocalTransform();
 }
 
 // Mesh & textures provider
@@ -79,6 +75,35 @@ std::shared_ptr<Texture> CM2_Base_Instance::getSpecialTexture(SM2_Texture::Type 
 {
 	assert1(_type < SM2_Texture::Type::COUNT);
 	return m_SpecialTextures[_type];
+}
+
+bool CM2_Base_Instance::Load()
+{
+	std::shared_ptr<M2> m2 = GetManager<IM2Manager>()->Add(m_M2Name);
+	if (m2)
+	{
+		setM2(m2);
+		UpdateBounds();
+		CreateInstances();
+		return true;
+	}
+
+	return false;
+}
+
+bool CM2_Base_Instance::Delete()
+{
+	return false;
+}
+
+void CM2_Base_Instance::setLoaded()
+{
+	m_IsLoaded = true;
+}
+
+bool CM2_Base_Instance::isLoaded() const
+{
+	return m_IsLoaded;
 }
 
 
@@ -142,7 +167,7 @@ void CM2_Base_Instance::InitAnimator()
 
 void CM2_Base_Instance::UpdateLocalTransform()
 {
-	if (m_Attached != nullptr)
+	if (m_Attached)
 	{
 		std::shared_ptr<const CM2_Part_Bone> bone = m_Attached->getBone().lock();
 		assert1(bone != nullptr);
@@ -162,7 +187,16 @@ void CM2_Base_Instance::UpdateLocalTransform()
 
 void CM2_Base_Instance::UpdateBounds()
 {
-	BoundingBox bbox = m_M2->GetBounds();
-	bbox.transform(GetWorldTransfom());
-	SetBounds(bbox);
+	if (m_M2)
+	{
+		BoundingBox bbox = m_M2->GetBounds();
+		bbox.transform(GetWorldTransfom());
+		SetBounds(bbox);
+	}
+	else
+	{
+		BoundingBox bbox;
+		bbox.calculateCenter();
+		SetBounds(bbox);
+	}
 }

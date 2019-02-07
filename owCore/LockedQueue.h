@@ -18,36 +18,18 @@
 
 #pragma once
 
-#include <deque>
-#include <mutex>
-
-template <class T, typename StorageType = std::deque<T> >
+template <class T>
 class LockedQueue
 {
 public:
-	LockedQueue() :
-		_canceled(false)
-	{ }
-
-	virtual ~LockedQueue()
-	{ }
-
 	//! Adds an item to the queue.
 	void add(const T& item)
 	{
 		lock();
 
-		_queue.push_back(item);
+		_queue.push(item);
 
 		unlock();
-	}
-
-	//! Adds items back to front of the queue
-	template<class Iterator>
-	void readd(Iterator begin, Iterator end)
-	{
-		std::lock_guard<std::mutex> lock(m_Lock);
-		_queue.insert(_queue.begin(), begin, end);
 	}
 
 	//! Gets the next result in the queue, if any.
@@ -61,33 +43,13 @@ public:
 		}
 
 		result = _queue.front();
-		_queue.pop_front();
+		_queue.pop();
 
-		return true;
-	}
-
-	template<class Checker>
-	bool next(T& result, Checker& check)
-	{
-		std::lock_guard<std::mutex> lock(m_Lock);
-
-		if (_queue.empty())
-		{
-			return false;
-		}
-
-		result = _queue.front();
-		if (!check.Process(result))
-		{
-			return false;
-		}
-
-		_queue.pop_front();
 		return true;
 	}
 
 	//! Peeks at the top of the queue. Check if the queue is empty before calling! Remember to unlock after use if autoUnlock == false.
-	T& peek(bool autoUnlock = false)
+	T& peek(bool autoUnlock = true)
 	{
 		lock();
 
@@ -109,11 +71,11 @@ public:
 		this->m_Lock.unlock();
 	}
 
-	void pop_front()
+	void pop()
 	{
 		std::lock_guard<std::mutex> lock(m_Lock);
 
-		_queue.pop_front();
+		_queue.pop();
 	}
 
 	bool empty()
@@ -124,5 +86,5 @@ public:
 
 private:
 	std::mutex m_Lock;
-	StorageType _queue;
+	std::queue<T> _queue;
 };

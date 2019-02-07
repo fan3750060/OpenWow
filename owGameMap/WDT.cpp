@@ -21,10 +21,9 @@ void WDT::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
 	if (!m_GlobalWMOName.empty())
 	{
-		std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_GlobalWMOName);
-		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(wmo, m_GlobalWMOPlacementInfo);
+		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(m_GlobalWMOName, m_GlobalWMOPlacementInfo);
 		m_GlobalWMO->SetParent(_parent);
-		m_GlobalWMO->Load();
+		Application::Get().GetLoader()->AddToLoadQueue(m_GlobalWMO);
 	}
 }
 

@@ -43,7 +43,7 @@ void CAuthSocket::SendData(const uint8* _data, uint32 _count)
 
 void CAuthSocket::AuthThread(std::future<void> futureObj)
 {
-	while (futureObj.wait_for(std::chrono::milliseconds(0)) == std::future_status::timeout)
+	while (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
 	{
 		if (socketBase->getReadCache()->isReady())
 		{
