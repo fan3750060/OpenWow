@@ -15,7 +15,7 @@ ItemTemplate::ItemTemplate(uint32 _displayId, InventoryType::List _inventoryType
 	EnchantAuraID(_enchantAuraID)
 {}
 
-ItemTemplate::ItemTemplate(const DBC_ItemDisplayInfoRecord* _display, InventoryType::List _inventoryType, uint32 _enchantAuraID) :
+ItemTemplate::ItemTemplate(std::shared_ptr<const DBC_ItemDisplayInfoRecord> _display, InventoryType::List _inventoryType, uint32 _enchantAuraID) :
 	DisplayId(0),
 	InventoryType(InventoryType::NON_EQUIP),
 	EnchantAuraID(0)

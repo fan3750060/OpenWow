@@ -8,7 +8,7 @@ public:
 	Liquid(uint32 x, uint32 y);
 
 protected:
-	void createLayers(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f);
+	void createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std::shared_ptr<IFile> f);
 	void createBuffer();
 	
 public:

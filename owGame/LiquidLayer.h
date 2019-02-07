@@ -14,7 +14,7 @@ public:
 	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) override;
 
 public:
-	const DBC_LiquidTypeRecord* LiquidType;
+	std::shared_ptr<const DBC_LiquidTypeRecord> LiquidType;
 	uint16 VertexFormat;
 
 	float MinHeightLevel;

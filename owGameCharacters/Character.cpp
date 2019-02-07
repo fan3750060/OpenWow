@@ -51,10 +51,10 @@ void Character::InitFromDisplayInfo(uint32 _id)
 	// TODO: Move me outside construtor
 
 
-	const DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
+	std::shared_ptr<const DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
-	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	std::shared_ptr<const DBC_CreatureDisplayInfoExtraRecord> humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra != nullptr);
 
 	// 1. Template
@@ -123,10 +123,10 @@ void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender
 	// TODO: Move me outside construtor
 
 
-	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
+	std::shared_ptr<const DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
-	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	std::shared_ptr<const DBC_CreatureDisplayInfoExtraRecord> humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra == nullptr);
 
 	// 1. Template

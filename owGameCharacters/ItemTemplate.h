@@ -5,7 +5,7 @@ struct ItemTemplate
 {
 	ItemTemplate();
 	ItemTemplate(uint32	_displayId, InventoryType::List _inventoryType, uint32 _enchantAuraID);
-	ItemTemplate(const DBC_ItemDisplayInfoRecord* _display, InventoryType::List _inventoryType, uint32 _enchantAuraID);
+	ItemTemplate(std::shared_ptr<const DBC_ItemDisplayInfoRecord> _display, InventoryType::List _inventoryType, uint32 _enchantAuraID);
 
 	void TemplateSet(const ItemTemplate& _o);
 	void TemplateFill(ByteBuffer& b);

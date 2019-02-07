@@ -1,4 +1,3 @@
-#include "DBC__File.h"
 #pragma once
 
 template<class RECORD_T>
@@ -11,12 +10,7 @@ inline DBCFile<RECORD_T>::DBCFile(const char* _fileName) :
 template<class RECORD_T>
 inline DBCFile<RECORD_T>::~DBCFile()
 {
-	for (auto it = records.begin(); it != records.end();)
-	{
-		auto obj = it->second;
-		it = records.erase(it);
-		delete obj;
-	}
+	m_Records.clear();
 }
 
 template<class RECORD_T>
@@ -39,7 +33,7 @@ inline bool DBCFile<RECORD_T>::Open()
 	m_File->readBytes(&recordSize, 4); // Size of a record
 	m_File->readBytes(&stringSize, 4); // String size
 
-	Log::Print("DBCFile[%s]: HEAD [%s], Size [%d]", m_File->Path_Name().c_str(), header, recordCount);
+	Log::Info("DBCFile[%s]: HEAD [%s], Size [%d]", m_File->Path_Name().c_str(), header, recordCount);
 
 	assert1(fieldCount * 4 == recordSize);
 
@@ -49,19 +43,19 @@ inline bool DBCFile<RECORD_T>::Open()
 	// Fill record table
 	for (uint64_t _offset = m_File->getPos(); _offset != stringTableOffset; _offset += recordSize)
 	{
-		RECORD_T* record = new RECORD_T(this, const_cast<uint8*>(m_File->getData() + _offset));
-		records.insert(std::make_pair(record->Get_ID(), record));
+		std::shared_ptr<RECORD_T> record = std::make_shared<RECORD_T>(this, const_cast<uint8*>(m_File->getData() + _offset));
+		m_Records.insert(std::make_pair(record->Get_ID(), record));
 	}
 
-	assert1(recordCount == records.size());
+	assert1(recordCount == m_Records.size());
 	return true;
 }
 
 template <class RECORD_T>
-RECORD_T* DBCFile<RECORD_T>::operator[](uint32 _id)
+std::shared_ptr<RECORD_T> DBCFile<RECORD_T>::operator[](uint32 _id)
 {
-	auto recordIt = records.find(_id);
-	if (recordIt != records.end())
+	auto recordIt = m_Records.find(_id);
+	if (recordIt != m_Records.end())
 	{
 		return recordIt->second;
 	}
@@ -70,7 +64,7 @@ RECORD_T* DBCFile<RECORD_T>::operator[](uint32 _id)
 }
 
 template <class RECORD_T>
-const std::multimap<uint32, RECORD_T*>& DBCFile<RECORD_T>::Records() const
+const std::multimap<uint32, std::shared_ptr<RECORD_T>>& DBCFile<RECORD_T>::Records() const
 {
-	return records;
+	return m_Records;
 }

@@ -17,7 +17,7 @@ public:
 	virtual bool isMeshEnabled(uint32 _index) const override;
 
 protected:
-	void CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record);
+	void CreateCreatureModel(std::shared_ptr<const DBC_CreatureDisplayInfoRecord> _record);
 
 private:
 	// Mesh provider

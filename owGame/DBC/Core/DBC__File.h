@@ -36,19 +36,19 @@ const char* CONCAT_GET(_name)(uint8 _index) const                \
 }
 
 #define __DBC_LOCSTR(_name, _field)                              \
-std::string CONCAT_GET(_name)(int8 _locale = -1) const                \
+std::string CONCAT_GET(_name)(int8 _locale = -1) const           \
 {                                                                \
 	return getLocalizedString(static_cast<uint32>(_field - 1));  \
 }
 
 #define __DBC_REF_ID(_dbc, _name, _field)                                                 \
-const _dbc##Record* CONCAT_GET(_name)() const                                             \
+const std::shared_ptr<_dbc##Record> CONCAT_GET(_name)() const                             \
 {                                                                                         \
 	return _dbc[static_cast<uint32>(getValue<uint32>(static_cast<uint32>(_field - 1)))];  \
 }
 
 #define __DBC_REFSID(_dbc, _name, _field, _size)                                                   \
-const _dbc##Record* CONCAT_GET(_name)(uint8 _index) const                                          \
+const std::shared_ptr<_dbc##Record> CONCAT_GET(_name)(uint8 _index) const                          \
 {                                                                                                  \
 	return _dbc[static_cast<uint32>(getValue<uint32>(static_cast<uint32>(_field - 1 + _index)))];  \
 }
@@ -72,7 +72,7 @@ const CONCAT_RECORD(_dbc)* _dispName()                                          
 
 #define FOREIGN_KEY_ID(_type, _dbc, _dispName)        \
 _type __##_dispName;                                  \
-const _dbc##Record* _dispName()                       \
+const std::shared_ptr<_dbc##Record> _dispName()       \
 {                                                     \
     return _dbc[static_cast<uint32>(__##_dispName)];  \
 }
@@ -245,7 +245,7 @@ public:
 	bool Open();
 
 	// Get data by id
-	RECORD_T* operator[](uint32 _id);
+	std::shared_ptr<RECORD_T> operator[](uint32 _id);
 
 	// Iterator that iterates over records
 	class Iterator
@@ -285,13 +285,13 @@ public:
 		return Iterator(this, stringTable);
 	}
 
-	const std::multimap<uint32, RECORD_T*>& Records() const;
+	const std::multimap<uint32, std::shared_ptr<RECORD_T>>& Records() const;
 
 protected:
-	std::multimap<uint32, RECORD_T*> records;
+	std::multimap<uint32, std::shared_ptr<RECORD_T>> m_Records;
 
 private:
-	std::string m_FileName;
+	std::string            m_FileName;
 	std::shared_ptr<IFile> m_File;
 };
 

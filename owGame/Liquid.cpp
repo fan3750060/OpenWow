@@ -53,7 +53,7 @@ struct SLiquidFlag
 #include __PACK_END
 #pragma endregion
 
-void Liquid::createLayers(const DBC_LiquidTypeRecord* _type, std::shared_ptr<IFile> f)
+void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std::shared_ptr<IFile> f)
 {
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));

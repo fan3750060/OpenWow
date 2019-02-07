@@ -42,7 +42,7 @@ int main(int argumentCount, char* arguments[])
 		app.Load();
 		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
 		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>());
-		app.SetGameState(GameStatesNames::GAME_STATE_CLIENT);
+		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
 		app.Run();
 	}
 

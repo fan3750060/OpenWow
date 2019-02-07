@@ -113,7 +113,7 @@ void CItem_VisualData::Render3D()
 
 void CItem_VisualData::InitObjectComponents()
 {
-	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
+	std::shared_ptr<const DBC_ItemDisplayInfoRecord> displayInfo = DBC_ItemDisplayInfo[DisplayId];
 	assert1(displayInfo != nullptr);
 
 	for (uint32 i = 0; i < ItemObjectComponents[InventoryType].count; i++)
@@ -156,12 +156,12 @@ void CItem_VisualData::InitObjectComponents()
 
 
 		// Visual effect
-		const DBC_ItemVisualsRecord* visuals = /*displayInfo->Get_ItemVisualID()*/DBC_ItemVisuals[EnchantAuraID];
+		std::shared_ptr<const DBC_ItemVisualsRecord> visuals = /*displayInfo->Get_ItemVisualID()*/DBC_ItemVisuals[EnchantAuraID];
 		if (visuals != nullptr)
 		{
 			for (uint32 j = 0; j < DBC_ItemVisuals_VisualEffect_Count; j++)
 			{
-				const DBC_ItemVisualEffectsRecord* visEffect = visuals->Get_VisualEffect(j);
+				std::shared_ptr<const DBC_ItemVisualEffectsRecord> visEffect = visuals->Get_VisualEffect(j);
 				if (visEffect == nullptr)
 				{
 					continue;
@@ -201,7 +201,7 @@ void CItem_VisualData::InitObjectComponents()
 
 void CItem_VisualData::InitGeosetComponents()
 {
-	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
+	std::shared_ptr<const DBC_ItemDisplayInfoRecord> displayInfo = DBC_ItemDisplayInfo[DisplayId];
 	assert1(displayInfo != nullptr);
 
 	for (uint32 j = 0; j < 3; j++)
@@ -218,7 +218,7 @@ void CItem_VisualData::InitGeosetComponents()
 
 void CItem_VisualData::InitTextureComponents()
 {
-	DBC_ItemDisplayInfoRecord* displayInfo = DBC_ItemDisplayInfo[DisplayId];
+	std::shared_ptr<DBC_ItemDisplayInfoRecord> displayInfo = DBC_ItemDisplayInfo[DisplayId];
 	assert1(displayInfo != nullptr);
 
 	for (uint32 i = 0; i < DBC_CharComponent_Sections::ITEMS_COUNT; i++)

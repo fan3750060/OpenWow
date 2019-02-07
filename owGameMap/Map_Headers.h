@@ -47,7 +47,7 @@ struct ADT_MCNK_Header
 		uint32 : 16;
 	} flags;
 
-	const DBC_LiquidTypeRecord* getLiquidType()
+	std::shared_ptr<const DBC_LiquidTypeRecord> getLiquidType()
 	{
 		if (flags.lq_river)
 		{

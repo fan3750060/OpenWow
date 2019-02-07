@@ -19,10 +19,10 @@ Creature::Creature() :
 
 void Creature::InitFromDisplayInfo(uint32 _id)
 {
-	DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[_id];
+	std::shared_ptr<const DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[_id];
 	assert1(rec != nullptr);
 
-	const DBC_CreatureDisplayInfoExtraRecord* humanoidRecExtra = rec->Get_HumanoidData();
+	std::shared_ptr<const DBC_CreatureDisplayInfoExtraRecord> humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra == nullptr);
 
 	// 1. Load model
@@ -92,9 +92,9 @@ bool Creature::isMeshEnabled(uint32 _index) const
 	return false;
 }
 
-void Creature::CreateCreatureModel(const DBC_CreatureDisplayInfoRecord* _record)
+void Creature::CreateCreatureModel(std::shared_ptr<const DBC_CreatureDisplayInfoRecord> _record)
 {
-	const DBC_CreatureModelDataRecord* modelRec = _record->Get_Model();
+	std::shared_ptr<const DBC_CreatureModelDataRecord> modelRec = _record->Get_Model();
 	assert1(modelRec != nullptr);
 
 	std::string modelName = modelRec->Get_ModelPath();

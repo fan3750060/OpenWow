@@ -41,7 +41,7 @@ void CADT_Liquid::CreateFromTerrainMH2O(std::shared_ptr<IFile> f, MH2O_Header* _
 		//assert1(mh2o_instance->minHeightLevel - mh2o_instance->maxHeightLevel > 0.001f);
 
 		// Init liquid
-		const DBC_LiquidTypeRecord* liquidType = mh2o_instance->liquidType();
+		std::shared_ptr<const DBC_LiquidTypeRecord> liquidType = mh2o_instance->liquidType();
 		assert1(liquidType != nullptr);
 		
 		std::shared_ptr<Liquid_Layer> waterLayer = std::make_shared<Liquid_Layer>(_RenderDevice->CreateMesh());

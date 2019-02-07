@@ -210,7 +210,7 @@ void CGameState_World::Load3D()
 			while (true)
 			{
 				int random = Random::GenerateMax(32000);
-				DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
+				std::shared_ptr<const DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[random];
 				if (rec == nullptr)	continue;
 
 				if (rec->Get_HumanoidData() != nullptr) continue;
