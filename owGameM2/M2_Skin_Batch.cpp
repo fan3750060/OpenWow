@@ -30,6 +30,8 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 
 	// TODO: Shit code. Delete me later
 	const SceneNode3D* sceneNode = dynamic_cast<const SceneNode3D*>(render3DEventArgs.Node);
+	assert1(sceneNode != nullptr);
+
 	const CM2_Base_Instance* sceneNodeAsM2Instance = dynamic_cast<const CM2_Base_Instance*>(sceneNode);
 	assert1(sceneNodeAsM2Instance != nullptr);
 
@@ -47,8 +49,6 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 	m_TestMaterial->SetBlendMode(static_cast<uint32>(m_Material->getBlendMode()));
 
 	std::shared_ptr<CM2_Comp_Skeleton> skeleton = m_ParentM2.lock()->getSkeleton();
-
-	//m_TestMaterial->SetAnimated(false);
 
 	bool isAnimated = skeleton->hasBones() && m_ParentM2.lock()->m_IsAnimated;
 	m_TestMaterial->SetAnimated(isAnimated ? 1 : 0);

@@ -10,7 +10,7 @@ CLoader::CLoader()
 {
 	for (int i = 0; i < c_PoolSize; i++)
 	{
-		std::future<void> futureObj = m_ThreadPromise[i].get_future();
+		std::future<void> futureObj = m_Thread_Loader_Promise_Exiter[i].get_future();
 		m_Thread_Loader[i] = std::thread(&CLoader::LoaderThread, this, std::move(futureObj));
 		m_Thread_Loader[i].detach();
 	}
@@ -24,7 +24,7 @@ CLoader::~CLoader()
 {
 	for (int i = 0; i < c_PoolSize; i++)
 	{
-		m_ThreadPromise[i].set_value();
+		m_Thread_Loader_Promise_Exiter[i].set_value();
 		if (m_Thread_Loader[i].joinable())
 			m_Thread_Loader[i].join();
 	}
@@ -55,6 +55,8 @@ void CLoader::LoadAll()
 
 void CLoader::AddToDeleteQueue(std::shared_ptr<ILoadable> _item)
 {
+
+
 	m_QueueDelete.add(_item);
 }
 
@@ -77,9 +79,9 @@ void CLoader::SetCamera(std::shared_ptr<Camera> _camera)
 	m_Camera = _camera;
 }
 
-void CLoader::LoaderThread(std::future<void> futureObj)
+void CLoader::LoaderThread(std::future<void> _promiseExiter)
 {
-	while (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
+	while (_promiseExiter.wait_for(std::chrono::milliseconds(0)) == std::future_status::timeout)
 	{
 		if (m_QueueLoad.empty())
 		{
@@ -91,14 +93,19 @@ void CLoader::LoaderThread(std::future<void> futureObj)
 		if (!m_QueueLoad.next(objectToLoad))
 			continue;
 
+		if (objectToLoad->isLoadingBegin())
+			continue;
+
+		objectToLoad->setLoadingBegin();
+		//objectToLoad->PreLoad();
 		objectToLoad->Load();
 		objectToLoad->setLoaded();
 	}
 }
 
-void CLoader::SorterThread(std::future<void> futureObj)
+void CLoader::SorterThread(std::future<void> _promiseExiter)
 {
-	while (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
+	while (_promiseExiter.wait_for(std::chrono::milliseconds(0)) == std::future_status::timeout)
 	{
 		if (m_QueueLoad.empty())
 		{
@@ -110,29 +117,35 @@ void CLoader::SorterThread(std::future<void> futureObj)
 		m_QueueLoad.getList().sort(sortFunctor(m_Camera));
 		m_QueueLoad.unlock();
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 }
 
 bool CLoader::sortFunctor::operator()(const std::shared_ptr<ILoadable>& first, const std::shared_ptr<ILoadable>& second)
 {
+	std::shared_ptr<SceneNode3D> node3DFirst = std::dynamic_pointer_cast<SceneNode3D, ILoadable>(first);
+	std::shared_ptr<SceneNode3D> node3DSecond = std::dynamic_pointer_cast<SceneNode3D, ILoadable>(second);
+
+	if (camera)
+	{
+		bool cullFirst = !camera->GetFrustum().cullSphere(node3DFirst->GetTranslation(), 15.0f);
+		bool cullSecond = !camera->GetFrustum().cullSphere(node3DSecond->GetTranslation(), 15.0f);
+
+		if (cullFirst && !cullSecond)
+			return true;
+
+		if (!cullFirst && cullSecond)
+			return false;
+
+		if (!cullFirst && !cullSecond)
+			return false;
+	}
+
+
 	if (first->getPriority() == second->getPriority())
 	{
 		if (camera)
 		{
-			std::shared_ptr<SceneNode3D> node3DFirst = std::dynamic_pointer_cast<SceneNode3D, ILoadable>(first);
-			std::shared_ptr<SceneNode3D> node3DSecond = std::dynamic_pointer_cast<SceneNode3D, ILoadable>(second);
-
-			
-			bool cullFirst = !camera->GetFrustum().cullSphere(node3DFirst->GetTranslation(), 1.0f);
-			bool cullSecond = !camera->GetFrustum().cullSphere(node3DSecond->GetTranslation(), 1.0f);
-			
-			if (cullFirst && !cullSecond)
-				return true;
-
-			if (!cullFirst && cullSecond)
-				return false;
-
 			float distToCamera2DFirst = glm::length(Fix_X0Z(camera->GetTranslation()) - node3DFirst->GetTranslation());
 			float distToCamera2DSecond = glm::length(Fix_X0Z(camera->GetTranslation()) - node3DSecond->GetTranslation());
 			return distToCamera2DFirst < distToCamera2DSecond;

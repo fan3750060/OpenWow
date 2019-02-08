@@ -32,25 +32,8 @@ std::shared_ptr<IFile> CFilesManager::Open(cstring _fileName)
 
 	if (file != nullptr)
 	{
-		Lock();
 		file->Open();
-		Unlock();
 	}
 
 	return file;
-}
-
-void CFilesManager::Lock()
-{
-	m_Lock.lock();
-}
-
-void CFilesManager::Unlock()
-{
-	m_Lock.unlock();
-}
-
-std::mutex& CFilesManager::Guard()
-{
-	return m_Lock;
 }

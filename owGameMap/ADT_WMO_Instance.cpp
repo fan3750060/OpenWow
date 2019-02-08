@@ -14,6 +14,7 @@ ADT_WMO_Instance::ADT_WMO_Instance(std::string _wmoName, ADT_MODF& _placementInf
 	{
 		// Translate
 		SetTranslate(_placementInfo.position);
+
 		// Rotate
 		vec3 rotate = glm::radians(_placementInfo.rotation);
 		rotate.x = -rotate.x;

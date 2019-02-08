@@ -22,7 +22,7 @@ M2::M2(cstring name) :
 	// Vertices
 	m_IsContainGeom(false)
 {
-	Log::Info("M2[%s]: Loading...", m_FileName.c_str());
+	//Log::Info("M2[%s]: Loading...", m_FileName.c_str());
 }
 
 void M2::CreateInsances(std::weak_ptr<SceneNode3D> _parent)

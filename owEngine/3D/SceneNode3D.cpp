@@ -12,6 +12,7 @@ SceneNode3D::SceneNode3D(cmat4 localTransform)
 	, m_RotateQuat(quat())
 	, m_IsRotateQuat(false)
 	, m_Scale(1.0f, 1.0f, 1.0f)
+	, m_IsLoadingBegin(false)
 	, m_IsLoaded(false)
 {
 	m_InverseLocalTransform = glm::inverse(m_LocalTransform);
@@ -342,6 +343,16 @@ bool SceneNode3D::Load()
 bool SceneNode3D::Delete()
 {
 	return false;
+}
+
+void SceneNode3D::setLoadingBegin()
+{
+	m_IsLoadingBegin = true;
+}
+
+bool SceneNode3D::isLoadingBegin() const
+{
+	return m_IsLoadingBegin;
 }
 
 void SceneNode3D::setLoaded()

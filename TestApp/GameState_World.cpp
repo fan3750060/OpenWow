@@ -156,7 +156,8 @@ void CGameState_World::Load3D()
 	m_MapController->EnterMap(x, y);
 
 	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-
+	m_CameraController->GetCamera()->SetTranslate(vec3(20873, 229, 16601));
+	m_CameraController->GetCamera()->SetEulerAngles(vec3(-17, -36, 3));
 
 	const uint32 cnt = 10;
 	/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];

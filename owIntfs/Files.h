@@ -39,10 +39,6 @@ struct
 	virtual ~IFilesManager() {}
 
 	virtual std::shared_ptr<IFile> Open(cstring _fileName) = 0;
-
-	virtual void Lock() = 0;
-	virtual void Unlock() = 0;
-	virtual std::mutex& Guard() = 0;
 };
 
 // FORWARD BEGIN

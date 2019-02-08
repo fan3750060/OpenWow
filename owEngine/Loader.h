@@ -14,7 +14,7 @@ public:
 
 	void SetCamera(std::shared_ptr<Camera> _camera);
 
-	void LoaderThread(std::future<void> futureObj);
+	void LoaderThread(std::future<void> _promiseExiter);
 	void SorterThread(std::future<void> futureObj);
 
 	struct sortFunctor 
@@ -29,13 +29,13 @@ public:
 	};
 
 private:
-	const static uint32                    c_PoolSize = 16;
+	const static uint32                    c_PoolSize = 8;
 
 private:
 	LockedQueue<std::shared_ptr<ILoadable>> m_QueueLoad;
 	LockedQueue<std::shared_ptr<ILoadable>> m_QueueDelete;
 
-	std::promise<void>					   m_ThreadPromise[c_PoolSize];
+	std::promise<void>					   m_Thread_Loader_Promise_Exiter[c_PoolSize];
 	std::thread                            m_Thread_Loader[c_PoolSize];
 
 	std::promise<void>					   m_Thread_Sorter_Promise;

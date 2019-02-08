@@ -118,8 +118,12 @@ public:
 	virtual bool PreLoad() override;
 	virtual bool Load() override;
 	virtual bool Delete() override;
+
+	void setLoadingBegin() override;
+	bool isLoadingBegin() const override;
 	void setLoaded() override;
 	bool isLoaded() const override;
+
 	virtual uint32 getPriority() const override;
 
 protected:
@@ -157,5 +161,6 @@ private:
 	std::mutex                m_MeshMutex;
 
 private:
+	std::atomic<bool>         m_IsLoadingBegin;
 	std::atomic<bool>         m_IsLoaded;
 };
