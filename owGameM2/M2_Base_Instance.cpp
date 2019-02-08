@@ -96,17 +96,6 @@ bool CM2_Base_Instance::Delete()
 	return false;
 }
 
-void CM2_Base_Instance::setLoaded()
-{
-	m_IsLoaded = true;
-}
-
-bool CM2_Base_Instance::isLoaded() const
-{
-	return m_IsLoaded;
-}
-
-
 
 //
 //	m_M2->update(_time, _dTime);

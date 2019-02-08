@@ -5,7 +5,7 @@
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
 
-class CWMO_Base_Instance : public SceneNode3D, public ILoadable
+class CWMO_Base_Instance : public SceneNode3D
 {
 public:
 	CWMO_Base_Instance(std::string _wmoName);
@@ -28,8 +28,7 @@ public:
 	// ILoadable
 	bool Load() override;
 	bool Delete() override;
-	void setLoaded() override;
-	bool isLoaded() const override;
+	uint32 getPriority() const override { return 2; };
 
 	// SceneNode3D
 	void UpdateCamera(const Camera* camera) override;
@@ -44,7 +43,4 @@ protected:
 	
 	std::vector<std::shared_ptr<CWMO_Group_Instance>>  m_GroupInstances;
 	std::vector<std::shared_ptr<CWMO_Group_Instance>>  m_OutdoorGroupInstances;
-
-private: // ILoadable
-	std::atomic<bool>					m_IsLoaded;
 };

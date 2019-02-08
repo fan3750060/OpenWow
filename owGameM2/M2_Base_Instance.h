@@ -2,7 +2,7 @@
 
 #include "M2.h"
 
-class CM2_Base_Instance : public SceneNode3D, public ILoadable
+class CM2_Base_Instance : public SceneNode3D
 {
 public:
 	CM2_Base_Instance(std::string _m2Name);
@@ -35,8 +35,7 @@ public:
 	// ILoadable
 	bool Load() override;
 	bool Delete() override;
-	void setLoaded() override;
-	bool isLoaded() const override;
+	uint32 getPriority() const override { return 3; };
 
 	// SceneNode3D
 	virtual bool Accept(IVisitor& visitor) override;
@@ -65,7 +64,4 @@ private:
 	std::string                                     m_M2Name;
 	std::shared_ptr<const CM2_Part_Attachment>      m_Attached;
 	const CGroupQuality&							m_QualitySettings;
-
-private: // ILoadable
-	std::atomic<bool>								m_IsLoaded;
 };

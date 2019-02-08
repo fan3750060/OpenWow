@@ -27,7 +27,7 @@ public:
 	{
 		lock();
 
-		_queue.push(item);
+		_queue.push_back(item);
 
 		unlock();
 	}
@@ -43,7 +43,7 @@ public:
 		}
 
 		result = _queue.front();
-		_queue.pop();
+		_queue.pop_front();
 
 		return true;
 	}
@@ -75,7 +75,7 @@ public:
 	{
 		std::lock_guard<std::mutex> lock(m_Lock);
 
-		_queue.pop();
+		_queue.pop_front();
 	}
 
 	bool empty()
@@ -84,7 +84,12 @@ public:
 		return _queue.empty();
 	}
 
+	std::list<T>& getList()
+	{
+		return _queue;
+	}
+
 private:
 	std::mutex m_Lock;
-	std::queue<T> _queue;
+	std::list<T> _queue;
 };

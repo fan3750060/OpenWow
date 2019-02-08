@@ -4,8 +4,7 @@
 #include "WMO_Base_Instance.h"
 
 CWMO_Base_Instance::CWMO_Base_Instance(std::string _wmoName) :
-	m_WMOName(_wmoName),
-	m_IsLoaded(false)
+	m_WMOName(_wmoName)
 {}
 
 CWMO_Base_Instance::~CWMO_Base_Instance()
@@ -59,15 +58,7 @@ bool CWMO_Base_Instance::Delete()
 	return false;
 }
 
-void CWMO_Base_Instance::setLoaded()
-{
-	m_IsLoaded = true;
-}
 
-bool CWMO_Base_Instance::isLoaded() const
-{
-	return m_IsLoaded;
-}
 
 void CWMO_Base_Instance::UpdateCamera(const Camera* camera)
 {

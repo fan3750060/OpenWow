@@ -46,6 +46,8 @@ SkyManager::SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecor
 	}
 
 	InitBuffer();
+
+	setLoaded();
 }
 
 SkyManager::~SkyManager()

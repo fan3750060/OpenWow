@@ -12,6 +12,9 @@ public:
 
 	void setPortalVisibility(bool _visibility) { m_PortalVis = _visibility; }
 		
+	// ILoadable
+	uint32 getPriority() const override { return CM2_Base_Instance::getPriority() + 1; };
+
 	// SceneNode3D
 	bool Accept(IVisitor& visitor) override;
 

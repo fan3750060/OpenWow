@@ -85,6 +85,7 @@ void CGameState_World::OnPreRender(Render3DEventArgs& e)
 void CGameState_World::OnRender(Render3DEventArgs& e)
 {
 	e.Camera = m_CameraController->GetCameraConst().operator->(); // TODO: Shit code. Refactor me.
+	Application::Get().GetLoader()->SetCamera(m_CameraController->GetCamera());
 
 	m_3DTechnique.Render(e);
 }

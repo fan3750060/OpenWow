@@ -7,7 +7,7 @@ class ADT;
 class MapController;
 // FORWARD END
 
-class ADT_MCNK : public SceneNode3D, public ILoadable
+class ADT_MCNK : public SceneNode3D
 {
 public:
 	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, cstring _fileName, const ADT_MCIN& _mcin);
@@ -18,13 +18,14 @@ public:
 	bool Accept(IVisitor& visitor) override;
 
 	// ILoadable
+	bool PreLoad() override;
 	bool Load() override;
 	bool Delete() override;
-	void setLoaded() override;
-	bool isLoaded() const override;
+	uint32 getPriority() const override { return 1; };
 
 public:
 	std::string m_FileName;
+	std::shared_ptr<IFile> m_File;
 	const ADT_MCIN mcin;
 	ADT_MCNK_Header header;
 
@@ -39,9 +40,6 @@ public:
 	// Qulity
 	std::shared_ptr<IMesh> __geomHigh;
 	std::shared_ptr<IMesh> __geomDefault;
-
-private: // ILoadable
-	std::atomic<bool>					m_IsLoaded;
 
 private: // PARENT
 	const std::weak_ptr<MapController>	m_MapController;

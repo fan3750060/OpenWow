@@ -12,6 +12,7 @@ SceneNode3D::SceneNode3D(cmat4 localTransform)
 	, m_RotateQuat(quat())
 	, m_IsRotateQuat(false)
 	, m_Scale(1.0f, 1.0f, 1.0f)
+	, m_IsLoaded(false)
 {
 	m_InverseLocalTransform = glm::inverse(m_LocalTransform);
 }
@@ -326,4 +327,34 @@ bool SceneNode3D::checkDistance(cvec3 _camPos, float _distance) const
 	// Check distance to camera
 	float distToCamera = glm::length(_camPos - GetBounds().getCenter()) - GetBounds().getRadius();
 	return distToCamera < _distance;
+}
+
+bool SceneNode3D::PreLoad()
+{
+	return false;
+}
+
+bool SceneNode3D::Load()
+{
+	return false;
+}
+
+bool SceneNode3D::Delete()
+{
+	return false;
+}
+
+void SceneNode3D::setLoaded()
+{
+	m_IsLoaded = true;
+}
+
+bool SceneNode3D::isLoaded() const
+{
+	return m_IsLoaded;
+}
+
+uint32 SceneNode3D::getPriority() const
+{
+	return 0;
 }

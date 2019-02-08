@@ -32,6 +32,8 @@ MapController::MapController() :
 
 	dir = mProvider->getMinimap("Kalimdor");
 	dir->Load();*/
+
+	setLoaded();
 }
 
 MapController::~MapController()

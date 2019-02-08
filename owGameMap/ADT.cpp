@@ -13,7 +13,6 @@ ADT::ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _inte
 	m_MapController(std::dynamic_pointer_cast<MapController>(_mapController.lock())),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
-	m_IsLoaded(false),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
 	// Scene node params
@@ -275,7 +274,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	for (auto& it : m_WMOsPlacementInfo)
+	/*for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(m_WMOsNames[it.nameIndex], it);
 		inst->SetParent(shared_from_this());
@@ -300,7 +299,7 @@ bool ADT::Load()
 		//BoundingBox bbox = GetBounds();
 		//bbox.makeUnion(inst->GetBounds());
 		//SetBounds(bbox);
-	}
+	}*/
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
@@ -311,14 +310,4 @@ bool ADT::Load()
 bool ADT::Delete()
 {
 	return true;
-}
-
-void ADT::setLoaded()
-{
-	m_IsLoaded = true;
-}
-
-bool ADT::isLoaded() const
-{
-	return m_IsLoaded;
 }

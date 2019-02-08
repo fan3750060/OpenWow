@@ -5,7 +5,7 @@ class Camera;
 class Render3DEventArgs;
 class IVisitor;
 
-class SceneNode3D : public Object, public std::enable_shared_from_this<SceneNode3D>
+class SceneNode3D : public Object, public ILoadable, public std::enable_shared_from_this<SceneNode3D>
 {
 	typedef Object base;
 public:
@@ -114,6 +114,14 @@ public:
 	bool checkDistance2D(cvec3 _camPos, float _distance) const;
 	bool checkDistance(cvec3 _camPos, float _distance) const;
 
+	// ILoadableObject
+	virtual bool PreLoad() override;
+	virtual bool Load() override;
+	virtual bool Delete() override;
+	void setLoaded() override;
+	bool isLoaded() const override;
+	virtual uint32 getPriority() const override;
+
 protected:
 	virtual mat4 GetParentWorldTransform() const;
 
@@ -147,4 +155,7 @@ private:
 	std::mutex                m_ChildMutex;
 	MeshList                  m_Meshes;
 	std::mutex                m_MeshMutex;
+
+private:
+	std::atomic<bool>         m_IsLoaded;
 };

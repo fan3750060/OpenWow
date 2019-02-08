@@ -10,7 +10,7 @@
 class MapController;
 // FORWARD END
 
-class ADT : public SceneNode3D, public ILoadable
+class ADT : public SceneNode3D
 {
 public:
 	ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _intexZ);
@@ -33,8 +33,7 @@ public:
 	// ILoadableObject
 	bool Load() override;
 	bool Delete() override;
-	void setLoaded() override;
-	bool isLoaded() const override;
+	uint32 getPriority() const override { return 0; };
 
 public:
 	const int										m_IndexX, m_IndexZ;
@@ -48,9 +47,6 @@ public:
 
 	std::vector<std::shared_ptr<Liquid_Instance>>	m_LiquidsInstances;
 	std::vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
-
-private:
-	std::atomic<bool>								m_IsLoaded;
 
 private: // PARENT
 	const std::weak_ptr<MapController>				m_MapController;
