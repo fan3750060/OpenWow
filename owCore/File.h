@@ -16,11 +16,11 @@ public:
 	 std::string Path_Name() const override { return std::string(m_Path + m_Name); }
 
 	 // IByteBuffer
-	 uint64_t getSize() const override 
+	 size_t getSize() const override
 	 { 
 		 return m_ByteBuffer.getSize(); 
 	 }
-	 uint64_t getPos() const override 
+	 size_t getPos() const override
 	 { 
 		 return m_ByteBuffer.getPos(); 
 	 }
@@ -36,11 +36,11 @@ public:
 	 { 
 		 return m_ByteBuffer.isEof(); 
 	 }
-	 void seek(uint64_t _bufferOffsetAbsolute) override 
+	 void seek(size_t _bufferOffsetAbsolute) override
 	 { 
 		 m_ByteBuffer.seek(_bufferOffsetAbsolute); 
 	 }
-	 void seekRelative(uint64_t _bufferOffsetRelative) override 
+	 void seekRelative(size_t _bufferOffsetRelative) override
 	 { 
 		 m_ByteBuffer.seekRelative(_bufferOffsetRelative); 
 	 }
@@ -48,7 +48,7 @@ public:
 	 { 
 		 return m_ByteBuffer.readLine(_string);
 	 }
-	 void readBytes(void* _destination, uint64_t _size) override 
+	 void readBytes(void* _destination, size_t _size) override
 	 { 
 		 m_ByteBuffer.readBytes(_destination, _size); 
 	 }

@@ -4,16 +4,16 @@ struct
 	__declspec(novtable)
 	IByteBuffer
 {
-	virtual uint64 getSize() const = 0;
-	virtual uint64 getPos() const = 0;
+	virtual size_t getSize() const = 0;
+	virtual size_t getPos() const = 0;
 	virtual const uint8* getData() const = 0;
 	virtual const uint8* getDataFromCurrent() const = 0;
 	virtual bool isEof() const = 0;
 
-	virtual void seek(uint64 _bufferOffsetAbsolute) = 0;
-	virtual void seekRelative(uint64 _bufferOffsetRelative) = 0;
+	virtual void seek(size_t _bufferOffsetAbsolute) = 0;
+	virtual void seekRelative(size_t _bufferOffsetRelative) = 0;
 	virtual bool readLine(std::string* _string) = 0;
-	virtual void readBytes(void* _destination, uint64 _size = 1) = 0;
+	virtual void readBytes(void* _destination, size_t _size = 1) = 0;
 	virtual void readString(std::string* _string) = 0;
 };
 

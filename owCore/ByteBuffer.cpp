@@ -33,7 +33,7 @@ ByteBuffer::ByteBuffer(ByteBuffer&& _other)
 	m_CurrentPosition = _other.m_CurrentPosition;
 }
 
-ByteBuffer::ByteBuffer(uint64 _size) :
+ByteBuffer::ByteBuffer(size_t _size) :
 	m_IsFilled(false),
 	m_IsEOF(true),
 	m_IsAllocated(false),
@@ -77,7 +77,7 @@ ByteBuffer& ByteBuffer::operator=(ByteBuffer&& _other)
 
 //--
 
-void ByteBuffer::Allocate(uint64 _size)
+void ByteBuffer::Allocate(size_t _size)
 {
 	m_IsEOF = true;
 
@@ -102,7 +102,7 @@ void ByteBuffer::SetFilled()
 	m_IsFilled = true;
 }
 
-void ByteBuffer::CopyData(const uint8* _data, uint64 _size)
+void ByteBuffer::CopyData(const uint8* _data, size_t _size)
 {
 	if (!m_IsAllocated)
 	{
@@ -126,14 +126,14 @@ void ByteBuffer::CopyData(const uint8* _data, uint64 _size)
 
 //--
 
-void ByteBuffer::seek(uint64 _bufferOffsetAbsolute)
+void ByteBuffer::seek(size_t _bufferOffsetAbsolute)
 {
 	assert1(_bufferOffsetAbsolute <= getSize());
 	m_CurrentPosition = _bufferOffsetAbsolute;
 	m_IsEOF = m_CurrentPosition >= getSize();
 }
 
-void ByteBuffer::seekRelative(uint64 _bufferOffsetRelative)
+void ByteBuffer::seekRelative(size_t _bufferOffsetRelative)
 {
 	assert1(m_CurrentPosition + _bufferOffsetRelative <= getSize());
 	m_CurrentPosition += _bufferOffsetRelative;
@@ -176,7 +176,7 @@ bool ByteBuffer::readLine(std::string* _string)
 	return true;
 }
 
-void ByteBuffer::readBytes(void* _destination, uint64 _size)
+void ByteBuffer::readBytes(void* _destination, size_t _size)
 {
 	if (m_IsEOF)
 	{
@@ -219,11 +219,11 @@ void ByteBuffer::readString(std::string* _string)
 
 //-- WRITE
 
-void ByteBuffer::Append(const uint8* _data, uint64 _size)
+void ByteBuffer::Append(const uint8* _data, size_t _size)
 {
 	assert1(_data != nullptr);
 
-	for (uint64 i = 0; i < _size; i++)
+	for (size_t i = 0; i < _size; i++)
 	{
 		uint64 pos = m_CurrentPosition + i;
 		m_Data.push_back(_data[i]);
