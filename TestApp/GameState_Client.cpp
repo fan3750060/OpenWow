@@ -38,7 +38,7 @@ void CGameState_Client::S_CharEnum(ByteBuffer& _buff)
 	bb << (uint64)charTemplate.GUID;
 	m_authWorldController->getWorldSocket()->SendData(CMSG_PLAYER_LOGIN, bb);
 
-	m_CameraController->GetCamera()->SetTranslate(charPosition);
+	/*m_CameraController->GetCamera()->SetTranslate(charPosition);
 
 	_RenderDevice->Lock();
 
@@ -54,7 +54,7 @@ void CGameState_Client::S_CharEnum(ByteBuffer& _buff)
 	m_MapController->MapPostLoad();
 	m_MapController->EnterMap(charPosition);
 
-	_RenderDevice->Unlock();
+	_RenderDevice->Unlock();*/
 
 	//Orc
 	/*ByteBuffer bb;
@@ -229,8 +229,8 @@ void CGameState_Client::Load3D()
 	inst->GetLocalTransform();*/
 
 	// Map
-	m_MapController = std::make_shared<MapController>();
-	m_MapController->SetParent(m_3DScene->GetRootNode());
+	//m_MapController = std::make_shared<MapController>();
+	//m_MapController->SetParent(m_3DScene->GetRootNode());
 	//m_MapController->MapPreLoad(*DBC_Map[1]);
 	//m_MapController->MapLoad();
 	//m_MapController->MapPostLoad();

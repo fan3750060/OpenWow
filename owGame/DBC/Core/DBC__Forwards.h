@@ -54,4 +54,5 @@ DBC_DEFINE(DBC_LightSkybox)
 
 // Liquid
 DBC_DEFINE(DBC_LiquidMaterial)
+DBC_DEFINE(DBC_LiquidObject)
 DBC_DEFINE(DBC_LiquidType)

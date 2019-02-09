@@ -8,6 +8,7 @@
 
 CLoader::CLoader()
 {
+#ifndef CLOADER_Disable
 	for (int i = 0; i < c_PoolSize; i++)
 	{
 		std::future<void> futureObj = m_Thread_Loader_Promise_Exiter[i].get_future();
@@ -18,10 +19,12 @@ CLoader::CLoader()
 	std::future<void> futureObj = m_Thread_Sorter_Promise.get_future();
 	m_Thread_Sorter = std::thread(&CLoader::SorterThread, this, std::move(futureObj));
 	m_Thread_Sorter.detach();
+#endif
 }
 
 CLoader::~CLoader()
 {
+#ifndef CLOADER_Disable
 	for (int i = 0; i < c_PoolSize; i++)
 	{
 		m_Thread_Loader_Promise_Exiter[i].set_value();
@@ -32,12 +35,18 @@ CLoader::~CLoader()
 	m_Thread_Sorter_Promise.set_value();
 	if (m_Thread_Sorter.joinable())
 		m_Thread_Sorter.join();
+#endif
 }
 
 void CLoader::AddToLoadQueue(std::shared_ptr<ILoadable> _item)
 {
 	_item->PreLoad();
+#ifdef CLOADER_Disable
+	_item->Load();
+	_item->setLoaded();
+#else
 	m_QueueLoad.add(_item);
+#endif;
 }
 
 void CLoader::LoadAll()
@@ -50,26 +59,6 @@ void CLoader::LoadAll()
 		obj->setLoaded();
 
 		m_QueueLoad.pop();
-	}
-}
-
-void CLoader::AddToDeleteQueue(std::shared_ptr<ILoadable> _item)
-{
-
-
-	m_QueueDelete.add(_item);
-}
-
-void CLoader::DeleteAll()
-{
-	while (!m_QueueDelete.empty())
-	{
-		std::shared_ptr<ILoadable> obj = m_QueueDelete.peek();
-
-		obj->Delete();
-		obj.reset();
-
-		m_QueueDelete.pop();
 	}
 }
 

@@ -100,13 +100,13 @@ float4 Test(VertexShaderOutput IN)
 	float4 tex0 = DiffuseTexture0.Sample(DiffuseTexture0Sampler, IN.texCoord0);
 	float4 tex1 = DiffuseTexture1.Sample(DiffuseTexture1Sampler, IN.texCoord1);
 
-	float4 _in  = float4(1.0f, 1.0f, 1.0f, tex0.a);
+	float4 _in  = float4(0.0f, 0.0f, 0.0f, tex0.a);
 	float4 _out = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	if (Material.gColorEnable)
 	{
-		_in.rgb = Material.gColor.rgb;
-		_in.a *= Material.gColor.a;
+		//_in.rgb = Material.gColor.rgb;
+		//_in.a *= Material.gColor.a;
 	}
 
 	//if (Material.gTextureWeightEnable)
@@ -212,8 +212,9 @@ float4 Test(VertexShaderOutput IN)
 	}
 	else if (Material.gShader == 16)
 	{
-		//Combiners_Mod2x_Add	2	// TODO	// TODO
-		_out = float4(1.0f, 0.0f, 0.0f, 1.0f);
+		//Combiners_Mod2x_Add	2
+		_out.rgb = (_in.rgb * tex0.rgb) * 2.0 + tex1.rgb;	
+		_out.a = _in.a * tex0.a * 2.0 + tex1.a;
 	}
 	else if (Material.gShader == 17)
 	{

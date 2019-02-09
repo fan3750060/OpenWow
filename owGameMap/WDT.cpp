@@ -18,6 +18,8 @@ WDT::~WDT()
 
 void WDT::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 {
+	return;
+
 	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
 	if (!m_GlobalWMOName.empty())
 	{

@@ -81,15 +81,15 @@ void CM2_Builder::Step1Header()
 #endif
 
 
-		// 3 Unique name
-		if (m_Header.name.size > 0)
+	// 3 Unique name
+	if (m_Header.name.size > 0)
+	{
+		m_M2->m_UniqueName = "";
+		for (uint32 i = 0; i < m_Header.name.size; i++)
 		{
-			m_M2->m_UniqueName = "";
-			for (uint32 i = 0; i < m_Header.name.size; i++)
-			{
-				m_M2->m_UniqueName += ((char*)(m_F->getData() + m_Header.name.offset))[i];
-			}
+			m_M2->m_UniqueName += ((char*)(m_F->getData() + m_Header.name.offset))[i];
 		}
+	}
 
 	// Bounds
 	m_M2->m_Bounds.set(m_Header.bounding_box.min, m_Header.bounding_box.max, true);
@@ -496,7 +496,7 @@ void CM2_Builder::Step8Skins()
 			m_ParentM2->m_Skins.push_back(skin);
 		}
 	}
-#elif (VERSION == VERSION_WotLK)
+#elif (VERSION >= VERSION_WotLK)
 	assert1(m_Header.num_skin_profiles > 0);
 	for (uint32 i = 0; i < 1/*m_Header.num_skin_profiles*/; i++)
 	{

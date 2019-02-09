@@ -40,7 +40,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		_parent.lock()->addLiquidInstance(liquid);
 	}
 
-	for (const auto& index : m_DoodadsPlacementIndexes)
+	/*for (const auto& index : m_DoodadsPlacementIndexes)
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
@@ -48,7 +48,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		inst->SetParent(_parent);
 		Application::Get().GetLoader()->AddToLoadQueue(inst);
 		_parent.lock()->addDoodadInstance(inst);
-	}
+	}*/
 }
 
 uint32 WMO_Group::to_wmo_liquid(int x)
@@ -232,7 +232,6 @@ void WMO_Group::Load()
 		}
 		else if (strcmp(fourcc, "MOCV") == 0) // Vertex colors
 		{
-			assert1(m_Header.flags.HAS_VERTEX_COLORS);
 			uint32 vertexColorsCount = size / sizeof(CBgra);
 			CBgra* vertexColors = (CBgra*)m_F->getDataFromCurrent();
 			mocv = new C4Vec[vertexColorsCount];
@@ -292,6 +291,18 @@ void WMO_Group::Load()
 
 			m_WMOLiqiud = std::make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
 			m_WMOLiqiud->CreateFromWMO(m_F, ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
+
+		}
+		else if (strcmp(fourcc, "MORB") == 0)
+		{
+
+		}
+		else if (strcmp(fourcc, "MOTA") == 0)
+		{
+
+		}
+		else if (strcmp(fourcc, "MOBS") == 0)
+		{
 
 		}
 		else

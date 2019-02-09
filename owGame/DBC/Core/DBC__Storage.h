@@ -8,7 +8,11 @@
 #include "..\\DBC_GroundEffectTexture.h"
 #include "..\\DBC_LoadingScreen.h"
 #include "..\\DBC_Material.h"
+#if (VERSION == VERSION_WotLK)
 #include "..\\DBC_Map_WotLK.h"
+#elif (VERSION == VERSION_Cata)
+#include "..\\DBC_Map_Cata.h"
+#endif
 #include "..\\DBC_TerrainType.h"
 #include "..\\DBC_WMOAreaTable.h"
 #include "..\\DBC_WorldSafeLocs.h"
@@ -16,7 +20,11 @@
 // Achivement
 
 // Area
+#if (VERSION == VERSION_WotLK)
 #include "..\\DBC_AreaTable.h"
+#elif (VERSION == VERSION_Cata)
+#include "..\\DBC_AreaTable_Cata.h"
+#endif
 
 // Character
 #include "..\\DBC_CharacterFacialHairStyles.h"
@@ -53,6 +61,7 @@
 
 // Liquid
 #include "..\\DBC_LiquidMaterial.h"
+#include "..\\DBC_LiquidObject_Cata.h"
 #include "..\\DBC_LiquidType.h"
 
 

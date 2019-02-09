@@ -210,6 +210,15 @@
     <ClInclude Include="DBC\Core\DBC__Storage.h">
       <Filter>DBC\Core</Filter>
     </ClInclude>
+    <ClInclude Include="DBC\DBC_Map_Cata.h">
+      <Filter>DBC</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC\DBC_AreaTable_Cata.h">
+      <Filter>DBC\Area</Filter>
+    </ClInclude>
+    <ClInclude Include="DBC\DBC_LiquidObject_Cata.h">
+      <Filter>DBC\Liquids</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DBC\Core\DBC__File.inl">

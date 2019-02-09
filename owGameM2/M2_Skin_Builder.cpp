@@ -96,7 +96,9 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, skinSection->getMesh());
 
-		batch->newShader = GetPixel(it);
+		batch->newShader = it.shader_id;//GetPixel(it);
+		Log::Info("SHADER is %d", it.shader_id);
+		batch->newShader = 0;
 
 		// Geometry data
 		batch->m_PriorityPlan = it.priorityPlane;
@@ -120,7 +122,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 		// Texture unit
 		if (it.texture_CoordIndex != -1)
 		{
-			batch->m_TextureUnit = materials->m_TexturesUnitLookup[it.texture_CoordIndex];
+			//batch->m_TextureUnit = materials->m_TexturesUnitLookup[it.texture_CoordIndex];
 		}
 
 		// Texture weight

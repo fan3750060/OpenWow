@@ -30,6 +30,7 @@ struct ADT_TextureInfo
 	std::shared_ptr<Texture> specularTexture;
 };
 
+#if (VERSION == VERSION_WotLK)
 struct ADT_MCIN
 {
 	uint32_t offset;               // absolute offset.
@@ -37,6 +38,7 @@ struct ADT_MCIN
 	uint32_t flags;                // always 0. only set in the client., FLAG_LOADED = 1
 	uint32_t asyncId;
 };
+#endif
 
 struct ADT_MCNK_Header
 {

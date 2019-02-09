@@ -25,8 +25,19 @@ inline bool DBCFile<RECORD_T>::Open()
 	char header[5];
 	m_File->readBytes(header, 4);
 	header[4] = '\0';
-	assert1(header[0] == 'W' && header[1] == 'D' && header[2] == 'B' && header[3] == 'C');
 
+#if (VERSION == VERSION_Cata)
+	int db_type = 0;
+	if (strncmp(header, "WDBC", 4) == 0)
+		db_type = 1;
+	else if (strncmp(header, "WDB2", 4) == 0)
+		db_type = 2;
+	else
+	{
+		Log::Error("DBCFile[%s]: File corrupt. Header [%s]", m_File->Path_Name().c_str(), header);
+		return false;
+	}
+#endif
 
 	m_File->readBytes(&recordCount, 4);// Number of records
 	m_File->readBytes(&fieldCount, 4); // Number of fields
@@ -34,6 +45,24 @@ inline bool DBCFile<RECORD_T>::Open()
 	m_File->readBytes(&stringSize, 4); // String size
 
 	Log::Info("DBCFile[%s]: HEAD [%s], Size [%d]", m_File->Path_Name().c_str(), header, recordCount);
+
+#if (VERSION == VERSION_Cata)
+	if (db_type == 2)
+	{
+		m_File->seekRelative(28);
+
+		unsigned int check;
+		m_File->readBytes(&check, 4);
+		if (check == 6)
+		{
+			m_File->seekRelative(-20);
+		}
+		else // 17
+		{
+			m_File->seekRelative(-4);
+		}
+	}
+#endif
 
 	assert1(fieldCount * 4 == recordSize);
 

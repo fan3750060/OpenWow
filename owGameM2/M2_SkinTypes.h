@@ -61,6 +61,20 @@ struct SM2_SkinBatch
 	int16 texture_TransformIndex;	// Index into uvanimation lookup table. 
 };
 
+struct M2ShadowBatch
+{
+	uint8_t flags;              // if auto-generated: M2Batch.flags & 0xFF
+	uint8_t flags2;             // if auto-generated: (renderFlag[i].flags & 0x04 ? 0x01 : 0x00)
+								//                  | (!renderFlag[i].blendingmode ? 0x02 : 0x00)
+								//                  | (renderFlag[i].flags & 0x80 ? 0x04 : 0x00)
+								//                  | (renderFlag[i].flags & 0x400 ? 0x06 : 0x00)
+	uint16_t _unknown1;
+	uint16_t submesh_id;
+	uint16_t texture_id;        // already looked-up
+	uint16_t color_id;
+	uint16_t transparency_id;   // already looked-up
+};
+
 struct SM2_SkinProfile
 {
 #if (VERSION >= VERSION_WotLK)
@@ -76,5 +90,9 @@ struct SM2_SkinProfile
 	// WoW takes this and divides it by the number of bones in each submesh, then stores the biggest one.
 	// Maximum number of bones per drawcall for each view. Related to (old) GPU numbers of registers. 
 	// Values seen : 256, 64, 53, 21
+
+#if (VERSION >= VERSION_Cata)
+	M2Array<M2ShadowBatch>      shadow_batches;
+#endif
 };
 #include __PACK_END

@@ -3,8 +3,9 @@
 #define VERSION_Vanila  0
 #define VERSION_BC		1
 #define VERSION_WotLK	2
+#define VERSION_Cata	3
 
-#define VERSION VERSION_WotLK
+#define VERSION VERSION_Cata
 
 // General types
 typedef signed char int8;

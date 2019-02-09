@@ -29,7 +29,12 @@ private:
 	M2_Animated<float> tRoll;
 	float rollResult;
 
+#if (VERSION < VERSION_Cata)
 	float fov;
+#else
+	M2_Animated<float> tFov;
+	float fovResult;
+#endif
 
 	CGroupVideo& m_VideoSettings;
 };

@@ -282,7 +282,7 @@ uint32 MapController::GetAreaID(Camera* camera)
 		return UINT32_MAX;
 	}
 
-	return curChunk->header.areaid;
+	return curChunk->m_Header.areaid;
 }
 
 bool MapController::IsTileInCurrent(std::shared_ptr<ADT> _mapTile)

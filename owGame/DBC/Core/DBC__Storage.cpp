@@ -54,6 +54,7 @@ DBC_LOAD(DBC_LightSkybox, "LightSkybox.dbc")
 
 // Liquid
 DBC_LOAD(DBC_LiquidMaterial, "LiquidMaterial.dbc")
+DBC_LOAD(DBC_LiquidObject, "LiquidObject.dbc")
 DBC_LOAD(DBC_LiquidType, "LiquidType.dbc")
 
 
@@ -111,5 +112,6 @@ void OpenDBs()
 
 	// Liquid
 	DBC_LiquidMaterial.Open();
+	DBC_LiquidObject.Open();
 	DBC_LiquidType.Open();
 }

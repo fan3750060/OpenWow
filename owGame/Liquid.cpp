@@ -58,14 +58,16 @@ void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
 
+	uint32 vertexFormat = _type->Get_LiquidMaterialID()->Get_LiquidVertexFormat();
+	if (_type->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
+	{
+		vertexFormat = 2;
+	}
+
 	std::shared_ptr<Liquid_Layer> layer = std::make_shared<Liquid_Layer>(_RenderDevice->CreateMesh());
 	layer->LiquidType = _type;
 	layer->InitTextures();
-	layer->VertexFormat = _type->Get_LiquidMaterialID()->Get_LiquidVertexFormat();
-	if (_type->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
-	{
-		layer->VertexFormat = 2;
-	}
+
 	layer->x = 0;
 	layer->y = 0;
 	layer->Width = m_TilesX;
@@ -80,12 +82,12 @@ void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std
 
 			layer->renderTiles.push_back((flags[p].liquid & 0x08) == 0);
 
-			if (layer->VertexFormat == 0)
+			if (vertexFormat == 0)
 			{
 				layer->heights.push_back(map[p].waterVert.height);
 				layer->depths.push_back(map[p].waterVert.depth);
 			}
-			else if (layer->VertexFormat == 1)
+			else if (vertexFormat == 1)
 			{
 				layer->heights.push_back(map[p].magmaVert.height);
 				layer->textureCoords.push_back
@@ -97,7 +99,7 @@ void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std
 					)
 				);
 			}
-			else if (layer->VertexFormat == 2)
+			else if (vertexFormat == 2)
 			{
 				layer->depths.push_back(map[p].oceanVert.depth);
 			}

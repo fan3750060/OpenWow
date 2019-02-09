@@ -224,7 +224,10 @@ struct SM2_Camera // TODO Spline keys
 {
 	uint32 type; // 0: portrait, 1: characterinfo; -1: else (flyby etc.); referenced backwards in the lookup table.
 
+#if (VERSION < VERSION_Cata)
 	float fov;
+#endif
+
 	float far_clip;
 	float near_clip;
 
@@ -234,7 +237,10 @@ struct SM2_Camera // TODO Spline keys
 	M2Track<vec3> target_position; // How the target moves. Should be 3*3 floats.
 	vec3 target_position_base;
 
-	M2Track<float> roll; // The camera can have some roll-effect. Its 0 to 2*Pi. 
+	M2Track<float> roll; // The camera can have some roll-effect. Its 0 to 2*Pi.
+#if (VERSION >= VERSION_Cata)
+	M2Track<float> fov; // Diagonal FOV in radians.
+#endif
 };
 #include __PACK_END
 

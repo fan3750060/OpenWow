@@ -7,7 +7,6 @@ struct IManager;
 struct ILoadable
 {
 	virtual bool PreLoad() = 0;
-
 	virtual bool Load() = 0;
 	virtual bool Delete() = 0;
 
@@ -25,7 +24,4 @@ struct
 {
 	virtual void AddToLoadQueue(std::shared_ptr<ILoadable> _item) = 0;
 	virtual void LoadAll() = 0;
-
-	virtual void AddToDeleteQueue(std::shared_ptr<ILoadable> _item) = 0;
-	virtual void DeleteAll() = 0;
 };

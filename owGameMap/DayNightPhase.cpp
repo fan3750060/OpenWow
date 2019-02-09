@@ -73,7 +73,7 @@ DayNightPhase::DayNightPhase(std::shared_ptr<IFile> f)
     uint32 time = (uint32)h * 60 * 2 + (uint32)m * 2;
 }
 
-DayNightPhase::DayNightPhase(DayNightPhase* a, DayNightPhase* b, float r)
+DayNightPhase::DayNightPhase(const DayNightPhase* a, const DayNightPhase* b, float r)
 {
     float ir = 1.0f - r;
 

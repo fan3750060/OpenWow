@@ -296,9 +296,11 @@ bool SceneNode3D::Accept(IVisitor& visitor)
 	// Now visit children
 	for (auto child : GetChilds())
 	{
-		std::shared_ptr<ILoadable> loadable = std::dynamic_pointer_cast<ILoadable, SceneNode3D>(child);
-		if (loadable != nullptr && ! loadable->isLoaded())
-			continue;
+#ifndef CLOADER_Disable
+		//std::shared_ptr<ILoadable> loadable = std::dynamic_pointer_cast<ILoadable, SceneNode3D>(child);
+		//if (loadable != nullptr && ! loadable->isLoaded())
+		//	continue;
+#endif
 
 		child->Accept(visitor);
 	}

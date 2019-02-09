@@ -16,7 +16,11 @@ CM2_Part_Camera::CM2_Part_Camera(std::shared_ptr<IFile> f, const SM2_Camera& _pr
 	tTarget.init(_proto.target_position, f, global, Fix_XZmY);
 
 	tRoll.init(_proto.roll, f, global);
-	fov = _proto.fov / sqrtf(1.0f + powf(m_VideoSettings.aspectRatio, 2.0f));;
+#if (VERSION < VERSION_Cata)
+	fov = _proto.fov / sqrtf(1.0f + powf(m_VideoSettings.aspectRatio, 2.0f));
+#else
+	tFov.init(_proto.fov, f, global);
+#endif
 }
 
 void CM2_Part_Camera::calc(uint32 time, uint32 globalTime)
@@ -35,6 +39,13 @@ void CM2_Part_Camera::calc(uint32 time, uint32 globalTime)
 	{
 		rollResult = tRoll.getValue(0, time, globalTime) / (glm::pi<float>() * 180.0f);
 	}
+
+#if (VERSION >= VERSION_Cata)
+	if (tFov.uses(0))
+	{
+		fovResult = tFov.getValue(0, time, globalTime);
+	}
+#endif
 }
 
 void CM2_Part_Camera::setup(cvec3 _startPoint, float rotate)
@@ -54,7 +65,7 @@ void CM2_Part_Camera::getParams(vec3* _position, vec3* _target, float* _fov, flo
 {
 	*_position = m_PositionBase + pResult;
 	*_target = m_TargetBase + tResult;
-	*_fov = fov;
+	//*_fov = fov;
 	*_nearPlane = nearclip;
 	*_farPlane = farclip;
 }

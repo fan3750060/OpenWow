@@ -35,6 +35,11 @@ public:
 	bool Delete() override;
 	uint32 getPriority() const override { return 0; };
 
+	// VERSION_Cata split files
+	void Load_ADT();
+	void Load_OBJ();
+	void Load_TEX();
+
 public:
 	const int										m_IndexX, m_IndexZ;
 	

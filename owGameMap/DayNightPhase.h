@@ -5,7 +5,7 @@ class DayNightPhase
 public:
 	DayNightPhase();
 	DayNightPhase(std::shared_ptr<IFile> f);
-	DayNightPhase(DayNightPhase* a, DayNightPhase* b, float r);
+	DayNightPhase(const DayNightPhase* a, const DayNightPhase* b, float r);
 
     void Render_DEBUG(cvec3 _playerPos);
 

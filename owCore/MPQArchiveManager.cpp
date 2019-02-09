@@ -9,8 +9,9 @@
 #if (VERSION == VERSION_Vanila)
 const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
 #elif (VERSION == VERSION_WotLK)
-//const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
-const char* archives = "C:/Data_3.3.5/";
+const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
+#elif (VERSION == VERSION_Cata)
+const char* archives = "D:/_games/World of Warcraft 4.3.4/Data/";
 #endif
 
 //
@@ -20,45 +21,60 @@ CMPQArchiveManager::CMPQArchiveManager()
 {
 	// Files 1.12
 #if (VERSION == VERSION_Vanila)
-	AddArchive(std::string("backup.MPQ"));
-	AddArchive(std::string("base.MPQ"));
-	AddArchive(std::string("dbc.MPQ"));
-	AddArchive(std::string("fonts.MPQ"));
-	AddArchive(std::string("interface.MPQ"));
-	AddArchive(std::string("misc.MPQ"));
-	AddArchive(std::string("model.MPQ"));
-	AddArchive(std::string("patch.MPQ"));
-	AddArchive(std::string("patch-2.MPQ"));
-	AddArchive(std::string("patch-3.MPQ"));
-	AddArchive(std::string("sound.MPQ"));
-	AddArchive(std::string("speech.MPQ"));
-	AddArchive(std::string("terrain.MPQ"));
-	AddArchive(std::string("texture.MPQ"));
-	AddArchive(std::string("wmo.MPQ"));
+	AddArchive("backup.MPQ");
+	AddArchive("base.MPQ");
+	AddArchive("dbc.MPQ");
+	AddArchive("fonts.MPQ");
+	AddArchive("interface.MPQ");
+	AddArchive("misc.MPQ");
+	AddArchive("model.MPQ");
+	AddArchive("patch.MPQ");
+	AddArchive("patch-2.MPQ");
+	AddArchive("patch-3.MPQ");
+	AddArchive("sound.MPQ");
+	AddArchive("speech.MPQ");
+	AddArchive("terrain.MPQ");
+	AddArchive("texture.MPQ");
+	AddArchive("wmo.MPQ");
 
-	//AddArchive(std::string("ruRU/patch-1.MPQ"));
-	//AddArchive(std::string("ruRU/patch-2.MPQ"));
-	//AddArchive(std::string("ruRU/patch-3.MPQ"));
+	//AddArchive("ruRU/patch-1.MPQ");
+	//AddArchive("ruRU/patch-2.MPQ");
+	//AddArchive("ruRU/patch-3.MPQ");
 
 #elif (VERSION == VERSION_WotLK)
-	AddArchive(std::string("common.MPQ"));
-	AddArchive(std::string("common-2.MPQ"));
-	AddArchive(std::string("expansion.MPQ"));
-	AddArchive(std::string("lichking.MPQ"));
-	AddArchive(std::string("patch.MPQ"));
-	AddArchive(std::string("patch-2.MPQ"));
-	AddArchive(std::string("patch-3.MPQ"));
-	//AddArchive(std::string("patch-w.MPQ"));
-	//AddArchive(std::string("patch-x.MPQ"));
+	AddArchive("common.MPQ");
+	AddArchive("common-2.MPQ");
+	AddArchive("expansion.MPQ");
+	AddArchive("lichking.MPQ");
+	AddArchive("patch.MPQ");
+	AddArchive("patch-2.MPQ");
+	AddArchive("patch-3.MPQ");
 
-	AddArchive(std::string("ruRU/locale-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/expansion-locale-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/lichking-locale-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/patch-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/patch-ruRU-2.MPQ"));
-	AddArchive(std::string("ruRU/patch-ruRU-3.MPQ"));
-	//AddArchive(std::string("ruRU/patch-ruRU-w.MPQ"));
-	//AddArchive(std::string("ruRU/patch-ruRU-x.MPQ"));
+	AddArchive("ruRU/locale-ruRU.MPQ");
+	AddArchive("ruRU/expansion-locale-ruRU.MPQ");
+	AddArchive("ruRU/lichking-locale-ruRU.MPQ");
+	AddArchive("ruRU/patch-ruRU.MPQ");
+	AddArchive("ruRU/patch-ruRU-2.MPQ");
+	AddArchive("ruRU/patch-ruRU-3.MPQ");
+
+#elif (VERSION == VERSION_Cata)
+	AddArchive("art.MPQ");
+	AddArchive("expansion1.MPQ");
+	AddArchive("expansion2.MPQ");
+	AddArchive("expansion3.MPQ");
+	AddArchive("world.MPQ");
+	AddArchive("world2.MPQ");
+	//AddArchive("wow-update-base-15211.MPQ");
+	//AddArchive("wow-update-base-15354.MPQ");
+	//AddArchive("wow-update-base-15595.MPQ");
+
+	AddArchive("ruRU/expansion1-locale-ruRU.MPQ");
+	AddArchive("ruRU/expansion2-locale-ruRU.MPQ");
+	AddArchive("ruRU/expansion3-locale-ruRU.MPQ");
+	AddArchive("ruRU/locale-ruRU.MPQ");
+	//AddArchive("ruRU/wow-update-ruRU-15211.MPQ");
+	//AddArchive("ruRU/wow-update-ruRU-15354.MPQ");
+	//AddArchive("ruRU/wow-update-ruRU-15595.MPQ");
 #endif
 
 

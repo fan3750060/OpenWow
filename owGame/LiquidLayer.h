@@ -15,7 +15,9 @@ public:
 
 public:
 	std::shared_ptr<const DBC_LiquidTypeRecord> LiquidType;
+#if (VERSION == VERSION_WotLK)
 	uint16 VertexFormat;
+#endif
 
 	float MinHeightLevel;
 	float MaxHeightLevel;

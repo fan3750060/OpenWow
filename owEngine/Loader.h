@@ -1,5 +1,7 @@
 #pragma once
 
+#define CLOADER_Disable
+
 class CLoader : public ILoader
 {
 public:
@@ -8,9 +10,6 @@ public:
 
 	void AddToLoadQueue(std::shared_ptr<ILoadable> _item) override;
 	void LoadAll() override;
-
-	void AddToDeleteQueue(std::shared_ptr<ILoadable> _item) override;
-	void DeleteAll() override;
 
 	void SetCamera(std::shared_ptr<Camera> _camera);
 
@@ -33,7 +32,6 @@ private:
 
 private:
 	LockedQueue<std::shared_ptr<ILoadable>> m_QueueLoad;
-	LockedQueue<std::shared_ptr<ILoadable>> m_QueueDelete;
 
 	std::promise<void>					   m_Thread_Loader_Promise_Exiter[c_PoolSize];
 	std::thread                            m_Thread_Loader[c_PoolSize];

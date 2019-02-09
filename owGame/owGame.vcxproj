@@ -32,6 +32,7 @@
     <ClInclude Include="DBC\Core\DBC__Storage.h" />
     <ClInclude Include="DBC\DBC_AnimationData.h" />
     <ClInclude Include="DBC\DBC_AreaTable.h" />
+    <ClInclude Include="DBC\DBC_AreaTable_Cata.h" />
     <ClInclude Include="DBC\DBC_CharacterFacialHairStyles.h" />
     <ClInclude Include="DBC\DBC_CharComponentTextureLayouts.h" />
     <ClInclude Include="DBC\DBC_CharComponentTextureSections.h" />
@@ -56,9 +57,11 @@
     <ClInclude Include="DBC\DBC_LightParams.h" />
     <ClInclude Include="DBC\DBC_LightSkyBox.h" />
     <ClInclude Include="DBC\DBC_LiquidMaterial.h" />
+    <ClInclude Include="DBC\DBC_LiquidObject_Cata.h" />
     <ClInclude Include="DBC\DBC_LiquidType.h" />
     <ClInclude Include="DBC\DBC_LoadingScreen.h" />
     <ClInclude Include="DBC\DBC_Map.h" />
+    <ClInclude Include="DBC\DBC_Map_Cata.h" />
     <ClInclude Include="DBC\DBC_Map_WotLK.h" />
     <ClInclude Include="DBC\DBC_Material.h" />
     <ClInclude Include="DBC\DBC_TerrainType.h" />
