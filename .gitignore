@@ -38,9 +38,5 @@
 *.zip
 
 
-bin/
+bin_x86/
 bin_x64/
-
-_unused/
-Externals/CascLib/
-Externals/freetype-2.8_project/
