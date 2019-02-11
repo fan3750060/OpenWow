@@ -22,7 +22,7 @@ RenderWindowDX11::RenderWindowDX11(HWND hWnd, std::shared_ptr<RenderDeviceDX11> 
 	m_SampleDesc = { 1, 0 };
 
 	// Try to choose the best multi-sampling quality level that is supported.
-	UINT sampleCount = 1;
+	/*UINT sampleCount = 1;
 	UINT qualityLevels = 0;
 	while (SUCCEEDED(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &qualityLevels)) && qualityLevels > 0)
 	{
@@ -32,7 +32,7 @@ RenderWindowDX11::RenderWindowDX11(HWND hWnd, std::shared_ptr<RenderDeviceDX11> 
 
 		// But can we do better?
 		sampleCount = sampleCount * 2;
-	}
+	}*/
 
 	// Create a render target for the back buffer and depth/stencil buffers.
 	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetDX11>(m_Device.lock()->CreateRenderTarget());
@@ -208,13 +208,7 @@ void RenderWindowDX11::ResizeSwapChainBuffers(uint32_t width, uint32_t height)
 
 void RenderWindowDX11::Present()
 {
-	// The application can leave the render targets unbound.
-	// Bind the render window's default render target before 
-	// drawing AntTweakBar.
 	m_RenderTarget->Bind();
-
-	// Draw the AntTweakBar
-	//TwDraw();
 
 	// Copy the render target's color buffer to the swap chain's back buffer.
 	std::shared_ptr<TextureDX11> colorBuffer = std::dynamic_pointer_cast<TextureDX11>(m_RenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color0));
@@ -246,6 +240,7 @@ void RenderWindowDX11::OnPreRender(Render3DEventArgs& e)
 		ResizeSwapChainBuffers(GetWindowWidth(), GetWindowHeight());
 		m_bResizePending = false;
 	}
+
 	m_RenderTarget->Bind();
 
 	base::OnPreRender(e);

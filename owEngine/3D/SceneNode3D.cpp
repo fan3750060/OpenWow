@@ -3,6 +3,9 @@
 // General
 #include "SceneNode3D.h"
 
+// Additional
+#include "Loader.h"
+
 SceneNode3D::SceneNode3D(cmat4 localTransform)
 	: m_LocalTransform(localTransform)
 	, m_Name("SceneNode3D")
@@ -296,9 +299,11 @@ bool SceneNode3D::Accept(IVisitor& visitor)
 	// Now visit children
 	for (auto child : GetChilds())
 	{
+#ifdef LOADER_ENABLED
 		std::shared_ptr<ILoadable> loadable = std::dynamic_pointer_cast<ILoadable, SceneNode3D>(child);
 		if (loadable != nullptr && ! loadable->isLoaded())
 			continue;
+#endif
 
 		child->Accept(visitor);
 	}

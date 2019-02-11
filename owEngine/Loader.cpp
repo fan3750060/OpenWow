@@ -8,6 +8,7 @@
 
 CLoader::CLoader()
 {
+#ifdef LOADER_ENABLED
 	for (int i = 0; i < c_PoolSize; i++)
 	{
 		std::future<void> futureObj = m_Thread_Loader_Promise_Exiter[i].get_future();
@@ -18,10 +19,12 @@ CLoader::CLoader()
 	std::future<void> futureObj = m_Thread_Sorter_Promise.get_future();
 	m_Thread_Sorter = std::thread(&CLoader::SorterThread, this, std::move(futureObj));
 	m_Thread_Sorter.detach();
+#endif
 }
 
 CLoader::~CLoader()
 {
+#ifdef LOADER_ENABLED
 	for (int i = 0; i < c_PoolSize; i++)
 	{
 		m_Thread_Loader_Promise_Exiter[i].set_value();
@@ -32,12 +35,18 @@ CLoader::~CLoader()
 	m_Thread_Sorter_Promise.set_value();
 	if (m_Thread_Sorter.joinable())
 		m_Thread_Sorter.join();
+#endif
 }
 
 void CLoader::AddToLoadQueue(std::shared_ptr<ILoadable> _item)
 {
 	_item->PreLoad();
+#ifdef LOADER_ENABLED
 	m_QueueLoad.add(_item);
+#else
+	_item->Load();
+	_item->setLoaded();
+#endif
 }
 
 void CLoader::LoadAll()

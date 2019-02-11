@@ -65,7 +65,6 @@ private:
 
 protected:
 	ByteBuffer m_ByteBuffer;
-	std::shared_ptr<IFilesManager> m_FilesManager;
 
 private: // IFile
 	std::string m_Name;

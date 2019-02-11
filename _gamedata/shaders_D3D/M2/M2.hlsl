@@ -13,10 +13,11 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position  : SV_POSITION;
-	float3 normal    : NORMAL0;
-	float2 texCoord0 : TEXCOORD0;
-	float2 texCoord1 : TEXCOORD1;
+	float4 positionVS : SV_POSITION;
+	float4 positionWS : POSITION;
+	float3 normal     : NORMAL0;
+	float2 texCoord0  : TEXCOORD0;
+	float2 texCoord1  : TEXCOORD1;
 };
 
 // Uniforms
@@ -58,7 +59,8 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 
 	VertexShaderOutput OUT;
-	OUT.position = mul(ModelViewProjection, newVertex);
+	OUT.positionVS = mul(ModelViewProjection, newVertex);
+	OUT.positionWS = newVertex;
 	OUT.normal = IN.normal;
 	if (Material.gTextureAnimEnable)
 	{
@@ -91,7 +93,10 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 	}
 	
 	PixelShaderOutput OUT;
+	OUT.PositionWS = IN.positionWS;
 	OUT.Diffuse = resultColor;
+	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	OUT.NormalWS = float4(IN.normal, 1.0f);
 	return OUT;
 }
 
@@ -100,19 +105,22 @@ float4 Test(VertexShaderOutput IN)
 	float4 tex0 = DiffuseTexture0.Sample(DiffuseTexture0Sampler, IN.texCoord0);
 	float4 tex1 = DiffuseTexture1.Sample(DiffuseTexture1Sampler, IN.texCoord1);
 
-	float4 _in  = float4(1.0f, 1.0f, 1.0f, tex0.a);
+	float4 _in  = float4(0.5f, 0.5f, 0.5f, tex0.a);
 	float4 _out = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	
+	_in = tex0;
 	
 	if (Material.gColorEnable)
 	{
-		_in.rgb = Material.gColor.rgb;
-		_in.a *= Material.gColor.a;
+		_in.rgb *= (Material.gColor.rgb * Material.gColor.a);
 	}
 
-	//if (Material.gTextureWeightEnable)
-	//{
-	//	_in.a *= Material.gTextureWeight;
-	//}
+	if (Material.gTextureWeightEnable)
+	{
+		_in.a *= Material.gTextureWeight;
+	}
+	
+	return _in;
 
 	if (Material.gShader == 0)
 	{

@@ -1,7 +1,6 @@
 #pragma once
 
 // FORWARD BEGIN
-class Scene;
 class SceneNode3D;
 class SceneNodeUI;
 class IMesh;

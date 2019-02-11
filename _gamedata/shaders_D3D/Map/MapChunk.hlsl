@@ -1,10 +1,16 @@
-#include "..\\_gamedata\\shaders_D3D\\Map\\MapChunk_Material.h"
 #include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
 
 #ifndef _IS_NORTREND
 #pragma message( "_IS_NORTREND undefined. Default to 0.")
 #define _IS_NORTREND 0 // should be defined by the application.
 #endif
+
+struct MapChunk_Material
+{
+    float4 DiffuseColor;
+	uint   LayersCnt;
+    //-------------------------- ( 16 bytes )
+};
 
 struct VertexShaderInput
 {
@@ -17,7 +23,8 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position       : SV_POSITION;
+	float4 positionVS     : SV_POSITION;
+	float4 positionWS     : POSITION;
 	float3 normal         : NORMAL0;
 	float4 mccvColor      : COLOR0;
 	float2 texCoordDetail : TEXCOORD0;
@@ -48,7 +55,8 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
 
-	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionVS = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionWS = float4(IN.position, 1.0f);
 	OUT.normal = IN.normal;
 	OUT.mccvColor = IN.mccvColor;
 	OUT.texCoordDetail = IN.texCoordDetail;
@@ -112,6 +120,9 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 	//resultColor *= (IN.mccvColor * 2.0f);
 
 	PixelShaderOutput OUT;
+	OUT.PositionWS = IN.positionWS;
 	OUT.Diffuse = float4(resultColor, 1.0f);
+	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	OUT.NormalWS = float4(IN.normal, 1.0f);
 	return OUT;
 }

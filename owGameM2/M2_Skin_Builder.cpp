@@ -96,6 +96,7 @@ void CM2_Skin_Builder::Step2InitBatches()
 
 		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, skinSection->getMesh());
 
+		Log::Green("Shader = %d", it.shader_id);
 		batch->newShader = GetPixel(it);
 
 		// Geometry data

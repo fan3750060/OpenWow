@@ -1,5 +1,10 @@
-#include "..\\_gamedata\\shaders_D3D\\WMO\\WMO_Material.h"
 #include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
+
+struct WMO_Material
+{
+	uint   gBlendMode;
+    //-------------------------- ( 4 bytes )
+};
 
 struct VertexShaderInput
 {
@@ -66,5 +71,8 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 	
 	PixelShaderOutput OUT;
 	OUT.Diffuse = resultColor;
+	OUT.LightAccumulation = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	OUT.Normal = float4(IN.normal, 1.0f);
 	return OUT;
 }

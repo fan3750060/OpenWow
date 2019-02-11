@@ -1,48 +1,22 @@
 #ifndef NUM_LIGHTS
-#pragma message( "NUM_LIGHTS undefined. Default to 8.")
-#define NUM_LIGHTS 8 // should be defined by the application.
+#pragma message( "NUM_LIGHTS undefined. Default to 1.")
+#define NUM_LIGHTS 1 // should be defined by the application.
 #endif
 
 #define POINT_LIGHT 0
 #define SPOT_LIGHT 1
 #define DIRECTIONAL_LIGHT 2
 
-struct Material
+struct LightMaterial
 {
-    float4  GlobalAmbient;
-    //-------------------------- ( 16 bytes )
-    float4  AmbientColor;
-    //-------------------------- ( 16 bytes )
-    float4  EmissiveColor;
-    //-------------------------- ( 16 bytes )
     float4  DiffuseColor;
     //-------------------------- ( 16 bytes )
     float4  SpecularColor;
     //-------------------------- ( 16 bytes )
-    // Reflective value.
-    float4  Reflectance;
-    //-------------------------- ( 16 bytes )
-    float   Opacity;
-    float   SpecularPower;
-    // For transparent materials, IOR > 0.
-    float   IndexOfRefraction;
-    bool    HasAmbientTexture;
-    //-------------------------- ( 16 bytes )
-    bool    HasEmissiveTexture;
-    bool    HasDiffuseTexture;
-    bool    HasSpecularTexture;
-    bool    HasSpecularPowerTexture;
-    //-------------------------- ( 16 bytes )
-    bool    HasNormalTexture;
-    bool    HasBumpTexture;
-    bool    HasOpacityTexture;
-    float   BumpIntensity;
-    //-------------------------- ( 16 bytes )
-    float   SpecularScale;
-    float   AlphaThreshold;
-    float2  Padding;
-    //--------------------------- ( 16 bytes )
-};  //--------------------------- ( 16 * 10 = 160 bytes )
+	float   SpecularPower;
+	float3  Padding;
+	//-------------------------- ( 16 bytes )
+};
 
 struct Light
 {
@@ -105,208 +79,6 @@ struct Light
     //--------------------------------------------------------------( 16 * 7 = 112 bytes )
 };
 
-struct Plane
-{
-    float3 N;   // Plane normal.
-    float  d;   // Distance to origin.
-};
-
-struct Sphere
-{
-    float3 c;   // Center point.
-    float  r;   // Radius.
-};
-
-struct Cone
-{
-    float3 T;   // Cone tip.
-    float  h;   // Height of the cone.
-    float3 d;   // Direction of the cone.
-    float  r;   // bottom radius of the cone.
-};
-
-// Four planes of a view frustum (in view space).
-// The planes are:
-//  * Left,
-//  * Right,
-//  * Top,
-//  * Bottom.
-// The back and/or front planes can be computed from depth values in the 
-// light culling compute shader.
-struct Frustum
-{
-    Plane planes[4];   // left, right, top, bottom frustum planes.
-};
-
-struct AppData
-{
-    float3 position : POSITION;
-    float3 tangent  : TANGENT;
-    float3 binormal : BINORMAL;
-    float3 normal   : NORMAL;
-    float2 texCoord : TEXCOORD0;
-};
-
-cbuffer PerObject : register( b0 )
-{
-    float4x4 ModelViewProjection;
-    float4x4 ModelView;
-}
-
-cbuffer Material : register( b2 )
-{
-    Material Mat;
-};
-
-// Parameters required to convert screen space coordinates to view space params.
-cbuffer ScreenToViewParams : register( b3 )
-{
-    float4x4 InverseProjection;
-    float2 ScreenDimensions;
-}
-
-Texture2D AmbientTexture        : register( t0 );
-Texture2D EmissiveTexture       : register( t1 );
-Texture2D DiffuseTexture        : register( t2 );
-Texture2D SpecularTexture       : register( t3 );
-Texture2D SpecularPowerTexture  : register( t4 );
-Texture2D NormalTexture         : register( t5 );
-Texture2D BumpTexture           : register( t6 );
-Texture2D OpacityTexture        : register( t7 );
-
-StructuredBuffer<Light> Lights : register( t8 );
-
-sampler LinearRepeatSampler     : register( s0 );
-sampler LinearClampSampler      : register( s1 );
-
-struct VertexShaderOutput
-{
-    float3 positionVS   : TEXCOORD0;    // View space position.
-    float2 texCoord     : TEXCOORD1;    // Texture coordinate
-    float3 tangentVS    : TANGENT;      // View space tangent.
-    float3 binormalVS   : BINORMAL;     // View space binormal.
-    float3 normalVS     : NORMAL;       // View space normal.
-    float4 position     : SV_POSITION;  // Clip space position.
-};
-
-// Convert clip space coordinates to view space
-float4 ClipToView( float4 clip )
-{
-    // View space position.
-    float4 view = mul( InverseProjection, clip );
-    // Perspecitive projection.
-    view = view / view.w;
-
-    return view;
-}
-
-// Convert screen space coordinates to view space.
-float4 ScreenToView( float4 screen )
-{
-    // Convert to normalized texture coordinates
-    float2 texCoord = screen.xy / ScreenDimensions;
-
-    // Convert to clip space
-    float4 clip = float4( float2( texCoord.x, 1.0f - texCoord.y ) * 2.0f - 1.0f, screen.z, screen.w );
-
-    return ClipToView( clip );
-}
-
-// Compute a plane from 3 noncollinear points that form a triangle.
-// This equation assumes a right-handed (counter-clockwise winding order) 
-// coordinate system to determine the direction of the plane normal.
-Plane ComputePlane( float3 p0, float3 p1, float3 p2 )
-{
-    Plane plane;
-
-    float3 v0 = p1 - p0;
-    float3 v2 = p2 - p0;
-
-    plane.N = normalize( cross( v0, v2 ) );
-
-    // Compute the distance to the origin using p0.
-    plane.d = dot( plane.N, p0 );
-
-    return plane;
-}
-
-// Check to see if a sphere is fully behind (inside the negative halfspace of) a plane.
-// Source: Real-time collision detection, Christer Ericson (2005)
-bool SphereInsidePlane( Sphere sphere, Plane plane )
-{
-    return dot( plane.N, sphere.c ) - plane.d < -sphere.r;
-}
-
-// Check to see if a point is fully behind (inside the negative halfspace of) a plane.
-bool PointInsidePlane( float3 p, Plane plane )
-{
-    return dot( plane.N, p ) - plane.d < 0;
-}
-
-// Check to see if a cone if fully behind (inside the negative halfspace of) a plane.
-// Source: Real-time collision detection, Christer Ericson (2005)
-bool ConeInsidePlane( Cone cone, Plane plane )
-{
-    // Compute the farthest point on the end of the cone to the positive space of the plane.
-    float3 m = cross( cross( plane.N, cone.d ), cone.d );
-    float3 Q = cone.T + cone.d * cone.h - m * cone.r;
-
-    // The cone is in the negative halfspace of the plane if both
-    // the tip of the cone and the farthest point on the end of the cone to the 
-    // positive halfspace of the plane are both inside the negative halfspace 
-    // of the plane.
-    return PointInsidePlane( cone.T, plane ) && PointInsidePlane( Q, plane );
-}
-
-// Check to see of a light is partially contained within the frustum.
-bool SphereInsideFrustum( Sphere sphere, Frustum frustum, float zNear, float zFar )
-{
-    bool result = true;
-
-    // First check depth
-    // Note: Here, the view vector points in the -Z axis so the 
-    // far depth value will be approaching -infinity.
-    if ( sphere.c.z - sphere.r > zNear || sphere.c.z + sphere.r < zFar )
-    {
-        result = false;
-    }
-
-    // Then check frustum planes
-    for ( int i = 0; i < 4 && result; i++ )
-    {
-        if ( SphereInsidePlane( sphere, frustum.planes[i] ) )
-        {
-            result = false;
-        }
-    }
-
-    return result;
-}
-
-bool ConeInsideFrustum( Cone cone, Frustum frustum, float zNear, float zFar )
-{
-    bool result = true;
-
-    Plane nearPlane = { float3( 0, 0, -1 ), -zNear };
-    Plane farPlane = { float3( 0, 0, 1 ), zFar };
-
-    // First check the near and far clipping planes.
-    if ( ConeInsidePlane( cone, nearPlane ) || ConeInsidePlane( cone, farPlane ) )
-    {
-        result = false;
-    }
-
-    // Then check frustum planes
-    for ( int i = 0; i < 4 && result; i++ )
-    {
-        if ( ConeInsidePlane( cone, frustum.planes[i] ) )
-        {
-            result = false;
-        }
-    }
-
-    return result;
-}
 
 float3 ExpandNormal( float3 n )
 {
@@ -359,7 +131,7 @@ float4 DoDiffuse( Light light, float4 L, float4 N )
     return light.Color * NdotL;
 }
 
-float4 DoSpecular( Light light, Material material, float4 V, float4 L, float4 N )
+float4 DoSpecular( Light light, LightMaterial material, float4 V, float4 L, float4 N )
 {
     float4 R = normalize( reflect( -L, N ) );
     float RdotV = max( dot( R, V ), 0 );
@@ -388,7 +160,7 @@ float DoSpotCone( Light light, float4 L )
     return smoothstep( minCos, maxCos, cosAngle );
 }
 
-LightingResult DoPointLight( Light light, Material mat, float4 V, float4 P, float4 N )
+LightingResult DoPointLight( Light light, LightMaterial mat, float4 V, float4 P, float4 N )
 {
     LightingResult result;
 
@@ -404,7 +176,7 @@ LightingResult DoPointLight( Light light, Material mat, float4 V, float4 P, floa
     return result;
 }
 
-LightingResult DoDirectionalLight( Light light, Material mat, float4 V, float4 P, float4 N )
+LightingResult DoDirectionalLight( Light light, LightMaterial mat, float4 V, float4 P, float4 N )
 {
     LightingResult result;
 
@@ -416,7 +188,7 @@ LightingResult DoDirectionalLight( Light light, Material mat, float4 V, float4 P
     return result;
 }
 
-LightingResult DoSpotLight( Light light, Material mat, float4 V, float4 P, float4 N )
+LightingResult DoSpotLight( Light light, LightMaterial mat, float4 V, float4 P, float4 N )
 {
     LightingResult result;
 
@@ -433,7 +205,7 @@ LightingResult DoSpotLight( Light light, Material mat, float4 V, float4 P, float
     return result;
 }
 
-LightingResult DoLighting( StructuredBuffer<Light> lights, Material mat, float4 eyePos, float4 P, float4 N )
+LightingResult DoLighting( StructuredBuffer<Light> lights, LightMaterial mat, float4 eyePos, float4 P, float4 N )
 {
     float4 V = normalize( eyePos - P );
 

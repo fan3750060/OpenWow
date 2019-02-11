@@ -1,5 +1,7 @@
 #pragma once
 
+//#define LOADER_ENABLED
+
 class CLoader : public ILoader
 {
 public:

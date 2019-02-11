@@ -1,4 +1,4 @@
-#include "..\\_gamedata\\shaders_D3D\\CommonInclude.hlsl"
+#include "CommonInclude.hlsl"
 
 VertexShaderOutput VS_main( AppData IN )
 {

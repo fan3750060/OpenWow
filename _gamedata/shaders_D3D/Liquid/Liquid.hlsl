@@ -9,7 +9,8 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position : SV_POSITION;
+	float4 positionVS : SV_POSITION;
+	float4 positionWS : POSITION;
 	float3 texCoord : TEXCOORD0;
 };
 
@@ -31,7 +32,8 @@ sampler   DiffuseTextureSampler : register(s0);
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
-	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionVS = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionWS = float4(IN.position, 1.0f);
 	OUT.texCoord = IN.texCoord;
 	return OUT;
 }
@@ -45,6 +47,9 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 	resultColor += float4(1.0f, 1.0f, 1.0f, 1.0f) * alpha;
 
 	PixelShaderOutput OUT;
+	OUT.PositionWS = IN.positionWS;
 	OUT.Diffuse = resultColor;
+	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	OUT.NormalWS = float4(0.0f, 1.0f, 0.0f, 1.0f);
 	return OUT;
 }

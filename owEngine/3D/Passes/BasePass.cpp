@@ -87,8 +87,8 @@ bool BasePass::Visit(SceneNode3D& node)
 
 bool BasePass::Visit(IMesh& mesh)
 {
-	std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
-	if (pMaterial && m_pRenderEventArgs)
+	//std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
+	if (m_pRenderEventArgs)
 	{
 		return mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
 	}

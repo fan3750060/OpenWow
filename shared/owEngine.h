@@ -64,10 +64,13 @@
 #include "../owEngine/3D/Passes/ClearRenderTargetPass.h"
 #include "../owEngine/3D/Passes/CopyBufferPass.h"
 #include "../owEngine/3D/Passes/CopyTexturePass.h"
-#include "../owEngine/3D/Passes/DeferredPass.h"
 #include "../owEngine/3D/Passes/GenerateMipMapsPass.h"
 #include "../owEngine/3D/Passes/PostprocessPass.h"
 #include "../owEngine/3D/Passes/BeginQueryPass.h"
 #include "../owEngine/3D/Passes/EndQueryPass.h"
 #include "../owEngine/3D/Passes/DispatchPass.h"
 #include "../owEngine/3D/Passes/InvokeFunctionPass.h"
+
+// Postprocess
+#include "../owEngine/3D/Passes/GBufferPass.h"
+#include "../owEngine/3D/Passes/DeferredLightingPass.h"

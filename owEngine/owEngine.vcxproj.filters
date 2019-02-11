@@ -28,9 +28,6 @@
     <Filter Include="3D\Passes\Query">
       <UniqueIdentifier>{315a420d-5e16-49f7-83c7-a3ccb81dfa2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3D\Passes\_unused">
-      <UniqueIdentifier>{deea5326-0821-4a14-84f7-617d872f1e1c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Fonts">
       <UniqueIdentifier>{00c4ea61-0dd2-4232-9832-90fe44d96dda}</UniqueIdentifier>
     </Filter>
@@ -95,15 +92,6 @@
     <ClCompile Include="3D\Passes\RenderTechnique.cpp">
       <Filter>3D\Passes\Base</Filter>
     </ClCompile>
-    <ClCompile Include="3D\Passes\DeferredLightingPass.cpp">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Passes\LightPickingPass.cpp">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Passes\LightsPass.cpp">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClCompile>
     <ClCompile Include="3D\Passes\ClearRenderTargetPass.cpp">
       <Filter>3D\Passes</Filter>
     </ClCompile>
@@ -127,9 +115,6 @@
     </ClCompile>
     <ClCompile Include="MeshWrapper.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="3D\Passes\DeferredPass.cpp">
-      <Filter>3D\Passes</Filter>
     </ClCompile>
     <ClCompile Include="CreatePasses.cpp">
       <Filter>RenderStuff</Filter>
@@ -169,6 +154,12 @@
     </ClCompile>
     <ClCompile Include="MaterialWrapper.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\GBufferPass.cpp">
+      <Filter>3D\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Passes\DeferredLightingPass.cpp">
+      <Filter>3D\Passes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,15 +225,6 @@
     <ClInclude Include="3D\Passes\RenderTechnique.h">
       <Filter>3D\Passes\Base</Filter>
     </ClInclude>
-    <ClInclude Include="3D\Passes\DeferredLightingPass.h">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Passes\LightPickingPass.h">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Passes\LightsPass.h">
-      <Filter>3D\Passes\_unused</Filter>
-    </ClInclude>
     <ClInclude Include="3D\Passes\ClearRenderTargetPass.h">
       <Filter>3D\Passes</Filter>
     </ClInclude>
@@ -266,9 +248,6 @@
     </ClInclude>
     <ClInclude Include="MeshWrapper.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="3D\Passes\DeferredPass.h">
-      <Filter>3D\Passes</Filter>
     </ClInclude>
     <ClInclude Include="CreatePasses.h">
       <Filter>RenderStuff</Filter>
@@ -308,6 +287,15 @@
     </ClInclude>
     <ClInclude Include="MaterialWrapper.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\GBufferPass.h">
+      <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\Light.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Passes\DeferredLightingPass.h">
+      <Filter>3D\Passes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

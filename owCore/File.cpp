@@ -8,22 +8,22 @@
 
 CFile::CFile(cstring _fullFileName) :
 	m_Name(_fullFileName),
-	m_Path(""),
-	m_FilesManager(GetManager<IFilesManager>())
+	m_Path("")
 {
 	ParsePathAndExtension();
 }
 
 CFile::CFile(cstring _name, cstring _path) :
 	m_Name(_name),
-	m_Path(_path),
-	m_FilesManager(GetManager<IFilesManager>())
+	m_Path(_path)
 {
 	ParsePathAndExtension();
 }
 
 CFile::~CFile()
 {
+
+
 	//Log::Info("File[%s] closed.", Path_Name().c_str());
 }
 

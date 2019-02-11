@@ -84,7 +84,14 @@ void PipelineStateDX11::Bind()
 	m_RasterizerState.Bind();
 	m_DepthStencilState.Bind();
 
-	/*sh*/
+	for (auto shader : m_Shaders)
+	{
+		std::shared_ptr<Shader> pShader = shader.second;
+		if (pShader)
+		{
+			pShader->Bind();
+		}
+	}
 }
 
 void PipelineStateDX11::UnBind()
@@ -94,5 +101,12 @@ void PipelineStateDX11::UnBind()
 		m_RenderTarget->UnBind();
 	}
 
-	/*sh*/
+	for (auto shader : m_Shaders)
+	{
+		std::shared_ptr<Shader> pShader = shader.second;
+		if (pShader)
+		{
+			pShader->UnBind();
+		}
+	}
 }

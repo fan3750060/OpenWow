@@ -178,7 +178,6 @@
     <ClInclude Include="MaterialImpl.h" />
     <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="InputSemantic.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="PipelineState.h" />

@@ -1,164 +1,79 @@
-#include "CommonInclude.hlsl"
+#include "..\\_gamedata\\shaders_D3D\\CommonInclude.hlsl"
 
-struct PixelShaderOutput
+struct VertexShaderInput
 {
-    float4 LightAccumulation    : SV_Target0;   // Ambient + emissive (R8G8B8_????) Unused (A8_UNORM)
-    float4 Diffuse              : SV_Target1;   // Diffuse Albedo (R8G8B8_UNORM) Unused (A8_UNORM)
-    float4 Specular             : SV_Target2;   // Specular Color (R8G8B8_UNROM) Specular Power(A8_UNORM)
-    float4 NormalVS             : SV_Target3;   // View space normal (R32G32B32_FLOAT) Unused (A32_FLOAT)
+	float3 position : POSITION;
+	float2 texCoord : TEXCOORD0;
+};
+struct VertexShaderOutput
+{
+	float4 position : SV_POSITION;
+	float2 texCoord : TEXCOORD0;
 };
 
-// Pixel shader that generates the G-buffer
-[earlydepthstencil]
-PixelShaderOutput PS_Geometry( VertexShaderOutput IN )
+// Uniforms
+cbuffer PerObject : register(b0)
 {
-    PixelShaderOutput OUT;
+	float4x4 ModelViewProjection;
+}
 
-    float4 diffuse = Mat.DiffuseColor;
-    if ( Mat.HasDiffuseTexture )
-    {
-        float4 diffuseTex = DiffuseTexture.Sample( LinearRepeatSampler, IN.texCoord );
-        if ( any( diffuse.rgb ) )
-        {
-            diffuse *= diffuseTex;
-        }
-        else
-        {
-            diffuse = diffuseTex;
-        }
-    }
 
-    // By default, use the alpha from the diffuse component.
-    float alpha = diffuse.a;
-    if ( Mat.HasOpacityTexture )
-    {
-        // If the material has an opacity texture, use that to override the diffuse alpha.
-        alpha = OpacityTexture.Sample( LinearRepeatSampler, IN.texCoord ).r;
-    }
-
-    if ( alpha * Mat.Opacity < Mat.AlphaThreshold )
-    {
-        discard;
-    }
-
-    OUT.Diffuse = diffuse;
-
-    float4 ambient = Mat.AmbientColor;
-    if ( Mat.HasAmbientTexture )
-    {
-        float4 ambientTex = AmbientTexture.Sample( LinearRepeatSampler, IN.texCoord );
-        if ( any( ambient.rgb ) )
-        {
-            ambient *= ambientTex;
-        }
-        else
-        {
-            ambient = ambientTex;
-        }
-    }
-
-    // Combine the global ambient term.
-    ambient *= Mat.GlobalAmbient;
-
-    float4 emissive = Mat.EmissiveColor;
-    if ( Mat.HasEmissiveTexture )
-    {
-        float4 emissiveTex = EmissiveTexture.Sample( LinearRepeatSampler, IN.texCoord );
-        if ( any( emissive.rgb ) )
-        {
-            emissive *= emissiveTex;
-        }
-        else
-        {
-            emissive = emissiveTex;
-        }
-    }
-
-    // TODO: Also compute directional lighting in the LightAccumulation buffer.
-    OUT.LightAccumulation = ( ambient + emissive );
-
-    float4 N;
-
-    // Normal mapping
-    if ( Mat.HasNormalTexture )
-    {
-        // For scense with normal mapping, I don't have to invert the binormal.
-        float3x3 TBN = float3x3( normalize( IN.tangentVS ),
-                                 normalize( IN.binormalVS ),
-                                 normalize( IN.normalVS ) );
-
-        N = DoNormalMapping( TBN, NormalTexture, LinearRepeatSampler, IN.texCoord );
-        //return N;
-    }
-    // Bump mapping
-    else if ( Mat.HasBumpTexture )
-    {
-        // For most scenes using bump mapping, I have to invert the binormal.
-        float3x3 TBN = float3x3( normalize( IN.tangentVS ),
-                                 normalize( -IN.binormalVS ), 
-                                 normalize( IN.normalVS ) );
-
-        N = DoBumpMapping( TBN, BumpTexture, LinearRepeatSampler, IN.texCoord, Mat.BumpIntensity );
-        //return N;
-    }
-    // Just use the normal from the model.
-    else
-    {
-        N = normalize( float4( IN.normalVS, 0 ) );
-        //return N;
-    }
-
-    OUT.NormalVS = N;
-
-    float specularPower = Mat.SpecularPower;
-    if ( Mat.HasSpecularPowerTexture )
-    {
-        specularPower = SpecularPowerTexture.Sample( LinearRepeatSampler, IN.texCoord ).r * Mat.SpecularScale;
-    }
-
-    float4 specular = 0;
-    if ( specularPower > 1.0f ) // If specular power is too low, don't use it.
-    {
-        specular = Mat.SpecularColor;
-        if ( Mat.HasSpecularTexture )
-        {
-            float4 specularTex = SpecularTexture.Sample( LinearRepeatSampler, IN.texCoord );
-            if ( any( specular.rgb ) )
-            {
-                specular *= specularTex;
-            }
-            else
-            {
-                specular = specularTex;
-            }
-        }
-    }
-
-    // Method of packing specular power from "Deferred Rendering in Killzone 2" presentation 
-    // from Michiel van der Leeuw, Guerrilla (2007)
-    OUT.Specular = float4( specular.rgb, log2( specularPower ) / 10.5f ); 
-
-    return OUT;
+cbuffer ScreenToViewParams : register( b3 ) // Parameters required to convert screen space coordinates to view space params.
+{
+    float4x4 InverseProjection;
+    float2 ScreenDimensions;
 }
 
 cbuffer LightIndexBuffer : register( b4 )
 {
-    // The index of the light in the Lights array.
-    uint LightIndex;
+    uint LightIndex; // The index of the light in the Lights array.
 }
 
-// The diffuse color from the view space texture.
-Texture2D DiffuseTextureVS : register( t0 );
-// The specular color from the screen space texture.
-Texture2D SpecularTextureVS : register( t1 );
-// The normal from the screen space texture.
-Texture2D NormalTextureVS : register( t2 );
-// The depth from the screen space texture.
-Texture2D DepthTextureVS : register( t3 );
+Texture2D PositionTextureWS : register( t0 ); // The position from the world space texture.
+Texture2D DiffuseTextureVS  : register( t1 ); // The diffuse color from the view space texture.
+Texture2D SpecularTextureVS : register( t2 ); // The specular color from the screen space texture.
+Texture2D NormalTextureVS   : register( t3 ); // The normal from the screen space texture.
+Texture2D DepthTextureVS    : register( t4 ); // The depth from the screen space texture.
 
-// Deferred lighting pixel shader.
+StructuredBuffer<Light> Lights : register(t5);
+
+//
+// HELPERS
+//
+
+// Convert clip space coordinates to view space
+float4 ClipToView( float4 clip )
+{
+    // View space position.
+    float4 view = mul( InverseProjection, clip );
+    // Perspecitive projection.
+    view = view / view.w;
+
+    return view;
+}
+
+// Convert screen space coordinates to view space.
+float4 ScreenToView( float4 screen )
+{
+    // Convert to normalized texture coordinates
+    float2 texCoord = screen.xy / ScreenDimensions;
+
+    // Convert to clip space
+    float4 clip = float4( float2( texCoord.x, 1.0f - texCoord.y ) * 2.0f - 1.0f, screen.z, screen.w );
+
+    return ClipToView( clip );
+}
+
+VertexShaderOutput VS_main(VertexShaderInput IN)
+{
+	VertexShaderOutput OUT;
+	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.texCoord = IN.texCoord;
+	return OUT;
+}
+
 [earlydepthstencil]
-float4 PS_DeferredLighting( VertexShaderOutput IN ) : SV_Target
+float4 PS_DeferredLighting(VertexShaderOutput IN) : SV_Target
 {
     // Everything is in view space.
     float4 eyePos = { 0, 0, 0, 1 };
@@ -180,7 +95,7 @@ float4 PS_DeferredLighting( VertexShaderOutput IN ) : SV_Target
 
     Light light = Lights[LightIndex];
     
-    Material mat = (Material)0;
+    LightMaterial mat = (LightMaterial)0;
     mat.DiffuseColor = diffuse;
     mat.SpecularColor = specular;
     mat.SpecularPower = specularPower;
@@ -200,39 +115,5 @@ float4 PS_DeferredLighting( VertexShaderOutput IN ) : SV_Target
         break;
     }
 
-    return ( diffuse * lit.Diffuse ) + ( specular * lit.Specular );
-}
-
-Texture2D DebugTexture : register( t0 );
-
-// Pixel shader to render a texture to the screen.
-float4 PS_DebugTexture( VertexShaderOutput IN ) : SV_Target
-{
-    //return float4( IN.texCoord, 0, 1 );
-    //return DebugTexture.SampleLevel( LinearRepeatSampler, IN.texCoord, 0 );
-    return DebugTexture.Sample( LinearRepeatSampler, IN.texCoord );
-}
-
-// Pixel shader to render a depth buffer to the screen.
-float4 PS_DebugDepthTexture( VertexShaderOutput IN ) : SV_Target
-{
-    //return float4( IN.texCoord, 0, 1 );
-    //return DebugTexture.SampleLevel( LinearRepeatSampler, IN.texCoord, 0 );
-    return DebugTexture.Sample( LinearRepeatSampler, IN.texCoord ).rrrr;
-}
-
-// Pixel shader to render a stencil buffer to the screen.
-float4 PS_DebugStencilTexture( VertexShaderOutput IN ) : SV_Target
-{
-    //return float4( IN.texCoord, 0, 1 );
-    //return DebugTexture.SampleLevel( LinearRepeatSampler, IN.texCoord, 0 );
-    return float4( 0, 1, 0, 1 );
-}
-
-uint PS_LightPicking( VertexShaderOutput IN ) : SV_Target
-{
-    // Only output the index of the light.
-    // The index is in the range 1...maxlights because 0 is the clear color
-    // and can't be used as a light index.
-    return LightIndex + 1;
+    return (diffuse * lit.Diffuse) + (specular * lit.Specular);
 }

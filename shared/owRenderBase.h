@@ -13,7 +13,6 @@
 #include "../owRenderBase/Material.h"
 #include "../owRenderBase/MaterialImpl.h"
 
-#include "../owRenderBase/Light.h"
 #include "../owRenderBase/Mesh.h"
 #include "../owRenderBase/ConstantBuffer.h"
 #include "../owRenderBase/StructuredBuffer.h"

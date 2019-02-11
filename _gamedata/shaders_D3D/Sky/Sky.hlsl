@@ -9,7 +9,8 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position : SV_POSITION;
+	float4 positionVS : SV_POSITION;
+	float4 positionWS : POSITION;
 	float4 color    : COLOR0;
 };
 
@@ -28,7 +29,8 @@ cbuffer Material : register(b2)
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
-	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionVS = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionWS = float4(IN.position, 1.0f);
 	OUT.color = IN.color;
 	return OUT;
 }
@@ -36,6 +38,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	PixelShaderOutput OUT;
+	OUT.PositionWS = IN.positionWS;
 	OUT.Diffuse = float4(IN.color.rgb, 1.0f);
 	return OUT;
 }

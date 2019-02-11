@@ -14,7 +14,6 @@ const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
 
 //
 
-
 CMPQArchiveManager::CMPQArchiveManager()
 {
 	// Files 1.12
@@ -76,7 +75,7 @@ void CMPQArchiveManager::AddArchive(std::string filename)
 {
 	mpq_archive_s* mpq_a;
 	int result = libmpq__archive_open(&mpq_a, (archives + filename).c_str(), -1);
-	Log::Info("Opening %s", filename.c_str());
+	//Log::Info("Opening %s", filename.c_str());
 	if (result)
 	{
 		switch (result)

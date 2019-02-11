@@ -79,9 +79,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Types</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="Pixel.h">
       <Filter>Types</Filter>
     </ClInclude>

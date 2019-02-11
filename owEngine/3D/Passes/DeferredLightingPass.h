@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BasePass.h"
+#include "Light.h"
 
 // Use this pass to render the lights as geometry in the scene.
 class DeferredLightingPass : public BasePass
@@ -14,6 +15,7 @@ public:
                           std::shared_ptr<PipelineState> lightPipeline0,
                           std::shared_ptr<PipelineState> lightPipeline1,
                           std::shared_ptr<PipelineState> directionalLightPipeline,
+						  std::shared_ptr<Texture> positionTexture,
                           std::shared_ptr<Texture> diffuseTexture,
                           std::shared_ptr<Texture> specularTexture,
                           std::shared_ptr<Texture> normalTexture,
@@ -23,13 +25,12 @@ public:
     virtual ~DeferredLightingPass();
 
     // Render the pass. This should only be called by the RenderTechnique.
-    virtual void PreRender( Render3DEventArgs& e );
-    virtual void Render( Render3DEventArgs& e );
-    virtual void PostRender( Render3DEventArgs& e );
+    virtual void PreRender(Render3DEventArgs& e) override;
+    virtual void Render(Render3DEventArgs& e) override;
+    virtual void PostRender(Render3DEventArgs& e) override;
 
     // Inherited from Visitor
-    virtual bool Visit( Scene3D& scene );
-    virtual bool Visit( SceneNode3D& node );
+    virtual bool Visit( SceneNode3D& node ) override;
 
 protected:
 
@@ -70,14 +71,9 @@ private:
     std::shared_ptr<Scene3D> m_pDirectionalLightScene;
 
     // Textures
+	std::shared_ptr<Texture> m_PositionTexture;
     std::shared_ptr<Texture> m_DiffuseTexture;
     std::shared_ptr<Texture> m_SpecularTexture;
     std::shared_ptr<Texture> m_NormalTexture;
     std::shared_ptr<Texture> m_DepthTexture;
-
-    __declspec( align( 16 ) ) struct AlignedProperties
-    {
-        glm::mat4 m_OrthographicProjection; // Requires 16 byte alignment.
-    };
-    AlignedProperties* m_pAlignedProperties;
 };
