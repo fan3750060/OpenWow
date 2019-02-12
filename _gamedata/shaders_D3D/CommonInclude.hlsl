@@ -40,6 +40,11 @@ struct Light
     */
     float4   DirectionVS;
     //--------------------------------------------------------------( 16 bytes )
+	/**
+    * Ambient color of the light.
+    */
+    float4   AmbientColor;
+	//--------------------------------------------------------------( 16 bytes )
     /**
     * Color of the light. Diffuse and specular colors are not seperated.
     */
@@ -89,6 +94,7 @@ float3 ExpandNormal( float3 n )
 // lighting functions for each light type.
 struct LightingResult
 {
+	float4 Ambient;
     float4 Diffuse;
     float4 Specular;
 };
@@ -170,6 +176,7 @@ LightingResult DoPointLight( Light light, LightMaterial mat, float4 V, float4 P,
 
     float attenuation = DoAttenuation( light, distance );
 
+	result.Ambient = light.AmbientColor;
     result.Diffuse = DoDiffuse( light, L, N ) * attenuation * light.Intensity;
     result.Specular = DoSpecular( light, mat, V, L, N ) * attenuation * light.Intensity;
 
@@ -182,6 +189,7 @@ LightingResult DoDirectionalLight( Light light, LightMaterial mat, float4 V, flo
 
     float4 L = normalize( -light.DirectionVS );
 
+	result.Ambient = light.AmbientColor;
     result.Diffuse = DoDiffuse( light, L, N ) * light.Intensity;
     result.Specular = DoSpecular( light, mat, V, L, N ) * light.Intensity;
 
@@ -199,6 +207,7 @@ LightingResult DoSpotLight( Light light, LightMaterial mat, float4 V, float4 P, 
     float attenuation = DoAttenuation( light, distance );
     float spotIntensity = DoSpotCone( light, L );
 
+	result.Ambient = light.AmbientColor;
     result.Diffuse = DoDiffuse( light, L, N ) * attenuation * spotIntensity * light.Intensity;
     result.Specular = DoSpecular( light, mat, V, L, N ) * attenuation * spotIntensity * light.Intensity;
 

@@ -36,7 +36,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	PixelShaderOutput OUT;
-	OUT.PositionWS = IN.positionWS;
+	OUT.PositionWS = float4(IN.positionWS.xyz, /*material*/ 0.0f);
 	OUT.Diffuse = Material.DiffuseColor;
 	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	OUT.NormalWS = float4(1.0f, 1.0f, 1.0f, 1.0f);

@@ -7,9 +7,8 @@
 // General
 #include "DeferredLightingPass.h"
 
-DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
-	std::shared_ptr<Scene3D> pointLight,
-	std::shared_ptr<Scene3D> spotLight,
+DeferredLightingPass::DeferredLightingPass(
+	std::shared_ptr<Scene3D> scene,
 	std::shared_ptr<PipelineState> lightPipeline0,
 	std::shared_ptr<PipelineState> lightPipeline1,
 	std::shared_ptr<PipelineState> directionalLightPipeline,
@@ -19,14 +18,10 @@ DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
 	std::shared_ptr<Texture> normalTexture,
 	std::shared_ptr<Texture> depthTexture
 )
-	: m_Lights(lights)
-	, m_pCurrentLight(nullptr)
-	, m_RenderDevice(Application::Get().GetRenderDevice())
-	, m_LightPipeline0(lightPipeline0)
+	: m_LightPipeline0(lightPipeline0)
 	, m_LightPipeline1(lightPipeline1)
 	, m_DirectionalLightPipeline(directionalLightPipeline)
-	, m_pPointLightScene(pointLight)
-	, m_pSpotLightScene(spotLight)
+	, m_Scene(scene)
 	, m_PositionTexture(positionTexture)
 	, m_DiffuseTexture(diffuseTexture)
 	, m_SpecularTexture(specularTexture)
@@ -34,11 +29,23 @@ DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
 	, m_DepthTexture(depthTexture)
 {
 	m_pScreenToViewParams = (ScreenToViewParams*)_aligned_malloc(sizeof(ScreenToViewParams), 16);
-	m_pLightParams = (LightParams*)_aligned_malloc(sizeof(LightParams), 16);
-
-	m_LightParamsCB = _RenderDevice->CreateConstantBuffer(LightParams());
 	m_ScreenToViewParamsCB = _RenderDevice->CreateConstantBuffer(ScreenToViewParams());
-	
+
+	m_pLightParams = (LightParams*)_aligned_malloc(sizeof(LightParams), 16);
+	m_LightParamsCB = _RenderDevice->CreateConstantBuffer(LightParams());
+
+	m_pFogParams = (FogParams*)_aligned_malloc(sizeof(FogParams), 16);
+	m_FogParamsCB = _RenderDevice->CreateConstantBuffer(FogParams());
+
+	// PointLightScene
+	m_pPointLightScene = std::make_shared<Scene3D>();
+
+	std::shared_ptr<SceneNode3D> sphereSceneNode = std::make_shared<SceneNode3D>();
+	sphereSceneNode->SetParent(m_pPointLightScene->GetRootNode());
+
+	std::shared_ptr<IMesh> sphereMesh = _RenderDevice->CreateSphere();
+	sphereSceneNode->AddMesh(sphereMesh);
+
 	// Create a full-screen quad that is placed on the far clip plane.
 	m_pDirectionalLightScene = std::make_shared<Scene3D>();
 
@@ -51,17 +58,20 @@ DeferredLightingPass::DeferredLightingPass(std::vector<Light>& lights,
 
 DeferredLightingPass::~DeferredLightingPass()
 {
-	_RenderDevice->DestroyConstantBuffer(m_LightParamsCB);
+	_aligned_free(m_pScreenToViewParams);
 	_RenderDevice->DestroyConstantBuffer(m_ScreenToViewParamsCB);
 
-	_aligned_free(m_pScreenToViewParams);
 	_aligned_free(m_pLightParams);
+	_RenderDevice->DestroyConstantBuffer(m_LightParamsCB);
+
+	_aligned_free(m_pFogParams);
+	_RenderDevice->DestroyConstantBuffer(m_FogParamsCB);
 }
 
 void DeferredLightingPass::PreRender(Render3DEventArgs& e)
 {
-	//std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
-	//assert1(pShader != nullptr);
+	e.PipelineState = nullptr;
+	SetRenderEventArgs(e);
 
 	// Bind the G-buffer textures to the pixel shader pipeline stage.
 	m_PositionTexture->Bind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
@@ -78,19 +88,7 @@ void DeferredLightingPass::RenderSubPass(Render3DEventArgs& e, std::shared_ptr<S
 
 	pipeline->Bind();
 
-	m_PositionTexture->Bind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_DiffuseTexture->Bind(1, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_SpecularTexture->Bind(2, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_NormalTexture->Bind(3, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_DepthTexture->Bind(4, Shader::PixelShader, ShaderParameter::Type::Texture);
-
 	scene->Accept(*this);
-
-	m_PositionTexture->UnBind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_DiffuseTexture->UnBind(1, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_SpecularTexture->UnBind(2, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_NormalTexture->UnBind(3, Shader::PixelShader, ShaderParameter::Type::Texture);
-	m_DepthTexture->UnBind(4, Shader::PixelShader, ShaderParameter::Type::Texture);
 
 	pipeline->UnBind();
 }
@@ -106,7 +104,7 @@ void DeferredLightingPass::Render(Render3DEventArgs& e)
 	// in the deferred lighting shader.
 	m_pScreenToViewParams->m_InverseProjectionMatrix = glm::inverse(pCamera->GetProjectionMatrix());
 	m_pScreenToViewParams->m_ScreenDimensions = glm::vec2(viewport.Width, viewport.Height);
-
+	m_pScreenToViewParams->m_CameraPos = vec4(pCamera->GetTranslation(), 1.0f);
 	m_ScreenToViewParamsCB->Set(*m_pScreenToViewParams);
 
 	// Connect shader parameters to shaders.
@@ -125,10 +123,11 @@ void DeferredLightingPass::Render(Render3DEventArgs& e)
 			// Bind the per-light & deferred lighting properties constant buffers to the pixel shader.
 			pixelShader->GetShaderParameterByName("LightIndexBuffer").Set(m_LightParamsCB);
 			pixelShader->GetShaderParameterByName("ScreenToViewParams").Set(m_ScreenToViewParamsCB);
+			pixelShader->GetShaderParameterByName("FogParams").Set(m_FogParamsCB);
 		}
 	}
 
-	m_pLightParams->m_LightIndex = 0;
+	/*m_pLightParams->m_LightIndex = 0;
 	for (Light& light : m_Lights)
 	{
 		if (light.m_Enabled)
@@ -158,14 +157,13 @@ void DeferredLightingPass::Render(Render3DEventArgs& e)
 			}
 		}
 		m_pLightParams->m_LightIndex++;
-	}
+	}*/
+
+	m_Scene->Accept(*this);
 }
 
 void DeferredLightingPass::PostRender(Render3DEventArgs& e)
 {
-	//std::shared_ptr<Shader> pShader = e.PipelineState->GetShader(Shader::PixelShader);
-	//assert1(pShader != nullptr);
-
 	// Explicitly unbind these textures so they can be used as render target textures.
 	m_PositionTexture->UnBind(0, Shader::PixelShader, ShaderParameter::Type::Texture);
 	m_DiffuseTexture->UnBind(1, Shader::PixelShader, ShaderParameter::Type::Texture);
@@ -178,44 +176,99 @@ void DeferredLightingPass::PostRender(Render3DEventArgs& e)
 
 bool DeferredLightingPass::Visit(SceneNode3D& node)
 {
+	m_World = node.GetWorldTransfom();
+
+	return true;
+}
+
+bool DeferredLightingPass::Visit(IMesh& mesh)
+{
+	if (m_pRenderEventArgs && mesh.GetMaterial() == nullptr) // TODO: Fixme
+	{
+		return mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
+	}
+
+	return false;
+}
+
+bool DeferredLightingPass::Visit(CLight3D& light)
+{
 	const Camera* camera = GetRenderEventArgs().Camera;
 	assert1(camera != nullptr);
 
 	PerObject perObjectData;
 
-	if (m_pCurrentLight->m_Type == Light::LightType::Directional)
+	if (light.getLight().m_Type == Light::LightType::Directional)
 	{
 		perObjectData.ModelView = glm::mat4(1.0f);
 		perObjectData.ModelViewProjection = glm::ortho(0.0f, 1280.0f, 1024.0f, 0.0f, -1.0f, 1.0f);
 	}
 	else
 	{
-		glm::mat4 nodeTransform = node.GetWorldTransfom();
-
 		// Setup constant buffer for node.
 		// Create a model matrix from the light properties.
-		glm::mat4 translation = glm::translate(glm::vec3(m_pCurrentLight->m_PositionWS));
+		glm::mat4 translation = glm::translate(glm::vec3(light.getLight().m_PositionWS));
 		// Create a rotation matrix that rotates the model towards the direction of the light.
-		glm::mat4 rotation = glm::toMat4(glm::quat(glm::vec3(0, 0, 1), glm::normalize(glm::vec3(m_pCurrentLight->m_DirectionWS))));
+		glm::mat4 rotation = glm::toMat4(glm::quat(glm::vec3(0, 0, 1), glm::normalize(glm::vec3(light.getLight().m_DirectionWS))));
 
 		// Compute the scale depending on the light type.
 		float scaleX, scaleY, scaleZ;
 		// For point lights, we want to scale the geometry by the range of the light.
-		scaleX = scaleY = scaleZ = m_pCurrentLight->m_Range;
-		if (m_pCurrentLight->m_Type == Light::LightType::Spot)
+		scaleX = scaleY = scaleZ = light.getLight().m_Range;
+		if (light.getLight().m_Type == Light::LightType::Spot)
 		{
 			// For spotlights, we want to scale the base of the cone by the spotlight angle.
-			scaleX = scaleY = glm::tan(glm::radians(m_pCurrentLight->m_SpotlightAngle)) * m_pCurrentLight->m_Range;
+			scaleX = scaleY = glm::tan(glm::radians(light.getLight().m_SpotlightAngle)) * light.getLight().m_Range;
 		}
 
 		glm::mat4 scale = glm::scale(glm::vec3(scaleX, scaleY, scaleZ));
 
-		perObjectData.ModelView = camera->GetViewMatrix() * translation * rotation * scale * nodeTransform;
+		perObjectData.ModelView = camera->GetViewMatrix() * translation * rotation * scale * m_World;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
 	}
-
 	SetPerObjectConstantBufferData(perObjectData);
+
+	// Update the constant buffer for the per-light data.
+	m_pLightParams->m_Light = light.getLight();
+	m_LightParamsCB->Set(*m_pLightParams);
+
+	// Clear the stencil buffer for the next light
+	m_LightPipeline0->GetRenderTarget()->Clear(ClearFlags::Stencil, glm::vec4(0), 1.0f, 1);
+	// The other pipelines should have the same render target.. so no need to clear it 3 times.
+
+	switch (light.getLight().m_Type)
+	{
+	case Light::LightType::Point:
+		RenderSubPass(GetRenderEventArgs(), m_pPointLightScene, m_LightPipeline0);
+		RenderSubPass(GetRenderEventArgs(), m_pPointLightScene, m_LightPipeline1);
+		break;
+	case Light::LightType::Spot:
+		RenderSubPass(GetRenderEventArgs(), m_pSpotLightScene, m_LightPipeline0);
+		RenderSubPass(GetRenderEventArgs(), m_pSpotLightScene, m_LightPipeline1);
+		break;
+	case Light::LightType::Directional:
+		RenderSubPass(GetRenderEventArgs(), m_pDirectionalLightScene, m_DirectionalLightPipeline);
+		break;
+	}
 
 	return true;
 }
 
+void DeferredLightingPass::UpdateFog(float fogModifier, vec3 fogColor, float fogDistance)
+{
+	m_pFogParams->FogModifier = fogModifier;
+	m_pFogParams->FogColor = fogColor;
+	m_pFogParams->FogDistance = fogDistance;
+	m_FogParamsCB->Set(*m_pFogParams);
+}
+
+void DeferredLightingPass::SetRenderEventArgs(Render3DEventArgs & e)
+{
+	m_pRenderEventArgs = &e;
+}
+
+Render3DEventArgs& DeferredLightingPass::GetRenderEventArgs() const
+{
+	assert1(m_pRenderEventArgs);
+	return *m_pRenderEventArgs;
+}

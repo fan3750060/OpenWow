@@ -7,8 +7,8 @@
 
 struct MapChunk_Material
 {
-    float4 DiffuseColor;
 	uint   LayersCnt;
+	bool   ShadowMapExists;
     //-------------------------- ( 16 bytes )
 };
 
@@ -48,6 +48,10 @@ Texture2D ColorMap1       : register(t1);
 Texture2D ColorMap2       : register(t2);
 Texture2D ColorMap3       : register(t3);
 Texture2D AlphaMap        : register(t4);
+Texture2D SpecMap0        : register(t5);
+Texture2D SpecMap1        : register(t6);
+Texture2D SpecMap2        : register(t7);
+Texture2D SpecMap3        : register(t8);
 sampler   ColorMapSampler : register(s0);
 sampler   AlphaMapSampler : register(s1);
 
@@ -57,7 +61,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 	OUT.positionVS = mul(ModelViewProjection, float4(IN.position, 1.0f));
 	OUT.positionWS = float4(IN.position, 1.0f);
-	OUT.normal = IN.normal;
+	OUT.normal = mul(ModelViewProjection, float4(IN.normal, 0.0f));
 	OUT.mccvColor = IN.mccvColor;
 	OUT.texCoordDetail = IN.texCoordDetail;
 	OUT.texCoordAlpha = IN.texCoordAlpha;
@@ -68,7 +72,9 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	float3 layersColor = float3(0,0,0);
+	float4 layersSpec = float4(0,0,0,0);
 	float3 resultColor = float3(0,0,0);
+	float4 resultSpec = float4(0,0,0,0);
 	
 #if _IS_NORTREND == 1
 
@@ -79,50 +85,63 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
 		alphaSumma += alphaCurrent;
 		layersColor += ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		layersSpec += SpecMap1.Sample(ColorMapSampler, IN.texCoordDetail) * alphaCurrent;
 	}
 	if (Material.LayersCnt >= 3)
 	{
 		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
 		alphaSumma += alphaCurrent;
 		layersColor += ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		layersSpec += SpecMap2.Sample(ColorMapSampler, IN.texCoordDetail) * alphaCurrent;
 	}
 	if (Material.LayersCnt >= 4)
 	{
 		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
 		alphaSumma += alphaCurrent;
 		layersColor += ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb * alphaCurrent;
+		layersSpec += SpecMap3.Sample(ColorMapSampler, IN.texCoordDetail) * alphaCurrent;
 	}
 	resultColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb * (1.0 - alphaSumma) + layersColor;
+	resultColor = SpecMap0.Sample(ColorMapSampler, IN.texCoordDetail) * (1.0 - alphaSumma) + layersSpec;
 	
 #else
 
 	/* NOT NORTREND */
 	layersColor = ColorMap0.Sample(ColorMapSampler, IN.texCoordDetail).rgb;
+	layersSpec = SpecMap0.Sample(ColorMapSampler, IN.texCoordDetail);
 	if (Material.LayersCnt >= 2)
 	{
 		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).r;
 		layersColor = lerp(layersColor, ColorMap1.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		layersSpec = lerp(layersSpec, SpecMap1.Sample(ColorMapSampler, IN.texCoordDetail), alphaCurrent);
 	}
 	if (Material.LayersCnt >= 3)
 	{
 		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).g;
 		layersColor = lerp(layersColor, ColorMap2.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		layersSpec = lerp(layersSpec, SpecMap2.Sample(ColorMapSampler, IN.texCoordDetail), alphaCurrent);
 	}
 	if (Material.LayersCnt >= 4)
 	{
 		float alphaCurrent = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).b;
 		layersColor = lerp(layersColor, ColorMap3.Sample(ColorMapSampler, IN.texCoordDetail).rgb, alphaCurrent);
+		layersSpec = lerp(layersSpec, SpecMap3.Sample(ColorMapSampler, IN.texCoordDetail), alphaCurrent);
 	}
 	resultColor = layersColor;
+	resultSpec = layersSpec;
 	
 #endif
-	
-	//resultColor *= (IN.mccvColor * 2.0f);
 
+	if (Material.ShadowMapExists)
+	{
+		float alphaShadow = AlphaMap.Sample(AlphaMapSampler, IN.texCoordAlpha).a;
+		resultColor = lerp(resultColor,  float3(0.0, 0.0, 0.0), alphaShadow);
+	}
+	
 	PixelShaderOutput OUT;
 	OUT.PositionWS = IN.positionWS;
 	OUT.Diffuse = float4(resultColor, 1.0f);
-	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	OUT.NormalWS = float4(IN.normal, 1.0f);
+	OUT.Specular = resultSpec;
+	OUT.NormalWS = float4(IN.normal, 0.0f);
 	return OUT;
 }

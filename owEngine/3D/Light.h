@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-__declspec(align(16)) struct Light
+struct Light
 {
 	enum class LightType : uint32_t
 	{
@@ -30,6 +30,11 @@ __declspec(align(16)) struct Light
 	* Direction for spot and directional lights (View space).
 	*/
 	vec4   m_DirectionVS;
+	//--------------------------------------------------------------( 16 bytes )
+	/**
+	 * Ambient color of the light.
+	 */
+	vec4   m_AmbientColor;
 	//--------------------------------------------------------------( 16 bytes )
 	/**
 	 * Color of the light. Diffuse and specular colors are not separated.
@@ -73,6 +78,7 @@ __declspec(align(16)) struct Light
 		, m_DirectionWS(0, 0, -1, 0)
 		, m_PositionVS(0, 0, 0, 1)
 		, m_DirectionVS(0, 0, 1, 0)
+		, m_AmbientColor(0, 0, 0, 0)
 		, m_Color(1, 1, 1, 1)
 		, m_SpotlightAngle(45.0f)
 		, m_Range(99999.0f)

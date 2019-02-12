@@ -40,7 +40,7 @@ void ADT_MCNK::UpdateLocalTransform()
 
 bool ADT_MCNK::Accept(IVisitor& visitor)
 {
-	const BasePass& visitorAsBasePass = reinterpret_cast<const BasePass&>(visitor);
+	const AbstractPass& visitorAsBasePass = reinterpret_cast<const AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
 	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
@@ -366,9 +366,11 @@ bool ADT_MCNK::Load()
 	for (uint32 i = 0; i < header.nLayers; i++)
 	{
 		mat->SetTexture(i, m_DiffuseTextures[i]); // DXT1
+		mat->SetTexture(i + 5, m_SpecularTextures[i]); // DXT1
 	}
 	mat->SetTexture(4, m_BlendRBGShadowATexture);
 	mat->SetLayersCnt(header.nLayers);
+	mat->SetShadowMapExists(header.flags.has_mcsh == 1);
 
 	{ // Geom High
 		std::vector<uint16>& mapArrayHigh = _MapShared->GenarateHighMapArray(header.holes);

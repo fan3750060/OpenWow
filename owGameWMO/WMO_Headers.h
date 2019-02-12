@@ -97,15 +97,13 @@ struct SWMO_VisibleBlockListDef
 
 struct SWMO_LightDef
 {
-	enum LightType : uint8
+	enum : uint8
 	{
 		OMNI_LGT = 0,
 		SPOT_LGT = 1,
 		DIRECT_LGT = 2,
 		AMBIENT_LGT = 3,
-	};
-
-	LightType type;
+	} type ;
 	uint8 useAtten;
 	uint8 unk0[2];
 	uint32 color;

@@ -12,8 +12,7 @@ BasePass::BasePass()
 	: m_pRenderEventArgs(nullptr)
 	, m_RenderDevice(_RenderDevice)
 {
-	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
-	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
+
 }
 
 BasePass::BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
@@ -22,14 +21,11 @@ BasePass::BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState
 	, m_Pipeline(pipeline)
 	, m_RenderDevice(_RenderDevice)
 {
-	m_PerObjectData = (PerObject*)_aligned_malloc(sizeof(PerObject), 16);
-	m_PerObjectConstantBuffer = m_RenderDevice.lock()->CreateConstantBuffer(PerObject());
+
 }
 
 BasePass::~BasePass()
 {
-	_aligned_free(m_PerObjectData);
-	m_RenderDevice.lock()->DestroyConstantBuffer(m_PerObjectConstantBuffer);
 }
 
 void BasePass::PreRender(Render3DEventArgs& e)
@@ -87,12 +83,16 @@ bool BasePass::Visit(SceneNode3D& node)
 
 bool BasePass::Visit(IMesh& mesh)
 {
-	//std::shared_ptr<const Material> pMaterial = mesh.GetMaterial();
 	if (m_pRenderEventArgs)
 	{
 		return mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer);
 	}
 
+	return false;
+}
+
+bool BasePass::Visit(CLight3D& light)
+{
 	return false;
 }
 
@@ -109,14 +109,6 @@ Render3DEventArgs& BasePass::GetRenderEventArgs() const
 	return *m_pRenderEventArgs;
 }
 
-void BasePass::BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader)
-{
-	if (shader)
-	{
-		shader->GetShaderParameterByName("PerObject").Set(m_PerObjectConstantBuffer);
-	}
-}
-
 //----------------------------------------------------------------------
 
 std::shared_ptr<IRenderDevice> BasePass::GetRenderDevice() const
@@ -127,16 +119,4 @@ std::shared_ptr<IRenderDevice> BasePass::GetRenderDevice() const
 std::shared_ptr<PipelineState> BasePass::GetPipelineState() const
 {
 	return m_Pipeline;
-}
-
-//----------------------------------------------------------------------
-
-void BasePass::SetPerObjectConstantBufferData(PerObject& perObjectData)
-{
-	m_PerObjectConstantBuffer->Set(perObjectData);
-}
-
-std::shared_ptr<ConstantBuffer> BasePass::GetPerObjectConstantBuffer() const
-{
-	return m_PerObjectConstantBuffer;
 }

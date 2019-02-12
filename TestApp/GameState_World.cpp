@@ -79,7 +79,17 @@ void CGameState_World::OnPreRender(Render3DEventArgs& e)
 {
 	m_FrameQuery->Begin(e.FrameCounter);
 
-	
+	//if (e.FrameCounter % 20 == 0)
+	//	m_MapController->getTime()->Tick();
+	UpdateLights();
+
+	std::shared_ptr<ISkyManager> skyManager = GetManager<ISkyManager>();
+
+	m_Pass->UpdateFog(
+		0.5f, //skyManager->GetFog(LightFogs::LIGHT_FOG_MULTIPLIER), 
+		skyManager->GetColor(LightColors::LIGHT_COLOR_FOG), 
+		skyManager->GetFog(LightFogs::LIGHT_FOG_DISTANCE)
+	);
 
 	ADT_WMO_Instance::reset();
 	ADT_MDX_Instance::reset();
@@ -454,38 +464,39 @@ void CGameState_World::Load3D()
 		g_pDirectionalLightsPipeline->GetBlendState().SetBlendMode(additiveBlending);
 
 		// Setup depth mode
-		DepthStencilState::DepthMode depthMode(true, DepthStencilState::DepthWrite::Disable); // Disable depth writes.
+		//DepthStencilState::DepthMode depthMode(true, DepthStencilState::DepthWrite::Disable); // Disable depth writes.
 		// The full-screen quad that will be used to light pixels will be placed at the far clipping plane.
 		// Only light pixels that are "in front" of the full screen quad (exclude sky box pixels)
-		depthMode.DepthFunction = DepthStencilState::CompareFunction::Greater;
+		//depthMode.DepthFunction = DepthStencilState::CompareFunction::Greater;
 		g_pDirectionalLightsPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
 	
 
 	Light dir;
 	dir.m_Enabled = true;
 	dir.m_Type = Light::LightType::Directional;
-	dir.m_DirectionWS = vec4(0.0, -0.5f, 0.0f, 0.0f);
+	dir.m_DirectionWS = vec4(0.0, -1.5f, 0.0f, 0.0f);
 	dir.m_Color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-	m_Lights.push_back(dir);
+	dir.m_Intensity = 0.5f;
 
-	UpdateNumLights();
+	m_DirLight = std::make_shared<CLight3D>();
+	m_DirLight->setLight(dir);
+	m_MapController->AddLight(m_DirLight);
+
 	UpdateLights();
-	g_pDeferredLightingPixelShader->GetShaderParameterByName("Lights").Set(m_LightsStructuredBuffer);
 
 	std::shared_ptr<Texture> depthStencilBuffer = renderWindow->GetRenderTarget()->GetTexture(IRenderTarget::AttachmentPoint::DepthStencil);
-	std::shared_ptr<IRenderPass> renderToSceneQuadPass = std::make_shared<DeferredLightingPass>(
-		m_Lights, 
-		nullptr, nullptr,
+	m_Pass = std::make_shared<DeferredLightingPass>(
+		m_3DScene,
 		g_pDeferredLightingPipeline1, g_pDeferredLightingPipeline2, g_pDirectionalLightsPipeline,
 		m_GBufferRenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color0), // position
 		m_GBufferRenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color1), // diffuse
 		m_GBufferRenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color2), // specular
 		m_GBufferRenderTarget->GetTexture(IRenderTarget::AttachmentPoint::Color3), // normal
-		depthStencilBuffer
+		m_GBufferRenderTarget->GetTexture(IRenderTarget::AttachmentPoint::DepthStencil)
 		);
 
 	m_3DDeferredTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-	m_3DDeferredTechnique.AddPass(renderToSceneQuadPass);
+	m_3DDeferredTechnique.AddPass(m_Pass);
 }
 
 void CGameState_World::LoadUI()
@@ -541,41 +552,12 @@ void CGameState_World::UpdateLights()
 {
 	glm::mat4 viewMatrix = m_CameraController->GetCamera()->GetViewMatrix();
 
-	// Update the viewspace vectors of the light.
-	for (unsigned int i = 0; i < m_Lights.size(); i++)
-	{
-		// Update the lights so that their position and direction are in view space.
-		Light& light = m_Lights[i];
-		light.m_PositionVS = viewMatrix * glm::vec4(light.m_PositionWS.xyz(), 1);
-		light.m_DirectionVS = glm::normalize(viewMatrix * glm::vec4(light.m_DirectionWS.xyz(), 0));
-	}
+	DayNightPhase& phase = m_MapController->getDayNightPhase();
+	Light& light = m_DirLight->getLight();
 
-	// Update constant buffer data with lights array.
-	m_LightsStructuredBuffer->Set(m_Lights);
+	light.m_DirectionWS = vec4(phase.dayDir, 0.0f);
+	light.m_AmbientColor = vec4(phase.ambientColor, phase.ambientIntensity);
+	light.m_Color = vec4(phase.dayColor, 1.0f) * phase.dayIntensity;
+	light.m_PositionVS = viewMatrix * glm::vec4(light.m_PositionWS.xyz(), 1);
+	light.m_DirectionVS = glm::normalize(viewMatrix * glm::vec4(light.m_DirectionWS.xyz(), 0));
 }
-
-void CGameState_World::UpdateNumLights()
-{
-	size_t numLights = m_Lights.size();
-
-	std::shared_ptr<IRenderDevice> renderDevice = Application::Get().GetRenderDevice();
-
-	// Destroy the old constant buffer
-	renderDevice->DestroyStructuredBuffer(m_LightsStructuredBuffer);
-
-	// Create a new one of the right size.
-	m_LightsStructuredBuffer = renderDevice->CreateStructuredBuffer(m_Lights, CPUAccess::Write);
-
-	// Recompile the shaders with the new size of lights array.
-	//Shader::ShaderMacros shaderMacros;
-	//{
-	//	std::stringstream ss;
-	//	ss << numLights;
-	//	shaderMacros["NUM_LIGHTS"] = ss.str();
-	//}
-
-	// Recompile pixel shaders with updated number of lights.
-	//g_pPixelShader->LoadShaderFromFile(Shader::PixelShader, L"../Assets/shaders/ForwardRendering.hlsl", shaderMacros, "PS_main", "latest");
-	//g_pDeferredLightingPixelShader->LoadShaderFromFile(Shader::PixelShader, L"../Assets/shaders/DeferredRendering.hlsl", shaderMacros, "PS_DeferredLighting", "latest");
-}
-

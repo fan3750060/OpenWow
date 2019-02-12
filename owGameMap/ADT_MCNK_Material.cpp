@@ -69,6 +69,12 @@ void ADT_MCNK_Material::SetLayersCnt(uint32 value)
 	MarkConstantBufferDirty();
 }
 
+void ADT_MCNK_Material::SetShadowMapExists(uint32 value)
+{
+	m_pProperties->m_ShadowMapExists = value;
+	MarkConstantBufferDirty();
+}
+
 //--
 
 void ADT_MCNK_Material::UpdateConstantBuffer() const

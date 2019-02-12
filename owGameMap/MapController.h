@@ -2,6 +2,7 @@
 
 #include "Map_Shared.h"
 #include "SkyManager.h"
+#include "EnvironmentManager.h"
 #include "ADT.h"
 #include "WDT.h"
 #include "WDL.h"
@@ -43,7 +44,9 @@ public: // Getters
 	
 	std::shared_ptr<Texture> getMinimap() const { return m_WDL->getMinimap(); }
 	const std::shared_ptr<SkyManager> getSkyManager() const { return m_SkyManager; }
-	const WowTime* getTime() const { return &m_GameTime; }
+	const std::shared_ptr<EnvironmentManager> getEnvManager() const { return m_EnvironmentManager; }
+	DayNightPhase getDayNightPhase() const { return m_EnvironmentManager->dayNightCycle->getPhase(m_GameTime.GetTime()); }
+	WowTime* getTime() { return &m_GameTime; }
 
 	bool getTileIsCurrent(int x, int z) const
 	{
@@ -80,6 +83,7 @@ private:
 	std::shared_ptr<WDT>	m_WDT;
 	std::shared_ptr<WDL>	m_WDL;
 	std::shared_ptr<SkyManager> m_SkyManager;
+	std::shared_ptr<EnvironmentManager> m_EnvironmentManager;
 	WowTime					m_GameTime;
 
 	// Minimap

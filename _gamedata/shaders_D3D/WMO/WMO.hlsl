@@ -17,8 +17,9 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position  : SV_POSITION;
-	float3 normal    : NORMAL0;
+	float4 positionVS: SV_POSITION;
+	float4 positionWS: POSITION;
+	float3 normalVS  : NORMAL0;
 	float4 color     : COLOR0;
 	float2 texCoord0 : TEXCOORD0;
 	float2 texCoord1 : TEXCOORD1;
@@ -43,8 +44,9 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
 
-	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
-	OUT.normal = IN.normal;
+	OUT.positionVS = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionWS = float4(IN.position, 1.0f);
+	OUT.normalVS = mul(ModelViewProjection, float4(IN.normal, 0.0f));
 	OUT.color = IN.color;
 	OUT.texCoord0 = IN.texCoord0;
 	OUT.texCoord1 = IN.texCoord1;
@@ -70,9 +72,9 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 	}
 	
 	PixelShaderOutput OUT;
+	OUT.PositionWS = float4(IN.positionWS.xyz, /*material*/ 1.0f);
 	OUT.Diffuse = resultColor;
-	OUT.LightAccumulation = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	OUT.Normal = float4(IN.normal, 1.0f);
+	OUT.NormalWS = float4(IN.normalVS, 1.0f);
 	return OUT;
 }

@@ -21,12 +21,12 @@ public:
 	D3DMultithreadLocker(ID3D10Multithread * locker)
 		: m_Locker(locker)
 	{
-		m_Locker->Enter();
+		//m_Locker->Enter();
 	}
 
 	~D3DMultithreadLocker()
 	{
-		m_Locker->Leave();
+		//m_Locker->Leave();
 	}
 
 private:
@@ -136,7 +136,7 @@ void RenderDeviceDX11::CreateDevice()
 		Log::Error("Failed to create DirectX 11.2 device");
 	}
 
-	m_pMultiThread->SetMultithreadProtected(FALSE);
+	//m_pMultiThread->SetMultithreadProtected(FALSE);
 
 	if (SUCCEEDED(m_pDevice->QueryInterface<ID3D11Debug>(&m_pDebugLayer)))
 	{
@@ -320,12 +320,12 @@ void RenderDeviceDX11::DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer>
 
 void RenderDeviceDX11::Lock()
 {
-	m_pMultiThread->Enter();
+	//m_pMultiThread->Enter();
 }
 
 void RenderDeviceDX11::Unlock()
 {
-	m_pMultiThread->Leave();
+	//m_pMultiThread->Leave();
 }
 
 //--

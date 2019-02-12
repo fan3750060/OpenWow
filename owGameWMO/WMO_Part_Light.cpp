@@ -15,7 +15,15 @@ WMO_Part_Light::WMO_Part_Light(const SWMO_LightDef& _proto)
 	//fcolor *= lightDef.intensity;
 	fcolor.w = 1.0f;
 
-	//Log::Warn("Atten = %f, %f", lightDef.attenStart, lightDef.attenEnd);
+	Light light;
+	light.m_Type = Light::LightType::Point;
+	light.m_PositionWS = vec4(lightDef.pos.x, lightDef.pos.z, -lightDef.pos.y, 1.0f);
+	light.m_Color = fcolor;
+	light.m_Range = _proto.intensity;
+
+	setLight(light);
+
+	Log::Warn("WMOLight: Created: Type %d, UseAtten %d, %f", lightDef.type, lightDef.useAtten, lightDef.attenStart, lightDef.attenEnd);
 }
 
 void WMO_Part_Light::setup(uint32 light)
@@ -28,10 +36,4 @@ void WMO_Part_Light::setup(uint32 light)
 	//glLightfv(light, GL_POSITION, LightPosition);
 
 	//glEnable(light);
-}
-
-void WMO_Part_Light::Render(cmat4 _world)
-{
-	//_Render->DrawSphere(mat4(), _world * vec4(m_Position, 0), lightDef.attenStart, fcolor);
-	//_Render->DrawSphere(mat4(), _world * vec4(m_Position, 0), lightDef.attenEnd, fcolor);
 }

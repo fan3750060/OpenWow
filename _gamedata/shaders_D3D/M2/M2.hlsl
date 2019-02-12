@@ -61,7 +61,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	VertexShaderOutput OUT;
 	OUT.positionVS = mul(ModelViewProjection, newVertex);
 	OUT.positionWS = newVertex;
-	OUT.normal = IN.normal;
+	OUT.normal = mul(ModelViewProjection, IN.normal);
 	if (Material.gTextureAnimEnable)
 	{
 		OUT.texCoord0 = (mul(Material.gTextureAnimMatrix, float4(IN.texCoord0, 1.0f, 1.0f))).xy;
@@ -95,8 +95,8 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 	PixelShaderOutput OUT;
 	OUT.PositionWS = IN.positionWS;
 	OUT.Diffuse = resultColor;
-	OUT.Specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	OUT.NormalWS = float4(IN.normal, 1.0f);
+	OUT.Specular = float4(0.5f, 0.5f, 0.5f, 1.0f);
+	OUT.NormalWS = float4(IN.normal, 0.0f);
 	return OUT;
 }
 

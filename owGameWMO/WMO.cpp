@@ -50,6 +50,11 @@ void WMO::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 
 		it->CreateInsances(groupInstance);
 	}
+
+	for (auto& it : m_Lights)
+	{
+		parentAsWMOInstance->AddLight(it);
+	}
 }
 
 bool WMO::Load()

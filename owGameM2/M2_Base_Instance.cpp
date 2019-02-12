@@ -103,7 +103,7 @@ bool CM2_Base_Instance::Delete()
 
 bool CM2_Base_Instance::Accept(IVisitor& visitor)
 {
-	const BasePass& visitorAsBasePass = reinterpret_cast<BasePass&>(visitor);
+	const AbstractPass& visitorAsBasePass = reinterpret_cast<AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
 	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();

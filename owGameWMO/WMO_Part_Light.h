@@ -10,14 +10,12 @@ enum LightType
 
 #include "WMO_Headers.h"
 
-class WMO_Part_Light
+class WMO_Part_Light : public CLight3D
 {
 public:
 	WMO_Part_Light(const SWMO_LightDef& _proto);
 
 	void setup(uint32 light);
-
-	void Render(cmat4 _world);
 
 public:
 	vec3 m_Position;

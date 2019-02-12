@@ -24,7 +24,6 @@ private:
 
 	// Lights update
 	void UpdateLights();
-	void UpdateNumLights();
 
 private:
 	Viewport                             m_Viewport;
@@ -39,19 +38,20 @@ private:
 	double                               m_FrameTime;
 	std::shared_ptr<Scene3D>             m_3DScene;
 	std::shared_ptr<SceneUI>             m_UIScene;
-	std::vector<Light>                   m_Lights;
-	std::shared_ptr<StructuredBuffer>    m_LightsStructuredBuffer;
 
+	std::shared_ptr<CLight3D>            m_DirLight;
 	std::shared_ptr<MapController>       m_MapController;
 
 	std::shared_ptr<UIText>              m_CameraPosText;
 	std::shared_ptr<UIText>              m_CameraRotText;
 
 private:
+	std::shared_ptr<DeferredLightingPass>m_Pass;
 	std::shared_ptr<IRenderTarget>       m_GBufferRenderTarget;
 
 private:
 	const uint16 c_WindowsWidth = 1280;
 	const uint16 c_WindowsHeight = 1024;
-	const vec4 g_ClearColor = vec4(0.39f, 0.58f, 0.93f, 1.0f);
+	//const vec4 g_ClearColor = vec4(0.39f, 0.58f, 0.93f, 1.0f);
+	const vec4 g_ClearColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 };

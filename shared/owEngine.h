@@ -72,5 +72,7 @@
 #include "../owEngine/3D/Passes/InvokeFunctionPass.h"
 
 // Postprocess
+#include "../owEngine/3D/Light.h"
+#include "../owEngine/3D/Light3D.h"
 #include "../owEngine/3D/Passes/GBufferPass.h"
 #include "../owEngine/3D/Passes/DeferredLightingPass.h"

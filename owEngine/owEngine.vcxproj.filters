@@ -161,6 +161,9 @@
     <ClCompile Include="3D\Passes\DeferredLightingPass.cpp">
       <Filter>3D\Passes</Filter>
     </ClCompile>
+    <ClCompile Include="3D\Light3D.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -296,6 +299,9 @@
     </ClInclude>
     <ClInclude Include="3D\Passes\DeferredLightingPass.h">
       <Filter>3D\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Light3D.h">
+      <Filter>3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

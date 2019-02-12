@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Light3D.h"
+
 class IMesh;
 class Camera;
 class Render3DEventArgs;
@@ -12,6 +14,7 @@ public:
 	typedef std::vector<std::shared_ptr<SceneNode3D>> NodeList;
 	typedef std::multimap<std::string, std::shared_ptr<SceneNode3D>> NodeNameMap;
 	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
+	typedef std::vector<std::shared_ptr<CLight3D>> LightList;
 
 public:
 	explicit SceneNode3D(cmat4 localTransform = mat4(1.0f));
@@ -93,6 +96,13 @@ public:
 	virtual const MeshList&  GetMeshes();
 
 	/**
+	 * Add a light to this scene node.
+	 */
+	virtual void AddLight(std::shared_ptr<CLight3D> _light);
+	virtual void RemoveLight(std::shared_ptr<CLight3D> _light);
+	virtual const LightList& GetLights();
+
+	/**
 	 * Called before all others calls
 	 */
 	virtual void UpdateCamera(const Camera* camera);
@@ -153,12 +163,14 @@ private:
 	
 	
 
-	std::weak_ptr<SceneNode3D>  m_pParentNode;
+	std::weak_ptr<SceneNode3D>m_pParentNode;
 	NodeList                  m_Children;
 	NodeNameMap               m_ChildrenByName;
 	std::mutex                m_ChildMutex;
 	MeshList                  m_Meshes;
 	std::mutex                m_MeshMutex;
+	LightList                 m_Lights;
+
 
 private:
 	std::atomic<bool>         m_IsLoadingBegin;

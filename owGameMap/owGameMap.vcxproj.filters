@@ -19,14 +19,14 @@
     <Filter Include="RenderStuff">
       <UniqueIdentifier>{7cb4ca49-cc19-4521-b63c-875a194bd00e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map\ADT_MCNK">
-      <UniqueIdentifier>{47d8efda-9ea2-4fbb-96f8-1cdf4f28a5d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Map\WDL">
       <UniqueIdentifier>{33702109-edc7-4dcf-a921-d1413fa8219c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Skies">
       <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map\ADT_MCNK">
+      <UniqueIdentifier>{47d8efda-9ea2-4fbb-96f8-1cdf4f28a5d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

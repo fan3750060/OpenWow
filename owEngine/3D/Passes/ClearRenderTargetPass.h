@@ -23,7 +23,7 @@ public:
 		uint8_t stencil = 0);
 	virtual ~ClearRenderTargetPass();
 
-	virtual void Render(Render3DEventArgs& e);
+	virtual void Render(Render3DEventArgs& e) override;
 
 private:
 	std::shared_ptr<IRenderTarget> m_RenderTarget;

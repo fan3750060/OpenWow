@@ -24,6 +24,25 @@ public:
 	// Inherited from Visitor
 	virtual bool Visit(SceneNode3D& node);
 	virtual bool Visit(IMesh& mesh);
+	virtual bool Visit(CLight3D& light);
+
+	virtual void SetRenderEventArgs(Render3DEventArgs& e);
+	virtual Render3DEventArgs& GetRenderEventArgs() const;
+
+protected: // PerObject functional
+	__declspec(align(16)) struct PerObject
+	{
+		glm::mat4 ModelViewProjection;
+		glm::mat4 ModelView;
+		glm::mat4 Model;
+	};
+	PerObject* m_PerObjectData;
+	std::shared_ptr<ConstantBuffer> m_PerObjectConstantBuffer;
+
+	void SetPerObjectConstantBufferData(PerObject& perObjectData);
+	std::shared_ptr<ConstantBuffer> GetPerObjectConstantBuffer() const;
+
+	void BindPerObjectConstantBuffer(std::shared_ptr<Shader> shader);
 
 private:
 	bool m_Enabled;

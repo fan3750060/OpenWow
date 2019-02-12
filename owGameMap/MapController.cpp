@@ -65,9 +65,12 @@ void MapController::MapLoad()
 	DelManager<ISkyManager>();
 	m_SkyManager.reset();
 
-	//m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNode3D>(shared_from_this()), m_DBC_Map);
-	//m_SkyManager->SetParent(weak_from_this());
-	//AddManager<ISkyManager>(m_SkyManager);
+	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNode3D>(shared_from_this()), m_DBC_Map);
+	m_SkyManager->SetParent(weak_from_this());
+	AddManager<ISkyManager>(m_SkyManager);
+
+	m_EnvironmentManager.reset();
+	m_EnvironmentManager = std::make_shared<EnvironmentManager>();
 
 	// Load data
 	m_WDT->Load();
@@ -78,7 +81,7 @@ void MapController::MapPostLoad()
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	m_WDT->CreateInsances(weak_from_this());
-	//m_WDL->CreateInsances(weak_from_this());
+	m_WDL->CreateInsances(weak_from_this());
 }
 
 void MapController::Unload()
@@ -108,11 +111,6 @@ void MapController::Unload()
 
 void MapController::UpdateCamera(const Camera* camera)
 {
-	if (m_QualitySettings.timeEnable)
-	{
-		m_GameTime.Tick();
-	}
-
 	bool loading = false;
 	int enteredTileX, enteredTileZ;
 	int midTile = static_cast<uint32>(C_RenderedTiles / 2);

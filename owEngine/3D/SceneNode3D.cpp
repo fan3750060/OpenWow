@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+// Include
+#include "Light.h"
+
 // General
 #include "SceneNode3D.h"
 
@@ -279,6 +282,27 @@ const SceneNode3D::MeshList& SceneNode3D::GetMeshes()
 	return m_Meshes;
 }
 
+void SceneNode3D::AddLight(std::shared_ptr<CLight3D> _light)
+{
+	LightList::iterator iter = std::find(m_Lights.begin(), m_Lights.end(), _light);
+	if (iter == m_Lights.end())
+		m_Lights.push_back(_light);
+}
+
+void SceneNode3D::RemoveLight(std::shared_ptr<CLight3D> _light)
+{
+	LightList::iterator iter = std::find(m_Lights.begin(), m_Lights.end(), _light);
+	if (iter != m_Lights.end())
+		m_Lights.erase(iter);
+}
+
+const SceneNode3D::LightList& SceneNode3D::GetLights()
+{
+	return m_Lights;
+}
+
+
+
 void SceneNode3D::UpdateCamera(const Camera* camera)
 {
 	// Do nothing...
@@ -290,10 +314,16 @@ bool SceneNode3D::Accept(IVisitor& visitor)
 	if (!visitResult)
 		return false;
 
-	// Visit meshes.
+	// Visit meshes
 	for (auto mesh : GetMeshes())
 	{
 		mesh->Accept(visitor);
+	}
+
+	// Visit lights
+	for (auto light : GetLights())
+	{
+		light->Accept(visitor);
 	}
 
 	// Now visit children
