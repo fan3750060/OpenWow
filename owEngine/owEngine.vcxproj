@@ -44,6 +44,7 @@
     <ClCompile Include="Debug_Pass.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="Loader.cpp" />
     <ClCompile Include="MaterialWrapper.cpp" />
     <ClCompile Include="MeshWrapper.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="Debug_Pass.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GBuffer.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="MaterialWrapper.h" />
     <ClInclude Include="MeshWrapper.h" />

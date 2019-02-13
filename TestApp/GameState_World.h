@@ -18,7 +18,6 @@ public:
 
 
 private:
-	void LoadGBuffer();
 	void Load3D();
 	void LoadUI();
 
@@ -46,8 +45,8 @@ private:
 	std::shared_ptr<UIText>              m_CameraRotText;
 
 private:
-	std::shared_ptr<DeferredLightingPass>m_Pass;
-	std::shared_ptr<IRenderTarget>       m_GBufferRenderTarget;
+	std::shared_ptr<CGBuffer>            m_GB;
+	
 
 private:
 	const uint16 c_WindowsWidth = 1280;
