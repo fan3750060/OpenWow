@@ -3,14 +3,14 @@
 // General
 #include "ByteBuffer.h"
 
-ByteBuffer::ByteBuffer() :
+CByteBuffer::CByteBuffer() :
 	m_IsFilled(false),
 	m_IsEOF(true),
 	m_IsAllocated(false),
 	m_CurrentPosition(0)
 {}
 
-ByteBuffer::ByteBuffer(const ByteBuffer& _other)
+CByteBuffer::CByteBuffer(const CByteBuffer& _other)
 {
 	m_IsFilled = false;
 	m_IsEOF = true;
@@ -24,7 +24,7 @@ ByteBuffer::ByteBuffer(const ByteBuffer& _other)
 	m_CurrentPosition = _other.m_CurrentPosition;
 }
 
-ByteBuffer::ByteBuffer(ByteBuffer&& _other)
+CByteBuffer::CByteBuffer(CByteBuffer&& _other)
 {
 	m_IsFilled = _other.m_IsFilled;
 	m_IsEOF = _other.m_IsEOF;
@@ -33,7 +33,7 @@ ByteBuffer::ByteBuffer(ByteBuffer&& _other)
 	m_CurrentPosition = _other.m_CurrentPosition;
 }
 
-ByteBuffer::ByteBuffer(size_t _size) :
+CByteBuffer::CByteBuffer(size_t _size) :
 	m_IsFilled(false),
 	m_IsEOF(true),
 	m_IsAllocated(false),
@@ -42,14 +42,14 @@ ByteBuffer::ByteBuffer(size_t _size) :
 	Allocate(_size);
 }
 
-ByteBuffer::~ByteBuffer()
+CByteBuffer::~CByteBuffer()
 {
 	m_Data.clear();
 }
 
 //--
 
-ByteBuffer& ByteBuffer::operator=(const ByteBuffer& _other)
+CByteBuffer& CByteBuffer::operator=(const CByteBuffer& _other)
 {
 	m_IsFilled = false;
 	m_IsEOF = true;
@@ -65,7 +65,7 @@ ByteBuffer& ByteBuffer::operator=(const ByteBuffer& _other)
 	return *this;
 }
 
-ByteBuffer& ByteBuffer::operator=(ByteBuffer&& _other)
+CByteBuffer& CByteBuffer::operator=(CByteBuffer&& _other)
 {
 	m_IsFilled = _other.m_IsFilled;
 	m_IsEOF = _other.m_IsEOF;
@@ -77,7 +77,7 @@ ByteBuffer& ByteBuffer::operator=(ByteBuffer&& _other)
 
 //--
 
-void ByteBuffer::Allocate(size_t _size)
+void CByteBuffer::Allocate(size_t _size)
 {
 	m_IsEOF = true;
 
@@ -96,13 +96,13 @@ void ByteBuffer::Allocate(size_t _size)
 	m_CurrentPosition = 0;
 }
 
-void ByteBuffer::SetFilled()
+void CByteBuffer::SetFilled()
 {
 	m_IsEOF = (getSize() == 0);
 	m_IsFilled = true;
 }
 
-void ByteBuffer::CopyData(const uint8* _data, size_t _size)
+void CByteBuffer::CopyData(const uint8* _data, size_t _size)
 {
 	if (!m_IsAllocated)
 	{
@@ -126,14 +126,14 @@ void ByteBuffer::CopyData(const uint8* _data, size_t _size)
 
 //--
 
-void ByteBuffer::seek(size_t _bufferOffsetAbsolute)
+void CByteBuffer::seek(size_t _bufferOffsetAbsolute)
 {
 	assert1(_bufferOffsetAbsolute <= getSize());
 	m_CurrentPosition = _bufferOffsetAbsolute;
 	m_IsEOF = m_CurrentPosition >= getSize();
 }
 
-void ByteBuffer::seekRelative(size_t _bufferOffsetRelative)
+void CByteBuffer::seekRelative(size_t _bufferOffsetRelative)
 {
 	assert1(m_CurrentPosition + _bufferOffsetRelative <= getSize());
 	m_CurrentPosition += _bufferOffsetRelative;
@@ -142,7 +142,7 @@ void ByteBuffer::seekRelative(size_t _bufferOffsetRelative)
 
 //-- READ
 
-bool ByteBuffer::readLine(std::string* _string)
+bool CByteBuffer::readLine(std::string* _string)
 {
 	assert1(_string != nullptr);
 
@@ -176,7 +176,7 @@ bool ByteBuffer::readLine(std::string* _string)
 	return true;
 }
 
-void ByteBuffer::readBytes(void* _destination, size_t _size)
+void CByteBuffer::readBytes(void* _destination, size_t _size)
 {
 	if (m_IsEOF)
 	{
@@ -196,7 +196,7 @@ void ByteBuffer::readBytes(void* _destination, size_t _size)
 	m_CurrentPosition = posAfterRead;
 }
 
-void ByteBuffer::readString(std::string* _string)
+void CByteBuffer::readString(std::string* _string)
 {
 	assert1(_string != nullptr);
 
@@ -219,7 +219,7 @@ void ByteBuffer::readString(std::string* _string)
 
 //-- WRITE
 
-void ByteBuffer::Append(const uint8* _data, size_t _size)
+void CByteBuffer::Append(const uint8* _data, size_t _size)
 {
 	assert1(_data != nullptr);
 
@@ -235,7 +235,7 @@ void ByteBuffer::Append(const uint8* _data, size_t _size)
 	}
 }
 
-void ByteBuffer::Write(cstring _string, uint64 _expectedSize)
+void CByteBuffer::Write(cstring _string, uint64 _expectedSize)
 {
 	Append((uint8*)_string.c_str(), static_cast<uint64>(_string.size()));
 
@@ -245,7 +245,7 @@ void ByteBuffer::Write(cstring _string, uint64 _expectedSize)
 	}
 }
 
-void ByteBuffer::WriteDummy(uint64 _size)
+void CByteBuffer::WriteDummy(uint64 _size)
 {
 	for (uint64 i = 0; i < _size; i++)
 	{

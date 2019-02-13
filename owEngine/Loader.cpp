@@ -4,7 +4,7 @@
 #include "Loader.h"
 
 // Additional
-#include "SceneNode3D.h"
+#include "3D//SceneNode3D.h"
 
 CLoader::CLoader()
 {

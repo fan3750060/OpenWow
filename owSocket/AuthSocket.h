@@ -9,7 +9,7 @@ class CAuthWorldController;
 
 class CAuthSocket : public ISocket
 {
-	typedef bool (CAuthSocket::* HandlerFunc)(ByteBuffer&);
+	typedef bool (CAuthSocket::* HandlerFunc)(CByteBuffer&);
 public:
 	CAuthSocket(CAuthWorldController* _world);
 	~CAuthSocket();
@@ -24,16 +24,16 @@ public:
 	
 	// Handlers
 	void InitHandlers();
-	void OnDataReceive(ByteBuffer& _buf);
-	void ProcessHandler(eAuthCmd _handler, ByteBuffer& _buffer);
+	void OnDataReceive(CByteBuffer& _buf);
+	void ProcessHandler(eAuthCmd _handler, CByteBuffer& _buffer);
 
 	// Client
 	void C_SendLogonChallenge();
 
 	// Server
-	bool S_LoginChallenge(ByteBuffer& _buff);
-	bool S_LoginProof(ByteBuffer& _buff);
-	bool S_Realmlist(ByteBuffer& _buff);
+	bool S_LoginChallenge(CByteBuffer& _buff);
+	bool S_LoginProof(CByteBuffer& _buff);
+	bool S_Realmlist(CByteBuffer& _buff);
 
 private:
 	CAuthWorldController* m_World;

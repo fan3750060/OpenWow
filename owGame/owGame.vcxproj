@@ -32,6 +32,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WoWChunkReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGame.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Liquid.h" />
     <ClInclude Include="LiquidMaterial.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WoWChunkReader.h" />
     <ClInclude Include="WowChunkUtils.h" />
     <ClInclude Include="WowConsts.h" />
     <ClInclude Include="WowTime.h" />
@@ -87,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DBC\Core\DBC__File.inl" />
+    <None Include="WoWChunkReader.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B55BA550-E3B6-4756-AE79-6A5C7D28AEFF}</ProjectGuid>

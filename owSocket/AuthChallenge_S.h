@@ -4,7 +4,7 @@
 
 struct AuthChallenge_S
 {
-	AuthChallenge_S(ByteBuffer& reader)
+	AuthChallenge_S(CByteBuffer& reader)
 	{
 		reader.readBytes(&unk2, 1);
 		reader.readBytes(&error, 1);

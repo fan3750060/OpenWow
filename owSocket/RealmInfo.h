@@ -43,7 +43,7 @@ public:
 	};
 
 public:
-	RealmInfo(ByteBuffer& _buff)
+	RealmInfo(CByteBuffer& _buff)
 	{
 		_buff.readBytes(&Type);
 		_buff.readBytes(&Locked);

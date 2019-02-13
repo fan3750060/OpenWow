@@ -66,7 +66,7 @@ void CAuthSocket::InitHandlers()
 	m_Thread.detach();
 }
 
-void CAuthSocket::OnDataReceive(ByteBuffer& _buf)
+void CAuthSocket::OnDataReceive(CByteBuffer& _buf)
 {
 	eAuthCmd currHandler;
 	_buf.readBytes(&currHandler);
@@ -76,7 +76,7 @@ void CAuthSocket::OnDataReceive(ByteBuffer& _buf)
 	ProcessHandler(currHandler, _buf);
 }
 
-void CAuthSocket::ProcessHandler(eAuthCmd _handler, ByteBuffer& _buffer)
+void CAuthSocket::ProcessHandler(eAuthCmd _handler, CByteBuffer& _buffer)
 {
 	std::unordered_map<eAuthCmd, HandlerFunc>::iterator handler = m_Handlers.find(_handler);
 	if (handler != m_Handlers.end())
@@ -103,7 +103,7 @@ void CAuthSocket::C_SendLogonChallenge()
 #include "AuthChallenge_S.h"
 #include "AuthProof_C.h"
 
-bool CAuthSocket::S_LoginChallenge(ByteBuffer& _buff)
+bool CAuthSocket::S_LoginChallenge(CByteBuffer& _buff)
 {
 	AuthChallenge_S challenge(_buff);
 
@@ -251,7 +251,7 @@ bool CAuthSocket::S_LoginChallenge(ByteBuffer& _buff)
 
 #include "AuthProof_S.h"
 
-bool CAuthSocket::S_LoginProof(ByteBuffer& _buff)
+bool CAuthSocket::S_LoginProof(CByteBuffer& _buff)
 {
 	AuthProof_S proof(_buff);
 
@@ -318,7 +318,7 @@ bool CAuthSocket::S_LoginProof(ByteBuffer& _buff)
 	Log::Green("Successfully logined!!!");
 
 
-	ByteBuffer bb2;
+	CByteBuffer bb2;
 	bb2 << (uint8)REALM_LIST;
 	bb2 << (uint32)0;
 	SendData(bb2.getData(), bb2.getSize());
@@ -326,7 +326,7 @@ bool CAuthSocket::S_LoginProof(ByteBuffer& _buff)
 	return true;
 }
 
-bool CAuthSocket::S_Realmlist(ByteBuffer& _buff)
+bool CAuthSocket::S_Realmlist(CByteBuffer& _buff)
 {
 	uint16 bufferSize;
 	_buff.readBytes(&bufferSize, 2);

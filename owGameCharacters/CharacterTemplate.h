@@ -11,7 +11,7 @@ struct CharacterTemplate
 	CharacterTemplate();
 
 	void TemplateSet(const CharacterTemplate& _o);
-	void TemplateFill(ByteBuffer& b);
+	void TemplateFill(CByteBuffer& b);
 
 	void TemplateFillDefaultShaman();
 	void TemplateFillDefaultPaladin();

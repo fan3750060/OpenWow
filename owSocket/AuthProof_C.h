@@ -13,7 +13,7 @@ struct AuthProof_C : public ISendable
 	{
 		uint8 crc[20];
 
-		ByteBuffer bb;
+		CByteBuffer bb;
 		bb << cmd;
 		bb.Append(A, 32);
 		bb.Append(M1, SHA_DIGEST_LENGTH);

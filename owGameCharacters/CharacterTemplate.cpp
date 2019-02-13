@@ -78,7 +78,7 @@ void CharacterTemplate::TemplateSet(const CharacterTemplate & _o)
 	}
 }
 
-void CharacterTemplate::TemplateFill(ByteBuffer& b)
+void CharacterTemplate::TemplateFill(CByteBuffer& b)
 {
 	uint32 beginSize = b.getPos();
 

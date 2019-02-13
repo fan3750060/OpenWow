@@ -1,8 +1,8 @@
 #include <stdafx.h>
 
 #include <Application.h>
-#include <SceneUI.h>
-#include <SceneNodeUI.h>
+#include "UI//SceneUI.h"
+#include "UI//SceneNodeUI.h"
 
 // General
 #include "BaseUIPass.h"

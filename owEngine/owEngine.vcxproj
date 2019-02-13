@@ -192,7 +192,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;..\owEngine\UI;..\owEngine\UI\Passes;..\owEngine\3D;..\owEngine\3D\Passes;..\owEngine\Fonts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -210,7 +210,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;..\owEngine\UI;..\owEngine\UI\Passes;..\owEngine\3D;..\owEngine\3D\Passes;..\owEngine\Fonts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -230,7 +230,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;..\owEngine\UI;..\owEngine\UI\Passes;..\owEngine\3D;..\owEngine\3D\Passes;..\owEngine\Fonts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>
@@ -254,7 +254,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;..\owEngine\UI;..\owEngine\UI\Passes;..\owEngine\3D;..\owEngine\3D\Passes;..\owEngine\Fonts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype\include;..\Externals\OpenSSL\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>

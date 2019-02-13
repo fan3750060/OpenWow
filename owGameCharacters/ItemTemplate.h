@@ -8,7 +8,7 @@ struct ItemTemplate
 	ItemTemplate(std::shared_ptr<const DBC_ItemDisplayInfoRecord> _display, InventoryType::List _inventoryType, uint32 _enchantAuraID);
 
 	void TemplateSet(const ItemTemplate& _o);
-	void TemplateFill(ByteBuffer& b);
+	void TemplateFill(CByteBuffer& b);
 
 	void TemplatePrint();
 

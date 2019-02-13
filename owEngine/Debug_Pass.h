@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BasePass.h"
+#include "3D//Passes/BasePass.h"
 
 // A pass that renders the opaque geometry in the scene.
 class Debug_Pass : public BasePass

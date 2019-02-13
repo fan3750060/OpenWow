@@ -9,6 +9,8 @@
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
 
+#include "../owGame/WoWChunkReader.h"
+
 // DBC
 #include "../owGame/DBC/Core/DBC__Storage.h"
 

@@ -7,7 +7,7 @@ public:
 	CGameState_Client();
 	virtual ~CGameState_Client();
 
-	void S_CharEnum(ByteBuffer& _buff);
+	void S_CharEnum(CByteBuffer& _buff);
 
 	// IGameState
 	bool Init();

@@ -4,7 +4,7 @@
 
 struct AuthProof_S
 {
-	AuthProof_S(ByteBuffer& reader)
+	AuthProof_S(CByteBuffer& reader)
 	{
 		cmd = AUTH_LOGON_PROOF;
 		reader.readBytes(&error);

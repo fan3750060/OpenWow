@@ -22,7 +22,7 @@ struct PacketType
 class Packet
 {
 public:
-	Packet(uint64 _id, PacketType::List _type, ByteBuffer& _buffer);
+	Packet(uint64 _id, PacketType::List _type, CByteBuffer& _buffer);
 	Packet(uint64 _id, PacketType::List _type, const uint8* _data, uint32 _size);
 	Packet(const Packet& _other) = delete;
 	Packet(Packet&& _other);
@@ -31,7 +31,7 @@ public:
 	Packet& operator=(const Packet&) = delete;
 	Packet& operator=(Packet&& _other);
 
-	ByteBuffer& getData() { return m_Buffer; }
+	CByteBuffer& getData() { return m_Buffer; }
 
 private:
 	std::string getName() { return std::string(m_PacketType == PacketType::READ ? "PacketRead" : "PacketWrite") + "[" + std::to_string(m_Id) + "]"; }
@@ -39,7 +39,7 @@ private:
 private:
 	uint64				m_Id;
 	PacketType::List	m_PacketType;
-	ByteBuffer			m_Buffer;
+	CByteBuffer			m_Buffer;
 };
 
 //******
@@ -52,7 +52,7 @@ public:
 	// Read cache
 	void Add(const uint8* _data, uint32 _size);
 	bool isReady();
-	ByteBuffer Pop();
+	CByteBuffer Pop();
 
 private:
 	std::mutex					m_CacheLock;
@@ -84,7 +84,7 @@ public:
 	SocketCache* getWriteCache() { return m_WriteCache; }
 
 	// Receive callback
-	void setOnReceiveCallback(Function_WA<ByteBuffer>* _onDataReceive);
+	void setOnReceiveCallback(Function_WA<CByteBuffer>* _onDataReceive);
 	bool isReceiveCallbackCorrect();
 	void callOnReceiveCallback(uint8* _data, uint32 _size);
 
@@ -105,7 +105,7 @@ private:
 	std::thread					m_WriteThread;
 
 	// Event
-	Function_WA<ByteBuffer>*	m_OnDataReceive;
+	Function_WA<CByteBuffer>*	m_OnDataReceive;
 
 	// Cahce
 	SocketCache*				m_ReadCache;

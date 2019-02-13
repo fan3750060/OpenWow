@@ -18,7 +18,7 @@ CGameState_Client::~CGameState_Client()
 }
 
 
-void CGameState_Client::S_CharEnum(ByteBuffer& _buff)
+void CGameState_Client::S_CharEnum(CByteBuffer& _buff)
 {
 	uint8 charCnt;
 	_buff.readBytes(&charCnt);
@@ -34,7 +34,7 @@ void CGameState_Client::S_CharEnum(ByteBuffer& _buff)
 	CharacterTemplate& charTemplate = chars[0];
 	vec3 charPosition = fromGameToReal(vec3(charTemplate.Y, charTemplate.X, charTemplate.Z));
 
-	ByteBuffer bb;
+	CByteBuffer bb;
 	bb << (uint64)charTemplate.GUID;
 	m_authWorldController->getWorldSocket()->SendData(CMSG_PLAYER_LOGIN, bb);
 
@@ -99,7 +99,7 @@ bool CGameState_Client::Init()
 	m_authWorldController = std::make_shared<CAuthWorldController>();
 	m_authWorldController->StartAuth();
 
-	m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, ByteBuffer&));
+	m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, CByteBuffer&));
 
 
 

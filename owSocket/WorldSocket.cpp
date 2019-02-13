@@ -69,13 +69,13 @@ void CWorldSocket::SendData(Opcodes _opcode)
 {
 	Opcodes command = (Opcodes)((&reinterpret_cast<uint8&>(_opcode))[1] << 8 | (&reinterpret_cast<uint8&>(_opcode))[0]);
 
-	ByteBuffer finalBuffer;
+	CByteBuffer finalBuffer;
 	finalBuffer << (uint8)0;
 	finalBuffer << (uint8)4;
 	finalBuffer << (uint32)command;
 	SendData(finalBuffer.getData(), finalBuffer.getSize());
 }
-void CWorldSocket::SendData(Opcodes _opcode, ByteBuffer& _bb)
+void CWorldSocket::SendData(Opcodes _opcode, CByteBuffer& _bb)
 {
 	assert1((_bb.getSize() + 4) < UINT16_MAX);
 
@@ -83,7 +83,7 @@ void CWorldSocket::SendData(Opcodes _opcode, ByteBuffer& _bb)
 	uint16 sizeFinal = ((&reinterpret_cast<uint8&>(size0))[0] << 8 | (&reinterpret_cast<uint8&>(size0))[1]);
 	Opcodes command = (Opcodes)((&reinterpret_cast<uint8&>(_opcode))[1] << 8 | (&reinterpret_cast<uint8&>(_opcode))[0]);
 
-	ByteBuffer finalBuffer;
+	CByteBuffer finalBuffer;
 	finalBuffer << sizeFinal;
 	finalBuffer << (uint32)command;
 	finalBuffer << _bb;
@@ -117,8 +117,8 @@ void CWorldSocket::WorldThread(std::future<void> futureObj)
 
 void CWorldSocket::InitHandlers()
 {
-	m_Handlers[SMSG_AUTH_CHALLENGE] = FUNCTION_CLASS_WA_Builder(CWorldSocket, this, S_AuthChallenge, ByteBuffer&);
-	m_Handlers[SMSG_AUTH_RESPONSE] = FUNCTION_CLASS_WA_Builder(CWorldSocket, this, S_AuthResponse, ByteBuffer&);
+	m_Handlers[SMSG_AUTH_CHALLENGE] = FUNCTION_CLASS_WA_Builder(CWorldSocket, this, S_AuthChallenge, CByteBuffer&);
+	m_Handlers[SMSG_AUTH_RESPONSE] = FUNCTION_CLASS_WA_Builder(CWorldSocket, this, S_AuthResponse, CByteBuffer&);
 	
 	// Dummy
 	m_Handlers[SMSG_POWER_UPDATE] = nullptr;
@@ -156,7 +156,7 @@ void CWorldSocket::InitHandlers()
 	//socketBase->setOnReceiveCallback(FUNCTION_CLASS_WA_Builder(CWorldSocket, this, OnDataReceive, ByteBuffer));
 }
 
-void CWorldSocket::OnDataReceive(ByteBuffer _buf)
+void CWorldSocket::OnDataReceive(CByteBuffer _buf)
 {
 	if (currPacket != nullptr)
 	{
@@ -212,15 +212,15 @@ void CWorldSocket::OnDataReceive(ByteBuffer _buf)
 	}
 }
 
-void CWorldSocket::AddHandler(Opcodes _opcode, Function_WA<ByteBuffer&>* _func)
+void CWorldSocket::AddHandler(Opcodes _opcode, Function_WA<CByteBuffer&>* _func)
 {
 	assert1(_func != nullptr);
 	m_Handlers.insert(std::make_pair(_opcode, _func));
 }
 
-void CWorldSocket::ProcessHandler(Opcodes _handler, ByteBuffer _buffer)
+void CWorldSocket::ProcessHandler(Opcodes _handler, CByteBuffer _buffer)
 {
-	std::unordered_map<Opcodes, Function_WA<ByteBuffer&>*>::iterator handler = m_Handlers.find(_handler);
+	std::unordered_map<Opcodes, Function_WA<CByteBuffer&>*>::iterator handler = m_Handlers.find(_handler);
 	if (handler != m_Handlers.end())
 	{
 		if (handler->second != nullptr)
@@ -234,14 +234,14 @@ void CWorldSocket::ProcessHandler(Opcodes _handler, ByteBuffer _buffer)
 
 void CWorldSocket::Packet1(uint16 _command, uint32 _size)
 {
-	ByteBuffer buff;
+	CByteBuffer buff;
 
 	currPacket = new InPacket();
 	currPacket->dataSize = _size;
 	currPacket->opcode = (Opcodes)_command;
 }
 
-void CWorldSocket::Packet2(ByteBuffer& _buf)
+void CWorldSocket::Packet2(CByteBuffer& _buf)
 {
 	uint32 buffRead = currPacket->dataSize - currPacket->data.getSize();
 	uint32 buffToEnd = _buf.getSize() - _buf.getPos();
@@ -267,7 +267,7 @@ void CWorldSocket::Packet2(ByteBuffer& _buf)
 
 //--
 
-void CWorldSocket::S_AuthChallenge(ByteBuffer& _buff)
+void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 {
 	uint32 one;
 	_buff.readBytes(&one, 4);
@@ -293,7 +293,7 @@ void CWorldSocket::S_AuthChallenge(ByteBuffer& _buff)
 	uSHA.Finalize();
 
 	//------------------
-	ByteBuffer bb;
+	CByteBuffer bb;
 	bb << (uint32)12345;
 	bb.WriteDummy(4);
 	bb << upperUsername;
@@ -308,7 +308,7 @@ void CWorldSocket::S_AuthChallenge(ByteBuffer& _buff)
 	cryptUtils.Init(m_World->getKey());
 }
 
-void CWorldSocket::S_AuthResponse(ByteBuffer& _buff)
+void CWorldSocket::S_AuthResponse(CByteBuffer& _buff)
 {
 	enum CommandDetail : uint8
 	{

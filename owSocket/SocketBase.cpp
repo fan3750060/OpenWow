@@ -203,7 +203,7 @@ void CSocketBase::SocketWriteThread(std::future<void> _future)
 	{
 		if (getWriteCache()->isReady())
 		{
-			ByteBuffer buff = std::move(getWriteCache()->Pop());
+			CByteBuffer buff = std::move(getWriteCache()->Pop());
 
 			m_SocketObjBusy.lock();
 			int32 result = send(m_SocketObj, (const char*)buff.getData(), buff.getSize(), 0);
@@ -223,7 +223,7 @@ void CSocketBase::SocketWriteThread(std::future<void> _future)
 
 // Callback
 
-void CSocketBase::setOnReceiveCallback(Function_WA<ByteBuffer>* _onDataReceive)
+void CSocketBase::setOnReceiveCallback(Function_WA<CByteBuffer>* _onDataReceive)
 {
 	SafeDelete(m_OnDataReceive);
 	m_OnDataReceive = _onDataReceive;
@@ -236,10 +236,10 @@ void CSocketBase::callOnReceiveCallback(uint8* _data, uint32 _size)
 {
 	assert1(m_OnDataReceive != nullptr);
 
-	ByteBuffer byteBuffer;
+	CByteBuffer byteBuffer;
 	byteBuffer.CopyData(_data, _size);
 
-	FUNCTION_WA_CALL(m_OnDataReceive, ByteBuffer, byteBuffer);
+	FUNCTION_WA_CALL(m_OnDataReceive, CByteBuffer, byteBuffer);
 }
 
 //-------
@@ -264,20 +264,20 @@ bool SocketCache::isReady()
 	return !m_Cache.empty();
 }
 
-ByteBuffer SocketCache::Pop()
+CByteBuffer SocketCache::Pop()
 {
 	std::lock_guard<std::mutex> lg(m_CacheLock);
 
 	assert1(!m_Cache.empty());
 
 	Packet& bb = m_Cache.front();
-	ByteBuffer buf =  bb.getData();
+	CByteBuffer buf =  bb.getData();
 	m_Cache.pop();
 
 	return std::move(buf);
 }
 
-Packet::Packet(uint64 _id, PacketType::List _type, ByteBuffer& _buffer) :
+Packet::Packet(uint64 _id, PacketType::List _type, CByteBuffer& _buffer) :
 	m_Id(_id),
 	m_PacketType(_type)
 {

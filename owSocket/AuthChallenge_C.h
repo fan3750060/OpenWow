@@ -15,7 +15,7 @@ struct AuthChallenge_C : public ISendable
 
 	void Send(ISocket* _socket) override
 	{
-		ByteBuffer bb;
+		CByteBuffer bb;
 		bb << cmd;
 		bb << (uint8)6;
 		bb << (uint8)(username.size() + 30);

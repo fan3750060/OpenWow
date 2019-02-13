@@ -64,7 +64,7 @@ private:
 	void ParsePathAndExtension();
 
 protected:
-	ByteBuffer m_ByteBuffer;
+	CByteBuffer m_ByteBuffer;
 
 private: // IFile
 	std::string m_Name;

@@ -2,8 +2,8 @@
 
 // Include
 #include <Application.h>
-#include <Scene3D.h>
-#include <SceneNode3D.h>
+#include <3D//Scene3D.h>
+#include <3D//SceneNode3D.h>
 
 // General
 #include "BasePass.h"

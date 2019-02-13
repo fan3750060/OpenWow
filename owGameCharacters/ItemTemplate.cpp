@@ -37,7 +37,7 @@ void ItemTemplate::TemplateSet(const ItemTemplate & _o)
 	EnchantAuraID = _o.EnchantAuraID;
 }
 
-void ItemTemplate::TemplateFill(ByteBuffer& b)
+void ItemTemplate::TemplateFill(CByteBuffer& b)
 {
 	b.readBytes(&DisplayId, 4);
 	b.readBytes(&InventoryType, 1);

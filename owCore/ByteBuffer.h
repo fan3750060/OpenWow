@@ -1,20 +1,16 @@
 #pragma once
 
-#include <mutex>
-
-//static_assert(sizeof(size_t) == sizeof(uint64), "Size of 'size_t' isn't equal 'uint64_t'");
-
-class ByteBuffer : public IByteBuffer
+class CByteBuffer : public IByteBuffer
 {
 public:
-	ByteBuffer();
-	ByteBuffer(const ByteBuffer& _other);
-	ByteBuffer(ByteBuffer&& _other);
-	ByteBuffer(size_t _size);
-	~ByteBuffer();
+	CByteBuffer();
+	CByteBuffer(const CByteBuffer& _other);
+	CByteBuffer(CByteBuffer&& _other);
+	CByteBuffer(size_t _size);
+	~CByteBuffer();
 
-	ByteBuffer& operator=(const ByteBuffer& _other);
-	ByteBuffer& operator=(ByteBuffer&&  _other);
+	CByteBuffer& operator=(const CByteBuffer& _other);
+	CByteBuffer& operator=(CByteBuffer&&  _other);
 
 	void Allocate(size_t _size);
 	void SetFilled();
@@ -40,60 +36,60 @@ public:
 	void readString(std::string* _string) override;
 
 	//-- SIGNED
-	ByteBuffer& operator>>(int8 &value)
+	CByteBuffer& operator>>(int8 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(int16 &value)
+	CByteBuffer& operator>>(int16 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(int32 &value)
+	CByteBuffer& operator>>(int32 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(int64 &value)
+	CByteBuffer& operator>>(int64 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
 	//-- UNSIGNED
-	ByteBuffer& operator>>(uint8 &value)
+	CByteBuffer& operator>>(uint8 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(uint16 &value)
+	CByteBuffer& operator>>(uint16 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(uint32 &value)
+	CByteBuffer& operator>>(uint32 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(uint64 &value)
+	CByteBuffer& operator>>(uint64 &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
 	//-- FLOAT
-	ByteBuffer& operator>>(float &value)
+	CByteBuffer& operator>>(float &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator>>(double &value)
+	CByteBuffer& operator>>(double &value)
 	{
 		readBytes(&value, sizeof(value));
 		return *this;
 	}
 	//-- STRING
-	ByteBuffer& operator>>(std::string& _string)
+	CByteBuffer& operator>>(std::string& _string)
 	{
 		_string = "";
 
@@ -117,65 +113,65 @@ public:
 	void Write(cstring _string, uint64 _expectedSize = UINT32_MAX);
 	void WriteDummy(uint64 _size);
 
-	ByteBuffer& operator<<(int8 value)
+	CByteBuffer& operator<<(int8 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator<<(int16 value)
+	CByteBuffer& operator<<(int16 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator<<(int32 value)
+	CByteBuffer& operator<<(int32 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator<<(int64 value)
+	CByteBuffer& operator<<(int64 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
 	//----
-	ByteBuffer& operator<<(uint8 value)
+	CByteBuffer& operator<<(uint8 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator<<(uint16 value)
+	CByteBuffer& operator<<(uint16 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator<<(uint32 value)
+	CByteBuffer& operator<<(uint32 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
-	ByteBuffer& operator<<(uint64 value)
-	{
-		Append((uint8*)&value, sizeof(value));
-		return *this;
-	}
-	//--
-	ByteBuffer& operator<<(float value)
-	{
-		Append((uint8*)&value, sizeof(value));
-		return *this;
-	}
-	ByteBuffer& operator<<(double value)
+	CByteBuffer& operator<<(uint64 value)
 	{
 		Append((uint8*)&value, sizeof(value));
 		return *this;
 	}
 	//--
-	ByteBuffer& operator<<(ByteBuffer& _other)
+	CByteBuffer& operator<<(float value)
+	{
+		Append((uint8*)&value, sizeof(value));
+		return *this;
+	}
+	CByteBuffer& operator<<(double value)
+	{
+		Append((uint8*)&value, sizeof(value));
+		return *this;
+	}
+	//--
+	CByteBuffer& operator<<(CByteBuffer& _other)
 	{
 		Append(_other.getData(), _other.getSize());
 		return *this;
 	}
-	ByteBuffer& operator<<(const char* _string)
+	CByteBuffer& operator<<(const char* _string)
 	{
 		size_t len = strlen(_string);
 		if (len > 0)
@@ -185,7 +181,7 @@ public:
 		Append((uint8)0x00, 1);
 		return *this;
 	}
-	ByteBuffer& operator<<(cstring _string)
+	CByteBuffer& operator<<(cstring _string)
 	{
 		Append((uint8*)_string.c_str(), _string.size() + 1);
 		return *this;

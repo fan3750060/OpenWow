@@ -73,6 +73,35 @@ float4 ScreenToView( float4 screen )
     return ClipToView( clip );
 }
 
+// Get view vector from depth
+float4 GetViewFromDepth(VertexShaderOutput IN)
+{
+	int2 texCoord = IN.position.xy;
+    float depth = DepthTextureVS.Load(int3(texCoord, 0)).r;
+
+    // Everything is in view space.
+    float4 eyePos = { 0, 0, 0, 1 };
+	
+	float4 P = ScreenToView(float4(texCoord, depth, 1.0f));
+	
+    // View vector
+	return normalize( eyePos - P );
+}
+
+// Get view vector from position buffer
+float4 GetViewFromPos(VertexShaderOutput IN)
+{
+    int2 texCoord = IN.position.xy;
+
+    // Everything is in view space.
+    float4 eyePos = CameraPos;
+	
+	float4 P = PositionTextureWS.Load(int3(texCoord, 0));
+	
+    // View vector
+    return normalize( eyePos - P );
+}
+
 float4 GetFogColor(float4 P)
 {
 	float CameraDistance = distance(P.xyz, CameraPos.xyz);
@@ -86,7 +115,7 @@ float4 GetFogColor(float4 P)
 	//float materialID = P.a;
 	//if (materialID >= 0.0 && materialID <= 0.0)
 	{
-		color.rgb = FogColor;
+		color.rgb = FogColor * fogFactor;
 		color.a = fogFactor;
 	}
 
@@ -112,19 +141,19 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 float4 PS_DeferredLighting(VertexShaderOutput IN) : SV_Target
 {
     int2 texCoord = IN.position.xy;
-    float depth = DepthTextureVS.Load( int3( texCoord, 0 ) ).r;
+    float depth = DepthTextureVS.Load(int3(texCoord, 0)).r;
 
     // Everything is in view space.
-    float4 eyePos = CameraPos; //{ 0, 0, 0, 1 };
+    float4 eyePos = { 0, 0, 0, 1 };
 	
-	float4 P = PositionTextureWS.Load( int3( texCoord, 0 ) ); //ScreenToView( float4( texCoord, depth, 1.0f ) );
+	float4 P = ScreenToView(float4(texCoord, depth, 1.0f));
 	
     // View vector
     float4 V = normalize( eyePos - P );
 
-    float4 diffuse = DiffuseTextureVS.Load( int3( texCoord, 0 ) );
-    float4 specular = SpecularTextureVS.Load( int3( texCoord, 0 ) );
-    float4 N = NormalTextureVS.Load( int3( texCoord, 0 ) );
+    float4 diffuse = DiffuseTextureVS.Load(int3(texCoord, 0));
+    float4 specular = SpecularTextureVS.Load(int3(texCoord, 0));
+    float4 N = NormalTextureVS.Load(int3(texCoord, 0));
 
     // Unpack the specular power from the alpha component of the specular color.
     float specularPower = exp2(specular.a);
@@ -152,9 +181,15 @@ float4 PS_DeferredLighting(VertexShaderOutput IN) : SV_Target
         lit = DoSpotLight( light, mat, V, P, N );
         break;
     }
+		
+    return /*lit.Ambient * diffuse +*/  (diffuse * lit.Diffuse) + (specular * lit.Specular);
+}
+
+[earlydepthstencil]
+float4 PS_DeferredLighting_FogPass(VertexShaderOutput IN) : SV_Target
+{
+    int2 texCoord = IN.position.xy;
+	float4 P = PositionTextureWS.Load(int3(texCoord, 0));
 	
-	float4 resultColor = /*lit.Ambient * diffuse +*/  (diffuse * lit.Diffuse) + (specular * lit.Specular);
-	float4 fogColor = GetFogColor(P);
-	
-    return lerp(resultColor, fogColor, fogColor.a);
+	return GetFogColor(P);
 }

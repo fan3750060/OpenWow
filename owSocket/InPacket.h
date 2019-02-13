@@ -12,5 +12,5 @@ struct InPacket
 {
 	uint32		dataSize;
 	Opcodes		opcode;
-	ByteBuffer	data;
+	CByteBuffer	data;
 };

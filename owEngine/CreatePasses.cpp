@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
 // Include
-#include "RenderTechnique.h"
-#include "RenderUITechnique.h"
+#include "3D//Passes//RenderTechnique.h"
+#include "UI//Passes//RenderUITechnique.h"
 
 // General
 #include "CreatePasses.h"
 
 // Additional
 #include "Debug_Pass.h"
-#include "BaseUIPass.h"
+#include "UI//Passes//BaseUIPass.h"
 
 void AddDebugPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
 {
