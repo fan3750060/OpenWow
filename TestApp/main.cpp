@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
-// Additional (OW)
-#include "GameState_Client.h"
+// Additional (TEST)
 #include "GameState_World.h"
 
 // Additional (Windows)
@@ -28,20 +27,14 @@ int main(int argumentCount, char* arguments[])
 		AddManager<IConsole>(console);
 		console->AddCommonCommands();
 		
-		std::shared_ptr<IMPQArchiveManager> mpqArchiveManager = std::make_shared<CMPQArchiveManager>();
-		AddManager<IMPQArchiveManager>(mpqArchiveManager);
-
 		std::shared_ptr<IFilesManager> filesManager = std::make_shared<CFilesManager>();
 		AddManager<IFilesManager>(filesManager);
-
-		OpenDBs();
 
 		//--
 
 		Application app;
 		app.Load();
 		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
-		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>());
 		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
 		app.Run();
 	}

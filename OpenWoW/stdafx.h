@@ -1,9 +1,7 @@
 #pragma once
 
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "freetype28.lib")
+#pragma comment(lib, "freetype.lib")
 #pragma comment(lib, "libmpq.lib")
-#pragma comment(lib, "glfw3.lib")
 
 // CORE
 
@@ -13,16 +11,11 @@
 #include <owCore.h>
 #pragma comment(lib, "owCore.lib")
 
-#include <owRender.h>
-#pragma comment(lib, "owRender.lib")
-
-#include <owGUI.h>
-#pragma comment(lib, "owGUI.lib")
+#include <owRenderBase.h>
+#pragma comment(lib, "owRenderBase.lib")
 
 #include <owEngine.h>
 #pragma comment(lib, "owEngine.lib")
-
-// GAME
 
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")
@@ -35,3 +28,11 @@
 
 #include <owGameMap.h>
 #pragma comment(lib, "owGameMap.lib")
+
+#include <owGameCharacters.h>
+#pragma comment(lib, "owGameCharacters.lib")
+
+// Socket
+
+#include <owSocket.h>
+#pragma comment(lib, "owSocket.lib")

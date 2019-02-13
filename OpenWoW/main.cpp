@@ -1,16 +1,11 @@
 #include "stdafx.h"
 
-// Additional
-#include "GameState_Menu.h"
-#include "GameState_InWorld.h"
-#include <ctime>
+// Additional (OW)
+#include "GameState_Client.h"
+#include "GameState_World.h"
 
-/*
-	Инициализация:
-	1) BaseManager
-	2) Хелперы
-	3) Ввод/вывод
-*/
+// Additional (Windows)
+#include <ctime>
 
 int main(int argumentCount, char* arguments[])
 {
@@ -19,53 +14,36 @@ int main(int argumentCount, char* arguments[])
 	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 	{
-		Random::SetSeed(static_cast<unsigned long>(time(0)));
+		_BaseManager = std::make_shared<CBaseManager>();
 
-		CBaseManager baseManager;
-		_BaseManager = &baseManager;
+		std::shared_ptr<CSettings> settings = std::make_shared<CSettings>();
+		AddManager<ISettings>(settings);
+		settings->AddDefaults();
+		
 
-		CBindingController bindingController;
-		_Bindings = &bindingController;
+		std::shared_ptr<CLog> log = std::make_shared<CLog>();
+		AddManager<ILog>(log);
 
-		CSettings settings;
-		settings.AddDefaults();
+		std::shared_ptr<CConsole> console = std::make_shared<CConsole>();
+		AddManager<IConsole>(console);
+		console->AddCommonCommands();
+		
+		std::shared_ptr<IMPQArchiveManager> mpqArchiveManager = std::make_shared<CMPQArchiveManager>();
+		AddManager<IMPQArchiveManager>(mpqArchiveManager);
 
-		CLog log;
-
-		CConsole console;
-		console.AddCommonCommands();
-
-		HANDLE hProcess = GetCurrentProcess();
-		if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
-		{
-			Log::Info("Process priority class set to HIGH");
-		}
-		else
-		{
-			Log::Error("Can't set process priority class.");
-		}
-
-		CMPQArchiveManager mpqArchiveManager;
-
-		CFilesManager filesManager;
-
-		OpenGLAdapter_Native adapter;
-
-		CEngine engine;
-		engine.Init(&adapter);
-		engine.SetArguments(argumentCount, arguments);
+		std::shared_ptr<IFilesManager> filesManager = std::make_shared<CFilesManager>();
+		AddManager<IFilesManager>(filesManager);
 
 		OpenDBs();
 
-		GameState_Menu gsMenu;
-		GameState_InWorld gsWorld;
+		//--
 
-		CGameStateManager gsManager;
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_MENU, &gsMenu);
-		gsManager.AddGameState(GameStatesNames::GAME_STATE_WORLD, &gsWorld);
-		gsManager.SetGameState(GameStatesNames::GAME_STATE_MENU);
-
-		while (engine.Tick());
+		Application app;
+		app.Load();
+		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
+		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>());
+		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
+		app.Run();
 	}
 
 	return 0;
