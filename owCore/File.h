@@ -5,15 +5,18 @@
 class CFile : public IFile
 {
 public:
-	 CFile(cstring _fullFileName);
-	 CFile(cstring _name, cstring _path);
+	 CFile(cstring _root, cstring _fullFileName);
+	 CFile(cstring _root, cstring _name, cstring _path);
 	 virtual ~CFile();
+
+	 CByteBuffer& GetByteBuffer() { return m_ByteBuffer; }
 
 	 // IFile
 	 std::string Name() const override { return m_Name; }
 	 std::string Path() const override { return m_Path; }
 	 std::string Extension() const override { return m_Extension; }
 	 std::string Path_Name() const override { return std::string(m_Path + m_Name); }
+	 std::string Full_Path_Name() const override { return std::string(m_Root + m_Path + m_Name); }
 
 	 // IByteBuffer
 	 size_t getSize() const override
@@ -70,4 +73,5 @@ private: // IFile
 	std::string m_Name;
 	std::string m_Path;
 	std::string m_Extension;
+	std::string m_Root;
 };

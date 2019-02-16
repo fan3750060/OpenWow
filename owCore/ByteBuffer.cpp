@@ -77,55 +77,6 @@ CByteBuffer& CByteBuffer::operator=(CByteBuffer&& _other)
 
 //--
 
-void CByteBuffer::Allocate(size_t _size)
-{
-	m_IsEOF = true;
-
-	if (_size > 0)
-	{
-		assert1(!m_IsAllocated);
-		m_Data.reserve(_size);
-		m_IsAllocated = true;
-	}
-
-	if (m_Data.size() < _size)
-	{
-		m_Data.resize(_size);
-	}
-
-	m_CurrentPosition = 0;
-}
-
-void CByteBuffer::SetFilled()
-{
-	m_IsEOF = (getSize() == 0);
-	m_IsFilled = true;
-}
-
-void CByteBuffer::CopyData(const uint8* _data, size_t _size)
-{
-	if (!m_IsAllocated)
-	{
-		Allocate(_size);
-	}
-
-	if (_size > getSize())
-	{
-		Log::Error("ByteBuffer[]: Source m_Data size [%d] bigger than m_IsAllocated memory [%d]!", _size, getSize());
-		Log::Error("ByteBuffer[]: Copy part of source m_Data.");
-		_size = getSize();
-		fail1();
-	}
-
-	if (_data != nullptr)
-	{
-		std::memcpy(&m_Data[0], _data, _size);
-		SetFilled();
-	}
-}
-
-//--
-
 void CByteBuffer::seek(size_t _bufferOffsetAbsolute)
 {
 	assert1(_bufferOffsetAbsolute <= getSize());
@@ -216,6 +167,57 @@ void CByteBuffer::readString(std::string* _string)
 	}
 
 	(*_string) = str;
+}
+
+//
+// IByteBufferEx
+//
+
+void CByteBuffer::Allocate(size_t _size)
+{
+	m_IsEOF = true;
+
+	if (_size > 0)
+	{
+		assert1(!m_IsAllocated);
+		m_Data.reserve(_size);
+		m_IsAllocated = true;
+	}
+
+	if (m_Data.size() < _size)
+	{
+		m_Data.resize(_size);
+	}
+
+	m_CurrentPosition = 0;
+}
+
+void CByteBuffer::SetFilled()
+{
+	m_IsEOF = (getSize() == 0);
+	m_IsFilled = true;
+}
+
+void CByteBuffer::CopyData(const uint8* _data, size_t _size)
+{
+	if (!m_IsAllocated)
+	{
+		Allocate(_size);
+	}
+
+	if (_size > getSize())
+	{
+		Log::Error("ByteBuffer[]: Source m_Data size [%d] bigger than m_IsAllocated memory [%d]!", _size, getSize());
+		Log::Error("ByteBuffer[]: Copy part of source m_Data.");
+		_size = getSize();
+		fail1();
+	}
+
+	if (_data != nullptr)
+	{
+		std::memcpy(&m_Data[0], _data, _size);
+		SetFilled();
+	}
 }
 
 //-- WRITE

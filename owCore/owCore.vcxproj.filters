@@ -102,12 +102,6 @@
     <ClCompile Include="FilesManager.cpp">
       <Filter>Files</Filter>
     </ClCompile>
-    <ClCompile Include="LocalFile.cpp">
-      <Filter>Files\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="MPQFile.cpp">
-      <Filter>Files\Common</Filter>
-    </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>Files\Common</Filter>
     </ClCompile>
@@ -134,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="Settings.cpp">
       <Filter>Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="MPQArchiveManager.cpp">
-      <Filter>Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="GroupRenderCaps.cpp">
       <Filter>Settings\Groups</Filter>
@@ -195,6 +186,12 @@
     <ClCompile Include="Events.cpp">
       <Filter>Events</Filter>
     </ClCompile>
+    <ClCompile Include="MPQFilesStorage.cpp">
+      <Filter>Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalFilesStorage.cpp">
+      <Filter>Files\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugOutput.h">
@@ -238,12 +235,6 @@
     </ClInclude>
     <ClInclude Include="FilesManager.h">
       <Filter>Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LocalFile.h">
-      <Filter>Files\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="MPQFile.h">
-      <Filter>Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="ByteBuffer.h">
       <Filter>Files\Common</Filter>
@@ -295,9 +286,6 @@
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="MPQArchiveManager.h">
-      <Filter>Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="GroupRenderCaps.h">
       <Filter>Settings\Groups</Filter>
@@ -376,6 +364,12 @@
     </ClInclude>
     <ClInclude Include="LockedQueue.h">
       <Filter>Common\Threads</Filter>
+    </ClInclude>
+    <ClInclude Include="MPQFilesStorage.h">
+      <Filter>Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalFilesStorage.h">
+      <Filter>Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

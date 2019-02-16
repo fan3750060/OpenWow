@@ -39,12 +39,11 @@
     <ClCompile Include="HighResolutionTimer.cpp" />
     <ClCompile Include="HMACSHA1.cpp" />
     <ClCompile Include="INIFile.cpp" />
-    <ClCompile Include="LocalFile.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="LocalFilesStorage.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="DebugOutput.cpp" />
-    <ClCompile Include="MPQArchiveManager.cpp" />
-    <ClCompile Include="MPQFile.cpp" />
+    <ClCompile Include="MPQFilesStorage.cpp" />
     <ClCompile Include="NEW_Random.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OpenSSLCrypto.cpp" />
@@ -77,6 +76,7 @@
     <ClInclude Include="HighResolutionTimer.h" />
     <ClInclude Include="HMACSHA1.h" />
     <ClInclude Include="KeyCodes.h" />
+    <ClInclude Include="LocalFilesStorage.h" />
     <ClInclude Include="LockedQueue.h" />
     <ClInclude Include="MapAssync.h" />
     <ClInclude Include="ConsoleCommand.h" />
@@ -95,7 +95,6 @@
     <ClInclude Include="FunctionSA.h" />
     <ClInclude Include="FunctionWA.h" />
     <ClInclude Include="INIFile.h" />
-    <ClInclude Include="LocalFile.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="MathCommon.h" />
@@ -103,8 +102,7 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="DebugOutput.h" />
-    <ClInclude Include="MPQArchiveManager.h" />
-    <ClInclude Include="MPQFile.h" />
+    <ClInclude Include="MPQFilesStorage.h" />
     <ClInclude Include="NEW_Random.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="OpenSSLCrypto.h" />
@@ -135,7 +133,7 @@
     <ProjectGuid>{A4E6F769-0036-4128-A409-495D9207F587}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>owCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

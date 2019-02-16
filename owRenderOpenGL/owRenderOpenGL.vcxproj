@@ -22,7 +22,7 @@
     <ProjectGuid>{102DC6F1-CB83-4203-BA24-1C9E812FDE4B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>owRenderOpenGL</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>owRenderOpenGL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

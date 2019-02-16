@@ -307,7 +307,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 	if (f == nullptr)
 		return false;
 
-	std::string filePath = "D:\\_programming\\OpenStalker\\_gamedata\\" + f->Path_Name();
+	std::string filePath = f->Full_Path_Name();
 
 	// Try to determine the file type from the image file.
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(filePath.c_str());

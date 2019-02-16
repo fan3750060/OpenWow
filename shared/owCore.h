@@ -14,11 +14,10 @@
 #include "../owCore/RefManager1DimAssync.h"
 
 // Files
-#include "../owCore/MPQArchiveManager.h"
+#include "../owCore/MPQFilesStorage.h"
+#include "../owCore/LocalFilesStorage.h"
 #include "../owCore/FilesManager.h"
 #include "../owCore/File.h"
-#include "../owCore/LocalFile.h"
-#include "../owCore/MPQFile.h"
 #include "../owCore/INIFile.h"
 #include "../owCore/XMLFile.h"
 

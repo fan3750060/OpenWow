@@ -5,8 +5,6 @@
 
 // Additional
 #include "BaseManager.h"
-#include "LocalFile.h"
-#include "MPQFile.h"
 
 CFilesManager::CFilesManager()
 {
@@ -19,21 +17,34 @@ CFilesManager::~CFilesManager()
 
 std::shared_ptr<IFile> CFilesManager::Open(cstring _fileName)
 {
-	std::shared_ptr<IFile> file = nullptr;
-
-	if (CLocalFile::IsFileExists(_fileName))
+	for (const auto& fs : m_Storages)
 	{
-		file = std::make_shared<CLocalFile>(_fileName);
-	}
-	else if (CMPQFile::IsFileExists(_fileName))
-	{
-		file = std::make_shared<CMPQFile>(_fileName);
+		if (fs->IsFileExists(_fileName))
+			return fs->CreateFile(_fileName);
 	}
 
-	if (file != nullptr)
-	{
-		file->Open();
-	}
+	Log::Error("[CFilesManager]: File '%s' not found.", _fileName.c_str());
+	return nullptr;
+}
 
-	return file;
+void CFilesManager::RegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage)
+{
+	std::shared_ptr<IFilesStorageEx> storageEx = std::dynamic_pointer_cast<IFilesStorageEx, IFilesStorage>(_storage);
+	assert1(storageEx);
+
+	m_Storages.push_back(_storage);
+
+	std::sort(m_Storages.begin(), m_Storages.end(),
+		[](const std::shared_ptr<IFilesStorage>& a, const std::shared_ptr<IFilesStorage>& b)
+		{
+			std::shared_ptr<const IFilesStorageEx> aEx = std::dynamic_pointer_cast<const IFilesStorageEx, const IFilesStorage>(a);
+			std::shared_ptr<const IFilesStorageEx> bEx = std::dynamic_pointer_cast<const IFilesStorageEx, const IFilesStorage>(b);
+			return aEx->GetPriority() > bEx->GetPriority();
+		}
+	);
+}
+
+void CFilesManager::UnRegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage)
+{
+	// Do nothing
 }

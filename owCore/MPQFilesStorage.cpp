@@ -1,20 +1,21 @@
 #include "stdafx.h"
 
 // General
-#include "MPQArchiveManager.h"
+#include "MPQFilesStorage.h"
 
 // Additional
 #include "BaseManager.h"
+#include "File.h"
 
-#if (VERSION == VERSION_Vanila)
-const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
-#elif (VERSION == VERSION_WotLK)
-const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
-#endif
+//#if (VERSION == VERSION_Vanila)
+//const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
+//#elif (VERSION == VERSION_WotLK)
+//const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
+//#endif
 
-//
-
-CMPQArchiveManager::CMPQArchiveManager()
+CMPQFilesStorage::CMPQFilesStorage(std::string _path, Priority _priority)
+	: m_Path(_path)
+	, m_Priority(_priority)
 {
 	// Files 1.12
 #if (VERSION == VERSION_Vanila)
@@ -33,7 +34,6 @@ CMPQArchiveManager::CMPQArchiveManager()
 	AddArchive(std::string("terrain.MPQ"));
 	AddArchive(std::string("texture.MPQ"));
 	AddArchive(std::string("wmo.MPQ"));
-
 	//AddArchive(std::string("ruRU/patch-1.MPQ"));
 	//AddArchive(std::string("ruRU/patch-2.MPQ"));
 	//AddArchive(std::string("ruRU/patch-3.MPQ"));
@@ -46,8 +46,6 @@ CMPQArchiveManager::CMPQArchiveManager()
 	AddArchive(std::string("patch.MPQ"));
 	AddArchive(std::string("patch-2.MPQ"));
 	AddArchive(std::string("patch-3.MPQ"));
-	//AddArchive(std::string("patch-w.MPQ"));
-	//AddArchive(std::string("patch-x.MPQ"));
 
 	AddArchive(std::string("ruRU/locale-ruRU.MPQ"));
 	AddArchive(std::string("ruRU/expansion-locale-ruRU.MPQ"));
@@ -55,15 +53,10 @@ CMPQArchiveManager::CMPQArchiveManager()
 	AddArchive(std::string("ruRU/patch-ruRU.MPQ"));
 	AddArchive(std::string("ruRU/patch-ruRU-2.MPQ"));
 	AddArchive(std::string("ruRU/patch-ruRU-3.MPQ"));
-	//AddArchive(std::string("ruRU/patch-ruRU-w.MPQ"));
-	//AddArchive(std::string("ruRU/patch-ruRU-x.MPQ"));
 #endif
-
-
-
 }
 
-CMPQArchiveManager::~CMPQArchiveManager()
+CMPQFilesStorage::~CMPQFilesStorage()
 {
 	for (auto it : m_OpenArchives)
 	{
@@ -71,10 +64,78 @@ CMPQArchiveManager::~CMPQArchiveManager()
 	}
 }
 
-void CMPQArchiveManager::AddArchive(std::string filename)
+
+
+//
+// // IFilesStorage
+//
+std::shared_ptr<IFile> CMPQFilesStorage::CreateFile(cstring _name)
+{
+	std::lock_guard<std::mutex> lock(m_Lock);
+
+	std::shared_ptr<CFile> file = std::make_shared<CFile>("<null>", _name);
+	CByteBuffer& byteBuffer = file->GetByteBuffer();
+	
+	SMPQFileLocation location = GetFileLocation(file->Path_Name());
+	if (!location.exists)
+		return nullptr;
+
+	libmpq__off_t size;
+	libmpq__file_size_unpacked(location.archive, location.fileNumber, &size);
+
+	// Allocate space and set data
+	byteBuffer.Allocate(size);
+	libmpq__file_read(location.archive, location.fileNumber, &(byteBuffer.getDataEx())[0], byteBuffer.getSize(), &size);
+	assert1(byteBuffer.getSize() == size);
+	byteBuffer.SetFilled();
+
+	//Log::Info("File[%s] opened. [mpq]", Path_Name().c_str());
+
+	return file;
+}
+
+size_t CMPQFilesStorage::GetFileSize(cstring _name)
+{
+	std::lock_guard<std::mutex> lock(m_Lock);
+
+	SMPQFileLocation location = GetFileLocation(_name);
+
+	if (location.exists)
+	{
+		libmpq__off_t size;
+		libmpq__file_size_unpacked(location.archive, location.fileNumber, &size);
+		return size;
+	}
+
+	return 0;
+}
+
+bool CMPQFilesStorage::IsFileExists(cstring _name)
+{
+	std::lock_guard<std::mutex> lock(m_Lock);
+
+	return GetFileLocation(_name).exists;
+}
+
+
+
+//
+// IFilesStorageEx
+//
+IFilesStorageEx::Priority CMPQFilesStorage::GetPriority() const
+{
+	return m_Priority;
+}
+
+
+
+//
+// CMPQFilesStorage
+//
+void CMPQFilesStorage::AddArchive(std::string filename)
 {
 	mpq_archive_s* mpq_a;
-	int result = libmpq__archive_open(&mpq_a, (archives + filename).c_str(), -1);
+	int result = libmpq__archive_open(&mpq_a, (m_Path + filename).c_str(), -1);
 	//Log::Info("Opening %s", filename.c_str());
 	if (result)
 	{
@@ -112,7 +173,7 @@ void CMPQArchiveManager::AddArchive(std::string filename)
 	Log::Green("CMPQFile[%s]: Added!", filename.c_str());
 }
 
-SMPQFileLocation CMPQArchiveManager::GetFileLocation(cstring filename)
+SMPQFileLocation CMPQFilesStorage::GetFileLocation(cstring filename)
 {
 	for (auto& i = m_OpenArchives.rbegin(); i != m_OpenArchives.rend(); ++i)
 	{
@@ -120,17 +181,10 @@ SMPQFileLocation CMPQArchiveManager::GetFileLocation(cstring filename)
 
 		uint32 filenum;
 		if (libmpq__file_number(mpq_a, filename.c_str(), &filenum) == LIBMPQ_ERROR_EXIST)
-		{
 			continue;
-		}
 
 		return SMPQFileLocation(mpq_a, filenum);
 	}
 
 	return SMPQFileLocation();
-}
-
-std::mutex& CMPQArchiveManager::Guard()
-{
-	return m_Lock;
 }
