@@ -23,3 +23,5 @@
 #include <dxgi1_3.h>
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
+
+#pragma comment(lib, "FreeImageLib.lib")

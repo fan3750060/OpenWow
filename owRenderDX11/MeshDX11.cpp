@@ -79,7 +79,7 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 		pVS = std::dynamic_pointer_cast<ShaderDX11>(args3D.PipelineState->GetShader(Shader::VertexShader));
 	}
 
-	assert1(pVS);
+	//assert1(pVS);
 
 	if (pVS)
 	{
@@ -104,7 +104,7 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 		if (indexCnt == 0)
 			m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
 		else
-			m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, 0);
+			m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, vertexStartLocation);
 		m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
 	}
 	else

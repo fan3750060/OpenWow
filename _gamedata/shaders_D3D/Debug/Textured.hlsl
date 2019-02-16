@@ -1,4 +1,9 @@
-#include "..\\_gamedata\\shaders_D3D\\Debug\\Textured_Material.h"
+#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
+
+struct Textured_Material
+{
+    //--------------------------- ( 0 bytes )
+}; 
 
 struct VertexShaderInput
 {
@@ -8,8 +13,9 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position : SV_POSITION;
-	float2 texCoord : TEXCOORD0;
+	float4 positionVS : SV_POSITION;
+	float4 positionWS : POSITION;
+	float2 texCoord   : TEXCOORD0;
 };
 
 cbuffer PerObject : register(b0)
@@ -22,12 +28,13 @@ cbuffer Material : register(b2)
 };
 
 Texture2D DiffuseTexture : register(t0);
-sampler DiffuseSampler : register(s0);
+sampler DiffuseTextureSampler : register(s0);
 
 VertexShaderOutput VS_main(VertexShaderInput IN)
 {
 	VertexShaderOutput OUT;
-	OUT.position = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionVS = mul(ModelViewProjection, float4(IN.position, 1.0f));
+	OUT.positionWS = float4(IN.position, 1.0f);
 	OUT.texCoord = IN.texCoord;
 
 	return OUT;
@@ -35,5 +42,10 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 
 float4 PS_main(VertexShaderOutput IN) : SV_TARGET
 {
-	return DiffuseTexture.Sample(DiffuseSampler, IN.texCoord);
+PixelShaderOutput OUT;
+	OUT.PositionWS = IN.positionWS;
+	OUT.Diffuse = DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord);
+	OUT.Specular = float4(1.0, 1.0, 1.0, 1.0);
+	OUT.NormalWS = float4(1.0, 1.0, 1.0, 0.0);
+	return OUT;
 }

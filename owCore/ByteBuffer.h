@@ -28,7 +28,7 @@ public:
 	uint8* getDataFromCurrentEx() { return &m_Data[m_CurrentPosition]; }
 
 	void seek(size_t _bufferOffsetAbsolute) override;
-	void seekRelative(size_t _bufferOffsetRelative) override;
+	void seekRelative(intptr_t _bufferOffsetRelative) override;
 
 	// Read
 	bool readLine(std::string* _string) override;

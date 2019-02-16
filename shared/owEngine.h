@@ -55,6 +55,7 @@
 
 // materials
 #include "../owEngine/3D/Materials/MaterialDebug.h"
+#include "../owEngine/3D/Materials/MaterialTextured.h"
 
 // base passes
 #include "../owEngine/3D/Passes/BasePass.h"

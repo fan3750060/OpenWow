@@ -40,7 +40,7 @@ public:
 	 { 
 		 m_ByteBuffer.seek(_bufferOffsetAbsolute); 
 	 }
-	 void seekRelative(size_t _bufferOffsetRelative) override
+	 void seekRelative(intptr_t _bufferOffsetRelative) override
 	 { 
 		 m_ByteBuffer.seekRelative(_bufferOffsetRelative); 
 	 }

@@ -133,8 +133,9 @@ void CByteBuffer::seek(size_t _bufferOffsetAbsolute)
 	m_IsEOF = m_CurrentPosition >= getSize();
 }
 
-void CByteBuffer::seekRelative(size_t _bufferOffsetRelative)
+void CByteBuffer::seekRelative(intptr_t _bufferOffsetRelative)
 {
+	assert1(m_CurrentPosition + _bufferOffsetRelative >= 0);
 	assert1(m_CurrentPosition + _bufferOffsetRelative <= getSize());
 	m_CurrentPosition += _bufferOffsetRelative;
 	m_IsEOF = m_CurrentPosition >= getSize();

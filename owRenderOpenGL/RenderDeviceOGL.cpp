@@ -198,12 +198,32 @@ cstring RenderDeviceOGL::GetDeviceName() const
 	return m_DeviceName;
 }
 
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateInt8VertexBuffer(const int8 * data, uint32 count, uint32 offset, uint32 stride)
+{
+	return std::shared_ptr<IBuffer>();
+}
+
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateInt16VertexBuffer(const int16 * data, uint32 count, uint32 offset, uint32 stride)
+{
+	return std::shared_ptr<IBuffer>();
+}
+
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateInt32VertexBuffer(const int32 * data, uint32 count, uint32 offset, uint32 stride)
+{
+	return std::shared_ptr<IBuffer>();
+}
+
 std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
 {
 	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferOGL>(GL_ARRAY_BUFFER, data, count, stride);
 	m_Buffers.push_back(buffer);
 
 	return buffer;
+}
+
+std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt16VertexBuffer(const uint16 * data, uint32 count, uint32 offset, uint32 stride)
+{
+	return std::shared_ptr<IBuffer>();
 }
 
 std::shared_ptr<IBuffer> RenderDeviceOGL::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)

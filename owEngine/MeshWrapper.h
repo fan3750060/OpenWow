@@ -25,5 +25,5 @@ public:
 	virtual bool Accept(IVisitor& visitor);
 
 private:
-	const std::shared_ptr<IMesh> m_Mesh;
+	std::shared_ptr<IMesh> m_Mesh;
 };

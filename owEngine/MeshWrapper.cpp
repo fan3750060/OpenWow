@@ -3,10 +3,15 @@
 // General
 #include "MeshWrapper.h"
 
+// Additional
+#include "Application.h"
+
 MeshWrapper::MeshWrapper(SceneNodeTypes type, std::shared_ptr<IMesh> _mesh) :
 	m_Mesh(_mesh)
 {
-	assert1(m_Mesh != nullptr);
+	if (m_Mesh == nullptr)
+		m_Mesh = _RenderDevice->CreateMesh();
+
 	m_Mesh->SetType(type);
 }
 

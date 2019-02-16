@@ -4,7 +4,7 @@
 #include "LocalFile.h"
 
 // Additional
-const char* m_LocalFilesFolder = "D:\\_programming\\OpenWow\\_gamedata\\";
+const char* m_LocalFilesFolder = "D:\\_programming\\OpenStalker\\_gamedata\\";
 
 CLocalFile::CLocalFile(cstring _fullFileName)	: 
 	CFile(_fullFileName)

@@ -43,6 +43,9 @@ bool CMPQFile::Open()
 uint64_t CMPQFile::GetFileSize(cstring _name)
 {
 	std::shared_ptr<IMPQArchiveManager> MPQArchiveManager = GetManager<IMPQArchiveManager>();
+	if (MPQArchiveManager == nullptr)
+		return 0;
+
 	std::lock_guard<std::mutex> lock(MPQArchiveManager->Guard());
 
 	SMPQFileLocation location = MPQArchiveManager->GetFileLocation(_name);
@@ -60,6 +63,9 @@ uint64_t CMPQFile::GetFileSize(cstring _name)
 bool CMPQFile::IsFileExists(cstring _name)
 {
 	std::shared_ptr<IMPQArchiveManager> MPQArchiveManager = GetManager<IMPQArchiveManager>();
+	if (MPQArchiveManager == nullptr)
+		return false;
+
 	std::lock_guard<std::mutex> lock(MPQArchiveManager->Guard());
 
 	return MPQArchiveManager->GetFileLocation(_name).exists;
