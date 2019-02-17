@@ -14,7 +14,7 @@ GLenum GLTranslateMinFilter(SamplerStateOGL::MinFilter _minFilter)
 		return GL_NEAREST;
 	}
 
-	std::exception("Invalid sampler GLTranslateMinFilter modes.");
+	throw std::exception("Invalid sampler GLTranslateMinFilter modes.");
 }
 
 GLenum GLTranslateMinMipFilter(SamplerStateOGL::MinFilter _minFilter, SamplerStateOGL::MipFilter _mipFilter)
@@ -36,7 +36,7 @@ GLenum GLTranslateMinMipFilter(SamplerStateOGL::MinFilter _minFilter, SamplerSta
 		return GL_NEAREST_MIPMAP_NEAREST;
 	}
 
-	std::exception("Invalid sampler MinMapFilter modes.");
+	throw std::exception("Invalid sampler MinMapFilter modes.");
 }
 
 GLenum GLTranslateMagFilter(SamplerStateOGL::MagFilter _magFilter)
@@ -50,7 +50,7 @@ GLenum GLTranslateMagFilter(SamplerStateOGL::MagFilter _magFilter)
 		return GL_NEAREST;
 	}
 
-	std::exception("Invalid sampler MagFilter modes.");
+	throw std::exception("Invalid sampler MagFilter modes.");
 }
 
 GLenum GLTranslateWrapMode(SamplerStateOGL::WrapMode wrapMode)
@@ -70,7 +70,7 @@ GLenum GLTranslateWrapMode(SamplerStateOGL::WrapMode wrapMode)
 		return GL_CLAMP_TO_BORDER;
 	}
 
-	std::exception("Invalid sampler WrapMode modes.");
+	throw std::exception("Invalid sampler WrapMode modes.");
 }
 
 GLenum GLTranslateCompareMode(SamplerStateOGL::CompareMode mode)
@@ -84,7 +84,7 @@ GLenum GLTranslateCompareMode(SamplerStateOGL::CompareMode mode)
 		return GL_COMPARE_R_TO_TEXTURE;
 	}
 
-	std::exception("Invalid sampler CompareMode modes.");
+	throw std::exception("Invalid sampler CompareMode modes.");
 }
 
 GLenum GLTranslateCompareFunction(SamplerStateOGL::CompareFunc compareFunc)
@@ -116,7 +116,7 @@ GLenum GLTranslateCompareFunction(SamplerStateOGL::CompareFunc compareFunc)
 		return GL_ALWAYS;
 	}
 
-	std::exception("Invalid sampler CompareFunction modes.");
+	throw std::exception("Invalid sampler CompareFunction modes.");
 }
 
 SamplerStateOGL::SamplerStateOGL()

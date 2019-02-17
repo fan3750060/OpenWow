@@ -186,9 +186,6 @@
     <ClCompile Include="Events.cpp">
       <Filter>Events</Filter>
     </ClCompile>
-    <ClCompile Include="MPQFilesStorage.cpp">
-      <Filter>Files\Common</Filter>
-    </ClCompile>
     <ClCompile Include="LocalFilesStorage.cpp">
       <Filter>Files\Common</Filter>
     </ClCompile>
@@ -364,9 +361,6 @@
     </ClInclude>
     <ClInclude Include="LockedQueue.h">
       <Filter>Common\Threads</Filter>
-    </ClInclude>
-    <ClInclude Include="MPQFilesStorage.h">
-      <Filter>Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="LocalFilesStorage.h">
       <Filter>Files\Common</Filter>

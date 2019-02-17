@@ -159,7 +159,7 @@ float4 PS_DeferredLighting(VertexShaderOutput IN) : SV_Target
     float specularPower = exp2(specular.a);
 
 	// If material unlit then discard
-	if (P.a == 0.0)
+	//if (P.a == 0.0)
 		return diffuse;
     
     

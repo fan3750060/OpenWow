@@ -10,9 +10,6 @@
 #include "ShaderOGL.h"
 #include "TextureOGLTranslate.h"
 
-#include <libblp/libblp.h>
-#pragma comment(lib, "libblp.lib")
-
 TextureOGL::TextureOGL(RenderDeviceOGL* _device)
 	: m_TextureWidth(0)
 	, m_TextureHeight(0)
@@ -134,7 +131,7 @@ bool TextureOGL::LoadTextureCustom(uint16_t width, uint16_t height, void * pixel
 
 bool TextureOGL::LoadTexture2D(cstring fileName)
 {
-	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
+	/*std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 
 	LIBBLP_PixelView blpView;
 	LIBBLP_Load(f->getData(), f->getSize(), &blpView);
@@ -156,7 +153,7 @@ bool TextureOGL::LoadTexture2D(cstring fileName)
 
 	//glGenerateMipmap(m_TextureType);
 
-	glBindTexture(m_TextureType, 0);
+	glBindTexture(m_TextureType, 0);*/
 
 	return true;
 }

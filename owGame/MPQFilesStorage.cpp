@@ -3,10 +3,6 @@
 // General
 #include "MPQFilesStorage.h"
 
-// Additional
-#include "BaseManager.h"
-#include "File.h"
-
 //#if (VERSION == VERSION_Vanila)
 //const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
 //#elif (VERSION == VERSION_WotLK)

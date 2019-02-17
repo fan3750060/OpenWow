@@ -9,6 +9,8 @@ public:
 
 	// IFilesManager
 	std::shared_ptr<IFile> Open(cstring _fileName) override final;
+	size_t                 GetFileSize(cstring _fileName) override final;
+	bool                   IsFileExists(cstring _fileName) override final;
 
 	void RegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage) override final;
 	void UnRegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage) override final;

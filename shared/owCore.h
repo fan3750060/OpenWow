@@ -14,7 +14,6 @@
 #include "../owCore/RefManager1DimAssync.h"
 
 // Files
-#include "../owCore/MPQFilesStorage.h"
 #include "../owCore/LocalFilesStorage.h"
 #include "../owCore/FilesManager.h"
 #include "../owCore/File.h"

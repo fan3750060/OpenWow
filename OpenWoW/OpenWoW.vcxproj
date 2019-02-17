@@ -46,7 +46,7 @@
     <ProjectGuid>{645797A4-A484-4D99-A130-88BD45546BD5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>OpenWoW</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>OpenWoW</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

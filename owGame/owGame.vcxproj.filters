@@ -72,6 +72,9 @@
     <ClCompile Include="WoWChunkReader.cpp">
       <Filter>Files</Filter>
     </ClCompile>
+    <ClCompile Include="MPQFilesStorage.cpp">
+      <Filter>Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Liquid.h">
@@ -217,6 +220,9 @@
       <Filter>DBC\Core</Filter>
     </ClInclude>
     <ClInclude Include="WoWChunkReader.h">
+      <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MPQFilesStorage.h">
       <Filter>Files</Filter>
     </ClInclude>
   </ItemGroup>

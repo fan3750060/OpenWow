@@ -253,15 +253,17 @@ std::shared_ptr<Texture> CItem_VisualData::LoadSkinTexture(DBC_CharComponent_Sec
 	std::string maleTexture = getTextureComponentName(_type, _textureName, Gender::Male);
 	std::string femaleTexture = getTextureComponentName(_type, _textureName, Gender::Female);
 
-	if (CMPQFile::IsFileExists(universalTexture))
+	std::shared_ptr<IFilesManager> fManager = GetManager<IFilesManager>();
+
+	if (fManager->IsFileExists(universalTexture))
 	{
 		return _RenderDevice->CreateTexture2D(universalTexture);
 	}
-	else if (CMPQFile::IsFileExists(maleTexture))
+	else if (fManager->IsFileExists(maleTexture))
 	{
 		return _RenderDevice->CreateTexture2D(maleTexture);
 	}
-	else if (CMPQFile::IsFileExists(femaleTexture))
+	else if (fManager->IsFileExists(femaleTexture))
 	{
 		return _RenderDevice->CreateTexture2D(femaleTexture);
 	}

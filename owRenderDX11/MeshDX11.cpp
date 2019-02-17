@@ -94,34 +94,32 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
 			}
 		}
-	}
 
-	m_pDeviceContext->IASetPrimitiveTopology(m_PrimitiveTopology);
+		m_pDeviceContext->IASetPrimitiveTopology(m_PrimitiveTopology);
 
-	if (m_pIndexBuffer != NULL)
-	{
-		m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
-		if (indexCnt == 0)
-			m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
-		else
-			m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, vertexStartLocation);
-		m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
-	}
-	else
-	{
-		if (vertexCnt == 0)
+		if (m_pIndexBuffer != NULL)
 		{
-			UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
-			m_pDeviceContext->Draw(vertexCount, 0);
+			m_pIndexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
+			if (indexCnt == 0)
+				m_pDeviceContext->DrawIndexed(m_pIndexBuffer->GetElementCount(), 0, 0);
+			else
+				m_pDeviceContext->DrawIndexed(indexCnt, indexStartLocation, vertexStartLocation);
+			m_pIndexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
 		}
 		else
 		{
-			m_pDeviceContext->Draw(vertexCnt, vertexStartLocation);
+			if (vertexCnt == 0)
+			{
+				UINT vertexCount = (*m_VertexBuffers.begin()).second->GetElementCount();
+				m_pDeviceContext->Draw(vertexCount, 0);
+			}
+			else
+			{
+				m_pDeviceContext->Draw(vertexCnt, vertexStartLocation);
+			}
 		}
-	}
 
-	if (pVS)
-	{
+
 		for (BufferMap::value_type buffer : m_VertexBuffers)
 		{
 			BufferBinding binding = buffer.first;

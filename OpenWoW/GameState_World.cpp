@@ -36,6 +36,15 @@ bool CGameState_World::Init()
 	Application& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
+	renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
+	renderDevice->CreateTexture2D("Textures\\Minimap\\00b445de1413eeca80cc683deb9af58b.blp"); // DXT1A
+	renderDevice->CreateTexture2D("Textures\\MinimapMask.blp"); // DXT3
+	renderDevice->CreateTexture2D("Textures\\SpellChainEffects\\VR_Chain.blp"); // DXT5
+	renderDevice->CreateTexture2D("Textures\\Moon02Glare.blp"); // RAW0
+	renderDevice->CreateTexture2D("Textures\\ShadowBlob.blp"); // RAW1
+	renderDevice->CreateTexture2D("Textures\\moon.blp"); // RAW8
+	renderDevice->CreateTexture2D("Textures\\SunGlare.blp"); // PURE
+
 	//
 	// Camera controller
 	//

@@ -91,6 +91,9 @@ struct
 	virtual ~IFilesManager() {}
 
 	virtual std::shared_ptr<IFile> Open(cstring _fileName) = 0;
+	virtual size_t                 GetFileSize(cstring _fileName) = 0;
+	virtual bool                   IsFileExists(cstring _fileName) = 0;
+
 
 	virtual void RegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage) = 0;
 	virtual void UnRegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage) = 0;

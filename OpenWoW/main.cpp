@@ -28,11 +28,14 @@ int main(int argumentCount, char* arguments[])
 		AddManager<IConsole>(console);
 		console->AddCommonCommands();
 		
-		std::shared_ptr<IMPQArchiveManager> mpqArchiveManager = std::make_shared<CMPQArchiveManager>();
-		AddManager<IMPQArchiveManager>(mpqArchiveManager);
-
 		std::shared_ptr<IFilesManager> filesManager = std::make_shared<CFilesManager>();
 		AddManager<IFilesManager>(filesManager);
+
+		std::shared_ptr<IFilesStorage> localFilesGamedata = std::make_shared<CLocalFilesStorage>("E:\\OpenWoW\\_gamedata\\");
+		filesManager->RegisterFilesStorage(localFilesGamedata);
+
+		std::shared_ptr<IFilesStorage> mpqFileStorage = std::make_shared<CMPQFilesStorage>("D:\\_games\\World of Warcraft 3.3.5a\\Data\\", IFilesStorageEx::PRIOR_HIGH);
+		filesManager->RegisterFilesStorage(mpqFileStorage);
 
 		OpenDBs();
 

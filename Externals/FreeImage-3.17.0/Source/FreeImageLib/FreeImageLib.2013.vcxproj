@@ -252,6 +252,7 @@ copy ..\FreeImage.h ..\..\Dist\x64
     <ClCompile Include="..\FreeImage\MemoryIO.cpp" />
     <ClCompile Include="..\FreeImage\PixelAccess.cpp" />
     <ClCompile Include="..\FreeImage\NNQuantizer.cpp" />
+    <ClCompile Include="..\FreeImage\PluginBLP.cpp" />
     <ClCompile Include="..\FreeImage\WuQuantizer.cpp" />
     <ClCompile Include="..\FreeImage\Conversion.cpp" />
     <ClCompile Include="..\FreeImage\Conversion16_555.cpp" />
@@ -281,7 +282,6 @@ copy ..\FreeImage.h ..\..\Dist\x64
     <ClCompile Include="..\FreeImage\PluginICO.cpp" />
     <ClCompile Include="..\FreeImage\PluginIFF.cpp" />
     <ClCompile Include="..\FreeImage\PluginJNG.cpp" />
-    <ClCompile Include="..\FreeImage\PluginJPEG.cpp" />
     <ClCompile Include="..\FreeImage\PluginKOALA.cpp" />
     <ClCompile Include="..\FreeImage\PluginMNG.cpp" />
     <ClCompile Include="..\FreeImage\PluginPCD.cpp" />
@@ -318,7 +318,6 @@ copy ..\FreeImage.h ..\..\Dist\x64
     <ClCompile Include="..\FreeImageToolkit\CopyPaste.cpp" />
     <ClCompile Include="..\FreeImageToolkit\Display.cpp" />
     <ClCompile Include="..\FreeImageToolkit\Flip.cpp" />
-    <ClCompile Include="..\FreeImageToolkit\JPEGTransform.cpp" />
     <ClCompile Include="..\FreeImageToolkit\MultigridPoissonSolver.cpp" />
     <ClCompile Include="..\FreeImageToolkit\Rescale.cpp" />
     <ClCompile Include="..\FreeImageToolkit\Resize.cpp" />
@@ -342,10 +341,6 @@ copy ..\FreeImage.h ..\..\Dist\x64
     <Text Include="..\..\Whatsnew.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibJPEG\LibJPEG.2013.vcxproj">
-      <Project>{5e1d4e5f-e10c-4ba3-b663-f33014fd21d9}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\LibPNG\LibPNG.2013.vcxproj">
       <Project>{7db10b50-ce00-4d7a-b322-6824f05d2fcb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

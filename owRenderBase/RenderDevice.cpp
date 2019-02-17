@@ -226,44 +226,44 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCone()
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<float> >(const std::vector<float>& data)
 {
-	return CreateFloatVertexBuffer(&(data[0]), (uint32)data.size(), 0, sizeof(float));
+	return CreateVoidVertexBuffer(&(data[0]), (uint32)data.size(), 0, sizeof(float));
 }
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<vec2> >(const std::vector<vec2>& data)
 {
-	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec2));
+	return CreateVoidVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec2));
 }
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<vec3> >(const std::vector<vec3>& data)
 {
-	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec3));
+	return CreateVoidVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec3));
 }
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer< std::vector<vec4> >(const std::vector<vec4>& data)
 {
-	return CreateFloatVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec4));
+	return CreateVoidVertexBuffer(glm::value_ptr(data[0]), (uint32)data.size(), 0, sizeof(vec4));
 }
 
 // Template specializations for vertex buffers (with common types)
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<float>(const float* data, uint32 count)
 {
-	return CreateFloatVertexBuffer(data, count, 0, sizeof(float));
+	return CreateVoidVertexBuffer(data, count, 0, sizeof(float));
 }
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<vec2>(const vec2* data, uint32 count)
 {
-	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec2));
+	return CreateVoidVertexBuffer((const float*)data, count, 0, sizeof(vec2));
 }
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<vec3>(const vec3* data, uint32 count)
 {
-	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec3));
+	return CreateVoidVertexBuffer((const float*)data, count, 0, sizeof(vec3));
 }
 template<>
 std::shared_ptr<IBuffer> IRenderDevice::CreateVertexBuffer<vec4>(const vec4* data, uint32 count)
 {
-	return CreateFloatVertexBuffer((const float*)data, count, 0, sizeof(vec4));
+	return CreateVoidVertexBuffer((const float*)data, count, 0, sizeof(vec4));
 }
 
 // Template specializations for index buffers (with std::vector)

@@ -198,77 +198,7 @@ ATL::CComPtr<ID3D11DeviceContext2> RenderDeviceDX11::GetDeviceContext() const
 	return m_pDeviceContext;
 }
 
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateInt8VertexBuffer(const int8 * data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateInt16VertexBuffer(const int16 * data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateInt32VertexBuffer(const int32 * data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt8VertexBuffer(const uint8 * data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt16VertexBuffer(const uint16 * data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateUInt32VertexBuffer(const uint32 * data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr<IBuffer> RenderDeviceDX11::CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride)
-{
-	D3DMultithreadLocker locker(m_pMultiThread);
-
-	std::shared_ptr<IBuffer> buffer = std::make_shared<BufferDX11>(m_pDevice, D3D11_BIND_VERTEX_BUFFER, data, count, offset, stride);
-	m_Buffers.push_back(buffer);
-
-	return buffer;
-}
-
-std::shared_ptr <IBuffer> RenderDeviceDX11::CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride)
+std::shared_ptr<IBuffer> RenderDeviceDX11::CreateVoidVertexBuffer(const void * data, uint32 count, uint32 offset, uint32 stride)
 {
 	D3DMultithreadLocker locker(m_pMultiThread);
 

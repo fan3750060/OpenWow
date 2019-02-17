@@ -26,6 +26,7 @@
     <ClCompile Include="LiquidInstance.cpp" />
     <ClCompile Include="Liquid.cpp" />
     <ClCompile Include="LiquidMaterial.cpp" />
+    <ClCompile Include="MPQFilesStorage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -80,6 +81,7 @@
     <ClInclude Include="LiquidInstance.h" />
     <ClInclude Include="Liquid.h" />
     <ClInclude Include="LiquidMaterial.h" />
+    <ClInclude Include="MPQFilesStorage.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WoWChunkReader.h" />
     <ClInclude Include="WowChunkUtils.h" />
@@ -95,7 +97,7 @@
     <ProjectGuid>{B55BA550-E3B6-4756-AE79-6A5C7D28AEFF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>owGame</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

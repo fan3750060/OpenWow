@@ -143,9 +143,6 @@
     <ClCompile Include="..\FreeImage\PluginJNG.cpp">
       <Filter>Source Files\Plugins</Filter>
     </ClCompile>
-    <ClCompile Include="..\FreeImage\PluginJPEG.cpp">
-      <Filter>Source Files\Plugins</Filter>
-    </ClCompile>
     <ClCompile Include="..\FreeImage\PluginKOALA.cpp">
       <Filter>Source Files\Plugins</Filter>
     </ClCompile>
@@ -254,9 +251,6 @@
     <ClCompile Include="..\FreeImageToolkit\Flip.cpp">
       <Filter>Toolkit Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\FreeImageToolkit\JPEGTransform.cpp">
-      <Filter>Toolkit Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\FreeImageToolkit\MultigridPoissonSolver.cpp">
       <Filter>Toolkit Files</Filter>
     </ClCompile>
@@ -274,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="..\FreeImage\ConversionRGBA16.cpp">
       <Filter>Source Files\Conversion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FreeImage\PluginBLP.cpp">
+      <Filter>Source Files\Plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

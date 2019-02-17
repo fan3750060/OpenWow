@@ -43,7 +43,6 @@
     <ClCompile Include="LocalFilesStorage.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="DebugOutput.cpp" />
-    <ClCompile Include="MPQFilesStorage.cpp" />
     <ClCompile Include="NEW_Random.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OpenSSLCrypto.cpp" />
@@ -102,7 +101,6 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="DebugOutput.h" />
-    <ClInclude Include="MPQFilesStorage.h" />
     <ClInclude Include="NEW_Random.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="OpenSSLCrypto.h" />

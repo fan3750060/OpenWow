@@ -27,6 +27,30 @@ std::shared_ptr<IFile> CFilesManager::Open(cstring _fileName)
 	return nullptr;
 }
 
+size_t CFilesManager::GetFileSize(cstring _fileName)
+{
+	for (const auto& fs : m_Storages)
+	{
+		size_t fileSize = fs->GetFileSize(_fileName);
+		if (fileSize != 0)
+			return fileSize;
+	}
+
+	return 0;
+}
+
+bool CFilesManager::IsFileExists(cstring _fileName)
+{
+	for (const auto& fs : m_Storages)
+	{
+		bool isFileExists = fs->IsFileExists(_fileName);
+		if (isFileExists)
+			return true;
+	}
+
+	return false;
+}
+
 void CFilesManager::RegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage)
 {
 	std::shared_ptr<IFilesStorageEx> storageEx = std::dynamic_pointer_cast<IFilesStorageEx, IFilesStorage>(_storage);

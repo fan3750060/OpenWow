@@ -131,14 +131,7 @@ public:
 	virtual std::shared_ptr<PipelineState> CreatePipelineState() = 0;
 	virtual void DestoryPipelineState(std::shared_ptr<PipelineState> pipeline) = 0;
 
-	virtual std::shared_ptr<IBuffer> CreateInt8VertexBuffer(const int8* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateInt16VertexBuffer(const int16 * data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateInt32VertexBuffer(const int32* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateUInt8VertexBuffer(const uint8* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateUInt16VertexBuffer(const uint16 * data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateUInt32VertexBuffer(const uint32* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateFloatVertexBuffer(const float* data, uint32 count, uint32 offset, uint32 stride) = 0;
-	virtual std::shared_ptr<IBuffer> CreateDoubleVertexBuffer(const double* data, uint32 count, uint32 offset, uint32 stride) = 0;
+	virtual std::shared_ptr<IBuffer> CreateVoidVertexBuffer(const void* data, uint32 count, uint32 offset, uint32 stride) = 0;
 
 	virtual std::shared_ptr<IBuffer> CreateUInt16IndexBuffer(const uint16* data, uint32 sizeInBytes) = 0;
 	virtual std::shared_ptr<IBuffer> CreateUInt32IndexBuffer(const uint32* data, uint32 sizeInBytes) = 0;

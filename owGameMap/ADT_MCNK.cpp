@@ -351,7 +351,7 @@ bool ADT_MCNK::Load()
 			}
 		}
 
-		mccvBuffer = _RenderDevice->CreateUInt32VertexBuffer(mccvColorsUINT8, C_MapBufferSize, 0, sizeof(uint8));
+		mccvBuffer = _RenderDevice->CreateVoidVertexBuffer(mccvColorsUINT8, C_MapBufferSize, 0, sizeof(uint8));
 	}
 
 	m_File.reset();

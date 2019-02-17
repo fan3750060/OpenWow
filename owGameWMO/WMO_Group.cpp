@@ -255,7 +255,7 @@ void WMO_Group::Load()
 			}
 
 			// Buffer
-			VB_Colors = _RenderDevice->CreateFloatVertexBuffer((const float*)vertexColorsConverted.data(), vertexColorsConverted.size(), 0, sizeof(vec4));
+			VB_Colors = _RenderDevice->CreateVoidVertexBuffer(vertexColorsConverted.data(), vertexColorsConverted.size(), 0, sizeof(vec4));
 			m_IsMOCVExists = vertexColorsCount > 0;
 
 			delete[] mocv;

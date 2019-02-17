@@ -9,6 +9,7 @@
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
 
+#include "../owGame/MPQFilesStorage.h"
 #include "../owGame/WoWChunkReader.h"
 
 // DBC
