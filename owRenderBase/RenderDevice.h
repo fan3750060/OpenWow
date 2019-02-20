@@ -48,42 +48,25 @@ public:
 	std::shared_ptr<StructuredBuffer> CreateStructuredBuffer(const std::vector<T>& data, CPUAccess cpuAccess = CPUAccess::None, bool gpuWrite = false);
 	virtual void DestroyStructuredBuffer(std::shared_ptr<StructuredBuffer> buffer) = 0;
 
+	// Create a line
+	std::shared_ptr<IMesh> CreateLine(cvec3 _dest);
+
 	// Create a plane in 3D.
-	// The plane will be centered at the origin.
-	// @param size The size of the plane.
-	// @param N Surface normal to the plane.
 	std::shared_ptr<IMesh> CreatePlane(cvec3 N = vec3(0, 1, 0));
 
 	// Create a screen-space quad that can be used to render full-screen post-process effects to the screen.
-	// By default, the quad will have clip-space coordinates and can be used with a pass-through vertex shader
-	// to render full-screen post-process effects. If you want more control over the area of the screen the quad covers, 
-	// you can specify your own screen coordinates and supply an appropriate orthographic projection matrix to align the 
-	// screen quad appropriately.
 	std::shared_ptr<IMesh> CreateScreenQuad(float left = -0.0f, float right = 1.0f, float bottom = -0.0f, float top = 1.0f, float z = 0.0f);
 
 	// Create a sphere in 3D
-	// @param radius Radius of the sphere.
-	// @param tesselation The amount of tessellation to apply to the sphere. Default tessellation is 4.
 	std::shared_ptr<IMesh> CreateSphere();
 
 	// Create a cube in 3D.
-	// The cube will be centered at the origin.
-	// @param size The length of each edge of the cube.
 	std::shared_ptr<IMesh> CreateCube();
 
 	// Create a cylinder that is aligned to a particular axis.
-	// @param baseRadius The radius of the base (bottom) of the cylinder.
-	// @param apexRadius The radius of the apex (top) of the cylinder.
-	// @param height The height of the sphere along the axis of the cylinder.
-	// @param axis The axis to align the cylinder. Default to the global Y axis.
 	std::shared_ptr<IMesh> CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis = vec3(0, 1, 0));
 
 	// Create a cone.
-	// Cones are always aligned to (0, 1, 0) with the base of the cone 
-	// centered at (0, 0, 0) and apex at (0, height, 0).
-	// A cone is just a cylinder with an apex radius of 0.
-	// @param baseRadius The radius of the base of the cone.
-	// @param height The height of the cone.
 	std::shared_ptr<IMesh> CreateCone();
 
 	//
@@ -96,7 +79,7 @@ public:
 	virtual std::shared_ptr<IMesh> CreateMesh() = 0;
 	virtual void DestroyMesh(std::shared_ptr<IMesh> mesh) = 0;
 
-	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
+	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile, std::shared_ptr<IShaderInputLayout> _customLayout = nullptr) = 0;
 	virtual void DestroyShader(std::shared_ptr<Shader> shader) = 0;
 
 	// Create a texture from a file.
@@ -120,8 +103,7 @@ public:
 	virtual std::shared_ptr<IRenderTarget> CreateRenderTarget() = 0;
 	virtual void DestroyRenderTarget(std::shared_ptr<IRenderTarget> renderTarget) = 0;
 
-	// Create a GPU query object. Used for performance profiling, occlusion queries,
-	// or primitive output queries.
+	// Create a GPU query object. Used for performance profiling, occlusion queries, or primitive output queries.
 	virtual std::shared_ptr<Query> CreateQuery(Query::QueryType queryType = Query::QueryType::Timer, uint8_t numBuffers = 3) = 0;
 	virtual void DestoryQuery(std::shared_ptr<Query> query) = 0;
 

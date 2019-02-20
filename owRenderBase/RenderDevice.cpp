@@ -3,37 +3,46 @@
 // General
 #include "RenderDevice.h"
 
+// Additional
+#include "Primitives/Geometry.h"
+
+std::shared_ptr<IMesh> IRenderDevice::CreateLine(cvec3 _dest)
+{
+	vec3 p[2];
+	p[0] = -_dest;
+	p[1] = _dest;
+
+	std::shared_ptr<IMesh> mesh = CreateMesh();
+	mesh->SetPrimitiveTopology(PrimitiveTopology::LineList);
+
+	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(p, 2);
+	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+
+	return mesh;
+}
+
 std::shared_ptr<IMesh> IRenderDevice::CreatePlane(cvec3 N)
 {
-	vec3 p[4];
-	p[0] = vec3(1.0f, 0, 1.0f);
-	p[1] = vec3(-1.0f, 0, 1.0f);
-	p[2] = vec3(-1.0f, 0, -1.0f);
-	p[3] = vec3(1.0f, 0, -1.0f);
+	DirectX::VertexCollection vertices;
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3( 1.0f, 0.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(-1.0f, 0.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(-1.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(1.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
 
-	vec2 t[4];
-	t[0] = vec2(1, 1);
-	t[1] = vec2(0, 1);
-	t[2] = vec2(0, 0);
-	t[3] = vec2(1, 0);
-
-	uint16 i[6];
-	i[0] = 0;
-	i[1] = 1;
-	i[2] = 2;
-	i[3] = 2;
-	i[4] = 3;
-	i[5] = 0;
+	DirectX::IndexCollection indices;
+	indices.push_back(1);
+	indices.push_back(0);
+	indices.push_back(2);
+	indices.push_back(2);
+	indices.push_back(0);
+	indices.push_back(3);
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(p, 4);
-	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+	std::shared_ptr<IBuffer> __vb = CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal));
+	mesh->SetVertexBuffer(__vb);
 
-	std::shared_ptr<IBuffer> __tb = CreateVertexBuffer(t, 4);
-	mesh->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __tb);
-
-	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(i, 6);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(indices);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
@@ -80,50 +89,16 @@ std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, 
 
 std::shared_ptr<IMesh> IRenderDevice::CreateSphere()
 {
-	vec3 spVerts[126] =
-	{  // x, y, z
-		vec3(0.0f, 1.0f, 0.0f),        vec3(0.0f, -1.0f, 0.0f),
-		vec3(-0.707f, 0.0f, 0.707f),   vec3(0.707f, 0.0f, 0.707f),
-		vec3(0.707f, 0.0f, -0.707f),   vec3(-0.707f, 0.0f, -0.707f)
-	};
-
-	uint16 spInds[128 * 3] = {  // Number of faces: (4 ^ iterations) * 8
-		2, 3, 0,   3, 4, 0,   4, 5, 0,   5, 2, 0,   2, 1, 3,   3, 1, 4,   4, 1, 5,   5, 1, 2
-	};
-
-	for (uint32 i = 0, nv = 6, ni = 24; i < 2; ++i)  // Two iterations
-	{
-		// Subdivide each face into 4 tris by bisecting each edge and push vertices onto unit sphere
-		for (uint32 j = 0, prevNumInds = ni; j < prevNumInds; j += 3)
-		{
-			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 0]] + spVerts[spInds[j + 1]]) * 0.5f));
-			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 1]] + spVerts[spInds[j + 2]]) * 0.5f));
-			spVerts[nv++] = glm::normalize(((spVerts[spInds[j + 2]] + spVerts[spInds[j + 0]]) * 0.5f));
-
-			spInds[ni++] = spInds[j + 0];
-			spInds[ni++] = nv - 3;
-			spInds[ni++] = nv - 1;
-
-			spInds[ni++] = nv - 3;
-			spInds[ni++] = spInds[j + 1];
-			spInds[ni++] = nv - 2;
-
-			spInds[ni++] = nv - 2;
-			spInds[ni++] = spInds[j + 2];
-			spInds[ni++] = nv - 1;
-
-			spInds[j + 0] = nv - 3;
-			spInds[j + 1] = nv - 2;
-			spInds[j + 2] = nv - 1;
-		}
-	}
+	DirectX::VertexCollection vertices;
+	DirectX::IndexCollection indices;
+	DirectX::ComputeSphere(vertices, indices, 1.0f, 32, true, false);
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 
-	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(spVerts, 126);
-	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+	std::shared_ptr<IBuffer> __vb = CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal));
+	mesh->SetVertexBuffer(__vb);
 
-	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(spInds, 128 * 3);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(indices);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
@@ -131,38 +106,17 @@ std::shared_ptr<IMesh> IRenderDevice::CreateSphere()
 
 std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 {
-	vec3 cubeVerts[8] = {  // x, y, z
-		vec3(-0.5f, 0.5f, -0.5f),
-		vec3(0.5f, 0.5f, -0.5f),
-		 vec3(-0.5f, -0.5f, -0.5f),
-		 vec3(0.5f, -0.5f, -0.5f),
-		 vec3(-0.5f, 0.5f, 0.5f),
-		 vec3(0.5f, 0.5f, 0.5f),
-		 vec3(-0.5f, -0.5f, 0.5f),
-		 vec3(0.5f, -0.5f, 0.5f)
-	};
-	uint16 cubeInds[36] = {
-		0, 1, 2,    // side 1
-		2, 1, 3,
-		4, 0, 6,    // side 2
-		6, 0, 2,
-		7, 5, 6,    // side 3
-		6, 5, 4,
-		3, 1, 7,    // side 4
-		7, 1, 5,
-		4, 5, 0,    // side 5
-		0, 5, 1,
-		3, 7, 2,    // side 6
-		2, 7, 6
-	};
+	DirectX::VertexCollection vertices;
+	DirectX::IndexCollection indices;
+	DirectX::ComputeBox(vertices, indices, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), true, false);
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
 	mesh->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
 
-	std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(cubeVerts, 8);
-	mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+	std::shared_ptr<IBuffer> __vb = CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal));
+	mesh->SetVertexBuffer(__vb);
 
-	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(cubeInds, 36);
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(indices);
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;

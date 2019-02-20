@@ -26,9 +26,9 @@ void CGBuffer::Load(uint32 width, uint32 height)
 	// Position (Color0) 
 	Texture::TextureFormat positionTextureFormat(
 		Texture::Components::RGBA,
-		Texture::Type::UnsignedNormalized,
+		Texture::Type::Float,
 		numSamples,
-		8, 8, 8, 8, 0, 0);
+		32, 32, 32, 32, 0, 0);
 	std::shared_ptr<Texture> positionTexture = renderDevice->CreateTexture2D(width, height, 1, positionTextureFormat);
 
 	// Diffuse buffer (Color1)
@@ -83,6 +83,7 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 
 	// Shaders that unite 4 textures
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(Shader::VertexShader, "shaders_D3D/DeferredRendering.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
+	g_pVertexShader->LoadInputLayoutFromReflector();
 	std::shared_ptr<Shader> g_pDeferredLightingPixelShader = _RenderDevice->CreateShader(Shader::PixelShader, "shaders_D3D/DeferredRendering.hlsl", Shader::ShaderMacros(), "PS_DeferredLighting", "latest");
 
 

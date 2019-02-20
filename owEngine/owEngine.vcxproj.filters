@@ -167,6 +167,9 @@
     <ClCompile Include="GBuffer.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="3D\SceneNodeModel3D.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -308,6 +311,9 @@
     </ClInclude>
     <ClInclude Include="GBuffer.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\SceneNodeModel3D.h">
+      <Filter>3D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

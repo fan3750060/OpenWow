@@ -13,6 +13,7 @@ public:
 	virtual void SetType(SceneNodeTypes type);
 
 	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer);
+	virtual void SetVertexBuffer(std::shared_ptr<IBuffer> buffer);
 	virtual void SetIndexBuffer(std::shared_ptr<IBuffer> buffer);
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology);

@@ -1,15 +1,13 @@
 #pragma once
 
-class ShaderParameter;
-struct BufferBinding;
-class ConstantBuffer;
-#include "InputSemantic.h"
+#include "ShaderInputLayout.h"
+#include "ShaderParameter.h"
+#include "D3D9_Types.h"
 
 class Shader : public Object
 {
-public:
 	typedef Object base;
-
+public:
 	enum ShaderType
 	{
 		UnknownShaderType = 0,
@@ -22,6 +20,8 @@ public:
 	};
 
 	Shader();
+	virtual ~Shader();
+
 
 	/**
 	 * What type of shader is this?
@@ -45,7 +45,7 @@ public:
 	 * To use the latest supported profile, specify "latest" here.
 	 * @return True if the shader was loaded correctly, or False otherwise.
 	 */
-	virtual bool LoadShaderFromString(ShaderType type, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
+	virtual bool LoadShaderFromString(ShaderType type, cstring fileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile, std::shared_ptr<IShaderInputLayout> _customLayout) = 0;
 
 	/**
 	 * Load a shader from a file.
@@ -56,7 +56,18 @@ public:
 	 * To use the latest supported profile, specify "latest" here.
 	 * @return True if the shader was loaded correctly, or False otherwise.
 	 */
-	virtual bool LoadShaderFromFile(ShaderType type, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile) = 0;
+	virtual bool LoadShaderFromFile(ShaderType type, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile, std::shared_ptr<IShaderInputLayout> _customLayout) = 0;
+
+	/**
+	 * Calculate shader input layout
+	 */
+	virtual bool LoadInputLayoutFromReflector() = 0;
+	virtual bool LoadInputLayoutFromD3DElement(const std::vector<D3DVERTEXELEMENT9>& declIn) = 0;
+
+	/**
+	 * Get a shader input layout description
+	 */
+	virtual std::shared_ptr<IShaderInputLayout> GetInputLayout() const = 0;
 
 	/**
 	 * Get a reference to a parameter defined in the shader.
@@ -67,12 +78,6 @@ public:
 	 */
 	virtual ShaderParameter& GetShaderParameterByName(cstring name) const = 0;
 	
-
-	// Check to see if this shader supports a given semantic.
-	virtual bool                 HasSemantic(const BufferBinding& binding) const = 0;
-	virtual const InputSemantic& GetSemantic(const BufferBinding& binding) const = 0;
-	virtual UINT                 GetSemanticSlot(const BufferBinding& binding) const = 0;
-
 	/**
 	 * Bind this shader for use in the rendering pipeline.
 	 */
@@ -95,8 +100,4 @@ protected:
 
 	typedef std::map<std::string, std::shared_ptr<ShaderParameter> > ParameterMap;
 	ParameterMap m_ShaderParameters;
-
-	// A map to convert a vertex attribute semantic to a slot.
-	typedef std::map<InputSemantic, UINT> SemanticMap;
-	SemanticMap m_InputSemantics;
 };

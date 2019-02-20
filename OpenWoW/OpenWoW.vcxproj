@@ -38,9 +38,6 @@
     <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">
       <Project>{590c7c79-ae16-4db2-b61c-bb7b25b76b42}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\owRenderOpenGL\owRenderOpenGL.vcxproj">
-      <Project>{102dc6f1-cb83-4203-ba24-1c9e812fde4b}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{645797A4-A484-4D99-A130-88BD45546BD5}</ProjectGuid>

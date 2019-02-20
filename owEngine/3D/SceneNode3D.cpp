@@ -12,7 +12,6 @@
 SceneNode3D::SceneNode3D(cmat4 localTransform)
 	: m_LocalTransform(localTransform)
 	, m_Name("SceneNode3D")
-	, m_Type(SN_TYPE_NONE)
 	, m_Translate(vec3())
 	, m_Rotate(vec3())
 	, m_RotateQuat(quat())
@@ -86,16 +85,6 @@ void SceneNode3D::SetScale(cvec3 _scale)
 cvec3 SceneNode3D::GetScale() const
 {
 	return m_Scale;
-}
-
-// Bounds
-void SceneNode3D::SetBounds(BoundingBox _bbox)
-{
-	m_Bounds = _bbox;
-}
-cbbox SceneNode3D::GetBounds() const
-{
-	return m_Bounds;
 }
 
 // Local transform
@@ -177,13 +166,6 @@ void SceneNode3D::UpdateWorldTransform()
 {
 	m_WorldTransform = GetParentWorldTransform() * m_LocalTransform;
 	m_InverseWorldTransform = glm::inverse(m_WorldTransform);
-
-	UpdateBounds();
-}
-
-void SceneNode3D::UpdateBounds()
-{
-	// do nothing
 }
 
 void SceneNode3D::AddChild(std::shared_ptr<SceneNode3D> childNode)
@@ -248,59 +230,17 @@ void SceneNode3D::SetParent(std::weak_ptr<SceneNode3D> parentNode)
 		newParent->AddChild(SceneNode3D::shared_from_this());
 }
 
+std::weak_ptr<SceneNode3D> SceneNode3D::GetParent() const
+{
+	return m_pParentNode;
+}
+
 SceneNode3D::NodeList SceneNode3D::GetChilds()
 {
 	std::lock_guard<std::mutex> lg(m_ChildMutex);
 
 	return m_Children;
 }
-
-void SceneNode3D::AddMesh(std::shared_ptr<IMesh> mesh)
-{
-	assert(mesh);
-	std::lock_guard<std::mutex> lg(m_MeshMutex);
-
-	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
-	if (iter == m_Meshes.end())
-		m_Meshes.push_back(mesh);
-}
-
-void SceneNode3D::RemoveMesh(std::shared_ptr<IMesh> mesh)
-{
-	assert(mesh);
-	std::lock_guard<std::mutex> lg(m_MeshMutex);
-
-	MeshList::iterator iter = std::find(m_Meshes.begin(), m_Meshes.end(), mesh);
-	if (iter != m_Meshes.end())
-		m_Meshes.erase(iter);
-}
-
-const SceneNode3D::MeshList& SceneNode3D::GetMeshes()
-{
-	std::lock_guard<std::mutex> lg(m_MeshMutex);
-
-	return m_Meshes;
-}
-
-void SceneNode3D::AddLight(std::shared_ptr<CLight3D> _light)
-{
-	LightList::iterator iter = std::find(m_Lights.begin(), m_Lights.end(), _light);
-	if (iter == m_Lights.end())
-		m_Lights.push_back(_light);
-}
-
-void SceneNode3D::RemoveLight(std::shared_ptr<CLight3D> _light)
-{
-	LightList::iterator iter = std::find(m_Lights.begin(), m_Lights.end(), _light);
-	if (iter != m_Lights.end())
-		m_Lights.erase(iter);
-}
-
-const SceneNode3D::LightList& SceneNode3D::GetLights()
-{
-	return m_Lights;
-}
-
 
 
 void SceneNode3D::UpdateCamera(const Camera* camera)
@@ -313,18 +253,6 @@ bool SceneNode3D::Accept(IVisitor& visitor)
 	bool visitResult = visitor.Visit(*this);
 	if (!visitResult)
 		return false;
-
-	// Visit meshes
-	for (auto mesh : GetMeshes())
-	{
-		mesh->Accept(visitor);
-	}
-
-	// Visit lights
-	for (auto light : GetLights())
-	{
-		light->Accept(visitor);
-	}
 
 	// Now visit children
 	for (auto child : GetChilds())
@@ -345,26 +273,11 @@ void SceneNode3D::OnUpdate(UpdateEventArgs & e)
 {
 }
 
-bool SceneNode3D::checkFrustum(const Camera* _camera) const
-{
-	assert1(_camera != nullptr);
-	return !_camera->GetFrustum().cullBox(GetBounds());
-}
 
-bool SceneNode3D::checkDistance2D(cvec3 _camPos, float _distance) const
-{
-	// Check distance to camera
-	float distToCamera2D = glm::length(Fix_X0Z(_camPos) - Fix_X0Z(GetBounds().getCenter())) - GetBounds().getRadius();
-	return distToCamera2D < _distance;
-}
 
-bool SceneNode3D::checkDistance(cvec3 _camPos, float _distance) const
-{
-	// Check distance to camera
-	float distToCamera = glm::length(_camPos - GetBounds().getCenter()) - GetBounds().getRadius();
-	return distToCamera < _distance;
-}
-
+//
+// // ILoadableObject
+//
 bool SceneNode3D::PreLoad()
 {
 	return false;

@@ -3,11 +3,13 @@
 // General
 #include "ShaderDX11.h"
 
-// Forward declarations
-DXGI_FORMAT GetDXGIFormat(const D3D11_SIGNATURE_PARAMETER_DESC& paramDesc);
+
 
 static ShaderParameter gs_InvalidShaderParameter;
-static InputSemantic gs_InvalidShaderSemantic;
+
+// FORWARD BEGIN
+std::string GetLatestProfile(Shader::ShaderType type, const D3D_FEATURE_LEVEL& _featureLevel);
+// FORWARD END
 
 ShaderDX11::ShaderDX11(ID3D11Device2* pDevice)
 	: m_pDevice(pDevice)
@@ -28,117 +30,12 @@ void ShaderDX11::Destroy()
 	m_pGeometryShader.Release();
 	m_pVertexShader.Release();
 	m_pComputeShader.Release();
-	m_pInputLayout.Release();
 
 	m_ShaderParameters.clear();
-	m_InputSemantics.clear();
+
 }
 
-std::string ShaderDX11::GetLatestProfile(ShaderType type)
-{
-	// Query the current feature level:
-	D3D_FEATURE_LEVEL featureLevel = m_pDevice->GetFeatureLevel();
-
-	switch (type)
-	{
-	case VertexShader:
-		switch (featureLevel)
-		{
-		case D3D_FEATURE_LEVEL_11_1:
-		case D3D_FEATURE_LEVEL_11_0:
-			return "vs_5_0";
-			break;
-		case D3D_FEATURE_LEVEL_10_1:
-			return "vs_4_1";
-			break;
-		case D3D_FEATURE_LEVEL_10_0:
-			return "vs_4_0";
-			break;
-		case D3D_FEATURE_LEVEL_9_3:
-			return "vs_4_0_level_9_3";
-			break;
-		case D3D_FEATURE_LEVEL_9_2:
-		case D3D_FEATURE_LEVEL_9_1:
-			return "vs_4_0_level_9_1";
-			break;
-		}
-		break;
-	case TessellationControlShader:
-		switch (featureLevel)
-		{
-		case D3D_FEATURE_LEVEL_11_1:
-		case D3D_FEATURE_LEVEL_11_0:
-			return "ds_5_0";
-			break;
-		}
-		break;
-	case TessellationEvaluationShader:
-		switch (featureLevel)
-		{
-		case D3D_FEATURE_LEVEL_11_1:
-		case D3D_FEATURE_LEVEL_11_0:
-			return "hs_5_0";
-			break;
-		}
-		break;
-	case GeometryShader:
-		switch (featureLevel)
-		{
-		case D3D_FEATURE_LEVEL_11_1:
-		case D3D_FEATURE_LEVEL_11_0:
-			return "gs_5_0";
-			break;
-		case D3D_FEATURE_LEVEL_10_1:
-			return "gs_4_1";
-			break;
-		case D3D_FEATURE_LEVEL_10_0:
-			return "gs_4_0";
-			break;
-		}
-		break;
-	case PixelShader:
-		switch (featureLevel)
-		{
-		case D3D_FEATURE_LEVEL_11_1:
-		case D3D_FEATURE_LEVEL_11_0:
-			return "ps_5_0";
-			break;
-		case D3D_FEATURE_LEVEL_10_1:
-			return "ps_4_1";
-			break;
-		case D3D_FEATURE_LEVEL_10_0:
-			return "ps_4_0";
-			break;
-		case D3D_FEATURE_LEVEL_9_3:
-			return "ps_4_0_level_9_3";
-			break;
-		case D3D_FEATURE_LEVEL_9_2:
-		case D3D_FEATURE_LEVEL_9_1:
-			return "ps_4_0_level_9_1";
-			break;
-		}
-		break;
-	case ComputeShader:
-		switch (featureLevel)
-		{
-		case D3D_FEATURE_LEVEL_11_1:
-		case D3D_FEATURE_LEVEL_11_0:
-			return "cs_5_0";
-			break;
-		case D3D_FEATURE_LEVEL_10_1:
-			return "cs_4_1";
-			break;
-		case D3D_FEATURE_LEVEL_10_0:
-			return "cs_4_0";
-			break;
-		}
-	} // switch( type )
-
-	// Throw an exception?
-	return "";
-}
-
-bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
+bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring fileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile, std::shared_ptr<IShaderInputLayout> _customLayout)
 {
 	HRESULT hr;
 	{
@@ -148,7 +45,8 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 		std::string _profile = profile;
 		if (profile == "latest")
 		{
-			_profile = GetLatestProfile(shaderType);
+			D3D_FEATURE_LEVEL featureLevel = m_pDevice->GetFeatureLevel();
+			_profile = GetLatestProfile(shaderType, featureLevel);
 			if (_profile.empty())
 			{
 				Log::Error("Invalid shader type for feature level.");
@@ -181,10 +79,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 		flags |= D3DCOMPILE_DEBUG;
 #endif
 
-		// fs::path filePath( sourceFileName );
-		 //std::string sourceFilePath = filePath.std::string();
-
-		hr = D3DCompile((LPCVOID)source.c_str(), source.size(), sourceFileName.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint.c_str(), _profile.c_str(), flags, 0, &pShaderBlob, &pErrorBlob);
+		hr = D3DCompile((LPCVOID)source.c_str(), source.size(), fileName.c_str(), macros.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint.c_str(), _profile.c_str(), flags, 0, &pShaderBlob, &pErrorBlob);
 
 		// We're done compiling.. Delete the macro definitions.
 		for (D3D_SHADER_MACRO macro : macros)
@@ -249,9 +144,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 	// Reflect the parameters from the shader.
 	// Inspired by: http://members.gamedev.net/JasonZ/Heiroglyph/D3D11ShaderReflection.pdf
 	ATL::CComPtr<ID3D11ShaderReflection> pReflector;
-	hr = D3DReflect(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflector);
-
-	if (FAILED(hr))
+	if (FAILED(hr = D3DReflect(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflector)))
 	{
 		Log::Error("Failed to reflect shader.");
 		return false;
@@ -259,49 +152,13 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 
 	// Query input parameters and build the input layout
 	D3D11_SHADER_DESC shaderDescription;
-	hr = pReflector->GetDesc(&shaderDescription);
-
-	if (FAILED(hr))
+	if (FAILED(hr = pReflector->GetDesc(&shaderDescription)))
 	{
 		Log::Error("Failed to get shader description from shader reflector.");
 		return false;
 	}
 
-	m_InputSemantics.clear();
-
-	UINT numInputParameters = shaderDescription.InputParameters;
-	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements;
-	for (UINT i = 0; i < numInputParameters; ++i)
-	{
-		D3D11_INPUT_ELEMENT_DESC inputElement;
-		D3D11_SIGNATURE_PARAMETER_DESC parameterSignature;
-
-		pReflector->GetInputParameterDesc(i, &parameterSignature);
-
-		inputElement.SemanticName = parameterSignature.SemanticName;
-		inputElement.SemanticIndex = parameterSignature.SemanticIndex;
-		inputElement.InputSlot = i; // TODO: If using interleaved arrays, then the input slot should be 0.  If using packed arrays, the input slot will vary.
-		inputElement.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-		inputElement.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA; // TODO: Figure out how to deal with per-instance data? .. Don't. Just use structured buffers to store per-instance data and use the SV_InstanceID as an index in the structured buffer.
-		inputElement.InstanceDataStepRate = 0;
-		inputElement.Format = GetDXGIFormat(parameterSignature);
-
-		assert(inputElement.Format != DXGI_FORMAT_UNKNOWN);
-
-		inputElements.push_back(inputElement);
-
-		m_InputSemantics.insert(SemanticMap::value_type(InputSemantic(inputElement.SemanticName, inputElement.SemanticIndex), i));
-	}
-
-	if (inputElements.size() > 0)
-	{
-		hr = m_pDevice->CreateInputLayout(inputElements.data(), (UINT)inputElements.size(), m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), &m_pInputLayout);
-		if (FAILED(hr))
-		{
-			Log::Error("Failed to create input layout.");
-			return false;
-		}
-	}
+	// LAYOUT HERE
 
 	// Query Resources that are bound to the shader.
 	for (UINT i = 0; i < shaderDescription.BoundResources; ++i)
@@ -335,7 +192,6 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 		// Create an empty shader parameter that should be filled-in by the application.
 		std::shared_ptr<ShaderParameter> shaderParameter = std::make_shared<ShaderParameter>(resourceName, bindDesc.BindPoint, shared_from_this(), parameterType);
 		m_ShaderParameters.insert(ParameterMap::value_type(resourceName, shaderParameter));
-
 	}
 
 	// Now try to restore the original shader parameters (if there were any)
@@ -351,26 +207,58 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring sourceFileN
 	return true;
 }
 
-bool ShaderDX11::LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile)
+bool ShaderDX11::LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile, std::shared_ptr<IShaderInputLayout> _customLayout)
 {
-	bool result = false;
+	std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
 
+	std::string data = "";
+	while (!file->isEof())
 	{
-		std::shared_ptr<IFile> file = GetManager<IFilesManager>()->Open(fileName);
+		std::string line;
+		file->readLine(&line);
 
-		std::string data = "";
-		while (!file->isEof())
-		{
-			std::string line;
-			file->readLine(&line);
-
-			data += line + '\n';
-		}
-
-		result = LoadShaderFromString(shaderType, fileName, data, shaderMacros, entryPoint, profile);
+		data += line + '\n';
 	}
 
-	return result;
+	return LoadShaderFromString(shaderType, fileName, data, shaderMacros, entryPoint, profile, _customLayout);
+}
+
+bool ShaderDX11::LoadInputLayoutFromReflector()
+{
+	if (m_InputLayout)
+		return true;
+
+	HRESULT hr = S_OK;
+
+	// Reflect the parameters from the shader.
+	// Inspired by: http://members.gamedev.net/JasonZ/Heiroglyph/D3D11ShaderReflection.pdf
+	ATL::CComPtr<ID3D11ShaderReflection> pReflector;
+	if (FAILED(hr = D3DReflect(m_pShaderBlob->GetBufferPointer(), m_pShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflector)))
+	{
+		Log::Error("Failed to reflect shader.");
+		return false;
+	}
+
+	m_InputLayout = std::make_shared<ShaderInputLayoutDX11>(m_pDevice);
+	m_InputLayout->LoadFromReflector(m_pShaderBlob, pReflector);
+
+	return true;
+}
+
+bool ShaderDX11::LoadInputLayoutFromD3DElement(const std::vector<D3DVERTEXELEMENT9>& declIn)
+{
+	if (m_InputLayout)
+		return true;
+
+	m_InputLayout = std::make_shared<ShaderInputLayoutDX11>(m_pDevice);
+	m_InputLayout->LoadFromD3D9(m_pShaderBlob, declIn);
+
+	return true;
+}
+
+std::shared_ptr<IShaderInputLayout> ShaderDX11::GetInputLayout() const
+{
+	return m_InputLayout;
 }
 
 ShaderParameter& ShaderDX11::GetShaderParameterByName(cstring name) const
@@ -385,47 +273,6 @@ ShaderParameter& ShaderDX11::GetShaderParameterByName(cstring name) const
 	return gs_InvalidShaderParameter;
 }
 
-bool ShaderDX11::HasSemantic(const BufferBinding& binding) const
-{
-	for (auto& it : m_InputSemantics)
-	{
-		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-const InputSemantic& ShaderDX11::GetSemantic(const BufferBinding& binding) const
-{
-	for (auto& it : m_InputSemantics)
-	{
-		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
-		{
-			return it.first;
-		}
-	}
-
-	assert1(false);
-	return gs_InvalidShaderSemantic;
-}
-
-UINT ShaderDX11::GetSemanticSlot(const BufferBinding& binding) const
-{
-	for (auto& it : m_InputSemantics)
-	{
-		if (it.first.Name == binding.Name && it.first.Index == binding.Index)
-		{
-			return it.second;
-		}
-	}
-
-	assert1(false);
-	return UINT_MAX;
-}
-
 void ShaderDX11::Bind()
 {
 	for (ParameterMap::value_type value : m_ShaderParameters)
@@ -435,7 +282,9 @@ void ShaderDX11::Bind()
 
 	if (m_pVertexShader)
 	{
-		m_pDeviceContext->IASetInputLayout(m_pInputLayout);
+		assert1(m_InputLayout);
+		assert1(m_InputLayout->GetInputLayout());
+		m_pDeviceContext->IASetInputLayout(m_InputLayout->GetInputLayout());
 		m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
 	}
 	else if (m_pHullShader)
@@ -502,97 +351,103 @@ void ShaderDX11::Dispatch(const glm::uvec3& numGroups)
 	}
 }
 
-
-// Determine DXGI format
-// Inspired by: http://takinginitiative.net/2011/12/11/directx-1011-basic-shader-reflection-automatic-input-layout-creation/
-DXGI_FORMAT GetDXGIFormat(const D3D11_SIGNATURE_PARAMETER_DESC& paramDesc)
+std::string GetLatestProfile(Shader::ShaderType type, const D3D_FEATURE_LEVEL& _featureLevel)
 {
-	DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN;
-	if (paramDesc.Mask == 1) // 1 component
+	switch (type)
 	{
-		switch (paramDesc.ComponentType)
+	case Shader::VertexShader:
+		switch (_featureLevel)
 		{
-		case D3D_REGISTER_COMPONENT_UINT32:
-		{
-			format = DXGI_FORMAT_R32_UINT;
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+			return "vs_5_0";
+			break;
+		case D3D_FEATURE_LEVEL_10_1:
+			return "vs_4_1";
+			break;
+		case D3D_FEATURE_LEVEL_10_0:
+			return "vs_4_0";
+			break;
+		case D3D_FEATURE_LEVEL_9_3:
+			return "vs_4_0_level_9_3";
+			break;
+		case D3D_FEATURE_LEVEL_9_2:
+		case D3D_FEATURE_LEVEL_9_1:
+			return "vs_4_0_level_9_1";
+			break;
 		}
 		break;
-		case D3D_REGISTER_COMPONENT_SINT32:
+	case Shader::TessellationControlShader:
+		switch (_featureLevel)
 		{
-			format = DXGI_FORMAT_R32_SINT;
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+			return "ds_5_0";
+			break;
 		}
 		break;
-		case D3D_REGISTER_COMPONENT_FLOAT32:
+	case Shader::TessellationEvaluationShader:
+		switch (_featureLevel)
 		{
-			format = DXGI_FORMAT_R32_FLOAT;
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+			return "hs_5_0";
+			break;
 		}
 		break;
-		}
-	}
-	else if (paramDesc.Mask <= 3) // 2 components
-	{
-		switch (paramDesc.ComponentType)
+	case Shader::GeometryShader:
+		switch (_featureLevel)
 		{
-		case D3D_REGISTER_COMPONENT_UINT32:
-		{
-			format = DXGI_FORMAT_R32G32_UINT;
-		}
-		break;
-		case D3D_REGISTER_COMPONENT_SINT32:
-		{
-			format = DXGI_FORMAT_R32G32_SINT;
-		}
-		break;
-		case D3D_REGISTER_COMPONENT_FLOAT32:
-		{
-			format = DXGI_FORMAT_R32G32_FLOAT;
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+			return "gs_5_0";
+			break;
+		case D3D_FEATURE_LEVEL_10_1:
+			return "gs_4_1";
+			break;
+		case D3D_FEATURE_LEVEL_10_0:
+			return "gs_4_0";
+			break;
 		}
 		break;
-		}
-	}
-	else if (paramDesc.Mask <= 7) // 3 components
-	{
-		switch (paramDesc.ComponentType)
+	case Shader::PixelShader:
+		switch (_featureLevel)
 		{
-		case D3D_REGISTER_COMPONENT_UINT32:
-		{
-			format = DXGI_FORMAT_R32G32B32_UINT;
-		}
-		break;
-		case D3D_REGISTER_COMPONENT_SINT32:
-		{
-			format = DXGI_FORMAT_R32G32B32_SINT;
-		}
-		break;
-		case D3D_REGISTER_COMPONENT_FLOAT32:
-		{
-			format = DXGI_FORMAT_R32G32B32_FLOAT;
-		}
-		break;
-		}
-	}
-	else if (paramDesc.Mask <= 15) // 4 components
-	{
-		switch (paramDesc.ComponentType)
-		{
-		case D3D_REGISTER_COMPONENT_UINT32:
-		{
-			format = DXGI_FORMAT_R32G32B32A32_UINT;
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+			return "ps_5_0";
+			break;
+		case D3D_FEATURE_LEVEL_10_1:
+			return "ps_4_1";
+			break;
+		case D3D_FEATURE_LEVEL_10_0:
+			return "ps_4_0";
+			break;
+		case D3D_FEATURE_LEVEL_9_3:
+			return "ps_4_0_level_9_3";
+			break;
+		case D3D_FEATURE_LEVEL_9_2:
+		case D3D_FEATURE_LEVEL_9_1:
+			return "ps_4_0_level_9_1";
+			break;
 		}
 		break;
-		case D3D_REGISTER_COMPONENT_SINT32:
+	case Shader::ComputeShader:
+		switch (_featureLevel)
 		{
-			format = DXGI_FORMAT_R32G32B32A32_SINT;
-		}
-		break;
-		case D3D_REGISTER_COMPONENT_FLOAT32:
-		{
-			format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		}
-		break;
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+			return "cs_5_0";
+			break;
+		case D3D_FEATURE_LEVEL_10_1:
+			return "cs_4_1";
+			break;
+		case D3D_FEATURE_LEVEL_10_0:
+			return "cs_4_0";
+			break;
 		}
 	}
 
-	return format;
+	return "";
 }
 

@@ -24,7 +24,7 @@ void AddDebugPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRend
 	DebugPipeline->GetBlendState().SetBlendMode(disableBlending);
 	DebugPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
 	DebugPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
-	DebugPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
+	DebugPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	DebugPipeline->SetRenderTarget(_renderTarget);
 	DebugPipeline->GetRasterizerState().SetViewport(*viewport);
 

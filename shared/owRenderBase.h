@@ -5,6 +5,7 @@
 #include "../owRenderBase/RenderWindow.h"
 #include "../owRenderBase/PipelineState.h"
 #include "../owRenderBase/Shader.h"
+#include "../owRenderBase/ShaderInputLayout.h"
 #include "../owRenderBase/ShaderParameter.h"
 #include "../owRenderBase/Texture.h"
 #include "../owRenderBase/SamplerState.h"
@@ -12,6 +13,7 @@
 // Standart materials
 #include "../owRenderBase/Material.h"
 #include "../owRenderBase/MaterialImpl.h"
+#include "../owRenderBase/D3D9_Types.h"
 
 #include "../owRenderBase/Mesh.h"
 #include "../owRenderBase/ConstantBuffer.h"

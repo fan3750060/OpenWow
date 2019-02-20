@@ -150,12 +150,15 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="D3D9_Types.cpp" />
     <ClCompile Include="MaterialImpl.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Primitives\Geometry.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderDevice.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderInputLayout.cpp" />
     <ClCompile Include="ShaderParameter.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -174,8 +177,10 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="CPUAccess.h" />
+    <ClInclude Include="D3D9_Types.h" />
     <ClInclude Include="DepthStencilState.h" />
     <ClInclude Include="MaterialImpl.h" />
+    <ClInclude Include="Primitives\Geometry.h" />
     <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="InputSemantic.h" />
     <ClInclude Include="Material.h" />
@@ -193,6 +198,7 @@
     <ClInclude Include="RenderEvents.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderInputLayout.h" />
     <ClInclude Include="ShaderParameter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StructuredBuffer.h" />

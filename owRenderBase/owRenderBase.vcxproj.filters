@@ -21,6 +21,13 @@
     <ClCompile Include="MaterialImpl.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderInputLayout.cpp" />
+    <ClCompile Include="D3D9_Types.cpp">
+      <Filter>D3D9 Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives\Geometry.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -104,6 +111,13 @@
     <ClInclude Include="MaterialImpl.h">
       <Filter>Materials</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderInputLayout.h" />
+    <ClInclude Include="D3D9_Types.h">
+      <Filter>D3D9 Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitives\Geometry.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -123,6 +137,12 @@
     </Filter>
     <Filter Include="Types\Enums">
       <UniqueIdentifier>{57c74fbd-55e5-4070-b317-6527bbe4b296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D9 Support">
+      <UniqueIdentifier>{29bfb4ba-713a-499d-ab36-be273fccc185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives">
+      <UniqueIdentifier>{b1eafa2b-d1c4-458c-b150-51aa539e716f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

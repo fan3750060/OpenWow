@@ -37,6 +37,10 @@
     </ClCompile>
     <ClCompile Include="SamplerStateDX11.cpp" />
     <ClCompile Include="MaterialDX11.cpp" />
+    <ClCompile Include="ShaderInputLayoutDX11.cpp" />
+    <ClCompile Include="D3D9_To_D3D11.cpp">
+      <Filter>Converters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -79,6 +83,10 @@
     <ClInclude Include="TextureDX11Translate.h" />
     <ClInclude Include="SamplerStateDX11.h" />
     <ClInclude Include="MaterialDX11.h" />
+    <ClInclude Include="ShaderInputLayoutDX11.h" />
+    <ClInclude Include="D3D9_To_D3D11.h">
+      <Filter>Converters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -89,6 +97,9 @@
     </Filter>
     <Filter Include="Pipeline">
       <UniqueIdentifier>{40b4cb14-a721-4704-9395-cfec84d76208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Converters">
+      <UniqueIdentifier>{3dde30a2-8db8-4a81-a32e-d315ee685f1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

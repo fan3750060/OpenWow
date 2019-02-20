@@ -305,17 +305,9 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 	if (f == nullptr)
 		return false;
 
-	//std::string filePath = f->Full_Path_Name();
-
 	FIMEMORY *hmem = FreeImage_OpenMemory(const_cast<BYTE*>(f->getData()), f->getSize());
 
-	// Try to determine the file type from the image file.
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(hmem, f->getSize());
-	//if (fif == FIF_UNKNOWN)
-	//{
-	//	fif = FreeImage_GetFIFFromFilename(filePath.c_str());
-	//}
-
 	if (fif == FIF_UNKNOWN || !FreeImage_FIFSupportsReading(fif))
 	{
 		fail1("Unknow file format: ");

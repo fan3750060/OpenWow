@@ -50,6 +50,7 @@
 // base nodes
 #include "../owEngine/3D/Scene3D.h"
 #include "../owEngine/3D/SceneNode3D.h"
+#include "../owEngine/3D/SceneNodeModel3D.h"
 
 // additional nodes
 

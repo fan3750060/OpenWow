@@ -38,6 +38,7 @@
     <ClCompile Include="3D\Passes\RenderTechnique.cpp" />
     <ClCompile Include="3D\Scene3D.cpp" />
     <ClCompile Include="3D\SceneNode3D.cpp" />
+    <ClCompile Include="3D\SceneNodeModel3D.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CreatePasses.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="3D\Passes\RenderTechnique.h" />
     <ClInclude Include="3D\Scene3D.h" />
     <ClInclude Include="3D\SceneNode3D.h" />
+    <ClInclude Include="3D\SceneNodeModel3D.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="common.h" />
@@ -117,6 +119,11 @@
     <ClInclude Include="UI\SceneUI.h" />
     <ClInclude Include="UI\UIText.h" />
     <ClInclude Include="UI\UITexture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">
+      <Project>{590c7c79-ae16-4db2-b61c-bb7b25b76b42}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{51252F60-B8DC-4090-BBA3-DD05942110F0}</ProjectGuid>

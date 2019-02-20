@@ -166,10 +166,10 @@ void ShaderOGL::Destroy()
 
 
 
-bool ShaderOGL::LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros & shaderMacros, cstring entryPoint, cstring profile)
+bool ShaderOGL::LoadShaderFromString(ShaderType shaderType, cstring fileName, cstring source, const ShaderMacros & shaderMacros, cstring entryPoint, cstring profile)
 {
 	m_ShaderType = shaderType;
-	m_ShaderFileName = sourceFileName;
+	m_ShaderFileName = fileName;
 
 	return false;
 }

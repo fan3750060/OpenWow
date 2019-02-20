@@ -30,7 +30,7 @@ public:
 	virtual void Lock();
 	virtual void Unlock();
 
-	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
+	virtual std::shared_ptr<Shader> CreateShader(Shader::ShaderType type, cstring fileName, const Shader::ShaderMacros& shaderMacros, cstring entryPoint, cstring profile, std::shared_ptr<IShaderInputLayout> _customLayout = nullptr);
 	virtual void DestroyShader(std::shared_ptr<Shader> shader);
 	
 	virtual std::shared_ptr<IMesh> CreateMesh();

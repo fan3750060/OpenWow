@@ -2,7 +2,7 @@
 
 #include <Application.h>
 #include "3D//Scene3D.h"
-#include "3D//SceneNode3D.h""
+#include "3D//SceneNodeModel3D.h"
 
 // General
 #include "DeferredLightingPass.h"
@@ -40,7 +40,7 @@ DeferredLightingPass::DeferredLightingPass(
 	// PointLightScene
 	m_pPointLightScene = std::make_shared<Scene3D>();
 
-	std::shared_ptr<SceneNode3D> sphereSceneNode = std::make_shared<SceneNode3D>();
+	std::shared_ptr<SceneNodeModel3D> sphereSceneNode = std::make_shared<SceneNodeModel3D>();
 	sphereSceneNode->SetParent(m_pPointLightScene->GetRootNode());
 
 	std::shared_ptr<IMesh> sphereMesh = _RenderDevice->CreateSphere();
@@ -49,7 +49,7 @@ DeferredLightingPass::DeferredLightingPass(
 	// Create a full-screen quad that is placed on the far clip plane.
 	m_pDirectionalLightScene = std::make_shared<Scene3D>();
 
-	std::shared_ptr<SceneNode3D> quadSceneNode = std::make_shared<SceneNode3D>();
+	std::shared_ptr<SceneNodeModel3D> quadSceneNode = std::make_shared<SceneNodeModel3D>();
 	quadSceneNode->SetParent(m_pDirectionalLightScene->GetRootNode());
 
 	std::shared_ptr<IMesh> quadMesh = _RenderDevice->CreateScreenQuad(0, 1280, 1024, 0); // _RenderDevice->CreateScreenQuad(-1, 1, -1, 1, -1);
@@ -209,7 +209,7 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 		// Create a model matrix from the light properties.
 		glm::mat4 translation = glm::translate(glm::vec3(light.getLight().m_PositionWS));
 		// Create a rotation matrix that rotates the model towards the direction of the light.
-		glm::mat4 rotation = glm::toMat4(glm::quat(glm::vec3(0, 0, 1), glm::normalize(glm::vec3(light.getLight().m_DirectionWS))));
+		//glm::mat4 rotation = glm::toMat4(glm::quat(glm::vec3(0, 0, 1), glm::normalize(glm::vec3(light.getLight().m_DirectionWS))));
 
 		// Compute the scale depending on the light type.
 		float scaleX, scaleY, scaleZ;
@@ -223,7 +223,7 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 
 		glm::mat4 scale = glm::scale(glm::vec3(scaleX, scaleY, scaleZ));
 
-		perObjectData.ModelView = camera->GetViewMatrix() * translation * rotation * scale * m_World;
+		perObjectData.ModelView = camera->GetViewMatrix() * translation /* rotation*/ * scale * m_World;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
 	}
 	SetPerObjectConstantBufferData(perObjectData);

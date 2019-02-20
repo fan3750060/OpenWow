@@ -7,7 +7,7 @@ public:
 	virtual ~ShaderOGL();
 
 	// Shader loading
-	bool LoadShaderFromString(ShaderType shaderType, cstring sourceFileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
+	bool LoadShaderFromString(ShaderType shaderType, cstring fileName, cstring source, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 	bool LoadShaderFromFile(ShaderType shaderType, cstring fileName, const ShaderMacros& shaderMacros, cstring entryPoint, cstring profile);
 
 	ShaderParameter& GetShaderParameterByName(cstring name) const;

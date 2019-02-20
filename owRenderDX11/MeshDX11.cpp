@@ -26,6 +26,11 @@ void MeshDX11::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBu
 	m_VertexBuffers[binding] = buffer;
 }
 
+void MeshDX11::SetVertexBuffer(std::shared_ptr<IBuffer> buffer)
+{
+	m_VertexBuffer = buffer;
+}
+
 void MeshDX11::SetIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	m_pIndexBuffer = buffer;
@@ -85,13 +90,20 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 	{
 		pVS->GetShaderParameterByName("PerObject").Set(perObject);
 
-		for (BufferMap::value_type buffer : m_VertexBuffers)
+		if (m_VertexBuffer != nullptr)
 		{
-			BufferBinding binding = buffer.first;
-			if (pVS->HasSemantic(binding))
+			m_VertexBuffer->Bind(0, pVS, ShaderParameter::Type::Buffer);
+		}
+		else
+		{
+			for (BufferMap::value_type buffer : m_VertexBuffers)
 			{
-				UINT slotID = pVS->GetSemanticSlot(binding);
-				buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
+				BufferBinding binding = buffer.first;
+				if (pVS->GetInputLayout()->HasSemantic(binding))
+				{
+					UINT slotID = pVS->GetInputLayout()->GetSemanticSlot(binding);
+					buffer.second->Bind(slotID, pVS, ShaderParameter::Type::Buffer);
+				}
 			}
 		}
 
@@ -120,13 +132,20 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 		}
 
 
-		for (BufferMap::value_type buffer : m_VertexBuffers)
+		if (m_VertexBuffer != nullptr)
 		{
-			BufferBinding binding = buffer.first;
-			if (pVS->HasSemantic(binding))
+			m_VertexBuffer->UnBind(0, pVS, ShaderParameter::Type::Buffer);
+		}
+		else
+		{
+			for (BufferMap::value_type buffer : m_VertexBuffers)
 			{
-				UINT slotID = pVS->GetSemanticSlot(binding);
-				buffer.second->UnBind(slotID, pVS, ShaderParameter::Type::Buffer); // TODO: Unbind
+				BufferBinding binding = buffer.first;
+				if (pVS->GetInputLayout()->HasSemantic(binding))
+				{
+					UINT slotID = pVS->GetInputLayout()->GetSemanticSlot(binding);
+					buffer.second->UnBind(slotID, pVS, ShaderParameter::Type::Buffer);
+				}
 			}
 		}
 	}

@@ -34,6 +34,11 @@ void MeshWrapper::AddVertexBuffer(const BufferBinding & binding, std::shared_ptr
 	m_Mesh->AddVertexBuffer(binding, buffer);
 }
 
+void MeshWrapper::SetVertexBuffer(std::shared_ptr<IBuffer> buffer)
+{
+	m_Mesh->SetVertexBuffer(buffer);
+}
+
 void MeshWrapper::SetIndexBuffer(std::shared_ptr<IBuffer> buffer)
 {
 	m_Mesh->SetIndexBuffer(buffer);

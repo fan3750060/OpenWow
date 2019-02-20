@@ -3,7 +3,8 @@
 // General
 #include "Light3D.h"
 
-CLight3D::CLight3D()
+CLight3D::CLight3D(const Light& _light)
+	: m_LightProto(_light)
 {
 }
 
@@ -13,10 +14,10 @@ CLight3D::~CLight3D()
 
 void CLight3D::setLight(const Light& _light)
 {
-	m_LightProto = _light;
+	//m_LightProto = _light;
 }
 
-Light& CLight3D::getLight()
+const Light& CLight3D::getLight()
 {
 	return m_LightProto;
 }

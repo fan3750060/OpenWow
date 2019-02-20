@@ -20,7 +20,9 @@ enum SceneNodeTypes : uint8
 	SN_TYPE_ADT_CHUNK,
 	SN_TYPE_WMO,
 	SN_TYPE_M2,
-	SN_TYPE_LQ
+	SN_TYPE_LQ,
+
+	SN_TYPE_STLK
 };
 
 class IMesh : public Object
@@ -33,6 +35,7 @@ public:
 	virtual void SetType(SceneNodeTypes type);
 
 	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer) = 0;
+	virtual void SetVertexBuffer(std::shared_ptr<IBuffer> buffer) = 0;
 	virtual void SetIndexBuffer(std::shared_ptr<IBuffer> buffer) = 0;
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology) = 0;

@@ -132,6 +132,11 @@ static vec3 rotateV(cvec3 v, float theta)
 }
 
 
+inline int iFloor(float x)
+{
+	return (int)floor(x);
+}
+
 
 inline std::string Utf8_to_cp1251(const char *str)
 {

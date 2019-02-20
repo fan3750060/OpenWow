@@ -8,8 +8,9 @@ public:
 	MeshDX11(ID3D11Device2* pDevice);
 	virtual ~MeshDX11();
 
-	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer);
-	virtual void SetIndexBuffer(std::shared_ptr<IBuffer> buffer);
+	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer) override;
+	virtual void SetVertexBuffer(std::shared_ptr<IBuffer> buffer) override;
+	virtual void SetIndexBuffer(std::shared_ptr<IBuffer> buffer) override;
 
 	virtual void SetPrimitiveTopology(PrimitiveTopology _topology);
 
@@ -23,6 +24,7 @@ public:
 private:
 	typedef std::map<BufferBinding, std::shared_ptr<IBuffer> > BufferMap;
 	BufferMap m_VertexBuffers;
+	std::shared_ptr<IBuffer> m_VertexBuffer;
 	std::shared_ptr<IBuffer> m_pIndexBuffer;
 	D3D11_PRIMITIVE_TOPOLOGY m_PrimitiveTopology;
 	std::shared_ptr<const Material> m_pMaterial;

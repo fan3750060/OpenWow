@@ -1,8 +1,6 @@
 #pragma once
 
 class RenderUIEventArgs;
-class Scene3D;
-class SceneNode3D;
 class SceneNodeUI;
 class IMesh;
 

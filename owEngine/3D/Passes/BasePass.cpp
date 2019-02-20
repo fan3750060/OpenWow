@@ -65,6 +65,8 @@ bool BasePass::Visit(SceneNode3D& node)
 	const Camera* camera = GetRenderEventArgs().Camera;
 	if (camera)
 	{
+		node.UpdateCamera(camera);
+
 		PerObject perObjectData;
 		perObjectData.Model               = node.GetWorldTransfom();
 		perObjectData.ModelView           = camera->GetViewMatrix()       * perObjectData.Model;
@@ -72,8 +74,6 @@ bool BasePass::Visit(SceneNode3D& node)
 
 		// Update the constant buffer data
 		SetPerObjectConstantBufferData(perObjectData);
-
-		node.UpdateCamera(camera);
 
 		return true;
 	}

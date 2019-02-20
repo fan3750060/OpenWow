@@ -13,8 +13,6 @@ class SceneNode3D : public Object, public ILoadable, public std::enable_shared_f
 public:
 	typedef std::vector<std::shared_ptr<SceneNode3D>> NodeList;
 	typedef std::multimap<std::string, std::shared_ptr<SceneNode3D>> NodeNameMap;
-	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
-	typedef std::vector<std::shared_ptr<CLight3D>> LightList;
 
 public:
 	explicit SceneNode3D(cmat4 localTransform = mat4(1.0f));
@@ -41,10 +39,6 @@ public:
 	// Scale
 	void SetScale(cvec3 _scale);
 	cvec3 GetScale() const;
-
-	// Bounds
-	void SetBounds(BoundingBox _bbox);
-	cbbox GetBounds() const;
 
 
 	/**
@@ -73,7 +67,6 @@ public:
 	void SetWorldTransform(cmat4 worldTransform);
 
 
-
 	/**
 	 * Add a child node to this node.
 	 * NOTE: Circular references are not checked!
@@ -83,24 +76,8 @@ public:
 	virtual void AddChild(std::shared_ptr<SceneNode3D> childNode);
 	virtual void RemoveChild(std::shared_ptr<SceneNode3D> childNode);
 	virtual void SetParent(std::weak_ptr<SceneNode3D> parentNode);
+	virtual std::weak_ptr<SceneNode3D> GetParent() const;
 	virtual NodeList GetChilds();
-
-	/**
-	 * Add a mesh to this scene node.
-	 * The scene node does not take ownership of a mesh that is set on a mesh
-	 * as it is possible that the same mesh is added to multiple scene nodes.
-	 * Deleting the scene node does not delete the meshes associated with it.
-	 */
-	virtual void AddMesh(std::shared_ptr<IMesh> mesh);
-	virtual void RemoveMesh(std::shared_ptr<IMesh> mesh);
-	virtual const MeshList&  GetMeshes();
-
-	/**
-	 * Add a light to this scene node.
-	 */
-	virtual void AddLight(std::shared_ptr<CLight3D> _light);
-	virtual void RemoveLight(std::shared_ptr<CLight3D> _light);
-	virtual const LightList& GetLights();
 
 	/**
 	 * Called before all others calls
@@ -117,23 +94,14 @@ public:
 	 */
 	virtual void OnUpdate(UpdateEventArgs& e);
 
-	/**
-	 * Useful for culling
-	 */
-	bool checkFrustum(const Camera* _camera) const;
-	bool checkDistance2D(cvec3 _camPos, float _distance) const;
-	bool checkDistance(cvec3 _camPos, float _distance) const;
-
 	// ILoadableObject
-	virtual bool PreLoad() override;
-	virtual bool Load() override;
-	virtual bool Delete() override;
-
-	void setLoadingBegin() override;
-	bool isLoadingBegin() const override;
-	void setLoaded() override;
-	bool isLoaded() const override;
-
+	virtual bool PreLoad()             override;
+	virtual bool Load()                override;
+	virtual bool Delete()              override;
+	void setLoadingBegin()             override final;
+	bool isLoadingBegin()        const override final;
+	void setLoaded()                   override final;
+	bool isLoaded()              const override final;
 	virtual uint32 getPriority() const override;
 
 protected:
@@ -141,36 +109,27 @@ protected:
 
 	virtual void UpdateLocalTransform();
 	virtual void UpdateWorldTransform();
-	virtual void UpdateBounds();
 
 private:
-	std::string         m_Name;
-	SceneNodeTypes      m_Type;
+	std::string               m_Name;
 
 	// Transforms node from parent's space to world space for rendering.
-	mat4                m_LocalTransform;
-	mat4                m_InverseLocalTransform;	// This is the inverse of the local -> world transform.
+	mat4                      m_LocalTransform;
+	mat4                      m_InverseLocalTransform;	// This is the inverse of the local -> world transform.
 
-	mat4                m_WorldTransform;
-	mat4                m_InverseWorldTransform;
+	mat4                      m_WorldTransform;
+	mat4                      m_InverseWorldTransform;
 
-	vec3                m_Translate;
-	vec3				m_Rotate;
-	quat				m_RotateQuat;
-	bool                m_IsRotateQuat;
-	vec3                m_Scale;
-	BoundingBox         m_Bounds;
-	
-	
+	vec3                      m_Translate;
+	vec3				      m_Rotate;
+	quat				      m_RotateQuat;
+	bool                      m_IsRotateQuat;
+	vec3                      m_Scale;
 
 	std::weak_ptr<SceneNode3D>m_pParentNode;
 	NodeList                  m_Children;
 	NodeNameMap               m_ChildrenByName;
 	std::mutex                m_ChildMutex;
-	MeshList                  m_Meshes;
-	std::mutex                m_MeshMutex;
-	LightList                 m_Lights;
-
 
 private:
 	std::atomic<bool>         m_IsLoadingBegin;

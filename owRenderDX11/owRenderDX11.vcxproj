@@ -166,6 +166,7 @@
     <ClCompile Include="BlendStateDX11.cpp" />
     <ClCompile Include="BufferDX11.cpp" />
     <ClCompile Include="ConstantBufferDX11.cpp" />
+    <ClCompile Include="D3D9_To_D3D11.cpp" />
     <ClCompile Include="DepthStencilStateDX11.cpp" />
     <ClCompile Include="MaterialDX11.cpp" />
     <ClCompile Include="MeshDX11.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="RenderWindowDX11.cpp" />
     <ClCompile Include="SamplerStateDX11.cpp" />
     <ClCompile Include="ShaderDX11.cpp" />
+    <ClCompile Include="ShaderInputLayoutDX11.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -192,6 +194,7 @@
     <ClInclude Include="BufferDX11.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="ConstantBufferDX11.h" />
+    <ClInclude Include="D3D9_To_D3D11.h" />
     <ClInclude Include="DepthStencilStateDX11.h" />
     <ClInclude Include="MaterialDX11.h" />
     <ClInclude Include="MeshDX11.h" />
@@ -204,6 +207,7 @@
     <ClInclude Include="RenderWindowDX11.h" />
     <ClInclude Include="SamplerStateDX11.h" />
     <ClInclude Include="ShaderDX11.h" />
+    <ClInclude Include="ShaderInputLayoutDX11.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StructuredBufferDX11.h" />
     <ClInclude Include="TextureDX11.h" />
