@@ -72,6 +72,9 @@ bool BasePass::Visit(SceneNode3D& node)
 		perObjectData.ModelView           = camera->GetViewMatrix()       * perObjectData.Model;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
 
+		perObjectData.View = camera->GetViewMatrix();
+		perObjectData.Projection = camera->GetProjectionMatrix();
+
 		// Update the constant buffer data
 		SetPerObjectConstantBufferData(perObjectData);
 

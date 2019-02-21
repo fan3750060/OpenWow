@@ -2,7 +2,7 @@
 
 #include "M2.h"
 
-class CM2_Base_Instance : public SceneNode3D
+class CM2_Base_Instance : public SceneNodeModel3D
 {
 public:
 	CM2_Base_Instance(std::string _m2Name);

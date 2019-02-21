@@ -2,7 +2,7 @@
 
 #include "Liquid.h"
 
-class Liquid_Instance : public SceneNode3D
+class Liquid_Instance : public SceneNodeModel3D
 {
 public:
 	Liquid_Instance(std::shared_ptr<Liquid> _liquidObject, vec3 _position);

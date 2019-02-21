@@ -35,6 +35,10 @@ protected: // PerObject functional
 		glm::mat4 ModelViewProjection;
 		glm::mat4 ModelView;
 		glm::mat4 Model;
+
+		glm::mat4 View;
+		glm::mat4 Projection;
+
 	};
 	PerObject* m_PerObjectData;
 	std::shared_ptr<ConstantBuffer> m_PerObjectConstantBuffer;

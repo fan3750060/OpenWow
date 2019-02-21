@@ -52,7 +52,7 @@ DeferredLightingPass::DeferredLightingPass(
 	std::shared_ptr<SceneNodeModel3D> quadSceneNode = std::make_shared<SceneNodeModel3D>();
 	quadSceneNode->SetParent(m_pDirectionalLightScene->GetRootNode());
 
-	std::shared_ptr<IMesh> quadMesh = _RenderDevice->CreateScreenQuad(0, 1280, 1024, 0); // _RenderDevice->CreateScreenQuad(-1, 1, -1, 1, -1);
+	std::shared_ptr<IMesh> quadMesh = _RenderDevice->CreateScreenQuad(0, 1280, 1024, 0, -0.5f); // _RenderDevice->CreateScreenQuad(-1, 1, -1, 1, -1);
 	quadSceneNode->AddMesh(quadMesh);
 }
 
@@ -198,12 +198,12 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 
 	PerObject perObjectData;
 
-	if (light.getLight().m_Type == Light::LightType::Directional)
+	//if (light.getLight().m_Type == Light::LightType::Directional)
 	{
 		perObjectData.ModelView = glm::mat4(1.0f);
-		perObjectData.ModelViewProjection = glm::ortho(0.0f, 1280.0f, 1024.0f, 0.0f, -1.0f, 1.0f);
+		perObjectData.ModelViewProjection = glm::ortho<float>(0.0f, 1280.0f, 1024.0f, 0.0f, 0.0f, -1.0f);
 	}
-	else
+	/*else
 	{
 		// Setup constant buffer for node.
 		// Create a model matrix from the light properties.
@@ -223,9 +223,9 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 
 		glm::mat4 scale = glm::scale(glm::vec3(scaleX, scaleY, scaleZ));
 
-		perObjectData.ModelView = camera->GetViewMatrix() * translation /* rotation*/ * scale * m_World;
+		perObjectData.ModelView = camera->GetViewMatrix() * translation  * scale * m_World;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
-	}
+	}*/
 	SetPerObjectConstantBufferData(perObjectData);
 
 	// Update the constant buffer for the per-light data.
@@ -239,12 +239,12 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 	switch (light.getLight().m_Type)
 	{
 	case Light::LightType::Point:
-		RenderSubPass(GetRenderEventArgs(), m_pPointLightScene, m_LightPipeline0);
-		RenderSubPass(GetRenderEventArgs(), m_pPointLightScene, m_LightPipeline1);
+		RenderSubPass(GetRenderEventArgs(), m_pDirectionalLightScene, m_DirectionalLightPipeline);
+		//RenderSubPass(GetRenderEventArgs(), m_pPointLightScene, m_LightPipeline1);
 		break;
 	case Light::LightType::Spot:
-		RenderSubPass(GetRenderEventArgs(), m_pSpotLightScene, m_LightPipeline0);
-		RenderSubPass(GetRenderEventArgs(), m_pSpotLightScene, m_LightPipeline1);
+		RenderSubPass(GetRenderEventArgs(), m_pDirectionalLightScene, m_DirectionalLightPipeline);
+		//RenderSubPass(GetRenderEventArgs(), m_pSpotLightScene, m_LightPipeline1);
 		break;
 	case Light::LightType::Directional:
 		RenderSubPass(GetRenderEventArgs(), m_pDirectionalLightScene, m_DirectionalLightPipeline);

@@ -51,13 +51,25 @@ namespace
 			it->textureCoordinate.x = (1.f - it->textureCoordinate.x);
 		}
 	}
+
+
+	// Helper for inverting normals of geometric primitives for 'inside' vs. 'outside' viewing
+	inline void InvertNormals(VertexCollection& vertices)
+	{
+		for (auto it = vertices.begin(); it != vertices.end(); ++it)
+		{
+			it->normal.x = -it->normal.x;
+			it->normal.y = -it->normal.y;
+			it->normal.z = -it->normal.z;
+		}
+	}
 }
 
 
 //--------------------------------------------------------------------------------------
 // Cube (aka a Hexahedron) or Box
 //--------------------------------------------------------------------------------------
-void DirectX::ComputeBox(VertexCollection& vertices, IndexCollection& indices, const XMFLOAT3& size, bool rhcoords)
+void DirectX::ComputeBox(VertexCollection& vertices, IndexCollection& indices, const XMFLOAT3& size, bool rhcoords, bool invertn)
 {
 	vertices.clear();
 	indices.clear();
@@ -124,13 +136,16 @@ void DirectX::ComputeBox(VertexCollection& vertices, IndexCollection& indices, c
 	// Build RH above
 	if (!rhcoords)
 		ReverseWinding(indices, vertices);
+
+	if (invertn)
+		InvertNormals(vertices);
 }
 
 
 //--------------------------------------------------------------------------------------
 // Sphere
 //--------------------------------------------------------------------------------------
-void DirectX::ComputeSphere(VertexCollection& vertices, IndexCollection& indices, float diameter, size_t tessellation, bool rhcoords)
+void DirectX::ComputeSphere(VertexCollection& vertices, IndexCollection& indices, float diameter, size_t tessellation, bool rhcoords, bool invertn)
 {
 	vertices.clear();
 	indices.clear();
@@ -196,6 +211,9 @@ void DirectX::ComputeSphere(VertexCollection& vertices, IndexCollection& indices
 	// Build RH above
 	if (!rhcoords)
 		ReverseWinding(indices, vertices);
+
+	if (invertn)
+		InvertNormals(vertices);
 }
 
 

@@ -50,9 +50,9 @@ void CGBuffer::Load(uint32 width, uint32 height)
 	// Normal buffer (Color3)
 	Texture::TextureFormat normalTextureFormat(
 		Texture::Components::RGBA,
-		Texture::Type::Float,
+		Texture::Type::UnsignedNormalized,
 		numSamples,
-		32, 32, 32, 32, 0, 0);
+		8, 8, 8, 8, 0, 0);
 	std::shared_ptr<Texture> normalTexture = renderDevice->CreateTexture2D(width, height, 1, normalTextureFormat);
 
 	// Depth/stencil buffer
@@ -83,7 +83,13 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 
 	// Shaders that unite 4 textures
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(Shader::VertexShader, "shaders_D3D/DeferredRendering.hlsl", Shader::ShaderMacros(), "VS_main", "latest");
-	g_pVertexShader->LoadInputLayoutFromReflector();
+	std::vector<D3DVERTEXELEMENT9> elements;
+	elements.push_back({ 0, 0,  D3DDECLTYPE_FLOAT3, 0, D3DDECLUSAGE_POSITION, 0 });
+	elements.push_back({ 0, 12, D3DDECLTYPE_FLOAT2, 0, D3DDECLUSAGE_TEXCOORD, 0 });
+	elements.push_back({ 0, 20, D3DDECLTYPE_FLOAT3, 0, D3DDECLUSAGE_NORMAL, 0 });
+	g_pVertexShader->LoadInputLayoutFromD3DElement(elements);
+
+
 	std::shared_ptr<Shader> g_pDeferredLightingPixelShader = _RenderDevice->CreateShader(Shader::PixelShader, "shaders_D3D/DeferredRendering.hlsl", Shader::ShaderMacros(), "PS_DeferredLighting", "latest");
 
 
@@ -117,7 +123,7 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 		DepthStencilState::DepthMode depthMode(true, DepthStencilState::DepthWrite::Disable); // Disable depth writes.
 		// Pass depth test if the light volume is behind scene geometry.
 		depthMode.DepthFunction = DepthStencilState::CompareFunction::Greater;
-		g_pDeferredLightingPipeline1->GetDepthStencilState().SetDepthMode(depthMode);
+		//g_pDeferredLightingPipeline1->GetDepthStencilState().SetDepthMode(depthMode);
 
 		// Setup stencil mode
 		DepthStencilState::StencilMode stencilMode(true); // Enable stencil operations
@@ -150,7 +156,7 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 		// Disable depth writes
 		DepthStencilState::DepthMode depthMode(true, DepthStencilState::DepthWrite::Disable); // Disable depth writes.
 		depthMode.DepthFunction = DepthStencilState::CompareFunction::GreaterOrEqual;
-		g_pDeferredLightingPipeline2->GetDepthStencilState().SetDepthMode(depthMode);
+		//g_pDeferredLightingPipeline2->GetDepthStencilState().SetDepthMode(depthMode);
 
 		// Setup stencil mode
 		DepthStencilState::StencilMode stencilMode(true);
@@ -159,6 +165,7 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 		faceOperation.StencilFunction = DepthStencilState::CompareFunction::Equal;
 		stencilMode.StencilReference = 1;
 		stencilMode.BackFace = faceOperation;
+
 		g_pDeferredLightingPipeline2->GetDepthStencilState().SetStencilMode(stencilMode);
 
 	}
@@ -180,11 +187,11 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 		g_pDirectionalLightsPipeline->GetBlendState().SetBlendMode(additiveBlending);
 
 		// Setup depth mode
-		//DepthStencilState::DepthMode depthMode(true, DepthStencilState::DepthWrite::Disable); // Disable depth writes.
+		DepthStencilState::DepthMode depthMode(true, DepthStencilState::DepthWrite::Disable); // Disable depth writes.
 		// The full-screen quad that will be used to light pixels will be placed at the far clipping plane.
 		// Only light pixels that are "in front" of the full screen quad (exclude sky box pixels)
-		//depthMode.DepthFunction = DepthStencilState::CompareFunction::Greater;
-		g_pDirectionalLightsPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
+		depthMode.DepthFunction = DepthStencilState::CompareFunction::Greater;
+		g_pDirectionalLightsPipeline->GetDepthStencilState().SetDepthMode(depthMode);
 	}
 
 
