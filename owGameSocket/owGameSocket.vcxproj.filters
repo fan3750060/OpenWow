@@ -94,9 +94,9 @@
     <ClInclude Include="OpcodesNames.h">
       <Filter>World</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\owSocket.h">
+    <ClInclude Include="SocketBase.h" />
+    <ClInclude Include="..\shared\owGameSocket.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="SocketBase.h" />
   </ItemGroup>
 </Project>
