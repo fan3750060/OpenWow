@@ -31,7 +31,7 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 void CM2_Base_Instance::CreateInstances()
 {
-	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode3D>(shared_from_this()));
+	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNodeModel3D>(shared_from_this()));
 }
 
 void CM2_Base_Instance::Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment)

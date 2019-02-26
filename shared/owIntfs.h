@@ -10,6 +10,7 @@
 //---------------------------------------------------------//
 #include "../owIntfs/BaseManager.h"
 
+#include "../owIntfs/Application.h"
 #include "../owIntfs/Console.h"
 #include "../owIntfs/DebugOutput.h"
 #include "../owIntfs/Files.h"
@@ -20,6 +21,5 @@
 #include "../owIntfs/Networking.h"
 #include "../owIntfs/SceneNodeProvider.h"
 #include "../owIntfs/Settings.h"
-#include "../owIntfs/SkyManager.h"
 #include "../owIntfs/UIManager.h"
 #include "../owIntfs/Visitor.h"

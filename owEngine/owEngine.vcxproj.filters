@@ -300,9 +300,6 @@
     <ClInclude Include="3D\Passes\GBufferPass.h">
       <Filter>3D\Passes</Filter>
     </ClInclude>
-    <ClInclude Include="3D\Passes\Light.h">
-      <Filter>3D</Filter>
-    </ClInclude>
     <ClInclude Include="3D\Passes\DeferredLightingPass.h">
       <Filter>3D\Passes</Filter>
     </ClInclude>

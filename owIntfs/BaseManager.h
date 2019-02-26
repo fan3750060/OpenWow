@@ -21,16 +21,16 @@ struct IRefManager : public IManager
 
 
 // FORWARD BEGIN
-class Font;
+class CFontMesh;
 // FORWARD END
 
 struct
 	__declspec(novtable, uuid("1427E242-CCB8-4AEC-ABC8-17DE58A96B05"))
-	IFontsManager : public IRefManager<Font>
+	IFontsManager : public IRefManager<CFontMesh>
 {
 	virtual ~IFontsManager() {};
 
-	virtual std::shared_ptr<Font> GetMainFont() const = 0;
+	virtual std::shared_ptr<CFontMesh> GetMainFont() const = 0;
 };
 
 

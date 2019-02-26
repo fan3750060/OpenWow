@@ -214,7 +214,7 @@ void CGameState_Client::Load3D()
 	cube->SetMaterial(mat);
 
 	// Cube SN
-	std::shared_ptr<SceneNode3D> cubeNode = std::make_shared<SceneNode3D>();
+	std::shared_ptr<SceneNodeModel3D> cubeNode = std::make_shared<SceneNodeModel3D>();
 	cubeNode->AddMesh(cube);
 	cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 	cubeNode->SetScale(vec3(15, 15, 15));

@@ -6,7 +6,7 @@ class CGameState : public IGameState
 {
 	friend CGameStateManager;
 public:
-    CGameState();
+    CGameState(std::shared_ptr<IRenderDevice> _renderDevice, std::shared_ptr<RenderWindow> _renderWindow);
 	virtual ~CGameState();
 
 	// IGameState
@@ -29,6 +29,9 @@ public:
 	virtual void OnRenderUI(RenderUIEventArgs& e) = 0;
 
 protected:
+	std::shared_ptr<IRenderDevice>       renderDevice;
+	std::shared_ptr<RenderWindow>        renderWindow;
+
 	const CGroupQuality&        m_QualitySettings;
 	const CGroupVideo&          m_VideoSettings;
 

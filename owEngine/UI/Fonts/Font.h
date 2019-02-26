@@ -5,11 +5,11 @@ class MeshWrapper;
 class UI_Font_Material;
 // FORWARD END
 
-class Font : public MeshWrapper
+class CFontMesh : public MeshWrapper
 {
 public:
-	Font(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _fontGeometry, std::vector<uint32> _widthArray, uint32 _height);
-	~Font();
+	CFontMesh(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _fontGeometry, std::vector<uint32> _widthArray, uint32 _height);
+	~CFontMesh();
 
 	// Getters
 	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text);

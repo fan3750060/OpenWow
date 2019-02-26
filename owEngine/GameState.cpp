@@ -6,8 +6,10 @@
 // Additional
 #include "Application.h"
 
-CGameState::CGameState() 
-	: m_IsInited(false)
+CGameState::CGameState(std::shared_ptr<IRenderDevice> _renderDevice, std::shared_ptr<RenderWindow> _renderWindow)
+	: renderDevice(_renderDevice)
+	, renderWindow(_renderWindow)
+	, m_IsInited(false)
 	, m_IsCurrent(false)
 	, m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 	, m_VideoSettings(GetSettingsGroup<CGroupVideo>())
@@ -35,8 +37,6 @@ void CGameState::Destroy()
 
 bool CGameState::Set()
 {
-	std::shared_ptr<RenderWindow> renderWindow = Application::Get().GetRenderWindow();
-
 	renderWindow->PreRender += boost::bind(&CGameState::OnPreRender, this, _1);
 	renderWindow->Render += boost::bind(&CGameState::OnRender, this, _1);
 	renderWindow->PostRender += boost::bind(&CGameState::OnPostRender, this, _1);
@@ -47,8 +47,7 @@ bool CGameState::Set()
 
 void CGameState::Unset()
 {
-	std::shared_ptr<RenderWindow> renderWindow = Application::Get().GetRenderWindow();
-	
+
 	//renderWindow->PreRender -= boost::bind(&CGameState::OnPreRender, this, _1);
 	//renderWindow->Render -= boost::bind(&CGameState::OnRender, this, _1);
 	//renderWindow->PostRender -= boost::bind(&CGameState::OnPostRender, this, _1);

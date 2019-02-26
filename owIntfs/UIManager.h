@@ -26,9 +26,9 @@ struct
 	virtual void RenderImage(vec2 _pos, Image* _image, vec2 _size) = 0;
 
 	virtual void RenderText(vec2 _pos, cstring _string, const Color& _color) const = 0;
-	virtual void RenderText(vec2 _pos, cstring _string, std::shared_ptr<Font> _font, const Color& _color) const = 0;
+	virtual void RenderText(vec2 _pos, cstring _string, std::shared_ptr<CFontMesh> _font, const Color& _color) const = 0;
 	virtual void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, const Color& _color) const = 0;
-	virtual void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, std::shared_ptr<Font> _font, const Color& _color) const = 0;
+	virtual void RenderText(vec2 _pos, cstring _string, TextAlignW _alignW, TextAlignH _alignH, std::shared_ptr<CFontMesh> _font, const Color& _color) const = 0;
 };
 
 struct	IUIMgrEx

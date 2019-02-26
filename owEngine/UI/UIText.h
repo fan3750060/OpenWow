@@ -10,7 +10,7 @@ public:
 	virtual ~UIText();
 
 	// UIText
-	void                        SetFont(std::shared_ptr<Font> _font);
+	void                        SetFont(std::shared_ptr<CFontMesh> _font);
 	void                        SetText(const std::string& _text);
 
 	// SceneNodeUI
@@ -20,6 +20,6 @@ public:
 	bool						RenderMesh(RenderUIEventArgs& renderEventArgs) override;
 
 private:
-	std::shared_ptr<Font>       m_Font;
+	std::shared_ptr<CFontMesh>       m_Font;
 	std::string                 m_Text;
 };

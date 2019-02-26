@@ -17,10 +17,10 @@
       <Filter>Core\Debug, Console &amp; Log</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Game</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="GameStateManager.h">
-      <Filter>Game</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Files.h">
       <Filter>Core</Filter>
@@ -37,9 +37,6 @@
     <ClInclude Include="..\shared\owIntfs.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="SkyManager.h">
-      <Filter>Game\Wow</Filter>
-    </ClInclude>
     <ClInclude Include="UIManager.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -52,6 +49,9 @@
     <ClInclude Include="SceneNodeProvider.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -60,14 +60,8 @@
     <Filter Include="Core">
       <UniqueIdentifier>{5c265354-6698-48b5-b4f1-9fcd76d633da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{09ac166e-fa8f-4f25-b9bb-8f5dac828b55}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Debug, Console &amp; Log">
       <UniqueIdentifier>{ea46065f-3629-447b-86c7-eaf0605943d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Wow">
-      <UniqueIdentifier>{21602bdc-920c-4d59-bd62-644ceb5f4589}</UniqueIdentifier>
     </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{51517ace-553a-4b85-ab37-c941b62ce843}</UniqueIdentifier>
@@ -77,6 +71,9 @@
     </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{98b09ec3-003c-4139-bfc6-71ba4f9d8c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{09ac166e-fa8f-4f25-b9bb-8f5dac828b55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

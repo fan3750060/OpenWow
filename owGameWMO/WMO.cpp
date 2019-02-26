@@ -32,7 +32,7 @@ WMO::~WMO()
 //
 // ISceneNodeProvider
 //
-void WMO::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
+void WMO::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 {
 	std::shared_ptr<CWMO_Base_Instance> parentAsWMOInstance = std::dynamic_pointer_cast<CWMO_Base_Instance, SceneNode3D>(_parent.lock());
 	assert1(parentAsWMOInstance != nullptr);

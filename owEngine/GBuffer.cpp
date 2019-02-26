@@ -17,7 +17,7 @@ CGBuffer::~CGBuffer()
 
 void CGBuffer::Load(uint32 width, uint32 height)
 {
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 	std::shared_ptr<RenderWindow> renderWindow = app.GetRenderWindow();
 
@@ -76,7 +76,7 @@ void CGBuffer::Load(uint32 width, uint32 height)
 
 void CGBuffer::Load2(const Viewport& _viewPort)
 {
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 	std::shared_ptr<RenderWindow> renderWindow = app.GetRenderWindow();
 
@@ -191,7 +191,7 @@ void CGBuffer::Load2(const Viewport& _viewPort)
 		// The full-screen quad that will be used to light pixels will be placed at the far clipping plane.
 		// Only light pixels that are "in front" of the full screen quad (exclude sky box pixels)
 		depthMode.DepthFunction = DepthStencilState::CompareFunction::Greater;
-		g_pDirectionalLightsPipeline->GetDepthStencilState().SetDepthMode(depthMode);
+		//g_pDirectionalLightsPipeline->GetDepthStencilState().SetDepthMode(depthMode);
 	}
 
 

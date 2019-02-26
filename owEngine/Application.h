@@ -5,15 +5,15 @@
 #include "GameState.h"
 #include "Loader.h"
 
-class Application : public Object, public IGameStateManager
+class Application : public Object, public IApplication, public IGameStateManager
 {
 public:
 	Application();
+	Application(HINSTANCE hInstance, IApplication * _other);
 	virtual ~Application();
 
-	static Application& Get();
+	static IApplication& Get();
 
-	// IApplication
 	bool                            Load();
 	int                             Run();
 	void                            Stop();
@@ -21,10 +21,12 @@ public:
 	std::shared_ptr<RenderWindow>   CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
 
 	CLoader*						GetLoader();
-	std::shared_ptr<IRenderDevice>  GetRenderDevice();
-	std::shared_ptr<RenderWindow>   GetRenderWindow();
 	HINSTANCE                       Get_HINSTANCE() const;
 	HWND                            Get_HWND() const;
+
+	// IApplication
+	std::shared_ptr<IRenderDevice>  GetRenderDevice() override;
+	std::shared_ptr<RenderWindow>   GetRenderWindow() override;
 
 	// IGameStateManager
 	void AddGameState(GameStatesNames::List _name, std::shared_ptr<IGameState> _gameState) override;
@@ -39,6 +41,8 @@ public:
 	Event           Terminated;
 	Event           Exit;
 	UserEvent       UserEvent;
+
+	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 protected:
 	void OnInitialize(EventArgs& e);
@@ -55,6 +59,7 @@ private:
 	bool            m_bIsRunning;
 
 	// Handle to the module.
+	CLoader         m_Loader;
 	HINSTANCE       m_hInstance;
 	HWND            m_hWindow;
 
@@ -64,9 +69,6 @@ private:
 	// IGameStateManager
 	std::shared_ptr<IGameState>                                     m_CurrentGameState;
 	std::map<GameStatesNames::List, std::shared_ptr<IGameState>>    m_GameStatesCollection;
-
-	// Loader
-	CLoader m_Loader;
 
 private:
 	const char* c_RenderWindow_ClassName = "RenderWindowClass";

@@ -52,7 +52,7 @@ DeferredLightingPass::DeferredLightingPass(
 	std::shared_ptr<SceneNodeModel3D> quadSceneNode = std::make_shared<SceneNodeModel3D>();
 	quadSceneNode->SetParent(m_pDirectionalLightScene->GetRootNode());
 
-	std::shared_ptr<IMesh> quadMesh = _RenderDevice->CreateScreenQuad(0, 1280, 1024, 0, -0.5f); // _RenderDevice->CreateScreenQuad(-1, 1, -1, 1, -1);
+	std::shared_ptr<IMesh> quadMesh = _RenderDevice->CreateScreenQuad(0, 1280, 1024, 0); // _RenderDevice->CreateScreenQuad(-1, 1, -1, 1, -1);
 	quadSceneNode->AddMesh(quadMesh);
 }
 
@@ -201,7 +201,7 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 	//if (light.getLight().m_Type == Light::LightType::Directional)
 	{
 		perObjectData.ModelView = glm::mat4(1.0f);
-		perObjectData.ModelViewProjection = glm::ortho<float>(0.0f, 1280.0f, 1024.0f, 0.0f, 0.0f, -1.0f);
+		perObjectData.ModelViewProjection = glm::ortho<float>(0.0f, 1280.0f, 1024.0f, 0.0f, -1.0f, 1.0f);
 	}
 	/*else
 	{

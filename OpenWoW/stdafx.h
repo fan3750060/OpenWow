@@ -34,5 +34,5 @@
 
 // Socket
 
-#include <owSocket.h>
-#pragma comment(lib, "owSocket.lib")
+#include <owGameSocket.h>
+#pragma comment(lib, "owGameSocket.lib")

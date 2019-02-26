@@ -6,7 +6,7 @@
 class MapController;
 // FORWARD END
 
-class SkyManager : public SceneNode3D, public ISkyManager
+class SkyManager : public SceneNodeModel3D, public ISkyManager
 {
 public:
 	SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord);

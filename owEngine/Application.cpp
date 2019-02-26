@@ -14,10 +14,8 @@ float g_GameDeltaTime = 0.0f;
 float g_ApplicationTime = 0.0f;
 int64_t g_FrameCounter = 0L;
 
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
 static std::shared_ptr<RenderWindow> gs_WindowHandle = nullptr;
-static Application* gs_pApplicationInstance = nullptr;
+static IApplication* gs_pApplicationInstance = nullptr;
 
 Application::Application()
 	: m_bIsInitialized(false)
@@ -32,7 +30,7 @@ Application::Application()
 	WNDCLASSEX renderWindowClass;
 	renderWindowClass.cbSize = sizeof(WNDCLASSEX);
 	renderWindowClass.style = CS_HREDRAW | CS_VREDRAW;
-	renderWindowClass.lpfnWndProc = &WndProc;
+	renderWindowClass.lpfnWndProc = &Application::WndProc;
 	renderWindowClass.cbClsExtra = 0;
 	renderWindowClass.cbWndExtra = 0;
 	renderWindowClass.hInstance = m_hInstance;
@@ -63,17 +61,31 @@ Application::Application()
 	gs_pApplicationInstance = this;
 }
 
+Application::Application(HINSTANCE hInstance, IApplication * _other)
+	: m_bIsInitialized(false)
+	, m_bIsRunning(false)
+{
+	m_hInstance = hInstance;
+
+	m_pRenderDevice = _other->GetRenderDevice();
+	m_pWindow = _other->GetRenderWindow();
+
+	gs_WindowHandle = m_pWindow;
+	gs_pApplicationInstance = _other;
+}
+
+
 Application::~Application()
 {
 	if (!UnregisterClass(c_RenderWindow_ClassName, m_hInstance))
 	{
-		fail1("Failed to unregister render window class");
+		//fail1("Failed to unregister render window class");
 	}
 
 	gs_pApplicationInstance = nullptr;
 }
 
-Application& Application::Get()
+IApplication& Application::Get()
 {
 	assert(gs_pApplicationInstance != nullptr);
 	return *gs_pApplicationInstance;
@@ -207,6 +219,20 @@ CLoader* Application::GetLoader()
 	return &m_Loader;
 }
 
+HINSTANCE Application::Get_HINSTANCE() const
+{
+	return m_hInstance;
+}
+
+HWND Application::Get_HWND() const
+{
+	return m_hWindow;
+}
+
+
+//
+// IApplication
+//
 std::shared_ptr<IRenderDevice> Application::GetRenderDevice()
 {
 	assert1(m_pRenderDevice);
@@ -219,15 +245,6 @@ std::shared_ptr<RenderWindow> Application::GetRenderWindow()
 	return m_pWindow;
 }
 
-HINSTANCE Application::Get_HINSTANCE() const
-{
-	return m_hInstance;
-}
-
-HWND Application::Get_HWND() const
-{
-	return m_hWindow;
-}
 
 
 
@@ -360,7 +377,7 @@ static MouseButtonEventArgs::ButtonState DecodeButtonState(UINT messageID)
 	return buttonState;
 }
 
-static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (gs_WindowHandle != NULL)
 	{

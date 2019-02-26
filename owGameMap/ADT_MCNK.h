@@ -7,7 +7,7 @@ class ADT;
 class MapController;
 // FORWARD END
 
-class ADT_MCNK : public SceneNode3D
+class ADT_MCNK : public SceneNodeModel3D
 {
 public:
 	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, cstring _fileName, const ADT_MCIN& _mcin);

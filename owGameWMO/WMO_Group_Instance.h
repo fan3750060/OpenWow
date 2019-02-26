@@ -8,7 +8,7 @@ class CWMO_Doodad_Instance;
 class CWMO_Liquid_Instance;
 // FORWARD END
 
-class CWMO_Group_Instance : public SceneNode3D
+class CWMO_Group_Instance : public SceneNodeModel3D
 {
 public:
 	typedef std::vector<std::shared_ptr<CWMO_Doodad_Instance>> DoodadInstances;

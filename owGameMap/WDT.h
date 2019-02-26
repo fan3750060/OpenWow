@@ -40,7 +40,7 @@ public:
 	virtual ~WDT();
 
 	// ISceneNodeProvider
-	void CreateInsances(std::weak_ptr<SceneNode3D> _parent) override;
+	void CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent) override;
 
 	void Load();
 

@@ -17,7 +17,7 @@ UIText::~UIText()
 //
 // UIText
 //
-void UIText::SetFont(std::shared_ptr<Font> _font)
+void UIText::SetFont(std::shared_ptr<CFontMesh> _font)
 {
 	m_Font = _font;
 }

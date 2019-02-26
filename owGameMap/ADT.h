@@ -10,7 +10,7 @@
 class MapController;
 // FORWARD END
 
-class ADT : public SceneNode3D
+class ADT : public SceneNodeModel3D
 {
 public:
 	ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _intexZ);

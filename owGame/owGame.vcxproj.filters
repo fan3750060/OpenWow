@@ -43,6 +43,9 @@
     <Filter Include="Files">
       <UniqueIdentifier>{e5bf550a-5a51-4482-87bc-533a4e241f7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{fdee02f5-b0eb-43b0-9311-02e2c269f51e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Liquid.cpp">
@@ -224,6 +227,9 @@
     </ClInclude>
     <ClInclude Include="MPQFilesStorage.h">
       <Filter>Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyManager.h">
+      <Filter>Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

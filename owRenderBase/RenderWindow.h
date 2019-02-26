@@ -81,13 +81,11 @@ public:
 	Event               MouseFocus;
 	Event               MouseBlur;
 
-protected:
+public:
 	friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	RenderWindow(cstring windowName, int windowWidth, int windowHeight, HWND _hwnd, bool vSync = false);
 	virtual ~RenderWindow();
-
-
 
 	// Window events
 	virtual void OnInputFocus(EventArgs& e);
@@ -99,7 +97,6 @@ protected:
 
 	// Window is closing
 	virtual void OnClose(WindowCloseEventArgs& e);
-
 
 	// Keyboard events
 	virtual void OnKeyPressed(KeyEventArgs& e);

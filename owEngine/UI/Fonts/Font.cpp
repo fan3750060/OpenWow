@@ -6,7 +6,7 @@
 // General
 #include "Font.h"
 
-Font::Font(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _fontGeometry, std::vector<uint32> _widthArray, uint32 _height) 
+CFontMesh::CFontMesh(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _fontGeometry, std::vector<uint32> _widthArray, uint32 _height) 
 	: MeshWrapper(SceneNodeTypes::SN_TYPE_NONE, _fontGeometry)
 	, m_Texture(_texture)
 	, m_WidthArray(_widthArray)
@@ -19,14 +19,14 @@ Font::Font(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _fontGeomet
 	SetMaterial(m_Material);
 }
 
-Font::~Font()
+CFontMesh::~CFontMesh()
 {
 	Log::Info("Fonts deleted!!!");
 }
 
 
 
-bool Font::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text)
+bool CFontMesh::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text)
 {
 	vec2 _offset = vec2(0.0f, 0.0f);
 
@@ -42,7 +42,7 @@ bool Font::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuff
 	return true;
 }
 
-uint32 Font::GetStringWidth(cstring _string) const
+uint32 CFontMesh::GetStringWidth(cstring _string) const
 {
 	uint32 width = 0;
 
@@ -55,7 +55,7 @@ uint32 Font::GetStringWidth(cstring _string) const
 	return width;
 }
 
-uint32 Font::GetHeight() const
+uint32 CFontMesh::GetHeight() const
 {
 	return m_Height;
 }

@@ -82,6 +82,7 @@
     <ClInclude Include="Liquid.h" />
     <ClInclude Include="LiquidMaterial.h" />
     <ClInclude Include="MPQFilesStorage.h" />
+    <ClInclude Include="SkyManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WoWChunkReader.h" />
     <ClInclude Include="WowChunkUtils.h" />

@@ -8,7 +8,7 @@
 #include "WDL.h"
 #include "MinimapProvider.h"
 
-class MapController : public SceneNode3D
+class MapController : public SceneNodeModel3D
 {
 public:
 	MapController();

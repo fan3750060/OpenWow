@@ -7,7 +7,7 @@ class Camera;
 class Render3DEventArgs;
 class IVisitor;
 
-class SceneNode3D : public Object, public ILoadable, public std::enable_shared_from_this<SceneNode3D>
+class SceneNode3D : public Object, public ILoadable, public virtual std::enable_shared_from_this<SceneNode3D>
 {
 	typedef Object base;
 public:
