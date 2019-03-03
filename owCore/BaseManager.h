@@ -36,7 +36,7 @@ static inline void AddManager(std::shared_ptr<IManager> _manager)
 template<class T>
 static inline void DelManager()
 {
-	_BaseManager->UnregisterManager(__uuidof(T));
+	//_BaseManager->UnregisterManager(__uuidof(T));
 }
 
 template<class T>

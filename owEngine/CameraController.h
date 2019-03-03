@@ -7,8 +7,8 @@ public:
 	~CCameraController();
 
 	void Init(std::shared_ptr<RenderWindow> _renderWindow);
+
 	std::shared_ptr<Camera> GetCamera() const;
-	std::shared_ptr<const Camera> GetCameraConst() const;
 
 	// Input
 	void OnUpdate(UpdateEventArgs& e);

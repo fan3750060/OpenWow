@@ -61,17 +61,13 @@ Application::Application()
 	gs_pApplicationInstance = this;
 }
 
-Application::Application(HINSTANCE hInstance, IApplication * _other)
+Application::Application(HINSTANCE hInstance)
 	: m_bIsInitialized(false)
 	, m_bIsRunning(false)
 {
 	m_hInstance = hInstance;
 
-	m_pRenderDevice = _other->GetRenderDevice();
-	m_pWindow = _other->GetRenderWindow();
-
-	gs_WindowHandle = m_pWindow;
-	gs_pApplicationInstance = _other;
+	gs_pApplicationInstance = this;
 }
 
 
@@ -233,16 +229,27 @@ HWND Application::Get_HWND() const
 //
 // IApplication
 //
-std::shared_ptr<IRenderDevice> Application::GetRenderDevice()
+std::shared_ptr<IRenderDevice> Application::GetRenderDevice() const
 {
 	assert1(m_pRenderDevice);
 	return m_pRenderDevice;
 }
 
-std::shared_ptr<RenderWindow> Application::GetRenderWindow()
+void Application::SetRenderDevice(std::shared_ptr<IRenderDevice> _renderDevice)
+{
+	m_pRenderDevice = _renderDevice;
+}
+
+std::shared_ptr<RenderWindow> Application::GetRenderWindow() const
 {
 	assert1(m_pWindow);
 	return m_pWindow;
+}
+
+void Application::SetRenderWindow(std::shared_ptr<RenderWindow> _renderWindow)
+{
+	m_pWindow = _renderWindow;
+	gs_WindowHandle = _renderWindow;
 }
 
 
@@ -558,6 +565,8 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 
 			ResizeEventArgs resizeEventArgs(*gs_WindowHandle, width, height);
 			gs_WindowHandle->OnResize(resizeEventArgs);
+
+			::UpdateWindow(hwnd);
 		}
 		break;
 		case WM_CLOSE:

@@ -9,6 +9,8 @@ struct IApplication
 {
 	virtual ~IApplication() = 0 {};
 
-	virtual std::shared_ptr<IRenderDevice>  GetRenderDevice() = 0;
-	virtual std::shared_ptr<RenderWindow>   GetRenderWindow() = 0;
+	virtual std::shared_ptr<IRenderDevice>  GetRenderDevice() const = 0;
+	virtual void                            SetRenderDevice(std::shared_ptr<IRenderDevice> _renderDevice) = 0;
+	virtual std::shared_ptr<RenderWindow>   GetRenderWindow() const = 0;
+	virtual void                            SetRenderWindow(std::shared_ptr<RenderWindow> _renderWindow) = 0;
 };

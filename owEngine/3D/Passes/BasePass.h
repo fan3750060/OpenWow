@@ -30,6 +30,8 @@ public:
 	virtual bool Visit(IMesh& mesh);
 	virtual bool Visit(CLight3D& light);
 
+	virtual void UpdateViewport(Viewport _viewport);
+
 	void SetRenderEventArgs(Render3DEventArgs& e) override;
 	Render3DEventArgs& GetRenderEventArgs() const override;
 

@@ -64,9 +64,6 @@
     <Filter Include="Timers">
       <UniqueIdentifier>{4ed86a83-bc26-44a8-8c60-1dbec01ff0c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Cryptography">
-      <UniqueIdentifier>{69b706e6-dded-4e00-8818-f8bc0b73fffd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{3726dda1-960e-4c4a-bda0-7937a163f686}</UniqueIdentifier>
     </Filter>
@@ -152,21 +149,6 @@
     </ClCompile>
     <ClCompile Include="DebugOutputLog.cpp">
       <Filter>Log\DebugOutput</Filter>
-    </ClCompile>
-    <ClCompile Include="ARC4.cpp">
-      <Filter>Cryptography</Filter>
-    </ClCompile>
-    <ClCompile Include="HMACSHA1.cpp">
-      <Filter>Cryptography</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenSSLCrypto.cpp">
-      <Filter>Cryptography</Filter>
-    </ClCompile>
-    <ClCompile Include="SHA1.cpp">
-      <Filter>Cryptography</Filter>
-    </ClCompile>
-    <ClCompile Include="BigNumber.cpp">
-      <Filter>Cryptography</Filter>
     </ClCompile>
     <ClCompile Include="NEW_Random.cpp">
       <Filter>Common\Helpers</Filter>
@@ -313,21 +295,6 @@
     </ClInclude>
     <ClInclude Include="DebugOutputLog.h">
       <Filter>Log\DebugOutput</Filter>
-    </ClInclude>
-    <ClInclude Include="ARC4.h">
-      <Filter>Cryptography</Filter>
-    </ClInclude>
-    <ClInclude Include="HMACSHA1.h">
-      <Filter>Cryptography</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenSSLCrypto.h">
-      <Filter>Cryptography</Filter>
-    </ClInclude>
-    <ClInclude Include="SHA1.h">
-      <Filter>Cryptography</Filter>
-    </ClInclude>
-    <ClInclude Include="BigNumber.h">
-      <Filter>Cryptography</Filter>
     </ClInclude>
     <ClInclude Include="NEW_Random.h">
       <Filter>Common\Helpers</Filter>

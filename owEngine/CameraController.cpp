@@ -29,6 +29,8 @@ CCameraController::~CCameraController()
 
 void CCameraController::Init(std::shared_ptr<RenderWindow> _renderWindow)
 {
+	assert1(_renderWindow != nullptr);
+
 	_renderWindow->Update               += boost::bind(&CCameraController::OnUpdate, this, _1);
 	_renderWindow->MouseButtonPressed   += boost::bind(&CCameraController::OnMouseButtonPressed, this, _1);
 	_renderWindow->MouseButtonReleased  += boost::bind(&CCameraController::OnMouseButtonReleased, this, _1);
@@ -39,11 +41,6 @@ void CCameraController::Init(std::shared_ptr<RenderWindow> _renderWindow)
 }
 
 std::shared_ptr<Camera> CCameraController::GetCamera() const
-{
-	return m_Camera;
-}
-
-std::shared_ptr<const Camera> CCameraController::GetCameraConst() const
 {
 	return m_Camera;
 }

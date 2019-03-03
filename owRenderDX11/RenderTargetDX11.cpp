@@ -89,6 +89,7 @@ void RenderTargetDX11::Resize(uint16_t width, uint16_t height)
 	{
 		m_Width = glm::max<uint16_t>(width, 1);
 		m_Height = glm::max<uint16_t>(height, 1);
+
 		// Resize the attached textures.
 		for (auto texture : m_Textures)
 		{

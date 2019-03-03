@@ -11,4 +11,7 @@ public:
 	virtual bool IsEnabled() const = 0;
 
 	virtual void RenderUI(RenderUIEventArgs& e) = 0;
+
+	// Update viewport
+	virtual void UpdateViewport(Viewport _viewport) = 0;
 };

@@ -155,6 +155,9 @@ void RenderWindow::OnResize(ResizeEventArgs& e) // The RenderWindow window has b
 	m_iWindowHeight = e.Height;
 
 	Resize(e);
+
+	HideWindow();
+	ShowWindow();
 }
 
 void RenderWindow::OnExpose(EventArgs& e) // The window contents should be repainted

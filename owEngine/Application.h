@@ -9,7 +9,7 @@ class Application : public Object, public IApplication, public IGameStateManager
 {
 public:
 	Application();
-	Application(HINSTANCE hInstance, IApplication * _other);
+	Application(HINSTANCE hInstance);
 	virtual ~Application();
 
 	static IApplication& Get();
@@ -25,8 +25,10 @@ public:
 	HWND                            Get_HWND() const;
 
 	// IApplication
-	std::shared_ptr<IRenderDevice>  GetRenderDevice() override;
-	std::shared_ptr<RenderWindow>   GetRenderWindow() override;
+	std::shared_ptr<IRenderDevice>  GetRenderDevice() const override;
+	void                            SetRenderDevice(std::shared_ptr<IRenderDevice> _renderDevice) override;
+	std::shared_ptr<RenderWindow>   GetRenderWindow() const override;
+	void                            SetRenderWindow(std::shared_ptr<RenderWindow> _renderWindow) override;
 
 	// IGameStateManager
 	void AddGameState(GameStatesNames::List _name, std::shared_ptr<IGameState> _gameState) override;

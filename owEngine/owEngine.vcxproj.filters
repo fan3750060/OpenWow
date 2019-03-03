@@ -7,9 +7,6 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{bff6234b-c347-4c9d-a52e-f7020b86d9e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TextureLoaders">
-      <UniqueIdentifier>{df5d4a0c-9523-4190-a4c5-a2d7dac88eaa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{ceacde36-956d-4881-adbb-a5866bf95bad}</UniqueIdentifier>
     </Filter>
@@ -52,12 +49,6 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="TextureLoadersStorage.cpp">
-      <Filter>TextureLoaders</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
-      <Filter>TextureLoaders</Filter>
-    </ClCompile>
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="UI\Passes\BaseUIPass.cpp">
       <Filter>UI\Passes</Filter>
@@ -188,12 +179,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="TextureLoadersStorage.h">
-      <Filter>TextureLoaders</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureLoader.h">
-      <Filter>TextureLoaders</Filter>
-    </ClInclude>
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="UI\Passes\BaseUIPass.h">
       <Filter>UI\Passes</Filter>

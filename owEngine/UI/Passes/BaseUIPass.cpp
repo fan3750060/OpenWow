@@ -52,3 +52,8 @@ void BaseUIPass::RenderUI(RenderUIEventArgs& e)
 	}
 }
 
+void BaseUIPass::UpdateViewport(Viewport _viewport)
+{
+	m_Pipeline->GetRasterizerState().SetViewport(_viewport);
+}
+

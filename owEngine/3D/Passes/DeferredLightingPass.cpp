@@ -254,6 +254,13 @@ bool DeferredLightingPass::Visit(CLight3D& light)
 	return true;
 }
 
+void DeferredLightingPass::UpdateViewport(Viewport _viewport)
+{
+	m_LightPipeline0->GetRasterizerState().SetViewport(_viewport);
+	m_LightPipeline1->GetRasterizerState().SetViewport(_viewport);
+	m_DirectionalLightPipeline->GetRasterizerState().SetViewport(_viewport);
+}
+
 void DeferredLightingPass::UpdateFog(float fogModifier, vec3 fogColor, float fogDistance)
 {
 	m_pFogParams->FogModifier = fogModifier;

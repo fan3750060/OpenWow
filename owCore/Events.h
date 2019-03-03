@@ -28,15 +28,14 @@ public:
 	}
 
 	// Remove a callback from the list
-	void operator -= (typename const FunctionType& callback) const
+	/*void disconnect (typename const FunctionType& callback) const
 	{
-		assert(false);
 		// TODO: This isn't working yet.. Getting a compiler error:
 		// Error	1	error C2666: 'boost::operator ==' : 4 overloads have similar conversions signal_template.hpp
 		// WORKAROUND: Use the connection object returned when the subscriber was initially connected
 		// to disconnect the subscriber.
-		m_Callbacks.disconnect<FunctionType>(callback);
-	}
+		m_Callbacks.disconnect(callback);
+	}*/
 
 	void operator -= (ConnectionType& con)
 	{

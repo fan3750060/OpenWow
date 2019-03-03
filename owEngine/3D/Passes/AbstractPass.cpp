@@ -55,6 +55,11 @@ bool AbstractPass::Visit(CLight3D& light)
 	return false;
 }
 
+void AbstractPass::UpdateViewport(Viewport _viewport)
+{
+	// do nothing
+}
+
 void AbstractPass::SetRenderEventArgs(Render3DEventArgs& e)
 {
 	fail1();

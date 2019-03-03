@@ -99,6 +99,11 @@ bool BasePass::Visit(CLight3D& light)
 	return false;
 }
 
+void BasePass::UpdateViewport(Viewport _viewport)
+{
+	m_Pipeline->GetRasterizerState().SetViewport(_viewport);
+}
+
 //----------------------------------------------------------------------
 
 void BasePass::SetRenderEventArgs(Render3DEventArgs& e)

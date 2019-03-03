@@ -280,7 +280,8 @@ void RenderWindowDX11::OnResize(ResizeEventArgs& e)
 	// This function can be called a lot very quickly.
 	// Delay the resizing of the swap chain until the OnPreRender function is called
 	// again (which doesn't happen until the user finishes resizing the window.
-//    ResizeSwapChainBuffers( e.Width, e.Height );
+    //ResizeSwapChainBuffers( e.Width, e.Height );
+
 	base::OnResize(e);
 
 	// The swap chain will be resized the next time OnPreRender is invoked.

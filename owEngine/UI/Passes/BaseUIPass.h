@@ -26,6 +26,8 @@ public:
 	// Render the pass. This should only be called by the RenderTechnique.
 	virtual void RenderUI(RenderUIEventArgs& e);
 
+	virtual void UpdateViewport(Viewport _viewport) override final;
+
 private:
 	bool m_Enabled;
 

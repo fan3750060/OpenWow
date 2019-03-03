@@ -19,14 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ARC4.cpp" />
     <ClCompile Include="AuthCodes.cpp" />
     <ClCompile Include="AuthCrypt.cpp" />
     <ClCompile Include="AuthSocket.cpp" />
     <ClCompile Include="AuthWorldController.cpp" />
+    <ClCompile Include="BigNumber.cpp" />
+    <ClCompile Include="HMACSHA1.cpp" />
     <ClCompile Include="InPacket.cpp" />
     <ClCompile Include="Opcodes.cpp" />
+    <ClCompile Include="OpenSSLCrypto.cpp" />
     <ClCompile Include="OutPacket.cpp" />
     <ClCompile Include="RealmInfo.cpp" />
+    <ClCompile Include="SHA1.cpp" />
     <ClCompile Include="SocketBase.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -39,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameSocket.h" />
+    <ClInclude Include="ARC4.h" />
     <ClInclude Include="AuthChallenge_C.h" />
     <ClInclude Include="AuthChallenge_S.h" />
     <ClInclude Include="AuthCodes.h" />
@@ -47,12 +53,16 @@
     <ClInclude Include="AuthProof_S.h" />
     <ClInclude Include="AuthSocket.h" />
     <ClInclude Include="AuthWorldController.h" />
+    <ClInclude Include="BigNumber.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="HMACSHA1.h" />
     <ClInclude Include="InPacket.h" />
     <ClInclude Include="Opcodes.h" />
     <ClInclude Include="OpcodesNames.h" />
+    <ClInclude Include="OpenSSLCrypto.h" />
     <ClInclude Include="OutPacket.h" />
     <ClInclude Include="RealmInfo.h" />
+    <ClInclude Include="SHA1.h" />
     <ClInclude Include="SocketBase.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="WorldHandlers.h" />

@@ -33,6 +33,8 @@ public:
 	virtual bool Visit(IMesh& mesh) override final;
 	virtual bool Visit(CLight3D& light) override final;
 
+	virtual void UpdateViewport(Viewport _viewport);
+
 	void UpdateFog(float fogModifier, vec3 fogColor, float fogDistance);
 
 	void SetRenderEventArgs(Render3DEventArgs& e) override;

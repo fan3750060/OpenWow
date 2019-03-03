@@ -21,6 +21,9 @@
 // General
 #include "AuthCrypt.h"
 
+// Additional
+#include "HMACSHA1.h"
+
 AuthCrypt::AuthCrypt() :
     m_ClientDecrypt(SHA_DIGEST_LENGTH), m_ServerEncrypt(SHA_DIGEST_LENGTH),
     m_Initialized(false)

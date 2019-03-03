@@ -17,6 +17,8 @@ typedef long long int64;
 typedef unsigned long long uint64;
 
 // GLM
+#pragma warning( push )
+#pragma warning( disable : 4201) // warning C4201: nonstandard extension used : nameless struct/union
 #define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
@@ -30,24 +32,7 @@ typedef unsigned long long uint64;
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/norm.hpp>
-
-// Math types
-/*class Vec2f;
-class Vec3f;
-class Vec4f;
-class Matrix4f;
-class Quaternion;
-
-typedef Vec2f vec2;
-typedef const Vec2f& cvec2;
-typedef Vec3f vec3;
-typedef const Vec3f& cvec3;
-typedef Vec4f vec4;
-typedef const Vec4f& cvec4;
-typedef Matrix4f mat4;
-typedef const Matrix4f& cmat4;
-typedef Quaternion quat;
-typedef const Quaternion& cquat;*/
+#pragma warning( pop ) 
 
 typedef glm::vec2 vec2;
 typedef const vec2& cvec2;

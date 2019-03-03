@@ -40,4 +40,12 @@ void RenderTechnique::Render(Render3DEventArgs& renderEventArgs)
 	}
 }
 
+void RenderTechnique::UpdateViewport(Viewport _viewport)
+{
+	for (auto pass : m_Passes)
+	{
+		pass->UpdateViewport(_viewport);
+	}
+}
+
 

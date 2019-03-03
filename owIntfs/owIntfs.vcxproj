@@ -29,6 +29,7 @@
   <ItemGroup>
     <ClInclude Include="..\shared\owIntfs.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="DebugOutput.h" />
     <ClInclude Include="Files.h" />
@@ -42,7 +43,6 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="UIManager.h" />
     <ClInclude Include="Visitor.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

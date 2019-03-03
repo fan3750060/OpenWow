@@ -18,6 +18,8 @@ public:
 
 	virtual void RenderUI(RenderUIEventArgs& renderEventArgs);
 
+	virtual void UpdateViewport(Viewport _viewport);
+
 protected:
 
 private:

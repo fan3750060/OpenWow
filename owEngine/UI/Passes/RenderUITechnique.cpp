@@ -26,4 +26,12 @@ void RenderUITechnique::RenderUI(RenderUIEventArgs& renderEventArgs)
 	}
 }
 
+void RenderUITechnique::UpdateViewport(Viewport _viewport)
+{
+	if (m_Pass != nullptr)
+	{
+		m_Pass->UpdateViewport(_viewport);
+	}
+}
+
 

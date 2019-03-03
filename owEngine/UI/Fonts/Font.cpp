@@ -12,11 +12,6 @@ CFontMesh::CFontMesh(std::shared_ptr<Texture> _texture, std::shared_ptr<IMesh> _
 	, m_WidthArray(_widthArray)
 	, m_Height(_height)
 {
-	m_Material = std::make_shared<UI_Font_Material>();
-	m_Material->SetWrapper(m_Material);
-	m_Material->SetTexture(0, m_Texture);
-
-	SetMaterial(m_Material);
 }
 
 CFontMesh::~CFontMesh()
@@ -25,21 +20,20 @@ CFontMesh::~CFontMesh()
 }
 
 
-
-bool CFontMesh::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text)
+std::shared_ptr<Texture> CFontMesh::GetTexture() const
 {
-	vec2 _offset = vec2(0.0f, 0.0f);
+	return m_Texture;
+}
 
-	for (uint32 i = 0; i < _text.length(); i++)
-	{
-		uint8 ch = _text.c_str()[i];
-		m_Material->SetOffset(_offset);
-		_offset.x += static_cast<float>(m_WidthArray[ch]);
+std::shared_ptr<IMesh> CFontMesh::GetMesh() const
+{
+	return m_Geometry;
+}
 
-		MeshWrapper::Render(renderEventArgs, perObject, 0, 0, (ch) * 6, 6);
-	}
-
-	return true;
+uint32 CFontMesh::GetCharWidth(char _char) const
+{
+	assert1(_char < m_WidthArray.size());
+	return m_WidthArray[_char];
 }
 
 uint32 CFontMesh::GetStringWidth(cstring _string) const

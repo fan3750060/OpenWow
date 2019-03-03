@@ -6,7 +6,7 @@ class CGameState : public IGameState
 {
 	friend CGameStateManager;
 public:
-    CGameState(std::shared_ptr<IRenderDevice> _renderDevice, std::shared_ptr<RenderWindow> _renderWindow);
+    CGameState(const IApplication * _application);
 	virtual ~CGameState();
 
 	// IGameState
@@ -23,14 +23,18 @@ public:
     bool IsCurrent() const override { return m_IsCurrent; }
 
 	//
+
+	virtual void OnResize(ResizeEventArgs& e);
+
 	virtual void OnPreRender(Render3DEventArgs& e) = 0;
 	virtual void OnRender(Render3DEventArgs& e) = 0;
 	virtual void OnPostRender(Render3DEventArgs& e) = 0;
 	virtual void OnRenderUI(RenderUIEventArgs& e) = 0;
 
 protected:
-	std::shared_ptr<IRenderDevice>       renderDevice;
-	std::shared_ptr<RenderWindow>        renderWindow;
+	Viewport                    m_Viewport;
+
+	const IApplication*         m_Application;
 
 	const CGroupQuality&        m_QualitySettings;
 	const CGroupVideo&          m_VideoSettings;

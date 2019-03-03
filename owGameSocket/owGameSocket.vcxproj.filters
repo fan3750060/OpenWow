@@ -13,6 +13,9 @@
     <Filter Include="World">
       <UniqueIdentifier>{c8ec6c2e-39ff-48cf-91ec-6dd4d91d9bd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cryptography">
+      <UniqueIdentifier>{560d99ba-dcb4-4aea-8a54-c7be6f006bfc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,6 +48,21 @@
     <ClCompile Include="AuthWorldController.cpp" />
     <ClCompile Include="RealmInfo.cpp" />
     <ClCompile Include="SocketBase.cpp" />
+    <ClCompile Include="ARC4.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="BigNumber.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="HMACSHA1.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenSSLCrypto.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="SHA1.cpp">
+      <Filter>Cryptography</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -97,6 +115,21 @@
     <ClInclude Include="SocketBase.h" />
     <ClInclude Include="..\shared\owGameSocket.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ARC4.h">
+      <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="BigNumber.h">
+      <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="HMACSHA1.h">
+      <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenSSLCrypto.h">
+      <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="SHA1.h">
+      <Filter>Cryptography</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

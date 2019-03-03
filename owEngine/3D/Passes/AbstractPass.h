@@ -26,6 +26,8 @@ public:
 	virtual bool Visit(IMesh& mesh);
 	virtual bool Visit(CLight3D& light);
 
+	virtual void UpdateViewport(Viewport _viewport);
+
 	virtual void SetRenderEventArgs(Render3DEventArgs& e);
 	virtual Render3DEventArgs& GetRenderEventArgs() const;
 

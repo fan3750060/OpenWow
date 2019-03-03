@@ -8,6 +8,7 @@
 
 // Additional
 #include "OpcodesNames.h"
+#include "HMACSHA1.h"
 
 const Opcodes IgnoredOpcodes[] = 
 {

@@ -12,16 +12,19 @@ public:
 	~CFontMesh();
 
 	// Getters
-	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text);
-	uint32 GetStringWidth(cstring _string) const;
-	uint32 GetHeight() const;
+	//bool   Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text);
+	
+	std::shared_ptr<Texture>  GetTexture() const;
+	std::shared_ptr<IMesh>    GetMesh() const;
+	uint32                    GetCharWidth(char _char) const;
+	uint32                    GetStringWidth(cstring _string) const;
+	uint32                    GetHeight() const;
 	 
 public:
 	static const uint32 SPACE = 32;
 	static const uint32 NUM_CHARS = 256;
 
 private:
-	std::shared_ptr<UI_Font_Material> m_Material;
 	std::shared_ptr<Texture>	m_Texture;
 	std::shared_ptr<IMesh>	    m_Geometry;
 	std::vector<uint32>	        m_WidthArray;

@@ -19,6 +19,9 @@
 #ifndef _AUTHCRYPT_H
 #define _AUTHCRYPT_H
 
+#include "BigNumber.h"
+#include "ARC4.h"
+
 class AuthCrypt
 {
     public:

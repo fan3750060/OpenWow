@@ -6,13 +6,6 @@ class SceneNode3D;
 class IMesh;
 class CLight3D;
 
-// A render pass describes a single pass to render a scene.
-// This could include opaque pass, transparent pass,
-// g-buffer pass, or post process effects that should be applied 
-// to a scene before presenting the scene to the final back buffer.
-// Passes can be added to a RenderTechnique and the render technique's 
-// "Render" method should be used to render all the passes in the order that 
-// they are added to the technique.
 class IRenderPass : public IVisitor, public Object
 {
 public:
@@ -29,4 +22,7 @@ public:
 	virtual bool Visit(SceneNode3D& node) = 0;
 	virtual bool Visit(IMesh& mesh) = 0;
 	virtual bool Visit(CLight3D& light) = 0;
+
+	// Update viewport
+	virtual void UpdateViewport(Viewport _viewport) = 0;
 };

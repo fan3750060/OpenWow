@@ -11,13 +11,13 @@
 
 
 // Statics
-std::shared_ptr<CBaseManager> _BaseManager = nullptr;
+//std::shared_ptr<CBaseManager> _BaseManager = nullptr;
 
 
 // Functions
 std::shared_ptr<IRenderDevice> CreateRenderDeviceDX11(std::shared_ptr<CBaseManager> _baseManager)
 {
-	_BaseManager = _baseManager;
+	//_BaseManager = _baseManager;
 	return std::make_shared<RenderDeviceDX11>();
 }
 

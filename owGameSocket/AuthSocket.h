@@ -3,6 +3,9 @@
 #include "SocketBase.h"
 #include "AuthCodes.h"
 
+#include "SHA1.h"
+#include "BigNumber.h"
+
 // FORWARD BEGIN
 class CAuthWorldController;
 // FORWARD END
