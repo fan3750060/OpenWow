@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 
 // Include
 #include <Application.h>
@@ -6,16 +6,16 @@
 #include <3D//SceneNode3D.h>
 
 // General
-#include "BasePass.h"
+#include "FontPass.h"
 
-BasePass::BasePass()
+CFontPass::CFontPass()
 	: m_pRenderEventArgs(nullptr)
 	, m_RenderDevice(_RenderDevice)
 {
 
 }
 
-BasePass::BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
+CFontPass::CFontPass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: m_pRenderEventArgs(nullptr)
 	, m_Scene(scene)
 	, m_Pipeline(pipeline)
@@ -24,11 +24,12 @@ BasePass::BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState
 
 }
 
-BasePass::~BasePass()
+CFontPass::~CFontPass()
 {
 }
 
-void BasePass::PreRender(Render3DEventArgs& e)
+
+void CFontPass::PreRender(Render3DEventArgs& e)
 {
 	e.PipelineState = m_Pipeline.get();
 	SetRenderEventArgs(e);
@@ -39,7 +40,7 @@ void BasePass::PreRender(Render3DEventArgs& e)
 	}
 }
 
-void BasePass::Render(Render3DEventArgs& e)
+void CFontPass::Render(Render3DEventArgs& e)
 {
 	if (m_Scene)
 	{
@@ -47,7 +48,7 @@ void BasePass::Render(Render3DEventArgs& e)
 	}
 }
 
-void BasePass::PostRender(Render3DEventArgs& e)
+void CFontPass::PostRender(Render3DEventArgs& e)
 {
 	if (m_Pipeline)
 	{
@@ -57,7 +58,7 @@ void BasePass::PostRender(Render3DEventArgs& e)
 
 // Inherited from Visitor
 
-bool BasePass::Visit(SceneNode3D& node)
+bool CFontPass::Visit(SceneNode3D& node)
 {
 	Object& nodeAsObject = reinterpret_cast<Object&>(node);
 	m_pRenderEventArgs->Node = &nodeAsObject;
@@ -68,12 +69,15 @@ bool BasePass::Visit(SceneNode3D& node)
 		node.UpdateCamera(camera);
 
 		PerObject perObjectData;
-		perObjectData.Model               = node.GetWorldTransfom();
-		perObjectData.ModelView           = camera->GetViewMatrix()       * perObjectData.Model;
+		perObjectData.Model = node.GetWorldTransfom();
+		perObjectData.ModelView = camera->GetViewMatrix()       * perObjectData.Model;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
+		//perObjectData.Model = node.GetWorldTransfom();
+		//perObjectData.ModelView = perObjectData.Model;
+		//perObjectData.ModelViewProjection = camera->GetViewport().OrthoMatrix * perObjectData.ModelView;
 
-		perObjectData.View = camera->GetViewMatrix();
-		perObjectData.Projection = camera->GetProjectionMatrix();
+		perObjectData.View = mat4(1.0f);
+		perObjectData.Projection = camera->GetViewport().OrthoMatrix;
 
 		// Update the constant buffer data
 		SetPerObjectConstantBufferData(perObjectData);
@@ -84,9 +88,9 @@ bool BasePass::Visit(SceneNode3D& node)
 	return false;
 }
 
-bool BasePass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
+bool CFontPass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
-	if (m_pRenderEventArgs)
+	if (m_pRenderEventArgs && mesh.GetType() == SN_TYPE_FONT)
 	{
 		return mesh.Render(*m_pRenderEventArgs, m_PerObjectConstantBuffer, indexStartLocation, indexCnt, vertexStartLocation, vertexCnt);
 	}
@@ -94,24 +98,24 @@ bool BasePass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT v
 	return false;
 }
 
-bool BasePass::Visit(CLight3D& light)
+bool CFontPass::Visit(CLight3D& light)
 {
 	return false;
 }
 
-void BasePass::UpdateViewport(Viewport _viewport)
+void CFontPass::UpdateViewport(Viewport _viewport)
 {
 	m_Pipeline->GetRasterizerState().SetViewport(_viewport);
 }
 
 //----------------------------------------------------------------------
 
-void BasePass::SetRenderEventArgs(Render3DEventArgs& e)
+void CFontPass::SetRenderEventArgs(Render3DEventArgs& e)
 {
 	m_pRenderEventArgs = &e;
 }
 
-Render3DEventArgs& BasePass::GetRenderEventArgs() const
+Render3DEventArgs& CFontPass::GetRenderEventArgs() const
 {
 	assert(m_pRenderEventArgs);
 	return *m_pRenderEventArgs;
@@ -119,12 +123,12 @@ Render3DEventArgs& BasePass::GetRenderEventArgs() const
 
 //----------------------------------------------------------------------
 
-std::shared_ptr<IRenderDevice> BasePass::GetRenderDevice() const
+std::shared_ptr<IRenderDevice> CFontPass::GetRenderDevice() const
 {
 	return m_RenderDevice.lock();
 }
 
-std::shared_ptr<PipelineState> BasePass::GetPipelineState() const
+std::shared_ptr<PipelineState> CFontPass::GetPipelineState() const
 {
 	return m_Pipeline;
 }

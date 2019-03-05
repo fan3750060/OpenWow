@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
 // General
-#include "SceneNodeUI.h"
+#include "UIBaseNode.h"
 
 // Additional
 #include "Application.h"
 
-SceneNodeUI::SceneNodeUI()
-	: m_Name("SceneNodeUI")
+CUIBaseNode::CUIBaseNode()
+	: m_Name("CUIBaseNode")
 	, m_Translate(vec2())
 	, m_Rotate(vec3())
 	, m_Scale(1.0f, 1.0f)
@@ -17,68 +17,71 @@ SceneNodeUI::SceneNodeUI()
 	m_PerObjectConstantBuffer = _RenderDevice->CreateConstantBuffer(PerObject());
 }
 
-SceneNodeUI::~SceneNodeUI()
+CUIBaseNode::~CUIBaseNode()
 {
 	m_Children.clear();
 
-	_aligned_free(m_PerObjectData);
-	_RenderDevice->DestroyConstantBuffer(m_PerObjectConstantBuffer);
+	if (m_PerObjectData)
+	{
+		_aligned_free(m_PerObjectData);
+		_RenderDevice->DestroyConstantBuffer(m_PerObjectConstantBuffer);
+	}
 }
 
-cstring SceneNodeUI::GetName() const
+cstring CUIBaseNode::GetName() const
 {
 	return m_Name;
 }
 
-void SceneNodeUI::SetName(cstring name)
+void CUIBaseNode::SetName(cstring name)
 {
 	m_Name = name;
 }
 
 // Translate
-void SceneNodeUI::SetTranslate(cvec2 _translate) 
+void CUIBaseNode::SetTranslate(cvec2 _translate) 
 { 
 	m_Translate = _translate;
 
 	UpdateLocalTransform();
 }
-cvec2 SceneNodeUI::GetTranslation() const 
+cvec2 CUIBaseNode::GetTranslation() const 
 { 
 	return m_Translate; 
 }
 
 // Rotate
-void SceneNodeUI::SetRotation(cvec3 _rotate) 
+void CUIBaseNode::SetRotation(cvec3 _rotate) 
 { 
 	m_Rotate = _rotate;
 
 	UpdateLocalTransform();
 }
-cvec3 SceneNodeUI::GetRotation() const 
+cvec3 CUIBaseNode::GetRotation() const 
 { 
 	return m_Rotate; 
 }
 
 // Scale
-void SceneNodeUI::SetScale(cvec2 _scale) 
+void CUIBaseNode::SetScale(cvec2 _scale) 
 { 
 	m_Scale = _scale;
 
 	UpdateLocalTransform();
 }
-cvec2 SceneNodeUI::GetScale() const 
+cvec2 CUIBaseNode::GetScale() const 
 { 
 	return m_Scale; 
 }
 
 // Local transform
 
-mat4 SceneNodeUI::GetLocalTransform() const
+mat4 CUIBaseNode::GetLocalTransform() const
 {
 	return m_LocalTransform;
 }
 
-void SceneNodeUI::SetLocalTransform(cmat4 localTransform)
+void CUIBaseNode::SetLocalTransform(cmat4 localTransform)
 {
 	m_LocalTransform = localTransform;
 
@@ -87,22 +90,22 @@ void SceneNodeUI::SetLocalTransform(cmat4 localTransform)
 
 // World transform
 
-mat4 SceneNodeUI::GetWorldTransfom() const
+mat4 CUIBaseNode::GetWorldTransfom() const
 {
 	return m_WorldTransform;
 }
 
-void SceneNodeUI::SetWorldTransform(cmat4 worldTransform)
+void CUIBaseNode::SetWorldTransform(cmat4 worldTransform)
 {
 	mat4 inverseParentTransform = glm::inverse(GetParentWorldTransform());
 	SetLocalTransform(inverseParentTransform * worldTransform);
 }
 
 
-mat4 SceneNodeUI::GetParentWorldTransform() const
+mat4 CUIBaseNode::GetParentWorldTransform() const
 {
 	mat4 parentTransform(1.0f);
-	if (std::shared_ptr<SceneNodeUI> parent = m_pParentNode.lock())
+	if (std::shared_ptr<CUIBaseNode> parent = m_pParentNode.lock())
 	{
 		parentTransform = parent->GetWorldTransfom();
 	}
@@ -112,7 +115,7 @@ mat4 SceneNodeUI::GetParentWorldTransform() const
 
 //
 
-void SceneNodeUI::UpdateLocalTransform()
+void CUIBaseNode::UpdateLocalTransform()
 {
 	m_LocalTransform = mat4();
 
@@ -125,12 +128,12 @@ void SceneNodeUI::UpdateLocalTransform()
 	UpdateWorldTransform();
 }
 
-void SceneNodeUI::UpdateWorldTransform()
+void CUIBaseNode::UpdateWorldTransform()
 {
 	m_WorldTransform = GetParentWorldTransform() * m_LocalTransform;
 }
 
-void SceneNodeUI::AddChild(std::shared_ptr<SceneNodeUI> pNode)
+void CUIBaseNode::AddChild(std::shared_ptr<CUIBaseNode> pNode)
 {
 	if (pNode)
 	{
@@ -149,14 +152,14 @@ void SceneNodeUI::AddChild(std::shared_ptr<SceneNodeUI> pNode)
 	}
 }
 
-void SceneNodeUI::RemoveChild(std::shared_ptr<SceneNodeUI> pNode)
+void CUIBaseNode::RemoveChild(std::shared_ptr<CUIBaseNode> pNode)
 {
 	if (pNode)
 	{
 		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
 		if (iter != m_Children.end())
 		{
-			pNode->SetParent(std::weak_ptr<SceneNodeUI>());
+			pNode->SetParent(std::weak_ptr<CUIBaseNode>());
 			pNode->UpdateWorldTransform();
 
 			m_Children.erase(iter);
@@ -179,11 +182,11 @@ void SceneNodeUI::RemoveChild(std::shared_ptr<SceneNodeUI> pNode)
 	}
 }
 
-void SceneNodeUI::SetParent(std::weak_ptr<SceneNodeUI> wpNode)
+void CUIBaseNode::SetParent(std::weak_ptr<CUIBaseNode> wpNode)
 {
-	std::shared_ptr<SceneNodeUI> me = shared_from_this();
+	std::shared_ptr<CUIBaseNode> me = shared_from_this();
 
-	if (std::shared_ptr<SceneNodeUI> parent = wpNode.lock())
+	if (std::shared_ptr<CUIBaseNode> parent = wpNode.lock())
 	{
 		parent->AddChild(me);
 	}
@@ -194,30 +197,31 @@ void SceneNodeUI::SetParent(std::weak_ptr<SceneNodeUI> wpNode)
 	}
 }
 
-void SceneNodeUI::SetMesh(std::shared_ptr<IMesh> mesh)
+void CUIBaseNode::SetMesh(std::shared_ptr<IMesh> mesh)
 {
 	assert1(mesh != nullptr);
 	m_Mesh = mesh;
 }
 
-std::shared_ptr<IMesh> SceneNodeUI::GetMesh() const
+std::shared_ptr<IMesh> CUIBaseNode::GetMesh() const
 {
 	return m_Mesh;
 }
 
-void SceneNodeUI::UpdateViewport(const Viewport* viewport)
+void CUIBaseNode::UpdateViewport(const Viewport* viewport)
 {
 	// Do nothing...
 }
 
-bool SceneNodeUI::Render(RenderUIEventArgs& renderEventArgs)
+bool CUIBaseNode::Render(RenderUIEventArgs& renderEventArgs)
 {
 	const Viewport* viewport = renderEventArgs.Viewport;
 	assert1(viewport != nullptr);
 
 	PerObject perObjectData;
-	perObjectData.Model = GetWorldTransfom();
-	perObjectData.ModelOrtho = viewport->OrthoMatrix * perObjectData.Model;
+	perObjectData.Model               = GetWorldTransfom();
+	perObjectData.ModelView           = mat4(1.0f);
+	perObjectData.ModelViewProjection = viewport->OrthoMatrix * perObjectData.Model;
 	m_PerObjectConstantBuffer->Set(perObjectData);
 
 	UpdateViewport(viewport);
@@ -232,7 +236,7 @@ bool SceneNodeUI::Render(RenderUIEventArgs& renderEventArgs)
 	return true;
 }
 
-bool SceneNodeUI::RenderMesh(RenderUIEventArgs& renderEventArgs)
+bool CUIBaseNode::RenderMesh(RenderUIEventArgs& renderEventArgs)
 {
 	if (GetMesh() != nullptr)
 	{
@@ -247,7 +251,7 @@ bool SceneNodeUI::RenderMesh(RenderUIEventArgs& renderEventArgs)
 /**
  * Input events
  */
-bool SceneNodeUI::OnKeyPressed(KeyEventArgs & e)
+bool CUIBaseNode::OnKeyPressed(KeyEventArgs & e)
 {
 	// Childs
 	bool result = false;
@@ -259,7 +263,7 @@ bool SceneNodeUI::OnKeyPressed(KeyEventArgs & e)
 	return result;
 }
 
-bool SceneNodeUI::OnKeyReleased(KeyEventArgs & e)
+bool CUIBaseNode::OnKeyReleased(KeyEventArgs & e)
 {
 	// Childs
 	bool result = false;
@@ -271,7 +275,7 @@ bool SceneNodeUI::OnKeyReleased(KeyEventArgs & e)
 	return result;
 }
 
-void SceneNodeUI::OnMouseMoved(MouseMotionEventArgs & e)
+void CUIBaseNode::OnMouseMoved(MouseMotionEventArgs & e)
 {
 	// Childs
 	for (auto it : m_Children)
@@ -280,7 +284,7 @@ void SceneNodeUI::OnMouseMoved(MouseMotionEventArgs & e)
 	}
 }
 
-bool SceneNodeUI::OnMouseButtonPressed(MouseButtonEventArgs & e)
+bool CUIBaseNode::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
 	// Childs
 	bool result = false;
@@ -292,7 +296,7 @@ bool SceneNodeUI::OnMouseButtonPressed(MouseButtonEventArgs & e)
 	return result;
 }
 
-bool SceneNodeUI::OnMouseButtonReleased(MouseButtonEventArgs & e)
+bool CUIBaseNode::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
 	// Childs
 	bool result = false;
@@ -304,7 +308,7 @@ bool SceneNodeUI::OnMouseButtonReleased(MouseButtonEventArgs & e)
 	return result;
 }
 
-bool SceneNodeUI::OnMouseWheel(MouseWheelEventArgs & e)
+bool CUIBaseNode::OnMouseWheel(MouseWheelEventArgs & e)
 {
 	// Childs
 	bool result = false;

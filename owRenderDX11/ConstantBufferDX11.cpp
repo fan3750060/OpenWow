@@ -35,7 +35,7 @@ void ConstantBufferDX11::Set(const void* data, size_t size)
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	if (FAILED(m_pDeviceContext->Map(m_pBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
-		fail2("Failed to map constant buffer.");
+		fail1("Failed to map constant buffer.");
 		return;
 	}
 

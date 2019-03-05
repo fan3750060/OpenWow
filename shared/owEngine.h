@@ -8,7 +8,10 @@
 
 // Base
 #include "../owEngine/Application.h"
-#include "../owEngine/CameraController.h"
+#include "../owEngine/CameraControllerBase.h"
+#include "../owEngine/ArcBallCameraController.h"
+#include "../owEngine/FreeCameraController.h"
+#include "../owEngine/RTSCameraController.h"
 #include "../owEngine/CreatePasses.h"
 #include "../owEngine/EngineTime.h"
 #include "../owEngine/Loader.h"
@@ -26,10 +29,11 @@
 //
 
 // base nodes
-#include "../owEngine/UI/SceneUI.h"
-#include "../owEngine/UI/SceneNodeUI.h"
+#include "../owEngine/UI/UIScene.h"
+#include "../owEngine/UI/UIBaseNode.h"
 
 // additional nodes
+#include "../owEngine/UI/UIColor.h"
 #include "../owEngine/UI/UIText.h"
 #include "../owEngine/UI/UITexture.h"
 
@@ -51,6 +55,7 @@
 #include "../owEngine/3D/Scene3D.h"
 #include "../owEngine/3D/SceneNode3D.h"
 #include "../owEngine/3D/SceneNodeModel3D.h"
+#include "../owEngine/3D/SceneNodeFont3D.h"
 
 // additional nodes
 

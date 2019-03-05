@@ -14,8 +14,8 @@ float g_GameDeltaTime = 0.0f;
 float g_ApplicationTime = 0.0f;
 int64_t g_FrameCounter = 0L;
 
-static std::shared_ptr<RenderWindow> gs_WindowHandle = nullptr;
-static IApplication* gs_pApplicationInstance = nullptr;
+std::shared_ptr<RenderWindow> gs_WindowHandle = nullptr;
+IApplication* _ApplicationInstance = nullptr;
 
 Application::Application()
 	: m_bIsInitialized(false)
@@ -58,7 +58,7 @@ Application::Application()
 	m_pRenderDevice = CreateRenderDeviceOGL(_BaseManager);
 #endif
 
-	gs_pApplicationInstance = this;
+	_ApplicationInstance = this;
 }
 
 Application::Application(HINSTANCE hInstance)
@@ -67,7 +67,7 @@ Application::Application(HINSTANCE hInstance)
 {
 	m_hInstance = hInstance;
 
-	gs_pApplicationInstance = this;
+	_ApplicationInstance = this;
 }
 
 
@@ -78,13 +78,13 @@ Application::~Application()
 		//fail1("Failed to unregister render window class");
 	}
 
-	gs_pApplicationInstance = nullptr;
+	_ApplicationInstance = nullptr;
 }
 
 IApplication& Application::Get()
 {
-	assert(gs_pApplicationInstance != nullptr);
-	return *gs_pApplicationInstance;
+	assert(_ApplicationInstance != nullptr);
+	return *_ApplicationInstance;
 }
 
 bool Application::Load()

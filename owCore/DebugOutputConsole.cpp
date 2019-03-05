@@ -42,10 +42,12 @@ void DebugOutput_ConsoleWindows::Print(std::string _messageFmt, CDebugOutput::De
 		break;
 	}
 
+	// To VisualStudio debug
 	OutputDebugStringA(_messageFmt.c_str());
 	OutputDebugStringA("\n");
-	// Add
-	//SetConsoleTextAttribute(m_ConsoleHandle, color);
-	//std::cout << _messageFmt << std::endl;
-	//SetConsoleTextAttribute(m_ConsoleHandle, m_DefaultConsoleColor);
+
+	// To console
+	SetConsoleTextAttribute(m_ConsoleHandle, color);
+	std::cout << _messageFmt << std::endl;
+	SetConsoleTextAttribute(m_ConsoleHandle, m_DefaultConsoleColor);
 }

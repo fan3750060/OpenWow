@@ -10,8 +10,9 @@ RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight
 	: m_sWindowName(windowName)
 	, m_iWindowWidth(windowWidth)
 	, m_iWindowHeight(windowHeight)
-	, m_hWindow(_hwnd)
+	, m_HWND(_hwnd)
 	, m_vSync(vSync)
+
 	, m_PreviousMousePosition(0, 0)
 	, m_bInClientRect(false)
 	, m_bHasKeyboardFocus(false)
@@ -22,26 +23,26 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::ShowWindow()
 {
-	::ShowWindow(m_hWindow, SW_SHOWDEFAULT);
-	::BringWindowToTop(m_hWindow);
+	::ShowWindow(m_HWND, SW_SHOWDEFAULT);
+	::BringWindowToTop(m_HWND);
 }
 
 void RenderWindow::HideWindow()
 {
-	::ShowWindow(m_hWindow, SW_HIDE);
+	::ShowWindow(m_HWND, SW_HIDE);
 }
 
 void RenderWindow::CloseWindow()
 {
-	::DestroyWindow(m_hWindow);
+	::DestroyWindow(m_HWND);
 }
 
 void RenderWindow::SetMousePosition(vec2 _position)
 {
 	RECT rc;
-	::GetClientRect(m_hWindow, &rc); // get client coords
-	::ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
-	::ClientToScreen(m_hWindow, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
+	::GetClientRect(m_HWND, &rc); // get client coords
+	::ClientToScreen(m_HWND, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
+	::ClientToScreen(m_HWND, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
 
 	::SetCursorPos(rc.left + _position.x, rc.top + _position.y);
 }
@@ -65,14 +66,14 @@ bool RenderWindow::IsVSync() const
 
 HWND RenderWindow::GetHWND() const
 {
-	return m_hWindow;
+	return m_HWND;
 }
 
 void RenderWindow::SetWindowName(cstring _name)
 {
 	m_sWindowName = _name;
 
-	::SetWindowText(m_hWindow, m_sWindowName.c_str());
+	::SetWindowText(m_HWND, m_sWindowName.c_str());
 }
 
 cstring RenderWindow::GetWindowName() const

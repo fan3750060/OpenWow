@@ -2,7 +2,6 @@
 
 // FORWARD BEGIN
 class MeshWrapper;
-class UI_Font_Material;
 // FORWARD END
 
 class CFontMesh : public MeshWrapper
@@ -12,8 +11,6 @@ public:
 	~CFontMesh();
 
 	// Getters
-	//bool   Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, cstring _text);
-	
 	std::shared_ptr<Texture>  GetTexture() const;
 	std::shared_ptr<IMesh>    GetMesh() const;
 	uint32                    GetCharWidth(char _char) const;

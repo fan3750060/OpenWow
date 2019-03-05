@@ -1,11 +1,12 @@
 #include <stdafx.h>
 
-#include <Application.h>
-#include "UI//SceneUI.h"
-#include "UI//SceneNodeUI.h"
+#include "UI//UIBaseNode.h"
 
 // General
 #include "BaseUIPass.h"
+
+// Additional
+#include <Application.h>
 
 BaseUIPass::BaseUIPass()
 	: m_Enabled(true)
@@ -13,7 +14,7 @@ BaseUIPass::BaseUIPass()
 {
 }
 
-BaseUIPass::BaseUIPass(std::shared_ptr<SceneUI> uiScene, std::shared_ptr<PipelineState> pipeline)
+BaseUIPass::BaseUIPass(std::shared_ptr<CUIScene> uiScene, std::shared_ptr<PipelineState> pipeline)
 	: m_Enabled(true)
 	, m_UIScene(uiScene)
 	, m_Pipeline(pipeline)

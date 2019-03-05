@@ -1,28 +1,25 @@
 #pragma once
 
-class IMesh;
-class Texture;
-class SceneNodeUI;
+#include "UIBaseNode.h"
 
-class SceneUI : public Object
+class CUIScene : public Object
 {
 public:
-	SceneUI();
-	virtual ~SceneUI();
+	CUIScene();
+	virtual ~CUIScene();
 
-	std::shared_ptr<SceneNodeUI> GetRootNode() const;
+	std::shared_ptr<CUIBaseNode> GetRootNode() const;
 
 	void Render(RenderUIEventArgs& renderEventArgs);
 
 	// Input events
 	void OnKeyPressed(KeyEventArgs& e);
 	void OnKeyReleased(KeyEventArgs& e);
-
 	void OnMouseMoved(MouseMotionEventArgs& e);
 	void OnMouseButtonPressed(MouseButtonEventArgs& e);
 	void OnMouseButtonReleased(MouseButtonEventArgs& e);
 	void OnMouseWheel(MouseWheelEventArgs& e);
 
 private:
-	std::shared_ptr<SceneNodeUI> m_pRootNode;
+	std::shared_ptr<CUIBaseNode> m_pRootNode;
 };

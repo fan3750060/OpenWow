@@ -1,6 +1,6 @@
 #pragma once
 
-class MaterialWrapper;
+#include "../../MaterialWrapper.h"
 
 class UI_Texture_Material : public MaterialWrapper
 {
@@ -19,7 +19,7 @@ private:
 	__declspec(align(16)) struct MaterialProperties
 	{
 		MaterialProperties()
-			: Color(1, 1, 1, 1)
+			: Color(1.0f, 1.0f, 1.0f, 1.0f)
 		{}
 		vec4 Color;
 		//-------------------------- ( 32 bytes )

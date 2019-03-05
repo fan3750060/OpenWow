@@ -30,7 +30,7 @@ public:
 
 	// Inherited from Visitor
 	virtual bool Visit(SceneNode3D& node) override final;
-	virtual bool Visit(IMesh& mesh) override final;
+	virtual bool Visit(IMesh& mesh, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) override final;
 	virtual bool Visit(CLight3D& light) override final;
 
 	virtual void UpdateViewport(Viewport _viewport);

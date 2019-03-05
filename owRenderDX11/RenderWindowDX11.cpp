@@ -134,13 +134,11 @@ void RenderWindowDX11::CreateSwapChain()
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // Use Alt-Enter to switch between full screen and windowed mode.
 
 	DXGI_SWAP_CHAIN_FULLSCREEN_DESC swapChainFullScreenDesc = {};
-
 	swapChainFullScreenDesc.RefreshRate = QueryRefreshRate(windowWidth, windowHeight, vSync);
 	swapChainFullScreenDesc.Windowed = true;
 
 	// First create a DXGISwapChain1
 	ATL::CComPtr<IDXGISwapChain1> pSwapChain;
-
 	if (FAILED(factory->CreateSwapChainForHwnd(m_pDevice, GetHWND(), &swapChainDesc, &swapChainFullScreenDesc, nullptr, &pSwapChain)))
 	{
 		Log::Error("Failed to create swap chain.");
@@ -157,14 +155,6 @@ void RenderWindowDX11::CreateSwapChain()
 		Log::Error("Failed to get back buffer pointer from swap chain.");
 	}
 
-	// Depth/stencil buffer
-	Texture::TextureFormat depthStencilTextureFormat(
-		Texture::Components::DepthStencil,
-		Texture::Type::UnsignedNormalized,
-		m_SampleDesc.Count,
-		0, 0, 0, 0, 24, 8);
-	std::shared_ptr<Texture> depthStencilTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, depthStencilTextureFormat);
-
 	// Color buffer (Color0)
 	Texture::TextureFormat colorTextureFormat
 	(
@@ -174,6 +164,14 @@ void RenderWindowDX11::CreateSwapChain()
 		8, 8, 8, 8, 0, 0
 	);
 	std::shared_ptr<Texture> colorTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, colorTextureFormat);
+
+	// Depth/stencil buffer
+	Texture::TextureFormat depthStencilTextureFormat(
+		Texture::Components::DepthStencil,
+		Texture::Type::UnsignedNormalized,
+		m_SampleDesc.Count,
+		0, 0, 0, 0, 24, 8);
+	std::shared_ptr<Texture> depthStencilTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, depthStencilTextureFormat);
 
 	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::Color0, colorTexture);
 	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::DepthStencil, depthStencilTexture);
@@ -259,7 +257,7 @@ void RenderWindowDX11::OnMouseMoved(MouseMotionEventArgs& e)
 		tme.cbSize = sizeof(TRACKMOUSEEVENT);
 		tme.dwFlags = TME_LEAVE;
 		tme.hwndTrack = GetHWND();
-		if (TrackMouseEvent(&tme))
+		if (::TrackMouseEvent(&tme))
 		{
 			m_bIsMouseTracking = true;
 		}

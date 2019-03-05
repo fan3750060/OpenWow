@@ -19,7 +19,7 @@ public:
 
 	virtual bool Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0);
 
-	virtual bool Accept(IVisitor& visitor);
+	virtual bool Accept(IVisitor& visitor, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0);
 
 private:
 	typedef std::map<BufferBinding, std::shared_ptr<IBuffer> > BufferMap;

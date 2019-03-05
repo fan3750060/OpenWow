@@ -24,10 +24,10 @@ std::shared_ptr<IMesh> IRenderDevice::CreateLine(cvec3 _dest)
 std::shared_ptr<IMesh> IRenderDevice::CreatePlane(cvec3 N)
 {
 	DirectX::VertexCollection vertices;
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3( 1.0f, 0.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(-1.0f, 0.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(-1.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(1.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3( 1.0f, 0.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(-1.0f, 0.0f,  1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(-1.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(1.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
 
 	DirectX::IndexCollection indices;
 	indices.push_back(1);
@@ -51,10 +51,10 @@ std::shared_ptr<IMesh> IRenderDevice::CreatePlane(cvec3 N)
 std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, float bottom, float top, float z)
 {
 	DirectX::VertexCollection vertices;
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(right, top, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(left, top, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(left, bottom, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
-	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(right, bottom, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(right, top, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(left, top, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(left, bottom, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(right, bottom, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
 
 	DirectX::IndexCollection indices;
 	indices.push_back(1);
@@ -112,28 +112,6 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCube()
 
 std::shared_ptr<IMesh> IRenderDevice::CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis)
 {
-	/*std::shared_ptr<Scene3D> scene = CreateScene();
-	std::stringstream ss;
-
-	// Create a white diffuse material for the cylinder.
-	// f red green blue Kd Ks Shine transmittance indexOfRefraction
-	ss << "f 1 1 1 1 0 0 0 0" << std::endl;
-
-	ss << "c" << std::endl;
-	// base.x base.y base.z baseRadius
-	ss << "0 0 0 " << baseRadius << std::endl;
-
-	vec3 apex = axis * height;
-	// apex.x apex.y apex.z apexRadius
-	ss << apex.x << " " << apex.y << " " << apex.z << " " << apexRadius << std::endl;
-
-	if (scene->LoadFromString(ss.str(), "nff"))
-	{
-	return scene;
-	}
-
-	// An error occurred while loading the scene.
-	DestroyScene(scene);*/
 	return nullptr;
 }
 

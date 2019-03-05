@@ -13,6 +13,7 @@ public:
 		World
 	};
 
+public:
 	Camera();
 	virtual ~Camera() {};
 
@@ -22,14 +23,12 @@ public:
 
 	const Frustum& GetFrustum() const;
 
-	// Set projection parameters
 	void SetProjectionRH(float fovy, float aspect, float zNear, float zFar);
 	void SetProjectionLH(float fovy, float aspect, float zNear, float zFar);
 
 	float GetNearClipPlane() const;
 	float GetFarClipPlane() const;
 
-	// Set an orthographic projection using screen space coordinates.
 	void SetOrthographic(float left, float right, float top, float bottom);
 
 	// Translate
@@ -57,42 +56,23 @@ public:
 	void SetRotate(const glm::quat& rot);
 	glm::quat GetRotation() const;
 
-	// Pivot
-	
-	void SetPivotDistance(float pivotDistance);                     // If the pivot distance > 0 then the camera will rotate around a pivot point that is pivotDistance along the lookAt vector of the camera.
-	float GetPivotDistance() const;
-	vec3 GetPivotPoint() const;                                     // Get the camera's pivot point in world space
-
 	bool IsDirty() const;
 	
 	// Matrices
 
-	void SetViewMatrix(cmat4 viewMatrix);                           // Directly set the view matrix
+	void SetViewMatrix(cmat4 viewMatrix);
 	mat4 GetViewMatrix() const;
 
-	void SetProjectionMatrix(cmat4 projectionMatrix);               // Directly set the projection matrix
+	void SetProjectionMatrix(cmat4 projectionMatrix);
 	mat4 GetProjectionMatrix() const;
 
-	// Get the view projection inverse matrix (useful for picking)
-	mat4 GetViewProjectionInverseMatrix() const;
-
-	// Converts a screen point to a ray in world space.
-	Ray	ScreenPointToRay(cvec2 screenPoint) const;
-
-	// For arcball camera, call this function with client-space coordinates when the mouse is clicked on the screen.
-	void OnMousePressed(MouseButtonEventArgs& e);
-	void OnMouseMoved(MouseMotionEventArgs& e);
+	mat4 GetViewProjectionInverseMatrix() const; // Get the view projection inverse matrix (useful for picking)
 
 protected:
-	vec3 ProjectOntoUnitSphere(glm::ivec2 screenPos);
-
 	virtual void UpdateViewMatrix();
 	virtual void UpdateViewProjectionInverse();
 
-	// View port parameters
 	Viewport    m_Viewport;
-
-	// Frustum
 	Frustum     m_Frustum;
 
 	// Projection parameters
@@ -105,19 +85,10 @@ protected:
 	vec3        m_Translate;
 	glm::quat   m_Rotate;
 
-	// Used for arcball camera
-	glm::vec3   m_PreviousPoint;
-	float       m_PivotDistance;
-
-	// View matrix
 	mat4        m_ViewMatrix;
-	// Projection matrix.
 	mat4        m_ProjectionMatrix;
-
 	mat4	    m_ViewProjectionInverse;
 
-	// True if the view matrix needs to be updated.
 	bool        m_bViewDirty;
-	// True if the view projection inverse matrix needs to be updated.
 	bool		m_bViewProjectionInverseDirty;
 };

@@ -1,7 +1,6 @@
 #pragma once
 
-class SceneNode3D;
-class IVisitor;
+#include "SceneNode3D.h"
 
 class Scene3D : public Object
 {

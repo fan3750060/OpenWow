@@ -2,11 +2,6 @@
 
 #include "Light3D.h"
 
-class IMesh;
-class Camera;
-class Render3DEventArgs;
-class IVisitor;
-
 class SceneNode3D : public Object, public ILoadable, public virtual std::enable_shared_from_this<SceneNode3D>
 {
 	typedef Object base;

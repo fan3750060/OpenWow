@@ -23,7 +23,7 @@ public:
 
 	// Inherited from Visitor
 	virtual bool Visit(SceneNode3D& node);
-	virtual bool Visit(IMesh& mesh);
+	virtual bool Visit(IMesh& mesh, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0);
 	virtual bool Visit(CLight3D& light);
 
 	virtual void UpdateViewport(Viewport _viewport);

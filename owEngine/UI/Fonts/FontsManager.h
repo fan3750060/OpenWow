@@ -10,6 +10,7 @@ public:
 
 	std::shared_ptr<CFontMesh> Add(cstring _fontFileName, uint32 _fontSize);
 
+	
 	std::shared_ptr<CFontMesh> GetMainFont() const override { return mainFont; }
 
 	// CRefManager1Dim

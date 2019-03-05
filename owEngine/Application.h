@@ -76,4 +76,6 @@ private:
 	const char* c_RenderWindow_ClassName = "RenderWindowClass";
 };
 
+extern IApplication* _ApplicationInstance;
+
 #define _RenderDevice Application::Get().GetRenderDevice()

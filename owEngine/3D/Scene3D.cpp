@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-// Include
-#include "SceneNode3D.h"
-
 // General
 #include "Scene3D.h"
 

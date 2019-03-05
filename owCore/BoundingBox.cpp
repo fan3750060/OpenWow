@@ -9,7 +9,7 @@ BoundingBox::BoundingBox() :
 	m_IsCenterCalc(false)
 {}
 
-BoundingBox::BoundingBox(cvec3 _min, cvec3 _max) :
+BoundingBox::BoundingBox(vec3 _min, vec3 _max) :
 	m_Min(_min),
 	m_Max(_max)
 {

@@ -2,16 +2,7 @@
 
 #include "RenderEvents.h"
 
-class Camera;
-class IBuffer;
-class StructuredBuffer;
-class Scene3D;
-class IMesh;
-class Shader;
-class Texture;
-class SamplerState;
 class Rect;
-class Material;
 class IRenderTarget;
 
 class RenderWindow : public Object
@@ -56,10 +47,10 @@ public:
 	virtual void OnTerminate(EventArgs& e);
 
 	// Window events
-	Event				InputFocus;// Window gets input focus
-	Event				InputBlur; // Window loses input focus
-	Event				Minimize; // Window is minimized.
-	Event				Restore;// Window is restored.
+	Event				InputFocus; // Window gets input focus
+	Event				InputBlur;  // Window loses input focus
+	Event				Minimize;   // Window is minimized.
+	Event				Restore;    // Window is restored.
 	ResizeEvent         Resize;
 	Event				Expose;
 
@@ -82,8 +73,6 @@ public:
 	Event               MouseBlur;
 
 public:
-	friend LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 	RenderWindow(cstring windowName, int windowWidth, int windowHeight, HWND _hwnd, bool vSync = false);
 	virtual ~RenderWindow();
 
@@ -117,7 +106,7 @@ private:
 	int m_iWindowWidth;
 	int m_iWindowHeight;
 	bool m_vSync;
-	HWND m_hWindow;
+	HWND m_HWND;
 	std::string m_sWindowName;
 
 	// Used to compute relative mouse motion in this window.

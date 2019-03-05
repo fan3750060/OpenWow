@@ -1,14 +1,17 @@
 #pragma once
 
-class CCameraController
+#include "CameraControllerBase.h"
+
+class CArcBallCameraController : public CCameraControllerBase
 {
 public:
-	CCameraController(std::shared_ptr<Camera> _camera = nullptr);
-	~CCameraController();
+	CArcBallCameraController();
+	~CArcBallCameraController();
 
-	void Init(std::shared_ptr<RenderWindow> _renderWindow);
-
-	std::shared_ptr<Camera> GetCamera() const;
+	// Pivot
+	void  SetPivotDistance(float pivotDistance);
+	float GetPivotDistance() const;
+	vec3  GetPivotPoint() const;
 
 	// Input
 	void OnUpdate(UpdateEventArgs& e);
@@ -17,12 +20,11 @@ public:
 	void OnMouseButtonPressed(MouseButtonEventArgs& e);
 	void OnMouseButtonReleased(MouseButtonEventArgs& e);
 	void OnMouseMoved(MouseMotionEventArgs& e);
-	void OnMouseWheel(MouseWheelEventArgs& e);
+
+protected:
+	vec3 ProjectOntoUnitSphere(glm::ivec2 screenPos);
 
 private:
-	std::shared_ptr<Camera>  m_Camera;
-	vec2                     m_PreviousMousePosition;
-
 	// Translation movement
 	float Forward, Back, Left, Right, Up, Down;
 
@@ -32,6 +34,10 @@ private:
 
 	// Move in/out from pivot point.
 	float PivotTranslate;
+
+	// Used for arcball camera
+	glm::vec3   m_PreviousPoint;
+	float       m_PivotDistance;
 
 	// Do you want to go faster?
 	bool TranslateFaster;

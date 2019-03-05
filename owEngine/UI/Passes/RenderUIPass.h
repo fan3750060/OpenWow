@@ -1,9 +1,5 @@
 #pragma once
 
-class RenderUIEventArgs;
-class SceneNodeUI;
-class IMesh;
-
 class IRenderUIPass : public Object
 {
 public:

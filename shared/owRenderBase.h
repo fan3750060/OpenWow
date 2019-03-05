@@ -13,6 +13,7 @@
 // Standart materials
 #include "../owRenderBase/Material.h"
 #include "../owRenderBase/MaterialImpl.h"
+#include "../owRenderBase/Primitives/Geometry.h"
 #include "../owRenderBase/D3D9_Types.h"
 
 #include "../owRenderBase/Mesh.h"

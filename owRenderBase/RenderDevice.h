@@ -55,7 +55,7 @@ public:
 	std::shared_ptr<IMesh> CreatePlane(cvec3 N = vec3(0, 1, 0));
 
 	// Create a screen-space quad that can be used to render full-screen post-process effects to the screen.
-	std::shared_ptr<IMesh> CreateScreenQuad(float left = -0.0f, float right = 1.0f, float bottom = -0.0f, float top = 1.0f, float z = 0.0f);
+	std::shared_ptr<IMesh> CreateScreenQuad(float left = 0.0f, float right = 1.0f, float bottom = 0.0f, float top = 1.0f, float z = 0.0f);
 
 	// Create a sphere in 3D
 	std::shared_ptr<IMesh> CreateSphere();

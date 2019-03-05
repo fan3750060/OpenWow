@@ -88,7 +88,13 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 
 	if (pVS)
 	{
-		pVS->GetShaderParameterByName("PerObject").Set(perObject);
+		ShaderParameter& perObjectParameter = pVS->GetShaderParameterByName("PerObject");
+		if (perObjectParameter.IsValid() && perObject != nullptr)
+		{
+			perObjectParameter.Set(perObject);
+			perObjectParameter.Bind();
+		}
+
 
 		if (m_VertexBuffer != nullptr)
 		{
@@ -158,7 +164,7 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 	return true;
 }
 
-bool MeshDX11::Accept(IVisitor& visitor)
+bool MeshDX11::Accept(IVisitor& visitor, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
-	return visitor.Visit(*this);
+	return visitor.Visit(*this, indexStartLocation, indexCnt, vertexStartLocation, vertexCnt);
 }

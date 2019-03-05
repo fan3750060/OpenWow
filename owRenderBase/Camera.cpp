@@ -213,25 +213,7 @@ glm::quat Camera::GetRotation() const
 	return m_Rotate;
 }
 
-// Pivot
 
-void Camera::SetPivotDistance(float pivotDistance)
-{
-	// Make sure pivot distance is always positive.
-	m_PivotDistance = glm::max(pivotDistance, 0.0f);
-	m_bViewDirty = true;
-}
-
-float Camera::GetPivotDistance() const
-{
-	return m_PivotDistance;
-}
-
-vec3 Camera::GetPivotPoint() const
-{
-	// The camera actually pivots around its "translation" point.
-	return m_Translate;
-}
 
 bool Camera::IsDirty() const
 {
@@ -318,101 +300,4 @@ mat4 Camera::GetViewProjectionInverseMatrix() const
 	return m_ViewProjectionInverse;
 }
 
-Ray Camera::ScreenPointToRay(cvec2 screenPoint) const
-{
-	mat4 clipToWorld = GetViewProjectionInverseMatrix();
-	vec4 clipPoint = vec4(screenPoint, 1, 1);
-	clipPoint.x = (screenPoint.x - m_Viewport.X) / m_Viewport.Width;
-	clipPoint.y = 1.0f - (screenPoint.y - m_Viewport.Y) / m_Viewport.Height;
-	clipPoint = clipPoint * 2.0f - 1.0f;
 
-	vec3 p0 = m_Translate;
-	vec4 worldSpace = clipToWorld * clipPoint;
-	vec3 p1 = vec3(worldSpace / worldSpace.w); // glm::unProject( vec3( screenPoint, 0), m_ViewMatrix, m_ProjectionMatrix, vec4( m_Viewport.X, m_Viewport.Y, m_Viewport.Width, m_Viewport.Height ) );
-
-	return Ray(p0, glm::normalize(p1 - p0));
-}
-
-vec3 Camera::ProjectOntoUnitSphere(glm::ivec2 screenPos)
-{
-	// Map the screen coordinates so that (0, 0) is the center of the viewport.
-	screenPos -= glm::vec2(m_Viewport.Width, m_Viewport.Height) * 0.5f;
-
-	float x, y, z;
-	// The radius of the unit sphere is 1/2 of the shortest dimension of the viewport.
-	float radius = glm::min(m_Viewport.Width, m_Viewport.Height) * 0.5f;
-
-	// Now normalize the screen coordinates into the range [-1 .. 1].
-	x = screenPos.x / radius;
-	// The y-coordinate has to be inverted so that +1 is the top of the unit sphere
-	// and -1 is the bottom of the unit sphere.
-	y = -(screenPos.y / radius);
-
-	float length_sqr = (x * x) + (y * y);
-
-	// If the screen point is mapped outside of the unit sphere
-	if (length_sqr > 1.0f)
-	{
-		float invLength = glm::inversesqrt(length_sqr);
-
-		// Return the normalized point that is closest to the outside of the unit sphere.
-		x *= invLength;
-		y *= invLength;
-		z = 0.0f;
-	}
-	else
-	{
-		// The point is on the inside of the unit sphere.
-		z = glm::sqrt(1.0f - length_sqr);
-		// If we are "inside" the unit sphere, then 
-		// invert the z component.
-		// In a right-handed coordinate system, the "+z" axis of the unit
-		// sphere points towards the viewer. If we are in the Unit sphere, we
-		// want to project the point to the inside of the sphere and in this case
-		// the z-axis we want to project on points away from the viewer (-z).
-		if (m_PivotDistance <= 0.0f)
-		{
-			z = -z;
-		}
-	}
-
-	return glm::vec3(x, y, z);
-}
-
-void Camera::OnMousePressed(MouseButtonEventArgs& e)
-{
-	//m_PreviousPoint = glm::ivec2(e.X, e.Y);
-	m_PreviousPoint = ProjectOntoUnitSphere(glm::ivec2(e.X, e.Y));
-}
-
-void Camera::OnMouseMoved(MouseMotionEventArgs& e)
-{
-	glm::vec3 currentPoint = ProjectOntoUnitSphere(glm::ivec2(e.X, e.Y));
-
-	AddRotation(glm::quat(currentPoint, m_PreviousPoint));
-
-
-
-	//// Compute the axis of rotation.
-	/*glm::vec3 axis = glm::cross( currentPoint, m_PreviousPoint );
-
-	float length_sqr = glm::length2( axis );
-
-	//// If the rotation axis is too short, don't rotate.
-	if ( length_sqr > 0.0f )
-	{
-	    // Normalize the axis of rotation
-	    //axis *= glm::inversesqrt( length_sqr );
-
-	    // The dot product between the two vectors gives the angle of rotation.
-	    float dotProduct = glm::dot( m_PreviousPoint, currentPoint );
-	    if ( dotProduct <= 1 && dotProduct >= -1 )
-	    {
-	        // Add the resulting rotation to our current rotation
-	        glm::quat deltaRotate = glm::angleAxis( glm::acos( dotProduct ), glm::normalize(axis) );
-	        AddRotation( deltaRotate );
-	    }
-	}*/
-
-	m_PreviousPoint = currentPoint;
-}

@@ -17,7 +17,11 @@ UI_Font_Material::UI_Font_Material() :
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/UI/UI_Font.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
-	g_pVertexShader->LoadInputLayoutFromReflector();
+	std::vector<D3DVERTEXELEMENT9> elements;
+	elements.push_back({ 0, 0,  D3DDECLTYPE_FLOAT3, 0, D3DDECLUSAGE_POSITION, 0 });
+	elements.push_back({ 0, 12, D3DDECLTYPE_FLOAT2, 0, D3DDECLUSAGE_TEXCOORD, 0 });
+	elements.push_back({ 0, 20, D3DDECLTYPE_FLOAT3, 0, D3DDECLUSAGE_NORMAL, 0 });
+	g_pVertexShader->LoadInputLayoutFromD3DElement(elements);
 
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
 		Shader::PixelShader, "shaders_D3D/UI/UI_Font.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
@@ -32,7 +36,7 @@ UI_Font_Material::UI_Font_Material() :
 	g_LinearRepeatSampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
 	g_LinearRepeatSampler->SetWrapMode(SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat, SamplerState::WrapMode::Repeat);
 
-	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_LinearRepeatSampler);
+	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_LinearClampSampler);
 
 	// Material
 	SetShader(Shader::VertexShader, g_pVertexShader);
@@ -48,6 +52,11 @@ UI_Font_Material::~UI_Font_Material()
 	}
 }
 
+
+
+//
+// UI_Font_Material
+//
 void UI_Font_Material::SetColor(vec4 color)
 {
 	m_pProperties->Color = color;

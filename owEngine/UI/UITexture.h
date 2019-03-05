@@ -1,19 +1,20 @@
 #pragma once
 
-// FORWARD BEGIN
-class SceneNodeUI;
-class UI_Texture_Material;
-// FORWARD END
+#include "UIBaseNode.h"
+#include "Materials/UI_Texture_Material.h"
 
-class UITexture : public SceneNodeUI
+class CUITextureNode : public CUIBaseNode
 {
 public:
-	UITexture();
-	virtual ~UITexture();
+	CUITextureNode();
+	virtual ~CUITextureNode();
 
-	// UITexture
+	// CUITextureNode
 	void SetTexture(std::shared_ptr<Texture> _texture);
 	void SetColor(vec4 _color);
+
+	// CUIBaseNode
+	bool RenderMesh(RenderUIEventArgs& renderEventArgs) override;
 
 private:
 	std::shared_ptr<UI_Texture_Material>   m_Material;

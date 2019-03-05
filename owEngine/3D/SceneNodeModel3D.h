@@ -3,11 +3,6 @@
 #include "SceneNode3D.h"
 #include "Light3D.h"
 
-class IMesh;
-class Camera;
-class Render3DEventArgs;
-class IVisitor;
-
 class SceneNodeModel3D : public SceneNode3D
 {
 	typedef SceneNode3D base;

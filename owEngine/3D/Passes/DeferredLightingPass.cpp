@@ -181,7 +181,7 @@ bool DeferredLightingPass::Visit(SceneNode3D& node)
 	return true;
 }
 
-bool DeferredLightingPass::Visit(IMesh& mesh)
+bool DeferredLightingPass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	if (m_pRenderEventArgs && mesh.GetMaterial() == nullptr) // TODO: Fixme
 	{

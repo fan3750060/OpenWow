@@ -14,6 +14,7 @@ enum SceneNodeTypes : uint8
 {
 	SN_TYPE_NONE = 0,
 	SN_TYPE_DEBUG,
+	SN_TYPE_FONT,
 
 	SN_TYPE_SKY,
 	SN_TYPE_WDL_NODE,
@@ -45,7 +46,7 @@ public:
 
 	virtual bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) = 0;
 
-	virtual bool Accept(IVisitor& visitor) = 0;
+	virtual bool Accept(IVisitor& visitor, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) = 0;
 
 private:
 	SceneNodeTypes m_Type;

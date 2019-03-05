@@ -12,7 +12,7 @@
 
 FontsManager::FontsManager()
 {
-	mainFont = Add("Fonts\\consola.TTF", 12);
+	mainFont = Add("Fonts\\consola.TTF", 16);
 }
 
 FontsManager::~FontsManager()
@@ -126,8 +126,11 @@ std::shared_ptr<CFontMesh> FontsManager::CreateAction(cstring _nameAndSize)
 	uint32_t x = 0;
 	uint32_t y = maxAscent;
 
-	std::vector<vec3> fontVertices;
-	std::vector<vec2> fontTextures;
+
+	DirectX::VertexCollection vertices;
+	DirectX::IndexCollection indices;
+	uint32 indicesCntr = 0;
+
 	float xOffset = 0.0f;
 
 	for (uint32 ch = 0; ch < CFontMesh::NUM_CHARS; ++ch)
@@ -149,23 +152,14 @@ std::shared_ptr<CFontMesh> FontsManager::CreateAction(cstring _nameAndSize)
 		float texY1 = (float)(y - maxAscent) / imageHeight;
 		float texY2 = texY1 + (float)(charHeight) / imageHeight;
 
-		fontVertices.push_back(vec3(0.0f,          0.0f,       0.0f));
-		fontVertices.push_back(vec3(charWidth[ch], 0.0f,       0.0f));
-		fontVertices.push_back(vec3(0.0f,          charHeight, 0.0f));
-
-		fontVertices.push_back(vec3(0.0f,          charHeight, 0.0f));
-		fontVertices.push_back(vec3(charWidth[ch], 0.0f,       0.0f));
-		fontVertices.push_back(vec3(charWidth[ch], charHeight, 0.0f));
-
-
-		fontTextures.push_back(vec2(texX1, texY1));
-		fontTextures.push_back(vec2(texX2, texY1));
-		fontTextures.push_back(vec2(texX1, texY2));
-
-		fontTextures.push_back(vec2(texX1, texY2));
-		fontTextures.push_back(vec2(texX2, texY1));
-		fontTextures.push_back(vec2(texX2, texY2));
-
+		vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(charWidth[ch],  charHeight,  0.0f),  DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(texX2, texY2)));
+		vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f,           charHeight,  0.0f),  DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(texX1, texY2)));
+		vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f,           0.0f,        0.0f),  DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(texX1, texY1)));
+		
+		vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f,           0.0f,        0.0f),  DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(texX1, texY1)));
+		vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(charWidth[ch],  charHeight,  0.0f),  DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(texX2, texY2)));
+		vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(charWidth[ch],  0.0f,        0.0f),  DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(texX2, texY1)));
+		
 		for (uint32 row = 0; row < face->glyph->bitmap.rows; ++row)
 		{
 			for (uint32 pixel = 0; pixel < face->glyph->bitmap.width; ++pixel)
@@ -182,13 +176,10 @@ std::shared_ptr<CFontMesh> FontsManager::CreateAction(cstring _nameAndSize)
 	}
 
 
-	std::shared_ptr<IBuffer> __vbPos = _RenderDevice->CreateVertexBuffer(fontVertices);
-	std::shared_ptr<IBuffer> __vbTex = _RenderDevice->CreateVertexBuffer(fontTextures);
-	//
-
 	std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
-	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), __vbPos);
-	__geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), __vbTex);
+
+	std::shared_ptr<IBuffer> __vb = _RenderDevice->CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal));
+	__geom->SetVertexBuffer(__vb);
 
 	// Font texture
 	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture();

@@ -54,6 +54,7 @@ public:
 	const Camera* Camera;
 	const PipelineState* PipelineState;
 	const Object* Node;
+	const Viewport* Viewport;
 };
 typedef Delegate<Render3DEventArgs> Render3DEvent;
 

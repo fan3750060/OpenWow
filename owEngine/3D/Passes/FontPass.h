@@ -2,15 +2,14 @@
 
 #include "AbstractPass.h"
 
-// Base pass provides implementations for functions used by most passes.
-class BasePass : public AbstractPass
+class CFontPass : public AbstractPass
 {
 public:
 	typedef AbstractPass base;
 
-	BasePass();
-	BasePass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
-	virtual ~BasePass();
+	CFontPass();
+	CFontPass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline);
+	virtual ~CFontPass();
 
 	// Render the pass. This should only be called by the RenderTechnique.
 	virtual void PreRender(Render3DEventArgs& e);
@@ -18,9 +17,9 @@ public:
 	virtual void PostRender(Render3DEventArgs& e);
 
 	// Inherited from Visitor
-	virtual bool Visit(SceneNode3D& node);
-	virtual bool Visit(IMesh& mesh, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0);
-	virtual bool Visit(CLight3D& light);
+	virtual bool Visit(SceneNode3D& node) override;
+	virtual bool Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt) override;
+	virtual bool Visit(CLight3D& light) override;
 
 	virtual void UpdateViewport(Viewport _viewport);
 
