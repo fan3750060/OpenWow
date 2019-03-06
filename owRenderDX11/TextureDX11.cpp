@@ -310,14 +310,14 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(hmem, f->getSize());
 	if (fif == FIF_UNKNOWN || !FreeImage_FIFSupportsReading(fif))
 	{
-		fail1("Unknow file format: ");
+		fail2("Unknow file format: ");
 		return false;
 	}
 
 	FIBITMAP* dib = FreeImage_LoadFromMemory(fif, hmem, f->getSize());
 	if (dib == nullptr || FreeImage_HasPixels(dib) == FALSE)
 	{
-		fail1("Failed to load image: ");
+		fail2("Failed to load image: ");
 		return false;
 	}
 
@@ -346,7 +346,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 		break;
 		default:
 		{
-			fail1("Unknown image format.");
+			fail2("Unknown image format.");
 		}
 		break;
 		}
@@ -373,7 +373,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 		break;
 		default:
 		{
-			fail1("Unknown image format.");
+			fail2("Unknown image format.");
 		}
 		break;
 		}
@@ -409,7 +409,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 		break;
 		default:
 		{
-			fail1("Unknown image format.");
+			fail2("Unknown image format.");
 		}
 		break;
 		}
@@ -447,7 +447,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 
 	if (FAILED(m_pDevice->CheckFormatSupport(m_TextureResourceFormat, &m_TextureResourceFormatSupport)))
 	{
-		fail1("Failed to query format support.");
+		fail2("Failed to query format support.");
 	}
 	if ((m_TextureResourceFormatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D) == 0)
 	{
@@ -491,7 +491,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 
 	if (FAILED(m_pDevice->CreateTexture2D(&textureDesc, m_bGenerateMipmaps ? nullptr : &subresourceData, &m_pTexture2D)))
 	{
-		fail1("Failed to create texture.");
+		fail2("Failed to create texture.");
 		return false;
 	}
 
@@ -505,7 +505,7 @@ bool TextureDX11::LoadTexture2D(cstring fileName)
 
 	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture2D, &resourceViewDesc, &m_pShaderResourceView)))
 	{
-		fail1("Failed to create texture resource view.");
+		fail2("Failed to create texture resource view.");
 		return false;
 	}
 

@@ -56,7 +56,7 @@ protected:
 	const CGroupQuality&        m_QualitySettings;
 	const CGroupVideo&          m_VideoSettings;
 
-private: // Input events connections
+/*private: // Input events connections
 	boost::signals2::connection OnKeyPressedConnection;
 	boost::signals2::connection OnKeyReleasedConnection;
 	boost::signals2::connection OnMouseButtonPressedConnection;
@@ -74,7 +74,7 @@ private: // Render events connection
 	boost::signals2::connection OnPreRenderConnection;
 	boost::signals2::connection OnRenderConnection;
 	boost::signals2::connection OnPostRenderConnection;
-	boost::signals2::connection OnRenderUIConnection;
+	boost::signals2::connection OnRenderUIConnection;*/
 
 private:
 	bool                        m_IsInited;

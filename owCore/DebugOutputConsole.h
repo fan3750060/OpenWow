@@ -6,7 +6,7 @@ class DebugOutput_ConsoleWindows : public CDebugOutput
 {
 public:
 	DebugOutput_ConsoleWindows();
-	~DebugOutput_ConsoleWindows();
+	virtual ~DebugOutput_ConsoleWindows();
 
 protected:
 	// CDebugOutput

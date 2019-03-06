@@ -39,24 +39,24 @@ bool CGameState::Set()
 	std::shared_ptr<RenderWindow> renderWindow = m_Application->GetRenderWindow();
 
 	// Input events connections
-	OnMouseButtonPressedConnection  = renderWindow->MouseButtonPressed += boost::bind(&CGameState::OnMouseButtonPressed, this, _1);
-	OnMouseButtonReleasedConnection = renderWindow->MouseButtonReleased += boost::bind(&CGameState::OnMouseButtonReleased, this, _1);
-	OnMouseMovedConnection          = renderWindow->MouseMoved += boost::bind(&CGameState::OnMouseMoved, this, _1);
-	OnMouseWheelConnection          = renderWindow->MouseWheel += boost::bind(&CGameState::OnMouseWheel, this, _1);
-	OnKeyPressedConnection          = renderWindow->KeyPressed += boost::bind(&CGameState::OnKeyPressed, this, _1);
-	OnKeyReleasedConnection         = renderWindow->KeyReleased += boost::bind(&CGameState::OnKeyReleased, this, _1);
+	renderWindow->MouseButtonPressed += std::bind(&CGameState::OnMouseButtonPressed, this, std::placeholders::_1);
+	renderWindow->MouseButtonReleased += std::bind(&CGameState::OnMouseButtonReleased, this, std::placeholders::_1);
+	renderWindow->MouseMoved += std::bind(&CGameState::OnMouseMoved, this, std::placeholders::_1);
+	renderWindow->MouseWheel += std::bind(&CGameState::OnMouseWheel, this, std::placeholders::_1);
+	renderWindow->KeyPressed += std::bind(&CGameState::OnKeyPressed, this, std::placeholders::_1);
+	renderWindow->KeyReleased += std::bind(&CGameState::OnKeyReleased, this, std::placeholders::_1);
 
 	// Window events connections
-	OnResizeConnection              = renderWindow->Resize += boost::bind(&CGameState::OnResize, this, _1);
+	renderWindow->Resize += std::bind(&CGameState::OnResize, this, std::placeholders::_1);
 
 	// Update events connection
-	OnUpdateConnection              = renderWindow->Update += boost::bind(&CGameState::OnUpdate, this, _1);
+	renderWindow->Update += std::bind(&CGameState::OnUpdate, this, std::placeholders::_1);
 
 	// Render events connections
-	OnPreRenderConnection           = renderWindow->PreRender += boost::bind(&CGameState::OnPreRender, this, _1);
-	OnRenderConnection              = renderWindow->Render += boost::bind(&CGameState::OnRender, this, _1);
-	OnPostRenderConnection          = renderWindow->PostRender += boost::bind(&CGameState::OnPostRender, this, _1);
-	OnRenderUIConnection            = renderWindow->RenderUI += boost::bind(&CGameState::OnRenderUI, this, _1);
+	renderWindow->PreRender += std::bind(&CGameState::OnPreRender, this, std::placeholders::_1);
+	renderWindow->Render += std::bind(&CGameState::OnRender, this, std::placeholders::_1);
+	renderWindow->PostRender += std::bind(&CGameState::OnPostRender, this, std::placeholders::_1);
+	renderWindow->RenderUI += std::bind(&CGameState::OnRenderUI, this, std::placeholders::_1);
 
     return true;
 }

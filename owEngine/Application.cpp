@@ -93,9 +93,9 @@ bool Application::Load()
 
 	// Create window
 	CreateRenderWindow("Name", 1280, 1024);
-	Initialize += boost::bind(&RenderWindow::OnInitialize, m_pWindow, _1);
-	Terminate += boost::bind(&RenderWindow::OnTerminate, m_pWindow, _1);
-	Update += boost::bind(&RenderWindow::OnUpdate, m_pWindow, _1);
+	Initialize += std::bind(&RenderWindow::OnInitialize, m_pWindow, std::placeholders::_1);
+	Terminate += std::bind(&RenderWindow::OnTerminate, m_pWindow, std::placeholders::_1);
+	Update += std::bind(&RenderWindow::OnUpdate, m_pWindow, std::placeholders::_1);
 	m_pWindow->ShowWindow();
 
 	return true;

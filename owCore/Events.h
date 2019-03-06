@@ -1,61 +1,52 @@
 #pragma once
 
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
-#include <boost/signals2.hpp>
+#include <functional>
 
 #include "KeyCodes.h"
 
 class Object;
 
-// Delegate template class for encapsulating event callback functions.
 template< class ArgumentType >
 class Delegate
 {
 public:
-	typedef boost::function< void(ArgumentType&) > FunctionType;
-	typedef boost::signals2::connection ConnectionType;
+	typedef std::function<void(ArgumentType&)> FunctionType;
+	typedef std::shared_ptr<FunctionType> FunctionDecl;
+	typedef std::set<FunctionDecl> FunctionsSet;
 
-	// Using scoped connections can help to manage connection lifetimes.
-	typedef std::vector< boost::signals2::scoped_connection > ScopedConnections;
-
-	// Add a callback to the the list
-	// Returns the connection object that can be used to disconnect the 
-	// subscriber from the signal.
-	ConnectionType operator += (typename const FunctionType& callback) const
+	FunctionDecl operator += (typename const FunctionType& function)
 	{
-		return m_Callbacks.connect(callback);
+		FunctionDecl ret = std::make_shared<FunctionType>(function);
+		m_Functions.insert(ret);
+		return ret;
 	}
 
-	// Remove a callback from the list
-	/*void disconnect (typename const FunctionType& callback) const
+	void operator -= (typename const FunctionDecl& function)
 	{
-		// TODO: This isn't working yet.. Getting a compiler error:
-		// Error	1	error C2666: 'boost::operator ==' : 4 overloads have similar conversions signal_template.hpp
-		// WORKAROUND: Use the connection object returned when the subscriber was initially connected
-		// to disconnect the subscriber.
-		m_Callbacks.disconnect(callback);
-	}*/
-
-	void operator -= (ConnectionType& con)
-	{
-		m_Callbacks.disconnect(con); // This doesn't seem to work either!?
-		if (con.connected())
+		FunctionsSet::const_iterator cit = m_Functions.find(_decl);
+		if (cit != m_Functions.end())
 		{
-			con.disconnect(); // This is stupid, then any connection passed to this function will be disconnected, even if it was never registered with this signal.
+			m_Functions.erase(cit);
 		}
 	}
 
-	// Invoke this event with the argument
 	void operator()(typename ArgumentType& argument)
 	{
-		m_Callbacks(argument);
+		std::for_each(
+			m_Functions.begin(),
+			m_Functions.end(),
+			[&argument](const FunctionDecl& _decl) 
+			{ 
+				(*_decl)(argument); 
+			}
+		);
 	}
 
 private:
-	typedef boost::signals2::signal< void(ArgumentType&) > Callbacks;
-	mutable Callbacks   m_Callbacks;
+	mutable FunctionsSet m_Functions;
 };
+
+
 
 class EventArgs
 {
@@ -110,7 +101,7 @@ public:
 	{}
 
 	KeyCode         Key;    // The Key Code that was pressed or released.
-	uint32    Char;   // The 32-bit character code that was pressed. This value will be 0 if it is a non-printable character.
+	uint32          Char;   // The 32-bit character code that was pressed. This value will be 0 if it is a non-printable character.
 	KeyState        State;  // Was the key pressed or released?
 	bool            Control;// Is the Control modifier pressed
 	bool            Shift;  // Is the Shift modifier pressed
