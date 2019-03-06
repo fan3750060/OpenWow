@@ -19,7 +19,7 @@ public:
 	void                        SetMesh(std::shared_ptr<IMesh> mesh) override;
 	std::shared_ptr<IMesh>      GetMesh() const override;
 
-	bool						RenderMesh(RenderUIEventArgs& renderEventArgs) override;
+	bool                        AcceptMesh(IVisitor& visitor) override;
 
 private:
 	std::shared_ptr<CFontMesh>         m_Font;

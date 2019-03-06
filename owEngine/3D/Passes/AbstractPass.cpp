@@ -45,6 +45,12 @@ bool AbstractPass::Visit(SceneNode3D& node)
 	return false;
 }
 
+bool AbstractPass::Visit(CUIBaseNode & nodeUI)
+{
+	fail1();
+	return false;
+}
+
 bool AbstractPass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	return false;

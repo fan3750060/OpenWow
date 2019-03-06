@@ -1,10 +1,13 @@
 #pragma once
 
-class CGameStateManager;
+#include "3D/Scene3D.h"
+#include "3D/Passes/RenderTechnique.h"
+
+#include "UI/UIScene.h"
+#include "UI/Passes/RenderUITechnique.h"
 
 class CGameState : public IGameState
 {
-	friend CGameStateManager;
 public:
     CGameState(const IApplication * _application);
 	virtual ~CGameState();
@@ -55,6 +58,11 @@ protected:
 
 	const CGroupQuality&        m_QualitySettings;
 	const CGroupVideo&          m_VideoSettings;
+
+	RenderTechnique                      m_3DTechnique;
+	RenderUITechnique                    m_UITechnique;
+	std::shared_ptr<Scene3D>             m_3DScene;
+	std::shared_ptr<CUIScene>            m_UIScene;
 
 /*private: // Input events connections
 	boost::signals2::connection OnKeyPressedConnection;

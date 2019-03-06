@@ -60,7 +60,12 @@ std::shared_ptr<IMesh> CUITextNode::GetMesh() const
 	return nullptr;
 }
 
-bool CUITextNode::RenderMesh(RenderUIEventArgs& renderEventArgs)
+
+
+//
+// Render functional
+//
+bool CUITextNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Font->SetMaterial(m_Material);
 
@@ -72,7 +77,7 @@ bool CUITextNode::RenderMesh(RenderUIEventArgs& renderEventArgs)
 		m_Material->SetOffset(_offset);
 		_offset.x += static_cast<float>(m_Font->GetCharWidth(ch));
 
-		m_Font->Render(renderEventArgs, m_PerObjectConstantBuffer, 0, 0, (ch) * 6, 6);
+		m_Font->Accept(visitor, 0, 0, (ch) * 6, 6);
 	}
 
 	return true;

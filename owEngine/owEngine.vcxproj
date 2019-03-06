@@ -62,16 +62,19 @@
     </ClCompile>
     <ClCompile Include="UI\Fonts\Font.cpp" />
     <ClCompile Include="UI\Fonts\FontsManager.cpp" />
+    <ClCompile Include="UI\Materials\UI_Button_Material.cpp" />
     <ClCompile Include="UI\Materials\UI_Color_Material.cpp" />
     <ClCompile Include="UI\Materials\UI_Font_Material.cpp" />
     <ClCompile Include="UI\Materials\UI_Texture_Material.cpp" />
     <ClCompile Include="UI\Passes\BaseUIPass.cpp" />
     <ClCompile Include="UI\Passes\RenderUITechnique.cpp" />
     <ClCompile Include="UI\UIBaseNode.cpp" />
+    <ClCompile Include="UI\UIButton.cpp" />
     <ClCompile Include="UI\UIColor.cpp" />
     <ClCompile Include="UI\UIScene.cpp" />
     <ClCompile Include="UI\UIText.cpp" />
     <ClCompile Include="UI\UITexture.cpp" />
+    <ClCompile Include="UI\UIWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
@@ -115,6 +118,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UI\Fonts\Font.h" />
     <ClInclude Include="UI\Fonts\FontsManager.h" />
+    <ClInclude Include="UI\Materials\UI_Button_Material.h" />
     <ClInclude Include="UI\Materials\UI_Color_Material.h" />
     <ClInclude Include="UI\Materials\UI_Font_Material.h" />
     <ClInclude Include="UI\Materials\UI_Texture_Material.h" />
@@ -122,10 +126,12 @@
     <ClInclude Include="UI\Passes\RenderUIPass.h" />
     <ClInclude Include="UI\Passes\RenderUITechnique.h" />
     <ClInclude Include="UI\UIBaseNode.h" />
+    <ClInclude Include="UI\UIButton.h" />
     <ClInclude Include="UI\UIColor.h" />
     <ClInclude Include="UI\UIScene.h" />
     <ClInclude Include="UI\UIText.h" />
     <ClInclude Include="UI\UITexture.h" />
+    <ClInclude Include="UI\UIWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\freetype-2.9.1\freetype.vcxproj">

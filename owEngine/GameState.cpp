@@ -12,7 +12,10 @@ CGameState::CGameState(const IApplication * _application)
 	, m_IsCurrent(false)
 	, m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 	, m_VideoSettings(GetSettingsGroup<CGroupVideo>())
-{}
+{
+	m_3DScene = std::make_shared<Scene3D>();
+	m_UIScene = std::make_shared<CUIScene>();
+}
 
 CGameState::~CGameState()
 {}
@@ -82,36 +85,54 @@ void CGameState::OnKeyPressed(KeyEventArgs & e)
 {
 	if (m_DefaultCameraController)
 		m_DefaultCameraController->OnKeyPressed(e);
+
+	if (m_UIScene)
+		m_UIScene->OnKeyPressed(e);
 }
 
 void CGameState::OnKeyReleased(KeyEventArgs & e)
 {
 	if (m_DefaultCameraController)
 		m_DefaultCameraController->OnKeyReleased(e);
+
+	if (m_UIScene)
+		m_UIScene->OnKeyReleased(e);
 }
 
 void CGameState::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
 	if (m_DefaultCameraController)
 		m_DefaultCameraController->OnMouseButtonPressed(e);
+
+	if (m_UIScene)
+		m_UIScene->OnMouseButtonPressed(e);
 }
 
 void CGameState::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
 	if (m_DefaultCameraController)
 		m_DefaultCameraController->OnMouseButtonReleased(e);
+
+	if (m_UIScene)
+		m_UIScene->OnMouseButtonReleased(e);
 }
 
 void CGameState::OnMouseMoved(MouseMotionEventArgs & e)
 {
 	if (m_DefaultCameraController)
 		m_DefaultCameraController->OnMouseMoved(e);
+
+	if (m_UIScene)
+		m_UIScene->OnMouseMoved(e);
 }
 
 void CGameState::OnMouseWheel(MouseWheelEventArgs & e)
 {
 	if (m_DefaultCameraController)
 		m_DefaultCameraController->OnMouseWheel(e);
+
+	if (m_UIScene)
+		m_UIScene->OnMouseWheel(e);
 }
 
 

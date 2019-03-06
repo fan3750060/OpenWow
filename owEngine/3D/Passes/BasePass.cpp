@@ -55,8 +55,11 @@ void BasePass::PostRender(Render3DEventArgs& e)
 	}
 }
 
-// Inherited from Visitor
 
+
+//
+// Inherited from Visitor
+//
 bool BasePass::Visit(SceneNode3D& node)
 {
 	Object& nodeAsObject = reinterpret_cast<Object&>(node);
@@ -72,8 +75,8 @@ bool BasePass::Visit(SceneNode3D& node)
 		perObjectData.ModelView           = camera->GetViewMatrix()       * perObjectData.Model;
 		perObjectData.ModelViewProjection = camera->GetProjectionMatrix() * perObjectData.ModelView;
 
-		perObjectData.View = camera->GetViewMatrix();
-		perObjectData.Projection = camera->GetProjectionMatrix();
+		perObjectData.View                = camera->GetViewMatrix();
+		perObjectData.Projection          = camera->GetProjectionMatrix();
 
 		// Update the constant buffer data
 		SetPerObjectConstantBufferData(perObjectData);
@@ -99,6 +102,11 @@ bool BasePass::Visit(CLight3D& light)
 	return false;
 }
 
+
+
+//
+// Update viewport (need for texture resizing)
+//
 void BasePass::UpdateViewport(Viewport _viewport)
 {
 	m_Pipeline->GetRasterizerState().SetViewport(_viewport);

@@ -578,7 +578,7 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 			{
 				// Just hide the window.
 				// Windows will be destroyed when the application quits.
-				ShowWindow(hwnd, SW_HIDE);
+				::ShowWindow(hwnd, SW_HIDE);
 			}
 		}
 		break;

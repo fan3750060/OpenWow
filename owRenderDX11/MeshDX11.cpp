@@ -84,8 +84,6 @@ bool MeshDX11::Render(RenderEventArgs& renderArgs, std::shared_ptr<ConstantBuffe
 		pVS = std::dynamic_pointer_cast<ShaderDX11>(args3D.PipelineState->GetShader(Shader::VertexShader));
 	}
 
-	//assert1(pVS);
-
 	if (pVS)
 	{
 		ShaderParameter& perObjectParameter = pVS->GetShaderParameterByName("PerObject");

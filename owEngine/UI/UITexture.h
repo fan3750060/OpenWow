@@ -14,7 +14,7 @@ public:
 	void SetColor(vec4 _color);
 
 	// CUIBaseNode
-	bool RenderMesh(RenderUIEventArgs& renderEventArgs) override;
+	bool AcceptMesh(IVisitor& visitor) override;
 
 private:
 	std::shared_ptr<UI_Texture_Material>   m_Material;

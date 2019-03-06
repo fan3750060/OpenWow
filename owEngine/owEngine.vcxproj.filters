@@ -188,6 +188,15 @@
     <ClCompile Include="UI\UIColor.cpp">
       <Filter>UI\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UIWindow.cpp">
+      <Filter>UI\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIButton.cpp">
+      <Filter>UI\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Materials\UI_Button_Material.cpp">
+      <Filter>UI\Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -341,6 +350,15 @@
     </ClInclude>
     <ClInclude Include="UI\UIColor.h">
       <Filter>UI\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIWindow.h">
+      <Filter>UI\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIButton.h">
+      <Filter>UI\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Materials\UI_Button_Material.h">
+      <Filter>UI\Materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

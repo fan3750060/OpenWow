@@ -1,7 +1,10 @@
 #pragma once
 
+class CUIWindowNode;
+
 class CUIBaseNode : public Object, public std::enable_shared_from_this<CUIBaseNode>
 {
+	friend CUIWindowNode;
 	typedef Object base;
 public:
 	explicit CUIBaseNode();
@@ -19,34 +22,43 @@ public:
 	void SetScale(cvec2 _scale);
 	cvec2 GetScale() const;
 
+	// Bounds functional
+	Rect GetBounds() const;
+	bool IsPointInBounds(glm::vec2 Point) const;
+
+
 	mat4 GetLocalTransform() const;
 	void SetLocalTransform(cmat4 localTransform);
 
 	mat4 GetWorldTransfom() const;
 	void SetWorldTransform(cmat4 worldTransform);
 
+	// Parent & childs functional
+	virtual void SetParent(std::weak_ptr<CUIBaseNode> parent);
+	virtual void SetParentInternal(std::weak_ptr<CUIBaseNode> parent);
 
-	virtual void AddChild(std::shared_ptr<CUIBaseNode> pNode);
-	virtual void RemoveChild(std::shared_ptr<CUIBaseNode> pNode);
-	virtual void SetParent(std::weak_ptr<CUIBaseNode> pNode);
-
+	// Meshes
 	virtual void SetMesh(std::shared_ptr<IMesh> mesh);
 	virtual std::shared_ptr<IMesh> GetMesh() const;
 
 	// Called before all others calls
 	virtual void UpdateViewport(const Viewport* viewport);
 
-	//Render this node and it's childs
-	virtual bool Render(RenderUIEventArgs& renderEventArgs);
-	virtual bool RenderMesh(RenderUIEventArgs& renderEventArgs);
+	// Allow a visitor to visit this node. 
+	virtual bool Accept(IVisitor& visitor);
+	virtual bool AcceptMesh(IVisitor& visitor);
 
 	// Input events
-	bool OnKeyPressed(KeyEventArgs& e);
-	bool OnKeyReleased(KeyEventArgs& e);
-	void OnMouseMoved(MouseMotionEventArgs& e);
-	bool OnMouseButtonPressed(MouseButtonEventArgs& e);
-	bool OnMouseButtonReleased(MouseButtonEventArgs& e);
-	bool OnMouseWheel(MouseWheelEventArgs& e);
+	virtual bool OnKeyPressed(KeyEventArgs& e);
+	virtual void OnKeyReleased(KeyEventArgs& e);
+	virtual void OnMouseMoved(MouseMotionEventArgs& e);
+	virtual bool OnMouseButtonPressed(MouseButtonEventArgs& e);
+	virtual void OnMouseButtonReleased(MouseButtonEventArgs& e);
+	virtual bool OnMouseWheel(MouseWheelEventArgs& e);
+
+	// Syntetic events
+	virtual void OnMouseEntered();
+	virtual void OnMouseLeaved();
 
 protected:
 	virtual mat4 GetParentWorldTransform() const;
@@ -54,19 +66,12 @@ protected:
 	virtual void UpdateLocalTransform();
 	virtual void UpdateWorldTransform();
 
-	// PerObject constant buffer data.
-	__declspec(align(16)) struct PerObject
-	{
-		glm::mat4 ModelViewProjection;
-		glm::mat4 ModelView;
-		glm::mat4 Model;
-	};
-	PerObject* m_PerObjectData;
-	std::shared_ptr<ConstantBuffer> m_PerObjectConstantBuffer;
+private: // Syntetic events
+	bool IsMouseOnNode() const;
+	void DoMouseEntered();
+	void DoMouseLeaved();
 
 private:
-	typedef std::vector<std::shared_ptr<CUIBaseNode>> NodeList;
-	typedef std::multimap<std::string, std::shared_ptr<CUIBaseNode>> NodeNameMap;
 	typedef std::vector<std::shared_ptr<IMesh>> MeshList;
 
 	std::string                 m_Name;
@@ -79,7 +84,9 @@ private:
 	mat4                        m_WorldTransform;
 
 	std::weak_ptr<CUIBaseNode>	m_pParentNode;
-	NodeList				    m_Children;
-	NodeNameMap				    m_ChildrenByName;
+
 	std::shared_ptr<IMesh>      m_Mesh;
+
+private: // Syntetic events
+	bool                        m_IsMouseOnNode;
 };

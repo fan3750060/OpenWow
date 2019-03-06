@@ -32,9 +32,9 @@ void CUIColorNode::SetColor(vec4 _color)
 //
 // CUIBaseNode
 //
-bool CUIColorNode::RenderMesh(RenderUIEventArgs& renderEventArgs)
+bool CUIColorNode::AcceptMesh(IVisitor& visitor)
 {
 	GetMesh()->SetMaterial(m_Material);
 
-	return GetMesh()->Render(renderEventArgs, m_PerObjectConstantBuffer);
+	return GetMesh()->Accept(visitor);
 }

@@ -63,8 +63,8 @@ typedef Delegate<EventArgs> Event;
 
 class WindowCloseEventArgs : EventArgs
 {
-public:
 	typedef EventArgs base;
+public:
 	WindowCloseEventArgs(const Object& caller)
 		: base(caller)
 		, ConfirmClose(true)
@@ -82,6 +82,7 @@ typedef Delegate<WindowCloseEventArgs> WindowCloseEvent;
 
 class KeyEventArgs : public EventArgs
 {
+	typedef EventArgs base;
 public:
 	enum KeyState
 	{
@@ -89,7 +90,6 @@ public:
 		Pressed = 1
 	};
 
-	typedef EventArgs base;
 	KeyEventArgs(const Object& caller, KeyCode key, uint32 c, KeyState state, bool control, bool shift, bool alt)
 		: base(caller)
 		, Key(key)
@@ -113,8 +113,8 @@ typedef Delegate<KeyEventArgs> KeyboardEvent;
 
 class MouseMotionEventArgs : public EventArgs
 {
-public:
 	typedef EventArgs base;
+public:
 	MouseMotionEventArgs(const Object& caller, bool leftButton, bool middleButton, bool rightButton, bool control, bool shift, int x, int y)
 		: base(caller)
 		, LeftButton(leftButton)
@@ -137,6 +137,7 @@ public:
 	int RelX;			// How far the mouse moved since the last event.
 	int RelY;			// How far the mouse moved since the last event.
 
+	glm::ivec2 GetPoint() const { return glm::ivec2(X, Y); }
 };
 typedef Delegate<MouseMotionEventArgs> MouseMotionEvent;
 
@@ -182,6 +183,8 @@ public:
 
 	int X;              // The X-position of the cursor relative to the upper-left corner of the client area.
 	int Y;              // The Y-position of the cursor relative to the upper-left corner of the client area.
+
+	glm::ivec2 GetPoint() const { return glm::ivec2(X, Y); }
 };
 typedef Delegate<MouseButtonEventArgs> MouseButtonEvent;
 
@@ -212,6 +215,8 @@ public:
 
 	int X;              // The X-position of the cursor relative to the upper-left corner of the client area.
 	int Y;              // The Y-position of the cursor relative to the upper-left corner of the client area.
+
+	glm::ivec2 GetPoint() const { return glm::ivec2(X, Y); }
 
 };
 typedef Delegate<MouseWheelEventArgs> MouseWheelEvent;

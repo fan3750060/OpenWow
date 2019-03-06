@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbstractPass.h"
+#include "../Scene3D.h"
 
 // Base pass provides implementations for functions used by most passes.
 class BasePass : public AbstractPass
@@ -22,6 +23,7 @@ public:
 	virtual bool Visit(IMesh& mesh, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0);
 	virtual bool Visit(CLight3D& light);
 
+	// Update viewport (need for texture resizing)
 	virtual void UpdateViewport(Viewport _viewport);
 
 	void SetRenderEventArgs(Render3DEventArgs& e) override;
@@ -33,10 +35,7 @@ public:
 private:
 	Render3DEventArgs* m_pRenderEventArgs;
 
-	std::shared_ptr<PipelineState> m_Pipeline;
-
-	// The scene to render.
-	std::shared_ptr<Scene3D> m_Scene;
-
-	std::weak_ptr<IRenderDevice> m_RenderDevice;
+	std::shared_ptr<PipelineState>  m_Pipeline;
+	std::shared_ptr<Scene3D>        m_Scene;
+	std::weak_ptr<IRenderDevice>    m_RenderDevice;
 };

@@ -40,12 +40,13 @@ void CUITextureNode::SetColor(vec4 _color)
 }
 
 
+
 //
 // CUIBaseNode
 //
-bool CUITextureNode::RenderMesh(RenderUIEventArgs& renderEventArgs)
+bool CUITextureNode::AcceptMesh(IVisitor& visitor)
 {
 	GetMesh()->SetMaterial(m_Material);
 
-	return GetMesh()->Render(renderEventArgs, m_PerObjectConstantBuffer);
+	return GetMesh()->Accept(visitor);
 }

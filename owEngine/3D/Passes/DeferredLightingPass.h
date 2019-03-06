@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbstractPass.h"
+#include "3D/Scene3D.h"
 #include "..//Light.h"
 
 // Use this pass to render the lights as geometry in the scene.

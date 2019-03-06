@@ -69,6 +69,7 @@ public:
 		, Viewport(viewport)
 	{}
 
+	const PipelineState* PipelineState;
 	const Viewport* Viewport;
 };
 typedef Delegate<RenderUIEventArgs> RenderUIEvent;

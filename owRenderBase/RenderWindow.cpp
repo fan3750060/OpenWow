@@ -219,7 +219,6 @@ void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e) // The mouse was moved
 	MouseMoved(e);
 }
 
-
 void RenderWindow::OnMouseButtonPressed(MouseButtonEventArgs& e) // A button on the mouse was pressed
 {
 	MouseButtonPressed(e);

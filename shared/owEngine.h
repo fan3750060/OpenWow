@@ -33,6 +33,7 @@
 #include "../owEngine/UI/UIBaseNode.h"
 
 // additional nodes
+#include "../owEngine/UI/UIButton.h"
 #include "../owEngine/UI/UIColor.h"
 #include "../owEngine/UI/UIText.h"
 #include "../owEngine/UI/UITexture.h"
