@@ -6,6 +6,7 @@
 
 class CUITextNode : public CUIBaseNode
 {
+	typedef CUIBaseNode base;
 public:
 	CUITextNode();
 	virtual ~CUITextNode();

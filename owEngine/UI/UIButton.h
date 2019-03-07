@@ -9,14 +9,14 @@ class UIButtonClickEventArgs
 {
 public:
 	UIButtonClickEventArgs()
-	{
-	}
+	{}
 };
 typedef Delegate<UIButtonClickEventArgs> UIButtonClickEvent;
 
 
 class CUIButtonNode : public CUIBaseNode
 {
+	typedef CUIBaseNode base;
 public:
 	enum ButtonState : uint32
 	{
@@ -41,6 +41,7 @@ public:
 	virtual void OnMouseLeaved() override;
 
 	// CUIBaseNode
+	virtual bool Accept(IVisitor& visitor) override;
 	virtual bool AcceptMesh(IVisitor& visitor) override;
 
 	UIButtonClickEvent OnClick;

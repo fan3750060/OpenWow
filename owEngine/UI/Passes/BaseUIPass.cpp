@@ -121,6 +121,11 @@ void BaseUIPass::UpdateViewport(Viewport _viewport)
 	m_Pipeline->GetRasterizerState().SetViewport(_viewport);
 }
 
+
+
+//
+// Store render event args
+//
 void BaseUIPass::SetRenderEventArgs(RenderUIEventArgs& e)
 {
 	m_pRenderEventArgs = &e;

@@ -68,7 +68,12 @@ cvec2 CUIBaseNode::GetScale() const
 
 Rect CUIBaseNode::GetBounds() const
 {
-	return Rect(m_Translate.x, m_Translate.y, m_Scale.x, m_Scale.y);
+	return Rect(m_Translate.x, m_Translate.y, m_Size.x, m_Size.y);
+}
+
+void CUIBaseNode::SetSize(glm::ivec2 Size)
+{
+	m_Size = Size;
 }
 
 bool CUIBaseNode::IsPointInBounds(glm::vec2 Point) const
@@ -184,7 +189,7 @@ std::shared_ptr<IMesh> CUIBaseNode::GetMesh() const
 
 void CUIBaseNode::UpdateViewport(const Viewport* viewport)
 {
-	// Do nothing...
+	// Do nothing
 }
 
 

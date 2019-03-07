@@ -12,8 +12,7 @@ CUIButtonNode::CUIButtonNode()
 	m_Material = std::make_shared<UI_Button_Material>();
 	m_Material->SetWrapper(m_Material);
 
-	std::shared_ptr<IMesh> mesh = _RenderDevice->CreateScreenQuad();
-	SetMesh(mesh);
+
 }
 
 CUIButtonNode::~CUIButtonNode()
@@ -34,7 +33,16 @@ void CUIButtonNode::CreateDefault()
 	m_Material->SetClickedTexture(_RenderDevice->CreateTexture2D("Textures\\btn_clicked.png")); 
 	m_Material->SetDisabledTexture(_RenderDevice->CreateTexture2D("Textures\\btn_disabled.png"));
 
-	SetScale(vec2(idleTexture->GetWidth(), idleTexture->GetHeight()));
+	SetSize(glm::ivec2(idleTexture->GetWidth(), idleTexture->GetHeight()));
+
+	std::shared_ptr<IMesh> mesh = _RenderDevice->CreateScreenQuad(0.0, idleTexture->GetWidth(), 0.0f, idleTexture->GetHeight());
+	SetMesh(mesh);
+
+	m_TextNode = std::make_shared<CUITextNode>();
+	m_TextNode->SetParentInternal(weak_from_this());
+	m_TextNode->SetText("Hello btn!");
+	m_TextNode->SetTranslate(vec2(10.0f, 10.0f));
+	m_TextNode->SetColor(vec4(0.0f, 0.0f, 1.0f, 1.0f));
 }
 
 
@@ -81,9 +89,25 @@ void CUIButtonNode::OnMouseLeaved()
 
 
 
+
+
 //
 // CUIBaseNode
 //
+bool CUIButtonNode::Accept(IVisitor & visitor)
+{
+	bool visitResult = base::Accept(visitor);
+	if (!visitResult)
+		return false;
+
+	if (m_TextNode != nullptr)
+	{
+		m_TextNode->Accept(visitor);
+	}
+
+	return true;
+}
+
 bool CUIButtonNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Material->SetState(m_State);

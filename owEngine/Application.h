@@ -18,6 +18,8 @@ public:
 	int                             Run();
 	void                            Stop();
 
+	
+
 	std::shared_ptr<RenderWindow>   CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
 
 	CLoader*						GetLoader();
@@ -25,6 +27,7 @@ public:
 	HWND                            Get_HWND() const;
 
 	// IApplication
+	int                             DoRun();
 	std::shared_ptr<IRenderDevice>  GetRenderDevice() const override;
 	void                            SetRenderDevice(std::shared_ptr<IRenderDevice> _renderDevice) override;
 	std::shared_ptr<RenderWindow>   GetRenderWindow() const override;
@@ -37,33 +40,33 @@ public:
 	std::shared_ptr<IGameState>     GetGameState() override;
 
 	// Application execution events
-	Event           Initialize;
-	UpdateEvent     Update;
-	Event			Terminate;
-	Event           Terminated;
-	Event           Exit;
-	UserEvent       UserEvent;
+	Event                           Initialize;
+	UpdateEvent                     Update;
+	Event			                Terminate;
+	Event                           Terminated;
+	Event                           Exit;
+	UserEvent                       UserEvent;
 
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 protected:
-	void OnInitialize(EventArgs& e);
-	void OnUpdate(UpdateEventArgs& e);
-	void OnRender(Render3DEventArgs& e);
-	void OnRenderUI(RenderUIEventArgs& e);
-	void OnTerminate(EventArgs& e);
-	void OnTerminated(EventArgs& e);
-	void OnExit(EventArgs& e);
-	void OnUserEvent(UserEventArgs& e);
+	void                            OnInitialize(EventArgs& e);
+	void                            OnUpdate(UpdateEventArgs& e);
+	void                            OnRender(Render3DEventArgs& e);
+	void                            OnRenderUI(RenderUIEventArgs& e);
+	void                            OnTerminate(EventArgs& e);
+	void                            OnTerminated(EventArgs& e);
+	void                            OnExit(EventArgs& e);
+	void                            OnUserEvent(UserEventArgs& e);
 
 private:
-	bool            m_bIsInitialized;
-	bool            m_bIsRunning;
+	bool                            m_bIsInitialized;
+	bool                            m_bIsRunning;
 
 	// Handle to the module.
 	CLoader         m_Loader;
-	HINSTANCE       m_hInstance;
-	HWND            m_hWindow;
+	HINSTANCE       m_HINSTANCE;
+	HWND            m_HWND;
 
 	std::shared_ptr<IRenderDevice> m_pRenderDevice;
 	std::shared_ptr<RenderWindow>  m_pWindow;

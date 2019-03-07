@@ -24,8 +24,8 @@ public:
 
 	// Bounds functional
 	Rect GetBounds() const;
+	void SetSize(glm::ivec2 Size);
 	bool IsPointInBounds(glm::vec2 Point) const;
-
 
 	mat4 GetLocalTransform() const;
 	void SetLocalTransform(cmat4 localTransform);
@@ -88,5 +88,6 @@ private:
 	std::shared_ptr<IMesh>      m_Mesh;
 
 private: // Syntetic events
+	glm::ivec2                  m_Size;
 	bool                        m_IsMouseOnNode;
 };

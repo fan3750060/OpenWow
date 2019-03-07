@@ -61,7 +61,7 @@ void AddUIPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderT
 
 	std::shared_ptr<PipelineState> UIPipeline = device->CreatePipelineState();
 	UIPipeline->GetBlendState().SetBlendMode(alphaBlending);
-	UIPipeline->GetDepthStencilState().SetDepthMode(enableDepthWrites);
+	UIPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
 	UIPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
 	UIPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	UIPipeline->SetRenderTarget(_renderTarget);

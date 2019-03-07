@@ -21,7 +21,7 @@ Application::Application()
 	: m_bIsInitialized(false)
 	, m_bIsRunning(false)
 {
-	m_hInstance = ::GetModuleHandle(NULL);
+	m_HINSTANCE = ::GetModuleHandle(NULL);
 
 	HINSTANCE hDll;
 	hDll = LoadLibrary("SHELL32.dll");
@@ -33,7 +33,7 @@ Application::Application()
 	renderWindowClass.lpfnWndProc = &Application::WndProc;
 	renderWindowClass.cbClsExtra = 0;
 	renderWindowClass.cbWndExtra = 0;
-	renderWindowClass.hInstance = m_hInstance;
+	renderWindowClass.hInstance = m_HINSTANCE;
 	renderWindowClass.hIcon = LoadIcon(hDll, MAKEINTRESOURCE(2));
 	renderWindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	renderWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -65,7 +65,7 @@ Application::Application(HINSTANCE hInstance)
 	: m_bIsInitialized(false)
 	, m_bIsRunning(false)
 {
-	m_hInstance = hInstance;
+	m_HINSTANCE = hInstance;
 
 	_ApplicationInstance = this;
 }
@@ -73,7 +73,7 @@ Application::Application(HINSTANCE hInstance)
 
 Application::~Application()
 {
-	if (!UnregisterClass(c_RenderWindow_ClassName, m_hInstance))
+	if (!UnregisterClass(c_RenderWindow_ClassName, m_HINSTANCE))
 	{
 		//fail1("Failed to unregister render window class");
 	}
@@ -109,47 +109,16 @@ int Application::Run()
 
 	m_bIsRunning = true;
 
-	MSG msg;
+	int runResult = -1;
 	while (m_bIsRunning)
 	{
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT)
-			{
-				EventArgs eventArgs(*this);
-				OnExit(eventArgs);
-			}
-
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		{
-			g_GameDeltaTime = elapsedTime.GetElapsedTime();
-			g_ApplicationTime += g_GameDeltaTime;
-			++g_FrameCounter;
-
-			UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
-			OnUpdate(updateArgs);
-
-			m_pRenderDevice->Lock();
-
-			Render3DEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
-			OnRender(renderArgs);
-
-			RenderUIEventArgs renderUIArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
-			OnRenderUI(renderUIArgs);
-
-			m_pWindow->Present();
-
-			m_pRenderDevice->Unlock();
-		}
+		DoRun();
 	}
 
 	OnTerminate(EventArgs(*this));
 	OnTerminated(EventArgs(*this));
 
-	return static_cast<int>(msg.wParam);
+	return runResult;
 }
 
 void Application::Stop()
@@ -181,7 +150,7 @@ std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName
 		windowX, windowY, windowWidth, windowHeight,
 		NULL,
 		NULL,
-		m_hInstance,
+		m_HINSTANCE,
 		NULL
 	);
 
@@ -196,7 +165,7 @@ std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName
 	m_pWindow = CreateRenderWindowOGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
 #endif
 
-	m_hWindow = hWindow;
+	m_HWND = hWindow;
 	gs_WindowHandle = m_pWindow;
 
 	if (m_bIsRunning)
@@ -217,18 +186,60 @@ CLoader* Application::GetLoader()
 
 HINSTANCE Application::Get_HINSTANCE() const
 {
-	return m_hInstance;
+	return m_HINSTANCE;
 }
 
 HWND Application::Get_HWND() const
 {
-	return m_hWindow;
+	return m_HWND;
 }
 
 
 //
 // IApplication
 //
+
+int Application::DoRun()
+{
+	static Timer elapsedTime;
+
+	MSG msg;
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		if (msg.message == WM_QUIT)
+		{
+			EventArgs eventArgs(*this);
+			OnExit(eventArgs);
+		}
+
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	{
+		g_GameDeltaTime = elapsedTime.GetElapsedTime();
+		g_ApplicationTime += g_GameDeltaTime;
+		++g_FrameCounter;
+
+		UpdateEventArgs updateArgs(*this, g_GameDeltaTime, g_ApplicationTime);
+		OnUpdate(updateArgs);
+
+		m_pRenderDevice->Lock();
+		{
+			Render3DEventArgs renderArgs(*this, g_GameDeltaTime * 166.0f, g_ApplicationTime * 166.0f, g_FrameCounter);
+			OnRender(renderArgs);
+
+			RenderUIEventArgs renderUIArgs(*this, g_GameDeltaTime, g_ApplicationTime, g_FrameCounter);
+			OnRenderUI(renderUIArgs);
+
+			m_pWindow->Present();
+		}
+		m_pRenderDevice->Unlock();
+	}
+
+	return static_cast<int>(msg.wParam);
+}
+
 std::shared_ptr<IRenderDevice> Application::GetRenderDevice() const
 {
 	assert1(m_pRenderDevice);
@@ -357,251 +368,223 @@ static MouseButtonEventArgs::MouseButton DecodeMouseButton(UINT messageID)
 	return mouseButton;
 }
 
-// Convert the message ID into a ButtonState.
-static MouseButtonEventArgs::ButtonState DecodeButtonState(UINT messageID)
+LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	MouseButtonEventArgs::ButtonState buttonState;
-	switch (messageID)
+	if (gs_WindowHandle == NULL)
 	{
-	case WM_LBUTTONUP:
-	case WM_RBUTTONUP:
-	case WM_MBUTTONUP:
-	case WM_XBUTTONUP:
+		if (message == WM_CREATE)
+		{
+			return 0;
+		}
+		else
+		{
+			return DefWindowProc(hwnd, message, wParam, lParam);
+		}
+	}
+
+	switch (message)
 	{
-		buttonState = MouseButtonEventArgs::Released;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT paintStruct;
+		HDC hDC = ::BeginPaint(hwnd, &paintStruct);
+		::EndPaint(hwnd, &paintStruct);
+	}
+	break;
+	case WM_KEYDOWN:
+	{
+		MSG charMsg;
+
+		// Get the unicode character (UTF-16)
+		unsigned int c = 0;
+
+		// For printable characters, the next message will be WM_CHAR.
+		// This message contains the character code we need to send the KeyPressed event.
+		// Inspired by the SDL 1.2 implementation.
+		if (PeekMessage(&charMsg, hwnd, 0, 0, PM_NOREMOVE) && charMsg.message == WM_CHAR)
+		{
+			GetMessage(&charMsg, hwnd, 0, 0);
+			c = static_cast<unsigned int>(charMsg.wParam);
+		}
+
+		bool shift = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
+		bool control = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
+		bool alt = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
+
+		KeyCode key = (KeyCode)wParam;
+		unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
+		KeyEventArgs keyEventArgs(*gs_WindowHandle, key, c, KeyEventArgs::Pressed, control, shift, alt);
+		gs_WindowHandle->OnKeyPressed(keyEventArgs);
+	}
+	break;
+	case WM_KEYUP:
+	{
+		bool shift = (::GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
+		bool control = (::GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
+		bool alt = (::GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
+
+		KeyCode key = (KeyCode)wParam;
+		unsigned int c = 0;
+		unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
+
+		// Determine which key was released by converting the key code and the scan code
+		// to a printable character (if possible).
+		// Inspired by the SDL 1.2 implementation.
+		unsigned char keyboardState[256];
+		::GetKeyboardState(keyboardState);
+		wchar_t translatedCharacters[4];
+		if (int result = ::ToUnicodeEx((UINT)wParam, scanCode, keyboardState, translatedCharacters, 4, 0, NULL) > 0)
+		{
+			c = translatedCharacters[0];
+		}
+
+		KeyEventArgs keyEventArgs(*gs_WindowHandle, key, c, KeyEventArgs::Released, control, shift, alt);
+		gs_WindowHandle->OnKeyReleased(keyEventArgs);
+	}
+	break;
+	case WM_KILLFOCUS:
+	{
+		// Window lost keyboard focus.
+		EventArgs eventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnKeyboardBlur(eventArgs);
+	}
+	break;
+	case WM_SETFOCUS:
+	{
+		EventArgs eventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnKeyboardFocus(eventArgs);
+	}
+	break;
+	case WM_MOUSEMOVE:
+	{
+		bool lButton = (wParam & MK_LBUTTON) != 0;
+		bool rButton = (wParam & MK_RBUTTON) != 0;
+		bool mButton = (wParam & MK_MBUTTON) != 0;
+		bool shift = (wParam & MK_SHIFT) != 0;
+		bool control = (wParam & MK_CONTROL) != 0;
+
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
+
+		MouseMotionEventArgs mouseMotionEventArgs(*gs_WindowHandle, lButton, mButton, rButton, control, shift, x, y);
+		gs_WindowHandle->OnMouseMoved(mouseMotionEventArgs);
 	}
 	break;
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 	case WM_MBUTTONDOWN:
-	case WM_XBUTTONDOWN:
 	{
-		buttonState = MouseButtonEventArgs::Pressed;
+		bool lButton = (wParam & MK_LBUTTON) != 0;
+		bool rButton = (wParam & MK_RBUTTON) != 0;
+		bool mButton = (wParam & MK_MBUTTON) != 0;
+		bool shift = (wParam & MK_SHIFT) != 0;
+		bool control = (wParam & MK_CONTROL) != 0;
+
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
+
+		MouseButtonEventArgs mouseButtonEventArgs(*gs_WindowHandle, DecodeMouseButton(message), MouseButtonEventArgs::Pressed, lButton, mButton, rButton, control, shift, x, y);
+		gs_WindowHandle->OnMouseButtonPressed(mouseButtonEventArgs);
 	}
 	break;
-	}
-
-	return buttonState;
-}
-
-LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	if (gs_WindowHandle != NULL)
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONUP:
 	{
-		switch (message)
-		{
-		case WM_PAINT:
-		{
-			PAINTSTRUCT paintStruct;
-			HDC hDC = BeginPaint(hwnd, &paintStruct);
-			EndPaint(hwnd, &paintStruct);
-		}
-		break;
-		case WM_KEYDOWN:
-		{
-			MSG charMsg;
+		bool lButton = (wParam & MK_LBUTTON) != 0;
+		bool rButton = (wParam & MK_RBUTTON) != 0;
+		bool mButton = (wParam & MK_MBUTTON) != 0;
+		bool shift = (wParam & MK_SHIFT) != 0;
+		bool control = (wParam & MK_CONTROL) != 0;
 
-			// Get the unicode character (UTF-16)
-			unsigned int c = 0;
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
 
-			// For printable characters, the next message will be WM_CHAR.
-			// This message contains the character code we need to send the KeyPressed event.
-			// Inspired by the SDL 1.2 implementation.
-			if (PeekMessage(&charMsg, hwnd, 0, 0, PM_NOREMOVE) && charMsg.message == WM_CHAR)
-			{
-				GetMessage(&charMsg, hwnd, 0, 0);
-				c = static_cast<unsigned int>(charMsg.wParam);
-			}
-
-			bool shift = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
-			bool control = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
-			bool alt = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
-
-			KeyCode key = (KeyCode)wParam;
-			unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
-			KeyEventArgs keyEventArgs(*gs_WindowHandle, key, c, KeyEventArgs::Pressed, control, shift, alt);
-			gs_WindowHandle->OnKeyPressed(keyEventArgs);
-		}
-		break;
-		case WM_KEYUP:
-		{
-			bool shift = (::GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
-			bool control = (::GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
-			bool alt = (::GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
-
-			KeyCode key = (KeyCode)wParam;
-			unsigned int c = 0;
-			unsigned int scanCode = (lParam & 0x00FF0000) >> 16;
-
-			// Determine which key was released by converting the key code and the scan code
-			// to a printable character (if possible).
-			// Inspired by the SDL 1.2 implementation.
-			unsigned char keyboardState[256];
-			::GetKeyboardState(keyboardState);
-			wchar_t translatedCharacters[4];
-			if (int result = ::ToUnicodeEx((UINT)wParam, scanCode, keyboardState, translatedCharacters, 4, 0, NULL) > 0)
-			{
-				c = translatedCharacters[0];
-			}
-
-			KeyEventArgs keyEventArgs(*gs_WindowHandle, key, c, KeyEventArgs::Released, control, shift, alt);
-			gs_WindowHandle->OnKeyReleased(keyEventArgs);
-		}
-		break;
-		case WM_KILLFOCUS:
-		{
-			// Window lost keyboard focus.
-			EventArgs eventArgs(*gs_WindowHandle);
-			gs_WindowHandle->OnKeyboardBlur(eventArgs);
-		}
-		break;
-		case WM_SETFOCUS:
-		{
-			EventArgs eventArgs(*gs_WindowHandle);
-			gs_WindowHandle->OnKeyboardFocus(eventArgs);
-		}
-		break;
-		case WM_MOUSEMOVE:
-		{
-			bool lButton = (wParam & MK_LBUTTON) != 0;
-			bool rButton = (wParam & MK_RBUTTON) != 0;
-			bool mButton = (wParam & MK_MBUTTON) != 0;
-			bool shift = (wParam & MK_SHIFT) != 0;
-			bool control = (wParam & MK_CONTROL) != 0;
-
-			int x = ((int)(short)LOWORD(lParam));
-			int y = ((int)(short)HIWORD(lParam));
-
-			MouseMotionEventArgs mouseMotionEventArgs(*gs_WindowHandle, lButton, mButton, rButton, control, shift, x, y);
-			gs_WindowHandle->OnMouseMoved(mouseMotionEventArgs);
-		}
-		break;
-		case WM_LBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-		case WM_MBUTTONDOWN:
-		{
-			bool lButton = (wParam & MK_LBUTTON) != 0;
-			bool rButton = (wParam & MK_RBUTTON) != 0;
-			bool mButton = (wParam & MK_MBUTTON) != 0;
-			bool shift = (wParam & MK_SHIFT) != 0;
-			bool control = (wParam & MK_CONTROL) != 0;
-
-			int x = ((int)(short)LOWORD(lParam));
-			int y = ((int)(short)HIWORD(lParam));
-
-			MouseButtonEventArgs mouseButtonEventArgs(*gs_WindowHandle, DecodeMouseButton(message), MouseButtonEventArgs::Pressed, lButton, mButton, rButton, control, shift, x, y);
-			gs_WindowHandle->OnMouseButtonPressed(mouseButtonEventArgs);
-		}
-		break;
-		case WM_LBUTTONUP:
-		case WM_RBUTTONUP:
-		case WM_MBUTTONUP:
-		{
-			bool lButton = (wParam & MK_LBUTTON) != 0;
-			bool rButton = (wParam & MK_RBUTTON) != 0;
-			bool mButton = (wParam & MK_MBUTTON) != 0;
-			bool shift = (wParam & MK_SHIFT) != 0;
-			bool control = (wParam & MK_CONTROL) != 0;
-
-			int x = ((int)(short)LOWORD(lParam));
-			int y = ((int)(short)HIWORD(lParam));
-
-			MouseButtonEventArgs mouseButtonEventArgs(*gs_WindowHandle, DecodeMouseButton(message), MouseButtonEventArgs::Released, lButton, mButton, rButton, control, shift, x, y);
-			gs_WindowHandle->OnMouseButtonReleased(mouseButtonEventArgs);
-		}
-		break;
-		case WM_MOUSEWHEEL:
-		{
-			// The distance the mouse wheel is rotated.
-			// A positive value indicates the wheel was rotated to the right.
-			// A negative value indicates the wheel was rotated to the left.
-			float zDelta = ((int)(short)HIWORD(wParam)) / (float)WHEEL_DELTA;
-			short keyStates = (short)LOWORD(wParam);
-
-			bool lButton = (keyStates & MK_LBUTTON) != 0;
-			bool rButton = (keyStates & MK_RBUTTON) != 0;
-			bool mButton = (keyStates & MK_MBUTTON) != 0;
-			bool shift = (keyStates & MK_SHIFT) != 0;
-			bool control = (keyStates & MK_CONTROL) != 0;
-
-			int x = ((int)(short)LOWORD(lParam));
-			int y = ((int)(short)HIWORD(lParam));
-
-			// Convert the screen coordinates to client coordinates.
-			POINT clientToScreenPoint;
-			clientToScreenPoint.x = x;
-			clientToScreenPoint.y = y;
-			::ScreenToClient(hwnd, &clientToScreenPoint);
-
-			MouseWheelEventArgs mouseWheelEventArgs(*gs_WindowHandle, zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
-			gs_WindowHandle->OnMouseWheel(mouseWheelEventArgs);
-		}
-		break;
-		// NOTE: Not really sure if these next set of messages are working correctly.
-		// Not really sure HOW to get them to work correctly.
-		// TODO: Try to fix these if I need them ;)
-		case WM_CAPTURECHANGED:
-		{
-			EventArgs mouseBlurEventArgs(*gs_WindowHandle);
-			gs_WindowHandle->OnMouseBlur(mouseBlurEventArgs);
-		}
-		break;
-		case WM_MOUSEACTIVATE:
-		{
-			EventArgs mouseFocusEventArgs(*gs_WindowHandle);
-			gs_WindowHandle->OnMouseFocus(mouseFocusEventArgs);
-		}
-		break;
-		case WM_MOUSELEAVE:
-		{
-			EventArgs mouseLeaveEventArgs(*gs_WindowHandle);
-			gs_WindowHandle->OnMouseLeave(mouseLeaveEventArgs);
-		}
-		break;
-		case WM_SIZE:
-		{
-			int width = ((int)(short)LOWORD(lParam));
-			int height = ((int)(short)HIWORD(lParam));
-
-			ResizeEventArgs resizeEventArgs(*gs_WindowHandle, width, height);
-			gs_WindowHandle->OnResize(resizeEventArgs);
-
-			::UpdateWindow(hwnd);
-		}
-		break;
-		case WM_CLOSE:
-		{
-			WindowCloseEventArgs windowCloseEventArgs(*gs_WindowHandle);
-			gs_WindowHandle->OnClose(windowCloseEventArgs);
-
-			if (windowCloseEventArgs.ConfirmClose)
-			{
-				// Just hide the window.
-				// Windows will be destroyed when the application quits.
-				::ShowWindow(hwnd, SW_HIDE);
-			}
-		}
-		break;
-		case WM_DESTROY:
-		{
-			// TODO delete gs_WindowHandle;
-		}
-		break;
-		default:
-			return DefWindowProc(hwnd, message, wParam, lParam);
-		}
+		MouseButtonEventArgs mouseButtonEventArgs(*gs_WindowHandle, DecodeMouseButton(message), MouseButtonEventArgs::Released, lButton, mButton, rButton, control, shift, x, y);
+		gs_WindowHandle->OnMouseButtonReleased(mouseButtonEventArgs);
 	}
-	else
+	break;
+	case WM_MOUSEWHEEL:
 	{
-		switch (message)
-		{
-		case WM_CREATE:
-			break;
-		default:
-			return DefWindowProc(hwnd, message, wParam, lParam);
-		}
+		// The distance the mouse wheel is rotated.
+		// A positive value indicates the wheel was rotated to the right.
+		// A negative value indicates the wheel was rotated to the left.
+		float zDelta = ((int)(short)HIWORD(wParam)) / (float)WHEEL_DELTA;
+		short keyStates = (short)LOWORD(wParam);
 
+		bool lButton = (keyStates & MK_LBUTTON) != 0;
+		bool rButton = (keyStates & MK_RBUTTON) != 0;
+		bool mButton = (keyStates & MK_MBUTTON) != 0;
+		bool shift = (keyStates & MK_SHIFT) != 0;
+		bool control = (keyStates & MK_CONTROL) != 0;
+
+		int x = ((int)(short)LOWORD(lParam));
+		int y = ((int)(short)HIWORD(lParam));
+
+		// Convert the screen coordinates to client coordinates.
+		POINT clientToScreenPoint;
+		clientToScreenPoint.x = x;
+		clientToScreenPoint.y = y;
+		::ScreenToClient(hwnd, &clientToScreenPoint);
+
+		MouseWheelEventArgs mouseWheelEventArgs(*gs_WindowHandle, zDelta, lButton, mButton, rButton, control, shift, (int)clientToScreenPoint.x, (int)clientToScreenPoint.y);
+		gs_WindowHandle->OnMouseWheel(mouseWheelEventArgs);
 	}
+	break;
+	// NOTE: Not really sure if these next set of messages are working correctly.
+	// Not really sure HOW to get them to work correctly.
+	// TODO: Try to fix these if I need them ;)
+	case WM_CAPTURECHANGED:
+	{
+		EventArgs mouseBlurEventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnMouseBlur(mouseBlurEventArgs);
+	}
+	break;
+	case WM_MOUSEACTIVATE:
+	{
+		EventArgs mouseFocusEventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnMouseFocus(mouseFocusEventArgs);
+	}
+	break;
+	case WM_MOUSELEAVE:
+	{
+		EventArgs mouseLeaveEventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnMouseLeave(mouseLeaveEventArgs);
+	}
+	break;
+	case WM_SIZE:
+	{
+		int width = ((int)(short)LOWORD(lParam));
+		int height = ((int)(short)HIWORD(lParam));
+
+		ResizeEventArgs resizeEventArgs(*gs_WindowHandle, width, height);
+		gs_WindowHandle->OnResize(resizeEventArgs);
+
+		::UpdateWindow(hwnd);
+	}
+	break;
+	case WM_CLOSE:
+	{
+		WindowCloseEventArgs windowCloseEventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnClose(windowCloseEventArgs);
+
+		if (windowCloseEventArgs.ConfirmClose)
+		{
+			// Just hide the window.
+			// Windows will be destroyed when the application quits.
+			::ShowWindow(hwnd, SW_HIDE);
+		}
+	}
+	break;
+	case WM_DESTROY:
+	{
+		// TODO delete gs_WindowHandle;
+	}
+	break;
+	default:
+		return DefWindowProc(hwnd, message, wParam, lParam);
+	}
+
 
 	return 0;
 }
@@ -656,7 +639,7 @@ void Application::OnExit(EventArgs& e)
 	Exit(e);
 
 	// Destroy any windows that are still hanging around.
-	DestroyWindow(m_hWindow);
+	::DestroyWindow(m_HWND);
 
 	// Setting this to false will cause the main application's message pump to stop.
 	m_bIsRunning = false;

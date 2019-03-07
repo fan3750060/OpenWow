@@ -8,8 +8,6 @@
 // Base pass provides implementations for functions used by most passes.
 class BaseUIPass : public IRenderUIPass
 {
-	typedef IRenderUIPass base;
-
 public:
 	BaseUIPass();
 	BaseUIPass(std::shared_ptr<CUIScene> uiScene, std::shared_ptr<PipelineState> pipeline);

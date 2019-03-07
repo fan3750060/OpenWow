@@ -1,7 +1,7 @@
 #pragma once
 
 struct
-	__declspec(novtable, uuid("52B0DE8F-A0C3-441F-BA1F-6307A9AF0096"))
+	__declspec(novtable)
 	IConsoleCommand
 {
 	virtual ~IConsoleCommand() {};

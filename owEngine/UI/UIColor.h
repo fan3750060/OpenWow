@@ -5,6 +5,7 @@
 
 class CUIColorNode : public CUIBaseNode
 {
+	typedef CUIBaseNode base;
 public:
 	CUIColorNode();
 	virtual ~CUIColorNode();

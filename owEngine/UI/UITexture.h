@@ -5,6 +5,7 @@
 
 class CUITextureNode : public CUIBaseNode
 {
+	typedef CUIBaseNode base;
 public:
 	CUITextureNode();
 	virtual ~CUITextureNode();
