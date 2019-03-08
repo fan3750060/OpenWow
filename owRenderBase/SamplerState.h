@@ -1,10 +1,11 @@
 #pragma once
-/**
- * Texture Sampler State. Defines how a texture is sampled in a shader.
- */
+
 #include "Shader.h"
 #include "ShaderParameter.h"
 
+/**
+ * Texture Sampler State. Defines how a texture is sampled in a shader.
+ */
 class SamplerState : public Object
 {
 public:
@@ -103,9 +104,6 @@ public:
 	virtual void SetMaxAnisotropy(uint8_t maxAnisotropy) = 0;
 	virtual uint8_t GetMaxAnisotropy() const = 0;
 
-	// Bind this sampler state to the ID for a specific shader type.
 	virtual void Bind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
-	// Unbind the sampler state.
 	virtual void UnBind(uint32_t ID, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
-
 };

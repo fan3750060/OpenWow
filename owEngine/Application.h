@@ -5,7 +5,10 @@
 #include "GameState.h"
 #include "Loader.h"
 
-class Application : public Object, public IApplication, public IGameStateManager
+class Application : 
+	public Object, 
+	public IApplication, 
+	public IGameStateManager
 {
 public:
 	Application();
@@ -14,20 +17,21 @@ public:
 
 	static IApplication& Get();
 
-	bool                            Load();
+	// Default query
 	int                             Run();
 	void                            Stop();
 
-	
-
-	std::shared_ptr<RenderWindow>   CreateRenderWindow(cstring title, int windowWidth, int windowHeight, bool vSync = false);
+	// Creators
+	std::shared_ptr<IRenderDevice>  CreateRenderDevice();
+	std::shared_ptr<RenderWindow>   CreateRenderWindow(IWindowObject * WindowObject, bool vSync = false);
 
 	CLoader*						GetLoader();
-	HINSTANCE                       Get_HINSTANCE() const;
-	HWND                            Get_HWND() const;
 
 	// IApplication
-	int                             DoRun();
+	void                            DoBeforeRun() override;
+	int                             DoRun() override;
+	void                            DoAfterRun() override;
+
 	std::shared_ptr<IRenderDevice>  GetRenderDevice() const override;
 	void                            SetRenderDevice(std::shared_ptr<IRenderDevice> _renderDevice) override;
 	std::shared_ptr<RenderWindow>   GetRenderWindow() const override;
@@ -41,42 +45,42 @@ public:
 
 	// Application execution events
 	Event                           Initialize;
+	void                          OnInitialize(EventArgs& e);
 	UpdateEvent                     Update;
+	void                          OnUpdate(UpdateEventArgs& e);
 	Event			                Terminate;
+	void                          OnTerminate(EventArgs& e);
 	Event                           Terminated;
+	void                          OnTerminated(EventArgs& e);
 	Event                           Exit;
+	void                          OnExit(EventArgs& e);
 	UserEvent                       UserEvent;
+	void                          OnUserEvent(UserEventArgs& e);
+
+	void                          OnRender(Render3DEventArgs& e);
+	void                          OnRenderUI(RenderUIEventArgs& e);
 
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-protected:
-	void                            OnInitialize(EventArgs& e);
-	void                            OnUpdate(UpdateEventArgs& e);
-	void                            OnRender(Render3DEventArgs& e);
-	void                            OnRenderUI(RenderUIEventArgs& e);
-	void                            OnTerminate(EventArgs& e);
-	void                            OnTerminated(EventArgs& e);
-	void                            OnExit(EventArgs& e);
-	void                            OnUserEvent(UserEventArgs& e);
 
 private:
 	bool                            m_bIsInitialized;
 	bool                            m_bIsRunning;
 
 	// Handle to the module.
-	CLoader         m_Loader;
-	HINSTANCE       m_HINSTANCE;
-	HWND            m_HWND;
+	CLoader                         m_Loader;
+	HINSTANCE                       m_HINSTANCE;
 
-	std::shared_ptr<IRenderDevice> m_pRenderDevice;
-	std::shared_ptr<RenderWindow>  m_pWindow;
+	std::shared_ptr<IRenderDevice>  m_pRenderDevice;
+	std::shared_ptr<RenderWindow>   m_pWindow;
 
 	// IGameStateManager
 	std::shared_ptr<IGameState>                                     m_CurrentGameState;
 	std::map<GameStatesNames::List, std::shared_ptr<IGameState>>    m_GameStatesCollection;
 
-private:
-	const char* c_RenderWindow_ClassName = "RenderWindowClass";
+	// Hold the connections
+	Delegate<EventArgs>::FunctionDecl        InitializeConnection;
+	Delegate<UpdateEventArgs>::FunctionDecl  UpdateConnection;
+	Delegate<EventArgs>::FunctionDecl        TerminateConnection;
 };
 
 extern IApplication* _ApplicationInstance;

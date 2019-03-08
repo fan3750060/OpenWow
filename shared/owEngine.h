@@ -16,6 +16,7 @@
 #include "../owEngine/EngineTime.h"
 #include "../owEngine/Loader.h"
 #include "../owEngine/UI/Fonts/FontsManager.h"
+#include "../owEngine/WindowCreator.h"
 
 //
 // Wrappers

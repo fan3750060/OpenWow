@@ -1,23 +1,12 @@
 #pragma once
-/**
- * StructuredBuffer is a read/write-able buffer.
- * The buffer can contain any data that can be accessed in the shader.
- */
 
 #include "Buffer.h"
 
 class StructuredBuffer : public IBuffer
 {
 public:
-	// Bind the buffer for rendering.
 	virtual bool Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
-	// Unbind the buffer for rendering.
 	virtual void UnBind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType) = 0;
-
-	// Is this an index buffer or an attribute/vertex buffer?
-	virtual BufferType GetType() const = 0;
-	// How many elements does this buffer contain?
-	virtual uint32 GetElementCount() const = 0;
 
 	// Copy the contents of another buffer to this one.
 	// Buffers must be the same size.
@@ -27,7 +16,6 @@ public:
 	template<typename T>
 	void Set(const std::vector<T>& value);
 
-	// Clear the contents of the buffer.
 	virtual void Clear() = 0;
 
 protected:
@@ -35,5 +23,13 @@ protected:
 
 };
 
-// Template parameter specializations.
-#include "StructuredBuffer.inl"
+
+
+//
+// Template specizalizations
+//
+template<typename T>
+void StructuredBuffer::Set(const std::vector<T>& values)
+{
+	SetData((void*)values.data(), sizeof(T), 0, values.size());
+}

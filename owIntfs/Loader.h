@@ -6,6 +6,8 @@ struct IManager;
 
 struct ILoadable
 {
+	virtual ~ILoadable() {}
+
 	virtual bool PreLoad() = 0;
 
 	virtual bool Load() = 0;

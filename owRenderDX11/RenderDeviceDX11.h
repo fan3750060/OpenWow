@@ -4,9 +4,8 @@ class Material;
 
 class RenderDeviceDX11 : public IRenderDevice
 {
-public:
 	typedef IRenderDevice base;
-
+public:
 	RenderDeviceDX11();
 	virtual ~RenderDeviceDX11();
 
@@ -69,12 +68,6 @@ protected:
 	virtual void CreateDevice();
 
 private:
-	ATL::CComPtr<ID3D11Device2> m_pDevice;
-	ATL::CComPtr<ID3D11Debug> m_pDebugLayer;
-	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
-	ATL::CComPtr<ID3D10Multithread> m_pMultiThread;
-
-	// The name of the graphics device used for rendering.
 	std::string m_DeviceName;
 
 	typedef std::vector< std::shared_ptr<IBuffer> > BufferList;
@@ -110,4 +103,10 @@ private:
 	QueryList m_Queries;
 
 	void LoadDefaultResources();
+
+	// DirectX
+	ATL::CComPtr<ID3D11Device2> m_pDevice;
+	ATL::CComPtr<ID3D11Debug> m_pDebugLayer;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<ID3D10Multithread> m_pMultiThread;
 };

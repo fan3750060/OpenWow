@@ -75,6 +75,7 @@
     <ClCompile Include="UI\UIText.cpp" />
     <ClCompile Include="UI\UITexture.cpp" />
     <ClCompile Include="UI\UIWindow.cpp" />
+    <ClCompile Include="WindowCreator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owEngine.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="UI\UIText.h" />
     <ClInclude Include="UI\UITexture.h" />
     <ClInclude Include="UI\UIWindow.h" />
+    <ClInclude Include="WindowCreator.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\freetype-2.9.1\freetype.vcxproj">

@@ -7,9 +7,8 @@ class IMesh;
 class CLight3D;
 // FORWARD END
 
-class IVisitor
+struct IVisitor
 {
-public:
 	virtual bool Visit(SceneNode3D& node) = 0;
 	virtual bool Visit(CUIBaseNode& node) = 0;
 	virtual bool Visit(IMesh& mesh, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) = 0;

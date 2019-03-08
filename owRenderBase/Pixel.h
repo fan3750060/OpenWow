@@ -2,8 +2,6 @@
 
 #include <cstdint>
 
-// Pixel formats for plotting and fetching pixels from a texture.
-
 // 4-component pixels
 template<typename T>
 struct Pixel4

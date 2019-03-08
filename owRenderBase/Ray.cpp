@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
-
+// General
 #include "Ray.h"
+
 
 Ray::Ray()
 {}

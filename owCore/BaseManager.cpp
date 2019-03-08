@@ -3,25 +3,25 @@
 // General
 #include "BaseManager.h"
 
-// Additional
-#include "FilesManager.h"
 
 std::shared_ptr<CBaseManager> _BaseManager;
 
-CBaseManager::CBaseManager() :
-	m_CurrentPhase(Phase_NONE)
-{}
+
+CBaseManager::CBaseManager()
+{
+	OutputDebugString(L"CBaseManager created.\n");
+}
 
 CBaseManager::~CBaseManager()
 {
-	OutputDebugString("CBaseManager destroyed.\n");
+	OutputDebugString(L"CBaseManager destroyed.\n");
 }
 
 void CBaseManager::RegisterManager(GUID _type, std::shared_ptr<IManager> _manager)
 {
 	if (m_Managers.find(_type) != m_Managers.end())
 	{
-		fail1();
+		throw std::exception("Manager already exists.");
 	}
 
 	m_Managers.insert(std::make_pair(_type, _manager));
@@ -40,14 +40,4 @@ std::shared_ptr<IManager> CBaseManager::GetManager(GUID _type)
 	}
 
 	return m_Managers.at(_type);
-}
-
-void CBaseManager::SetPhase(SBaseManagerPhases _phase)
-{
-	m_CurrentPhase = _phase;
-}
-
-SBaseManagerPhases CBaseManager::GetPhase()
-{
-	return m_CurrentPhase;
 }

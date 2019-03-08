@@ -19,7 +19,7 @@ struct
 	virtual void          readString(std::string* _string) = 0;
 };
 
-
+//--
 
 struct
 	__declspec(novtable)
@@ -34,7 +34,7 @@ struct
 	virtual uint8*  getDataFromCurrentEx() = 0;
 };
 
-
+//--
 
 struct
 	__declspec(novtable)
@@ -49,7 +49,7 @@ struct
 	virtual std::string  Full_Path_Name() const = 0;
 };
 
-
+//--
 
 struct
 	__declspec(novtable)
@@ -62,7 +62,7 @@ struct
 	virtual bool                    IsFileExists(cstring _name) = 0;
 };
 
-
+//--
 
 struct
 	__declspec(novtable)
@@ -82,7 +82,7 @@ struct
 	virtual Priority GetPriority() const = 0;
 };
 
-
+//--
 
 struct 
 	__declspec(novtable, uuid("5DC32EB8-9A63-4FAD-A4BF-81916B8EF86A"))
@@ -93,7 +93,6 @@ struct
 	virtual std::shared_ptr<IFile> Open(cstring _fileName) = 0;
 	virtual size_t                 GetFileSize(cstring _fileName) = 0;
 	virtual bool                   IsFileExists(cstring _fileName) = 0;
-
 
 	virtual void RegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage) = 0;
 	virtual void UnRegisterFilesStorage(std::shared_ptr<IFilesStorage> _storage) = 0;

@@ -15,5 +15,4 @@ public:
 
 	// A pointer to the material that was hit (if one was, NULL otherwise)
 	Material* pMaterial;
-
 };

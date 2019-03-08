@@ -1,5 +1,8 @@
 #pragma once
 
+/**
+ * Used for meshes
+ */
 enum class PrimitiveTopology
 {
 	PointList,
@@ -8,4 +11,3 @@ enum class PrimitiveTopology
 	TriangleList,
 	TriangleStrip
 };
-

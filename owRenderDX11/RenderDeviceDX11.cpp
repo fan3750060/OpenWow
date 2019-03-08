@@ -15,6 +15,8 @@
 // General
 #include "RenderDeviceDX11.h"
 
+
+
 class D3DMultithreadLocker
 {
 public:
@@ -32,6 +34,7 @@ public:
 private:
 	ATL::CComPtr<ID3D10Multithread> m_Locker;
 };
+
 
 
 std::string ShaderMacrosToString(const Shader::ShaderMacros& _shaderMacros)

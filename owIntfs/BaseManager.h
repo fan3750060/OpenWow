@@ -7,6 +7,8 @@ struct
 	virtual ~IManager() = 0 {};
 };
 
+//--
+
 template<class T>
 struct IRefManager : public IManager
 {	
@@ -33,53 +35,16 @@ struct
 	virtual std::shared_ptr<CFontMesh> GetMainFont() const = 0;
 };
 
-
-
-// FORWARD BEGIN
-class WMO;
-// FORWARD END
-
-struct 
-	__declspec(novtable, uuid("42D47100-B825-47F1-BE2F-6F7C78443884"))
-	IWMOManager : public IRefManager<WMO>
-{
-	virtual ~IWMOManager() {};
-};
-
-
-// FORWARD BEGIN
-class M2;
-// FORWARD END
-
-struct
-	__declspec(novtable, uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))
-	IM2Manager : public IRefManager<M2>
-{
-	virtual ~IM2Manager() {};
-};
-
 //--
-
-enum SBaseManagerPhases : uint8
-{
-	Phase_Input = 0,
-	Phase_Update,
-	Phase_Pre3D,
-	Phase_3D,
-	Phase_Post3D,
-	Phase_UI,
-	Phase_NONE
-};
 
 struct 
 	__declspec(novtable, uuid("BB9FD479-C7AD-4F57-837B-E299A04AF171"))
 	IBaseManager
 {
+	virtual ~IBaseManager() {};
+
 	virtual void RegisterManager(GUID _type, std::shared_ptr<IManager> _manager) = 0;
 	virtual void UnregisterManager(GUID _type) = 0;
 
 	virtual std::shared_ptr<IManager> GetManager(GUID _type) = 0;
-
-	virtual void SetPhase(SBaseManagerPhases _phase) = 0;
-	virtual SBaseManagerPhases GetPhase() = 0;
 };

@@ -21,7 +21,6 @@ class PipelineState;
 class IRenderDevice : public Object
 {
 public:
-	// Get the name of the primary graphics device.
 	virtual cstring GetDeviceName() const = 0;
 
 	// Create an vertex buffer (with std::vector)
@@ -68,6 +67,8 @@ public:
 
 	// Create a cone.
 	std::shared_ptr<IMesh> CreateCone();
+
+
 
 	//
 	// ABSTRACT

@@ -9,18 +9,15 @@ class CBaseManager : public IBaseManager
 {
 public:
 	CBaseManager();
-	~CBaseManager();
+	virtual ~CBaseManager();
 
 	// IBaseManager
 	void RegisterManager(GUID _type, std::shared_ptr<IManager> _manager) override;
 	void UnregisterManager(GUID _type) override;
 	std::shared_ptr<IManager> GetManager(GUID _type) override;
-	void SetPhase(SBaseManagerPhases _phase) override;
-	SBaseManagerPhases GetPhase() override;
 
 private:
 	std::map<GUID, std::shared_ptr<IManager>> m_Managers;
-	SBaseManagerPhases m_CurrentPhase;
 };
 
 extern std::shared_ptr<CBaseManager> _BaseManager;
@@ -42,5 +39,12 @@ static inline void DelManager()
 template<class T>
 static inline std::shared_ptr<T> GetManager()
 {
-	return std::dynamic_pointer_cast<T, IManager>(_BaseManager->GetManager(__uuidof(T)));
+	std::shared_ptr<IManager> manager = _BaseManager->GetManager(__uuidof(T));
+	if (manager == nullptr)
+	{
+		return nullptr;
+		//throw std::exception("Manager not found!");
+	}
+
+	return std::dynamic_pointer_cast<T, IManager>(manager);
 }

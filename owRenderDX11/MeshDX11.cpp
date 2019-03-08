@@ -9,7 +9,8 @@
 #include "MeshDX11.h"
 
 MeshDX11::MeshDX11(ID3D11Device2* pDevice)
-	: m_pDevice(pDevice)
+	: m_MeshType(SN_TYPE_NONE)
+	, m_pDevice(pDevice)
 	, m_pIndexBuffer(nullptr)
 	, m_PrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 	, m_pMaterial(nullptr)
@@ -20,6 +21,16 @@ MeshDX11::MeshDX11(ID3D11Device2* pDevice)
 
 MeshDX11::~MeshDX11()
 {}
+
+SceneNodeTypes MeshDX11::GetType() const
+{
+	return m_MeshType;
+}
+
+void MeshDX11::SetType(SceneNodeTypes type)
+{
+	m_MeshType = type;
+}
 
 void MeshDX11::AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer)
 {

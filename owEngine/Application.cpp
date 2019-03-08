@@ -15,48 +15,13 @@ float g_ApplicationTime = 0.0f;
 int64_t g_FrameCounter = 0L;
 
 std::shared_ptr<RenderWindow> gs_WindowHandle = nullptr;
-IApplication* _ApplicationInstance = nullptr;
+IApplication * _ApplicationInstance = nullptr;
 
 Application::Application()
 	: m_bIsInitialized(false)
 	, m_bIsRunning(false)
 {
 	m_HINSTANCE = ::GetModuleHandle(NULL);
-
-	HINSTANCE hDll;
-	hDll = LoadLibrary("SHELL32.dll");
-
-	// Register a window class for creating our render windows with.
-	WNDCLASSEX renderWindowClass;
-	renderWindowClass.cbSize = sizeof(WNDCLASSEX);
-	renderWindowClass.style = CS_HREDRAW | CS_VREDRAW;
-	renderWindowClass.lpfnWndProc = &Application::WndProc;
-	renderWindowClass.cbClsExtra = 0;
-	renderWindowClass.cbWndExtra = 0;
-	renderWindowClass.hInstance = m_HINSTANCE;
-	renderWindowClass.hIcon = LoadIcon(hDll, MAKEINTRESOURCE(2));
-	renderWindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	renderWindowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	renderWindowClass.lpszMenuName = NULL;
-	renderWindowClass.lpszClassName = c_RenderWindow_ClassName;
-	renderWindowClass.hIconSm = LoadIcon(hDll, MAKEINTRESOURCE(2));
-
-	if (!RegisterClassEx(&renderWindowClass))
-	{
-		fail2("Failed to register the render window class.");
-	}
-
-	/*HANDLE hProcess = ::GetCurrentProcess();
-	if (::SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
-		Log::Info("Process priority class set to HIGH");
-	else
-		Log::Error("Can't set process priority class.");*/
-
-#ifdef  IS_DX11
-	m_pRenderDevice = CreateRenderDeviceDX11(_BaseManager);
-#else
-	m_pRenderDevice = CreateRenderDeviceOGL(_BaseManager);
-#endif
 
 	_ApplicationInstance = this;
 }
@@ -70,14 +35,8 @@ Application::Application(HINSTANCE hInstance)
 	_ApplicationInstance = this;
 }
 
-
 Application::~Application()
 {
-	if (!UnregisterClass(c_RenderWindow_ClassName, m_HINSTANCE))
-	{
-		//fail1("Failed to unregister render window class");
-	}
-
 	_ApplicationInstance = nullptr;
 }
 
@@ -87,36 +46,19 @@ IApplication& Application::Get()
 	return *_ApplicationInstance;
 }
 
-bool Application::Load()
-{
-	Random::SetSeed(static_cast<unsigned long>(time(0)));
 
-	// Create window
-	CreateRenderWindow("Name", 1280, 1024);
-	Initialize += std::bind(&RenderWindow::OnInitialize, m_pWindow, std::placeholders::_1);
-	Terminate += std::bind(&RenderWindow::OnTerminate, m_pWindow, std::placeholders::_1);
-	Update += std::bind(&RenderWindow::OnUpdate, m_pWindow, std::placeholders::_1);
-	m_pWindow->ShowWindow();
-
-	return true;
-}
 
 int Application::Run()
 {
-	static Timer elapsedTime;
-
-	OnInitialize(EventArgs(*this));
-
-	m_bIsRunning = true;
+	DoBeforeRun();
 
 	int runResult = -1;
 	while (m_bIsRunning)
 	{
-		DoRun();
+		runResult = DoRun();
 	}
 
-	OnTerminate(EventArgs(*this));
-	OnTerminated(EventArgs(*this));
+	DoAfterRun();
 
 	return runResult;
 }
@@ -127,77 +69,50 @@ void Application::Stop()
 }
 
 
-std::shared_ptr<RenderWindow> Application::CreateRenderWindow(cstring windowName, int windowWidth, int windowHeight, bool vSync)
+std::shared_ptr<IRenderDevice> Application::CreateRenderDevice()
 {
-	int screenWidth = ::GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = ::GetSystemMetrics(SM_CYSCREEN);
-
-	RECT windowRect = { 0, 0, windowWidth, windowHeight };
-	::AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
-
-	windowWidth = windowRect.right - windowRect.left;
-	windowHeight = windowRect.bottom - windowRect.top;
-
-	int windowX = (screenWidth - windowWidth) / 2;
-	int windowY = (screenHeight - windowHeight) / 2;
-
-	HWND hWindow = CreateWindowEx
-	(
-		NULL,
-		c_RenderWindow_ClassName,
-		windowName.c_str(),
-		WS_OVERLAPPEDWINDOW,
-		windowX, windowY, windowWidth, windowHeight,
-		NULL,
-		NULL,
-		m_HINSTANCE,
-		NULL
-	);
-
-	if (!hWindow)
-	{
-		fail2("Failed to create render window.");
-	}
-
 #ifdef  IS_DX11
-	m_pWindow = CreateRenderWindowDX11(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+	std::shared_ptr<IRenderDevice> renderDevice = CreateRenderDeviceDX11(_BaseManager);
 #else
-	m_pWindow = CreateRenderWindowOGL(hWindow, GetRenderDevice(), windowName, windowWidth, windowHeight, vSync);
+	std::shared_ptr<IRenderDevice> renderDevice = CreateRenderDeviceOGL(_BaseManager);
 #endif
 
-	m_HWND = hWindow;
-	gs_WindowHandle = m_pWindow;
+	SetRenderDevice(renderDevice);
 
-	if (m_bIsRunning)
-	{
-		EventArgs eventArgs(*this);
-		m_pWindow->OnInitialize(eventArgs);
-	}
-
-	::UpdateWindow(hWindow);
-
-	return m_pWindow;
+	return renderDevice;
 }
+
+std::shared_ptr<RenderWindow> Application::CreateRenderWindow(IWindowObject * WindowObject, bool vSync)
+{
+#ifdef  IS_DX11
+	std::shared_ptr<RenderWindow> renderWindow = CreateRenderWindowDX11(GetRenderDevice(), WindowObject, vSync);
+#else
+	std::shared_ptr<RenderWindow> renderWindow = CreateRenderWindowOGL(GetRenderDevice(), WindowObject, vSync);
+#endif
+
+	SetRenderWindow(renderWindow);
+
+	return renderWindow;
+}
+
+
 
 CLoader* Application::GetLoader()
 {
 	return &m_Loader;
 }
 
-HINSTANCE Application::Get_HINSTANCE() const
-{
-	return m_HINSTANCE;
-}
-
-HWND Application::Get_HWND() const
-{
-	return m_HWND;
-}
-
 
 //
 // IApplication
 //
+
+void Application::DoBeforeRun()
+{
+	OnInitialize(EventArgs(*this));
+
+	m_bIsRunning = true;
+}
 
 int Application::DoRun()
 {
@@ -240,6 +155,12 @@ int Application::DoRun()
 	return static_cast<int>(msg.wParam);
 }
 
+void Application::DoAfterRun()
+{
+	OnTerminate(EventArgs(*this));
+	OnTerminated(EventArgs(*this));
+}
+
 std::shared_ptr<IRenderDevice> Application::GetRenderDevice() const
 {
 	assert1(m_pRenderDevice);
@@ -259,8 +180,32 @@ std::shared_ptr<RenderWindow> Application::GetRenderWindow() const
 
 void Application::SetRenderWindow(std::shared_ptr<RenderWindow> _renderWindow)
 {
+	if (m_pWindow != nullptr)
+	{
+		m_pWindow->HideWindow();
+
+		Initialize -= InitializeConnection;
+		Update -= UpdateConnection;
+		Terminate -= TerminateConnection;
+
+		m_pWindow->CloseWindow();
+		m_pWindow.reset();
+	}
+
 	m_pWindow = _renderWindow;
-	gs_WindowHandle = _renderWindow;
+
+	InitializeConnection = Initialize += std::bind(&RenderWindow::OnInitialize, m_pWindow, std::placeholders::_1);
+	UpdateConnection     = Update     += std::bind(&RenderWindow::OnUpdate,     m_pWindow, std::placeholders::_1);
+	TerminateConnection  = Terminate  += std::bind(&RenderWindow::OnTerminate,  m_pWindow, std::placeholders::_1);
+	
+	m_pWindow->ShowWindow();
+
+	gs_WindowHandle = m_pWindow;
+
+	if (m_bIsRunning)
+	{
+		DoBeforeRun();
+	}
 }
 
 
@@ -391,6 +336,12 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 		::EndPaint(hwnd, &paintStruct);
 	}
 	break;
+
+
+
+	//
+	// Keyboard events
+	//
 	case WM_KEYDOWN:
 	{
 		MSG charMsg;
@@ -442,6 +393,12 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 		gs_WindowHandle->OnKeyReleased(keyEventArgs);
 	}
 	break;
+	case WM_SETFOCUS:
+	{
+		EventArgs eventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnKeyboardFocus(eventArgs);
+	}
+	break;
 	case WM_KILLFOCUS:
 	{
 		// Window lost keyboard focus.
@@ -449,12 +406,12 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 		gs_WindowHandle->OnKeyboardBlur(eventArgs);
 	}
 	break;
-	case WM_SETFOCUS:
-	{
-		EventArgs eventArgs(*gs_WindowHandle);
-		gs_WindowHandle->OnKeyboardFocus(eventArgs);
-	}
-	break;
+
+
+
+	//
+	// The mouse events
+	//
 	case WM_MOUSEMOVE:
 	{
 		bool lButton = (wParam & MK_LBUTTON) != 0;
@@ -531,6 +488,18 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 		gs_WindowHandle->OnMouseWheel(mouseWheelEventArgs);
 	}
 	break;
+	case WM_MOUSELEAVE:
+	{
+		EventArgs mouseLeaveEventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnMouseLeave(mouseLeaveEventArgs);
+	}
+	break;
+	case WM_MOUSEACTIVATE:
+	{
+		EventArgs mouseFocusEventArgs(*gs_WindowHandle);
+		gs_WindowHandle->OnMouseFocus(mouseFocusEventArgs);
+	}
+	break;
 	// NOTE: Not really sure if these next set of messages are working correctly.
 	// Not really sure HOW to get them to work correctly.
 	// TODO: Try to fix these if I need them ;)
@@ -540,29 +509,70 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 		gs_WindowHandle->OnMouseBlur(mouseBlurEventArgs);
 	}
 	break;
-	case WM_MOUSEACTIVATE:
+
+
+
+
+	//
+	// Window events
+	//
+
+	case WM_ACTIVATE:
 	{
-		EventArgs mouseFocusEventArgs(*gs_WindowHandle);
-		gs_WindowHandle->OnMouseFocus(mouseFocusEventArgs);
+		switch (wParam)
+		{
+			case WA_ACTIVE:
+			{
+				EventArgs inputFocusEventArgs(*gs_WindowHandle);
+				gs_WindowHandle->OnInputFocus(inputFocusEventArgs);
+			}
+			break;
+
+			case WA_INACTIVE:
+			{
+				EventArgs inputBlueEventArgs(*gs_WindowHandle);
+				gs_WindowHandle->OnInputBlur(inputBlueEventArgs);
+			}
+			break;
+		}
 	}
 	break;
-	case WM_MOUSELEAVE:
-	{
-		EventArgs mouseLeaveEventArgs(*gs_WindowHandle);
-		gs_WindowHandle->OnMouseLeave(mouseLeaveEventArgs);
-	}
-	break;
+
+
 	case WM_SIZE:
 	{
-		int width = ((int)(short)LOWORD(lParam));
-		int height = ((int)(short)HIWORD(lParam));
+		switch (wParam) 
+		{
+			case SIZE_MINIMIZED:
+			{
+				EventArgs mininizeEventArgs(*gs_WindowHandle);
+				gs_WindowHandle->OnMinimize(mininizeEventArgs);
+			}
+			break;
 
-		ResizeEventArgs resizeEventArgs(*gs_WindowHandle, width, height);
-		gs_WindowHandle->OnResize(resizeEventArgs);
+			case SIZE_MAXIMIZED:
+			{
+				EventArgs restoreEventArgs(*gs_WindowHandle);
+				gs_WindowHandle->OnRestore(restoreEventArgs);
+			}
+			break;
+
+			case SIZE_RESTORED:
+			{
+				int width = ((int)(short)LOWORD(lParam));
+				int height = ((int)(short)HIWORD(lParam));
+
+				ResizeEventArgs resizeEventArgs(*gs_WindowHandle, width, height);
+				gs_WindowHandle->OnResize(resizeEventArgs);
+			}
+			break;
+		}
 
 		::UpdateWindow(hwnd);
 	}
 	break;
+
+
 	case WM_CLOSE:
 	{
 		WindowCloseEventArgs windowCloseEventArgs(*gs_WindowHandle);
@@ -576,11 +586,17 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 		}
 	}
 	break;
+
+
+
 	case WM_DESTROY:
 	{
 		// TODO delete gs_WindowHandle;
 	}
 	break;
+
+
+
 	default:
 		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
@@ -588,6 +604,8 @@ LRESULT CALLBACK Application::WndProc(HWND hwnd, UINT message, WPARAM wParam, LP
 
 	return 0;
 }
+
+
 
 //---------------------------------------------------------------
 //-- EVENTS
@@ -606,18 +624,6 @@ void Application::OnInitialize(EventArgs& e)
 void Application::OnUpdate(UpdateEventArgs& e)
 {
 	Update(e);
-}
-
-void Application::OnRender(Render3DEventArgs& e)
-{
-	m_pWindow->OnPreRender(e);
-	m_pWindow->OnRender(e);
-	m_pWindow->OnPostRender(e);
-}
-
-void Application::OnRenderUI(RenderUIEventArgs & e)
-{
-	m_pWindow->OnRenderUI(e);
 }
 
 void Application::OnTerminate(EventArgs& e)
@@ -639,7 +645,8 @@ void Application::OnExit(EventArgs& e)
 	Exit(e);
 
 	// Destroy any windows that are still hanging around.
-	::DestroyWindow(m_HWND);
+	if (m_pWindow)
+		m_pWindow->CloseWindow();
 
 	// Setting this to false will cause the main application's message pump to stop.
 	m_bIsRunning = false;
@@ -648,4 +655,16 @@ void Application::OnExit(EventArgs& e)
 void Application::OnUserEvent(UserEventArgs& e)
 {
 	UserEvent(e);
+}
+
+void Application::OnRender(Render3DEventArgs& e)
+{
+	m_pWindow->OnPreRender(e);
+	m_pWindow->OnRender(e);
+	m_pWindow->OnPostRender(e);
+}
+
+void Application::OnRenderUI(RenderUIEventArgs & e)
+{
+	m_pWindow->OnRenderUI(e);
 }

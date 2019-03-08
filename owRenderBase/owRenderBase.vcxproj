@@ -156,7 +156,6 @@
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="D3D9_Types.cpp" />
     <ClCompile Include="MaterialImpl.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Primitives\Geometry.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RenderDevice.cpp" />
@@ -210,10 +209,8 @@
     <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ConstantBuffer.inl" />
     <None Include="RenderDevice.inl" />
     <None Include="ShaderParameter.inl" />
-    <None Include="StructuredBuffer.inl" />
     <None Include="Texture.inl" />
   </ItemGroup>
   <ItemGroup>

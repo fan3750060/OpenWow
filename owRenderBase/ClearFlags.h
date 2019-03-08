@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 /**
  * Flags to specify which value should be cleared.
  */

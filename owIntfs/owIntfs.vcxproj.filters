@@ -52,6 +52,9 @@
     <ClInclude Include="CameraController.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="WindowObject.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

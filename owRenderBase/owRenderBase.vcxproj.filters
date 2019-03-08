@@ -17,7 +17,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Types</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MaterialImpl.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
@@ -146,12 +145,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="StructuredBuffer.inl">
-      <Filter>Buffers</Filter>
-    </None>
-    <None Include="ConstantBuffer.inl">
-      <Filter>Buffers</Filter>
-    </None>
     <None Include="Texture.inl" />
     <None Include="ShaderParameter.inl" />
     <None Include="RenderDevice.inl" />

@@ -5,8 +5,6 @@
 class ConstantBuffer : public IBuffer
 {
 public:
-
-	// The contents of a constant buffer can also be updated.
 	template <typename T>
 	void Set(const T& data);
 
@@ -17,15 +15,19 @@ public:
 	// Elements stride
 	virtual uint32 GetElementStride() const;
 
-	// Copy the contents of a buffer to this one.
-	// Buffers must be the same size.
+	// Copy the contents of a buffer to this one. Buffers must be the same size.
 	virtual void Copy(std::shared_ptr<ConstantBuffer> other) = 0;
 
-	// Implementations must provide this method.
 	virtual void Set(const void* data, size_t size) = 0;
-
-protected:
-
 };
 
-#include "ConstantBuffer.inl"
+
+
+//
+// Template specizalizations
+//
+template<typename T>
+void ConstantBuffer::Set(const T& data)
+{
+	Set(&data, sizeof(T));
+}

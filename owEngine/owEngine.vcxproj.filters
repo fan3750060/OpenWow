@@ -197,6 +197,7 @@
     <ClCompile Include="UI\Materials\UI_Button_Material.cpp">
       <Filter>UI\Materials</Filter>
     </ClCompile>
+    <ClCompile Include="WindowCreator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -360,5 +361,6 @@
     <ClInclude Include="UI\Materials\UI_Button_Material.h">
       <Filter>UI\Materials</Filter>
     </ClInclude>
+    <ClInclude Include="WindowCreator.h" />
   </ItemGroup>
 </Project>

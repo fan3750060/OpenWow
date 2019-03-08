@@ -1,14 +1,11 @@
 #pragma once
 
 #include "BufferBinding.h"
+#include "Buffer.h"
 #include "PrimitiveTopology.h"
-
-class IBuffer;
-class Shader;
-class Material;
-class RenderEventArgs;
-class IVisitor;
-class ConstantBuffer;
+#include "Material.h"
+#include "RenderEvents.h"
+#include "ConstantBuffer.h"
 
 enum SceneNodeTypes : uint8
 {
@@ -29,11 +26,10 @@ enum SceneNodeTypes : uint8
 class IMesh : public Object
 {
 public:
-	IMesh();
-	virtual ~IMesh();
+	virtual ~IMesh() {};
 
-	virtual SceneNodeTypes GetType() const;
-	virtual void SetType(SceneNodeTypes type);
+	virtual SceneNodeTypes GetType() const = 0;
+	virtual void SetType(SceneNodeTypes type) = 0;
 
 	virtual void AddVertexBuffer(const BufferBinding& binding, std::shared_ptr<IBuffer> buffer) = 0;
 	virtual void SetVertexBuffer(std::shared_ptr<IBuffer> buffer) = 0;

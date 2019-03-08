@@ -6,19 +6,19 @@
 // General
 #include "RenderWindowDX11.h"
 
-// Additional
-#include "RenderTargetDX11.h"
-#include "TextureDX11.h"
-
-RenderWindowDX11::RenderWindowDX11(HWND hWnd, std::shared_ptr<RenderDeviceDX11> device, cstring windowName, int windowWidth, int windowHeight, bool vSync)
-	: RenderWindow(windowName, windowWidth, windowHeight, hWnd, vSync)
-	, m_bIsMouseTracking(false)
+RenderWindowDX11::RenderWindowDX11(std::shared_ptr<RenderDeviceDX11> device, IWindowObject * WindowObject, bool vSync)
+	: RenderWindow(WindowObject, vSync)
 	, m_Device(device)
-	, m_pDevice(m_Device.lock()->GetDevice())
-	, m_pDeviceContext(m_Device.lock()->GetDeviceContext())
-	, m_pSwapChain(nullptr)
 	, m_bResizePending(false)
+
+	, m_pDevice(nullptr)
+	, m_pDeviceContext(nullptr)
+	, m_pSwapChain(nullptr)
+	, m_pBackBuffer(nullptr)
 {
+	m_pDevice = m_Device.lock()->GetDevice();
+	m_pDeviceContext = m_Device.lock()->GetDeviceContext();
+
 	m_SampleDesc = { 1, 0 };
 
 	// Try to choose the best multi-sampling quality level that is supported.
@@ -139,7 +139,7 @@ void RenderWindowDX11::CreateSwapChain()
 
 	// First create a DXGISwapChain1
 	ATL::CComPtr<IDXGISwapChain1> pSwapChain;
-	if (FAILED(factory->CreateSwapChainForHwnd(m_pDevice, GetHWND(), &swapChainDesc, &swapChainFullScreenDesc, nullptr, &pSwapChain)))
+	if (FAILED(factory->CreateSwapChainForHwnd(m_pDevice, GetHWnd(), &swapChainDesc, &swapChainFullScreenDesc, nullptr, &pSwapChain)))
 	{
 		Log::Error("Failed to create swap chain.");
 	}
@@ -231,6 +231,9 @@ std::shared_ptr<IRenderTarget> RenderWindowDX11::GetRenderTarget()
 	return m_RenderTarget;
 }
 
+
+
+// Engine events
 void RenderWindowDX11::OnPreRender(Render3DEventArgs& e)
 {
 	if (m_bResizePending)
@@ -246,47 +249,19 @@ void RenderWindowDX11::OnPreRender(Render3DEventArgs& e)
 
 void RenderWindowDX11::OnPostRender(Render3DEventArgs& e)
 {
+	//m_RenderTarget->UnBind();
+
 	base::OnPostRender(e);
 }
 
-void RenderWindowDX11::OnMouseMoved(MouseMotionEventArgs& e)
-{
-	if (!m_bIsMouseTracking)
-	{
-		TRACKMOUSEEVENT tme;
-		tme.cbSize = sizeof(TRACKMOUSEEVENT);
-		tme.dwFlags = TME_LEAVE;
-		tme.hwndTrack = GetHWND();
-		if (::TrackMouseEvent(&tme))
-		{
-			m_bIsMouseTracking = true;
-		}
-	}
 
-	base::OnMouseMoved(e);
-}
 
-void RenderWindowDX11::OnMouseLeave(EventArgs& e)
-{
-	m_bIsMouseTracking = false;
-
-	base::OnMouseLeave(e);
-}
-
+//
+// Window events
+//
 void RenderWindowDX11::OnResize(ResizeEventArgs& e)
 {
-	// This function can be called a lot very quickly.
-	// Delay the resizing of the swap chain until the OnPreRender function is called
-	// again (which doesn't happen until the user finishes resizing the window.
-    //ResizeSwapChainBuffers( e.Width, e.Height );
-
 	base::OnResize(e);
 
-	// The swap chain will be resized the next time OnPreRender is invoked.
-	m_bResizePending = true;
-}
-
-void RenderWindowDX11::OnTerminate(EventArgs& e)
-{
-	base::OnTerminate(e);
+	m_bResizePending = true; // The swap chain will be resized the next time OnPreRender is invoked.
 }

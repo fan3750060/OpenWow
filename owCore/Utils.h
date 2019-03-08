@@ -18,9 +18,6 @@ public:
     static  Color ToColorFromName(std::string& _string);
     static  Color ToColorFromRGB(std::string& _string);
     static  Color ToColorFromRGBA(std::string& _string);
-    static  TextAlignW ToTextAlignW(std::string& _string);
-    static  TextAlignH ToTextAlignH(std::string& _string);
-    static  InputMode ToInputMode(std::string& _string);
 
     // Parse
     static   std::string ParseSectionName(std::string& _string);
@@ -287,7 +284,7 @@ inline std::string ConvertString(const std::wstring& wstring)
 }
 
 // Gets a std::string resource from the module's resources.
-inline std::string GetStringResource(int ID, cstring type)
+inline std::wstring GetStringResource(int ID, const std::wstring& type)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
 	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(ID), type.c_str());
@@ -297,11 +294,11 @@ inline std::string GetStringResource(int ID, cstring type)
 		DWORD resourceSize = SizeofResource(hModule, hResource);
 		if (hResourceData && resourceSize > 0)
 		{
-			const char* resourceData = static_cast<const char*>(LockResource(hResourceData));
-			std::string strData(resourceData, resourceSize);
+			const wchar_t* resourceData = static_cast<const wchar_t*>(LockResource(hResourceData));
+			std::wstring strData(resourceData, resourceSize);
 			return strData;
 		}
 	}
 	// Just return an empty std::string.
-	return std::string();
+	return std::wstring();
 }

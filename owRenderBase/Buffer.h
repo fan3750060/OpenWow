@@ -6,8 +6,6 @@
 class IBuffer : public Object
 {
 public:
-	typedef Object base;
-
 	enum BufferType
 	{
 		Unknown = 0,

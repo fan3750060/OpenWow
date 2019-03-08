@@ -1,11 +1,5 @@
 #pragma once
 
-#define VERSION_Vanila  0
-#define VERSION_BC		1
-#define VERSION_WotLK	2
-
-#define VERSION VERSION_WotLK
-
 // General types
 typedef signed char int8;
 typedef unsigned char uint8;
@@ -67,28 +61,6 @@ class Color;
 #include <mutex>
 
 typedef const std::string& cstring;
-
-// Consts
-enum TextAlignW
-{
-	TEXT_ALIGNW_LEFT = 0,
-	TEXT_ALIGNW_CENTER,
-	TEXT_ALIGNW_RIGHT
-};
-
-enum TextAlignH
-{
-	TEXT_ALIGNH_TOP = 0,
-	TEXT_ALIGNH_CENTER,
-	TEXT_ALIGNH_BOTTOM
-};
-
-enum InputMode
-{
-	MODE_CHARACTERS = 0,
-	MODE_NUMBERS,
-	MODE_ANY
-};
 
 // Usefull macros
 #define __PACK_BEGIN  "../shared/pack_begin.h"

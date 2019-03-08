@@ -73,22 +73,3 @@ public:
 	const Viewport* Viewport;
 };
 typedef Delegate<RenderUIEventArgs> RenderUIEvent;
-
-
-
-class UserEventArgs : public EventArgs
-{
-	typedef EventArgs base;
-public:
-	UserEventArgs(const Object& caller, int code, void* data1, void* data2)
-		: base(caller)
-		, Code(code)
-		, Data1(data1)
-		, Data2(data2)
-	{}
-
-	int     Code;
-	void*   Data1;
-	void*   Data2;
-};
-typedef Delegate<UserEventArgs> UserEvent;

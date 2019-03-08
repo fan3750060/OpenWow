@@ -13,11 +13,17 @@ struct Viewport
 		OrthoMatrix = glm::ortho(0.0f, Width, Height, 0.0f, -1.0f, 1.0f);
 	}
 
+	void UpdateOrthoMatrix()
+	{
+		OrthoMatrix = glm::ortho(0.0f, Width, Height, 0.0f, -1.0f, 1.0f);
+	}
+
 	float X;
 	float Y;
 	float Width;
 	float Height;
 	float MinDepth;
 	float MaxDepth;
+
 	mat4 OrthoMatrix;
 };

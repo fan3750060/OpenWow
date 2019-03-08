@@ -23,7 +23,9 @@ public:
 
 	void operator -= (typename const FunctionDecl& function)
 	{
-		FunctionsSet::const_iterator cit = m_Functions.find(_decl);
+		_ASSERT(function);
+
+		FunctionsSet::const_iterator cit = m_Functions.find(function);
 		if (cit != m_Functions.end())
 		{
 			m_Functions.erase(cit);
@@ -237,3 +239,22 @@ public:
 	int Height;
 };
 typedef Delegate<ResizeEventArgs> ResizeEvent;
+
+
+
+class UserEventArgs : public EventArgs
+{
+	typedef EventArgs base;
+public:
+	UserEventArgs(const Object& caller, int code, void* data1, void* data2)
+		: base(caller)
+		, Code(code)
+		, Data1(data1)
+		, Data2(data2)
+	{}
+
+	int     Code;
+	void*   Data1;
+	void*   Data2;
+};
+typedef Delegate<UserEventArgs> UserEvent;

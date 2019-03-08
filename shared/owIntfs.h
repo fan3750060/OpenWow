@@ -23,3 +23,4 @@
 #include "../owIntfs/SceneNodeProvider.h"
 #include "../owIntfs/Settings.h"
 #include "../owIntfs/Visitor.h"
+#include "../owIntfs/WindowObject.h"

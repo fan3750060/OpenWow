@@ -231,6 +231,9 @@
     <ClInclude Include="SkyManager.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="Managers.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DBC\Core\DBC__File.inl">

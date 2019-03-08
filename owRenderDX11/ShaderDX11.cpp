@@ -93,7 +93,7 @@ bool ShaderDX11::LoadShaderFromString(ShaderType shaderType, cstring fileName, c
 		{
 			if (pErrorBlob)
 			{
-				OutputDebugString(static_cast<char*>(pErrorBlob->GetBufferPointer()));
+				OutputDebugStringA(static_cast<char*>(pErrorBlob->GetBufferPointer()));
 				Log::Error(static_cast<char*>(pErrorBlob->GetBufferPointer()));
 			}
 			return false;

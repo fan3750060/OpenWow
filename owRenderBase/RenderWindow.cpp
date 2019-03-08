@@ -6,57 +6,74 @@
 // Additional
 #include "Camera.h"
 
-RenderWindow::RenderWindow(cstring windowName, int windowWidth, int windowHeight, HWND _hwnd, bool vSync)
-	: m_sWindowName(windowName)
-	, m_iWindowWidth(windowWidth)
-	, m_iWindowHeight(windowHeight)
-	, m_HWND(_hwnd)
+RenderWindow::RenderWindow(IWindowObject * WindowObject, bool vSync)
+	: m_WindowObject(WindowObject)
 	, m_vSync(vSync)
 
 	, m_PreviousMousePosition(0, 0)
 	, m_bInClientRect(false)
+	, m_bIsMouseTracking(false)
+
 	, m_bHasKeyboardFocus(false)
 {}
 
 RenderWindow::~RenderWindow()
 {}
 
+
+
 void RenderWindow::ShowWindow()
 {
-	::ShowWindow(m_HWND, SW_SHOWDEFAULT);
-	::BringWindowToTop(m_HWND);
+	m_WindowObject->ShowWindow(SW_SHOWDEFAULT);
+	m_WindowObject->BringWindowToTop();
 }
 
 void RenderWindow::HideWindow()
 {
-	::ShowWindow(m_HWND, SW_HIDE);
+	m_WindowObject->ShowWindow(SW_HIDE);
 }
 
 void RenderWindow::CloseWindow()
 {
-	::DestroyWindow(m_HWND);
+	m_WindowObject->DestroyWindow();
 }
 
 void RenderWindow::SetMousePosition(vec2 _position)
 {
 	RECT rc;
-	::GetClientRect(m_HWND, &rc); // get client coords
-	::ClientToScreen(m_HWND, reinterpret_cast<POINT*>(&rc.left)); // convert top-left
-	::ClientToScreen(m_HWND, reinterpret_cast<POINT*>(&rc.right)); // convert bottom-right
+	m_WindowObject->GetClientRect(&rc);
+	m_WindowObject->ClientToScreen(reinterpret_cast<POINT*>(&rc.left));
+	m_WindowObject->ClientToScreen(reinterpret_cast<POINT*>(&rc.right));
 
 	::SetCursorPos(rc.left + _position.x, rc.top + _position.y);
 }
 
 
+void RenderWindow::SetWindowName(cstring _name)
+{
+	//m_sWindowName = _name;
+
+	//::SetWindowTextA(m_HWND, m_sWindowName.c_str());
+}
+
+std::string RenderWindow::GetWindowName() const
+{
+	return m_WindowObject->GetWindowName();
+}
 
 int RenderWindow::GetWindowWidth() const
 {
-	return m_iWindowWidth;
+	return m_WindowObject->GetWindowWidth();
 }
 
 int RenderWindow::GetWindowHeight() const
 {
-	return m_iWindowHeight;
+	return m_WindowObject->GetWindowHeight();
+}
+
+glm::ivec2 RenderWindow::GetWindowSize() const
+{
+	return glm::ivec2(GetWindowWidth(), GetWindowHeight());
 }
 
 bool RenderWindow::IsVSync() const
@@ -64,21 +81,9 @@ bool RenderWindow::IsVSync() const
 	return m_vSync;
 }
 
-HWND RenderWindow::GetHWND() const
+HWND RenderWindow::GetHWnd() const
 {
-	return m_HWND;
-}
-
-void RenderWindow::SetWindowName(cstring _name)
-{
-	m_sWindowName = _name;
-
-	::SetWindowText(m_HWND, m_sWindowName.c_str());
-}
-
-cstring RenderWindow::GetWindowName() const
-{
-	return m_sWindowName;
+	return m_WindowObject->GetHWnd();
 }
 
 
@@ -152,8 +157,9 @@ void RenderWindow::OnRestore(EventArgs& e) // The RenderWindow window has been r
 
 void RenderWindow::OnResize(ResizeEventArgs& e) // The RenderWindow window has be resized
 {
-	m_iWindowWidth = e.Width;
-	m_iWindowHeight = e.Height;
+	// TODO
+	//m_iWindowWidth = e.Width;
+	//m_iWindowHeight = e.Height;
 
 	Resize(e);
 
@@ -203,8 +209,20 @@ void RenderWindow::OnKeyboardBlur(EventArgs& e) // Window lost keyboard focus
 // The mouse events
 //
 
-void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e) // The mouse was moved
+void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e)
 {
+	if (!m_bIsMouseTracking)
+	{
+		TRACKMOUSEEVENT tme;
+		tme.cbSize = sizeof(TRACKMOUSEEVENT);
+		tme.dwFlags = TME_LEAVE;
+		tme.hwndTrack = m_WindowObject->GetHWnd();
+		if (::TrackMouseEvent(&tme))
+		{
+			m_bIsMouseTracking = true;
+		}
+	}
+
 	if (!m_bInClientRect)
 	{
 		m_PreviousMousePosition = glm::ivec2(e.X, e.Y);
@@ -219,12 +237,12 @@ void RenderWindow::OnMouseMoved(MouseMotionEventArgs& e) // The mouse was moved
 	MouseMoved(e);
 }
 
-void RenderWindow::OnMouseButtonPressed(MouseButtonEventArgs& e) // A button on the mouse was pressed
+void RenderWindow::OnMouseButtonPressed(MouseButtonEventArgs& e)
 {
 	MouseButtonPressed(e);
 }
 
-void RenderWindow::OnMouseButtonReleased(MouseButtonEventArgs& e) // A button on the mouse was released
+void RenderWindow::OnMouseButtonReleased(MouseButtonEventArgs& e)
 {
 	MouseButtonReleased(e);
 }
@@ -236,7 +254,9 @@ void RenderWindow::OnMouseWheel(MouseWheelEventArgs& e)
 
 void RenderWindow::OnMouseLeave(EventArgs& e)
 {
+	m_bIsMouseTracking = false;
 	m_bInClientRect = false;
+
 	MouseLeave(e);
 }
 

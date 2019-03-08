@@ -1,4 +1,3 @@
-// A Ray structure that can be used in raycasting renderers.
 #pragma once;
 
 class Material;

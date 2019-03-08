@@ -1,13 +1,13 @@
 #pragma once
 
-class TextureDX11;
-class RenderTargetDX11;
+#include "TextureDX11.h"
+#include "RenderTargetDX11.h"
 
 class RenderWindowDX11 : public RenderWindow
 {
 	typedef RenderWindow base;
 public:
-	RenderWindowDX11(HWND hWnd, std::shared_ptr<RenderDeviceDX11> device, cstring windowName, int windowWidth, int windowHeight, bool vSync);
+	RenderWindowDX11(std::shared_ptr<RenderDeviceDX11> device, IWindowObject * WindowObject, bool vSync);
 	virtual ~RenderWindowDX11();
 
 	virtual void Present();
@@ -17,33 +17,27 @@ public:
 protected:
 	virtual void CreateSwapChain();
 
+	// Engine events
 	virtual void OnPreRender(Render3DEventArgs& e);
 	virtual void OnPostRender(Render3DEventArgs& e);
 
-	virtual void OnMouseMoved(MouseMotionEventArgs& e);
-	virtual void OnMouseLeave(EventArgs& e);
-
+	// Window events
 	virtual void OnResize(ResizeEventArgs& e);
 
-	virtual void OnTerminate(EventArgs& e);
-
+protected:
 	virtual void ResizeSwapChainBuffers(uint32_t width, uint32_t height);
 
 private:
-	bool m_bIsMouseTracking; // Used to capture mouse enter/leave events.
-
-	std::weak_ptr<RenderDeviceDX11> m_Device;
-
-	// Used to enable multisampling AA
-	DXGI_SAMPLE_DESC m_SampleDesc; // = { 1, 0 };
-
-	ATL::CComPtr<ID3D11Device2> m_pDevice;
-	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
-	ATL::CComPtr<IDXGISwapChain2> m_pSwapChain;
-	ATL::CComPtr<ID3D11Texture2D> m_pBackBuffer;
-
+	std::weak_ptr<RenderDeviceDX11>   m_Device;
 	std::shared_ptr<RenderTargetDX11> m_RenderTarget;
 
-	// If the window has to be resized, delay the resizing of the swap chain until the prerender function.
-	bool m_bResizePending;
+	bool                               m_bResizePending;  // If the window has to be resized, delay the resizing of the swap chain until the prerender function.
+
+	// DirectX
+	ATL::CComPtr<ID3D11Device2>        m_pDevice;
+	ATL::CComPtr<ID3D11DeviceContext2> m_pDeviceContext;
+	ATL::CComPtr<IDXGISwapChain2>      m_pSwapChain;
+	ATL::CComPtr<ID3D11Texture2D>      m_pBackBuffer;
+
+	DXGI_SAMPLE_DESC                   m_SampleDesc;      // Used to enable multisampling AA
 };

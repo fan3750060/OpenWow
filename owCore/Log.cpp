@@ -16,14 +16,14 @@ CLog::CLog()
 	m_DebugOutput_ConsoleWindows = std::make_shared<DebugOutput_ConsoleWindows>();
 	AddDebugOutput(m_DebugOutput_ConsoleWindows);
 
-	OutputDebugString("Log created.\n");
+	OutputDebugString(L"Log created.\n");
 }
 
 CLog::~CLog()
 {
 	DelManager<ILog>();
 
-	OutputDebugString("Log destroyed.\n");
+	OutputDebugString(L"Log destroyed.\n");
 }
 
 //--

@@ -44,6 +44,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Visitor.h" />
+    <ClInclude Include="WindowObject.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{69AEC773-3240-4644-A049-ABABD643DBEC}</ProjectGuid>

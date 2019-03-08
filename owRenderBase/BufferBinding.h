@@ -23,6 +23,6 @@ struct BufferBinding
 		return false;
 	}
 
-	std::string Name;
-	uint32 Index;
+	std::string  Name;
+	uint32       Index;
 };
