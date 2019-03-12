@@ -36,8 +36,10 @@
 // additional nodes
 #include "../owEngine/UI/UIButton.h"
 #include "../owEngine/UI/UIColor.h"
+#include "../owEngine/UI/UILine.h"
 #include "../owEngine/UI/UIText.h"
 #include "../owEngine/UI/UITexture.h"
+#include "../owEngine/UI/UISlateEditor.h"
 
 // materials
 #include "../owEngine/UI/Materials/UI_Color_Material.h"

@@ -32,7 +32,10 @@ CUITextNode::~CUITextNode()
 //
 void CUITextNode::SetFont(std::shared_ptr<CFontMesh> _font)
 {
+	_ASSERT(_font != nullptr);
+
 	m_Font = _font;
+	m_Material->SetTexture(0, m_Font->GetTexture());
 }
 
 void CUITextNode::SetText(const std::string& _text)
@@ -50,21 +53,6 @@ void CUITextNode::SetColor(cvec4 _color)
 //
 // CUIBaseNode
 //
-void CUITextNode::SetMesh(std::shared_ptr<IMesh> mesh)
-{
-	fail1();
-}
-std::shared_ptr<IMesh> CUITextNode::GetMesh() const
-{
-	fail1();
-	return nullptr;
-}
-
-
-
-//
-// Render functional
-//
 bool CUITextNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Font->SetMaterial(m_Material);
@@ -75,7 +63,7 @@ bool CUITextNode::AcceptMesh(IVisitor& visitor)
 	{
 		uint8 ch = m_Text.c_str()[i];
 		m_Material->SetOffset(_offset);
-		_offset.x += static_cast<float>(m_Font->GetCharWidth(ch));
+		_offset.x += static_cast<float>(m_Font->GetCharWidth(ch)) + 0.01f;
 
 		m_Font->Accept(visitor, 0, 0, (ch) * 6, 6);
 	}

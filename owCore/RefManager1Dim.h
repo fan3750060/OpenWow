@@ -5,7 +5,7 @@ class CRefManager1Dim
 {
 public:
 	CRefManager1Dim();
-	~CRefManager1Dim();
+	virtual ~CRefManager1Dim();
 
 	std::shared_ptr<T> Add(cstring name);
 

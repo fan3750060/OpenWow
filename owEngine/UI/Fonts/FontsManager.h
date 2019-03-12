@@ -8,10 +8,9 @@ public:
 	FontsManager();
 	virtual ~FontsManager();
 
+	// IFontsManager
+	std::shared_ptr<CFontMesh> GetMainFont() const override;
 	std::shared_ptr<CFontMesh> Add(cstring _fontFileName, uint32 _fontSize);
-
-	
-	std::shared_ptr<CFontMesh> GetMainFont() const override { return mainFont; }
 
 	// CRefManager1Dim
 	std::shared_ptr<CFontMesh> CreateAction(cstring name) override;
@@ -24,5 +23,5 @@ public:
 	void Delete(std::shared_ptr<CFontMesh> item) { CRefManager1Dim::Delete(item); }
 
 private:
-	std::shared_ptr<CFontMesh> mainFont;
+	std::shared_ptr<CFontMesh> m_MainFont;
 };

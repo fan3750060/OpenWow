@@ -46,6 +46,9 @@
     <Filter Include="UI\Core">
       <UniqueIdentifier>{0dacc9cb-cf95-46f6-acda-50d67e6bdd2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\SlateEditor">
+      <UniqueIdentifier>{3d6dd2c1-5bf4-49a8-81f7-65890fb629e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -188,9 +191,6 @@
     <ClCompile Include="UI\UIColor.cpp">
       <Filter>UI\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="UI\UIWindow.cpp">
-      <Filter>UI\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="UI\UIButton.cpp">
       <Filter>UI\Nodes</Filter>
     </ClCompile>
@@ -198,6 +198,30 @@
       <Filter>UI\Materials</Filter>
     </ClCompile>
     <ClCompile Include="WindowCreator.cpp" />
+    <ClCompile Include="UI\UISlateEditor.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateNodeHeader.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateNodeParameter.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateNode.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateNodeFooter.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Materials\UI_Line_Material.cpp">
+      <Filter>UI\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UILine.cpp">
+      <Filter>UI\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIWindow.cpp">
+      <Filter>UI\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -352,9 +376,6 @@
     <ClInclude Include="UI\UIColor.h">
       <Filter>UI\Nodes</Filter>
     </ClInclude>
-    <ClInclude Include="UI\UIWindow.h">
-      <Filter>UI\Nodes</Filter>
-    </ClInclude>
     <ClInclude Include="UI\UIButton.h">
       <Filter>UI\Nodes</Filter>
     </ClInclude>
@@ -362,5 +383,29 @@
       <Filter>UI\Materials</Filter>
     </ClInclude>
     <ClInclude Include="WindowCreator.h" />
+    <ClInclude Include="UI\UISlateEditor.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateNodeHeader.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateNodeParameter.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateNode.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateNodeFooter.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Materials\UI_Line_Material.h">
+      <Filter>UI\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UILine.h">
+      <Filter>UI\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIWindow.h">
+      <Filter>UI\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

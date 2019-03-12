@@ -600,6 +600,11 @@ uint16_t TextureDX11::GetHeight() const
 	return m_TextureHeight;
 }
 
+glm::ivec2 TextureDX11::GetSize() const
+{
+	return glm::ivec2(m_TextureWidth, m_TextureHeight);
+}
+
 uint16_t TextureDX11::GetDepth() const
 {
 	return m_NumSlices;

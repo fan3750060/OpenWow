@@ -9,7 +9,7 @@
 std::shared_ptr<IMesh> IRenderDevice::CreateLine(cvec3 _dest)
 {
 	vec3 p[2];
-	p[0] = -_dest;
+	p[0] = vec3(0.0f, 0.0f, 0.0f);
 	p[1] = _dest;
 
 	std::shared_ptr<IMesh> mesh = CreateMesh();
@@ -55,6 +55,33 @@ std::shared_ptr<IMesh> IRenderDevice::CreateScreenQuad(float left, float right, 
 	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(left, top, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
 	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(left, bottom, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
 	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(right, bottom, z), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
+
+	DirectX::IndexCollection indices;
+	indices.push_back(1);
+	indices.push_back(0);
+	indices.push_back(2);
+	indices.push_back(2);
+	indices.push_back(0);
+	indices.push_back(3);
+
+	std::shared_ptr<IMesh> mesh = CreateMesh();
+
+	std::shared_ptr<IBuffer> __vb = CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal));
+	mesh->SetVertexBuffer(__vb);
+
+	std::shared_ptr<IBuffer> __ib = CreateIndexBuffer(indices);
+	mesh->SetIndexBuffer(__ib);
+
+	return mesh;
+}
+
+std::shared_ptr<IMesh> IRenderDevice::CreateUIQuad(float width, float height)
+{
+	DirectX::VertexCollection vertices;
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(width, height, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f,  height, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f,  0.0f,   0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
+	vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(width, 0.0f,   0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
 
 	DirectX::IndexCollection indices;
 	indices.push_back(1);
@@ -131,6 +158,28 @@ std::shared_ptr<IMesh> IRenderDevice::CreateCone()
 	mesh->SetIndexBuffer(__ib);
 
 	return mesh;
+}
+
+std::shared_ptr<IMesh> IRenderDevice::CreateBeizerLine(vec2 start, vec2 end)
+{
+    vec3 p[4];
+    p[0] = vec3(start, 0.0f);
+    p[1] = vec3((end - start).x / 2.0f, start.y, 0.0f);
+    p[2] = vec3((end - start).x / 2.0f, end.y, 0.0f);
+    p[3] = vec3(end, 0.0f);
+
+    //vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(width, height, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)));
+    //vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f, height, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)));
+    //vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)));
+    //vertices.push_back(DirectX::VertexPositionTextureNormal(DirectX::XMFLOAT3(width, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)));
+
+    std::shared_ptr<IMesh> mesh = CreateMesh();
+    mesh->SetPrimitiveTopology(PrimitiveTopology::LineList);
+
+    std::shared_ptr<IBuffer> __vb = CreateVertexBuffer(p, 4);
+    mesh->AddVertexBuffer(BufferBinding("POSITION", 0), __vb);
+
+    return mesh;
 }
 
 // Template specializations for vertex buffers (with std::vector)

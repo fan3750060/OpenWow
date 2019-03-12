@@ -138,10 +138,11 @@ public:
 	 */
 	virtual std::shared_ptr<Texture> GetSlice(uint32 slice) const = 0;
 
-	virtual uint16_t GetWidth() const = 0; // Get the width of the textures in texels.
+	virtual uint16_t GetWidth() const = 0;  // Get the width of the textures in texels.
 	virtual uint16_t GetHeight() const = 0; // Get the height of the texture in texles.
-	virtual uint16_t GetDepth() const = 0; // Get the cube faces for cubemap textures.
-	virtual uint8_t GetBPP() const = 0; // Get the bits-per-pixel of the texture.
+	virtual glm::ivec2 GetSize() const = 0; // Get the 2d size of the texture in texles.
+	virtual uint16_t GetDepth() const = 0;  // Get the cube faces for cubemap textures.
+	virtual uint8_t GetBPP() const = 0;     // Get the bits-per-pixel of the texture.
 	virtual bool IsTransparent() const = 0; // Check to see if this texture has an alpha channel.
 
 	// Resize the texture to the new dimensions.

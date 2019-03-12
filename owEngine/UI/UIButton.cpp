@@ -6,6 +6,12 @@
 // Additional
 #include "Application.h"
 
+namespace
+{
+	const char* cDefaultText = "<empty>";
+	const vec4  cDefaultColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
 CUIButtonNode::CUIButtonNode()
 	: m_State(Idle)
 {
@@ -26,21 +32,19 @@ CUIButtonNode::~CUIButtonNode()
 //
 void CUIButtonNode::CreateDefault()
 {
-	std::shared_ptr<Texture> idleTexture = _RenderDevice->CreateTexture2D("Textures\\btn_idle.png");
-
-	m_Material->SetIdleTexture(idleTexture);
+	m_Material->SetIdleTexture(_RenderDevice->CreateTexture2D("Textures\\btn_idle.png"));
 	m_Material->SetHoverTexture(_RenderDevice->CreateTexture2D("Textures\\btn_hover.png"));
 	m_Material->SetClickedTexture(_RenderDevice->CreateTexture2D("Textures\\btn_clicked.png")); 
 	m_Material->SetDisabledTexture(_RenderDevice->CreateTexture2D("Textures\\btn_disabled.png"));
 
-	SetSize(glm::ivec2(idleTexture->GetWidth(), idleTexture->GetHeight()));
+	std::shared_ptr<Texture> idleTexture = m_Material->GetTexture(0);
+	SetSize(idleTexture->GetSize());
 
-	std::shared_ptr<IMesh> mesh = _RenderDevice->CreateScreenQuad(0.0, idleTexture->GetWidth(), 0.0f, idleTexture->GetHeight());
-	SetMesh(mesh);
+	m_Mesh = _RenderDevice->CreateScreenQuad(0.0, idleTexture->GetWidth(), 0.0f, idleTexture->GetHeight());
 
 	m_TextNode = std::make_shared<CUITextNode>();
 	m_TextNode->SetParentInternal(weak_from_this());
-	m_TextNode->SetText("Hello btn!");
+	m_TextNode->SetText(cDefaultText);
 	m_TextNode->SetTranslate(vec2(10.0f, 10.0f));
 	m_TextNode->SetColor(vec4(0.0f, 0.0f, 1.0f, 1.0f));
 }
@@ -111,7 +115,7 @@ bool CUIButtonNode::Accept(IVisitor & visitor)
 bool CUIButtonNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Material->SetState(m_State);
-	GetMesh()->SetMaterial(m_Material);
+	m_Mesh->SetMaterial(m_Material);
 
-	return GetMesh()->Accept(visitor);
+	return m_Mesh->Accept(visitor);
 }

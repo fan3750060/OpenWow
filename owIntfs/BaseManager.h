@@ -33,6 +33,7 @@ struct
 	virtual ~IFontsManager() {};
 
 	virtual std::shared_ptr<CFontMesh> GetMainFont() const = 0;
+	virtual std::shared_ptr<CFontMesh> Add(cstring _fontFileName, uint32 _fontSize) = 0;
 };
 
 //--

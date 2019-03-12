@@ -17,9 +17,6 @@ public:
 	void                        SetColor(cvec4 _color);
 
 	// CUIBaseNode
-	void                        SetMesh(std::shared_ptr<IMesh> mesh) override;
-	std::shared_ptr<IMesh>      GetMesh() const override;
-
 	bool                        AcceptMesh(IVisitor& visitor) override;
 
 private:

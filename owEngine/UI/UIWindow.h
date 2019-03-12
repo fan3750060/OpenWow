@@ -10,8 +10,8 @@ public:
 	virtual ~CUIWindowNode();
 
 	// Parent & childs functional
-	virtual void AddChild(std::shared_ptr<CUIBaseNode> pNode);
-	virtual void RemoveChild(std::shared_ptr<CUIBaseNode> pNode);
+	virtual void AddChild(std::shared_ptr<CUIBaseNode> Node);
+	virtual void RemoveChild(std::shared_ptr<CUIBaseNode> Node);
 	
 	// CUIBaseNode
 	virtual bool Accept(IVisitor& visitor);

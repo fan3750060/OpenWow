@@ -7,7 +7,7 @@ class CUITextureNode : public CUIBaseNode
 {
 	typedef CUIBaseNode base;
 public:
-	CUITextureNode();
+	CUITextureNode(vec2 Size = vec2(1.0f, 1.0f));
 	virtual ~CUITextureNode();
 
 	// CUITextureNode
@@ -18,5 +18,6 @@ public:
 	bool AcceptMesh(IVisitor& visitor) override;
 
 private:
+	std::shared_ptr<IMesh>                 m_Mesh;
 	std::shared_ptr<UI_Texture_Material>   m_Material;
 };

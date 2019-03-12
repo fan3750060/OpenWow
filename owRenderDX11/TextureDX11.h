@@ -62,6 +62,9 @@ public:
 	// Get the height of the texture in texles.
 	virtual uint16_t GetHeight() const;
 
+	// Get the 2D size of the texture in texles
+	glm::ivec2 GetSize() const;
+
 	// Get the depth of the texture in texels.
 	virtual uint16_t GetDepth() const;
 

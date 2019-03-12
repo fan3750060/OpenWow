@@ -545,5 +545,5 @@ void RenderDeviceDX11::DestoryQuery(std::shared_ptr<Query> query)
 void RenderDeviceDX11::LoadDefaultResources()
 {
 	FreeImage_Initialise();
-	//m_pDefaultTexture = CreateTexture2D("Textures\\ShaneCube.blp");
+	m_pDefaultTexture = CreateTexture2D("Textures\\default.png");
 }

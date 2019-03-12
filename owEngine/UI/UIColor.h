@@ -7,7 +7,7 @@ class CUIColorNode : public CUIBaseNode
 {
 	typedef CUIBaseNode base;
 public:
-	CUIColorNode();
+	CUIColorNode(vec2 Size = vec2(16.0f, 16.0f));
 	virtual ~CUIColorNode();
 
 	// CUIColorNode
@@ -17,5 +17,6 @@ public:
 	virtual bool AcceptMesh(IVisitor& visitor) override;
 
 private:
+	std::shared_ptr<IMesh>              m_Mesh;
 	std::shared_ptr<UI_Color_Material>  m_Material;
 };

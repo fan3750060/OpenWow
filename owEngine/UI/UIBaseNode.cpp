@@ -7,11 +7,12 @@
 #include "UIWindow.h"
 #include "Application.h"
 
-CUIBaseNode::CUIBaseNode()
+CUIBaseNode::CUIBaseNode(vec2 Size)
 	: m_Name("CUIBaseNode")
 	, m_Translate(vec2())
 	, m_Rotate(vec3())
 	, m_Scale(1.0f, 1.0f)
+	, m_Size(Size)
 	, m_IsMouseOnNode(false)
 {
 }
@@ -37,9 +38,21 @@ void CUIBaseNode::SetTranslate(cvec2 _translate)
 
 	UpdateLocalTransform();
 }
-cvec2 CUIBaseNode::GetTranslation() const 
+
+glm::vec2 CUIBaseNode::GetTranslation() const
 { 
 	return m_Translate; 
+}
+
+glm::vec2 CUIBaseNode::GetAbsTranslation() const
+{
+	glm::vec2 parentTranslate = vec2(0.0f, 0.0f);
+	if (std::shared_ptr<CUIBaseNode> parent = m_pParentNode.lock())
+	{
+		parentTranslate = parent->GetAbsTranslation();
+	}
+
+	return parentTranslate + GetTranslation();
 }
 
 // Rotate
@@ -49,7 +62,7 @@ void CUIBaseNode::SetRotation(cvec3 _rotate)
 
 	UpdateLocalTransform();
 }
-cvec3 CUIBaseNode::GetRotation() const 
+glm::vec3 CUIBaseNode::GetRotation() const
 { 
 	return m_Rotate; 
 }
@@ -61,19 +74,27 @@ void CUIBaseNode::SetScale(cvec2 _scale)
 
 	UpdateLocalTransform();
 }
-cvec2 CUIBaseNode::GetScale() const 
+glm::vec2 CUIBaseNode::GetScale() const
 { 
 	return m_Scale; 
 }
 
-Rect CUIBaseNode::GetBounds() const
-{
-	return Rect(m_Translate.x, m_Translate.y, m_Size.x, m_Size.y);
-}
-
+// Size
 void CUIBaseNode::SetSize(glm::ivec2 Size)
 {
 	m_Size = Size;
+}
+
+glm::vec2 CUIBaseNode::GetSize() const
+{
+	return m_Size;
+}
+
+
+
+Rect CUIBaseNode::GetBounds() const
+{
+	return Rect(m_Translate.x, m_Translate.y, m_Size.x * m_Scale.x, m_Size.y * m_Scale.y);
 }
 
 bool CUIBaseNode::IsPointInBounds(glm::vec2 Point) const
@@ -93,15 +114,13 @@ mat4 CUIBaseNode::GetLocalTransform() const
 void CUIBaseNode::SetLocalTransform(cmat4 localTransform)
 {
 	m_LocalTransform = localTransform;
-
-	UpdateWorldTransform();
 }
 
 // World transform
 
 mat4 CUIBaseNode::GetWorldTransfom() const
 {
-	return m_WorldTransform;
+	return GetParentWorldTransform() * m_LocalTransform;
 }
 
 void CUIBaseNode::SetWorldTransform(cmat4 worldTransform)
@@ -111,6 +130,10 @@ void CUIBaseNode::SetWorldTransform(cmat4 worldTransform)
 }
 
 
+
+//
+// Parent & childs functional
+//
 void CUIBaseNode::SetParent(std::weak_ptr<CUIBaseNode> parentNode)
 {
 	std::shared_ptr<CUIBaseNode> me = shared_from_this();
@@ -139,10 +162,11 @@ void CUIBaseNode::SetParent(std::weak_ptr<CUIBaseNode> parentNode)
 	}
 }
 
+
+
 void CUIBaseNode::SetParentInternal(std::weak_ptr<CUIBaseNode> parent)
 {
 	m_pParentNode = parent;
-	UpdateWorldTransform();
 }
 
 
@@ -167,24 +191,6 @@ void CUIBaseNode::UpdateLocalTransform()
 	m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.y, vec3(0, 1, 0));
 	m_LocalTransform = glm::rotate(m_LocalTransform, m_Rotate.z, vec3(0, 0, 1));
 	m_LocalTransform = glm::scale(m_LocalTransform, vec3(m_Scale, 1.0f));
-
-	UpdateWorldTransform();
-}
-
-void CUIBaseNode::UpdateWorldTransform()
-{
-	m_WorldTransform = GetParentWorldTransform() * m_LocalTransform;
-}
-
-void CUIBaseNode::SetMesh(std::shared_ptr<IMesh> mesh)
-{
-	assert1(mesh != nullptr);
-	m_Mesh = mesh;
-}
-
-std::shared_ptr<IMesh> CUIBaseNode::GetMesh() const
-{
-	return m_Mesh;
 }
 
 void CUIBaseNode::UpdateViewport(const Viewport* viewport)
@@ -211,12 +217,6 @@ bool CUIBaseNode::Accept(IVisitor& visitor)
 
 bool CUIBaseNode::AcceptMesh(IVisitor & visitor)
 {
-	std::shared_ptr<IMesh> mesh = GetMesh();
-	if (mesh != nullptr)
-	{
-		return mesh->Accept(visitor);
-	}
-
 	return false;
 }
 

@@ -18,40 +18,37 @@ CUIWindowNode::~CUIWindowNode()
 //
 // Parent & childs functional
 //
-void CUIWindowNode::AddChild(std::shared_ptr<CUIBaseNode> pNode)
+void CUIWindowNode::AddChild(std::shared_ptr<CUIBaseNode> Node)
 {
-	if (pNode)
-	{
-		NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
-		if (iter == m_Children.end())
-		{
-			pNode->SetParentInternal(weak_from_this());
+    _ASSERT(Node != nullptr);
 
-			m_Children.push_back(pNode);
-			if (!pNode->GetName().empty())
-			{
-				m_ChildrenByName.insert(NodeNameMap::value_type(pNode->GetName(), pNode));
-			}
+	NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), Node);
+	if (iter == m_Children.end())
+	{
+		Node->SetParentInternal(weak_from_this());
+
+		m_Children.push_back(Node);
+		std::string nodeName = Node->GetName();
+		if (!nodeName.empty())
+		{
+			m_ChildrenByName.insert(NodeNameMap::value_type(nodeName, Node));
 		}
 	}
 }
 
-void CUIWindowNode::RemoveChild(std::shared_ptr<CUIBaseNode> pNode)
+void CUIWindowNode::RemoveChild(std::shared_ptr<CUIBaseNode> Node)
 {
-	if (pNode == nullptr)
-	{
-		return;
-	}
+    _ASSERT(Node != nullptr);
 
-	NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), pNode);
+	NodeList::iterator iter = std::find(m_Children.begin(), m_Children.end(), Node);
 	if (iter != m_Children.end())
 	{
-		pNode->SetParent(std::weak_ptr<CUIWindowNode>());
+		Node->SetParentInternal(std::weak_ptr<CUIWindowNode>());
 
 		m_Children.erase(iter);
 
 		// Also remove it from the name map.
-		NodeNameMap::iterator iter2 = m_ChildrenByName.find(pNode->GetName());
+		NodeNameMap::iterator iter2 = m_ChildrenByName.find(Node->GetName());
 		if (iter2 != m_ChildrenByName.end())
 		{
 			m_ChildrenByName.erase(iter2);

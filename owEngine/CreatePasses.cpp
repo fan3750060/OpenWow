@@ -64,6 +64,8 @@ void AddUIPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderT
 	UIPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
 	UIPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
 	UIPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
+    UIPipeline->GetRasterizerState().SetAntialiasedLineEnable(true);
+    UIPipeline->GetRasterizerState().SetMultisampleEnabled(true);
 	UIPipeline->SetRenderTarget(_renderTarget);
 	UIPipeline->GetRasterizerState().SetViewport(viewport);
 

@@ -22,7 +22,7 @@ RenderWindowDX11::RenderWindowDX11(std::shared_ptr<RenderDeviceDX11> device, IWi
 	m_SampleDesc = { 1, 0 };
 
 	// Try to choose the best multi-sampling quality level that is supported.
-	/*UINT sampleCount = 1;
+	UINT sampleCount = 1;
 	UINT qualityLevels = 0;
 	while (SUCCEEDED(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &qualityLevels)) && qualityLevels > 0)
 	{
@@ -32,7 +32,7 @@ RenderWindowDX11::RenderWindowDX11(std::shared_ptr<RenderDeviceDX11> device, IWi
 
 		// But can we do better?
 		sampleCount = sampleCount * 2;
-	}*/
+	}
 
 	// Create a render target for the back buffer and depth/stencil buffers.
 	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetDX11>(m_Device.lock()->CreateRenderTarget());

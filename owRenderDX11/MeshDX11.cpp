@@ -55,7 +55,7 @@ void MeshDX11::SetPrimitiveTopology(PrimitiveTopology _topology)
 		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 		break;
 	case PrimitiveTopology::LineList:
-		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST_ADJ; // TODO REMOVE ME!
 		break;
 	case PrimitiveTopology::LineStrip:
 		m_PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;

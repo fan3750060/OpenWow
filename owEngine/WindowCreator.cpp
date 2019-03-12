@@ -33,9 +33,9 @@ CWindowObject::~CWindowObject()
 //
 std::string CWindowObject::GetWindowName()
 {
-	//char windowName[512];
-	//::GetWindowTextA(m_HWnd, windowName, 512);
-	return "Default";
+	std::wstring title(GetWindowTextLength(m_HWnd) + 1, L'\0');
+	GetWindowText(m_HWnd, &title[0], title.size());
+	return ConvertString(title);
 }
 
 long CWindowObject::GetWindowWidth()
@@ -193,6 +193,8 @@ HWND CWindowObject::CreateWindowInstance(int nWidth, int nHeight)
 	{
 		fail2("CWindowObject: Failed to create render window.");
 	}
+
+    return m_HWnd;
 }
 
 void CWindowObject::DestroyWindowInstance()

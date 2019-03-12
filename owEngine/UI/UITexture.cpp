@@ -11,14 +11,14 @@ namespace
 	const vec4 cDefaultColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-CUITextureNode::CUITextureNode()
+CUITextureNode::CUITextureNode(vec2 Size)
+	: base(Size)
 {
 	m_Material = std::make_shared<UI_Texture_Material>();
 	m_Material->SetWrapper(m_Material);;
 	m_Material->SetColor(cDefaultColor);
 
-	std::shared_ptr<IMesh> mesh = _RenderDevice->CreateScreenQuad();
-	SetMesh(mesh);
+	m_Mesh = _RenderDevice->CreateUIQuad(Size.x, Size.y);
 }
 
 CUITextureNode::~CUITextureNode()
@@ -32,6 +32,8 @@ CUITextureNode::~CUITextureNode()
 void CUITextureNode::SetTexture(std::shared_ptr<Texture> _texture)
 {
 	m_Material->SetTexture(_texture);
+
+    SetSize(_texture->GetSize());
 }
 
 void CUITextureNode::SetColor(vec4 _color)
@@ -46,7 +48,7 @@ void CUITextureNode::SetColor(vec4 _color)
 //
 bool CUITextureNode::AcceptMesh(IVisitor& visitor)
 {
-	GetMesh()->SetMaterial(m_Material);
+	m_Mesh->SetMaterial(m_Material);
 
-	return GetMesh()->Accept(visitor);
+	return m_Mesh->Accept(visitor);
 }

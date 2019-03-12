@@ -48,6 +48,7 @@ public:
 
 private:
 	uint32                               m_State;
+	std::shared_ptr<IMesh>               m_Mesh;
 	std::shared_ptr<UI_Button_Material>  m_Material;
 	std::shared_ptr<CUITextNode>         m_TextNode;
 	
