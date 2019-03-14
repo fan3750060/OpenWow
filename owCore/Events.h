@@ -2,9 +2,8 @@
 
 #include <functional>
 
+#include "Object.h"
 #include "KeyCodes.h"
-
-class Object;
 
 template< class ArgumentType >
 class Delegate
@@ -139,7 +138,7 @@ public:
 	int RelX;			// How far the mouse moved since the last event.
 	int RelY;			// How far the mouse moved since the last event.
 
-	glm::ivec2 GetPoint() const { return glm::ivec2(X, Y); }
+	glm::vec2 GetPoint() const { return glm::vec2(X, Y); }
 };
 typedef Delegate<MouseMotionEventArgs> MouseMotionEvent;
 
@@ -186,7 +185,7 @@ public:
 	int X;              // The X-position of the cursor relative to the upper-left corner of the client area.
 	int Y;              // The Y-position of the cursor relative to the upper-left corner of the client area.
 
-	glm::ivec2 GetPoint() const { return glm::ivec2(X, Y); }
+	glm::vec2 GetPoint() const { return glm::vec2(X, Y); }
 };
 typedef Delegate<MouseButtonEventArgs> MouseButtonEvent;
 
@@ -218,7 +217,7 @@ public:
 	int X;              // The X-position of the cursor relative to the upper-left corner of the client area.
 	int Y;              // The Y-position of the cursor relative to the upper-left corner of the client area.
 
-	glm::ivec2 GetPoint() const { return glm::ivec2(X, Y); }
+	glm::vec2 GetPoint() const { return glm::vec2(X, Y); }
 
 };
 typedef Delegate<MouseWheelEventArgs> MouseWheelEvent;

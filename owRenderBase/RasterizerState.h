@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Rect.h"
 #include "Viewport.h"
 
 class RasterizerState : public Object

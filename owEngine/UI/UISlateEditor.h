@@ -1,13 +1,14 @@
 #pragma once
 
-// Base UI
-#include "UIWindow.h"
-
-// Slate nodes
-#include "UISlateNode.h"
-
 // Common UI
+#include "UIBaseNode.h"
 #include "UIColor.h"
+#include "UIBeizerLine.h"
+
+// Slate
+#include "UISlateEditorInterfaces.h"
+#include "UISlateNode.h"
+#include "UISlateConnection.h"
 
 class CUISlateEditor : public CUIBaseNode
 {
@@ -16,14 +17,26 @@ public:
     CUISlateEditor();
     virtual ~CUISlateEditor();
 
+
+    //
     // CUISlateEditor
+    //
     void CreateDefault(vec2 Position, vec2 Size);
 
-    // Parent & childs functional
-    void AddChild(std::shared_ptr<CUISlateNode> Node);
-    void RemoveChild(std::shared_ptr<CUISlateNode> Node);
+    // Add / remove slate nodes
+    void AddNode(std::shared_ptr<CUISlateNode> Node);
+    void RemoveNode(std::shared_ptr<CUISlateNode> Node);
 
+    // Connect / disconnect result of one slate node to parameter from another node
+    void BeginMakeConnection(std::shared_ptr<IUISlateConnectionable> Initiator);
+    void FinishMakeConnection(std::shared_ptr<IUISlateConnectionable> Target);
+
+    // Moving nodes
+    void BeginMoveNode(std::shared_ptr<CUISlateNode> Node, glm::vec2 Point);
+
+    //
     // CUIBaseNode
+    //
     virtual bool Accept(IVisitor& visitor);
 
     // Input events
@@ -34,12 +47,27 @@ public:
     virtual void OnMouseButtonReleased(MouseButtonEventArgs& e) override;
     virtual bool OnMouseWheel(MouseWheelEventArgs& e) override;
 
-private:
-    typedef std::vector<std::shared_ptr<CUISlateNode>> NodeList;
-    typedef std::multimap<std::string, std::shared_ptr<CUISlateNode>> NodeNameMap;
+protected:
+    void MakeConnection(std::shared_ptr<IUISlateConnectionable> Initiator, std::shared_ptr<IUISlateConnectionable> Target);
 
+private:
     std::shared_ptr<CUIColorNode>       m_Background;
 
-    NodeList				            m_Children;
-    NodeNameMap				            m_ChildrenByName;
+    // Childs
+    typedef std::vector<std::shared_ptr<CUISlateNode>> NodeList;
+    typedef std::unordered_multimap<std::string, std::shared_ptr<CUISlateNode>> NodeNameMap;
+
+    NodeList				            m_Nodes;
+    NodeNameMap				            m_NodesByName;
+
+    // Connections
+    std::shared_ptr<CUIBeizerLineNode>                m_CurrentLine;
+    std::shared_ptr<IUISlateConnectionable>     m_CurrentConnectionable;
+
+    typedef std::vector<std::shared_ptr<CUISlateConnection>> ConnectionsList;
+    ConnectionsList                             m_Connections;
+
+    // Move nodes
+    std::shared_ptr<CUISlateNode>               m_MovingNodes_Current;
+    glm::vec2                                   m_MovingNodes_Point;
 };

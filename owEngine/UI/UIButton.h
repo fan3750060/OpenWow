@@ -44,7 +44,7 @@ public:
 	virtual bool Accept(IVisitor& visitor) override;
 	virtual bool AcceptMesh(IVisitor& visitor) override;
 
-	UIButtonClickEvent OnClick;
+	UIButtonClickEvent Click;
 
 private:
 	uint32                               m_State;

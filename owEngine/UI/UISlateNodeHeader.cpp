@@ -5,6 +5,7 @@
 
 // Additional
 #include "Application.h"
+#include "UISlateEditor.h"
 #include "UISlateNode.h"
 
 
@@ -26,9 +27,10 @@ namespace
 }
 
 
-CUISlateNodeHeader::CUISlateNodeHeader()
+CUISlateNodeHeader::CUISlateNodeHeader(std::weak_ptr<CUISlateEditor> Editor)
+    : m_Editor(Editor)
 {
-    SetSize(cDefaultBackgroundSize);
+
 }
 
 CUISlateNodeHeader::~CUISlateNodeHeader()
@@ -42,9 +44,11 @@ CUISlateNodeHeader::~CUISlateNodeHeader()
 //
 void CUISlateNodeHeader::CreateDefault()
 {
-	m_BackgroungNode = std::make_shared<CUIColorNode>(cDefaultBackgroundSize);
-	m_BackgroungNode->SetParentInternal(weak_from_this());
-	m_BackgroungNode->SetColor(cDefaultBackgroundColor);
+    SetSize(cDefaultBackgroundSize);
+
+	m_Background = std::make_shared<CUIColorNode>(cDefaultBackgroundSize);
+	m_Background->SetParentInternal(weak_from_this());
+	m_Background->SetColor(cDefaultBackgroundColor);
 
 	m_IconNode = std::make_shared<CUITextureNode>(vec2(cDefaultIconSize, cDefaultIconSize));
 	m_IconNode->SetParentInternal(weak_from_this());
@@ -52,48 +56,53 @@ void CUISlateNodeHeader::CreateDefault()
 	m_IconNode->SetTranslate(cDefaultIconOffset);
 
 	vec2 labelPosition = m_IconNode->GetTranslation();
-	labelPosition.x += m_IconNode->GetBounds().Width;
+	labelPosition.x += cDefaultIconSize;
 	labelPosition += cDefaultTextOffset;
 
-	m_LabelNode = std::make_shared<CUITextNode>();
-	m_LabelNode->SetParentInternal(weak_from_this());
-	m_LabelNode->SetText(cDefaultText);
-	m_LabelNode->SetTranslate(labelPosition);
-	m_LabelNode->SetColor(cDefaultTextColor);
-	m_LabelNode->SetFont(GetManager<IFontsManager>()->Add("Fonts\\JustBreatheBd.otf", cDefaultTextHeight));
+	m_Text = std::make_shared<CUITextNode>();
+	m_Text->SetParentInternal(weak_from_this());
+	m_Text->SetText(cDefaultText);
+	m_Text->SetTranslate(labelPosition);
+	m_Text->SetTextColor(cDefaultTextColor);
+	m_Text->SetFont(GetManager<IFontsManager>()->Add("Fonts\\JustBreatheBd.otf", cDefaultTextHeight));
 }
-
 
 
 //
 // CUIBaseNode
 //
 
-bool CUISlateNodeHeader::Accept(IVisitor & visitor)
+std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNodeHeader::GetChilds() const
 {
-	bool visitResult = base::Accept(visitor);
-	if (!visitResult)
-		return false;
+    std::vector<std::shared_ptr<CUIBaseNode>> childs;
 
-	if (m_BackgroungNode != nullptr)
-	{
-		m_BackgroungNode->Accept(visitor);
-	}
+    if (m_Background)
+        childs.push_back(m_Background);
 
-	if (m_IconNode != nullptr)
-	{
-		m_IconNode->Accept(visitor);
-	}
+    if (m_IconNode)
+        childs.push_back(m_IconNode);
 
-	if (m_LabelNode != nullptr)
-	{
-		m_LabelNode->Accept(visitor);
-	}
+    if (m_Text)
+        childs.push_back(m_Text);
 
-	return visitResult;
+    return childs;
 }
 
-bool CUISlateNodeHeader::AcceptMesh(IVisitor & visitor)
+
+
+//
+// Input events
+//
+bool CUISlateNodeHeader::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
-	return false;
+    std::shared_ptr<CUISlateEditor> editor = m_Editor.lock();
+    _ASSERT(editor);
+
+    editor->BeginMoveNode(std::dynamic_pointer_cast<CUISlateNode>(GetParent()), e.GetPoint() - GetParent()->GetTranslationAbs());
+
+    return true;
+}
+
+void CUISlateNodeHeader::OnMouseButtonReleased(MouseButtonEventArgs & e)
+{
 }

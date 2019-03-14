@@ -194,7 +194,6 @@
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RaycastHit.h" />
-    <ClInclude Include="Rect.h" />
     <ClInclude Include="RenderDevice.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="RenderWindow.h" />

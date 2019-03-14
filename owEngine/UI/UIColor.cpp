@@ -13,6 +13,8 @@ CUIColorNode::CUIColorNode(vec2 Size)
 	m_Material->SetWrapper(m_Material);;
 
 	m_Mesh = _RenderDevice->CreateUIQuad(Size.x, Size.y);
+
+    SetSize(Size);
 }
 
 CUIColorNode::~CUIColorNode()

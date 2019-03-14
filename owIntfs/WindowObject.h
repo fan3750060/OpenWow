@@ -5,8 +5,8 @@ struct IWindowObject
 	virtual ~IWindowObject() {}
 
 	virtual std::string GetWindowName() = 0;
-	virtual long GetWindowWidth() = 0;
-	virtual long GetWindowHeight() = 0;
+	virtual long GetWindowWidth() = 0;         // include borders
+	virtual long GetWindowHeight() = 0;        // include borders
 	virtual HWND GetHWnd() = 0;
 
 	virtual HDC BeginPaint(LPPAINTSTRUCT PaintStruct) = 0;

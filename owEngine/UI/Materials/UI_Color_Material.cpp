@@ -17,11 +17,7 @@ UI_Color_Material::UI_Color_Material() :
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
 		Shader::VertexShader, "shaders_D3D/UI/UI_VertexBase.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
-	std::vector<D3DVERTEXELEMENT9> elements;
-	elements.push_back({ 0, 0,  D3DDECLTYPE_FLOAT3, 0, D3DDECLUSAGE_POSITION, 0 });
-	elements.push_back({ 0, 12, D3DDECLTYPE_FLOAT2, 0, D3DDECLUSAGE_TEXCOORD, 0 });
-	elements.push_back({ 0, 20, D3DDECLTYPE_FLOAT3, 0, D3DDECLUSAGE_NORMAL, 0 });
-	g_pVertexShader->LoadInputLayoutFromD3DElement(elements);
+    g_pVertexShader->LoadInputLayoutFromReflector();
 
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
 		Shader::PixelShader, "shaders_D3D/UI/UI_Color.hlsl", Shader::ShaderMacros(), "PS_main", "latest"

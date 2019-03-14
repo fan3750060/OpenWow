@@ -33,13 +33,16 @@
 #include "../owEngine/UI/UIScene.h"
 #include "../owEngine/UI/UIBaseNode.h"
 
-// additional nodes
+// common nodes
 #include "../owEngine/UI/UIButton.h"
 #include "../owEngine/UI/UIColor.h"
-#include "../owEngine/UI/UILine.h"
+#include "../owEngine/UI/UIBeizerLine.h"
 #include "../owEngine/UI/UIText.h"
 #include "../owEngine/UI/UITexture.h"
+
+// additional nodes
 #include "../owEngine/UI/UISlateEditor.h"
+#include "../owEngine/UI/UIContainerGarmoshka.h"
 
 // materials
 #include "../owEngine/UI/Materials/UI_Color_Material.h"

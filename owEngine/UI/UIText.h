@@ -12,12 +12,21 @@ public:
 	virtual ~CUITextNode();
 
 	// CUITextNode
-	void                        SetFont(std::shared_ptr<CFontMesh> _font);
-	void                        SetText(const std::string& _text);
-	void                        SetColor(cvec4 _color);
+    void                        SetFont(std::shared_ptr<CFontMesh> _font);
+    std::shared_ptr<CFontMesh>  GetFont() const;
+
+    void                        SetText(const std::string& _text);
+    void                        SetTextColor(cvec4 _color);
+    std::string                 GetText() const;
+    void                        SetOffset(glm::vec2 Offset);
+    glm::vec2                   GetOffset() const;
+    glm::vec2                   GetTextSize() const;
 
 	// CUIBaseNode
-	bool                        AcceptMesh(IVisitor& visitor) override;
+    void                        SetSize(glm::vec2 Size);
+    glm::vec2                   GetSize() const override final;
+
+	bool                        AcceptMesh(IVisitor& visitor) override final;
 
 private:
 	std::shared_ptr<CFontMesh>         m_Font;

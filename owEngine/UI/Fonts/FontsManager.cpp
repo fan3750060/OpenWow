@@ -12,7 +12,7 @@
 
 FontsManager::FontsManager()
 {
-	m_MainFont = Add("Fonts\\consola.TTF", 12);
+	m_MainFont = Add("Fonts\\consola.TTF", 14);
 }
 
 FontsManager::~FontsManager()
@@ -185,8 +185,8 @@ std::shared_ptr<CFontMesh> FontsManager::CreateAction(cstring _nameAndSize)
 
 	std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
 
-	std::shared_ptr<IBuffer> __vb = _RenderDevice->CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal));
-	__geom->SetVertexBuffer(__vb);
+	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), _RenderDevice->CreateVoidVertexBuffer(vertices.data(), vertices.size(), 0, sizeof(DirectX::VertexPositionTextureNormal)));
+    __geom->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _RenderDevice->CreateVoidVertexBuffer(vertices.data(), vertices.size(), 12, sizeof(DirectX::VertexPositionTextureNormal)));
 
 	// Font texture
 	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture();

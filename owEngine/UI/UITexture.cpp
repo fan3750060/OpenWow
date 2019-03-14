@@ -32,8 +32,6 @@ CUITextureNode::~CUITextureNode()
 void CUITextureNode::SetTexture(std::shared_ptr<Texture> _texture)
 {
 	m_Material->SetTexture(_texture);
-
-    SetSize(_texture->GetSize());
 }
 
 void CUITextureNode::SetColor(vec4 _color)

@@ -4,7 +4,8 @@
 #include "UISlateNode.h"
 
 // Additional
-#include "Application.h"
+#include "UISlateEditor.h"
+
 
 namespace
 {
@@ -20,8 +21,10 @@ namespace
 }
 
 
-CUISlateNode::CUISlateNode()
+CUISlateNode::CUISlateNode(std::weak_ptr<CUISlateEditor> Editor)
+    : m_Editor(Editor)
 {
+    SetSize(cDefaultBackgroundSize);
 }
 
 CUISlateNode::~CUISlateNode()
@@ -35,19 +38,26 @@ CUISlateNode::~CUISlateNode()
 //
 void CUISlateNode::CreateDefault()
 {
-    std::shared_ptr<CUISlateNodeHeader> header = std::make_shared<CUISlateNodeHeader>();
+    std::shared_ptr<CUISlateNodeHeader> header = std::make_shared<CUISlateNodeHeader>(m_Editor);
     header->CreateDefault();
     SetHeader(header);
 
-    std::shared_ptr<CUISlateNodeParameter> param0 = std::make_shared<CUISlateNodeParameter>();
+    std::shared_ptr<CUISlateNodeParameter> param0 = std::make_shared<CUISlateNodeParameter>(m_Editor);
     param0->CreateDefault();
+    param0->SetText("Parameter 0");
     AddParameter(param0);
 
-    std::shared_ptr<CUISlateNodeParameter> param1 = std::make_shared<CUISlateNodeParameter>();
+    std::shared_ptr<CUISlateNodeParameter> param1 = std::make_shared<CUISlateNodeParameter>(m_Editor);
     param1->CreateDefault();
+    param1->SetText("Parameter 1");
     AddParameter(param1);
 
-    std::shared_ptr<CUISlateNodeFooter> footer = std::make_shared<CUISlateNodeFooter>();
+    std::shared_ptr<CUISlateNodeParameter> param2 = std::make_shared<CUISlateNodeParameter>(m_Editor);
+    param2->CreateDefault();
+    param2->SetText("Parameter 2");
+    AddParameter(param2);
+
+    std::shared_ptr<CUISlateNodeFooter> footer = std::make_shared<CUISlateNodeFooter>(m_Editor);
     footer->CreateDefault();
     SetFooter(footer);
 }
@@ -88,7 +98,7 @@ void CUISlateNode::RemoveParameter(std::shared_ptr<CUISlateNodeParameter> Parame
 {
     _ASSERT(Parameter != nullptr);
 
-    Parameter->SetParentInternal(std::weak_ptr<CUIWindowNode>());
+    Parameter->SetParentInternal(std::weak_ptr<CUIBaseNode>());
 
     SlateParameterNameMap::iterator iter = m_Parameters.find(Parameter->GetName());
     if (iter != m_Parameters.end())
@@ -117,42 +127,75 @@ void CUISlateNode::SetFooter(std::shared_ptr<CUISlateNodeFooter> Footer)
 
 
 
+glm::vec2 CUISlateNode::GetSize() const
+{
+    vec2 size = vec2(cDefaultBackgroundSize.x, 0.0f);
+
+    for (auto ch : GetChilds())
+    {
+        size.y += ch->GetSize().y;
+    }
+
+    return size;
+}
+
+
 //
 // CUIBaseNode
 //
-void CUISlateNode::SetParent(std::weak_ptr<CUIBaseNode> parent)
+std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNode::GetChilds() const
 {
-    fail1("Don't call this method! Use 'AddChild' instead!");
-}
+    std::vector<std::shared_ptr<CUIBaseNode>> childs;
 
-bool CUISlateNode::Accept(IVisitor & visitor)
-{
-    bool visitResult = base::Accept(visitor);
-    if (!visitResult)
-        return false;
-
-    if (m_Header != nullptr)
-    {
-        m_Header->Accept(visitor);
-    }
+    if (m_Header)
+        childs.push_back(m_Header);
 
     for (auto it : m_Parameters)
+        childs.push_back(it.second);
+
+    if (m_Footer)
+        childs.push_back(m_Footer);
+
+    return childs;
+}
+
+
+
+//
+// Input events
+void CUISlateNode::OnMouseMoved(MouseMotionEventArgs & e)
+{
+    for (auto ch : GetChilds())
     {
-        if (it.second != nullptr)
+        _ASSERT(ch);
+        ch->OnMouseMoved(e);
+    }
+}
+
+bool CUISlateNode::OnMouseButtonPressed(MouseButtonEventArgs & e)
+{
+    bool result = false;
+    for (auto ch : GetChilds())
+    {
+        _ASSERT(ch);
+        if (ch->IsPointInBoundsAbs(e.GetPoint()))
         {
-            it.second->Accept(visitor);
+            if (ch->OnMouseButtonPressed(e))
+            {
+                result = true;
+                break;
+            }
         }
     }
 
-    if (m_Footer != nullptr)
-    {
-        m_Footer->Accept(visitor);
-    }
-
-    return visitResult;
+    return result;
 }
 
-bool CUISlateNode::AcceptMesh(IVisitor & visitor)
+void CUISlateNode::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
-    return false;
+    for (auto ch : GetChilds())
+    {
+        _ASSERT(ch);
+        ch->OnMouseButtonReleased(e);
+    }
 }

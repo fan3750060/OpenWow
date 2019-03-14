@@ -104,14 +104,10 @@ void CUIWindowNode::OnMouseMoved(MouseMotionEventArgs& e)
 {
 	for (auto it : m_Children)
 	{
-		MouseMotionEventArgs eInner(e);
-		e.X -= static_cast<int>(GetTranslation().x);
-		e.Y -= static_cast<int>(GetTranslation().y);
-
-		it->OnMouseMoved(eInner);
+		it->OnMouseMoved(e);
 
 		// Synteric events impl
-		if (it->IsPointInBounds(eInner.GetPoint()))
+		if (it->IsPointInBoundsAbs(e.GetPoint()))
 		{
 			if (!it->IsMouseOnNode())
 			{
@@ -135,12 +131,8 @@ bool CUIWindowNode::OnMouseButtonPressed(MouseButtonEventArgs & e)
 	bool result = false;
 	for (auto it : m_Children)
 	{
-		MouseButtonEventArgs eInner(e);
-		e.X -= static_cast<int>(GetTranslation().x);
-		e.Y -= static_cast<int>(GetTranslation().y);
-
-		if (it->IsPointInBounds(eInner.GetPoint()))
-			if (it->OnMouseButtonPressed(eInner))
+		if (it->IsPointInBoundsAbs(e.GetPoint()))
+			if (it->OnMouseButtonPressed(e))
 				result = true;
 	}
 	return result;
@@ -148,12 +140,12 @@ bool CUIWindowNode::OnMouseButtonPressed(MouseButtonEventArgs & e)
 
 void CUIWindowNode::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
+    MouseButtonEventArgs eInner(e);
+    eInner.X -= static_cast<int>(GetTranslation().x);
+    eInner.Y -= static_cast<int>(GetTranslation().y);
+
 	for (auto it : m_Children)
 	{
-		MouseButtonEventArgs eInner(e);
-		e.X -= static_cast<int>(GetTranslation().x);
-		e.Y -= static_cast<int>(GetTranslation().y);
-
 		it->OnMouseButtonReleased(eInner);
 	}
 }
@@ -163,12 +155,8 @@ bool CUIWindowNode::OnMouseWheel(MouseWheelEventArgs & e)
 	bool result = false;
 	for (auto it : m_Children)
 	{
-		MouseWheelEventArgs eInner(e);
-		e.X -= static_cast<int>(GetTranslation().x);
-		e.Y -= static_cast<int>(GetTranslation().y);
-
-		if (it->IsPointInBounds(eInner.GetPoint()))
-			if (it->OnMouseWheel(eInner))
+		if (it->IsPointInBoundsAbs(e.GetPoint()))
+			if (it->OnMouseWheel(e))
 				result = true;
 	}
 	return result;

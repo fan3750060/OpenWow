@@ -1,12 +1,20 @@
 #pragma once
 
 class CUIWindowNode;
-class CUISlateEditor;
+
+
+class UIBaseNodeMovedEventArgs
+{
+public:
+    UIBaseNodeMovedEventArgs()
+    {}
+};
+typedef Delegate<UIBaseNodeMovedEventArgs> UIBaseNodeMovedEvent;
+
 
 class CUIBaseNode : public Object, public std::enable_shared_from_this<CUIBaseNode>
 {
 	friend CUIWindowNode;
-	friend CUISlateEditor;
 
 	typedef Object base;
 public:
@@ -18,22 +26,24 @@ public:
 
 	void SetTranslate(cvec2 _translate);
 	glm::vec2 GetTranslation() const;
-	glm::vec2 GetAbsTranslation() const;
+	glm::vec2 GetTranslationAbs() const;
+
+    UIBaseNodeMovedEvent Moved;
 
 	void SetRotation(cvec3 _rotate);
 	glm::vec3 GetRotation() const;
 
 	void SetScale(cvec2 _scale);
 	glm::vec2 GetScale() const;
+    glm::vec2 GetScaleAbs() const;
 
-	// Size
-	void SetSize(glm::ivec2 Size);
-	glm::vec2 GetSize() const;
+	// Size functional
+	void SetSize(glm::vec2 Size);
+	virtual glm::vec2 GetSize() const;
 
-	// Bounds functional
-	Rect GetBounds() const;
-	
-	bool IsPointInBounds(glm::vec2 Point) const;
+	// Size & bounds functional
+    virtual BoundingRect GetBoundsAbs() const;
+    virtual bool IsPointInBoundsAbs(glm::vec2 Point) const;
 
 	mat4 GetLocalTransform() const;
 	void SetLocalTransform(cmat4 localTransform);
@@ -44,6 +54,9 @@ public:
 	// Parent & childs functional
 	virtual void SetParent(std::weak_ptr<CUIBaseNode> parent);         // Call this from CUIWindowNode
 	virtual void SetParentInternal(std::weak_ptr<CUIBaseNode> parent); // Call this from others nodes
+    virtual std::shared_ptr<CUIBaseNode> GetParent() const;
+
+    virtual std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const;
 
 	// Called before all others calls
 	virtual void UpdateViewport(const Viewport* viewport);
@@ -69,7 +82,7 @@ protected:
 
 	virtual void UpdateLocalTransform();
 
-private: // Syntetic events
+public: // Syntetic events // TODO: Make private
 	bool IsMouseOnNode() const;
 	void DoMouseEntered();
 	void DoMouseLeaved();
@@ -87,6 +100,6 @@ private:
 	mat4                        m_LocalTransform;
 
 private: // Syntetic events
-	glm::ivec2                  m_Size;
+	glm::vec2                   m_Size;
 	bool                        m_IsMouseOnNode;
 };

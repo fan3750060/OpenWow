@@ -51,16 +51,17 @@ public:
 	std::shared_ptr<IMesh> CreateLine(cvec3 _dest); // Create a line
 	std::shared_ptr<IMesh> CreatePlane(cvec3 N = vec3(0, 1, 0)); // Create a plane in 3D.
 	std::shared_ptr<IMesh> CreateScreenQuad(float left = 0.0f, float right = 1.0f, float bottom = 0.0f, float top = 1.0f, float z = 0.0f); // Create a screen-space quad that can be used to render full-screen post-process effects to the screen.
-	std::shared_ptr<IMesh> CreateUIQuad(float width = 1.0f, float height = 1.0f); // Create a screen-space quad that can be used to render full-screen post-process effects to the screen.	
 	std::shared_ptr<IMesh> CreateSphere(); // Create a sphere in 3D
 	std::shared_ptr<IMesh> CreateCube(); // Create a cube in 3D.
-	std::shared_ptr<IMesh> CreateCylinder(float baseRadius, float apexRadius, float height, cvec3 axis = vec3(0, 1, 0)); // Create a cylinder that is aligned to a particular axis.
 	std::shared_ptr<IMesh> CreateCone(); // Create a cone.
 
+    // 3D meshes
+    std::shared_ptr<IMesh> Create3DQuad(float width = 10.0f, float height = 10.0f);
+    std::shared_ptr<IMesh> Create3DBeizerLine(vec3 start = vec3(0.0f, 0.0f, 0.0f), vec3 end = vec3(500.0f, 0.0f, 500.0f));
 
-
-    // Create a beizer line
-    std::shared_ptr<IMesh> CreateBeizerLine(vec2 start, vec2 end);
+    // UI meshes
+    std::shared_ptr<IMesh> CreateUIQuad(float width = 10.0f, float height = 10.0f);
+    std::shared_ptr<IMesh> CreateUIBeizerLine(vec2 start = vec2(0.0f, 0.0f), vec2 end = vec2(500.0f, 500.0f));
 
 
 

@@ -31,12 +31,23 @@ void CUIBaseNode::SetName(cstring name)
 	m_Name = name;
 }
 
+
+//
 // Translate
+//
 void CUIBaseNode::SetTranslate(cvec2 _translate) 
 { 
 	m_Translate = _translate;
 
 	UpdateLocalTransform();
+
+    UIBaseNodeMovedEventArgs args;
+    Moved(args);
+
+    for (auto ch : GetChilds())
+    {
+        ch->Moved(args);
+    }
 }
 
 glm::vec2 CUIBaseNode::GetTranslation() const
@@ -44,18 +55,18 @@ glm::vec2 CUIBaseNode::GetTranslation() const
 	return m_Translate; 
 }
 
-glm::vec2 CUIBaseNode::GetAbsTranslation() const
+glm::vec2 CUIBaseNode::GetTranslationAbs() const
 {
 	glm::vec2 parentTranslate = vec2(0.0f, 0.0f);
 	if (std::shared_ptr<CUIBaseNode> parent = m_pParentNode.lock())
-	{
-		parentTranslate = parent->GetAbsTranslation();
-	}
-
+		parentTranslate = parent->GetTranslationAbs();
 	return parentTranslate + GetTranslation();
 }
 
+
+//
 // Rotate
+//
 void CUIBaseNode::SetRotation(cvec3 _rotate) 
 { 
 	m_Rotate = _rotate;
@@ -67,20 +78,35 @@ glm::vec3 CUIBaseNode::GetRotation() const
 	return m_Rotate; 
 }
 
+
+//
 // Scale
+//
 void CUIBaseNode::SetScale(cvec2 _scale) 
 { 
 	m_Scale = _scale;
 
 	UpdateLocalTransform();
 }
+
 glm::vec2 CUIBaseNode::GetScale() const
 { 
 	return m_Scale; 
 }
 
-// Size
-void CUIBaseNode::SetSize(glm::ivec2 Size)
+glm::vec2 CUIBaseNode::GetScaleAbs() const
+{
+    glm::vec2 parentScale = vec2(1.0f, 1.0f);
+    if (std::shared_ptr<CUIBaseNode> parent = m_pParentNode.lock())
+        parentScale = parent->GetScaleAbs();
+    return parentScale * GetScale();
+}
+
+
+//
+// Size & bounds
+//
+void CUIBaseNode::SetSize(glm::vec2 Size)
 {
 	m_Size = Size;
 }
@@ -90,18 +116,19 @@ glm::vec2 CUIBaseNode::GetSize() const
 	return m_Size;
 }
 
-
-
-Rect CUIBaseNode::GetBounds() const
+BoundingRect CUIBaseNode::GetBoundsAbs() const
 {
-	return Rect(m_Translate.x, m_Translate.y, m_Size.x * m_Scale.x, m_Size.y * m_Scale.y);
+    BoundingRect boundRect = BoundingRect(GetTranslationAbs(), GetTranslationAbs() + GetSize() * GetScaleAbs());
+
+    for (auto ch : GetChilds())
+        boundRect.makeUnion(ch->GetBoundsAbs());
+
+    return boundRect;
 }
 
-bool CUIBaseNode::IsPointInBounds(glm::vec2 Point) const
+bool CUIBaseNode::IsPointInBoundsAbs(glm::vec2 Point) const
 {
-	Rect rect = GetBounds();
-
-	return (Point.x >= rect.X) && (Point.x < (rect.X + rect.Width)) && (Point.y >= rect.Y) && (Point.y < (rect.Y + rect.Height));
+    return GetBoundsAbs().isPointInside(Point);
 }
 
 // Local transform
@@ -162,11 +189,19 @@ void CUIBaseNode::SetParent(std::weak_ptr<CUIBaseNode> parentNode)
 	}
 }
 
-
-
 void CUIBaseNode::SetParentInternal(std::weak_ptr<CUIBaseNode> parent)
 {
 	m_pParentNode = parent;
+}
+
+std::shared_ptr<CUIBaseNode> CUIBaseNode::GetParent() const
+{
+    return m_pParentNode.lock();
+}
+
+std::vector<std::shared_ptr<CUIBaseNode>> CUIBaseNode::GetChilds() const
+{
+    return std::vector<std::shared_ptr<CUIBaseNode>>();
 }
 
 
@@ -208,6 +243,10 @@ bool CUIBaseNode::Accept(IVisitor& visitor)
 	bool visitResult = visitor.Visit(*this);
 	if (!visitResult)
 		return false;
+
+    // Visit childs
+    for (auto child : GetChilds())
+        child->Accept(visitor);
 
 	// Visit meshes
 	AcceptMesh(visitor);

@@ -22,7 +22,7 @@ RenderWindowDX11::RenderWindowDX11(std::shared_ptr<RenderDeviceDX11> device, IWi
 	m_SampleDesc = { 1, 0 };
 
 	// Try to choose the best multi-sampling quality level that is supported.
-	UINT sampleCount = 1;
+	/*UINT sampleCount = 1;
 	UINT qualityLevels = 0;
 	while (SUCCEEDED(m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &qualityLevels)) && qualityLevels > 0)
 	{
@@ -32,7 +32,7 @@ RenderWindowDX11::RenderWindowDX11(std::shared_ptr<RenderDeviceDX11> device, IWi
 
 		// But can we do better?
 		sampleCount = sampleCount * 2;
-	}
+	}*/
 
 	// Create a render target for the back buffer and depth/stencil buffers.
 	m_RenderTarget = std::dynamic_pointer_cast<RenderTargetDX11>(m_Device.lock()->CreateRenderTarget());
@@ -166,15 +166,15 @@ void RenderWindowDX11::CreateSwapChain()
 	std::shared_ptr<Texture> colorTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, colorTextureFormat);
 
 	// Depth/stencil buffer
-	Texture::TextureFormat depthStencilTextureFormat(
-		Texture::Components::DepthStencil,
-		Texture::Type::UnsignedNormalized,
-		m_SampleDesc.Count,
-		0, 0, 0, 0, 24, 8);
-	std::shared_ptr<Texture> depthStencilTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, depthStencilTextureFormat);
+	//Texture::TextureFormat depthStencilTextureFormat(
+	//	Texture::Components::DepthStencil,
+	//	Texture::Type::UnsignedNormalized,
+	//	m_SampleDesc.Count,
+	//	0, 0, 0, 0, 24, 8);
+	//std::shared_ptr<Texture> depthStencilTexture = m_Device.lock()->CreateTexture2D(windowWidth, windowHeight, 1, depthStencilTextureFormat);
 
 	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::Color0, colorTexture);
-	m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::DepthStencil, depthStencilTexture);
+	//m_RenderTarget->AttachTexture(IRenderTarget::AttachmentPoint::DepthStencil, depthStencilTexture);
 }
 
 void RenderWindowDX11::ResizeSwapChainBuffers(uint32_t width, uint32_t height)

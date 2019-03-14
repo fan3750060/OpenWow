@@ -26,7 +26,7 @@ private:
             , Thickness(4.0f)
             , Viewport(vec2(1280.0f, 1024.0f))
             , MiterLimit(0.75f)
-            , SegmentsCount(15)
+            , SegmentsCount(30)
 		{}
 		vec4   Color;
         float  Thickness;

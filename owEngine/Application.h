@@ -23,7 +23,7 @@ public:
 
 	// Creators
 	std::shared_ptr<IRenderDevice>  CreateRenderDevice();
-	std::shared_ptr<RenderWindow>   CreateRenderWindow(IWindowObject * WindowObject, bool vSync = false);
+	std::shared_ptr<RenderWindow>   CreateRenderWindow(IWindowObject * WindowObject, bool vSync);
 
 	CLoader*						GetLoader();
 

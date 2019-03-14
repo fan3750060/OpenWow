@@ -40,13 +40,13 @@ void CUIButtonNode::CreateDefault()
 	std::shared_ptr<Texture> idleTexture = m_Material->GetTexture(0);
 	SetSize(idleTexture->GetSize());
 
-	m_Mesh = _RenderDevice->CreateScreenQuad(0.0, idleTexture->GetWidth(), 0.0f, idleTexture->GetHeight());
+	m_Mesh = _RenderDevice->CreateUIQuad(idleTexture->GetWidth(), idleTexture->GetHeight());
 
 	m_TextNode = std::make_shared<CUITextNode>();
 	m_TextNode->SetParentInternal(weak_from_this());
 	m_TextNode->SetText(cDefaultText);
 	m_TextNode->SetTranslate(vec2(10.0f, 10.0f));
-	m_TextNode->SetColor(vec4(0.0f, 0.0f, 1.0f, 1.0f));
+	m_TextNode->SetTextColor(vec4(0.0f, 0.0f, 1.0f, 1.0f));
 }
 
 
@@ -60,14 +60,14 @@ bool CUIButtonNode::OnMouseButtonPressed(MouseButtonEventArgs & e)
 
 	// Raise event
 	UIButtonClickEventArgs args;
-	OnClick(args);
+	Click(args);
 
 	return true;
 }
 
 void CUIButtonNode::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
-	if (IsPointInBounds(e.GetPoint()))
+	if (IsPointInBoundsAbs(e.GetPoint()))
 	{
 		m_State = Hover;
 		return;

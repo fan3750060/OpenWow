@@ -100,7 +100,7 @@ bool BaseUIPass::Visit(CUIBaseNode & nodeUI)
 	return false;
 }
 
-bool BaseUIPass::Visit(IMesh & mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
+bool BaseUIPass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	if (m_pRenderEventArgs)
 	{

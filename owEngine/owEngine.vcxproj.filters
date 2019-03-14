@@ -49,6 +49,15 @@
     <Filter Include="UI\SlateEditor">
       <UniqueIdentifier>{3d6dd2c1-5bf4-49a8-81f7-65890fb629e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Containers">
+      <UniqueIdentifier>{9bfc82a2-2d45-44e0-a767-71f1055434bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Core\Utils">
+      <UniqueIdentifier>{c516e9c8-ed14-4a0c-85f6-882ed6a79347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Containers\ContainerGarmoshka">
+      <UniqueIdentifier>{cb7b8eb3-6eea-4dff-930c-e2c8dd4a8432}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -216,11 +225,26 @@
     <ClCompile Include="UI\Materials\UI_Line_Material.cpp">
       <Filter>UI\Materials</Filter>
     </ClCompile>
-    <ClCompile Include="UI\UILine.cpp">
-      <Filter>UI\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="UI\UIWindow.cpp">
       <Filter>UI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateConnection.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIBeizerLine.cpp">
+      <Filter>UI\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIUtils.cpp">
+      <Filter>UI\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIContainerGarmoshka.cpp">
+      <Filter>UI\Containers\ContainerGarmoshka</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIContainerGarmoshkaCategory.cpp">
+      <Filter>UI\Containers\ContainerGarmoshka</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIContainerGarmoshkaCategoryHeader.cpp">
+      <Filter>UI\Containers\ContainerGarmoshka</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -401,11 +425,29 @@
     <ClInclude Include="UI\Materials\UI_Line_Material.h">
       <Filter>UI\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="UI\UILine.h">
-      <Filter>UI\Nodes</Filter>
-    </ClInclude>
     <ClInclude Include="UI\UIWindow.h">
       <Filter>UI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateConnection.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateEditorInterfaces.h">
+      <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIBeizerLine.h">
+      <Filter>UI\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIUtils.h">
+      <Filter>UI\Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIContainerGarmoshka.h">
+      <Filter>UI\Containers\ContainerGarmoshka</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIContainerGarmoshkaCategory.h">
+      <Filter>UI\Containers\ContainerGarmoshka</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIContainerGarmoshkaCategoryHeader.h">
+      <Filter>UI\Containers\ContainerGarmoshka</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

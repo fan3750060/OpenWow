@@ -171,6 +171,9 @@
     <ClCompile Include="LocalFilesStorage.cpp">
       <Filter>Files\Common</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingRect.cpp">
+      <Filter>Common\Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugOutput.h">
@@ -331,6 +334,12 @@
     </ClInclude>
     <ClInclude Include="LocalFilesStorage.h">
       <Filter>Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Common\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingRect.h">
+      <Filter>Common\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

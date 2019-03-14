@@ -70,4 +70,16 @@ void AddUIPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderT
 	UIPipeline->GetRasterizerState().SetViewport(viewport);
 
 	technique->SetPass(std::make_shared<BaseUIPass>(scene, UIPipeline));
+
+
+    //std::shared_ptr<PipelineState> UIDebugPipeline = device->CreatePipelineState();
+    //UIDebugPipeline->GetBlendState().SetBlendMode(alphaBlending);
+    //UIDebugPipeline->GetDepthStencilState().SetDepthMode(disableDepthWrites);
+    //UIDebugPipeline->GetRasterizerState().SetCullMode(RasterizerState::CullMode::None);
+    //UIDebugPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Wireframe);
+    //UIDebugPipeline->SetRenderTarget(_renderTarget);
+    //UIDebugPipeline->GetRasterizerState().SetViewport(viewport);
+
+    //technique->SetPass(std::make_shared<BaseUIPass>(scene, UIDebugPipeline));
+
 }

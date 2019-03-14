@@ -72,8 +72,12 @@
     <ClCompile Include="UI\UIBaseNode.cpp" />
     <ClCompile Include="UI\UIButton.cpp" />
     <ClCompile Include="UI\UIColor.cpp" />
-    <ClCompile Include="UI\UILine.cpp" />
+    <ClCompile Include="UI\UIContainerGarmoshka.cpp" />
+    <ClCompile Include="UI\UIContainerGarmoshkaCategory.cpp" />
+    <ClCompile Include="UI\UIContainerGarmoshkaCategoryHeader.cpp" />
+    <ClCompile Include="UI\UIBeizerLine.cpp" />
     <ClCompile Include="UI\UIScene.cpp" />
+    <ClCompile Include="UI\UISlateConnection.cpp" />
     <ClCompile Include="UI\UISlateEditor.cpp" />
     <ClCompile Include="UI\UISlateNode.cpp" />
     <ClCompile Include="UI\UISlateNodeFooter.cpp" />
@@ -81,6 +85,7 @@
     <ClCompile Include="UI\UISlateNodeParameter.cpp" />
     <ClCompile Include="UI\UIText.cpp" />
     <ClCompile Include="UI\UITexture.cpp" />
+    <ClCompile Include="UI\UIUtils.cpp" />
     <ClCompile Include="UI\UIWindow.cpp" />
     <ClCompile Include="WindowCreator.cpp" />
   </ItemGroup>
@@ -137,15 +142,21 @@
     <ClInclude Include="UI\UIBaseNode.h" />
     <ClInclude Include="UI\UIButton.h" />
     <ClInclude Include="UI\UIColor.h" />
-    <ClInclude Include="UI\UILine.h" />
+    <ClInclude Include="UI\UIContainerGarmoshka.h" />
+    <ClInclude Include="UI\UIContainerGarmoshkaCategory.h" />
+    <ClInclude Include="UI\UIContainerGarmoshkaCategoryHeader.h" />
+    <ClInclude Include="UI\UIBeizerLine.h" />
     <ClInclude Include="UI\UIScene.h" />
+    <ClInclude Include="UI\UISlateConnection.h" />
     <ClInclude Include="UI\UISlateEditor.h" />
+    <ClInclude Include="UI\UISlateEditorInterfaces.h" />
     <ClInclude Include="UI\UISlateNode.h" />
     <ClInclude Include="UI\UISlateNodeFooter.h" />
     <ClInclude Include="UI\UISlateNodeHeader.h" />
     <ClInclude Include="UI\UISlateNodeParameter.h" />
     <ClInclude Include="UI\UIText.h" />
     <ClInclude Include="UI\UITexture.h" />
+    <ClInclude Include="UI\UIUtils.h" />
     <ClInclude Include="UI\UIWindow.h" />
     <ClInclude Include="WindowCreator.h" />
   </ItemGroup>

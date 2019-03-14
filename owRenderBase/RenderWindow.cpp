@@ -63,12 +63,18 @@ std::string RenderWindow::GetWindowName() const
 
 int RenderWindow::GetWindowWidth() const
 {
-	return m_WindowObject->GetWindowWidth();
+    RECT clientRect;
+    m_WindowObject->GetClientRect(&clientRect);
+
+	return clientRect.right - clientRect.left;
 }
 
 int RenderWindow::GetWindowHeight() const
 {
-	return m_WindowObject->GetWindowHeight();
+    RECT clientRect;
+    m_WindowObject->GetClientRect(&clientRect);
+
+    return clientRect.bottom - clientRect.top;
 }
 
 glm::ivec2 RenderWindow::GetWindowSize() const

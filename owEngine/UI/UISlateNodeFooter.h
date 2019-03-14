@@ -1,32 +1,48 @@
 #pragma once
 
-// Base
+// Common UI
 #include "UIBaseNode.h"
-
-// Childs
 #include "UIColor.h"
 #include "UIText.h"
 #include "UITexture.h"
 
+// Slate
+#include "UISlateEditorInterfaces.h"
+
 // FORWARD BEGIN
+class CUISlateEditor;
 class CUISlateNode;
 // FORWARD END
 
-class CUISlateNodeFooter : public CUIBaseNode
+class CUISlateNodeFooter : 
+    public CUIBaseNode, 
+    public IUISlateConnectionable
 {
     typedef CUIBaseNode base;
 public:
-    CUISlateNodeFooter();
+    CUISlateNodeFooter(std::weak_ptr<CUISlateEditor> Editor);
     virtual ~CUISlateNodeFooter();
 
     // CUISlateNodeHeader
     void CreateDefault();
 
+    // IUISlateConnectionable
+    vec2 GetConnectPoint() const;
+    BoundingRect GetConnectRectangle() const;
+    LineDefaultDirection GetConnectDirection() const;
+
     // CUIBaseNode
-    virtual bool Accept(IVisitor& visitor) override;
-    virtual bool AcceptMesh(IVisitor& visitor) override;
+    std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const override;
+
+    // Input events
+    bool OnMouseButtonPressed(MouseButtonEventArgs& e) override final;
+    void OnMouseButtonReleased(MouseButtonEventArgs& e) override final;
 
 private:
-    std::shared_ptr<CUIColorNode>   m_BackgroungNode;
-    std::shared_ptr<CUITextureNode> m_IconNode;
+    std::shared_ptr<CUIColorNode>           m_Background;
+    std::shared_ptr<CUITextNode>            m_Text;
+    std::shared_ptr<CUITextureNode>         m_LinePoint;
+
+    // Weak refs
+    std::weak_ptr<CUISlateEditor>           m_Editor;
 };

@@ -40,18 +40,24 @@ std::string CWindowObject::GetWindowName()
 
 long CWindowObject::GetWindowWidth()
 {
-	RECT rect;
-	::GetWindowRect(m_HWnd, &rect);
+    RECT windowRect;
+    ::GetWindowRect(m_HWnd, &windowRect);
 
-	return (rect.right - rect.left);
+    int windowWidth = windowRect.right - windowRect.left;
+    int windowHeight = windowRect.bottom - windowRect.top;
+
+	return windowWidth;
 }
 
 long CWindowObject::GetWindowHeight()
 {
-	RECT rect;
-	::GetWindowRect(m_HWnd, &rect);
+    RECT windowRect;
+    ::GetWindowRect(m_HWnd, &windowRect);
 
-	return (rect.bottom - rect.top);
+    int windowWidth = windowRect.right - windowRect.left;
+    int windowHeight = windowRect.bottom - windowRect.top;
+
+	return windowHeight;
 }
 
 HWND CWindowObject::GetHWnd()
@@ -126,7 +132,7 @@ void CWindowObject::RegisterWindowClass(HINSTANCE HInstance)
 	// Register a window class for creating our render windows with.
 	WNDCLASSEX renderWindowClass;
 	renderWindowClass.cbSize = sizeof(WNDCLASSEX);
-	renderWindowClass.style = CS_HREDRAW | CS_VREDRAW;
+	renderWindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	renderWindowClass.lpfnWndProc = &Application::WndProc;
 	renderWindowClass.cbClsExtra = 0;
 	renderWindowClass.cbWndExtra = 0;

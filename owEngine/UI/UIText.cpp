@@ -32,20 +32,49 @@ CUITextNode::~CUITextNode()
 //
 void CUITextNode::SetFont(std::shared_ptr<CFontMesh> _font)
 {
-	_ASSERT(_font != nullptr);
+    _ASSERT(_font != nullptr);
 
-	m_Font = _font;
-	m_Material->SetTexture(0, m_Font->GetTexture());
+    m_Font = _font;
+    m_Material->SetTexture(0, m_Font->GetTexture());
+}
+
+std::shared_ptr<CFontMesh> CUITextNode::GetFont() const
+{
+    return m_Font;
 }
 
 void CUITextNode::SetText(const std::string& _text)
 {
-	m_Text = _text;
+    m_Text = _text;
 }
 
-void CUITextNode::SetColor(cvec4 _color)
+void CUITextNode::SetTextColor(cvec4 _color)
 {
-	m_Material->SetColor(_color);
+    m_Material->SetColor(_color);
+}
+
+std::string CUITextNode::GetText() const
+{
+    return std::string();
+}
+
+void CUITextNode::SetOffset(glm::vec2 Offset)
+{
+    m_Offset = Offset;
+}
+
+glm::vec2 CUITextNode::GetOffset() const
+{
+    return m_Offset;
+}
+
+
+glm::vec2 CUITextNode::GetTextSize() const
+{
+    float width = m_Font->GetStringWidth(m_Text);
+    float height = m_Font->GetHeight();
+
+    return glm::vec2(width, height);
 }
 
 
@@ -53,6 +82,17 @@ void CUITextNode::SetColor(cvec4 _color)
 //
 // CUIBaseNode
 //
+
+void CUITextNode::SetSize(glm::vec2 Size)
+{
+    _ASSERT(false);
+}
+
+glm::vec2 CUITextNode::GetSize() const
+{
+    return GetTextSize() + 2.0f * m_Offset;
+}
+
 bool CUITextNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Font->SetMaterial(m_Material);

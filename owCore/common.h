@@ -19,9 +19,11 @@
 // Primitives
 #include "Math.h"
 #include "BoundingBox.h"
+#include "BoundingRect.h"
 #include "BoundingSphere.h"
 #include "Frustrum.h"
 #include "Plane.h"
+#include "Rect.h"
 
 // Additional types
 #include "Color.h"

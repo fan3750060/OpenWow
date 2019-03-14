@@ -35,7 +35,9 @@ BufferDX11::BufferDX11(ID3D11Device2* pDevice, UINT bindFlags, const void* data,
 }
 
 BufferDX11::~BufferDX11()
-{}
+{
+    
+}
 
 bool BufferDX11::Bind(uint32 id, std::weak_ptr<Shader> shader, ShaderParameter::Type parameterType)
 {

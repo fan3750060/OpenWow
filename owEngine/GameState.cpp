@@ -83,11 +83,12 @@ void CGameState::Unset()
 //
 void CGameState::OnKeyPressed(KeyEventArgs & e)
 {
-	if (m_DefaultCameraController)
-		m_DefaultCameraController->OnKeyPressed(e);
+    bool result = false;
+    if (m_UIScene)
+        result = m_UIScene->OnKeyPressed(e);
 
-	if (m_UIScene)
-		m_UIScene->OnKeyPressed(e);
+	if (m_DefaultCameraController && !result)
+		m_DefaultCameraController->OnKeyPressed(e);
 }
 
 void CGameState::OnKeyReleased(KeyEventArgs & e)
@@ -101,11 +102,12 @@ void CGameState::OnKeyReleased(KeyEventArgs & e)
 
 void CGameState::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
-	if (m_DefaultCameraController)
-		m_DefaultCameraController->OnMouseButtonPressed(e);
+    bool result = false;
+    if (m_UIScene)
+        result = m_UIScene->OnMouseButtonPressed(e);
 
-	if (m_UIScene)
-		m_UIScene->OnMouseButtonPressed(e);
+	if (m_DefaultCameraController && !result)
+		m_DefaultCameraController->OnMouseButtonPressed(e);
 }
 
 void CGameState::OnMouseButtonReleased(MouseButtonEventArgs & e)
