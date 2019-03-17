@@ -13,9 +13,14 @@ CUISlateEditor::~CUISlateEditor()
     m_Nodes.clear();
 }
 
-void CUISlateEditor::CreateDefault(vec2 Position, vec2 Size)
+
+
+//
+// CUISlateEditor
+//
+
+void CUISlateEditor::Initialize(vec2 Size)
 {
-    SetTranslate(Position);
     SetSize(Size);
 
     m_Background = std::make_shared<CUIColorNode>(Size);
@@ -23,9 +28,9 @@ void CUISlateEditor::CreateDefault(vec2 Position, vec2 Size)
     m_Background->SetColor(vec4(0.0f, 0.3f, 0.9f, 0.8f));
 }
 
-//
+
 // Parent & childs functional
-//
+
 void CUISlateEditor::AddNode(std::shared_ptr<CUISlateNode> Node)
 {
     _ASSERT(Node != nullptr);
@@ -63,10 +68,8 @@ void CUISlateEditor::RemoveNode(std::shared_ptr<CUISlateNode> Node)
 }
 
 
-
-//
 // Connect / disconnect
-//
+
 void CUISlateEditor::BeginMakeConnection(std::shared_ptr<IUISlateConnectionable> Initiator)
 {
     m_CurrentConnectionable = Initiator;
@@ -101,12 +104,28 @@ void CUISlateEditor::FinishMakeConnection(std::shared_ptr<IUISlateConnectionable
     MakeConnection(m_CurrentConnectionable, Target);
 }
 
+// Moving nodes
+
 void CUISlateEditor::BeginMoveNode(std::shared_ptr<CUISlateNode> Node, glm::vec2 Point)
 {
     m_MovingNodes_Current = Node;
     m_MovingNodes_Point = Point;
 }
 
+
+std::vector<std::shared_ptr<CUIBaseNode>> CUISlateEditor::GetChilds() const
+{
+    std::vector<std::shared_ptr<CUIBaseNode>> childs;
+
+    std::for_each(m_Nodes.begin(), m_Nodes.end(),
+        [&childs](const std::shared_ptr<CUISlateNode>& Node)
+        {
+            childs.push_back(Node);
+        }
+    );
+
+    return childs;
+}
 
 //
 // CUIBaseNode
@@ -136,28 +155,8 @@ bool CUISlateEditor::Accept(IVisitor& visitor)
     return true;
 }
 
-//
 // Input events
-//
-bool CUISlateEditor::OnKeyPressed(KeyEventArgs & e)
-{
-    // Childs
-    bool result = false;
-    for (auto it : m_Nodes)
-    {
-        if (it->OnKeyPressed(e))
-            result = true;
-    }
-    return result;
-}
 
-void CUISlateEditor::OnKeyReleased(KeyEventArgs & e)
-{
-    for (auto it : m_Nodes)
-    {
-        it->OnKeyPressed(e);
-    }
-}
 
 void CUISlateEditor::OnMouseMoved(MouseMotionEventArgs& e)
 {
@@ -170,50 +169,15 @@ void CUISlateEditor::OnMouseMoved(MouseMotionEventArgs& e)
     {
         m_MovingNodes_Current->SetTranslate(e.GetPoint() - m_MovingNodes_Current->GetParent()->GetTranslationAbs() - m_MovingNodes_Point);
     }
-
-    for (auto it : m_Nodes)
-    {
-        it->OnMouseMoved(e);
-
-        // Synteric events impl
-        if (it->IsPointInBoundsAbs(e.GetPoint()))
-        {
-            if (!it->IsMouseOnNode())
-            {
-                it->OnMouseEntered();
-                it->DoMouseEntered();
-            }
-        }
-        else
-        {
-            if (it->IsMouseOnNode())
-            {
-                it->OnMouseLeaved();
-                it->DoMouseLeaved();
-            }
-        }
-    }
 }
 
 bool CUISlateEditor::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
-    bool result = false;
-    for (auto it : m_Nodes)
-    {
-        if (it->IsPointInBoundsAbs(e.GetPoint()))
-            if (it->OnMouseButtonPressed(e))
-                result = true;
-    }
-    return result;
+    return false;
 }
 
 void CUISlateEditor::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
-    for (auto it : m_Nodes)
-    {
-        it->OnMouseButtonReleased(e);
-    }
-
     m_CurrentConnectionable = nullptr;
     m_CurrentLine = nullptr;
 
@@ -222,16 +186,14 @@ void CUISlateEditor::OnMouseButtonReleased(MouseButtonEventArgs & e)
 
 bool CUISlateEditor::OnMouseWheel(MouseWheelEventArgs & e)
 {
-    bool result = false;
-    for (auto it : m_Nodes)
-    {
-        if (it->IsPointInBoundsAbs(e.GetPoint()))
-            if (it->OnMouseWheel(e))
-                result = true;
-    }
-    return result;
+    return false;
 }
 
+
+
+//
+// Protected
+//
 void CUISlateEditor::MakeConnection(std::shared_ptr<IUISlateConnectionable> Initiator, std::shared_ptr<IUISlateConnectionable> Target)
 {
     _ASSERT(Initiator != nullptr);

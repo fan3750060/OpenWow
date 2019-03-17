@@ -246,6 +246,9 @@
     <ClCompile Include="UI\UIContainerGarmoshkaCategoryHeader.cpp">
       <Filter>UI\Containers\ContainerGarmoshka</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UISlateConnectionPoint.cpp">
+      <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -448,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="UI\UIContainerGarmoshkaCategoryHeader.h">
       <Filter>UI\Containers\ContainerGarmoshka</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateConnectionPoint.h">
+      <Filter>UI\SlateEditor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

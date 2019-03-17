@@ -30,10 +30,10 @@ void CUISlateConnection::Create(std::shared_ptr<IUISlateConnectionable> Begin, s
     RefreshLine();
 
     std::shared_ptr<CUIBaseNode> BeginAsBaseNode = std::dynamic_pointer_cast<CUIBaseNode>(m_Begin);
-    BeginAsBaseNode->Moved += std::bind(&CUISlateConnection::OnNodesMoved, this, std::placeholders::_1);
+    BeginAsBaseNode->Moved.connect(&CUISlateConnection::OnNodesMoved, this, std::placeholders::_1);
 
     std::shared_ptr<CUIBaseNode> EndAsBaseNode = std::dynamic_pointer_cast<CUIBaseNode>(m_End);
-    EndAsBaseNode->Moved += std::bind(&CUISlateConnection::OnNodesMoved, this, std::placeholders::_1);
+    EndAsBaseNode->Moved.connect(&CUISlateConnection::OnNodesMoved, this, std::placeholders::_1);
 }
 
 void CUISlateConnection::OnNodesMoved(UIBaseNodeMovedEventArgs & args)

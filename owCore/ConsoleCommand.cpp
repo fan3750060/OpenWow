@@ -3,16 +3,14 @@
 // General
 #include "ConsoleCommand.h"
 
-ConsoleCommand::ConsoleCommand(cstring _commandName, Function* _function, bool _hasArgs) :
+ConsoleCommand::ConsoleCommand(cstring _commandName, const std::function<void()>& _function, bool _hasArgs) :
 	m_Name(Utils::ToLower(_commandName)),
 	m_Function(_function),
 	m_HasArgs(_hasArgs)
 {}
 
 ConsoleCommand::~ConsoleCommand()
-{
-	delete m_Function;
-}
+{}
 
 const std::string ConsoleCommand::GetName() const 
 { 
@@ -26,7 +24,7 @@ bool ConsoleCommand::HasArgs() const
 
 void ConsoleCommand::Execute()
 {
-	m_Function->operator()();
+	m_Function();
 }
 
 void ConsoleCommand::Execute(cstring _args)

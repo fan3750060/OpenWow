@@ -1,9 +1,11 @@
 #pragma once
 
+#include <functional>
+
 class ConsoleCommand : public IConsoleCommand
 {
 public:
-	ConsoleCommand(cstring _commandName, Function* _function, bool _hasArgs = false);
+	ConsoleCommand(cstring _commandName, const std::function<void()>& _function, bool _hasArgs = false);
 	virtual ~ConsoleCommand();
 
 	// IConsoleCommand
@@ -15,14 +17,14 @@ public:
 protected:
 	std::string     m_Name;
 	bool       m_HasArgs;
-	Function*  m_Function;
+    std::function<void()>  m_Function;
 };
 
-template <class ARGTYPE>
+template <class ArgumentType>
 class ConsoleCommand_WA : public ConsoleCommand
 {
 public:
-	ConsoleCommand_WA(cstring _commandName, Function* _function) :
+	ConsoleCommand_WA(cstring _commandName, const std::function<void(ArgumentType)>& _function) :
 		ConsoleCommand(_commandName, _function, true)
 	{}
 	virtual ~ConsoleCommand_WA()
@@ -34,18 +36,20 @@ public:
 	void Execute() override { return ConsoleCommand::Execute(); };
 	void Execute(cstring _args) override
 	{
-		ARGTYPE value;
+		ArgumentType value;
 
-		if (Utils::TryParse(typeid(ARGTYPE), _args, &value))
+		if (Utils::TryParse(typeid(ArgumentType), _args, &value))
 		{
-			Function_WA<ARGTYPE>* funcWA = dynamic_cast<Function_WA<ARGTYPE>*>(m_Function);
-			assert1(funcWA != nullptr);
+			//Function_WA<ArgumentType>* funcWA = dynamic_cast<Function_WA<ArgumentType>*>(m_Function);
+			//assert1(funcWA != nullptr);
 
-			funcWA->operator()(ARGTYPE(value));
+            m_Function();
+
+			//funcWA->operator()(ArgumentType(value));
 		}
 		else
 		{
-			Log::Error("ConsoleCommand_WA[%s]: Can't parse argument [%s] to [%s].", m_Name.c_str(), _args.c_str(), typeid(ARGTYPE).name());
+			Log::Error("ConsoleCommand_WA[%s]: Can't parse argument [%s] to [%s].", m_Name.c_str(), _args.c_str(), typeid(ArgumentType).name());
 		}
 	}
 };

@@ -41,12 +41,15 @@ void CUIBaseNode::SetTranslate(cvec2 _translate)
 
 	UpdateLocalTransform();
 
-    UIBaseNodeMovedEventArgs args;
-    Moved(args);
-
-    for (auto ch : GetChilds())
+    // Raise 'Moved' callback
     {
-        ch->Moved(args);
+        UIBaseNodeMovedEventArgs args;
+        Moved(args);
+
+        for (auto ch : GetChilds())
+        {
+            ch->Moved(args);
+        }
     }
 }
 

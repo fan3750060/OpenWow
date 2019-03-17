@@ -40,40 +40,43 @@ void CGameState::Destroy()
 bool CGameState::Set()
 {
 	std::shared_ptr<RenderWindow> renderWindow = m_Application->GetRenderWindow();
+    _ASSERT(renderWindow);
 
 	// Input events connections
-	renderWindow->MouseButtonPressed += std::bind(&CGameState::OnMouseButtonPressed, this, std::placeholders::_1);
-	renderWindow->MouseButtonReleased += std::bind(&CGameState::OnMouseButtonReleased, this, std::placeholders::_1);
-	renderWindow->MouseMoved += std::bind(&CGameState::OnMouseMoved, this, std::placeholders::_1);
-	renderWindow->MouseWheel += std::bind(&CGameState::OnMouseWheel, this, std::placeholders::_1);
-	renderWindow->KeyPressed += std::bind(&CGameState::OnKeyPressed, this, std::placeholders::_1);
-	renderWindow->KeyReleased += std::bind(&CGameState::OnKeyReleased, this, std::placeholders::_1);
+    OnKeyPressedConnection          = renderWindow->KeyPressed.connect(&CGameState::OnKeyPressed, this, std::placeholders::_1);
+    OnKeyReleasedConnection         = renderWindow->KeyReleased.connect(&CGameState::OnKeyReleased, this, std::placeholders::_1);
+    OnMouseButtonPressedConnection  = renderWindow->MouseButtonPressed.connect(&CGameState::OnMouseButtonPressed, this, std::placeholders::_1);
+    OnMouseButtonReleasedConnection = renderWindow->MouseButtonReleased.connect(&CGameState::OnMouseButtonReleased, this, std::placeholders::_1);
+    OnMouseMovedConnection          = renderWindow->MouseMoved.connect(&CGameState::OnMouseMoved, this, std::placeholders::_1);
+    OnMouseWheelConnection          = renderWindow->MouseWheel.connect(&CGameState::OnMouseWheel, this, std::placeholders::_1);
 
 	// Window events connections
-	renderWindow->Resize += std::bind(&CGameState::OnResize, this, std::placeholders::_1);
+    OnResizeConnection              = renderWindow->Resize.connect(&CGameState::OnResize, this, std::placeholders::_1);
 
 	// Update events connection
-	renderWindow->Update += std::bind(&CGameState::OnUpdate, this, std::placeholders::_1);
+    OnUpdateConnection              = renderWindow->Update.connect(&CGameState::OnUpdate, this, std::placeholders::_1);
 
 	// Render events connections
-	renderWindow->PreRender += std::bind(&CGameState::OnPreRender, this, std::placeholders::_1);
-	renderWindow->Render += std::bind(&CGameState::OnRender, this, std::placeholders::_1);
-	renderWindow->PostRender += std::bind(&CGameState::OnPostRender, this, std::placeholders::_1);
-	renderWindow->RenderUI += std::bind(&CGameState::OnRenderUI, this, std::placeholders::_1);
+    OnPreRenderConnection           = renderWindow->PreRender.connect(&CGameState::OnPreRender, this, std::placeholders::_1);
+    OnRenderConnection              = renderWindow->Render.connect(&CGameState::OnRender, this, std::placeholders::_1);
+    OnPostRenderConnection          = renderWindow->PostRender.connect(&CGameState::OnPostRender, this, std::placeholders::_1);
+    OnRenderUIConnection            = renderWindow->RenderUI.connect(&CGameState::OnRenderUI, this, std::placeholders::_1);
 
     return true;
 }
 
 void CGameState::Unset()
 {
-	/*_renderWindow->Update -= OnUpdateConnection;
-	_renderWindow->MouseButtonPressed -= OnMouseButtonPressedConnection;
-	_renderWindow->MouseButtonReleased -= OnMouseButtonReleasedConnection;
-	_renderWindow->MouseMoved -= OnMouseMovedConnection;
-	_renderWindow->MouseWheel -= OnMouseWheelConnection;
-	_renderWindow->KeyPressed -= OnKeyPressedConnection;
-	_renderWindow->KeyReleased -= OnKeyReleasedConnection;*/
+    std::shared_ptr<RenderWindow> renderWindow = m_Application->GetRenderWindow();
+    _ASSERT(renderWindow);
 
+    renderWindow->Update.disconnect(OnUpdateConnection);
+    renderWindow->MouseButtonPressed.disconnect(OnMouseButtonPressedConnection);
+    renderWindow->MouseButtonReleased.disconnect(OnMouseButtonReleasedConnection);
+    renderWindow->MouseMoved.disconnect(OnMouseMovedConnection);
+    renderWindow->MouseWheel.disconnect(OnMouseWheelConnection);
+    renderWindow->KeyPressed.disconnect(OnKeyPressedConnection);
+    renderWindow->KeyReleased.disconnect(OnKeyReleasedConnection);
 }
 
 

@@ -53,6 +53,9 @@ protected:
 protected:
 	const IApplication*         m_Application;
 
+    std::shared_ptr<Query>               m_FrameQuery;
+    double                               m_FrameTime;
+
 	Viewport                    m_Viewport;
 	std::shared_ptr<ICameraController> m_DefaultCameraController;
 
@@ -64,25 +67,25 @@ protected:
 	std::shared_ptr<Scene3D>             m_3DScene;
 	std::shared_ptr<CUIScene>            m_UIScene;
 
-/*private: // Input events connections
-	boost::signals2::connection OnKeyPressedConnection;
-	boost::signals2::connection OnKeyReleasedConnection;
-	boost::signals2::connection OnMouseButtonPressedConnection;
-	boost::signals2::connection OnMouseButtonReleasedConnection;
-	boost::signals2::connection OnMouseMovedConnection;
-	boost::signals2::connection OnMouseWheelConnection;
+private: // Input events connections
+    Delegate<KeyEventArgs>::FunctionDecl OnKeyPressedConnection;
+    Delegate<KeyEventArgs>::FunctionDecl OnKeyReleasedConnection;
+    Delegate<MouseButtonEventArgs>::FunctionDecl OnMouseButtonPressedConnection;
+    Delegate<MouseButtonEventArgs>::FunctionDecl OnMouseButtonReleasedConnection;
+    Delegate<MouseMotionEventArgs>::FunctionDecl OnMouseMovedConnection;
+    Delegate<MouseWheelEventArgs>::FunctionDecl OnMouseWheelConnection;
 
 private: // Windows events connection
-	boost::signals2::connection OnResizeConnection;
+    Delegate<ResizeEventArgs>::FunctionDecl OnResizeConnection;
 
 private: // Update event connection
-	boost::signals2::connection OnUpdateConnection;
+    Delegate<UpdateEventArgs>::FunctionDecl OnUpdateConnection;
 
 private: // Render events connection
-	boost::signals2::connection OnPreRenderConnection;
-	boost::signals2::connection OnRenderConnection;
-	boost::signals2::connection OnPostRenderConnection;
-	boost::signals2::connection OnRenderUIConnection;*/
+    Delegate<Render3DEventArgs>::FunctionDecl OnPreRenderConnection;
+    Delegate<Render3DEventArgs>::FunctionDecl OnRenderConnection;
+    Delegate<Render3DEventArgs>::FunctionDecl OnPostRenderConnection;
+    Delegate<RenderUIEventArgs>::FunctionDecl OnRenderUIConnection;
 
 private:
 	bool                        m_IsInited;

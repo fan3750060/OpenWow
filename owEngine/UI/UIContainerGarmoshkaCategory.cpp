@@ -9,9 +9,16 @@
 #include "UIUtils.h"
 #include "UIText.h"
 
+namespace
+{
+    // Icon
+    const vec2  cChildsOffset          = vec2(5.0f, 5.0f);
+    const float cChildsVerticalPadding = 2.0f;
+}
 
 CUIContainerGarmoshkaCategory::CUIContainerGarmoshkaCategory(std::weak_ptr<CUIContainerGarmoshka> ContainerGarmoshka)
-    : m_ContainerGarmoshka(ContainerGarmoshka)
+    : m_IsActive(false)
+    , m_ContainerGarmoshka(ContainerGarmoshka)
 {
 }
 
@@ -19,41 +26,72 @@ CUIContainerGarmoshkaCategory::~CUIContainerGarmoshkaCategory()
 {
 }
 
-void CUIContainerGarmoshkaCategory::CreateDefault()
+
+
+//
+// CUIContainerGarmoshkaCategory
+//
+void CUIContainerGarmoshkaCategory::Initialize(const std::string& CategoryName)
 {
-    m_Header = std::make_shared<CUIContainerGarmoshkaCategoryHeader>();
+    m_Header = std::make_shared<CUIContainerGarmoshkaCategoryHeader>(m_ContainerGarmoshka);
     m_Header->SetParentInternal(weak_from_this());
-    m_Header->CreateDefault();
-    m_Header->SetText("Some header text");
-
-    glm::vec2 textOffset = glm::vec2(5.0f, 5.0f);
-
-    std::shared_ptr<CUITextNode> ch1 = std::make_shared<CUITextNode>();
-    ch1->SetParentInternal(weak_from_this());
-    ch1->SetText("Some child #1");
-    ch1->SetOffset(textOffset);
-    m_Nodes.push_back(ch1);
-
-
-    std::shared_ptr<CUITextNode> ch2 = std::make_shared<CUITextNode>();
-    ch2->SetParentInternal(weak_from_this());
-    ch2->SetText("Some child #2");
-    ch2->SetOffset(textOffset);
-    m_Nodes.push_back(ch2);
-
-
-    std::shared_ptr<CUITextNode> ch3 = std::make_shared<CUITextNode>();
-    ch3->SetParentInternal(weak_from_this());
-    ch3->SetText("Some child #3");
-    ch3->SetOffset(textOffset);
-    m_Nodes.push_back(ch3);
-
-    CalculateNodesTranslate(vec2(0.0, m_Header->GetSize().y));
+    m_Header->Initialize();
+    m_Header->SetText(CategoryName);
 }
 
-void CUIContainerGarmoshkaCategory::SetText(cstring Name)
+void CUIContainerGarmoshkaCategory::CreateDefault()
+{
+    const glm::vec2 textOffset = glm::vec2(5.0f, 5.0f);
+
+    std::shared_ptr<CUITextNode> ch1 = std::make_shared<CUITextNode>();
+    ch1->SetText("Some child #1");
+    ch1->SetTextColor(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ch1->SetOffset(textOffset);
+    AddChild(ch1);
+
+    std::shared_ptr<CUITextNode> ch2 = std::make_shared<CUITextNode>();
+    ch2->SetText("Some child #2");
+    ch2->SetTextColor(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ch2->SetOffset(textOffset);
+    AddChild(ch2);
+
+    std::shared_ptr<CUITextNode> ch3 = std::make_shared<CUITextNode>();
+    ch3->SetText("Some child #3");
+    ch3->SetTextColor(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ch3->SetOffset(textOffset);
+    AddChild(ch3);
+
+    std::shared_ptr<CUITextNode> ch4 = std::make_shared<CUITextNode>();
+    ch4->SetText("Some child #4");
+    ch4->SetTextColor(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ch4->SetOffset(textOffset);
+    AddChild(ch4);
+
+    std::shared_ptr<CUITextNode> ch5 = std::make_shared<CUITextNode>();
+    ch5->SetText("Some child #5");
+    ch5->SetTextColor(vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    ch5->SetOffset(textOffset);
+    AddChild(ch5);
+}
+
+void CUIContainerGarmoshkaCategory::AddChild(std::shared_ptr<CUIBaseNode> Child)
+{
+    _ASSERT(Child != nullptr);
+
+    Child->SetParentInternal(weak_from_this());
+    m_Nodes.push_back(Child);
+
+    CalculateChildsTranslate();
+}
+
+void CUIContainerGarmoshkaCategory::SetCategoryName(cstring Name)
 {
     m_Header->SetText(Name);
+}
+
+void CUIContainerGarmoshkaCategory::SetActive(bool Active)
+{
+    m_IsActive = Active;
 }
 
 
@@ -63,7 +101,7 @@ void CUIContainerGarmoshkaCategory::SetText(cstring Name)
 //
 glm::vec2 CUIContainerGarmoshkaCategory::GetSize() const
 {
-    return owUIUtils::CalculateChildsVerticalSize(GetChilds(), 26.0f);
+    return owUIUtils::CalculateChildsVerticalSize(GetChilds(), cChildsVerticalPadding);
 }
 
 std::vector<std::shared_ptr<CUIBaseNode>> CUIContainerGarmoshkaCategory::GetChilds() const
@@ -73,30 +111,11 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUIContainerGarmoshkaCategory::GetChil
     if (m_Header)
         childs.push_back(m_Header);
 
-    for (auto node : m_Nodes)
-        childs.push_back(node);
+    if (m_IsActive)
+        for (auto node : m_Nodes)
+            childs.push_back(node);
 
     return childs;
-}
-
-bool CUIContainerGarmoshkaCategory::OnMouseButtonPressed(MouseButtonEventArgs & e)
-{
-    bool result = false;
-    for (auto it : GetChilds())
-    {
-        if (it->IsPointInBoundsAbs(e.GetPoint()))
-            if (it->OnMouseButtonPressed(e))
-                result = true;
-    }
-    return result;
-}
-
-void CUIContainerGarmoshkaCategory::OnMouseButtonReleased(MouseButtonEventArgs & e)
-{
-    for (auto it : GetChilds())
-    {
-        it->OnMouseButtonReleased(e);
-    }
 }
 
 
@@ -104,14 +123,15 @@ void CUIContainerGarmoshkaCategory::OnMouseButtonReleased(MouseButtonEventArgs &
 //
 // Protected
 //
-void CUIContainerGarmoshkaCategory::CalculateNodesTranslate(glm::vec2 StartPosition, glm::vec2 EveryNodeOffset)
+void CUIContainerGarmoshkaCategory::CalculateChildsTranslate()
 {
-    glm::vec2 increment = StartPosition;
+    glm::vec2 currentTranslate = m_Header->GetTranslation() + vec2(0.0, m_Header->GetSize().y);
 
     for (auto node : m_Nodes)
     {
-        node->SetTranslate(EveryNodeOffset + increment);
-        increment += vec2(0.0f, EveryNodeOffset.y);
-        increment += vec2(0.0f, node->GetSize().y);
+        node->SetTranslate(cChildsOffset + currentTranslate);
+
+        currentTranslate += vec2(0.0f, node->GetSize().y);
+        currentTranslate += vec2(0.0f, cChildsVerticalPadding);
     }
 }

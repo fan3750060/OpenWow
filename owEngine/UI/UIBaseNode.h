@@ -24,15 +24,17 @@ public:
 	virtual cstring GetName() const;
 	virtual void SetName(cstring name);
 
+    // Translate functional
 	void SetTranslate(cvec2 _translate);
 	glm::vec2 GetTranslation() const;
 	glm::vec2 GetTranslationAbs() const;
-
     UIBaseNodeMovedEvent Moved;
 
+    // Rotate functional
 	void SetRotation(cvec3 _rotate);
 	glm::vec3 GetRotation() const;
 
+    // Scale functional
 	void SetScale(cvec2 _scale);
 	glm::vec2 GetScale() const;
     glm::vec2 GetScaleAbs() const;
@@ -54,8 +56,8 @@ public:
 	// Parent & childs functional
 	virtual void SetParent(std::weak_ptr<CUIBaseNode> parent);         // Call this from CUIWindowNode
 	virtual void SetParentInternal(std::weak_ptr<CUIBaseNode> parent); // Call this from others nodes
+    
     virtual std::shared_ptr<CUIBaseNode> GetParent() const;
-
     virtual std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const;
 
 	// Called before all others calls

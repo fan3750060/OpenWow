@@ -22,14 +22,22 @@ public:
     virtual ~CUISlateNodeHeader();
 
     // CUISlateNodeHeader
-    void CreateDefault();
+    void Initialize(const std::string& HeaderText, const std::string& HeaderIconPath);
+
+    void SetHeaderText(const std::string& HeaderText);
+    void SetHeaderIcon(const std::string& HeaderIconPath);
 
     // CUIBaseNode
-    virtual std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const override;
+    glm::vec2 GetSize() const override final;
+    std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const override;
 
     // Input events
     bool OnMouseButtonPressed(MouseButtonEventArgs& e) override;
     void OnMouseButtonReleased(MouseButtonEventArgs& e) override;
+
+protected:
+    void CreateIconIfNeed(const std::string& HeaderIconPath);
+    void CalculateChildsTranslate();
 
 private:
     std::shared_ptr<CUIColorNode>       m_Background;

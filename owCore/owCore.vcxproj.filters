@@ -16,9 +16,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{ad29bc23-2620-4c7e-936f-19c0ecea08b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Functions">
-      <UniqueIdentifier>{db2dcf18-9c82-4909-8336-3bb07a02f976}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RefManager">
       <UniqueIdentifier>{e8b7d06f-ce44-4d51-8bb0-e6370cc39c70}</UniqueIdentifier>
     </Filter>
@@ -67,11 +64,11 @@
     <Filter Include="Events">
       <UniqueIdentifier>{3726dda1-960e-4c4a-bda0-7937a163f686}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Helpers">
-      <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\Threads">
       <UniqueIdentifier>{94a88278-a0a3-4d93-8432-ca705b1e488d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Helpers">
+      <UniqueIdentifier>{59b139b6-3568-49b9-afe7-7e6b75e45abd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,15 +184,6 @@
     </ClInclude>
     <ClInclude Include="INIFile.h">
       <Filter>Files\INIFile</Filter>
-    </ClInclude>
-    <ClInclude Include="Function.h">
-      <Filter>Common\Functions</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionSA.h">
-      <Filter>Common\Functions</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionWA.h">
-      <Filter>Common\Functions</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Common</Filter>

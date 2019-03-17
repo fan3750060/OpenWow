@@ -8,6 +8,7 @@
 
 // Slate
 #include "UISlateEditorInterfaces.h"
+#include "UISlateConnectionPoint.h"
 
 // FORWARD BEGIN
 class CUISlateEditor;
@@ -24,8 +25,10 @@ public:
 	virtual ~CUISlateNodeParameter();
 
 	// CUISlateNodeParameter
+    void Initialize();
 	void CreateDefault();
-    void SetText(std::string Text);
+
+    void SetText(const std::string& Text);
 
     // IUISlateConnectionable
     vec2 GetConnectPoint() const;
@@ -42,7 +45,7 @@ public:
 private:
 	std::shared_ptr<CUIColorNode>       m_Background;
 	std::shared_ptr<CUITextNode>        m_Text;
-    std::shared_ptr<CUITextureNode>     m_LinePoint;
+    std::shared_ptr<CUISlateConnectionPoint> m_LinePoint;
 
     bool                                m_IsLinePointOpened;
 

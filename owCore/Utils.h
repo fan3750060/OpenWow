@@ -15,9 +15,6 @@ public:
     // My types
     static  vec2 ToPoint(std::string& _string);
     static  vec3 ToVector3(std::string& _string);
-    static  Color ToColorFromName(std::string& _string);
-    static  Color ToColorFromRGB(std::string& _string);
-    static  Color ToColorFromRGBA(std::string& _string);
 
     // Parse
     static   std::string ParseSectionName(std::string& _string);

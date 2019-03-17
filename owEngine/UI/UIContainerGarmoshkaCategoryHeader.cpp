@@ -4,23 +4,27 @@
 #include "UIContainerGarmoshkaCategoryHeader.h"
 
 // Additional
+#include "UIContainerGarmoshka.h"
+#include "UIContainerGarmoshkaCategory.h"
+
 #include "UIUtils.h"
 
 namespace
 {
     // Background
-    const vec2  cDefaultBackgroundSize = vec2(240.0f, 20.0f);
-    const vec4  cDefaultBackgroundColor = vec4(0.23f, 0.7f, 0.23f, 1.0f);
+    const vec2   cDefaultBackgroundSize = vec2(240.0f, 20.0f);
+    const vec4   cDefaultBackgroundColor = vec4(0.88f, 0.88f, 0.88f, 1.0f);
 
     // Text
-    const char* cDefaultText = "Category header";
+    const char*  cDefaultText = "Category header";
     const uint32 cDefaultTextHeight = 12;
-    const vec2  cDefaultTextOffset = vec2(3.0f, 3.0f);
-    const vec4  cDefaultTextColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    const vec2   cDefaultTextOffset = vec2(3.0f, 3.0f);
+    const vec4   cDefaultTextColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 
-CUIContainerGarmoshkaCategoryHeader::CUIContainerGarmoshkaCategoryHeader()
+CUIContainerGarmoshkaCategoryHeader::CUIContainerGarmoshkaCategoryHeader(std::weak_ptr<CUIContainerGarmoshka> ContainerGarmoshka)
+    : m_ContainerGarmoshka(ContainerGarmoshka)
 {
 }
 
@@ -33,7 +37,7 @@ CUIContainerGarmoshkaCategoryHeader::~CUIContainerGarmoshkaCategoryHeader()
 //
 // CUIContainerGarmoshkaCategoryHeader
 //
-void CUIContainerGarmoshkaCategoryHeader::CreateDefault()
+void CUIContainerGarmoshkaCategoryHeader::Initialize()
 {
     m_Background = std::make_shared<CUIColorNode>(cDefaultBackgroundSize);
     m_Background->SetParentInternal(weak_from_this());
@@ -49,6 +53,9 @@ void CUIContainerGarmoshkaCategoryHeader::CreateDefault()
 
 void CUIContainerGarmoshkaCategoryHeader::SetText(cstring Text)
 {
+    _ASSERT(m_Background != nullptr);
+    _ASSERT(m_Text != nullptr);
+
     m_Text->SetText(Text);
 }
 
@@ -75,9 +82,22 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUIContainerGarmoshkaCategoryHeader::G
     return childs;
 }
 
+// Input events
+
 bool CUIContainerGarmoshkaCategoryHeader::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
-    return false;
+    std::shared_ptr<CUIBaseNode> parent = m_pParentNode.lock();
+    _ASSERT(parent != nullptr);
+
+    std::shared_ptr<CUIContainerGarmoshkaCategory> parentAsContainerGarmoshka = std::dynamic_pointer_cast<CUIContainerGarmoshkaCategory>(parent);
+    _ASSERT(parentAsContainerGarmoshka != nullptr);
+
+    std::shared_ptr<CUIContainerGarmoshka> containerGarmoshka = m_ContainerGarmoshka.lock();
+    _ASSERT(containerGarmoshka != nullptr);
+
+    containerGarmoshka->OnCategoryHeaderClicked(parentAsContainerGarmoshka);
+
+    return true;
 }
 
 void CUIContainerGarmoshkaCategoryHeader::OnMouseButtonReleased(MouseButtonEventArgs & e)

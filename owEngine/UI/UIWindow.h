@@ -14,15 +14,7 @@ public:
 	virtual void RemoveChild(std::shared_ptr<CUIBaseNode> Node);
 	
 	// CUIBaseNode
-	virtual bool Accept(IVisitor& visitor);
-
-	// Input events
-	virtual bool OnKeyPressed(KeyEventArgs& e) override;
-	virtual void OnKeyReleased(KeyEventArgs& e) override;
-	virtual void OnMouseMoved(MouseMotionEventArgs& e) override;
-	virtual bool OnMouseButtonPressed(MouseButtonEventArgs& e) override;
-	virtual void OnMouseButtonReleased(MouseButtonEventArgs& e) override;
-	virtual bool OnMouseWheel(MouseWheelEventArgs& e) override;
+    virtual std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const;
 
 private:
 	typedef std::vector<std::shared_ptr<CUIBaseNode>> NodeList;

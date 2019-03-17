@@ -12,17 +12,15 @@
 namespace
 {
 	// Background
-	const vec2  cDefaultBackgroundSize  = vec2(240.0f, 32.0f);
-	const vec4  cDefaultBackgroundColor = vec4(0.23f, 0.23f, 0.23f, 1.0f);
-
-    // Line point 
-    const float cDefaultIconSize = 12.0f;
+	const vec2   cFooterBackgroundSize  = vec2(240.0f, 32.0f);
+	const vec4   cFooterBackgroundColor = vec4(0.23f, 0.23f, 0.23f, 1.0f);
 
     // Text
-    const char* cDefaultText = "Result: ";
-    const uint32 cDefaultTextHeight = 16;
-    const vec2  cDefaultTextOffset = vec2(5.0f, 5.0f);
-    const vec4  cDefaultTextColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    const char*  cHeaderTextFontPath = "Fonts\\JustBreatheBd.otf";
+    const char*  cFooterText = "Result: ";
+    const uint32 cFooterTextHeight = 16;
+    const vec2   cFooterTextOffset = vec2(5.0f, 5.0f);
+    const vec4   cFooterTextColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 
@@ -41,21 +39,23 @@ CUISlateNodeFooter::~CUISlateNodeFooter()
 //
 // CUISlateNodeFooter
 //
+void CUISlateNodeFooter::Initialize()
+{
+    SetSize(cFooterBackgroundSize);
+
+    m_Background = std::make_shared<CUIColorNode>(cFooterBackgroundSize);
+    m_Background->SetParentInternal(weak_from_this());
+    m_Background->SetColor(cFooterBackgroundColor);
+}
+
 void CUISlateNodeFooter::CreateDefault()
 {
-    SetSize(cDefaultBackgroundSize);
-
-	m_Background = std::make_shared<CUIColorNode>(cDefaultBackgroundSize);
-	m_Background->SetParentInternal(weak_from_this());
-	m_Background->SetColor(cDefaultBackgroundColor);
-
-
-    m_LinePoint = std::make_shared<CUITextureNode>(vec2(cDefaultIconSize, cDefaultIconSize));
+    m_LinePoint = std::make_shared<CUISlateConnectionPoint>(m_Editor);
     m_LinePoint->SetParentInternal(weak_from_this());
-    m_LinePoint->SetTexture(_RenderDevice->CreateTexture2D("Textures\\slate_round_filled.png"));
+    m_LinePoint->Initialize();
 
     // Calculate translate
-    vec2 translate = cDefaultBackgroundSize;
+    vec2 translate = cFooterBackgroundSize;
     translate.y /= 2.0f;
     translate -= (m_LinePoint->GetSize() / 2.0f);
 
@@ -64,12 +64,17 @@ void CUISlateNodeFooter::CreateDefault()
 
     m_Text = std::make_shared<CUITextNode>();
     m_Text->SetParentInternal(weak_from_this());
-    m_Text->SetText(cDefaultText);
-    m_Text->SetTranslate(cDefaultTextOffset);
-    m_Text->SetTextColor(cDefaultTextColor);
-    m_Text->SetFont(GetManager<IFontsManager>()->Add("Fonts\\JustBreatheBd.otf", cDefaultTextHeight));
+    m_Text->SetText(cFooterText);
+    m_Text->SetTranslate(cFooterTextOffset);
+    m_Text->SetTextColor(cFooterTextColor);
+    m_Text->SetFont(GetManager<IFontsManager>()->Add(cHeaderTextFontPath, cFooterTextHeight));
 }
 
+
+
+//
+// IUISlateConnectionable
+//
 vec2 CUISlateNodeFooter::GetConnectPoint() const
 {
     cvec2 size = GetSize();
@@ -114,26 +119,10 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNodeFooter::GetChilds() const
 //
 bool CUISlateNodeFooter::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
-    if (GetConnectRectangle().isPointInside(e.GetPoint()))
-    {
-        std::shared_ptr<CUISlateEditor> editor = m_Editor.lock();
-        _ASSERT(editor);
-
-        editor->BeginMakeConnection(std::dynamic_pointer_cast<IUISlateConnectionable>(shared_from_this()));
-
-        return true;
-    }
-
     return false;
 }
 
 void CUISlateNodeFooter::OnMouseButtonReleased(MouseButtonEventArgs & e)
 {
-    if (GetConnectRectangle().isPointInside(e.GetPoint()))
-    {
-        std::shared_ptr<CUISlateEditor> editor = m_Editor.lock();
-        _ASSERT(editor);
 
-        editor->FinishMakeConnection(std::dynamic_pointer_cast<IUISlateConnectionable>(shared_from_this()));
-    }
 }

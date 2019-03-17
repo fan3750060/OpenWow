@@ -184,9 +184,9 @@ void Application::SetRenderWindow(std::shared_ptr<RenderWindow> _renderWindow)
 	{
 		m_pWindow->HideWindow();
 
-		Initialize -= InitializeConnection;
-		Update -= UpdateConnection;
-		Terminate -= TerminateConnection;
+		Initialize.disconnect(InitializeConnection);
+		Update.disconnect(UpdateConnection);
+		Terminate.disconnect(TerminateConnection);
 
 		m_pWindow->CloseWindow();
 		m_pWindow.reset();
@@ -194,9 +194,9 @@ void Application::SetRenderWindow(std::shared_ptr<RenderWindow> _renderWindow)
 
 	m_pWindow = _renderWindow;
 
-	InitializeConnection = Initialize += std::bind(&RenderWindow::OnInitialize, m_pWindow, std::placeholders::_1);
-	UpdateConnection     = Update     += std::bind(&RenderWindow::OnUpdate,     m_pWindow, std::placeholders::_1);
-	TerminateConnection  = Terminate  += std::bind(&RenderWindow::OnTerminate,  m_pWindow, std::placeholders::_1);
+	InitializeConnection = Initialize.connect(&RenderWindow::OnInitialize, m_pWindow, std::placeholders::_1);
+	UpdateConnection     = Update    .connect(&RenderWindow::OnUpdate,     m_pWindow, std::placeholders::_1);
+	TerminateConnection  = Terminate .connect(&RenderWindow::OnTerminate,  m_pWindow, std::placeholders::_1);
 	
 	m_pWindow->ShowWindow();
 

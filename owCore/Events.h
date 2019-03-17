@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "KeyCodes.h"
 
-template< class ArgumentType >
+template<class ArgumentType>
 class Delegate
 {
 public:
@@ -13,14 +13,23 @@ public:
 	typedef std::shared_ptr<FunctionType> FunctionDecl;
 	typedef std::set<FunctionDecl> FunctionsSet;
 
-	FunctionDecl operator += (typename const FunctionType& function)
+    template<class _Fx,  class... _Types>
+    FunctionDecl connect(_Fx&& _Func, _Types&&... _Args)
+    {
+        // https://stackoverflow.com/questions/20588191/error-with-variadiac-template-parameter-pack-must-be-expanded
+        FunctionDecl ret = std::make_shared<FunctionType>(std::bind(_Func, std::forward<_Types>(_Args)...));
+        m_Functions.insert(ret);
+        return ret;
+    }
+
+	FunctionDecl connect(typename const FunctionType& function)
 	{
 		FunctionDecl ret = std::make_shared<FunctionType>(function);
 		m_Functions.insert(ret);
 		return ret;
 	}
 
-	void operator -= (typename const FunctionDecl& function)
+	void disconnect(typename const FunctionDecl& function)
 	{
 		_ASSERT(function);
 
@@ -60,7 +69,7 @@ public:
 	const Object& Caller;
 };
 typedef Delegate<EventArgs> Event;
-
+typedef Delegate<EventArgs>::FunctionDecl EventConnection;
 
 class WindowCloseEventArgs : EventArgs
 {
@@ -79,7 +88,7 @@ public:
 	bool ConfirmClose;
 };
 typedef Delegate<WindowCloseEventArgs> WindowCloseEvent;
-
+typedef Delegate<WindowCloseEventArgs>::FunctionDecl WindowCloseConnection;
 
 class KeyEventArgs : public EventArgs
 {
@@ -109,7 +118,7 @@ public:
 	bool            Alt;    // Is the Alt modifier pressed
 };
 typedef Delegate<KeyEventArgs> KeyboardEvent;
-
+typedef Delegate<KeyEventArgs>::FunctionDecl KeyboardConnection;
 
 
 class MouseMotionEventArgs : public EventArgs
@@ -141,7 +150,7 @@ public:
 	glm::vec2 GetPoint() const { return glm::vec2(X, Y); }
 };
 typedef Delegate<MouseMotionEventArgs> MouseMotionEvent;
-
+typedef Delegate<MouseMotionEventArgs>::FunctionDecl MouseMotionConnection;
 
 
 class MouseButtonEventArgs : public EventArgs
@@ -188,7 +197,7 @@ public:
 	glm::vec2 GetPoint() const { return glm::vec2(X, Y); }
 };
 typedef Delegate<MouseButtonEventArgs> MouseButtonEvent;
-
+typedef Delegate<MouseButtonEventArgs>::FunctionDecl MouseButtonConnection;
 
 
 class MouseWheelEventArgs : public EventArgs
@@ -221,7 +230,7 @@ public:
 
 };
 typedef Delegate<MouseWheelEventArgs> MouseWheelEvent;
-
+typedef Delegate<MouseWheelEventArgs>::FunctionDecl MouseWheelConnection;
 
 
 class ResizeEventArgs : public EventArgs
@@ -257,3 +266,4 @@ public:
 	void*   Data2;
 };
 typedef Delegate<UserEventArgs> UserEvent;
+typedef Delegate<UserEventArgs>::FunctionDecl UserConnection;

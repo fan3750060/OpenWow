@@ -7,12 +7,12 @@ glm::vec2 owUIUtils::CalculateChildsVerticalSize(const std::vector<std::shared_p
 {
     glm::vec2 size = glm::vec2(0.0f, 0.0f);
 
-    for (auto childs : Childs)
+    for (auto child : Childs)
     {
-        if (childs->GetSize().x > size.x)
-            size.x = childs->GetSize().x;
+        const glm::vec2& childSize = child->GetSize();
 
-        size.y += childs->GetSize().y;
+        size.x = std::max(childSize.x, size.x);
+        size.y += childSize.y + HorizontalSpace;
     }
 
     return size;

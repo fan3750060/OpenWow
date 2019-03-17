@@ -8,6 +8,7 @@
 
 // Slate
 #include "UISlateEditorInterfaces.h"
+#include "UISlateConnectionPoint.h"
 
 // FORWARD BEGIN
 class CUISlateEditor;
@@ -24,6 +25,7 @@ public:
     virtual ~CUISlateNodeFooter();
 
     // CUISlateNodeHeader
+    void Initialize();
     void CreateDefault();
 
     // IUISlateConnectionable
@@ -39,10 +41,10 @@ public:
     void OnMouseButtonReleased(MouseButtonEventArgs& e) override final;
 
 private:
-    std::shared_ptr<CUIColorNode>           m_Background;
-    std::shared_ptr<CUITextNode>            m_Text;
-    std::shared_ptr<CUITextureNode>         m_LinePoint;
+    std::shared_ptr<CUIColorNode>               m_Background;
+    std::shared_ptr<CUITextNode>                m_Text;
+    std::shared_ptr<CUISlateConnectionPoint>    m_LinePoint;
 
     // Weak refs
-    std::weak_ptr<CUISlateEditor>           m_Editor;
+    std::weak_ptr<CUISlateEditor>               m_Editor;
 };

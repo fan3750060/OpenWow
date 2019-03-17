@@ -17,24 +17,24 @@ public:
     virtual ~CUIContainerGarmoshkaCategory();
 
     // CUIContainerGarmoshkaCategory
+    void Initialize(const std::string& CategoryName);
     void CreateDefault();
-    void SetText(cstring Name);
+
+    void AddChild(std::shared_ptr<CUIBaseNode> Child);
+    void SetCategoryName(cstring Name);
+    void SetActive(bool Active);
 
     // CUIBaseNode
     glm::vec2 GetSize() const override final;
-
     std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const override final;
 
-    // Input events
-    virtual bool OnMouseButtonPressed(MouseButtonEventArgs& e) override;
-    virtual void OnMouseButtonReleased(MouseButtonEventArgs& e) override;
-
 protected:
-    void CalculateNodesTranslate(glm::vec2 StartPosition, glm::vec2 EveryNodeOffset = glm::vec2(0.0f, 0.0f));
+    void CalculateChildsTranslate();
 
 private:
     std::shared_ptr<CUIContainerGarmoshkaCategoryHeader>    m_Header;
     std::vector<std::shared_ptr<CUIBaseNode>>               m_Nodes;
+    bool                                                    m_IsActive;
 
     // Weak refs
     std::weak_ptr<CUIContainerGarmoshka>                    m_ContainerGarmoshka;

@@ -78,6 +78,7 @@
     <ClCompile Include="UI\UIBeizerLine.cpp" />
     <ClCompile Include="UI\UIScene.cpp" />
     <ClCompile Include="UI\UISlateConnection.cpp" />
+    <ClCompile Include="UI\UISlateConnectionPoint.cpp" />
     <ClCompile Include="UI\UISlateEditor.cpp" />
     <ClCompile Include="UI\UISlateNode.cpp" />
     <ClCompile Include="UI\UISlateNodeFooter.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="UI\UIBeizerLine.h" />
     <ClInclude Include="UI\UIScene.h" />
     <ClInclude Include="UI\UISlateConnection.h" />
+    <ClInclude Include="UI\UISlateConnectionPoint.h" />
     <ClInclude Include="UI\UISlateEditor.h" />
     <ClInclude Include="UI\UISlateEditorInterfaces.h" />
     <ClInclude Include="UI\UISlateNode.h" />

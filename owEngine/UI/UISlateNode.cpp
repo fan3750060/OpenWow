@@ -24,7 +24,7 @@ namespace
 CUISlateNode::CUISlateNode(std::weak_ptr<CUISlateEditor> Editor)
     : m_Editor(Editor)
 {
-    SetSize(cDefaultBackgroundSize);
+  
 }
 
 CUISlateNode::~CUISlateNode()
@@ -36,28 +36,36 @@ CUISlateNode::~CUISlateNode()
 //
 // CUISlateNode
 //
-void CUISlateNode::CreateDefault()
+
+void CUISlateNode::Initialize()
 {
     std::shared_ptr<CUISlateNodeHeader> header = std::make_shared<CUISlateNodeHeader>(m_Editor);
-    header->CreateDefault();
+    header->Initialize("Operation name", "Textures\\Operations\\LogMessage.png");
     SetHeader(header);
+}
 
+void CUISlateNode::CreateDefault()
+{
     std::shared_ptr<CUISlateNodeParameter> param0 = std::make_shared<CUISlateNodeParameter>(m_Editor);
+    param0->Initialize();
     param0->CreateDefault();
     param0->SetText("Parameter 0");
     AddParameter(param0);
 
     std::shared_ptr<CUISlateNodeParameter> param1 = std::make_shared<CUISlateNodeParameter>(m_Editor);
+    param1->Initialize();
     param1->CreateDefault();
     param1->SetText("Parameter 1");
     AddParameter(param1);
 
     std::shared_ptr<CUISlateNodeParameter> param2 = std::make_shared<CUISlateNodeParameter>(m_Editor);
+    param2->Initialize();
     param2->CreateDefault();
     param2->SetText("Parameter 2");
     AddParameter(param2);
 
     std::shared_ptr<CUISlateNodeFooter> footer = std::make_shared<CUISlateNodeFooter>(m_Editor);
+    footer->Initialize();
     footer->CreateDefault();
     SetFooter(footer);
 }
@@ -67,22 +75,19 @@ void CUISlateNode::SetHeader(std::shared_ptr<CUISlateNodeHeader> Header)
     _ASSERT(Header != nullptr);
 
     Header->SetParentInternal(weak_from_this());
-
     m_Header = Header;
+
+    CalculateChildsTranslate();
+}
+
+std::shared_ptr<CUISlateNodeHeader> CUISlateNode::GetHeader() const
+{
+    return m_Header;
 }
 
 void CUISlateNode::AddParameter(std::shared_ptr<CUISlateNodeParameter> Parameter)
 {
     _ASSERT(Parameter != nullptr);
-
-    // Calculate yTranslate
-    float yTranslate = 0.0f;
-    if (m_Header)
-        yTranslate += m_Header->GetSize().y;
-    for (auto it : m_Parameters)
-        yTranslate += it.second->GetSize().y;
-    Parameter->SetTranslate(vec2(0.0f, yTranslate));
-
 
     Parameter->SetParentInternal(weak_from_this());
 
@@ -92,6 +97,7 @@ void CUISlateNode::AddParameter(std::shared_ptr<CUISlateNodeParameter> Parameter
         m_Parameters.insert(SlateParameterNameMap::value_type(parameterName, Parameter));
     }
 
+    CalculateChildsTranslate();
 }
 
 void CUISlateNode::RemoveParameter(std::shared_ptr<CUISlateNodeParameter> Parameter)
@@ -111,22 +117,19 @@ void CUISlateNode::SetFooter(std::shared_ptr<CUISlateNodeFooter> Footer)
 {
     _ASSERT(Footer != nullptr);
 
-    // Calculate yTranslate
-    float yTranslate = 0.0f;
-    if (m_Header)
-        yTranslate += m_Header->GetSize().y;
-    for (auto it : m_Parameters)
-        yTranslate += it.second->GetSize().y;
-
-    Footer->SetTranslate(vec2(0.0f, yTranslate));
-
     Footer->SetParentInternal(weak_from_this());
-
     m_Footer = Footer;
+
+    CalculateChildsTranslate();
 }
 
 
 
+
+
+//
+// CUIBaseNode
+//
 glm::vec2 CUISlateNode::GetSize() const
 {
     vec2 size = vec2(cDefaultBackgroundSize.x, 0.0f);
@@ -139,10 +142,6 @@ glm::vec2 CUISlateNode::GetSize() const
     return size;
 }
 
-
-//
-// CUIBaseNode
-//
 std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNode::GetChilds() const
 {
     std::vector<std::shared_ptr<CUIBaseNode>> childs;
@@ -160,9 +159,8 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNode::GetChilds() const
 }
 
 
-
-//
 // Input events
+
 void CUISlateNode::OnMouseMoved(MouseMotionEventArgs & e)
 {
     for (auto ch : GetChilds())
@@ -198,4 +196,33 @@ void CUISlateNode::OnMouseButtonReleased(MouseButtonEventArgs & e)
         _ASSERT(ch);
         ch->OnMouseButtonReleased(e);
     }
+}
+
+
+
+//
+// Protected
+//
+void CUISlateNode::CalculateChildsTranslate()
+{
+    // Header
+    // don't touch it position
+
+    // Parameters
+    glm::vec2 parametersStartPosition = m_Header->GetTranslation() + glm::vec2(0.0f, m_Header->GetSize().y);
+    glm::vec2 parameterCurrentPosition = parametersStartPosition;
+
+    for (auto parameterIter : m_Parameters)
+    {
+        std::shared_ptr<CUISlateNodeParameter> parameter = parameterIter.second;
+        _ASSERT(parameter != nullptr);
+
+        parameter->SetTranslate(parameterCurrentPosition);
+
+        parameterCurrentPosition += glm::vec2(0.0f, parameter->GetSize().y);
+    }
+
+    // Footer
+    if (m_Footer)
+        m_Footer->SetTranslate(parameterCurrentPosition);
 }

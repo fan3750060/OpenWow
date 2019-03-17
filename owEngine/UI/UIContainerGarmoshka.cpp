@@ -4,6 +4,7 @@
 #include "UIContainerGarmoshka.h"
 
 CUIContainerGarmoshka::CUIContainerGarmoshka()
+    : m_ActiveCategory(nullptr)
 {
 }
 
@@ -11,27 +12,55 @@ CUIContainerGarmoshka::~CUIContainerGarmoshka()
 {
 }
 
-
-
 //
 // CUIContainerGarmoshka
 //
+void CUIContainerGarmoshka::Initialize(vec2 Size)
+{
+    SetSize(Size);
+
+    m_Background = std::make_shared<CUIColorNode>(Size);
+    m_Background->SetParentInternal(weak_from_this());
+    m_Background->SetColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+}
+
 void CUIContainerGarmoshka::CreateDefault()
 {
-    std::shared_ptr<CUIContainerGarmoshkaCategory> category1 = std::make_shared<CUIContainerGarmoshkaCategory>(std::dynamic_pointer_cast<CUIContainerGarmoshka>(shared_from_this()));
-    category1->SetParentInternal(weak_from_this());
-    category1->CreateDefault();
-    m_Categories.insert(std::make_pair("catName1", category1));
+    CreateCategory("First catogory")->CreateDefault();
+    CreateCategory("Second catogory")->CreateDefault();
+    CreateCategory("Third catogory")->CreateDefault();
+    CreateCategory("Fourth catogory")->CreateDefault();
+    CreateCategory("Fifth catogory")->CreateDefault();
+}
 
-    std::shared_ptr<CUIContainerGarmoshkaCategory> category2 = std::make_shared<CUIContainerGarmoshkaCategory>(std::dynamic_pointer_cast<CUIContainerGarmoshka>(shared_from_this()));
-    category2->SetParentInternal(weak_from_this());
-    category2->CreateDefault();
-    m_Categories.insert(std::make_pair("catName2", category2));
+std::shared_ptr<CUIContainerGarmoshkaCategory> CUIContainerGarmoshka::CreateCategory(const std::string& CategoryName)
+{
+    std::shared_ptr<CUIContainerGarmoshkaCategory> category = std::make_shared<CUIContainerGarmoshkaCategory>(std::dynamic_pointer_cast<CUIContainerGarmoshka>(shared_from_this()));
+    category->SetParentInternal(weak_from_this());
+    category->Initialize(CategoryName);
+    m_Categories.push_back(category);
 
-    CalculateCategoriesTranslate(vec2(), vec2(0.0f, 15.0f));
+    CalculateActiveCategory();
+
+    return category;
+}
+
+void CUIContainerGarmoshka::OnCategoryHeaderClicked(std::shared_ptr<CUIContainerGarmoshkaCategory> Category)
+{
+    if (m_ActiveCategory == Category)
+        return;
+
+    m_ActiveCategory = Category;
+    CalculateActiveCategory();
 }
 
 
+
+glm::vec2 CUIContainerGarmoshka::GetSize() const
+{
+    _ASSERT(m_Background != nullptr);
+    return m_Background->GetSize();
+}
 
 //
 // CUIBaseNode
@@ -40,8 +69,12 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUIContainerGarmoshka::GetChilds() con
 {
     std::vector<std::shared_ptr<CUIBaseNode>> childs;
 
+    if (m_Background)
+        childs.push_back(m_Background);
+
     for (auto category : m_Categories)
-        childs.push_back(category.second);
+        if (category)
+            childs.push_back(category);
 
     return childs;
 }
@@ -49,42 +82,38 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUIContainerGarmoshka::GetChilds() con
 
 
 //
-// Input events
-bool CUIContainerGarmoshka::OnMouseButtonPressed(MouseButtonEventArgs & e)
-{
-    bool result = false;
-    for (auto it : GetChilds())
-    {
-        if (it->IsPointInBoundsAbs(e.GetPoint()))
-            if (it->OnMouseButtonPressed(e))
-                result = true;
-    }
-    return result;
-}
-
-void CUIContainerGarmoshka::OnMouseButtonReleased(MouseButtonEventArgs & e)
-{
-    for (auto it : GetChilds())
-    {
-        it->OnMouseButtonReleased(e);
-    }
-}
-
-
-
-//
 // Protected
 //
-void CUIContainerGarmoshka::CalculateCategoriesTranslate(glm::vec2 StartPosition, glm::vec2 EveryNodeOffset)
+void CUIContainerGarmoshka::CalculateActiveCategory()
 {
-    glm::vec2 increment = StartPosition;
-
-    for (auto categoryIter : m_Categories)
+    if (m_ActiveCategory == nullptr)
     {
-        std::shared_ptr<CUIContainerGarmoshkaCategory> category = categoryIter.second;
+        if (!m_Categories.empty())
+        {
+            std::shared_ptr<CUIContainerGarmoshkaCategory> category = *(m_Categories.begin());
+            _ASSERT(category != nullptr);
 
-        category->SetTranslate(EveryNodeOffset + increment);
-        increment += vec2(0.0f, EveryNodeOffset.y);
+            m_ActiveCategory = category;
+        }
+    }
+
+    for (auto category : m_Categories)
+    {
+        category->SetActive(category == m_ActiveCategory);
+    }
+
+    CalculateCategoriesTranslate();
+}
+
+void CUIContainerGarmoshka::CalculateCategoriesTranslate()
+{
+    glm::vec2 increment = glm::vec2(0.0f, 0.0f);
+    glm::vec2 eachOffset = vec2(0.0f, 2.0f);
+
+    for (auto category : m_Categories)
+    {
+        category->SetTranslate(eachOffset + increment);
+        increment += vec2(0.0f, eachOffset.y);
         increment += vec2(0.0f, category->GetSize().y);
     }
 }

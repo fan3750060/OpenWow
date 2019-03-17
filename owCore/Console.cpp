@@ -41,9 +41,9 @@ CConsole::~CConsole()
 
 void CConsole::AddCommonCommands()
 {
-	ADDCONSOLECOMMAND_WITHARGS("test1_with_1", Test1, int32);
-	ADDCONSOLECOMMAND_WITHARGS("test11_with_1", Test11, uint32);
-	ADDCONSOLECOMMAND("test2_with_0", Test2);
+	//ADDCONSOLECOMMAND_WITHARGS("test1_with_1", Test1, int32);
+	//ADDCONSOLECOMMAND_WITHARGS("test11_with_1", Test11, uint32);
+	//ADDCONSOLECOMMAND("test2_with_0", Test2);
 }
 
 bool CConsole::AddConsoleCommand(IConsoleCommand* _command)
