@@ -49,7 +49,7 @@ public:
     virtual bool OnMouseButtonPressed(MouseButtonEventArgs& e) override;
     virtual void OnMouseButtonReleased(MouseButtonEventArgs& e) override;
 
-protected:
+public:
     void CalculateChildsTranslate();
 
 private:

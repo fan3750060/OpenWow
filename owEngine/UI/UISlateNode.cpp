@@ -7,6 +7,9 @@
 #include "UISlateEditor.h"
 
 
+// TEMP DELETE ME
+#include "UISlateNodeParameter_List.h"
+
 namespace
 {
     // Background
@@ -57,6 +60,12 @@ void CUISlateNode::CreateDefault()
     param1->CreateDefault();
     param1->SetText("Parameter 1");
     AddParameter(param1);
+
+
+    std::shared_ptr<CUISlateNodeParameter_List> paramList = std::make_shared<CUISlateNodeParameter_List>(m_Editor);
+    paramList->Initialize(std::vector<std::string>());
+    paramList->SetText("Parameter List");
+    AddParameter(paramList);
 
     std::shared_ptr<CUISlateNodeParameter> param2 = std::make_shared<CUISlateNodeParameter>(m_Editor);
     param2->Initialize();

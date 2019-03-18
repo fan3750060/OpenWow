@@ -2,7 +2,6 @@
 
 // Common UI
 #include "UIBaseNode.h"
-#include "UIColor.h"
 #include "UIText.h"
 #include "UITexture.h"
 
@@ -36,19 +35,21 @@ public:
     LineDefaultDirection GetConnectDirection() const;
 
 	// CUIBaseNode
+    virtual glm::vec2 GetSize() const override;
     virtual std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const override;
 
     // Input events
     bool OnMouseButtonPressed(MouseButtonEventArgs& e) override;
     void OnMouseButtonReleased(MouseButtonEventArgs& e) override;
 
+protected:
+    std::shared_ptr<CUITextureNode>     m_Background;
+    
+    // Weak refs
+    std::weak_ptr<CUISlateEditor>       m_Editor;
+
 private:
-	std::shared_ptr<CUIColorNode>       m_Background;
-	std::shared_ptr<CUITextNode>        m_Text;
     std::shared_ptr<CUISlateConnectionPoint> m_LinePoint;
 
     bool                                m_IsLinePointOpened;
-
-    // Weak refs
-    std::weak_ptr<CUISlateEditor>       m_Editor;
 };

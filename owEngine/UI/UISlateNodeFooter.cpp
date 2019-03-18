@@ -19,7 +19,7 @@ namespace
     const char*  cHeaderTextFontPath = "Fonts\\JustBreatheBd.otf";
     const char*  cFooterText = "Result: ";
     const uint32 cFooterTextHeight = 16;
-    const vec2   cFooterTextOffset = vec2(5.0f, 5.0f);
+    const vec2   cFooterTextOffset = vec2(10.0f, 5.0f);
     const vec4   cFooterTextColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
@@ -41,11 +41,11 @@ CUISlateNodeFooter::~CUISlateNodeFooter()
 //
 void CUISlateNodeFooter::Initialize()
 {
-    SetSize(cFooterBackgroundSize);
-
-    m_Background = std::make_shared<CUIColorNode>(cFooterBackgroundSize);
+    m_Background = std::make_shared<CUITextureNode>(cFooterBackgroundSize);
     m_Background->SetParentInternal(weak_from_this());
-    m_Background->SetColor(cFooterBackgroundColor);
+
+    std::shared_ptr<Texture> backgroundTexture = _RenderDevice->CreateTexture2D("Textures\\Slate\\slate_footer_32.png");
+    m_Background->SetTexture(backgroundTexture);
 }
 
 void CUISlateNodeFooter::CreateDefault()
@@ -96,6 +96,11 @@ IUISlateConnectionable::LineDefaultDirection CUISlateNodeFooter::GetConnectDirec
 //
 // CUIBaseNode
 //
+glm::vec2 CUISlateNodeFooter::GetSize() const
+{
+    return m_Background->GetSize();
+}
+
 std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNodeFooter::GetChilds() const
 {
     std::vector<std::shared_ptr<CUIBaseNode>> childs;

@@ -14,12 +14,6 @@ namespace
 	// Background
 	const vec2   cParameterBackgroundSize  = vec2(240.0f, 32.0f);
 	const vec4   cParameterBackgroundColor = vec4(0.43f, 0.43f, 0.43f, 1.0f);
-
-	// Text
-	const char*  cParameterText = "Parameter name";
-	const uint32 cParameterTextHeight = 16;
-	const vec2   cParameterTextOffset = vec2(10.0f, 5.0f);
-	const vec4   cParameterTextColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 
@@ -41,11 +35,13 @@ CUISlateNodeParameter::~CUISlateNodeParameter()
 //
 void CUISlateNodeParameter::Initialize()
 {
-    SetSize(cParameterBackgroundSize);
-
-    m_Background = std::make_shared<CUIColorNode>(cParameterBackgroundSize);
+    m_Background = std::make_shared<CUITextureNode>(cParameterBackgroundSize);
     m_Background->SetParentInternal(weak_from_this());
-    m_Background->SetColor(cParameterBackgroundColor);
+
+    std::shared_ptr<Texture> backgroundTexture = _RenderDevice->CreateTexture2D("Textures\\Slate\\slate_parameter_32.png");
+    m_Background->SetTexture(backgroundTexture);
+
+
 }
 
 void CUISlateNodeParameter::CreateDefault()
@@ -57,23 +53,17 @@ void CUISlateNodeParameter::CreateDefault()
     vec2 translate = vec2(0.0f, 0.0f);
     translate.y += m_Background->GetSize().y / 2.0f;
     translate -= (m_LinePoint->GetSize() / 2.0f);
+    translate += glm::vec2(2.0f, 0.0f);
+
 
     m_LinePoint->SetTranslate(translate);
-
-    // 
-	m_Text = std::make_shared<CUITextNode>();
-	m_Text->SetParentInternal(weak_from_this());
-	m_Text->SetText(cParameterText);
-	m_Text->SetTranslate(cParameterTextOffset);
-	m_Text->SetTextColor(cParameterTextColor);
-	m_Text->SetFont(GetManager<IFontsManager>()->Add("Fonts\\JustBreatheBd.otf", cParameterTextHeight));
 }
 
 void CUISlateNodeParameter::SetText(const std::string& Text)
 {
-    _ASSERT(m_Text != nullptr);
+    //_ASSERT(m_Text != nullptr);
 
-    m_Text->SetText(Text);
+    //m_Text->SetText(Text);
 }
 
 
@@ -98,9 +88,15 @@ IUISlateConnectionable::LineDefaultDirection CUISlateNodeParameter::GetConnectDi
 }
 
 
+
 //
 // CUIBaseNode
 //
+glm::vec2 CUISlateNodeParameter::GetSize() const
+{
+    return m_Background->GetSize();
+}
+
 std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNodeParameter::GetChilds() const
 {
     std::vector<std::shared_ptr<CUIBaseNode>> childs;
@@ -108,8 +104,8 @@ std::vector<std::shared_ptr<CUIBaseNode>> CUISlateNodeParameter::GetChilds() con
     if (m_Background)
         childs.push_back(m_Background);
 
-    if (m_Text)
-        childs.push_back(m_Text);
+    //if (m_Text)
+    //    childs.push_back(m_Text);
 
     if (m_LinePoint)
         childs.push_back(m_LinePoint);

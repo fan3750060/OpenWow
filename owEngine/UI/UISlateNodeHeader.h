@@ -2,7 +2,6 @@
 
 // Common UI
 #include "UIBaseNode.h"
-#include "UIColor.h"
 #include "UIText.h"
 #include "UITexture.h"
 
@@ -40,7 +39,7 @@ protected:
     void CalculateChildsTranslate();
 
 private:
-    std::shared_ptr<CUIColorNode>       m_Background;
+    std::shared_ptr<CUITextureNode>     m_Background;
     std::shared_ptr<CUITextureNode>     m_IconNode;
     std::shared_ptr<CUITextNode>        m_Text;
 

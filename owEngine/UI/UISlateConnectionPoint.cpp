@@ -12,7 +12,7 @@
 namespace
 {
     // Line point 
-    const float  cLinePointIconSize = 12.0f;
+    const float  cLinePointIconSize = 14.0f;
     const vec4   cLinePointOpenedColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     const vec4   cLinePointClosedColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 }
@@ -20,6 +20,7 @@ namespace
 
 CUISlateConnectionPoint::CUISlateConnectionPoint(std::weak_ptr<CUISlateEditor> Editor)
     : base(glm::vec2(cLinePointIconSize, cLinePointIconSize))
+    , m_ConnectionState(ConnectionState::Disconnected)
     , m_Editor(Editor)
 {
 }
@@ -35,7 +36,7 @@ CUISlateConnectionPoint::~CUISlateConnectionPoint()
 //
 void CUISlateConnectionPoint::Initialize()
 {
-    SetTexture(_RenderDevice->CreateTexture2D("Textures\\slate_round_filled.png"));
+    SetTexture(_RenderDevice->CreateTexture2D("Textures\\Slate\\slate_round_filled.png"));
 }
 
 

@@ -16,7 +16,7 @@ namespace
 	const vec4  cHeaderBackgroundColor = vec4(0.33f, 0.33f, 0.33f, 1.0f);
 
 	// Icon
-	const vec2  cHeaderIconOffset = vec2(5.0f, 5.0f);
+	const vec2  cHeaderIconOffset = vec2(10.0f, 10.0f);
 	const float cHeaderIconSize   = 32.0f;
 
 	// Text
@@ -44,12 +44,12 @@ CUISlateNodeHeader::~CUISlateNodeHeader()
 //
 void CUISlateNodeHeader::Initialize(const std::string& HeaderText, const std::string& HeaderIconPath)
 {
-    SetSize(cHeaderBackgroundSize);
-
     // Header background
-    m_Background = std::make_shared<CUIColorNode>(cHeaderBackgroundSize);
+    m_Background = std::make_shared<CUITextureNode>(cHeaderBackgroundSize);
     m_Background->SetParentInternal(weak_from_this());
-    m_Background->SetColor(cHeaderBackgroundColor);
+
+    std::shared_ptr<Texture> backgroundTexture = _RenderDevice->CreateTexture2D("Textures\\Slate\\slate_header.png");
+    m_Background->SetTexture(backgroundTexture);
     
     // Icon (might not be presented)
     CreateIconIfNeed(HeaderIconPath);
@@ -167,7 +167,7 @@ void CUISlateNodeHeader::CalculateChildsTranslate()
     {
         m_IconNode->SetTranslate(cHeaderIconOffset);
 
-        headerTextTranslate += glm::vec2(m_IconNode->GetTranslation().x, 0.0f);
+        headerTextTranslate += m_IconNode->GetTranslation();
         headerTextTranslate += glm::vec2(m_IconNode->GetSize().x, 0.0f);
     }
 

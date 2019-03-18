@@ -23,7 +23,6 @@ public:
     glm::vec2                   GetTextSize() const;
 
 	// CUIBaseNode
-    void                        SetSize(glm::vec2 Size);
     glm::vec2                   GetSize() const override final;
 
 	bool                        AcceptMesh(IVisitor& visitor) override final;

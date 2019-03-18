@@ -1,15 +1,26 @@
 #pragma once
 
+// FORWARD BEGIN
+class CUIBaseNode;
 class CUIWindowNode;
+// FORWARD END
 
 
 class UIBaseNodeMovedEventArgs
+{};
+typedef Delegate<UIBaseNodeMovedEventArgs> UIBaseNodeMovedEvent;
+
+
+class UIBaseNodeClickedEventArgs
 {
 public:
-    UIBaseNodeMovedEventArgs()
+    UIBaseNodeClickedEventArgs(std::shared_ptr<CUIBaseNode> Initiator)
+        : Initiator(Initiator)
     {}
+
+    std::shared_ptr<CUIBaseNode> Initiator;
 };
-typedef Delegate<UIBaseNodeMovedEventArgs> UIBaseNodeMovedEvent;
+typedef Delegate<UIBaseNodeClickedEventArgs> UIBaseNodeClickedEvent;
 
 
 class CUIBaseNode : public Object, public std::enable_shared_from_this<CUIBaseNode>
@@ -18,7 +29,7 @@ class CUIBaseNode : public Object, public std::enable_shared_from_this<CUIBaseNo
 
 	typedef Object base;
 public:
-	explicit CUIBaseNode(vec2 Size = vec2(1.0f, 1.0f));
+	explicit CUIBaseNode();
 	virtual ~CUIBaseNode();
 
 	virtual cstring GetName() const;
@@ -39,11 +50,8 @@ public:
 	glm::vec2 GetScale() const;
     glm::vec2 GetScaleAbs() const;
 
-	// Size functional
-	void SetSize(glm::vec2 Size);
-	virtual glm::vec2 GetSize() const;
-
 	// Size & bounds functional
+    virtual glm::vec2 GetSize() const;
     virtual BoundingRect GetBoundsAbs() const;
     virtual bool IsPointInBoundsAbs(glm::vec2 Point) const;
 
@@ -75,6 +83,8 @@ public:
 	virtual void OnMouseButtonReleased(MouseButtonEventArgs& e);
 	virtual bool OnMouseWheel(MouseWheelEventArgs& e);
 
+    UIBaseNodeClickedEvent Clicked;
+
 	// Syntetic events
 	virtual void OnMouseEntered();
 	virtual void OnMouseLeaved();
@@ -102,6 +112,5 @@ private:
 	mat4                        m_LocalTransform;
 
 private: // Syntetic events
-	glm::vec2                   m_Size;
 	bool                        m_IsMouseOnNode;
 };

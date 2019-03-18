@@ -60,6 +60,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UI\UIContainerListWithActivation.cpp" />
     <ClCompile Include="UI\Fonts\Font.cpp" />
     <ClCompile Include="UI\Fonts\FontsManager.cpp" />
     <ClCompile Include="UI\Materials\UI_Button_Material.cpp" />
@@ -76,6 +77,7 @@
     <ClCompile Include="UI\UIContainerGarmoshkaCategory.cpp" />
     <ClCompile Include="UI\UIContainerGarmoshkaCategoryHeader.cpp" />
     <ClCompile Include="UI\UIBeizerLine.cpp" />
+    <ClCompile Include="UI\UIContainerListBase.cpp" />
     <ClCompile Include="UI\UIScene.cpp" />
     <ClCompile Include="UI\UISlateConnection.cpp" />
     <ClCompile Include="UI\UISlateConnectionPoint.cpp" />
@@ -84,6 +86,7 @@
     <ClCompile Include="UI\UISlateNodeFooter.cpp" />
     <ClCompile Include="UI\UISlateNodeHeader.cpp" />
     <ClCompile Include="UI\UISlateNodeParameter.cpp" />
+    <ClCompile Include="UI\UISlateNodeParameter_List.cpp" />
     <ClCompile Include="UI\UIText.cpp" />
     <ClCompile Include="UI\UITexture.cpp" />
     <ClCompile Include="UI\UIUtils.cpp" />
@@ -147,6 +150,8 @@
     <ClInclude Include="UI\UIContainerGarmoshkaCategory.h" />
     <ClInclude Include="UI\UIContainerGarmoshkaCategoryHeader.h" />
     <ClInclude Include="UI\UIBeizerLine.h" />
+    <ClInclude Include="UI\UIContainerListBase.h" />
+    <ClInclude Include="UI\UIContainerListWithActivation.h" />
     <ClInclude Include="UI\UIScene.h" />
     <ClInclude Include="UI\UISlateConnection.h" />
     <ClInclude Include="UI\UISlateConnectionPoint.h" />
@@ -156,6 +161,7 @@
     <ClInclude Include="UI\UISlateNodeFooter.h" />
     <ClInclude Include="UI\UISlateNodeHeader.h" />
     <ClInclude Include="UI\UISlateNodeParameter.h" />
+    <ClInclude Include="UI\UISlateNodeParameter_List.h" />
     <ClInclude Include="UI\UIText.h" />
     <ClInclude Include="UI\UITexture.h" />
     <ClInclude Include="UI\UIUtils.h" />

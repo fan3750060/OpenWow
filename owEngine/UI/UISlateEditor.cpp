@@ -21,8 +21,6 @@ CUISlateEditor::~CUISlateEditor()
 
 void CUISlateEditor::Initialize(vec2 Size)
 {
-    SetSize(Size);
-
     m_Background = std::make_shared<CUIColorNode>(Size);
     m_Background->SetParentInternal(weak_from_this());
     m_Background->SetColor(vec4(0.0f, 0.3f, 0.9f, 0.8f));

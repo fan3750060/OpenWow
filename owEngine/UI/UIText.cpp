@@ -82,12 +82,6 @@ glm::vec2 CUITextNode::GetTextSize() const
 //
 // CUIBaseNode
 //
-
-void CUITextNode::SetSize(glm::vec2 Size)
-{
-    _ASSERT(false);
-}
-
 glm::vec2 CUITextNode::GetSize() const
 {
     return GetTextSize() + 2.0f * m_Offset;

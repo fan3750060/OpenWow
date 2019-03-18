@@ -58,9 +58,15 @@ void CUIBeizerLineNode::SetThickness(float Thickness)
 }
 
 
+
 //
 // CUIBaseNode
 //
+glm::vec2 CUIBeizerLineNode::GetSize() const
+{
+    return glm::vec2(9999.0f, 9999.0f);
+}
+
 bool CUIBeizerLineNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Mesh->SetMaterial(m_Material);

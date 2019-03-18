@@ -58,6 +58,9 @@
     <Filter Include="UI\Containers\ContainerGarmoshka">
       <UniqueIdentifier>{cb7b8eb3-6eea-4dff-930c-e2c8dd4a8432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\SlateEditor\Parameters">
+      <UniqueIdentifier>{20111de5-f17d-4922-90df-57810f88ac0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -213,9 +216,6 @@
     <ClCompile Include="UI\UISlateNodeHeader.cpp">
       <Filter>UI\SlateEditor</Filter>
     </ClCompile>
-    <ClCompile Include="UI\UISlateNodeParameter.cpp">
-      <Filter>UI\SlateEditor</Filter>
-    </ClCompile>
     <ClCompile Include="UI\UISlateNode.cpp">
       <Filter>UI\SlateEditor</Filter>
     </ClCompile>
@@ -248,6 +248,18 @@
     </ClCompile>
     <ClCompile Include="UI\UISlateConnectionPoint.cpp">
       <Filter>UI\SlateEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateNodeParameter.cpp">
+      <Filter>UI\SlateEditor\Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UISlateNodeParameter_List.cpp">
+      <Filter>UI\SlateEditor\Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIContainerListBase.cpp">
+      <Filter>UI\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIContainerListWithActivation.cpp">
+      <Filter>UI\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,9 +428,6 @@
     <ClInclude Include="UI\UISlateNodeHeader.h">
       <Filter>UI\SlateEditor</Filter>
     </ClInclude>
-    <ClInclude Include="UI\UISlateNodeParameter.h">
-      <Filter>UI\SlateEditor</Filter>
-    </ClInclude>
     <ClInclude Include="UI\UISlateNode.h">
       <Filter>UI\SlateEditor</Filter>
     </ClInclude>
@@ -454,6 +463,18 @@
     </ClInclude>
     <ClInclude Include="UI\UISlateConnectionPoint.h">
       <Filter>UI\SlateEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateNodeParameter.h">
+      <Filter>UI\SlateEditor\Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UISlateNodeParameter_List.h">
+      <Filter>UI\SlateEditor\Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIContainerListBase.h">
+      <Filter>UI\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIContainerListWithActivation.h">
+      <Filter>UI\Containers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

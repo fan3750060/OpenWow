@@ -15,9 +15,12 @@ public:
 	void SetColor(vec4 _color);
 
 	// CUIBaseNode
-	bool AcceptMesh(IVisitor& visitor) override;
+    virtual glm::vec2 GetSize() const override;
+
+	virtual bool AcceptMesh(IVisitor& visitor) override;
 
 private:
-	std::shared_ptr<IMesh>                 m_Mesh;
-	std::shared_ptr<UI_Texture_Material>   m_Material;
+    glm::vec2                               m_Size;
+	std::shared_ptr<IMesh>                  m_Mesh;
+	std::shared_ptr<UI_Texture_Material>    m_Material;
 };

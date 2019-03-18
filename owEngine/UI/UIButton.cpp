@@ -38,7 +38,7 @@ void CUIButtonNode::CreateDefault()
 	m_Material->SetDisabledTexture(_RenderDevice->CreateTexture2D("Textures\\btn_disabled.png"));
 
 	std::shared_ptr<Texture> idleTexture = m_Material->GetTexture(0);
-	SetSize(idleTexture->GetSize());
+    m_Size = idleTexture->GetSize();
 
 	m_Mesh = _RenderDevice->CreateUIQuad(idleTexture->GetWidth(), idleTexture->GetHeight());
 
@@ -98,6 +98,11 @@ void CUIButtonNode::OnMouseLeaved()
 //
 // CUIBaseNode
 //
+glm::vec2 CUIButtonNode::GetSize() const
+{
+    return m_Size;
+}
+
 bool CUIButtonNode::Accept(IVisitor & visitor)
 {
 	bool visitResult = base::Accept(visitor);

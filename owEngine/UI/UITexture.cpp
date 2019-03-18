@@ -12,7 +12,7 @@ namespace
 }
 
 CUITextureNode::CUITextureNode(vec2 Size)
-	: base(Size)
+	: m_Size(Size)
 {
 	m_Material = std::make_shared<UI_Texture_Material>();
 	m_Material->SetWrapper(m_Material);;
@@ -41,9 +41,15 @@ void CUITextureNode::SetColor(vec4 _color)
 
 
 
+
 //
 // CUIBaseNode
 //
+glm::vec2 CUITextureNode::GetSize() const
+{
+    return m_Size;
+}
+
 bool CUITextureNode::AcceptMesh(IVisitor& visitor)
 {
 	m_Mesh->SetMaterial(m_Material);

@@ -17,6 +17,8 @@ public:
     void SetThickness(float Thickness);
 
 	// CUIBaseNode
+    virtual glm::vec2 GetSize() const override final;
+
 	virtual bool AcceptMesh(IVisitor& visitor) override;
 
 protected:

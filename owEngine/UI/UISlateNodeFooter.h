@@ -34,6 +34,7 @@ public:
     LineDefaultDirection GetConnectDirection() const;
 
     // CUIBaseNode
+    glm::vec2 GetSize() const override final;
     std::vector<std::shared_ptr<CUIBaseNode>> GetChilds() const override;
 
     // Input events
@@ -41,7 +42,7 @@ public:
     void OnMouseButtonReleased(MouseButtonEventArgs& e) override final;
 
 private:
-    std::shared_ptr<CUIColorNode>               m_Background;
+    std::shared_ptr<CUITextureNode>             m_Background;
     std::shared_ptr<CUITextNode>                m_Text;
     std::shared_ptr<CUISlateConnectionPoint>    m_LinePoint;
 

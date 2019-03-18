@@ -41,12 +41,15 @@ public:
 	virtual void OnMouseLeaved() override;
 
 	// CUIBaseNode
+    virtual glm::vec2 GetSize() const override;
+
 	virtual bool Accept(IVisitor& visitor) override;
 	virtual bool AcceptMesh(IVisitor& visitor) override;
 
 	UIButtonClickEvent Click;
 
 private:
+    glm::vec2                            m_Size;
 	uint32                               m_State;
 	std::shared_ptr<IMesh>               m_Mesh;
 	std::shared_ptr<UI_Button_Material>  m_Material;

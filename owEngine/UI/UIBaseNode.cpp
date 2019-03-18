@@ -7,12 +7,11 @@
 #include "UIWindow.h"
 #include "Application.h"
 
-CUIBaseNode::CUIBaseNode(vec2 Size)
+CUIBaseNode::CUIBaseNode()
 	: m_Name("CUIBaseNode")
 	, m_Translate(vec2())
 	, m_Rotate(vec3())
 	, m_Scale(1.0f, 1.0f)
-	, m_Size(Size)
 	, m_IsMouseOnNode(false)
 {
 }
@@ -109,14 +108,10 @@ glm::vec2 CUIBaseNode::GetScaleAbs() const
 //
 // Size & bounds
 //
-void CUIBaseNode::SetSize(glm::vec2 Size)
-{
-	m_Size = Size;
-}
 
 glm::vec2 CUIBaseNode::GetSize() const
 {
-	return m_Size;
+    return glm::vec2(99999.0f, 999999.0f);
 }
 
 BoundingRect CUIBaseNode::GetBoundsAbs() const
@@ -284,6 +279,12 @@ void CUIBaseNode::OnMouseMoved(MouseMotionEventArgs& e)
 
 bool CUIBaseNode::OnMouseButtonPressed(MouseButtonEventArgs & e)
 {
+    // Raise 'Clicked' callback
+    {
+        UIBaseNodeClickedEventArgs args(shared_from_this());
+        Clicked(args);
+    }
+
 	return false;
 }
 
