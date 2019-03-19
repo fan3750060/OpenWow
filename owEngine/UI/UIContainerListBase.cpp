@@ -16,6 +16,9 @@ namespace
 
 CUIContainerListBase::CUIContainerListBase()
     : m_StartNodeIndex(0)
+    // consts override
+    , m_c_ChildsOffset(cChildsOffset)
+    , m_c_ChildsVerticalPadding(cChildsVerticalPadding)
 {
 }
 
@@ -102,7 +105,7 @@ void CUIContainerListBase::DecStartNodeIndex()
 //
 glm::vec2 CUIContainerListBase::GetSize() const
 {
-    return owUIUtils::CalculateChildsVerticalSize(GetChilds(), cChildsVerticalPadding);
+    return owUIUtils::CalculateChildsVerticalSize(GetChilds(), m_c_ChildsVerticalPadding);
 }
 
 std::vector<std::shared_ptr<CUIBaseNode>> CUIContainerListBase::GetChilds() const
@@ -143,9 +146,9 @@ void CUIContainerListBase::CalculateChildsTranslate(glm::vec2 StartPoint)
 
     for (auto node : m_Nodes)
     {
-        node->SetTranslate(cChildsOffset + currentTranslate);
+        node->SetTranslate(m_c_ChildsOffset + currentTranslate);
 
         currentTranslate += vec2(0.0f, node->GetSize().y);
-        currentTranslate += vec2(0.0f, cChildsVerticalPadding);
+        currentTranslate += vec2(0.0f, m_c_ChildsVerticalPadding);
     }
 }

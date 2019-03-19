@@ -41,7 +41,6 @@
 #include "../owEngine/UI/UITexture.h"
 
 // additional nodes
-#include "../owEngine/UI/UISlateEditor.h"
 #include "../owEngine/UI/UIContainerGarmoshka.h"
 
 // materials

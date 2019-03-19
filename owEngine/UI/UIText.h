@@ -23,9 +23,9 @@ public:
     glm::vec2                   GetTextSize() const;
 
 	// CUIBaseNode
-    glm::vec2                   GetSize() const override final;
+    virtual glm::vec2           GetSize() const override;
 
-	bool                        AcceptMesh(IVisitor& visitor) override final;
+    virtual bool                AcceptMesh(IVisitor& visitor) override;
 
 private:
 	std::shared_ptr<CFontMesh>         m_Font;

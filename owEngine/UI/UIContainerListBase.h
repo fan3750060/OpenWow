@@ -29,5 +29,9 @@ private:
     size_t                                    m_StartNodeIndex; // used for MaxSize
     glm::vec2                                 m_MaxSize;
 
+    // Const params override
+    glm::vec2                                 m_c_ChildsOffset;
+    float                                     m_c_ChildsVerticalPadding;
+
     std::vector<std::shared_ptr<CUIBaseNode>> m_Nodes;
 };
