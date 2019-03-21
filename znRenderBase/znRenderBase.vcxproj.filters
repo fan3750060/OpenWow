@@ -47,9 +47,6 @@
     <ClInclude Include="StructuredBuffer.h">
       <Filter>Buffers</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\owRenderBase.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ShaderParameter.h" />
     <ClInclude Include="Shader.h" />
@@ -114,6 +111,7 @@
     <ClInclude Include="Primitives\Geometry.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared\znRenderBase.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

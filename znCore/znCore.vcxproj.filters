@@ -269,9 +269,6 @@
     <ClInclude Include="GroupOpenGL.h">
       <Filter>Settings\Groups</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\owCore.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="common.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -329,6 +326,7 @@
     <ClInclude Include="BoundingRect.h">
       <Filter>Common\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared\znCore.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RefManager2Dim.inl">

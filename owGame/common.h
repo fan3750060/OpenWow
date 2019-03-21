@@ -15,3 +15,7 @@
 #include "WowConsts.h"
 #include "WowTime.h"
 #include "WowChunkUtils.h"
+
+#include "Function.h"
+#include "FunctionWA.h"
+#include "FunctionSA.h"

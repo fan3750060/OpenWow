@@ -19,38 +19,38 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{590C7C79-AE16-4DB2-B61C-BB7B25B76B42}</ProjectGuid>
+    <ProjectGuid>{102DC6F1-CB83-4203-BA24-1C9E812FDE4B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>owRenderDX11</RootNamespace>
+    <RootNamespace>znRenderOpenGL</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>owRenderDX11</ProjectName>
+    <ProjectName>znRenderOpenGL</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -93,13 +93,12 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_RENDER_DX11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_RENDER_OPENGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\FreeImage-3.17.0\Source;..\owRenderDX11\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\znRenderOpenGL\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\bin_x64\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -110,13 +109,12 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_RENDER_DX11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_RENDER_OPENGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\FreeImage-3.17.0\Source;..\owRenderDX11\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\znRenderOpenGL\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\bin_x86\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -129,19 +127,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_RENDER_DX11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_RENDER_OPENGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\FreeImage-3.17.0\Source;..\owRenderDX11\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\znRenderOpenGL\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\bin_x64\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,79 +147,68 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_RENDER_DX11_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_RENDER_OPENGL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\FreeImage-3.17.0\Source;..\owRenderDX11\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\znRenderOpenGL\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\bin_x86\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BlendStateDX11.cpp" />
-    <ClCompile Include="BufferDX11.cpp" />
-    <ClCompile Include="ConstantBufferDX11.cpp" />
-    <ClCompile Include="D3D9_To_D3D11.cpp" />
-    <ClCompile Include="DepthStencilStateDX11.cpp" />
-    <ClCompile Include="MaterialDX11.cpp" />
-    <ClCompile Include="MeshDX11.cpp" />
-    <ClCompile Include="owRenderDX11.cpp" />
-    <ClCompile Include="PipelineStateDX11.cpp" />
-    <ClCompile Include="QueryDX11.cpp" />
-    <ClCompile Include="RasterizerStateDX11.cpp" />
-    <ClCompile Include="RenderDeviceDX11.cpp" />
-    <ClCompile Include="RenderTargetDX11.cpp" />
-    <ClCompile Include="RenderWindowDX11.cpp" />
-    <ClCompile Include="SamplerStateDX11.cpp" />
-    <ClCompile Include="ShaderDX11.cpp" />
-    <ClCompile Include="ShaderInputLayoutDX11.cpp" />
+    <ClCompile Include="BlendStateOGL.cpp" />
+    <ClCompile Include="BufferOGL.cpp" />
+    <ClCompile Include="ConstantBufferOGL.cpp" />
+    <ClCompile Include="DepthStencilStateOGL.cpp" />
+    <ClCompile Include="MaterialOGL.cpp" />
+    <ClCompile Include="MeshOGL.cpp" />
+    <ClCompile Include="OpenGL.cpp" />
+    <ClCompile Include="owRenderOpenGL.cpp" />
+    <ClCompile Include="PipelineStateOGL.cpp" />
+    <ClCompile Include="QueryOGL.cpp" />
+    <ClCompile Include="RasterizerStateOGL.cpp" />
+    <ClCompile Include="RenderDeviceOGL.cpp" />
+    <ClCompile Include="RenderTargetOGL.cpp" />
+    <ClCompile Include="RenderWindowOGL.cpp" />
+    <ClCompile Include="SamplerStateOGL.cpp" />
+    <ClCompile Include="ShaderOGL.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StructuredBufferDX11.cpp" />
-    <ClCompile Include="TextureDX11.cpp" />
+    <ClCompile Include="StructuredBufferOGL.cpp" />
+    <ClCompile Include="TextureOGL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BlendStateDX11.h" />
-    <ClInclude Include="BufferDX11.h" />
+    <ClInclude Include="BlendStateOGL.h" />
+    <ClInclude Include="BufferOGL.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="ConstantBufferDX11.h" />
-    <ClInclude Include="D3D9_To_D3D11.h" />
-    <ClInclude Include="DepthStencilStateDX11.h" />
-    <ClInclude Include="MaterialDX11.h" />
-    <ClInclude Include="MeshDX11.h" />
-    <ClInclude Include="owRenderDX11.h" />
-    <ClInclude Include="PipelineStateDX11.h" />
-    <ClInclude Include="QueryDX11.h" />
-    <ClInclude Include="RasterizerStateDX11.h" />
-    <ClInclude Include="RenderDeviceDX11.h" />
-    <ClInclude Include="RenderTargetDX11.h" />
-    <ClInclude Include="RenderWindowDX11.h" />
-    <ClInclude Include="SamplerStateDX11.h" />
-    <ClInclude Include="ShaderDX11.h" />
-    <ClInclude Include="ShaderInputLayoutDX11.h" />
+    <ClInclude Include="ConstantBufferOGL.h" />
+    <ClInclude Include="DepthStencilStateOGL.h" />
+    <ClInclude Include="MaterialOGL.h" />
+    <ClInclude Include="MeshOGL.h" />
+    <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="OpenGLTypes.h" />
+    <ClInclude Include="znRenderOpenGL.h" />
+    <ClInclude Include="PipelineStateOGL.h" />
+    <ClInclude Include="QueryOGL.h" />
+    <ClInclude Include="RasterizerStateOGL.h" />
+    <ClInclude Include="RenderDeviceOGL.h" />
+    <ClInclude Include="RenderTargetOGL.h" />
+    <ClInclude Include="RenderWindowOGL.h" />
+    <ClInclude Include="SamplerStateOGL.h" />
+    <ClInclude Include="ShaderOGL.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StructuredBufferDX11.h" />
-    <ClInclude Include="TextureDX11.h" />
-    <ClInclude Include="TextureDX11Translate.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Externals\FreeImage-3.17.0\Source\FreeImageLib\FreeImageLib.2013.vcxproj">
-      <Project>{9e219df2-315d-478e-8a07-8960c377ce1e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\owRenderBase\owRenderBase.vcxproj">
-      <Project>{4bfb75a1-ee52-478a-bdac-30ffb977ebb7}</Project>
-    </ProjectReference>
+    <ClInclude Include="StructuredBufferOGL.h" />
+    <ClInclude Include="TextureOGL.h" />
+    <ClInclude Include="TextureOGLTranslate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

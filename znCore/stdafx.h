@@ -1,5 +1,5 @@
 #pragma once
 
-#include <owIntfs.h>
+#include <znIntfs.h>
 
 #include "common.h"

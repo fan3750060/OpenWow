@@ -3,11 +3,11 @@
 #pragma comment(lib, "freetype28.lib")
 #pragma comment(lib, "libmpq.lib")
 
-#include <owIntfs.h>
-#pragma comment(lib, "owIntfs.lib")
+#include <znIntfs.h>
+#pragma comment(lib, "znIntfs.lib")
 
-#include <owCore.h>
-#pragma comment(lib, "owCore.lib")
+#include <znCore.h>
+#pragma comment(lib, "znCore.lib")
 
 #include <owRenderNew.h>
 #pragma comment(lib, "owRender.lib")
@@ -16,7 +16,7 @@
 #pragma comment(lib, "owGUI.lib")*/
 
 #include <owEngineNew.h>
-#pragma comment(lib, "owEngine.lib")
+#pragma comment(lib, "znEngine.lib")
 
 // GAME
 

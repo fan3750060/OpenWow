@@ -5,17 +5,17 @@
 
 // CORE
 
-#include <owIntfs.h>
-#pragma comment(lib, "owIntfs.lib")
+#include <znIntfs.h>
+#pragma comment(lib, "znIntfs.lib")
 
-#include <owCore.h>
-#pragma comment(lib, "owCore.lib")
+#include <znCore.h>
+#pragma comment(lib, "znCore.lib")
 
-#include <owRenderBase.h>
-#pragma comment(lib, "owRenderBase.lib")
+#include <znRenderBase.h>
+#pragma comment(lib, "znRenderBase.lib")
 
-#include <owEngine.h>
-#pragma comment(lib, "owEngine.lib")
+#include <znEngine.h>
+#pragma comment(lib, "znEngine.lib")
 
 #include <owGame.h>
 #pragma comment(lib, "owGame.lib")

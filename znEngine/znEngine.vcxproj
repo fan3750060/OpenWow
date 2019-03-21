@@ -86,7 +86,7 @@
     <ClCompile Include="WindowCreator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\shared\owEngine.h" />
+    <ClInclude Include="..\shared\znEngine.h" />
     <ClInclude Include="3D\Light3D.h" />
     <ClInclude Include="3D\Materials\MaterialDebug.h" />
     <ClInclude Include="3D\Materials\MaterialTextured.h" />
@@ -155,20 +155,20 @@
     <ProjectReference Include="..\Externals\freetype-2.9.1\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\owCore\owCore.vcxproj">
+    <ProjectReference Include="..\znCore\znCore.vcxproj">
       <Project>{a4e6f769-0036-4128-a409-495d9207f587}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\owRenderBase\owRenderBase.vcxproj">
-      <Project>{4bfb75a1-ee52-478a-bdac-30ffb977ebb7}</Project>
+    <ProjectReference Include="..\znIntfs\znIntfs.vcxproj">
+      <Project>{69aec773-3240-4644-a049-ababd643dbec}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">
-      <Project>{590c7c79-ae16-4db2-b61c-bb7b25b76b42}</Project>
+    <ProjectReference Include="..\znRenderBase\znRenderBase.vcxproj">
+      <Project>{4bfb75a1-ee52-478a-bdac-30ffb977ebb7}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{51252F60-B8DC-4090-BBA3-DD05942110F0}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>owEngine</RootNamespace>
+    <RootNamespace>znEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -241,7 +241,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\znEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -260,7 +260,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\znEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -281,7 +281,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\znEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>
@@ -306,7 +306,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\owEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\freetype-2.9.1\include;..\znEngine\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>

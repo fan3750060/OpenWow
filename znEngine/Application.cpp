@@ -7,8 +7,8 @@
 #include "EngineTime.h"
 
 // Additional renders
-#include "..\\owRenderDX11\\owRenderDX11.h"
-//#include "..\\owRenderOpenGL\\owRenderOpenGL.h"
+#include "..\\znRenderDX11\\znRenderDX11.h"
+//#include "..\\znRenderDX11\\znRenderDX11.h"
 
 float g_GameDeltaTime = 0.0f;
 float g_ApplicationTime = 0.0f;

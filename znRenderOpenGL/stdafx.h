@@ -1,13 +1,13 @@
 #pragma once
 
-#include <owIntfs.h>
+#include <znIntfs.h>
 #pragma comment(lib, "owIntfs.lib")
 
-#include <owCore.h>
+#include <znCore.h>
 #pragma comment(lib, "owCore.lib")
 
-#include <owRenderBase.h>
-#pragma comment(lib, "owRenderBase.lib")
+#include <znRenderBase.h>
+#pragma comment(lib, "znRenderBase.lib")
 
 #include "OpenGL.h"
 #pragma comment(lib, "opengl32.lib")

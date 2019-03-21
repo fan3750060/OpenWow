@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // General
-#include "owRenderOpenGL.h"
+#include "znRenderOpenGL.h"
 
 // Additional
 #include "RenderDeviceOGL.h"
