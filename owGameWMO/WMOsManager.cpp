@@ -5,7 +5,7 @@
 
 WMOsManager::WMOsManager()
 {
-	ADDCONSOLECOMMAND_CLASS("wmo_info", WMOsManager, PrintAllInfo);
+
 }
 
 std::shared_ptr<WMO> WMOsManager::CreateAction(cstring name)

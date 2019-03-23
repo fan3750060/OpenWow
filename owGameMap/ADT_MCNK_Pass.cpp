@@ -12,11 +12,11 @@ ADT_MCNK_Pass::ADT_MCNK_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<Pip
 ADT_MCNK_Pass::~ADT_MCNK_Pass()
 {}
 
-bool ADT_MCNK_Pass::Visit(IMesh& mesh)
+bool ADT_MCNK_Pass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	if (mesh.GetType() == SN_TYPE_ADT_CHUNK && m_QualitySettings.draw_mcnk)
 	{
-		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer(), indexStartLocation, indexCnt, vertexStartLocation, vertexCnt);
 	}
 
 	return false;

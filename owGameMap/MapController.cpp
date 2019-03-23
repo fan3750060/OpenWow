@@ -17,7 +17,6 @@ MapController::MapController() :
 		_MapShared = new CMapShared();
 	}
 
-	ADDCONSOLECOMMAND_CLASS("map_clear", MapController, ClearCache);
 
 	/*time_t t = time(0);   // get time now
 	tm* now = localtime(&t);
