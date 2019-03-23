@@ -35,8 +35,32 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\owRenderDX11\owRenderDX11.vcxproj">
+    <ProjectReference Include="..\..\ZenonEngine\znEngine\znEngine.vcxproj">
+      <Project>{51252f60-b8dc-4090-bba3-dd05942110f0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZenonEngine\znRenderDX11\znRenderDX11.vcxproj">
       <Project>{590c7c79-ae16-4db2-b61c-bb7b25b76b42}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZenonEngine\znRender\znRender.vcxproj">
+      <Project>{4bfb75a1-ee52-478a-bdac-30ffb977ebb7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owGameCharacters\owGameCharacters.vcxproj">
+      <Project>{4723f94f-2eca-40fb-a4fa-c491dfe3b3a5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owGameM2\owGameM2.vcxproj">
+      <Project>{ad0fb1d4-e81d-482d-a74f-eeaffd9b2dfc}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owGameMap\owGameMap.vcxproj">
+      <Project>{c29c7fee-86d9-4eef-965f-68b89c516fae}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owGameSocket\owGameSocket.vcxproj">
+      <Project>{8810fe3d-3a00-4a79-9370-69612befe04e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owGameWMO\owGameWMO.vcxproj">
+      <Project>{de443032-d503-4633-9552-2e4097c96715}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\owGame\owGame.vcxproj">
+      <Project>{b55ba550-e3b6-4756-ae79-6a5c7d28aeff}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">

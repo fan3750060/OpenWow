@@ -1,0 +1,6 @@
+[submodule "Externals/libmpq"]
+	path = Externals/libmpq
+	url = https://github.com/bouzi71/libmpq.git
+[submodule "Externals/zlib"]
+	path = Externals/zlib
+	url = https://github.com/bouzi71/zlib.git
