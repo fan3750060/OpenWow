@@ -14,11 +14,13 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	std::shared_ptr<const CM2_Part_Bone> ParticleSystem_ParentBone = ParticleSystem->m_ParentBone.lock();
 	assert1(ParticleSystem_ParentBone != nullptr);
 
+    Random random;
+
 	Particle p;
 	vec3 dir;
 	float radius;
 
-	radius = Random::GenerateRange(0.0f, 1.0f);
+	radius = random.Range(0.0f, 1.0f);
 
 	// Old method
 	//float t = Random::GenerateRange(0,2*Math::Pi);
@@ -27,9 +29,9 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 	// Spread should never be zero for sphere particles ?
 	float t = 0;
 	if (spr == 0)
-		t = Random::GenerateRange(-glm::pi<float>(), glm::pi<float>());
+		t = random.Range(-glm::pi<float>(), glm::pi<float>());
 	else
-		t = Random::GenerateRange(-spr, spr);
+		t = random.Range(-spr, spr);
 
 	//Spread Calculation
 	mat4 mrot;
@@ -73,7 +75,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 		else
 		{
 			dir = ParticleSystem_ParentBone->getRotateMatrix() * vec4((glm::normalize(bdir)), 0);//mrot * vec3(0, 1.0f,0);
-			p.speed = glm::normalize(dir) * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
+			p.speed = glm::normalize(dir) * spd * (1.0f + random.Range(-var, var));   // ?
 		}
 
 	}
@@ -106,7 +108,7 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 			else
 				dir = glm::normalize(bdir);
 
-			p.speed = glm::normalize(dir) * spd * (1.0f + Random::GenerateRange(-var, var));   // ?
+			p.speed = glm::normalize(dir) * spd * (1.0f + random.Range(-var, var));   // ?
 		}
 	}
 
@@ -118,6 +120,6 @@ Particle SphereParticleEmitter::newParticle(int anim, int time, float w, float l
 
 	p.origin = p.pos;
 
-	p.m_TileExists = Random::GenerateRange(0, ParticleSystem->rows * ParticleSystem->cols - 1);
+	p.m_TileExists = random.Range(0, ParticleSystem->rows * ParticleSystem->cols - 1);
 	return p;
 }

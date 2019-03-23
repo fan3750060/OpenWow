@@ -98,6 +98,14 @@
     <None Include="DBC\Core\DBC__File.inl" />
     <None Include="WoWChunkReader.inl" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ZenonEngine\znEngine\znEngine.vcxproj">
+      <Project>{51252f60-b8dc-4090-bba3-dd05942110f0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Externals\libmpq\libmpq.vcxproj">
+      <Project>{0cc7fa61-23de-4d9f-a6f4-fda327ab5984}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B55BA550-E3B6-4756-AE79-6A5C7D28AEFF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -174,7 +182,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZenonEngine\shared;..\..\ZenonEngine\Externals;..\shared;..\Externals;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -192,7 +200,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZenonEngine\shared;..\..\ZenonEngine\Externals;..\shared;..\Externals;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatSpecificWarningsAsErrors>
       </TreatSpecificWarningsAsErrors>
       <DisableSpecificWarnings>4244;4267</DisableSpecificWarnings>
@@ -212,7 +220,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZenonEngine\shared;..\..\ZenonEngine\Externals;..\shared;..\Externals;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>
@@ -236,7 +244,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;OW_GAME_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>..\shared;..\Externals;..\Externals\OpenSSL\include;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\ZenonEngine\shared;..\..\ZenonEngine\Externals;..\shared;..\Externals;..\owGame\;..\owGame\DBC\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatSpecificWarningsAsErrors>

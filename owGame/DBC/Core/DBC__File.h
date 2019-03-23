@@ -220,7 +220,7 @@ protected:
 		uint32 stringOffset = getValue<uint32>(field + static_cast<uint32>(loc));
 
 		assert2(stringOffset < m_DBC_Stats->getStringSize(), std::to_string(stringOffset).c_str());
-		return Utf8_to_cp1251(reinterpret_cast<char*>(const_cast<uint8*>(m_DBC_Stats->stringTable) + stringOffset));
+		return Resources::Utf8_to_cp1251(reinterpret_cast<char*>(const_cast<uint8*>(m_DBC_Stats->stringTable) + stringOffset));
 	}
 
 protected:

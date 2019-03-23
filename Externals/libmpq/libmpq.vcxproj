@@ -19,12 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\zlib\adler32.c" />
-    <ClCompile Include="..\zlib\crc32.c" />
-    <ClCompile Include="..\zlib\inffast.c" />
-    <ClCompile Include="..\zlib\inflate.c" />
-    <ClCompile Include="..\zlib\inftrees.c" />
-    <ClCompile Include="..\zlib\zutil.c" />
     <ClCompile Include="common.c" />
     <ClCompile Include="explode.c" />
     <ClCompile Include="extract.c" />
@@ -33,15 +27,6 @@
     <ClCompile Include="wave.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\zlib\crc32.h" />
-    <ClInclude Include="..\zlib\gzguts.h" />
-    <ClInclude Include="..\zlib\inffast.h" />
-    <ClInclude Include="..\zlib\inffixed.h" />
-    <ClInclude Include="..\zlib\inflate.h" />
-    <ClInclude Include="..\zlib\inftrees.h" />
-    <ClInclude Include="..\zlib\zconf.h" />
-    <ClInclude Include="..\zlib\zlib.h" />
-    <ClInclude Include="..\zlib\zutil.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="crypt_buf.h" />
     <ClInclude Include="explode.h" />
@@ -51,6 +36,11 @@
     <ClInclude Include="mpq.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="wave.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ZenonEngine\Externals\zlib\zlib.vcxproj">
+      <Project>{33134f61-c1ad-4b6f-9cea-503a9f140c52}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -132,7 +122,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;LIBMPQ_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ZenonEngine\shared;..\..\..\ZenonEngine\Externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,7 +142,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;LIBMPQ_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ZenonEngine\shared;..\..\..\ZenonEngine\Externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -170,7 +160,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;LIBMPQ_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ZenonEngine\shared;..\..\..\ZenonEngine\Externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -186,7 +176,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;LIBMPQ_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\ZenonEngine\shared;..\..\..\ZenonEngine\Externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

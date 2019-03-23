@@ -8,14 +8,16 @@
 
 mat4 CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 {
+    Random random;
+
 	int i, j;
 	float a[2], c[2], s[2];
-	mat4	Temp;
+	mat4 Temp;
 
 	mat4 SpreadMat = mat4();
 
-	a[0] = Random::GenerateRange(-Spread1, Spread1) / 2.0f;
-	a[1] = Random::GenerateRange(-Spread2, Spread2) / 2.0f;
+	a[0] = random.Range(-Spread1, Spread1) / 2.0f;
+	a[1] = random.Range(-Spread2, Spread2) / 2.0f;
 
 	/*SpreadMat.m[0][0]*=l;
 	SpreadMat.m[1][1]*=l;

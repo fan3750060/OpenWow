@@ -11,11 +11,11 @@ WDL_Node_Pass::WDL_Node_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<Pip
 WDL_Node_Pass::~WDL_Node_Pass()
 {}
 
-bool WDL_Node_Pass::Visit(IMesh& mesh)
+bool WDL_Node_Pass::Visit(IMesh& mesh, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	if (mesh.GetType() == SN_TYPE_WDL_NODE)
 	{
-		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer(), indexStartLocation, indexCnt, vertexStartLocation, vertexCnt);
 	}
 
 	return false;
