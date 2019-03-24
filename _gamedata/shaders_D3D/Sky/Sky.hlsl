@@ -1,4 +1,3 @@
-#include "..\\_gamedata\\shaders_D3D\\Sky\\Sky_Material.h"
 #include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
 
 struct VertexShaderInput
@@ -22,7 +21,7 @@ cbuffer PerObject : register(b0)
 }
 cbuffer Material : register(b2)
 {
-   Sky_Material Material;
+   uint   gBlendMode;
 };
 
 

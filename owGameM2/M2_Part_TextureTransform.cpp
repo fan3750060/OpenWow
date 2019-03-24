@@ -12,7 +12,7 @@ CM2_Part_TextureTransform::CM2_Part_TextureTransform(std::shared_ptr<IFile> f, c
 
 void CM2_Part_TextureTransform::calc(uint16 anim, uint32 time, uint32 globalTime)
 {
-	matrix = mat4();
+	matrix = mat4(1.0f);
 	
 	vec3 transValue;
 	if (trans.uses(anim))

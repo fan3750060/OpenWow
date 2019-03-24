@@ -19,7 +19,7 @@ class WMO : public ISceneNodeProvider, public std::enable_shared_from_this<WMO>
 {
 	friend CWMO_Part_Portal;
 public:
-	WMO(cstring _fileName);
+	WMO(const std::string& _fileName);
 	virtual ~WMO();
 
 	// ISceneNodeProvider

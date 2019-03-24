@@ -59,7 +59,7 @@ bool CM2_Base_Instance::isMeshEnabled(uint32 _index) const
 {
 	return true;
 }
-void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, cstring _textureName)
+void CM2_Base_Instance::setSpecialTexture(SM2_Texture::Type _type, const std::string& _textureName)
 {
 	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(_textureName);
 	setSpecialTexture(_type, texture);

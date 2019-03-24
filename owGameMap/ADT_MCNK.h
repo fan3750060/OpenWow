@@ -9,8 +9,9 @@ class MapController;
 
 class ADT_MCNK : public SceneNodeModel3D
 {
+    typedef SceneNodeModel3D base;
 public:
-	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, cstring _fileName, const ADT_MCIN& _mcin);
+	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin);
 	virtual ~ADT_MCNK();
 
 	// SceneNode3D

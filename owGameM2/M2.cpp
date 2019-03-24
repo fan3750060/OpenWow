@@ -8,7 +8,7 @@
 // General
 #include "M2.h"
 
-M2::M2(cstring name) :
+M2::M2(const std::string& name) :
 	m_FileName(name),
 	m_UniqueName(""),
 

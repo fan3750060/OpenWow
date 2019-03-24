@@ -65,7 +65,7 @@ CMPQFilesStorage::~CMPQFilesStorage()
 //
 // // IFilesStorage
 //
-std::shared_ptr<IFile> CMPQFilesStorage::CreateFile(cstring _name)
+std::shared_ptr<IFile> CMPQFilesStorage::CreateFile(const std::string& _name)
 {
 	std::lock_guard<std::mutex> lock(m_Lock);
 
@@ -90,7 +90,7 @@ std::shared_ptr<IFile> CMPQFilesStorage::CreateFile(cstring _name)
 	return file;
 }
 
-size_t CMPQFilesStorage::GetFileSize(cstring _name)
+size_t CMPQFilesStorage::GetFileSize(const std::string& _name)
 {
 	std::lock_guard<std::mutex> lock(m_Lock);
 
@@ -106,7 +106,7 @@ size_t CMPQFilesStorage::GetFileSize(cstring _name)
 	return 0;
 }
 
-bool CMPQFilesStorage::IsFileExists(cstring _name)
+bool CMPQFilesStorage::IsFileExists(const std::string& _name)
 {
 	std::lock_guard<std::mutex> lock(m_Lock);
 
@@ -169,7 +169,7 @@ void CMPQFilesStorage::AddArchive(std::string filename)
 	Log::Green("CMPQFile[%s]: Added!", filename.c_str());
 }
 
-SMPQFileLocation CMPQFilesStorage::GetFileLocation(cstring filename)
+SMPQFileLocation CMPQFilesStorage::GetFileLocation(const std::string& filename)
 {
 	for (auto& i = m_OpenArchives.rbegin(); i != m_OpenArchives.rend(); ++i)
 	{

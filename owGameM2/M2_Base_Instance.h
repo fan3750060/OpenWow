@@ -25,7 +25,7 @@ public:
 
 	// Mesh & textures provider
 	virtual bool                          isMeshEnabled(uint32 _index) const;
-	void                                  setSpecialTexture(SM2_Texture::Type _type, cstring _textureName);
+	void                                  setSpecialTexture(SM2_Texture::Type _type, const std::string& _textureName);
 	void                                  setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture);
 	std::shared_ptr<Texture>              getSpecialTexture(SM2_Texture::Type _type) const;
 

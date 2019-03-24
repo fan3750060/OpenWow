@@ -67,7 +67,7 @@ private:
 class CSocketBase : public ISocket
 {
 public:
-	CSocketBase(cstring _host, cstring _port);
+	CSocketBase(const std::string& _host, const std::string& _port);
 	~CSocketBase();
 
 	void Start();

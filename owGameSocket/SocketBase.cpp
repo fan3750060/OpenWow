@@ -3,7 +3,7 @@
 // General
 #include "SocketBase.h"
 
-CSocketBase::CSocketBase(cstring _host, cstring _port) :
+CSocketBase::CSocketBase(const std::string& _host, const std::string& _port) :
 	m_SocketObj(INVALID_SOCKET),
 	m_Host(_host),
 	m_Port(_port),

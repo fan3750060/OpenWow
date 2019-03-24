@@ -23,7 +23,7 @@ class M2 : public ISceneNodeProvider
 	friend class CM2_Builder;
 	friend class CM2_Skin_Builder;
 public:
-	M2(cstring name);
+	M2(const std::string& name);
 
 	// ISceneNodeProvider
 	void CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent);

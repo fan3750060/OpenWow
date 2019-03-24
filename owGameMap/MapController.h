@@ -10,6 +10,7 @@
 
 class MapController : public SceneNodeModel3D
 {
+    typedef SceneNodeModel3D base;
 public:
 	MapController();
 	virtual ~MapController();

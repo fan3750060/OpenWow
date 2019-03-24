@@ -16,10 +16,10 @@ public:
 	void AddRealm(RealmInfo& _realm);
 
 	// Getters
-	cstring getHost() const { return m_Host; }
-	cstring getPort() const { return m_Port; }
-	cstring getUsername() const { return m_Username; }
-	cstring getPassword() const { return m_Password; }
+	const std::string& getHost() const { return m_Host; }
+	const std::string& getPort() const { return m_Port; }
+	const std::string& getUsername() const { return m_Username; }
+	const std::string& getPassword() const { return m_Password; }
 	BigNumber* getKey() { return &m_Key; }
 
 	CAuthSocket* getAuthSocket() const { return m_AuthSocket; }

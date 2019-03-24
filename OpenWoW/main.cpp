@@ -31,20 +31,39 @@ int main(int argumentCount, char* arguments[])
 		std::shared_ptr<IFilesManager> filesManager = std::make_shared<CFilesManager>();
 		AddManager<IFilesManager>(filesManager);
 
-		std::shared_ptr<IFilesStorage> localFilesGamedata = std::make_shared<CLocalFilesStorage>("E:\\OpenWoW\\_gamedata\\");
+		std::shared_ptr<IFilesStorage> localFilesGamedata = std::make_shared<CLocalFilesStorage>("D:\\_programming\\OpenWow\\_gamedata\\");
 		filesManager->RegisterFilesStorage(localFilesGamedata);
 
 		std::shared_ptr<IFilesStorage> mpqFileStorage = std::make_shared<CMPQFilesStorage>("D:\\_games\\World of Warcraft 3.3.5a\\Data\\", IFilesStorageEx::PRIOR_HIGH);
 		filesManager->RegisterFilesStorage(mpqFileStorage);
 
+        std::shared_ptr<IFilesStorage> libraryFileStorage = std::make_shared<CLibraryResourceFileStotage>(GetModuleHandle(NULL));
+        filesManager->RegisterFilesStorage(libraryFileStorage);
+
+        GetManager<IFilesManager>()->Open("IDR_SHADER_UI_Button");
+
+
 		OpenDBs();
 
 		//--
 
+        HMODULE m_HINSTANCE = ::GetModuleHandle(NULL);
+
+        CWindowObject* windowObject = new CWindowObject();
+        windowObject->RegisterWindowClass(m_HINSTANCE);
+        windowObject->CreateWindowInstance(1280, 1024);
+
 		Application app;
-		app.Load();
-		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>());
-		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>());
+
+        std::shared_ptr<IRenderDevice> renderDevice = app.CreateRenderDevice();
+        std::shared_ptr<RenderWindow> renderWindow = app.CreateRenderWindow(windowObject, true);
+
+
+        std::shared_ptr<IFontsManager> fontsManager = std::make_shared<FontsManager>();
+        AddManager<IFontsManager>(fontsManager);
+
+		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>(&app));
+		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>(&app));
 		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
 		app.Run();
 	}

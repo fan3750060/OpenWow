@@ -12,6 +12,7 @@ enum LightType
 
 class WMO_Part_Light : public CLight3D
 {
+    typedef CLight3D base;
 public:
 	WMO_Part_Light(const SWMO_LightDef& _proto);
 

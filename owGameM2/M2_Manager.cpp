@@ -31,7 +31,7 @@ CM2_Manager::~CM2_Manager()
 
 //
 
-std::shared_ptr<M2> CM2_Manager::CreateAction(cstring name)
+std::shared_ptr<M2> CM2_Manager::CreateAction(const std::string& name)
 {
 	std::string newName = Utils::ToLower(name);
 	if (newName.find("orgrimmarsmokeemitter.mdx") != -1 ||
@@ -51,7 +51,7 @@ std::shared_ptr<M2> CM2_Manager::CreateAction(cstring name)
 
 	return model;
 }
-bool CM2_Manager::DeleteAction(cstring name)
+bool CM2_Manager::DeleteAction(const std::string& name)
 {
 	return true;
 }

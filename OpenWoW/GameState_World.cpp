@@ -5,12 +5,10 @@
 
 // Additional
 
-CGameState_World::CGameState_World()
+CGameState_World::CGameState_World(const IApplication * _application)
+    : base(_application)
 {
 	m_Viewport = Viewport(0, 0, 1280.0f, 1024.0f);
-
-	m_3DScene = std::make_shared<Scene3D>();
-	m_UIScene = std::make_shared<SceneUI>();
 }
 
 CGameState_World::~CGameState_World()
@@ -23,9 +21,6 @@ CGameState_World::~CGameState_World()
 //
 bool CGameState_World::Init()
 {
-	std::shared_ptr<IFontsManager> fontsManager = std::make_shared<FontsManager>();
-	AddManager<IFontsManager>(fontsManager);
-
 	std::shared_ptr<IWMOManager> wmoManager = std::make_shared<WMOsManager>();
 	AddManager<IWMOManager>(wmoManager);
 
@@ -33,7 +28,7 @@ bool CGameState_World::Init()
 	AddManager<IM2Manager>(m2Manager);
 
 
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
 	renderDevice->CreateTexture2D("Textures\\ShaneCube.blp"); // DXT1
@@ -48,16 +43,16 @@ bool CGameState_World::Init()
 	//
 	// Camera controller
 	//
-	m_CameraController = std::make_shared<CCameraController>();
-	m_CameraController->Init(app.GetRenderWindow());
+	m_CameraController = std::make_shared<CFreeCameraController>();
 	m_CameraController->GetCamera()->SetTranslate(vec3(0, 0, 0));
 	m_CameraController->GetCamera()->SetRotate(vec3(0, 0, 0));
-	m_CameraController->GetCamera()->SetViewport(m_Viewport);
-	m_CameraController->GetCamera()->SetProjectionRH(45.0f, 1280.0f / 1024.0f, 1.0f, 4000.0f);
-	
-	m_FrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
-	//m_3DTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(app.GetRenderWindow()->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
+	m_CameraController->GetCamera()->SetViewport(m_Viewport);
+	m_CameraController->GetCamera()->SetProjectionRH(45.0f, 1280.0f / 1024.0f, 0.5f, 4000.0f);
+	
+    SetCameraController(m_CameraController);
+
+	m_FrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
 	m_GB = std::make_shared<CGBuffer>(m_3DScene);
 	m_GB->Load(c_WindowsWidth, c_WindowsHeight);
@@ -87,6 +82,24 @@ void CGameState_World::Destroy()
 //
 //
 //
+
+void CGameState_World::OnResize(ResizeEventArgs & e)
+{
+    if (e.Width == 0 || e.Height == 0)
+    {
+        return;
+    }
+
+    m_CameraController->GetCamera()->SetProjectionRH(45.0f, static_cast<float>(e.Width) / static_cast<float>(e.Height), 0.5f, 4000.0f);
+
+    base::OnResize(e);
+
+    m_CameraController->GetCamera()->SetViewport(m_Viewport);
+
+    m_3DDeferredTechnique.UpdateViewport(m_Viewport);
+    m_UITechnique.UpdateViewport(m_Viewport);
+}
+
 void CGameState_World::OnPreRender(Render3DEventArgs& e)
 {
 	m_FrameQuery->Begin(e.FrameCounter);
@@ -109,7 +122,7 @@ void CGameState_World::OnPreRender(Render3DEventArgs& e)
 
 void CGameState_World::OnRender(Render3DEventArgs& e)
 {
-	e.Camera = m_CameraController->GetCameraConst().operator->(); // TODO: Shit code. Refactor me.
+	e.Camera = m_CameraController->GetCamera().operator->(); // TODO: Shit code. Refactor me.
 	Application::Get().GetLoader()->SetCamera(m_CameraController->GetCamera());
 
 	m_3DDeferredTechnique.Render(e);
@@ -147,7 +160,7 @@ void CGameState_World::OnRenderUI(RenderUIEventArgs& e)
 {
 	e.Viewport = &m_Viewport;
 
-	//m_UITechnique.RenderUI(e);
+	m_UITechnique.RenderUI(e);
 }
 
 //
@@ -156,7 +169,7 @@ void CGameState_World::OnRenderUI(RenderUIEventArgs& e)
 
 void CGameState_World::Load3D()
 {
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 	std::shared_ptr<RenderWindow> renderWindow = app.GetRenderWindow();
 
@@ -183,7 +196,7 @@ void CGameState_World::Load3D()
 	
 	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 	//m_CameraController->GetCamera()->SetTranslate(vec3(20873, 229, 16601));
-	m_CameraController->GetCamera()->SetEulerAngles(vec3(-17, -36, 3));
+	//m_CameraController->GetCamera()->SetEulerAngles(vec3(-17, -36, 3));
 
 	const uint32 cnt = 10;
 	/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
@@ -283,7 +296,7 @@ void CGameState_World::Load3D()
 	//
 	AddSkyPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
 	AddWDLPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
-	AddDebugPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
+	AddDebugPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, m_Viewport, m_3DScene);
 	AddMCNKPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
 	AddWMOPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
 	AddLiquidPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
@@ -298,8 +311,7 @@ void CGameState_World::Load3D()
 	dir.m_Color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	dir.m_Intensity = 0.5f;
 
-	m_DirLight = std::make_shared<CLight3D>();
-	m_DirLight->setLight(dir);
+	m_DirLight = std::make_shared<CLight3D>(dir);
 	m_MapController->AddLight(m_DirLight);
 
 	UpdateLights();
@@ -310,17 +322,17 @@ void CGameState_World::Load3D()
 
 void CGameState_World::LoadUI()
 {
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
 
 	// Font
-	m_CameraPosText = std::make_shared<UIText>();
+	m_CameraPosText = std::make_shared<CUITextNode>();
 	m_CameraPosText->SetParent(m_UIScene->GetRootNode());
 	m_CameraPosText->SetText("Camera position");
 	m_CameraPosText->SetTranslate(vec2(0.0f, 0.0f));
 
-	m_CameraRotText = std::make_shared<UIText>();
+	m_CameraRotText = std::make_shared<CUITextNode>();
 	m_CameraRotText->SetParent(m_UIScene->GetRootNode());
 	m_CameraRotText->SetText("Camera rotation");
 	m_CameraRotText->SetTranslate(vec2(0.0f, 20.0f));
@@ -354,7 +366,7 @@ void CGameState_World::LoadUI()
 	//
 	// UI Passes
 	//
-	//AddUIPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_UITechnique, &m_Viewport, m_UIScene);
+	AddUIPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_UITechnique, m_Viewport, m_UIScene);
 }
 
 void CGameState_World::UpdateLights()

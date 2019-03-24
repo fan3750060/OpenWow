@@ -29,16 +29,16 @@ public:
 	virtual ~CMPQFilesStorage();
 
 	// IFilesStorage
-	std::shared_ptr<IFile>  CreateFile(cstring _name) override;
-	size_t                  GetFileSize(cstring _name) override;
-	bool                    IsFileExists(cstring _name) override;
+	std::shared_ptr<IFile>  CreateFile(const std::string& _name) override;
+	size_t                  GetFileSize(const std::string& _name) override;
+	bool                    IsFileExists(const std::string& _name) override;
 
 	// IFilesStorageEx
 	Priority GetPriority() const;
 
 	// CMPQFilesStorage
 	void AddArchive(std::string _filename);
-	SMPQFileLocation GetFileLocation(cstring _filename);
+	SMPQFileLocation GetFileLocation(const std::string& _filename);
 
 private:
 	const std::string           m_Path;

@@ -185,11 +185,11 @@ float4 PS_DeferredLighting(VertexShaderOutput IN) : SV_Target
     return /*lit.Ambient * diffuse +*/  (diffuse * lit.Diffuse) + (specular * lit.Specular);
 }
 
-[earlydepthstencil]
+/*[earlydepthstencil]
 float4 PS_DeferredLighting_FogPass(VertexShaderOutput IN) : SV_Target
 {
     int2 texCoord = IN.position.xy;
 	float4 P = PositionTextureWS.Load(int3(texCoord, 0));
 	
 	return GetFogColor(P);
-}
+}*/

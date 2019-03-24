@@ -69,8 +69,8 @@ public:
 		m_Port = Addres.substr(pos + 1);
 	}
 
-	cstring getIP() const { return m_IPAddres; }
-	cstring getPort() const { return m_Port; }
+	const std::string& getIP() const { return m_IPAddres; }
+	const std::string& getPort() const { return m_Port; }
 
 	void print()
 	{

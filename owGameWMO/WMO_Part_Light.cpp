@@ -6,6 +6,7 @@
 #include "Wmo_Part_Light.h"
 
 WMO_Part_Light::WMO_Part_Light(const SWMO_LightDef& _proto)
+    : base(Light())
 {
 	lightDef = _proto;
 

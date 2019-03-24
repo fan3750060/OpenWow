@@ -13,7 +13,7 @@ struct WMO_GroupInfoDef
 	int32			nameoffset;		// name in MOGN chunk (-1 for no name)
 };
 
-WMO::WMO(cstring name) :
+WMO::WMO(const std::string& name) :
 	m_FileName(name),
 	m_TexturesNames(nullptr),
 	m_DoodadsFilenames(nullptr)

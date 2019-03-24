@@ -5,12 +5,13 @@
 
 // Additional
 
-CGameState_Client::CGameState_Client()
+CGameState_Client::CGameState_Client(const IApplication * Application)
+    : base(Application)
 {
 	m_Viewport = Viewport(0, 0, 1280.0f, 1024.0f);
 
 	m_3DScene = std::make_shared<Scene3D>();
-	m_UIScene = std::make_shared<SceneUI>();
+	m_UIScene = std::make_shared<CUIScene>();
 }
 
 CGameState_Client::~CGameState_Client()
@@ -78,9 +79,6 @@ void CGameState_Client::S_CharEnum(CByteBuffer& _buff)
 //
 bool CGameState_Client::Init()
 {
-	std::shared_ptr<IFontsManager> fontsManager = std::make_shared<FontsManager>();
-	AddManager<IFontsManager>(fontsManager);
-
 	std::shared_ptr<IWMOManager> wmoManager = std::make_shared<WMOsManager>();
 	AddManager<IWMOManager>(wmoManager);
 
@@ -88,7 +86,7 @@ bool CGameState_Client::Init()
 	AddManager<IM2Manager>(m2Manager);
 
 
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
 
@@ -106,8 +104,7 @@ bool CGameState_Client::Init()
 	//
 	// Camera controller
 	//
-	m_CameraController = std::make_shared<CCameraController>();
-	m_CameraController->Init(app.GetRenderWindow());
+	m_CameraController = std::make_shared<CFreeCameraController>();
 	m_CameraController->GetCamera()->SetTranslate(vec3(0, 0, 0));
 	m_CameraController->GetCamera()->SetRotate(vec3(0, 0, 0));
 	m_CameraController->GetCamera()->SetViewport(m_Viewport);
@@ -151,7 +148,7 @@ void CGameState_Client::OnPreRender(Render3DEventArgs& e)
 
 void CGameState_Client::OnRender(Render3DEventArgs& e)
 {
-	e.Camera = m_CameraController->GetCameraConst().operator->(); // TODO: Shit code. Refactor me.
+	e.Camera = m_CameraController->GetCamera().operator->(); // TODO: Shit code. Refactor me.
 
 	m_3DTechnique.Render(e);
 }
@@ -197,7 +194,7 @@ void CGameState_Client::OnRenderUI(RenderUIEventArgs& e)
 
 void CGameState_Client::Load3D()
 {
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
 	const float x = 40;
@@ -243,7 +240,7 @@ void CGameState_Client::Load3D()
 	//
 	AddSkyPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
 	AddWDLPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
-	AddDebugPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
+	AddDebugPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, m_Viewport, m_3DScene);
 	AddMCNKPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
 	AddWMOPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
 	AddLiquidPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
@@ -252,17 +249,17 @@ void CGameState_Client::Load3D()
 
 void CGameState_Client::LoadUI()
 {
-	Application& app = Application::Get();
+	IApplication& app = Application::Get();
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 
 
 	// Font
-	m_CameraPosText = std::make_shared<UIText>();
+	m_CameraPosText = std::make_shared<CUITextNode>();
 	m_CameraPosText->SetParent(m_UIScene->GetRootNode());
 	m_CameraPosText->SetText("Camera position");
 	m_CameraPosText->SetTranslate(vec2(0.0f, 0.0f));
 
-	m_CameraRotText = std::make_shared<UIText>();
+	m_CameraRotText = std::make_shared<CUITextNode>();
 	m_CameraRotText->SetParent(m_UIScene->GetRootNode());
 	m_CameraRotText->SetText("Camera rotation");
 	m_CameraRotText->SetTranslate(vec2(0.0f, 20.0f));
@@ -281,5 +278,5 @@ void CGameState_Client::LoadUI()
 	//
 	// UI Passes
 	//
-	AddUIPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_UITechnique, &m_Viewport, m_UIScene);
+	AddUIPasses(renderDevice, app.GetRenderWindow()->GetRenderTarget(), &m_UITechnique, m_Viewport, m_UIScene);
 }

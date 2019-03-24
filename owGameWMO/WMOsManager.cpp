@@ -8,7 +8,7 @@ WMOsManager::WMOsManager()
 
 }
 
-std::shared_ptr<WMO> WMOsManager::CreateAction(cstring name)
+std::shared_ptr<WMO> WMOsManager::CreateAction(const std::string& name)
 {
 	std::shared_ptr<WMO> _wmo = std::make_shared<WMO>(name);
 	LoadAction(name, _wmo);
@@ -23,7 +23,7 @@ void WMOsManager::LoadAction(std::string name, std::shared_ptr<WMO>& item)
 	}
 }
 
-bool WMOsManager::DeleteAction(cstring name)
+bool WMOsManager::DeleteAction(const std::string& name)
 {
 	return true;
 }

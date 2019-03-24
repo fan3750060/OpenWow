@@ -13,7 +13,7 @@
 #include "Map_Shared.h"
 #include "ADT_MCNK_Material.h"
 
-ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, cstring _fileName, const ADT_MCIN& _mcin) :
+ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin) :
 	m_MapController(_mapController),
 	m_ParentADT(_parentTile),
 	m_FileName(_fileName),
@@ -54,7 +54,7 @@ bool ADT_MCNK::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	return SceneNode3D::Accept(visitor);
+	return base::Accept(visitor);
 }
 
 

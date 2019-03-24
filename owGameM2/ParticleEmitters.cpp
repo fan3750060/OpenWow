@@ -14,7 +14,7 @@ mat4 CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 	float a[2], c[2], s[2];
 	mat4 Temp;
 
-	mat4 SpreadMat = mat4();
+	mat4 SpreadMat = mat4(1.0f);
 
 	a[0] = random.Range(-Spread1, Spread1) / 2.0f;
 	a[1] = random.Range(-Spread2, Spread2) / 2.0f;
@@ -29,7 +29,7 @@ mat4 CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 		s[i] = sin(a[i]);
 	}
 
-	Temp = mat4();
+	Temp = mat4(1.0f);
 	Temp[1][1] = c[0];
 	Temp[2][1] = s[0];
 	Temp[2][2] = c[0];
@@ -37,7 +37,7 @@ mat4 CalcSpreadMatrix(float Spread1, float Spread2, float w, float l)
 
 	SpreadMat = SpreadMat*Temp;
 
-	Temp = mat4();
+	Temp = mat4(1.0f);
 	Temp[0][0] = c[1];
 	Temp[1][0] = s[1];
 	Temp[1][1] = c[1];
