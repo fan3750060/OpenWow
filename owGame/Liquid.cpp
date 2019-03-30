@@ -60,19 +60,35 @@ void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std
 
 	std::shared_ptr<Liquid_Layer> layer = std::make_shared<Liquid_Layer>(_RenderDevice->CreateMesh());
 	layer->LiquidType = _type;
-	layer->InitTextures();
-	layer->VertexFormat = _type->Get_LiquidMaterialID()->Get_LiquidVertexFormat();
-	if (_type->Get_Type() == DBC_LIQUIDTYPE_Type::ocean)
-	{
-		layer->VertexFormat = 2;
-	}
+	layer->InitTextures(_type->Get_Type());
+
 	layer->x = 0;
 	layer->y = 0;
 	layer->Width = m_TilesX;
 	layer->Height = m_TilesY;
 	
+    for (uint32 j = 0; j < m_TilesY + 1; j++)
+    {
+        for (uint32 i = 0; i < m_TilesX + 1; i++)
+        {
+            uint32 p = j * (m_TilesX + 1) + i;
 
-	for (uint32 j = 0; j < m_TilesY + 1; j++)
+            if (flags[p].liquid & 0x08)
+            {
+                layer->renderTiles.push_back(false);
+            }
+            else
+            {
+                layer->renderTiles.push_back(true);
+            }
+
+            layer->heights.push_back(map[p].magmaVert.height);
+            //layer.depths.push_back((map[p].magmaVert.s / 255.0f) * 0.5f + 0.5f);
+        }
+    }
+
+
+	/*for (uint32 j = 0; j < m_TilesY + 1; j++)
 	{
 		for (uint32 i = 0; i < m_TilesX + 1; i++)
 		{
@@ -102,7 +118,7 @@ void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std
 				layer->depths.push_back(map[p].oceanVert.depth);
 			}
 		}
-	}
+	}*/
 
 	m_WaterLayers.push_back(layer);
 

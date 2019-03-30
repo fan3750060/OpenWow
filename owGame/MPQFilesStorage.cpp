@@ -3,53 +3,23 @@
 // General
 #include "MPQFilesStorage.h"
 
-//#if (VERSION == VERSION_Vanila)
-//const char* archives = "D:/_games/World of Warcraft 1.12.1/Data/";
-//#elif (VERSION == VERSION_WotLK)
-//const char* archives = "D:/_games/World of Warcraft 3.3.5a/Data/";
-//#endif
-
 CMPQFilesStorage::CMPQFilesStorage(std::string _path, Priority _priority)
 	: m_Path(_path)
 	, m_Priority(_priority)
 {
-	// Files 1.12
-#if (VERSION == VERSION_Vanila)
-	AddArchive(std::string("backup.MPQ"));
-	AddArchive(std::string("base.MPQ"));
-	AddArchive(std::string("dbc.MPQ"));
-	AddArchive(std::string("fonts.MPQ"));
-	AddArchive(std::string("interface.MPQ"));
-	AddArchive(std::string("misc.MPQ"));
-	AddArchive(std::string("model.MPQ"));
-	AddArchive(std::string("patch.MPQ"));
-	AddArchive(std::string("patch-2.MPQ"));
-	AddArchive(std::string("patch-3.MPQ"));
-	AddArchive(std::string("sound.MPQ"));
-	AddArchive(std::string("speech.MPQ"));
-	AddArchive(std::string("terrain.MPQ"));
-	AddArchive(std::string("texture.MPQ"));
-	AddArchive(std::string("wmo.MPQ"));
-	//AddArchive(std::string("ruRU/patch-1.MPQ"));
-	//AddArchive(std::string("ruRU/patch-2.MPQ"));
-	//AddArchive(std::string("ruRU/patch-3.MPQ"));
-
-#elif (VERSION == VERSION_WotLK)
-	AddArchive(std::string("common.MPQ"));
-	AddArchive(std::string("common-2.MPQ"));
-	AddArchive(std::string("expansion.MPQ"));
-	AddArchive(std::string("lichking.MPQ"));
-	AddArchive(std::string("patch.MPQ"));
-	AddArchive(std::string("patch-2.MPQ"));
-	AddArchive(std::string("patch-3.MPQ"));
-
-	AddArchive(std::string("ruRU/locale-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/expansion-locale-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/lichking-locale-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/patch-ruRU.MPQ"));
-	AddArchive(std::string("ruRU/patch-ruRU-2.MPQ"));
-	AddArchive(std::string("ruRU/patch-ruRU-3.MPQ"));
-#endif
+	AddArchive("base.MPQ");
+	AddArchive("dbc.MPQ");
+	//AddArchive(std::string("fonts.MPQ"));
+	//AddArchive(std::string("interface.MPQ"));
+	AddArchive("misc.MPQ");
+	AddArchive("model.MPQ");
+	AddArchive("patch.MPQ");
+	AddArchive("patch-2.MPQ");
+	//AddArchive(std::string("sound.MPQ"));
+	//AddArchive(std::string("speech.MPQ"));
+	AddArchive("terrain.MPQ");
+	AddArchive("texture.MPQ");
+	AddArchive("wmo.MPQ");
 }
 
 CMPQFilesStorage::~CMPQFilesStorage()

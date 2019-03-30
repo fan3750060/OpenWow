@@ -15,7 +15,6 @@ public:
 
 public:
 	std::shared_ptr<const DBC_LiquidTypeRecord> LiquidType;
-	uint16 VertexFormat;
 
 	float MinHeightLevel;
 	float MaxHeightLevel;
@@ -36,7 +35,7 @@ public:
 
 
 	// Render
-	void InitTextures();
+	void InitTextures(DBC_LIQUIDTYPE_Type::List _liquidType);
 
 	std::shared_ptr<LiquidMaterial> m_Material;
 	std::vector<std::shared_ptr<Texture>>    m_Textures;

@@ -74,22 +74,17 @@ void CM2_Builder::Step1Header()
 	//assert1(m_Header.magic == "MD20");
 
 	// 2 Version is ???
-#if (VERSION == VERSION_Vanila)
 	assert1(m_Header.version == 256);
-#elif (VERSION == VERSION_WotLK)
-	assert1(m_Header.version == 264);
-#endif
 
-
-		// 3 Unique name
-		if (m_Header.name.size > 0)
+	// 3 Unique name
+	if (m_Header.name.size > 0)
+	{
+		m_M2->m_UniqueName = "";
+		for (uint32 i = 0; i < m_Header.name.size; i++)
 		{
-			m_M2->m_UniqueName = "";
-			for (uint32 i = 0; i < m_Header.name.size; i++)
-			{
-				m_M2->m_UniqueName += ((char*)(m_F->getData() + m_Header.name.offset))[i];
-			}
+			m_M2->m_UniqueName += ((char*)(m_F->getData() + m_Header.name.offset))[i];
 		}
+	}
 
 	// Bounds
 	m_M2->m_Bounds.set(m_Header.bounding_box.min, m_Header.bounding_box.max, true);
@@ -115,18 +110,6 @@ void CM2_Builder::Step2GlobalLoops()
 		for (uint32 i = 0; i < m_Header.sequences.size; i++)
 		{
 			m_M2->m_Sequences.push_back(Sequences[i]);
-
-			char buf[256];
-			sprintf_s(buf, "%s%04d-%02d.anim", m_M2->m_FileNameWithoutExt.c_str(), Sequences[i].__animID, Sequences[i].variationIndex);
-
-			if (Sequences[i].flags.DataInM2)
-			{
-				animfiles.push_back(nullptr);
-			}
-			else
-			{
-				animfiles.push_back(GetManager<IFilesManager>()->Open(buf));
-			}
 		}
 	}
 
@@ -152,7 +135,7 @@ void CM2_Builder::Step3Bones()
 		m_M2Bones = (SM2_Bone*)(m_F->getData() + m_Header.bones.offset);
 		for (uint32 i = 0; i < m_Header.bones.size; i++)
 		{
-			std::shared_ptr<CM2_Part_Bone> bone = std::make_shared<CM2_Part_Bone>(m_F, m_M2Bones[i], m_GlobalLoops, &animfiles);
+			std::shared_ptr<CM2_Part_Bone> bone = std::make_shared<CM2_Part_Bone>(m_F, m_M2Bones[i], m_GlobalLoops);
 			skeleton->m_Bones.push_back(bone);
 		}
 
@@ -288,18 +271,6 @@ void CM2_Builder::Step5ColorAndTextures()
 			materials->m_ReplacebleLookup.push_back(ReplacebleLookup[i]);
 		}
 	}
-
-	// 3.4 Replaceble textures lookup
-	if (m_Header.global_flags.flag_use_texture_combiner_combos && m_Header.textureCombinerCombos.size > 0)
-	{
-		int16* TexturesCombos = (int16*)(m_F->getData() + m_Header.textureCombinerCombos.offset);
-		for (uint32 i = 0; i < m_Header.textureCombinerCombos.size; i++)
-		{
-			materials->m_TexturesCombos.push_back(TexturesCombos[i]);
-		}
-	}
-
-	//assert1(m_Header.textures.size == m_Header.texturesLookup.size);
 
 	// 4.1 Textures weights
 	if (m_Header.textureWeights.size > 0)
@@ -477,43 +448,26 @@ void CM2_Builder::Step6Misc()
 
 void CM2_Builder::Step8Skins()
 {
-	if (!(m_M2->m_IsContainGeom))
-	{
-		Log::Warn("M2[%s] don't contain geometry. Skins [%d]", m_M2->getFilename().c_str(), m_Header.num_skin_profiles);
-		return;
-	}
+    if (!(m_M2->m_IsContainGeom))
+    {
+        Log::Warn("M2[%s] don't contain geometry. Skins [%d]", m_M2->getFilename().c_str(), m_Header.skin_profiles.size);
+        return;
+    }
 
-#if (VERSION == VERSION_Vanila)
 	assert1(m_Header.skin_profiles.size > 0);
 	if (m_Header.skin_profiles.size > 0)
 	{
 		m_Skins = (SM2_SkinProfile*)(m_F->getData() + m_Header.skin_profiles.offset);
 		for (uint32 i = 0; i < m_Header.skin_profiles.size; i++)
 		{
-			CM2_Skin* skin = new CM2_Skin(m_Skins[i]);
-			CM2_Skin_Builder builder(m_ParentM2, skin, m_F);
+			std::shared_ptr<CM2_Skin> skin = std::make_shared<CM2_Skin>(m_M2);
+
+			CM2_Skin_Builder builder(*this, m_M2, m_Skins[i], skin, m_F);
 			builder.Load();
-			m_ParentM2->m_Skins.push_back(skin);
+
+            m_M2->m_Skins.push_back(skin);
 		}
 	}
-#elif (VERSION == VERSION_WotLK)
-	assert1(m_Header.num_skin_profiles > 0);
-	for (uint32 i = 0; i < 1/*m_Header.num_skin_profiles*/; i++)
-	{
-		char buf[256];
-		sprintf_s(buf, "%s%02d.skin", m_M2->m_FileNameWithoutExt.c_str(), i);
-
-		std::shared_ptr<IFile> skinFile = GetManager<IFilesManager>()->Open(buf);
-		assert1(skinFile != nullptr);
-
-		std::shared_ptr<CM2_Skin> skin = std::make_shared<CM2_Skin>(m_M2);
-
-		CM2_Skin_Builder builder(*this, m_M2, skin, skinFile);
-		builder.Load();
-
-		m_M2->m_Skins.push_back(skin);
-	}
-#endif
 }
 
 void CM2_Builder::Step9Collision()

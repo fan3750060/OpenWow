@@ -212,38 +212,6 @@ bool ADT::Load()
 		}
 	}
 
-	// Liquids
-	if (header.MH20 != 0)
-	{
-		f->seek(startPos + header.MH20);
-		{
-			f->seekRelative(4);
-			uint32_t size;
-			f->readBytes(&size, sizeof(uint32_t));
-			assert1(size > 0);
-
-			const uint8* abuf = f->getDataFromCurrent();
-			for (uint32 i = 0; i < C_ChunksInTile; i++)
-			{
-				for (uint32 j = 0; j < C_ChunksInTile; j++)
-				{
-					MH2O_Header* mh2o_Header = (MH2O_Header*) abuf;
-					if (mh2o_Header->layersCount > 0)
-					{
-						std::shared_ptr<CADT_Liquid> liquid = std::make_shared<CADT_Liquid>(8, 8);
-						liquid->CreateFromTerrainMH2O(f, mh2o_Header);
-
-						// Create instance
-						std::shared_ptr<Liquid_Instance> instance = std::make_shared<Liquid_Instance>(liquid, vec3(GetTranslation().x + j * C_ChunkSize, 0.0f, GetTranslation().z + i * C_ChunkSize));
-						instance->SetParent(weak_from_this());
-						m_LiquidsInstances.push_back(instance);
-					}
-					abuf += sizeof(MH2O_Header);
-				}
-			}
-		}
-	}
-
 	//-- Load Textures -------------------------------------------------------------------
 
 	for (auto& it : m_Textures)

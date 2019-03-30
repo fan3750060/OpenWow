@@ -60,7 +60,7 @@ struct M2_GameBoneType
 class CM2_Part_Bone
 {
 public:
-	CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles);
+	CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, cGlobalLoopSeq global);
 
 	void setParentBone(std::shared_ptr<CM2_Comp_Skeleton> _skeleton);
 	uint16 getSubmesh() const { return submesh; };
@@ -109,7 +109,7 @@ private:
 	bool m_IsCalculated;
 
 	M2_Animated<vec3> trans;
-	M2_Animated<quat, M2CompQuat, Quat16ToQuat32> roll;
+	M2_Animated<quat> roll;
 	M2_Animated<vec3> scale;
 };
 

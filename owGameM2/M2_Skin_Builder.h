@@ -8,27 +8,10 @@
 class CM2_Builder;
 // FORWARD END
 
-/*struct M2_SkinBatch_PriorityPlan_Compare
-{
-	bool operator() (const CM2_Skin_Batch* left, const CM2_Skin_Batch* right) const
-	{
-		return left->getPriorityPlan() < right->getPriorityPlan();
-	}
-};
-
-
-struct M2_SkinBatch_MeshID_Compare
-{
-	bool operator() (const CM2_Skin_Batch* left, const CM2_Skin_Batch* right) const
-	{
-		return left->getSkin().lock()->getProto().meshPartID < right->getSkin().lock()->getProto().meshPartID;
-	}
-};*/
-
 class CM2_Skin_Builder
 {
 public:
-	CM2_Skin_Builder(const CM2_Builder& _m2Builder, std::weak_ptr<M2> _model, std::shared_ptr<CM2_Skin> _skin, std::shared_ptr<IFile> _file);
+	CM2_Skin_Builder(const CM2_Builder& _m2Builder, std::weak_ptr<M2> _model, const SM2_SkinProfile& _skinProto, std::shared_ptr<CM2_Skin> _skin, std::shared_ptr<IFile> _file);
 
 	void Load();
 

@@ -6,7 +6,7 @@
 // General
 #include "M2_Part_Bone.h"
 
-CM2_Part_Bone::CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, cGlobalLoopSeq global, std::vector<std::shared_ptr<IFile>>* animfiles)
+CM2_Part_Bone::CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, cGlobalLoopSeq global)
 {
 	m_GameBoneId = _proto.key_bone_id;
 	m_Flags = _proto.flags;
@@ -14,9 +14,9 @@ CM2_Part_Bone::CM2_Part_Bone(std::shared_ptr<IFile> f, const SM2_Bone& _proto, c
 	m_ParentBoneID = _proto.parent_bone;
 	submesh = _proto.submesh_id;
 
-	trans.init(_proto.translation, f, global, Fix_XZmY, animfiles);
-	roll.init(_proto.rotation, f, global, Fix_XZmYW, animfiles);
-	scale.init(_proto.scale, f, global, Fix_XZY, animfiles);
+	trans.init(_proto.translation, f, global, Fix_XZmY);
+	roll.init(_proto.rotation, f, global, Fix_XZmYW);
+	scale.init(_proto.scale, f, global, Fix_XZY);
 
 	pivot = Fix_XZmY(_proto.pivot);
 }
@@ -42,7 +42,7 @@ void CM2_Part_Bone::calcMatrix(uint16 anim, uint32 time, uint32 globalTime)
 		ParentBone->calcMatrix(anim, time, globalTime);
 	}
 
-	mat4 m;
+	mat4 m(1.0f);
 	if (IsInterpolated(anim))
 	{
 		m = glm::translate(m, pivot);

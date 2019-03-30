@@ -56,7 +56,7 @@
     <ClInclude Include="DBC\DBC_CreatureDisplayInfoExtra.h" />
     <ClInclude Include="DBC\DBC_CreatureModelData.h" />
     <ClInclude Include="DBC\DBC_HelmetGeosetVisData.h" />
-    <ClInclude Include="DBC\DBC_Item.h" />
+    <ClInclude Include="DBC\DBC_Item_WotLK.h" />
     <ClInclude Include="DBC\DBC_ItemBagFamily.h" />
     <ClInclude Include="DBC\DBC_ItemClass.h" />
     <ClInclude Include="DBC\DBC_ItemDisplayInfo.h" />
@@ -67,7 +67,6 @@
     <ClInclude Include="DBC\DBC_LightIntBand.h" />
     <ClInclude Include="DBC\DBC_LightParams.h" />
     <ClInclude Include="DBC\DBC_LightSkyBox.h" />
-    <ClInclude Include="DBC\DBC_LiquidMaterial.h" />
     <ClInclude Include="DBC\DBC_LiquidType.h" />
     <ClInclude Include="DBC\DBC_LoadingScreen.h" />
     <ClInclude Include="DBC\DBC_Map.h" />

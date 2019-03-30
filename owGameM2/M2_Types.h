@@ -16,13 +16,8 @@ struct SM2_Sequence
 	FOREIGN_KEY_ID(uint16, DBC_AnimationData, animID); // Animation id in AnimationData.dbc	
 	uint16		variationIndex;			// Sub-animation id: Which number in a row of animations this one is.
 
-#if (VERSION == VERSION_Vanila)
 	uint32_t start_timestamp;
 	uint32_t end_timestamp;
-#else
-	uint32_t duration;             // The length of this animation sequence in milliseconds.
-#endif
-
 	float		movespeed;				// This is the speed the character moves with in this animation.
 
 	struct Flags
@@ -72,18 +67,8 @@ struct SM2_Bone
 	int16			parent_bone;            // Parent bone ID or -1 if there is none.
 	uint16			submesh_id;				// Mesh part ID OR uDistToParent?
 
-	union 
-	{  
-		struct 
-		{
-			uint16_t uDistToFurthDesc;
-			uint16_t uZRatioOfChain;
-		} CompressData;               // No model has ever had this part of the union used.
-		uint32_t boneNameCRC;         // these are for debugging only. their bone names match those in key bone lookup.
-	};
-
 	M2Track<vec3>       translation;
-	M2Track<M2CompQuat>	rotation;				// compressed values, default is (32767,32767,32767,65535) == (0,0,0,1) == identity
+	M2Track<quat>	    rotation;
 	M2Track<vec3>       scale;
 
 	vec3                pivot;					// The pivot point of that bone.

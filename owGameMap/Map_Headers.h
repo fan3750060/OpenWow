@@ -5,7 +5,6 @@ struct ADT_MHDR
 	struct Flags
 	{
 		uint32 HasMFBO : 1;
-		uint32 IsNortrend : 1;
 	} flags;
 
 	uint32 MCIN;

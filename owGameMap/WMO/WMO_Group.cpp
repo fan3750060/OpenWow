@@ -290,8 +290,8 @@ void WMO_Group::Load()
 				}
 			}
 
-			m_WMOLiqiud = std::make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
-			m_WMOLiqiud->CreateFromWMO(m_F, ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
+			//m_WMOLiqiud = std::make_shared<CWMO_Liquid>(m_LiquidHeader.A, m_LiquidHeader.B);
+			//m_WMOLiqiud->CreateFromWMO(m_F, ParentWMO->m_Materials[m_LiquidHeader.materialID], DBC_LiquidType[liquid_type], m_Header.flags.IS_INDOOR);
 
 		}
 		else

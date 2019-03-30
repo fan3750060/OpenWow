@@ -63,6 +63,7 @@
     <ClInclude Include="CreatePasses.h" />
     <ClInclude Include="M2_AnimatedConverters.h" />
     <ClInclude Include="M2_Animated.h" />
+    <ClInclude Include="M2_Animated_WotLK.h" />
     <ClInclude Include="M2_Animation.h" />
     <ClInclude Include="M2_Animator.h" />
     <ClInclude Include="M2_Comp_Materials.h" />

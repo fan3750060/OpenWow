@@ -38,7 +38,6 @@ DBC_LOAD(DBC_CreatureModelData, "CreatureModelData.dbc")
 
 // Item
 DBC_LOAD(DBC_HelmetGeosetVisData, "HelmetGeosetVisData.dbc")
-DBC_LOAD(DBC_Item, "Item.dbc")
 DBC_LOAD(DBC_ItemBagFamily, "ItemBagFamily.dbc")
 DBC_LOAD(DBC_ItemClass, "ItemClass.dbc")
 DBC_LOAD(DBC_ItemDisplayInfo, "ItemDisplayInfo.dbc")
@@ -53,7 +52,6 @@ DBC_LOAD(DBC_LightParams, "LightParams.dbc")
 DBC_LOAD(DBC_LightSkybox, "LightSkybox.dbc")
 
 // Liquid
-DBC_LOAD(DBC_LiquidMaterial, "LiquidMaterial.dbc")
 DBC_LOAD(DBC_LiquidType, "LiquidType.dbc")
 
 
@@ -95,7 +93,6 @@ void OpenDBs()
 
 	// Item
 	DBC_HelmetGeosetVisData.Open();
-	DBC_Item.Open();
 	DBC_ItemBagFamily.Open();
 	DBC_ItemClass.Open();
 	DBC_ItemDisplayInfo.Open();
@@ -110,6 +107,5 @@ void OpenDBs()
 	DBC_LightSkybox.Open();
 
 	// Liquid
-	DBC_LiquidMaterial.Open();
 	DBC_LiquidType.Open();
 }

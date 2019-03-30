@@ -22,7 +22,7 @@ ADT_MCNK_Material::ADT_MCNK_Material(const std::weak_ptr<ADT> _parentADT) :
     g_pVertexShader->LoadInputLayoutFromReflector();
 
 	Shader::ShaderMacros macros;
-	macros["_IS_NORTREND"] = _parentADT.lock()->header.flags.IsNortrend ? "1" : "0";
+	macros["_IS_NORTREND"] = "0";
 
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
 		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", macros, "PS_main", "latest"

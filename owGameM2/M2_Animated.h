@@ -6,199 +6,155 @@
 /*
 	Generic animated value class:
 
-	T is the data type to animate
-	D is the data type stored in the file (by default this is the same as T)
+	T is the values type to animate
+	D is the values type stored in the file (by default this is the same as T)
 	Conv is a conversion object that defines T conv(D) to convert from D to T (by default this is an identity function)	(there might be a nicer way to do this? meh meh)
 */
 template <class T, class D = T, class Conv = NoConvert<T> >
 class M2_Animated
 {
 public:
-	M2_Animated() :
-		m_Times(nullptr),
-		m_Data(nullptr),
-		m_DataIN(nullptr),
-		m_DataOUT(nullptr)
-	{}
-	~M2_Animated()
-	{
-		if (m_Times != nullptr) delete[] m_Times;
-		if (m_Data != nullptr) delete[] m_Data;
-		if (m_DataIN != nullptr) delete[] m_DataIN;
-		if (m_DataOUT != nullptr) delete[] m_DataOUT;
-	}
-
-	void init(const M2Track<D>& b, std::shared_ptr<IFile> f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix, std::vector<std::shared_ptr<IFile>>* animfiles = nullptr)
+	void init(const M2Track<D>& b, std::shared_ptr<IFile> f, cGlobalLoopSeq _globalSec, T fixfunc(const T&) = NoFix)
 	{
 		m_Type = b.interpolation_type;
-		m_GlobalSeqIndex = b.global_sequence;
+		m_GlobalSecIndex = b.global_sequence;
 		m_GlobalSec = _globalSec;
-		if (m_GlobalSeqIndex != -1)
+
+		// If hasn't index, then use global sec
+		if (m_GlobalSecIndex != -1)
 		{
-			assert1(_globalSec);
+			assert1(m_GlobalSec != nullptr);
 		}
 
-		// Checks
-		assert1(b.timestamps.size == b.values.size);
-		m_Count = b.timestamps.size;
-		if (b.timestamps.size == 0)	return;
+		assert1((b.interpolation_ranges.size > 0) || (m_GlobalSecIndex != -1) || (m_Type == INTERPOLATION_NONE));
 
-		m_Times = new std::vector<uint32>[m_Count];
-		m_Data = new std::vector<T>[m_Count];
-		if (m_Type == INTERPOLATION_HERMITE)
+		// ranges
+		if (b.interpolation_ranges.size > 0)
 		{
-			m_DataIN = new std::vector<T>[m_Count];
-			m_DataOUT = new std::vector<T>[m_Count];
+			uint32* ranges = (uint32*)(f->getData() + b.interpolation_ranges.offset);
+			for (uint32 i = 0; i < b.interpolation_ranges.size; i += 2)
+			{
+				m_Ranges.push_back(std::make_pair(ranges[i], ranges[i + 1]));
+			}
 		}
 
 		// times
-		M2Array<uint32>* pHeadTimes = (M2Array<uint32>*)(f->getData() + b.timestamps.offset);
-		M2Array<D>* pHeadKeys = (M2Array<D>*)(f->getData() + b.values.offset);
-		for (uint32 j = 0; j < m_Count; j++)
+		uint32* times = (uint32*)(f->getData() + b.timestamps.offset);
+		for (uint32 i = 0; i < b.timestamps.size; i++)
 		{
-			uint32* times = nullptr;
-			D* keys = nullptr;
-			if (animfiles != nullptr && animfiles->at(j) != nullptr)
+			m_Times.push_back(times[i]);
+		}
+
+		assert1(b.timestamps.size == b.values.size);
+
+		// keyframes
+		D* values = (D*)(f->getData() + b.values.offset);
+		for (uint32 i = 0; i < b.values.size; i++)
+		{
+			switch (m_Type)
 			{
-				assert3(pHeadTimes[j].offset < animfiles->at(j)->getSize(), std::to_string(pHeadTimes[j].offset).c_str(), std::to_string(animfiles->at(j)->getSize()).c_str());
-				times = (uint32*)(animfiles->at(j)->getData() + pHeadTimes[j].offset);
-
-				assert3(pHeadKeys[j].offset < animfiles->at(j)->getSize(), std::to_string(pHeadKeys[j].offset).c_str(), std::to_string(animfiles->at(j)->getSize()).c_str());
-				keys = (D*)(animfiles->at(j)->getData() + pHeadKeys[j].offset);
-			}
-			else
-			{
-				assert3(pHeadTimes[j].offset < f->getSize(), std::to_string(pHeadTimes[j].offset).c_str(), std::to_string(f->getSize()).c_str());
-				times = (uint32*)(f->getData() + pHeadTimes[j].offset);
-
-				assert3(pHeadKeys[j].offset < f->getSize(), std::to_string(pHeadKeys[j].offset).c_str(), std::to_string(f->getSize()).c_str());
-				keys = (D*)(f->getData() + pHeadKeys[j].offset);
-			}
-
-
-			assert1(times != nullptr);
-			for (uint32 i = 0; i < pHeadTimes[j].size; i++)
-			{
-				m_Times[j].push_back(times[i]);
-			}
-
-			assert1(keys != nullptr);
-			for (uint32 i = 0; i < pHeadKeys[j].size; i++)
-			{
-				switch (m_Type)
-				{
-				case INTERPOLATION_NONE:
-				case INTERPOLATION_LINEAR:
-				{
-					m_Data[j].push_back(fixfunc(Conv::conv(keys[i])));
-				}
+			case INTERPOLATION_LINEAR:
+				m_Values.push_back(fixfunc(Conv::conv(values[i])));
 				break;
 
-				case INTERPOLATION_HERMITE:
-				{
-					m_Data[j].push_back(fixfunc(Conv::conv(keys[i * 3 + 0])));
-					m_DataIN[j].push_back(fixfunc(Conv::conv(keys[i * 3 + 1])));
-					m_DataOUT[j].push_back(fixfunc(Conv::conv(keys[i * 3 + 2])));
-				}
+			case INTERPOLATION_HERMITE:
+				m_Values.push_back(fixfunc(Conv::conv(values[i * 3 + 0])));
+				m_ValuesHermiteIn.push_back(fixfunc(Conv::conv(values[i * 3 + 1])));
+				m_ValuesHermiteOut.push_back(fixfunc(Conv::conv(values[i * 3 + 2])));
 				break;
-				}
 			}
 		}
+
 	}
 
-	bool uses(uint32 anim) const
+	bool uses(uint16 anim) const
 	{
-		if (m_GlobalSeqIndex != -1)
-		{
-			anim = 0;
-		}
-
-		if (m_Count <= anim)
+		if (m_Type == INTERPOLATION_NONE)
 		{
 			return false;
 		}
 
-		return (m_Data[anim].size() > 0);
+		if (m_GlobalSecIndex == -1 && m_Ranges.size() <= anim)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
-	T getValue(uint32 anim, uint32 time, uint32 globalTime) const
+	T getValue(uint16 anim, uint32 time, uint32 globalTime) const
 	{
-		if (m_GlobalSeqIndex != -1)
+		assert1(m_Type != INTERPOLATION_NONE);
+
+        std::pair<uint32, uint32> range = std::make_pair(0, m_Values.size() - 1);
+
+		// obtain a time value and a values range
+		if (m_GlobalSecIndex != -1)
 		{
-			if (m_GlobalSec->at(m_GlobalSeqIndex).timestamp == 0)
+			if (m_GlobalSec->at(m_GlobalSecIndex).timestamp == 0)
 			{
 				time = 0;
 			}
 			else
 			{
-				time = globalTime % m_GlobalSec->at(m_GlobalSeqIndex).timestamp;
+				time = globalTime % m_GlobalSec->at(m_GlobalSecIndex).timestamp;
 			}
-			anim = 0;
+		}
+		else
+		{
+			assert1(time >= m_Times[0] && time < m_Times[m_Times.size() - 1]);
+			range = m_Ranges[anim];
 		}
 
-		// TODO: Delete me
-		if (anim >= m_Count)
+
+
+		// If simple frame
+		if (range.first == range.second)
 		{
-			return T();
+			return m_Values[range.first];
 		}
 
-		const std::vector<uint32>& pTimes = m_Times[anim];
-		const std::vector<T>& pData = m_Data[anim];
-
-		if ((m_Count > anim) && (pData.size() > 1) && (pTimes.size() > 1))
+		// Get pos by time
+		uint32 pos = UINT32_MAX;
+		for (uint32 i = range.first; i < range.second; i++)
 		{
-			int max_time = pTimes.at(pTimes.size() - 1);
-			if (max_time > 0)
+			if (time >= m_Times[i] && time < m_Times[i + 1])
 			{
-				time %= max_time; // I think this might not be necessary?
-			}
-
-			uint32 pos = 0;
-			for (uint32 i = 0; i < pTimes.size() - 1; i++)
-			{
-				if (time >= pTimes.at(i) && time < pTimes.at(i + 1))
-				{
-					pos = i;
-					break;
-				}
-			}
-
-			uint32 t1 = pTimes.at(pos);
-			uint32 t2 = pTimes.at(pos + 1);
-			float r = (time - t1) / (float)(t2 - t1);
-
-			switch (m_Type)
-			{
-			case INTERPOLATION_NONE:
-				return pData.at(pos);
-				break;
-
-			case INTERPOLATION_LINEAR:
-				return interpolate<T>(r, pData.at(pos), pData.at(pos + 1));
-				break;
-
-			case INTERPOLATION_HERMITE:
-				return interpolateHermite<T>(r, pData.at(pos), pData.at(pos + 1), m_DataIN[anim].at(pos), m_DataOUT[anim].at(pos));
+				pos = i;
 				break;
 			}
 		}
-		else if (!(pData.empty()))
+		assert1(pos != UINT32_MAX);
+
+		uint32 t1 = m_Times[pos];
+		uint32 t2 = m_Times[pos + 1];
+		assert1(t2 > t1);
+		assert1(time >= t1 && time < t2);
+		float r = (float)(time - t1) / (float)(t2 - t1);
+
+		switch (m_Type)
 		{
-			return pData.at(0);
+		case INTERPOLATION_LINEAR:
+			return interpolate<T>(r, m_Values[pos], m_Values[pos + 1]);
+			break;
+
+		case INTERPOLATION_HERMITE:
+			return interpolateHermite<T>(r, m_Values[pos], m_Values[pos + 1], m_ValuesHermiteIn[pos], m_ValuesHermiteOut[pos]);
+			break;
 		}
 
-		return T();
+		return m_Values[0];
 	}
 
 private:
-	Interpolations	m_Type;
-	int32			m_GlobalSeqIndex;
-	cGlobalLoopSeq	m_GlobalSec;
+	Interpolations				m_Type;
+	int16						m_GlobalSecIndex;
+	cGlobalLoopSeq				m_GlobalSec;
 
-	uint32			m_Count;
+	std::vector<std::pair<uint32, uint32>>m_Ranges;
+    std::vector<int32>				m_Times;
 
-	std::vector<uint32>*	m_Times;
-	std::vector<T>*			m_Data;
-	std::vector<T>*			m_DataIN;
-	std::vector<T>*			m_DataOUT;
+    std::vector<T>					m_Values;
+    std::vector<T>					m_ValuesHermiteIn;
+    std::vector<T>					m_ValuesHermiteOut;
 };

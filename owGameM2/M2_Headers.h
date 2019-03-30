@@ -24,6 +24,8 @@ struct SM2_Header
     // Sequences
     M2Array<SM2_Sequence>			sequences;						// Information about the animations in the model.
     M2Array<int16>					sequencesLookup;				// Mapping of sequence IDs to the entries in the Animation sequences block.
+    M2Array<int16>					playable_animation_lookup;
+
 
     // Bones
     M2Array<SM2_Bone>				bones;                           // MAX_BONES = 0x100
@@ -33,12 +35,13 @@ struct SM2_Header
     M2Array<SM2_Vertex>				vertices;
 
 	// Skin
-	uint32_t						num_skin_profiles; 
+    M2Array<SM2_SkinSection> skin_profiles;
 
     // Materials
     M2Array<SM2_Color>				colors;							// Color and alpha animations definitions.
     M2Array<SM2_Texture>			textures;
     M2Array<SM2_TextureWeight>		textureWeights;
+    M2Array<void>                   unknown;
 	M2Array<SM2_TextureTransform>	textureTransforms;
 
     M2Array<uint16>					replacable_texture_lookup;		// ???
@@ -78,11 +81,6 @@ struct SM2_Header
     // Emitters and particles
     M2Array<SM2_RibbonEmitter>		ribbon_emitters;
     M2Array<SM2_Particle>			particle_emitters;
-
-#if VERSION >= VERSION_WotLK
-	M2Array<uint16>					textureCombinerCombos;
-#endif
-
 };
 
 #include __PACK_END

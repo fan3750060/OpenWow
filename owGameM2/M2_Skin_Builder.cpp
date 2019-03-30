@@ -9,11 +9,12 @@
 // Additional
 #include "ShaderResolver.h"
 
-CM2_Skin_Builder::CM2_Skin_Builder(const CM2_Builder& _m2Builder, std::weak_ptr<M2> _model, std::shared_ptr<CM2_Skin> _skin, std::shared_ptr<IFile> _file) :
-	m_M2Builder(_m2Builder),
-	m_ParentM2(_model),
-	m_Skin(_skin),
-	m_F(_file)
+CM2_Skin_Builder::CM2_Skin_Builder(const CM2_Builder& _m2Builder, std::weak_ptr<M2> _model, const SM2_SkinProfile& _skinProto, std::shared_ptr<CM2_Skin> _skin, std::shared_ptr<IFile> _file)
+	: m_M2Builder(_m2Builder)
+	, m_ParentM2(_model)
+    , m_SkinProfile(_skinProto)
+    , m_Skin(_skin)
+    , m_F(_file)
 {}
 
 void CM2_Skin_Builder::Load()
@@ -30,7 +31,7 @@ void CM2_Skin_Builder::Step1LoadProfile()
 	std::shared_ptr<CM2_Skin> Skin = m_Skin.lock();
 	assert1(Skin != nullptr);
 
-	F->readBytes(&m_SkinProfile, sizeof(SM2_SkinProfile));
+	//F->readBytes(&m_SkinProfile, sizeof(SM2_SkinProfile));
 
 	// Skin data
 	uint16*				t_verticesIndexes	= (uint16*)				(F->getData() + m_SkinProfile.vertices.offset);
@@ -97,7 +98,8 @@ void CM2_Skin_Builder::Step2InitBatches()
 		std::shared_ptr<CM2_Skin_Batch> batch = std::make_shared<CM2_Skin_Batch>(m_ParentM2, skinSection->getMesh());
 
 		//Log::Green("Shader = %d", it.shader_id);
-		batch->newShader = GetPixel(it);
+        batch->newShader = it.shader_id;
+		//batch->newShader = GetPixel(it);
 
 		// Geometry data
 		batch->m_PriorityPlan = it.priorityPlane;

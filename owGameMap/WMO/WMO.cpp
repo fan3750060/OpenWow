@@ -254,7 +254,7 @@ bool WMO::Load()
 	{
 		it->Load();
 
-		assert1(it->m_Header.flags.IS_OUTDOOR != it->m_Header.flags.IS_INDOOR);
+		//assert1(it->m_Header.flags.IS_OUTDOOR != it->m_Header.flags.IS_INDOOR);
 
 		// Add outdoor group
 		if (it->m_Header.flags.IS_OUTDOOR)

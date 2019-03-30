@@ -80,7 +80,6 @@ public:
 	//--
 	std::vector<int16_t>						m_TexturesUnitLookup;
 	std::vector<int16_t>						m_ReplacebleLookup;    // index is TextureType, value is texture number
-	std::vector<int16_t>						m_TexturesCombos;
 	//--
 	std::vector<std::shared_ptr<CM2_Part_TextureWeight>>		m_TextureWeights;
 	std::vector<int16_t>						m_TextureWeightsLookup;

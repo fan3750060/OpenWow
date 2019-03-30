@@ -17,6 +17,8 @@ struct ADT_MODF
 	uint16 scale;			// Legion+
 };
 
+#include "WMO\\WMO_Base_Instance.h"
+
 class ADT_WMO_Instance : public CWMO_Base_Instance
 {
 public:

@@ -3,6 +3,9 @@
 // General
 #include "ADT_WMO_Instance.h"
 
+// Additional
+#include "WMO\\WMO_Pass.h"
+
 ADT_WMO_Instance::ADT_WMO_Instance(std::string _wmoName, ADT_MODF& _placementInfo) :
 	CWMO_Base_Instance(_wmoName)
 {

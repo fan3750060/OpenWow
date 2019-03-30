@@ -8,7 +8,7 @@
 #include "..\\DBC_GroundEffectTexture.h"
 #include "..\\DBC_LoadingScreen.h"
 #include "..\\DBC_Material.h"
-#include "..\\DBC_Map_WotLK.h"
+#include "..\\DBC_Map.h"
 #include "..\\DBC_TerrainType.h"
 #include "..\\DBC_WMOAreaTable.h"
 #include "..\\DBC_WorldSafeLocs.h"
@@ -37,7 +37,9 @@
 
 // Item
 #include "..\\DBC_HelmetGeosetVisData.h"
+//#if VERSION == VERSION_WotLK
 #include "..\\DBC_Item.h"
+//#endif
 #include "..\\DBC_ItemBagFamily.h"
 #include "..\\DBC_ItemClass.h"
 #include "..\\DBC_ItemDisplayInfo.h"
@@ -52,7 +54,6 @@
 #include "..\\DBC_LightSkyBox.h"
 
 // Liquid
-#include "..\\DBC_LiquidMaterial.h"
 #include "..\\DBC_LiquidType.h"
 
 

@@ -36,7 +36,6 @@ private:
 
 	// Global loop, animation and bones
 	cGlobalLoopSeq			m_GlobalLoops;
-	std::vector<std::shared_ptr<IFile>>			animfiles;
 
 	// Bones
 	SM2_Bone*				m_M2Bones;

@@ -18,13 +18,8 @@ CM2_Animation::CM2_Animation(const std::weak_ptr<const M2> _m2, uint16 _animID, 
 		m_Next = new CM2_Animation(_m2, _animID, (_name + "" + std::to_string(nextIndex)), nextIndex, _m2.lock()->m_Sequences[nextIndex]);
 	}
 
-#if (VERSION == VERSION_Vanila)
 	m_StartTimeStamp = _sequence.start_timestamp;
 	m_EndTimeStamp = _sequence.end_timestamp;
-#else
-	m_StartTimeStamp = 0;
-	m_EndTimeStamp = _sequence.duration;
-#endif
 }
 
 CM2_Animation::~CM2_Animation()

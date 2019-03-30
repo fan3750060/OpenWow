@@ -42,14 +42,35 @@ bool Liquid_Layer::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<Con
 	return MeshWrapper::Render(renderEventArgs, perObject, indexStartLocation, indexCnt, vertexStartLocation, vertexCnt);
 }
 
-void Liquid_Layer::InitTextures()
+void Liquid_Layer::InitTextures(DBC_LIQUIDTYPE_Type::List _liquidType)
 {
-	std::string baseName = LiquidType->Get_Texture(0);
+    std::string baseName;
+
+    if (_liquidType == DBC_LIQUIDTYPE_Type::water)
+    {
+        baseName = "XTextures\\river\\lake_a";
+    }
+    else if (_liquidType == DBC_LIQUIDTYPE_Type::ocean)
+    {
+        baseName = "XTextures\\ocean\\ocean";
+    }
+    else if (_liquidType == DBC_LIQUIDTYPE_Type::magma)
+    {
+        baseName = "XTextures\\lava\\lava";
+    }
+    else if (_liquidType == DBC_LIQUIDTYPE_Type::slime)
+    {
+        baseName = "XTextures\\slime\\slime";
+    }
+    else
+    {
+        fail1();
+    }
 
 	char buf[256];
 	for (int i = 1; i <= 30; i++)
 	{
-		sprintf_s(buf, baseName.c_str(), i);
+        sprintf(buf, "%s.%d.blp", baseName.c_str(), i);
 		std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(buf);
 		m_Textures.push_back(texture);
 	}

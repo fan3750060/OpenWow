@@ -197,9 +197,6 @@
     <ClInclude Include="M2_SkinSection.h">
       <Filter>Skins</Filter>
     </ClInclude>
-    <ClInclude Include="M2_Animated.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="M2_Comp_Skeleton.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -256,6 +253,12 @@
     </ClInclude>
     <ClInclude Include="ParticleEmitter_Sphere.h">
       <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Animated_WotLK.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Animated.h">
+      <Filter>Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

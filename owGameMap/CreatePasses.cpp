@@ -7,7 +7,7 @@
 #include "Sky_Pass.h"
 #include "ADT_MCNK_Pass.h"
 #include "WDL_Node_Pass.h"
-#include "WMO_Pass.h"
+#include "WMO\\WMO_Pass.h"
 
 void AddSkyPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
 {
