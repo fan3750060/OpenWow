@@ -44,7 +44,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 	vec3 lowres[17][17];
 	vec3 lowsub[16][16];
 
-	for (uint8 j = 0; j < C_TilesInMap; j++)
+	/*for (uint8 j = 0; j < C_TilesInMap; j++)
 	{
 		for (uint8 i = 0; i < C_TilesInMap; i++)
 		{
@@ -104,7 +104,7 @@ void WDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 				m_LowResilutionTiles.push_back(lowResTile);
 			}
 		}
-	}
+	}*/
 
 	// Load low-resolution WMOs
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
@@ -119,8 +119,8 @@ void WDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 
 void WDL::UpdateCamera(const Camera * camera)
 {
-	if (m_LowResilutionTileMaterial)
-		m_LowResilutionTileMaterial->SetDiffuseColor(vec4(GetManager<ISkyManager>()->GetColor(LightColors::LIGHT_COLOR_FOG), 1.0f));
+	//if (m_LowResilutionTileMaterial)
+	//	m_LowResilutionTileMaterial->SetDiffuseColor(vec4(GetManager<ISkyManager>()->GetColor(LightColors::LIGHT_COLOR_FOG), 1.0f));
 }
 
 void WDL::Load()

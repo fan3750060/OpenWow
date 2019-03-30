@@ -37,11 +37,10 @@ int main(int argumentCount, char* arguments[])
 		std::shared_ptr<IFilesStorage> mpqFileStorage = std::make_shared<CMPQFilesStorage>("D:\\_games\\World of Warcraft 3.3.5a\\Data\\", IFilesStorageEx::PRIOR_HIGH);
 		filesManager->RegisterFilesStorage(mpqFileStorage);
 
-        std::shared_ptr<IFilesStorage> libraryFileStorage = std::make_shared<CLibraryResourceFileStotage>(GetModuleHandle(NULL));
+
+        HMODULE hModule = GetModuleHandle(NULL);
+        std::shared_ptr<IFilesStorage> libraryFileStorage = std::make_shared<CLibraryResourceFileStotage>(hModule);
         filesManager->RegisterFilesStorage(libraryFileStorage);
-
-        GetManager<IFilesManager>()->Open("IDR_SHADER_UI_Button");
-
 
 		OpenDBs();
 

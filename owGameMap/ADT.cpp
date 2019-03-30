@@ -274,7 +274,7 @@ bool ADT::Load()
 
 	//-- WMOs --------------------------------------------------------------------------
 
-	/*for (auto& it : m_WMOsPlacementInfo)
+	for (auto& it : m_WMOsPlacementInfo)
 	{
 		std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(m_WMOsNames[it.nameIndex], it);
 		inst->SetParent(shared_from_this());
@@ -285,10 +285,10 @@ bool ADT::Load()
 		//BoundingBox bbox = GetBounds();
 		//bbox.makeUnion(inst->GetBounds());
 		//SetBounds(bbox);
-	}*/
+	}
 
 	//-- MDXs -------------------------------------------------------------------------
-	/*for (auto& it : m_MDXsPlacementInfo)
+	for (auto& it : m_MDXsPlacementInfo)
 	{
 		std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(m_MDXsNames[it.nameIndex], it);
 		inst->SetParent(shared_from_this());
@@ -299,7 +299,7 @@ bool ADT::Load()
 		//BoundingBox bbox = GetBounds();
 		//bbox.makeUnion(inst->GetBounds());
 		//SetBounds(bbox);
-	}*/
+	}
 	//---------------------------------------------------------------------------------
 
 	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);

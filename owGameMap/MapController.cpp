@@ -64,9 +64,9 @@ void MapController::MapLoad()
 	DelManager<ISkyManager>();
 	m_SkyManager.reset();
 
-	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNodeModel3D>(shared_from_this()), m_DBC_Map);
-	m_SkyManager->SetParent(weak_from_this());
-	AddManager<ISkyManager>(m_SkyManager);
+	//m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNodeModel3D>(shared_from_this()), m_DBC_Map);
+	//m_SkyManager->SetParent(weak_from_this());
+	//AddManager<ISkyManager>(m_SkyManager);
 
 	m_EnvironmentManager.reset();
 	m_EnvironmentManager = std::make_shared<EnvironmentManager>();

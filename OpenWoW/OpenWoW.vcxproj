@@ -56,9 +56,6 @@
     <ProjectReference Include="..\owGameSocket\owGameSocket.vcxproj">
       <Project>{8810fe3d-3a00-4a79-9370-69612befe04e}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\owGameWMO\owGameWMO.vcxproj">
-      <Project>{de443032-d503-4633-9552-2e4097c96715}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\owGame\owGame.vcxproj">
       <Project>{b55ba550-e3b6-4756-ae79-6a5c7d28aeff}</Project>
     </ProjectReference>
@@ -150,7 +147,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\bin_x64\$(Configuration)\;..\Externals\freetype\lib\$(PlatformName);..\Externals\OpenSSL\lib\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VC\libssl64MDd.lib;VC\libcrypto64MD.lib;VC\libcrypto64MDd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>VC\libssl64MDd.lib;VC\libcrypto64MD.lib;VC\libcrypto64MDd.lib;znEngine.res;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -170,7 +167,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\bin_x86\$(Configuration)\;..\Externals\freetype\lib\$(PlatformName);..\Externals\OpenSSL\lib\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VC\libssl32MDd.lib;VC\libcrypto32MD.lib;VC\libcrypto32MDd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>VC\libssl32MDd.lib;VC\libcrypto32MD.lib;VC\libcrypto32MDd.lib;znEngine.res;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -195,7 +192,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\bin_x64\$(Configuration)\;..\Externals\freetype\lib\$(PlatformName);..\Externals\OpenSSL\lib\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VC\libssl64MD.lib;VC\libcrypto64MD.lib;VC\libcrypto64MDd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>VC\libssl64MD.lib;VC\libcrypto64MD.lib;VC\libcrypto64MDd.lib;znEngine.res;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -220,7 +217,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\bin_x86\$(Configuration)\;..\Externals\freetype\lib\$(PlatformName);..\Externals\OpenSSL\lib\$(PlatformName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>VC\libssl32MD.lib;VC\libcrypto32MD.lib;VC\libcrypto32MDd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>VC\libssl32MD.lib;VC\libcrypto32MD.lib;VC\libcrypto32MDd.lib;znEngine.res;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

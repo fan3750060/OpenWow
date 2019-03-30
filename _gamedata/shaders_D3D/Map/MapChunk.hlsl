@@ -1,4 +1,4 @@
-#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
+#include "IDB_SHADER_COMMON_TYPES"
 
 #ifndef _IS_NORTREND
 #pragma message( "_IS_NORTREND undefined. Default to 0.")

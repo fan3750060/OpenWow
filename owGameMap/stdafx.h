@@ -7,7 +7,6 @@
 
 #include <owGame.h>
 #include <owGameM2.h>
-#include <owGameWMO.h>
 
 #include "common.h"
 

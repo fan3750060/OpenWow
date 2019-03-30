@@ -1,5 +1,5 @@
-#include "..\\_gamedata\\shaders_D3D\\Liquid\\Liquid_Material.h"
-#include "..\\_gamedata\\shaders_D3D\\CommonTypes.h"
+#include "shaders_D3D\\Liquid\\Liquid_Material.h"
+#include "IDB_SHADER_COMMON_TYPES"
 
 struct VertexShaderInput
 {
