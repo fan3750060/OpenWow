@@ -9,6 +9,20 @@
 class CWoWClient;
 // FORWARD END
 
+
+struct ServerPktHeader
+{
+    uint16 size;
+    uint16 cmd;
+};
+
+struct ClientPktHeader
+{
+    uint16 size;
+    uint32 cmd;
+};
+
+
 class CWorldSocket : public TcpSocket
 {
 	typedef bool (CWorldSocket::* HandlerFunc)(CByteBuffer&);

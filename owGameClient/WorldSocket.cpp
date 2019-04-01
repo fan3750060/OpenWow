@@ -83,7 +83,7 @@ void CWorldSocket::SendData(const uint8* _data, uint32 _count)
 
     m_WoWCryptoUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
 
-	//socketBase->SendData(data2, _count);
+    SendBuf(reinterpret_cast<const char*>(data2), _count);
 }
 
 void CWorldSocket::OnConnect()
@@ -149,7 +149,7 @@ void CWorldSocket::OnDataReceive(CByteBuffer _buf)
 		{
 			sizeCorrection = 3;
             m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
-			packetSize = (/*((data[0] & 0x7F) << 16) |*/ (data[1] << 8) | data[2]);
+			packetSize = (((data[0] & 0x7F) << 16) | (data[1] << 8) | data[2]);
 			command = ((data[4] << 8) | data[3]);
 		}
 		else
@@ -175,7 +175,8 @@ void CWorldSocket::OnDataReceive(CByteBuffer _buf)
 		assert1(command < Opcodes::COUNT);
 		Log::Info("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[command].c_str(), command, packetSize - sizeCorrection);
 
-		_buf.seekRelative(sizeCorrection + sizeof(Opcodes));
+        // Seek to data
+		_buf.seekRelative(sizeCorrection + sizeof(uint16));
 
 		Packet1(command, packetSize - sizeCorrection);
 		Packet2(_buf);
@@ -265,51 +266,57 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 	bb << (uint32)WoWClient->getClientBuild();
 	bb.WriteDummy(4);
 	bb << upperUsername;
-	bb.WriteDummy(4);
 	bb.Append(ourSeed.AsByteArray(4).get(), 4);
-	bb.WriteDummy(20);
 	bb.Append(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
-	bb.WriteDummy(4);
 	SendData(CMSG_AUTH_SESSION, bb);
 
 	// Start encription from here
-    m_WoWCryptoUtils.Init(WoWClient->getKey());
+    m_WoWCryptoUtils.SetKey(WoWClient->getKey()->AsByteArray().get(), 40);
+    m_WoWCryptoUtils.Init();
 }
 
 void CWorldSocket::S_AuthResponse(CByteBuffer& _buff)
 {
 	enum CommandDetail : uint8
 	{
-		AuthSuccess = 0x0C,
-		AuthQueue,
-		AuthFailure
+        AUTH_OK = 0x0C,
+        AUTH_FAILED = 0x0D,
+        AUTH_REJECT = 0x0E,
+        AUTH_BAD_SERVER_PROOF = 0x0F,
+        AUTH_UNAVAILABLE = 0x10,
+        AUTH_SYSTEM_ERROR = 0x11,
+        AUTH_BILLING_ERROR = 0x12,
+        AUTH_BILLING_EXPIRED = 0x13,
+        AUTH_VERSION_MISMATCH = 0x14,
+        AUTH_UNKNOWN_ACCOUNT = 0x15,
+        AUTH_INCORRECT_PASSWORD = 0x16,
+        AUTH_SESSION_EXPIRED = 0x17,
+        AUTH_SERVER_SHUTTING_DOWN = 0x18,
+        AUTH_ALREADY_LOGGING_IN = 0x19,
+        AUTH_LOGIN_SERVER_NOT_FOUND = 0x1A,
+        AUTH_WAIT_QUEUE = 0x1B,
+        AUTH_BANNED = 0x1C,
+        AUTH_ALREADY_ONLINE = 0x1D,
+        AUTH_NO_TIME = 0x1E,
+        AUTH_DB_BUSY = 0x1F,
+        AUTH_SUSPENDED = 0x20,
+        AUTH_PARENTAL_CONTROL = 0x21,
+        AUTH_LOCKED_ENFORCED = 0x02, /// Unsure
 	};
 
 	CommandDetail detail;
 	_buff.readBytes(&detail, sizeof(uint8));
 
-	uint32 billingTimeRemaining;
-	_buff.readBytes(&billingTimeRemaining, 4);
-
-	uint8 billingFlags;
-	_buff.readBytes(&billingFlags, 1);
-
-	uint32 billingTimeRested;
-	_buff.readBytes(&billingTimeRested, 4);
-
-	uint8 expansion;
-	_buff.readBytes(&expansion, 1);
-
-	if (detail == CommandDetail::AuthSuccess)
+	if (detail == CommandDetail::AUTH_OK)
 	{
 		SendData(CMSG_CHAR_ENUM);
 		Log::Green("Succes access to server!!!");
 	}
-	else if (detail == CommandDetail::AuthQueue)
+	else if (detail == CommandDetail::AUTH_WAIT_QUEUE)
 	{
 		Log::Warn("You in queue!");
 	}
-	else if (detail == CommandDetail::AuthFailure)
+	else if (detail == CommandDetail::AUTH_FAILED)
 	{
 		Log::Warn("Auth failed");
 	}

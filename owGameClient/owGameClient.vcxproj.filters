@@ -4,17 +4,17 @@
     <Filter Include="Common">
       <UniqueIdentifier>{d0033b79-fd0f-4221-80fa-9a9bedd64d33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Authentification">
-      <UniqueIdentifier>{3364f293-36ca-480a-bc97-c5ec3f68631a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Authentification\Handlers">
-      <UniqueIdentifier>{d2347f52-2bb8-47c4-8e22-3725e0a2f6e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="World">
       <UniqueIdentifier>{c8ec6c2e-39ff-48cf-91ec-6dd4d91d9bd6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Cryptography">
       <UniqueIdentifier>{560d99ba-dcb4-4aea-8a54-c7be6f006bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Auth">
+      <UniqueIdentifier>{3364f293-36ca-480a-bc97-c5ec3f68631a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Auth\Handlers">
+      <UniqueIdentifier>{d2347f52-2bb8-47c4-8e22-3725e0a2f6e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,15 +22,12 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="AuthSocket.cpp">
-      <Filter>Authentification</Filter>
+      <Filter>Auth</Filter>
     </ClCompile>
     <ClCompile Include="WorldSocket.cpp">
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="Opcodes.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="AuthCrypt.cpp">
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="RealmInfo.cpp" />
@@ -53,6 +50,9 @@
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="AuthCrypt.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -62,30 +62,27 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="AuthCodes.h">
-      <Filter>Authentification</Filter>
+      <Filter>Auth</Filter>
     </ClInclude>
     <ClInclude Include="AuthSocket.h">
-      <Filter>Authentification</Filter>
+      <Filter>Auth</Filter>
     </ClInclude>
     <ClInclude Include="WorldSocket.h">
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="AuthProof_C.h">
-      <Filter>Authentification\Handlers</Filter>
+      <Filter>Auth\Handlers</Filter>
     </ClInclude>
     <ClInclude Include="AuthProof_S.h">
-      <Filter>Authentification\Handlers</Filter>
+      <Filter>Auth\Handlers</Filter>
     </ClInclude>
     <ClInclude Include="AuthChallenge_S.h">
-      <Filter>Authentification\Handlers</Filter>
+      <Filter>Auth\Handlers</Filter>
     </ClInclude>
     <ClInclude Include="AuthChallenge_C.h">
-      <Filter>Authentification\Handlers</Filter>
+      <Filter>Auth\Handlers</Filter>
     </ClInclude>
     <ClInclude Include="Opcodes.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthCrypt.h">
       <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="RealmInfo.h" />
@@ -113,6 +110,9 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="..\shared\owGameClient.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthCrypt.h">
+      <Filter>World</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

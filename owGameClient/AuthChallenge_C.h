@@ -2,9 +2,9 @@
 
 struct AuthChallenge_C : public ISendable
 {
-	AuthChallenge_C(std::string _username, uint32 _ip) 
-        : username(_username)
-        , ip(_ip)
+	AuthChallenge_C(std::string Login, uint32 IPv4) 
+        : Login(Login)
+        , IPv4(IPv4)
 	{}
 
 	void Send(TcpSocket* _socket) override
@@ -12,7 +12,7 @@ struct AuthChallenge_C : public ISendable
 		CByteBuffer bb;
 		bb << (uint8)AUTH_LOGON_CHALLENGE;
 		bb << (uint8)6;
-		bb << (uint8)(username.size() + 30);
+		bb << (uint8)(Login.size() + 30);
 		bb << (uint8)0;
 
 		bb.Append(gamename, 4);
@@ -24,9 +24,9 @@ struct AuthChallenge_C : public ISendable
 		bb.Append((const uint8*)"niW", 4);   // Win
 		bb.Append((const uint8*)"URur", 4);  // ruRU
 		bb << (uint32)180;
-		bb << ip;
-		bb << (uint8)username.size();
-		bb.Write(username);
+		bb << IPv4;
+		bb << (uint8)Login.size();
+		bb.Write(Login);
 
         _socket->SendBuf(reinterpret_cast<const char*>(bb.getData()), bb.getSize());
 	}
@@ -38,6 +38,6 @@ struct AuthChallenge_C : public ISendable
     const uint8   version2 = 12;
     const uint8   version3 = 1;
 	const uint16  build = 5875;
-	uint32  ip;
-	std::string	username;
+	uint32  IPv4;
+	std::string	Login;
 };

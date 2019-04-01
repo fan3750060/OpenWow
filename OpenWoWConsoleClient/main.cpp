@@ -60,8 +60,8 @@ int main(int argumentCount, char* arguments[])
 	std::shared_ptr<IFilesStorage> localFilesGamedata = std::make_shared<CLocalFilesStorage>("D:\\_programming\\OpenWow\\_gamedata\\");
 	filesManager->RegisterFilesStorage(localFilesGamedata);
 
-    authWorldController = std::make_shared<CWoWClient>();
-    authWorldController->StartAuth();
+    authWorldController = std::make_shared<CWoWClient>("192.168.1.50", 3724);
+    authWorldController->BeginConnect("admin", "admin");
 
     //authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, std::bind(&S_CharEnum, std::placeholders::_1));
 

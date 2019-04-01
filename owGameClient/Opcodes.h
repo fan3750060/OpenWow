@@ -19,7 +19,7 @@
 #ifndef _OPCODES_H
 #define _OPCODES_H
 
-enum Opcodes
+enum Opcodes : uint16
 {
     MSG_NULL_ACTION = 0x000,
     CMSG_BOOTME = 0x001,

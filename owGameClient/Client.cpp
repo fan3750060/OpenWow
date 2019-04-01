@@ -3,19 +3,21 @@
 // General
 #include "Client.h"
 
-CWoWClient::CWoWClient()
+CWoWClient::CWoWClient(const std::string& AuthServerHost, uint16 AuthServerPort)
 {
-	m_Host = "192.168.1.50";
-	m_Port = 3724;
-	m_Username = "admin";
-	m_Password = "admin";
+	m_Host = AuthServerHost;
+	m_Port = AuthServerPort;
+
 
     m_SocketsHandler = std::make_shared<SocketHandler>();
     m_SocketsHandler->RegStdLog(&m_SocketLog);  	
 }
 
-void CWoWClient::StartAuth()
+void CWoWClient::BeginConnect(const std::string& Username, const std::string& Password)
 {
+    m_Username = Username;
+    m_Password = Password;
+
     m_AuthSocket = std::make_shared<CAuthSocket>(*m_SocketsHandler, shared_from_this());
     m_AuthSocket->Open(getHost(), getPort());
 
