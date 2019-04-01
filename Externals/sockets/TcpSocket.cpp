@@ -102,9 +102,6 @@ TcpSocket::TcpSocket(ISocketHandler& h) : StreamSocket(h)
 , m_ssl(NULL)
 , m_sbio(NULL)
 #endif
-#ifdef ENABLE_SOCKS4
-, m_socks4_state(0)
-#endif
 #ifdef ENABLE_RESOLVER
 , m_resolver_id(0)
 #endif
@@ -141,9 +138,6 @@ TcpSocket::TcpSocket(ISocketHandler& h, size_t isize, size_t osize) : StreamSock
 , m_ssl_ctx(NULL)
 , m_ssl(NULL)
 , m_sbio(NULL)
-#endif
-#ifdef ENABLE_SOCKS4
-, m_socks4_state(0)
 #endif
 #ifdef ENABLE_RESOLVER
 , m_resolver_id(0)
@@ -222,9 +216,6 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
         return false;
     }
     SetConnecting(false);
-#ifdef ENABLE_SOCKS4
-    SetSocks4(false);
-#endif
     // check for pooling
 #ifdef ENABLE_POOL
     if (Handler().PoolEnabled())
@@ -264,22 +255,6 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
     {
         bind(s, bind_ad, bind_ad);
     }
-#ifdef ENABLE_SOCKS4
-    if (!skip_socks && GetSocks4Host() && GetSocks4Port())
-    {
-        Ipv4Address sa(GetSocks4Host(), GetSocks4Port());
-        {
-            std::string sockshost;
-            Utility::l2ip(GetSocks4Host(), sockshost);
-            Handler().LogError(this, "Open", 0, "Connecting to socks4 server @ " + sockshost + ":" +
-                Utility::l2string(GetSocks4Port()), LOG_LEVEL_INFO);
-        }
-        SetSocks4();
-        n = connect(s, sa, sa);
-        SetRemoteAddress(sa);
-    }
-    else
-#endif
     {
         n = connect(s, ad, ad);
         SetRemoteAddress(ad);
@@ -297,14 +272,6 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
             SetConnecting(true); // this flag will control fd_set's
         }
         else
-#ifdef ENABLE_SOCKS4
-            if (Socks4() && Handler().Socks4TryDirect()) // retry
-            {
-                closesocket(s);
-                return Open(ad, true);
-            }
-            else
-#endif
 #ifdef ENABLE_RECONNECT
                 if (Reconnect())
                 {
@@ -646,17 +613,6 @@ void TcpSocket::OnRead(char *buf, size_t n)
     {
         return;
     }
-    // further processing: socks4
-#ifdef ENABLE_SOCKS4
-    if (Socks4())
-    {
-        bool need_more = false;
-        while (GetInputLength() && !need_more && !CloseAndDelete())
-        {
-            need_more = OnSocks4Read();
-        }
-    }
-#endif
 }
 
 
@@ -683,14 +639,6 @@ void TcpSocket::OnWrite()
         Handler().ISocketHandler_Mod(this, false, false); // no more monitoring because connection failed
 
         // failed
-#ifdef ENABLE_SOCKS4
-        if (Socks4())
-        {
-            // %! leave 'Connecting' flag set?
-            OnSocks4ConnectFailed();
-            return;
-        }
-#endif
         if (GetConnectionRetry() == -1 ||
             (GetConnectionRetry() && GetConnectionRetries() < GetConnectionRetry()))
         {
@@ -949,121 +897,6 @@ TcpSocket::TcpSocket(const TcpSocket& s)
 }
 #ifdef _MSC_VER
 #pragma warning(default:4355)
-#endif
-
-
-#ifdef ENABLE_SOCKS4
-void TcpSocket::OnSocks4Connect()
-{
-    char request[1000];
-    memset(request, 0, sizeof(request));
-    request[0] = 4; // socks v4
-    request[1] = 1; // command code: CONNECT
-    {
-        std::auto_ptr<SocketAddress> ad = GetClientRemoteAddress();
-        if (ad.get())
-        {
-            struct sockaddr *p0 = (struct sockaddr *)*ad;
-            struct sockaddr_in *p = (struct sockaddr_in *)p0;
-            if (p->sin_family == AF_INET)
-            {
-                memcpy(request + 2, &p->sin_port, 2); // nwbo is ok here
-                memcpy(request + 4, &p->sin_addr, sizeof(struct in_addr));
-            }
-            else
-            {
-                /// \todo warn
-            }
-        }
-        else
-        {
-            /// \todo warn
-        }
-    }
-#if defined( _WIN32) && !defined(__CYGWIN__)
-    strcpy_s(request + 8, sizeof(request) - 8, GetSocks4Userid().c_str());
-#else
-    strcpy(request + 8, GetSocks4Userid().c_str());
-#endif
-    size_t length = GetSocks4Userid().size() + 8 + 1;
-    SendBuf(request, length);
-    m_socks4_state = 0;
-}
-
-
-void TcpSocket::OnSocks4ConnectFailed()
-{
-    Handler().LogError(this, "OnSocks4ConnectFailed", 0, "connection to socks4 server failed, trying direct connection", LOG_LEVEL_WARNING);
-    if (!Handler().Socks4TryDirect())
-    {
-        SetConnecting(false);
-        SetCloseAndDelete();
-        OnConnectFailed(); // just in case
-    }
-    else
-    {
-        SetRetryClientConnect();
-    }
-}
-
-
-bool TcpSocket::OnSocks4Read()
-{
-    switch (m_socks4_state)
-    {
-    case 0:
-        ibuf.Read(&m_socks4_vn, 1);
-        m_socks4_state = 1;
-        break;
-    case 1:
-        ibuf.Read(&m_socks4_cd, 1);
-        m_socks4_state = 2;
-        break;
-    case 2:
-        if (GetInputLength() > 1)
-        {
-            ibuf.Read((char *)&m_socks4_dstport, 2);
-            m_socks4_state = 3;
-        }
-        else
-        {
-            return true;
-        }
-        break;
-    case 3:
-        if (GetInputLength() > 3)
-        {
-            ibuf.Read((char *)&m_socks4_dstip, 4);
-            SetSocks4(false);
-
-            switch (m_socks4_cd)
-            {
-            case 90:
-                OnConnect();
-                Handler().LogError(this, "OnSocks4Read", 0, "Connection established", LOG_LEVEL_INFO);
-                break;
-            case 91:
-            case 92:
-            case 93:
-                Handler().LogError(this, "OnSocks4Read", m_socks4_cd, "socks4 server reports connect failed", LOG_LEVEL_FATAL);
-                SetConnecting(false);
-                SetCloseAndDelete();
-                OnConnectFailed();
-                break;
-            default:
-                Handler().LogError(this, "OnSocks4Read", m_socks4_cd, "socks4 server unrecognized response", LOG_LEVEL_FATAL);
-                SetCloseAndDelete();
-                break;
-            }
-        }
-        else
-        {
-            return true;
-        }
-        break;
-    }
-    return false;
-}
 #endif
 
 
@@ -1711,14 +1544,7 @@ std::string TcpSocket::CircularBuffer::ReadString(size_t l)
 void TcpSocket::OnConnectTimeout()
 {
     Handler().LogError(this, "connect", -1, "connect timeout", LOG_LEVEL_FATAL);
-#ifdef ENABLE_SOCKS4
-    if (Socks4())
-    {
-        OnSocks4ConnectFailed();
-        // retry direct connection
-    }
-    else
-#endif
+
         if (GetConnectionRetry() == -1 ||
             (GetConnectionRetry() && GetConnectionRetries() < GetConnectionRetry()))
         {
@@ -1753,11 +1579,6 @@ void TcpSocket::OnException()
 {
     if (Connecting())
     {
-#ifdef ENABLE_SOCKS4
-        if (Socks4())
-            OnSocks4ConnectFailed();
-        else
-#endif
             if (GetConnectionRetry() == -1 ||
                 (GetConnectionRetry() &&
                     GetConnectionRetries() < GetConnectionRetry()))

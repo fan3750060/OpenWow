@@ -105,12 +105,6 @@ Socket::Socket(ISocketHandler& h)
     , m_bClient(false)
     , m_bRetain(false)
 #endif
-#ifdef ENABLE_SOCKS4
-    , m_bSocks4(false)
-    , m_socks4_host(h.GetSocks4Host())
-    , m_socks4_port(h.GetSocks4Port())
-    , m_socks4_userid(h.GetSocks4Userid())
-#endif
 #ifdef ENABLE_DETACH
     , m_detach(false)
     , m_detached(false)
@@ -773,81 +767,6 @@ bool Socket::Retain()
 
 
 #endif // ENABLE_POOL
-
-
-#ifdef ENABLE_SOCKS4
-void Socket::OnSocks4Connect()
-{
-    Handler().LogError(this, "OnSocks4Connect", 0, "Use with TcpSocket only");
-}
-
-
-void Socket::OnSocks4ConnectFailed()
-{
-    Handler().LogError(this, "OnSocks4ConnectFailed", 0, "Use with TcpSocket only");
-}
-
-
-bool Socket::OnSocks4Read()
-{
-    Handler().LogError(this, "OnSocks4Read", 0, "Use with TcpSocket only");
-    return true;
-}
-
-
-void Socket::SetSocks4Host(const std::string& host)
-{
-    Utility::u2ip(host, m_socks4_host);
-}
-
-
-bool Socket::Socks4()
-{
-    return m_bSocks4;
-}
-
-
-void Socket::SetSocks4(bool x)
-{
-    m_bSocks4 = x;
-}
-
-
-void Socket::SetSocks4Host(ipaddr_t a)
-{
-    m_socks4_host = a;
-}
-
-
-void Socket::SetSocks4Port(port_t p)
-{
-    m_socks4_port = p;
-}
-
-
-void Socket::SetSocks4Userid(const std::string& x)
-{
-    m_socks4_userid = x;
-}
-
-
-ipaddr_t Socket::GetSocks4Host()
-{
-    return m_socks4_host;
-}
-
-
-port_t Socket::GetSocks4Port()
-{
-    return m_socks4_port;
-}
-
-
-const std::string& Socket::GetSocks4Userid()
-{
-    return m_socks4_userid;
-}
-#endif // ENABLE_SOCKS4
 
 
 #ifdef ENABLE_DETACH

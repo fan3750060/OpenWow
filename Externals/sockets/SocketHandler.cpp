@@ -75,11 +75,6 @@ SocketHandler::SocketHandler(StdLog *p)
     , m_b_check_timeout(false)
     , m_b_check_retry(false)
     , m_b_check_close(false)
-#ifdef ENABLE_SOCKS4
-    , m_socks4_host(0)
-    , m_socks4_port(0)
-    , m_bTryDirect(false)
-#endif
 #ifdef ENABLE_RESOLVER
     , m_resolv_id(0)
     , m_resolver(NULL)
@@ -111,11 +106,6 @@ SocketHandler::SocketHandler(IMutex& mutex, StdLog *p)
     , m_b_check_timeout(false)
     , m_b_check_retry(false)
     , m_b_check_close(false)
-#ifdef ENABLE_SOCKS4
-    , m_socks4_host(0)
-    , m_socks4_port(0)
-    , m_bTryDirect(false)
-#endif
 #ifdef ENABLE_RESOLVER
     , m_resolv_id(0)
     , m_resolver(NULL)
@@ -148,11 +138,6 @@ SocketHandler::SocketHandler(IMutex& mutex, ISocketHandler& parent, StdLog *p)
     , m_b_check_timeout(false)
     , m_b_check_retry(false)
     , m_b_check_close(false)
-#ifdef ENABLE_SOCKS4
-    , m_socks4_host(0)
-    , m_socks4_port(0)
-    , m_bTryDirect(false)
-#endif
 #ifdef ENABLE_RESOLVER
     , m_resolv_id(0)
     , m_resolver(NULL)
@@ -484,33 +469,6 @@ size_t SocketHandler::GetCount()
     return m_sockets.size() + m_add.size() + m_delete.size();
 }
 
-
-#ifdef ENABLE_SOCKS4
-void SocketHandler::SetSocks4Host(ipaddr_t a)
-{
-    m_socks4_host = a;
-}
-
-
-void SocketHandler::SetSocks4Host(const std::string& host)
-{
-    Utility::u2ip(host, m_socks4_host);
-}
-
-
-void SocketHandler::SetSocks4Port(port_t port)
-{
-    m_socks4_port = port;
-}
-
-
-void SocketHandler::SetSocks4Userid(const std::string& id)
-{
-    m_socks4_userid = id;
-}
-#endif
-
-
 #ifdef ENABLE_RESOLVER
 int SocketHandler::Resolve(Socket *p, const std::string& host, port_t port)
 {
@@ -604,38 +562,6 @@ bool SocketHandler::ResolverReady()
     return m_resolver ? m_resolver->Ready() : false;
 }
 #endif // ENABLE_RESOLVER
-
-
-#ifdef ENABLE_SOCKS4
-void SocketHandler::SetSocks4TryDirect(bool x)
-{
-    m_bTryDirect = x;
-}
-
-
-ipaddr_t SocketHandler::GetSocks4Host()
-{
-    return m_socks4_host;
-}
-
-
-port_t SocketHandler::GetSocks4Port()
-{
-    return m_socks4_port;
-}
-
-
-const std::string& SocketHandler::GetSocks4Userid()
-{
-    return m_socks4_userid;
-}
-
-
-bool SocketHandler::Socks4TryDirect()
-{
-    return m_bTryDirect;
-}
-#endif
 
 
 #ifdef ENABLE_RESOLVER
@@ -993,11 +919,6 @@ void SocketHandler::CheckCallOnConnect()
             if (p->IsSSL()) // SSL Enabled socket
                 p->OnSSLConnect();
             else
-#endif
-#ifdef ENABLE_SOCKS4
-                if (p->Socks4())
-                    p->OnSocks4Connect();
-                else
 #endif
                 {
                     TcpSocket *tcp = dynamic_cast<TcpSocket *>(p);

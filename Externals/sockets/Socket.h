@@ -83,8 +83,6 @@ class Socket
         SOCK_RETAIN = 			0x0400, ///< keep connection on close
         SOCK_LOST = 			0x0800, ///< connection lost
 
-        // ENABLE_SOCKS4
-        SOCK_SOCKS4 = 			0x1000, ///< socks4 negotiation mode (TcpSocket)
         // ENABLE_DETACH
         SOCK_DETACH = 			0x2000, ///< Socket ordered to detach flag
         SOCK_DETACHED = 		0x4000, ///< Socket has been detached
@@ -534,42 +532,6 @@ public:
     //@}
 #endif // ENABLE_POOL
 
-#ifdef ENABLE_SOCKS4
-    /** \name Socks4 support */
-    //@{
-    /** Socks4 client support internal use. \sa TcpSocket */
-    virtual void OnSocks4Connect();
-    /** Socks4 client support internal use. \sa TcpSocket */
-    virtual void OnSocks4ConnectFailed();
-    /** Socks4 client support internal use. \sa TcpSocket */
-    virtual bool OnSocks4Read();
-    /** Called when the last write caused the tcp output buffer to
-     * become empty. */
-     /** socket still in socks4 negotiation mode */
-    bool Socks4();
-    /** Set flag indicating Socks4 handshaking in progress */
-    void SetSocks4(bool x = true);
-
-    /** Set socks4 server host address to use */
-    void SetSocks4Host(ipaddr_t a);
-    /** Set socks4 server hostname to use. */
-    void SetSocks4Host(const std::string&);
-    /** Socks4 server port to use. */
-    void SetSocks4Port(port_t p);
-    /** Provide a socks4 userid if required by the socks4 server. */
-    void SetSocks4Userid(const std::string& x);
-    /** Get the ip address of socks4 server to use.
-        \return socks4 server host address */
-    ipaddr_t GetSocks4Host();
-    /** Get the socks4 server port to use.
-        \return socks4 server port */
-    port_t GetSocks4Port();
-    /** Get socks4 userid.
-        \return Socks4 userid */
-    const std::string& GetSocks4Userid();
-    //@}
-#endif // ENABLE_SOCKS4
-
 #ifdef ENABLE_RESOLVER
     /** \name Asynchronous Resolver */
     //@{
@@ -685,13 +647,6 @@ private:
     std::string m_socket_protocol; ///< Protocol, from socket() call
     bool m_bClient; ///< only client connections are pooled
     bool m_bRetain; ///< keep connection on close
-#endif
-
-#ifdef ENABLE_SOCKS4
-    bool m_bSocks4; ///< socks4 negotiation mode (TcpSocket)
-    ipaddr_t m_socks4_host; ///< socks4 server address
-    port_t m_socks4_port; ///< socks4 server port number
-    std::string m_socks4_userid; ///< socks4 server usedid
 #endif
 
 #ifdef ENABLE_DETACH

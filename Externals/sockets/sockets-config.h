@@ -44,12 +44,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #undef USE_SCTP
 #undef NO_GETADDRINFO
 #undef ENABLE_POOL
-#undef ENABLE_SOCKS4
 #undef ENABLE_RESOLVER
 #undef ENABLE_RECONNECT
 #undef ENABLE_DETACH
 #undef ENABLE_EXCEPTIONS
-#undef ENABLE_XML
 #endif // _RUN_DP
 
 
@@ -70,16 +68,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define NO_GETADDRINFO
 
 
-   /* Connection pool support. */
-   //#define ENABLE_POOL
+/* Connection pool support. */
+//#define ENABLE_POOL
 
 
-   /* Socks4 client support. */
-   //#define ENABLE_SOCKS4
-
-
-   /* Asynchronous resolver. */
-#define ENABLE_RESOLVER
+/* Asynchronous resolver. */
+//#define ENABLE_RESOLVER
 
 
 /* Enable TCP reconnect on lost connection.
@@ -95,10 +89,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 /* Enabled exceptions. */
 #define ENABLE_EXCEPTIONS
-
-
-/* XML classes. */
-#define ENABLE_XML
 
 
 /* Resolver uses the detach function so either enable both or disable both. */

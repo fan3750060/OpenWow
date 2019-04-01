@@ -339,14 +339,6 @@ private:
     static	std::map<std::string, SSL_CTX *> m_server_contexts;
 #endif
 
-#ifdef ENABLE_SOCKS4
-    int m_socks4_state; ///< socks4 support
-    char m_socks4_vn; ///< socks4 support, temporary variable
-    char m_socks4_cd; ///< socks4 support, temporary variable
-    unsigned short m_socks4_dstport; ///< socks4 support
-    unsigned long m_socks4_dstip; ///< socks4 support
-#endif
-
 #ifdef ENABLE_RESOLVER
     int m_resolver_id; ///< Resolver id (if any) for current Open call
 #endif

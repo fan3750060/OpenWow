@@ -186,34 +186,6 @@ public:
 #endif // ENABLE_POOL
 
     // -------------------------------------------------------------------------
-    // Socks4
-    // -------------------------------------------------------------------------
-#ifdef ENABLE_SOCKS4
-    /** Set socks4 server ip that all new tcp sockets should use. */
-    virtual void SetSocks4Host(ipaddr_t) = 0;
-    /** Set socks4 server hostname that all new tcp sockets should use. */
-    virtual void SetSocks4Host(const std::string&) = 0;
-    /** Set socks4 server port number that all new tcp sockets should use. */
-    virtual void SetSocks4Port(port_t) = 0;
-    /** Set optional socks4 userid. */
-    virtual void SetSocks4Userid(const std::string&) = 0;
-    /** If connection to socks4 server fails, immediately try direct connection to final host. */
-    virtual void SetSocks4TryDirect(bool = true) = 0;
-    /** Get socks4 server ip.
-        \return socks4 server ip */
-    virtual ipaddr_t GetSocks4Host() = 0;
-    /** Get socks4 port number.
-        \return socks4 port number */
-    virtual port_t GetSocks4Port() = 0;
-    /** Get socks4 userid (optional).
-        \return socks4 userid */
-    virtual const std::string& GetSocks4Userid() = 0;
-    /** Check status of socks4 try direct flag.
-        \return true if direct connection should be tried if connection to socks4 server fails */
-    virtual bool Socks4TryDirect() = 0;
-#endif // ENABLE_SOCKS4
-
-    // -------------------------------------------------------------------------
     // DNS resolve server
     // -------------------------------------------------------------------------
 #ifdef ENABLE_RESOLVER

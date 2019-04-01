@@ -157,32 +157,6 @@ public:
     bool PoolEnabled();
 #endif // ENABLE_POOL
 
-    // Socks4
-#ifdef ENABLE_SOCKS4
-    /** Set socks4 server ip that all new tcp sockets should use. */
-    void SetSocks4Host(ipaddr_t);
-    /** Set socks4 server hostname that all new tcp sockets should use. */
-    void SetSocks4Host(const std::string&);
-    /** Set socks4 server port number that all new tcp sockets should use. */
-    void SetSocks4Port(port_t);
-    /** Set optional socks4 userid. */
-    void SetSocks4Userid(const std::string&);
-    /** If connection to socks4 server fails, immediately try direct connection to final host. */
-    void SetSocks4TryDirect(bool x = true);
-    /** Get socks4 server ip.
-        \return socks4 server ip */
-    ipaddr_t GetSocks4Host();
-    /** Get socks4 port number.
-        \return socks4 port number */
-    port_t GetSocks4Port();
-    /** Get socks4 userid (optional).
-        \return socks4 userid */
-    const std::string& GetSocks4Userid();
-    /** Check status of socks4 try direct flag.
-        \return true if direct connection should be tried if connection to socks4 server fails */
-    bool Socks4TryDirect();
-#endif // ENABLE_SOCKS4
-
     // DNS resolve server
 #ifdef ENABLE_RESOLVER
     /** Enable asynchronous DNS.
@@ -266,12 +240,6 @@ private:
     bool m_b_check_retry;
     bool m_b_check_close;
 
-#ifdef ENABLE_SOCKS4
-    ipaddr_t m_socks4_host; ///< Socks4 server host ip
-    port_t m_socks4_port; ///< Socks4 server port number
-    std::string m_socks4_userid; ///< Socks4 userid
-    bool m_bTryDirect; ///< Try direct connection if socks4 server fails
-#endif
 #ifdef ENABLE_RESOLVER
     int m_resolv_id; ///< Resolver id counter
     ResolvServer *m_resolver; ///< Resolver thread pointer
