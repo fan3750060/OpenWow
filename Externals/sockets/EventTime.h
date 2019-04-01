@@ -6,11 +6,11 @@
 Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
+the additional exemption that compiling, linking, and/or using OpenSSL
 is allowed.
 
 If you would like to use this library in a closed-source application,
-a separate license agreement is available. For information about 
+a separate license agreement is available. For information about
 the closed-source license agreement for the C++ sockets library,
 please visit http://www.alhem.net/Sockets/license.html and/or
 email license@alhem.net.
@@ -49,24 +49,24 @@ typedef int64_t mytime_t;
 /** \defgroup timer EventTimer event handling */
 
 /** EventTime primitive, returns current time as a 64-bit number.
-	\ingroup timer */
+    \ingroup timer */
 class EventTime
 {
 public:
-	EventTime();
-	EventTime(mytime_t sec,long usec);
-	~EventTime();
+    EventTime();
+    EventTime(mytime_t sec, long usec);
+    ~EventTime();
 
-	static mytime_t Tick();
+    static mytime_t Tick();
 
-	operator mytime_t () { return m_time; }
-	EventTime operator - (const EventTime& x) const;
-	bool operator < (const EventTime& x) const;
+    operator mytime_t () { return m_time; }
+    EventTime operator - (const EventTime& x) const;
+    bool operator < (const EventTime& x) const;
 
 private:
-	EventTime(const EventTime& ) {} // copy constructor
-	EventTime& operator=(const EventTime& ) { return *this; } // assignment operator
-	mytime_t m_time;
+    EventTime(const EventTime&) {} // copy constructor
+    EventTime& operator=(const EventTime&) { return *this; } // assignment operator
+    mytime_t m_time;
 };
 
 

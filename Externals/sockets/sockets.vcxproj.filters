@@ -1,11 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="Exception.h" />
     <ClInclude Include="sockets-config.h" />
     <ClInclude Include="socket_include.h" />
-    <ClInclude Include="IMutex.h" />
-    <ClInclude Include="IStream.h" />
     <ClInclude Include="StdLog.h">
       <Filter>Log help classes</Filter>
     </ClInclude>
@@ -38,9 +35,6 @@
     </ClInclude>
     <ClInclude Include="IEventOwner.h">
       <Filter>Timer Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Parse.h">
       <Filter>Utilities</Filter>
@@ -81,9 +75,6 @@
     <ClInclude Include="SocketHandlerThread.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="SocketStream.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="SocketThread.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -96,9 +87,14 @@
     <ClInclude Include="UdpSocket.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="IMutex.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Exception.cpp" />
     <ClCompile Include="socket_include.cpp" />
     <ClCompile Include="StdoutLog.cpp">
       <Filter>Log help classes</Filter>
@@ -126,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="IEventOwner.cpp">
       <Filter>Timer Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Parse.cpp">
       <Filter>Utilities</Filter>
@@ -160,9 +153,6 @@
     <ClCompile Include="SocketHandlerThread.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="SocketStream.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="SocketThread.cpp">
       <Filter>Base</Filter>
     </ClCompile>
@@ -174,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="UdpSocket.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

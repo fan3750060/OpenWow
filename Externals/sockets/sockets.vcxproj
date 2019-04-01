@@ -218,7 +218,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Debug.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventTime.h" />
@@ -229,7 +228,6 @@
     <ClInclude Include="Ipv4Address.h" />
     <ClInclude Include="Ipv6Address.h" />
     <ClInclude Include="ISocketHandler.h" />
-    <ClInclude Include="IStream.h" />
     <ClInclude Include="ListenSocket.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="Mutex.h" />
@@ -243,7 +241,6 @@
     <ClInclude Include="SocketHandlerEp.h" />
     <ClInclude Include="SocketHandlerThread.h" />
     <ClInclude Include="sockets-config.h" />
-    <ClInclude Include="SocketStream.h" />
     <ClInclude Include="SocketThread.h" />
     <ClInclude Include="socket_include.h" />
     <ClInclude Include="StdLog.h" />
@@ -255,7 +252,6 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="EventTime.cpp" />
@@ -273,7 +269,6 @@
     <ClCompile Include="SocketHandler.cpp" />
     <ClCompile Include="SocketHandlerEp.cpp" />
     <ClCompile Include="SocketHandlerThread.cpp" />
-    <ClCompile Include="SocketStream.cpp" />
     <ClCompile Include="SocketThread.cpp" />
     <ClCompile Include="socket_include.cpp" />
     <ClCompile Include="StdoutLog.cpp" />

@@ -6,11 +6,11 @@
 Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
+the additional exemption that compiling, linking, and/or using OpenSSL
 is allowed.
 
 If you would like to use this library in a closed-source application,
-a separate license agreement is available. For information about 
+a separate license agreement is available. For information about
 the closed-source license agreement for the C++ sockets library,
 please visit http://www.alhem.net/Sockets/license.html and/or
 email license@alhem.net.
@@ -39,13 +39,13 @@ namespace SOCKETS_NAMESPACE {
 
 Lock::Lock(const IMutex& m) : m_mutex(m)
 {
-	m_mutex.Lock();
+    m_mutex.Lock();
 }
 
 
 Lock::~Lock()
 {
-	m_mutex.Unlock();
+    m_mutex.Unlock();
 }
 
 

@@ -7,11 +7,11 @@
 Copyright (C) 2007-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
+the additional exemption that compiling, linking, and/or using OpenSSL
 is allowed.
 
 If you would like to use this library in a closed-source application,
-a separate license agreement is available. For information about 
+a separate license agreement is available. For information about
 the closed-source license agreement for the C++ sockets library,
 please visit http://www.alhem.net/Sockets/license.html and/or
 email license@alhem.net.
@@ -50,13 +50,13 @@ Exception::Exception(const std::string& description) : m_description(description
 
 const std::string Exception::ToString() const
 {
-	return m_description;
+    return m_description;
 }
 
 
 const std::string Exception::Stack() const
 {
-	return m_stack;
+    return m_stack;
 }
 
 

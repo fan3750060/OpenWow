@@ -6,11 +6,11 @@
 Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
+the additional exemption that compiling, linking, and/or using OpenSSL
 is allowed.
 
 If you would like to use this library in a closed-source application,
-a separate license agreement is available. For information about 
+a separate license agreement is available. For information about
 the closed-source license agreement for the C++ sockets library,
 please visit http://www.alhem.net/Sockets/license.html and/or
 email license@alhem.net.
@@ -47,7 +47,7 @@ namespace SOCKETS_NAMESPACE {
 long Event::m_unique_id = 0;
 
 
-Event::Event(IEventOwner *from,long sec,long usec,unsigned long data) : m_from(from), m_data(data), m_time(sec, usec), m_id(++m_unique_id)
+Event::Event(IEventOwner *from, long sec, long usec, unsigned long data) : m_from(from), m_data(data), m_time(sec, usec), m_id(++m_unique_id)
 {
 }
 
@@ -59,31 +59,31 @@ Event::~Event()
 
 bool Event::operator<(Event& e)
 {
-	return m_time < e.m_time;
+    return m_time < e.m_time;
 }
 
 
 long Event::GetID() const
 {
-	return m_id;
+    return m_id;
 }
 
 
 const EventTime& Event::GetTime() const
 {
-	return m_time;
+    return m_time;
 }
 
 
 IEventOwner *Event::GetFrom() const
 {
-	return m_from;
+    return m_from;
 }
 
 
 unsigned long Event::Data() const
 {
-	return m_data;
+    return m_data;
 }
 
 

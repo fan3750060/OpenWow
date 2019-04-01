@@ -6,11 +6,11 @@
 Copyright (C) 2004-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
+the additional exemption that compiling, linking, and/or using OpenSSL
 is allowed.
 
 If you would like to use this library in a closed-source application,
-a separate license agreement is available. For information about 
+a separate license agreement is available. For information about
 the closed-source license agreement for the C++ sockets library,
 please visit http://www.alhem.net/Sockets/license.html and/or
 email license@alhem.net.
@@ -43,7 +43,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    in read operations - helps on ECOS */
 #define SOCKETS_DYNAMIC_TEMP
 
-/** define type to uniquely identify a socket instance. */
+   /** define type to uniquely identify a socket instance. */
 typedef unsigned long socketuid_t;
 
 // platform specific stuff
@@ -243,17 +243,17 @@ namespace SOCKETS_NAMESPACE {
 class WSAInitializer // Winsock Initializer
 {
 public:
-	WSAInitializer() {
-		if (WSAStartup(0x101,&m_wsadata)) 
-		{
-			exit(-1);
-		}
-	}
-	~WSAInitializer() {
-		WSACleanup();
-	}
+    WSAInitializer() {
+        if (WSAStartup(0x101, &m_wsadata))
+        {
+            exit(-1);
+        }
+    }
+    ~WSAInitializer() {
+        WSACleanup();
+    }
 private:
-	WSADATA m_wsadata;
+    WSADATA m_wsadata;
 };
 
 #ifdef SOCKETS_NAMESPACE
@@ -280,8 +280,8 @@ namespace SOCKETS_NAMESPACE {
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
-	/** List type containing file descriptors. */
-	typedef std::list<SOCKET> socket_v;
+/** List type containing file descriptors. */
+typedef std::list<SOCKET> socket_v;
 
 
 #ifdef SOCKETS_NAMESPACE
