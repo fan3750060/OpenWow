@@ -92,11 +92,6 @@ Socket::Socket(ISocketHandler& h)
     , m_uid(++Socket::m_next_uid)
     , m_call_on_connect(false)
     , m_b_retry_connect(false)
-#ifdef HAVE_OPENSSL
-    , m_b_enable_ssl(false)
-    , m_b_ssl(false)
-    , m_b_ssl_server(false)
-#endif
 #ifdef ENABLE_IPV6
     , m_ipv6(false)
 #endif
@@ -642,70 +637,6 @@ bool Socket::RetryClientConnect()
 {
     return m_b_retry_connect;
 }
-
-
-#ifdef HAVE_OPENSSL
-void Socket::OnSSLConnect()
-{
-}
-
-
-void Socket::OnSSLAccept()
-{
-}
-
-
-bool Socket::SSLNegotiate()
-{
-    return false;
-}
-
-
-bool Socket::IsSSL()
-{
-    return m_b_enable_ssl;
-}
-
-
-void Socket::EnableSSL(bool x)
-{
-    m_b_enable_ssl = x;
-}
-
-
-bool Socket::IsSSLNegotiate()
-{
-    return m_b_ssl;
-}
-
-
-void Socket::SetSSLNegotiate(bool x)
-{
-    m_b_ssl = x;
-}
-
-
-bool Socket::IsSSLServer()
-{
-    return m_b_ssl_server;
-}
-
-
-void Socket::SetSSLServer(bool x)
-{
-    m_b_ssl_server = x;
-}
-
-
-void Socket::OnSSLConnectFailed()
-{
-}
-
-
-void Socket::OnSSLAcceptFailed()
-{
-}
-#endif // HAVE_OPENSSL
 
 
 #ifdef ENABLE_POOL

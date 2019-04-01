@@ -37,9 +37,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <vector>
 #include <list>
 #include "socket_include.h"
-#ifdef HAVE_OPENSSL
-#include <openssl/ssl.h>
-#endif
 
 #include <time.h>
 #include "SocketAddress.h"
@@ -61,42 +58,6 @@ class SocketThread;
     \ingroup basic */
 class Socket
 {
-    /** Socket mode flags. */
-/*
-    enum {
-        // Socket
-        SOCK_DEL = 			0x01, ///< Delete by handler flag
-        SOCK_CLOSE = 			0x02, ///< Close and delete flag
-        SOCK_DISABLE_READ = 		0x04, ///< Disable checking for read events
-        SOCK_CONNECTED = 		0x08, ///< Socket is connected (tcp/udp)
-
-        SOCK_ERASED_BY_HANDLER = 	0x10, ///< Set by handler before delete
-        // HAVE_OPENSSL
-        SOCK_ENABLE_SSL = 		0x20, ///< Enable SSL for this TcpSocket
-        SOCK_SSL = 			0x40, ///< ssl negotiation mode (TcpSocket)
-        SOCK_SSL_SERVER = 		0x80, ///< True if this is an incoming ssl TcpSocket connection
-
-        // ENABLE_IPV6
-        SOCK_IPV6 = 			0x0100, ///< This is an ipv6 socket if this one is true
-        // ENABLE_POOL
-        SOCK_CLIENT = 			0x0200, ///< only client connections are pooled
-        SOCK_RETAIN = 			0x0400, ///< keep connection on close
-        SOCK_LOST = 			0x0800, ///< connection lost
-
-        // ENABLE_DETACH
-        SOCK_DETACH = 			0x2000, ///< Socket ordered to detach flag
-        SOCK_DETACHED = 		0x4000, ///< Socket has been detached
-        // StreamSocket
-        STREAMSOCK_CONNECTING =		0x8000, ///< Flag indicating connection in progress
-
-        STREAMSOCK_FLUSH_BEFORE_CLOSE = 0x010000L, ///< Send all data before closing (default true)
-        STREAMSOCK_CALL_ON_CONNECT =	0x020000L, ///< OnConnect will be called next ISocketHandler cycle if true
-        STREAMSOCK_RETRY_CONNECT =	0x040000L, ///< Try another connection attempt next ISocketHandler cycle
-        STREAMSOCK_LINE_PROTOCOL =	0x080000L, ///< Line protocol mode flag
-
-    };
-*/
-
 public:
     /** "Default" constructor */
     Socket(ISocketHandler&);
@@ -461,41 +422,6 @@ public:
         \return true when another attempt should be made */
     bool RetryClientConnect();
 
-#ifdef HAVE_OPENSSL
-    /** @name SSL Support */
-    //@{
-    /** SSL client/server support - internal use. \sa TcpSocket */
-    virtual void OnSSLConnect();
-    /** SSL client/server support - internal use. \sa TcpSocket */
-    virtual void OnSSLAccept();
-    /** SSL negotiation failed for client connect. */
-    virtual void OnSSLConnectFailed();
-    /** SSL negotiation failed for server accept. */
-    virtual void OnSSLAcceptFailed();
-    /** new SSL support */
-    virtual bool SSLNegotiate();
-    /** Check if SSL is Enabled for this TcpSocket.
-        \return true if this is a TcpSocket with SSL enabled */
-    bool IsSSL();
-    /** Enable SSL operation for a TcpSocket. */
-    void EnableSSL(bool x = true);
-    /** Still negotiating ssl connection.
-        \return true if ssl negotiating is still in progress */
-    bool IsSSLNegotiate();
-    /** Set flag indicating ssl handshaking still in progress. */
-    void SetSSLNegotiate(bool x = true);
-    /** OnAccept called with SSL Enabled.
-        \return true if this is a TcpSocket with an incoming SSL connection */
-    bool IsSSLServer();
-    /** Set flag indicating that this is a TcpSocket with incoming SSL connection. */
-    void SetSSLServer(bool x = true);
-    /** SSL; Get pointer to ssl context structure. */
-    virtual SSL_CTX *GetSslContext() { return NULL; }
-    /** SSL; Get pointer to ssl structure. */
-    virtual SSL *GetSsl() { return NULL; }
-    //@}
-#endif // HAVE_OPENSSL
-
 #ifdef ENABLE_IPV6
     /** Enable ipv6 for this socket. */
     void SetIpv6(bool x = true);
@@ -630,12 +556,6 @@ private:
 
 #ifdef _WIN32
     static	WSAInitializer m_winsock_init; ///< Winsock initialization singleton class
-#endif
-
-#ifdef HAVE_OPENSSL
-    bool m_b_enable_ssl; ///< Enable SSL for this TcpSocket
-    bool m_b_ssl; ///< ssl negotiation mode (TcpSocket)
-    bool m_b_ssl_server; ///< True if this is an incoming ssl TcpSocket connection
 #endif
 
 #ifdef ENABLE_IPV6

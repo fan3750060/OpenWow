@@ -915,11 +915,6 @@ void SocketHandler::CheckCallOnConnect()
         if (Valid(p) && Valid(p->UniqueIdentifier()) && p->CallOnConnect())
         {
             p->SetConnected(); // moved here from inside if (tcp) check below
-#ifdef HAVE_OPENSSL
-            if (p->IsSSL()) // SSL Enabled socket
-                p->OnSSLConnect();
-            else
-#endif
                 {
                     TcpSocket *tcp = dynamic_cast<TcpSocket *>(p);
                     if (tcp)
@@ -1053,11 +1048,7 @@ void SocketHandler::CheckClose()
             }
             else
                 // new graceful tcp - flush and close timeout 5s
-                if (tcp && p->IsConnected() && tcp->GetFlushBeforeClose() &&
-#ifdef HAVE_OPENSSL
-                    !tcp->IsSSL() &&
-#endif
-                    p->TimeSinceClose() < 5)
+                if (tcp && p->IsConnected() && tcp->GetFlushBeforeClose() && p->TimeSinceClose() < 5)
                 {
                     DEB(fprintf(stderr, " close(1)\n");)
                         if (tcp->GetOutputLength())
@@ -1236,13 +1227,6 @@ int SocketHandler::ISocketHandler_Select(struct timeval *tsel)
                     // ---------------------------------------------------------------------------------
                     if (FD_ISSET(i, &rfds))
                     {
-#ifdef HAVE_OPENSSL
-                        if (p->IsSSLNegotiate())
-                        {
-                            p->SSLNegotiate();
-                        }
-                        else
-#endif
                         {
                             p->OnRead();
                         }
@@ -1250,13 +1234,6 @@ int SocketHandler::ISocketHandler_Select(struct timeval *tsel)
                     // ---------------------------------------------------------------------------------
                     if (FD_ISSET(i, &wfds))
                     {
-#ifdef HAVE_OPENSSL
-                        if (p->IsSSLNegotiate())
-                        {
-                            p->SSLNegotiate();
-                        }
-                        else
-#endif
                         {
                             p->OnWrite();
                         }

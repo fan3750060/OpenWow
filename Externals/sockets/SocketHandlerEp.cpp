@@ -175,26 +175,12 @@ int SocketHandlerEp::ISocketHandler_Select(struct timeval *tsel)
                     Socket *p = static_cast<Socket *>(m_events[x].data.ptr);
                     if ((m_events[x].events & EPOLLIN) || (m_events[x].events & EPOLLHUP))
                     {
-#ifdef HAVE_OPENSSL
-                        if (p->IsSSLNegotiate())
-                        {
-                            p->SSLNegotiate();
-                        }
-                        else
-#endif
                         {
                             p->OnRead();
                         }
                     }
                     if (m_events[x].events & EPOLLOUT)
                     {
-#ifdef HAVE_OPENSSL
-                        if (p->IsSSLNegotiate())
-                        {
-                            p->SSLNegotiate();
-                        }
-                        else
-#endif
                         {
                             p->OnWrite();
                         }

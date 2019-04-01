@@ -39,9 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef _RUN_DP
 /* First undefine symbols if already defined. */
-#undef HAVE_OPENSSL
 #undef ENABLE_IPV6
-#undef USE_SCTP
 #undef NO_GETADDRINFO
 #undef ENABLE_POOL
 #undef ENABLE_RESOLVER
@@ -51,16 +49,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif // _RUN_DP
 
 
-/* OpenSSL support. */
-//#define HAVE_OPENSSL
-
-
 /* Ipv6 support. */
 //#define ENABLE_IPV6
-
-
-/* SCTP support. */
-//#define USE_SCTP
 
 
 /* Define NO_GETADDRINFO if your operating system does not support

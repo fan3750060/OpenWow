@@ -123,12 +123,6 @@ public:
     }
 
     int Bind(SocketAddress& ad, int depth) {
-#ifdef USE_SCTP
-        if (dynamic_cast<SctpSocket *>(m_creator))
-        {
-            return Bind(ad, "sctp", depth);
-        }
-#endif
         return Bind(ad, "tcp", depth);
     }
 
@@ -222,12 +216,6 @@ public:
         \param depth Listen queue depth */
     int Bind(ipaddr_t a, port_t port, int depth = 20) {
         Ipv4Address ad(a, port);
-#ifdef USE_SCTP
-        if (dynamic_cast<SctpSocket *>(m_creator))
-        {
-            return Bind(ad, "sctp", depth);
-        }
-#endif
         return Bind(ad, "tcp", depth);
     }
     /** Bind and listen to ipv4 interface.
@@ -248,12 +236,6 @@ public:
         \param depth Listen queue depth */
     int Bind(in6_addr a, port_t port, int depth = 20) {
         Ipv6Address ad(a, port);
-#ifdef USE_SCTP
-        if (dynamic_cast<SctpSocket *>(m_creator))
-        {
-            return Bind(ad, "sctp", depth);
-        }
-#endif
         return Bind(ad, "tcp", depth);
     }
     /** Bind and listen to ipv6 interface.
@@ -397,21 +379,6 @@ public:
                 {
                     Lock lock(h.GetMutex());
                     h.Add(tmp);
-#ifdef HAVE_OPENSSL
-                    if (tmp->IsSSL()) // SSL Enabled socket
-                    {
-                        // %! OnSSLAccept calls SSLNegotiate that can finish in this one call.
-                        // %! If that happens and negotiation fails, the 'tmp' instance is
-                        // %! still added to the list of active sockets in the sockethandler.
-                        // %! See bugfix for this in SocketHandler::Select - don't Set rwx
-                        // %! flags if CloseAndDelete() flag is true.
-                        // %! An even better fugbix (see TcpSocket::OnSSLAccept) now avoids
-                        // %! the Add problem altogether, so ignore the above.
-                        // %! (OnSSLAccept does no longer call SSLNegotiate().)
-                        tmp->OnSSLAccept();
-                    }
-                    else
-#endif
                     {
                         tmp->OnAccept();
                     }
@@ -457,21 +424,6 @@ public:
                 tmp->Init();
                 tmp->SetDeleteByHandler(true);
                 Handler().Add(tmp);
-#ifdef HAVE_OPENSSL
-                if (tmp->IsSSL()) // SSL Enabled socket
-                {
-                    // %! OnSSLAccept calls SSLNegotiate that can finish in this one call.
-                    // %! If that happens and negotiation fails, the 'tmp' instance is
-                    // %! still added to the list of active sockets in the sockethandler.
-                    // %! See bugfix for this in SocketHandler::Select - don't Set rwx
-                    // %! flags if CloseAndDelete() flag is true.
-                    // %! An even better fugbix (see TcpSocket::OnSSLAccept) now avoids
-                    // %! the Add problem altogether, so ignore the above.
-                    // %! (OnSSLAccept does no longer call SSLNegotiate().)
-                    tmp->OnSSLAccept();
-                }
-                else
-#endif
                 {
                     tmp->OnAccept();
                 }
