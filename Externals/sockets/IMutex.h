@@ -1,5 +1,5 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/** \file IMutex.h
+ **	\date  2008-10-25
  **	\author grymse@alhem.net
 **/
 /*
@@ -29,71 +29,29 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#ifndef _SOCKETS_IMutex_H
+#define _SOCKETS_IMutex_H
+
+#include "sockets-config.h"
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
-
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+/** IMutex interface.
+	\ingroup threading */
+class IMutex
 {
-}
+public:
+	virtual ~IMutex() {}
 
-
-ResolvServer::~ResolvServer()
-{
-}
-
-
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
+	virtual void Lock() const = 0;
+	virtual void Unlock() const = 0;
+};
 
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
-
-#endif // ENABLE_RESOLVER
+#endif // _SOCKETS_IMutex_H
 

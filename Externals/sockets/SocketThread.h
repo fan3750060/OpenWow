@@ -1,13 +1,12 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/**
+ **	\file SocketThread.h
+ **	\date  2011-08-16
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2011  Anders Hedstrom
 
-This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
-is allowed.
+This library is made available under the terms of the GNU GPL.
 
 If you would like to use this library in a closed-source application,
 a separate license agreement is available. For information about 
@@ -29,71 +28,43 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
+#ifndef _SOCKETTHREAD_H
+#define _SOCKETTHREAD_H
+
+#include "sockets-config.h"
+#ifdef ENABLE_DETACH
+
+#include "Thread.h"
 #include "SocketHandler.h"
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
+class Socket;
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+/** Detached socket run thread. 
+	\ingroup internal */
+class SocketThread : public Thread
 {
-}
+public:
+	SocketThread(Socket *p);
+	~SocketThread();
 
+	void Run();
 
-ResolvServer::~ResolvServer()
-{
-}
+private:
+	SocketThread(const SocketThread& s) : m_socket(s.m_socket) {}
+	SocketThread& operator=(const SocketThread& ) { return *this; }
 
-
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
-
+	SocketHandler m_h;
+	Socket *m_socket;
+};
 
 #ifdef SOCKETS_NAMESPACE
-}
+} // namespace SOCKETS_NAMESPACE {
 #endif
 
-#endif // ENABLE_RESOLVER
+#endif // ENABLE_DETACH
 
+#endif // _SOCKETTHREAD_H

@@ -1,10 +1,20 @@
 /**
- ** \file sockets-config.h
- ** \date  2007-04-14
- ** \author grymse@alhem.net
+ **	\file sockets-config.h
+ **	\date  2007-04-14
+ **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2007  Anders Hedstrom
+Copyright (C) 2007-2011  Anders Hedstrom
+
+This library is made available under the terms of the GNU GPL, with
+the additional exemption that compiling, linking, and/or using OpenSSL 
+is allowed.
+
+If you would like to use this library in a closed-source application,
+a separate license agreement is available. For information about 
+the closed-source license agreement for the C++ sockets library,
+please visit http://www.alhem.net/Sockets/license.html and/or
+email license@alhem.net.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,10 +30,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#include <cstdio>
-
 #ifndef _SOCKETS_CONFIG_H
 #define _SOCKETS_CONFIG_H
+
+/* Limits */
+#define TCP_LINE_SIZE 8192
+#define MAX_HTTP_HEADER_COUNT 200
 
 #ifndef _RUN_DP
 /* First undefine symbols if already defined. */
@@ -36,14 +48,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #undef ENABLE_RESOLVER
 #undef ENABLE_RECONNECT
 #undef ENABLE_DETACH
-#undef ENABLE_TRIGGERS
 #undef ENABLE_EXCEPTIONS
+#undef ENABLE_XML
 #endif // _RUN_DP
 
-// define MACOSX for internal socket library checks
-#if defined(__APPLE__) && defined(__MACH__) && !defined(MACOSX)
-#define MACOSX
-#endif
 
 /* OpenSSL support. */
 //#define HAVE_OPENSSL
@@ -63,7 +71,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 /* Connection pool support. */
-#define ENABLE_POOL
+//#define ENABLE_POOL
 
 
 /* Socks4 client support. */
@@ -75,8 +83,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 /* Enable TCP reconnect on lost connection.
-    Socket::OnReconnect
-    Socket::OnDisconnect
+	Socket::OnReconnect
+	Socket::OnDisconnect
 */
 #define ENABLE_RECONNECT
 
@@ -85,12 +93,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define ENABLE_DETACH
 
 
-/* Enable socket to socket triggers. Not yet in use. */
-//#define ENABLE_TRIGGERS
-
-
 /* Enabled exceptions. */
-//#define ENABLE_EXCEPTIONS
+#define ENABLE_EXCEPTIONS
+
+
+/* XML classes. */
+#define ENABLE_XML
 
 
 /* Resolver uses the detach function so either enable both or disable both. */
@@ -100,5 +108,3 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #endif // _SOCKETS_CONFIG_H
-
-

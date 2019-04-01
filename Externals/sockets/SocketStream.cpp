@@ -1,9 +1,10 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/**
+ **	\file SocketStream.cpp
+ **	\date  2008-12-20
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2008-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +30,40 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#include "SocketStream.h"
+#include "ISocketHandler.h"
+#include "TcpSocket.h"
+
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
-
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+SocketStream::SocketStream(ISocketHandler& h, TcpSocket *sock) : m_handler(h), m_socket(sock)
+, m_socket_uid(sock -> UniqueIdentifier())
 {
 }
 
 
-ResolvServer::~ResolvServer()
+size_t SocketStream::IStreamRead(char *buf, size_t max_sz)
 {
+  if (m_handler.Valid(m_socket_uid))
+  {
+    return m_socket -> ReadInput(buf, max_sz);
+  }
+  return 0;
 }
 
 
-void ResolvServer::Run()
+void SocketStream::IStreamWrite(const char *buf, size_t sz)
 {
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
+  if (m_handler.Valid(m_socket_uid))
+  {
+    m_socket -> SendBuf(buf, sz);
+  }
 }
 
 
 #ifdef SOCKETS_NAMESPACE
-}
+} // namespace SOCKETS_NAMESPACE {
 #endif
-
-#endif // ENABLE_RESOLVER
-

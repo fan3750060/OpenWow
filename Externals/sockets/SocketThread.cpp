@@ -1,13 +1,12 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/**
+ **	\file SocketThread.cpp
+ **	\date  2011-08-16
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2011  Anders Hedstrom
 
-This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
-is allowed.
+This library is made available under the terms of the GNU GPL.
 
 If you would like to use this library in a closed-source application,
 a separate license agreement is available. For information about 
@@ -29,71 +28,55 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#include "SocketThread.h"
+
+#ifdef ENABLE_DETACH
+#include "Utility.h"
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
-
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+SocketThread::SocketThread(Socket *p)
+:Thread(false)
+,m_socket(p)
 {
+	// Creator will release
 }
 
 
-ResolvServer::~ResolvServer()
+SocketThread::~SocketThread()
 {
-}
-
-
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
+	if (IsRunning())
 	{
-		return;
+		SetRelease(true);
+		SetRunning(false);
+		m_h.Release();
+		Utility::Sleep(5);
 	}
-	h.Add(&l);
+}
 
-	m_ready = true;
-	while (!m_quit && IsRunning() )
+
+void SocketThread::Run()
+{
+	m_h.SetSlave();
+	m_h.Add(m_socket);
+	m_socket -> SetSlaveHandler(&m_h);
+	m_socket -> OnDetached();
+	m_h.EnableRelease();
+	while (m_h.GetCount() > 1 && IsRunning())
 	{
-		h.Select(0, 500000);
+		m_h.Select(0, 500000);
 	}
-	SetRunning(false);
+	// m_socket now deleted oops
+	//  (a socket can only be detached if DeleteByHandler() is true)
+	// yeah oops m_socket delete its socket thread, that means this
+	// so Socket will no longer delete its socket thread, instead we do this:
+	SetDeleteOnExit();
 }
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
-
 
 #ifdef SOCKETS_NAMESPACE
-}
+} // namespace SOCKETS_NAMESPACE {
 #endif
 
-#endif // ENABLE_RESOLVER
-
+#endif // ENABLE_DETACH

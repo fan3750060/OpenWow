@@ -1,9 +1,10 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/**
+ **	\file Semaphore.cpp
+ **	\date  2007-04-13
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2007-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +30,94 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#include "Semaphore.h"
+
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+// ---------------------------------------------------------------
+#ifdef _WIN32
+
+Semaphore::Semaphore(value_t start_val)
 {
+	m_handle = ::CreateSemaphore((LPSECURITY_ATTRIBUTES)NULL, start_val, 1, (LPCTSTR)NULL);
 }
 
 
-ResolvServer::~ResolvServer()
+Semaphore::~Semaphore()
 {
+	::CloseHandle(m_handle);
 }
 
 
-void ResolvServer::Run()
+int Semaphore::Post()
 {
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
+	return (::ReleaseSemaphore(m_handle, 1, (LPLONG)NULL) != 0) ? 0 : -1;
 }
 
 
-void ResolvServer::Quit()
+int Semaphore::Wait()
 {
-	m_quit = true;
+	return (WaitForSingleObject(m_handle, INFINITE) == WAIT_OBJECT_0) ? 0 : -1;
 }
 
 
-bool ResolvServer::Ready()
+int Semaphore::TryWait()
 {
-	return m_ready;
+	return -1; // %! not implemented
 }
+
+
+int Semaphore::GetValue(int& i)
+{
+	return 0; // %! not implemented
+}
+
+// ---------------------------------------------------------------
+#else
+
+Semaphore::Semaphore(value_t start_val)
+{
+	sem_init(&m_sem, 0, start_val);
+}
+
+
+Semaphore::~Semaphore()
+{
+	sem_destroy(&m_sem);
+}
+
+
+int Semaphore::Post()
+{
+	return sem_post(&m_sem);
+}
+
+
+int Semaphore::Wait()
+{
+	return sem_wait(&m_sem);
+}
+
+
+int Semaphore::TryWait()
+{
+	return sem_trywait(&m_sem);
+}
+
+
+int Semaphore::GetValue(int& i)
+{
+	return sem_getvalue(&m_sem, &i);
+}
+
+#endif
 
 
 #ifdef SOCKETS_NAMESPACE
-}
+} // namespace SOCKETS_NAMESPACE {
 #endif
-
-#endif // ENABLE_RESOLVER
 

@@ -1,9 +1,10 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/**
+ **	\file SocketStream.h
+ **	\date  2008-12-20
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2008-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +30,37 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#ifndef _SOCKETS_SocketStream_H
+#define _SOCKETS_SocketStream_H
+
+#include "IStream.h"
+
+#include "socket_include.h"
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
+class ISocketHandler;
+class TcpSocket;
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+class SocketStream : public IStream
 {
-}
+public:
+	SocketStream(ISocketHandler& h, TcpSocket *sock);
 
+	size_t IStreamRead(char *buf, size_t max_sz);
 
-ResolvServer::~ResolvServer()
-{
-}
+	void IStreamWrite(const char *buf, size_t sz);
 
-
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
-
+private:
+	ISocketHandler& m_handler;
+	TcpSocket *m_socket;
+	socketuid_t m_socket_uid;
+};
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
 
-#endif // ENABLE_RESOLVER
-
+#endif // _SOCKETS_SocketStream_H

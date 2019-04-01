@@ -1,9 +1,9 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/** \file IEventOwner.h
+ **	\date  2005-12-07
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +29,51 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#ifndef _SOCKETS_IEventOwner_H
+#define _SOCKETS_IEventOwner_H
+
+#include "sockets-config.h"
+#include "IEventHandler.h"
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+/** Any class that wants to use timer events inherits this.
+	\ingroup timer */
+class IEventOwner
 {
-}
+public:
+	IEventOwner(IEventHandler& h);
+	virtual ~IEventOwner();
 
+	/** Schedule event.
+		\param sec Seconds until event
+		\param usec Microseconds until event
+		\return Event ID */
+	long AddEvent(long sec,long usec);
+	/** Clear all events scheduled by this owner. */
+	void ClearEvents();
+	/** Remove one event scheduled by this owner.
+		\param eid Event ID to remove */
+	void RemoveEvent(long eid);
+	/** Event callback will fire when time is up. */
+	virtual void OnEvent(int) = 0;
 
-ResolvServer::~ResolvServer()
-{
-}
+	IEventHandler& GetEventHandler();
+	void SetHandlerInvalid(bool x = true) { m_handler_invalid = x; }
 
+private:
+	IEventHandler& m_event_handler;
+	bool m_handler_invalid;
+};
 
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
 
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
 
-#endif // ENABLE_RESOLVER
+#endif // _SOCKETS_IEventOwner_H
 

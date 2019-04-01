@@ -218,22 +218,33 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Base64.h" />
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventHandler.h" />
+    <ClInclude Include="EventTime.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="IEventHandler.h" />
+    <ClInclude Include="IEventOwner.h" />
+    <ClInclude Include="IMutex.h" />
     <ClInclude Include="Ipv4Address.h" />
     <ClInclude Include="Ipv6Address.h" />
     <ClInclude Include="ISocketHandler.h" />
+    <ClInclude Include="IStream.h" />
     <ClInclude Include="ListenSocket.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="Parse.h" />
     <ClInclude Include="ResolvServer.h" />
     <ClInclude Include="ResolvSocket.h" />
-    <ClInclude Include="SctpSocket.h" />
+    <ClInclude Include="Semaphore.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketAddress.h" />
     <ClInclude Include="SocketHandler.h" />
+    <ClInclude Include="SocketHandlerEp.h" />
+    <ClInclude Include="SocketHandlerThread.h" />
     <ClInclude Include="sockets-config.h" />
+    <ClInclude Include="SocketStream.h" />
+    <ClInclude Include="SocketThread.h" />
     <ClInclude Include="socket_include.h" />
     <ClInclude Include="StdLog.h" />
     <ClInclude Include="StdoutLog.h" />
@@ -244,8 +255,12 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Base64.cpp" />
+    <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventHandler.cpp" />
+    <ClCompile Include="EventTime.cpp" />
     <ClCompile Include="Exception.cpp" />
+    <ClCompile Include="IEventOwner.cpp" />
     <ClCompile Include="Ipv4Address.cpp" />
     <ClCompile Include="Ipv6Address.cpp" />
     <ClCompile Include="Lock.cpp" />
@@ -253,8 +268,13 @@
     <ClCompile Include="Parse.cpp" />
     <ClCompile Include="ResolvServer.cpp" />
     <ClCompile Include="ResolvSocket.cpp" />
+    <ClCompile Include="Semaphore.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="SocketHandler.cpp" />
+    <ClCompile Include="SocketHandlerEp.cpp" />
+    <ClCompile Include="SocketHandlerThread.cpp" />
+    <ClCompile Include="SocketStream.cpp" />
+    <ClCompile Include="SocketThread.cpp" />
     <ClCompile Include="socket_include.cpp" />
     <ClCompile Include="StdoutLog.cpp" />
     <ClCompile Include="StreamSocket.cpp" />

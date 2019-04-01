@@ -1,9 +1,9 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/** \file EventHandler.h
+ **	\date  2005-12-07
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +29,57 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
+#ifndef _SOCKETS_EventHandler_H
+#define _SOCKETS_EventHandler_H
+
+#include "sockets-config.h"
 #include "SocketHandler.h"
+#include "IEventHandler.h"
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+class StdLog;
+class IEventOwner;
+class Event;
+class TcpSocket;
+
+/** SocketHandler implementing the IEventHandler interface.
+	\ingroup timer */
+class EventHandler : public SocketHandler,public IEventHandler
 {
-}
+public:
+	EventHandler(StdLog * = NULL);
+	EventHandler(IMutex&,StdLog * = NULL);
+	~EventHandler();
 
+	bool GetTimeUntilNextEvent(struct timeval *tv);
+	void CheckEvents();
+	long AddEvent(IEventOwner *from,long sec,long usec);
+	void ClearEvents(IEventOwner *from);
+	void RemoveEvent(IEventOwner *from,long eid);
 
-ResolvServer::~ResolvServer()
-{
-}
+	/** SocketHandler while() loop implemented with event functionality. */
+	void EventLoop();
+	/** Stop event loop. */
+	void SetQuit(bool = true);
 
+	void Add(Socket *);
 
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
+private:
+	EventHandler(const EventHandler& ) {} // copy constructor
+	EventHandler& operator=(const EventHandler& ) { return *this; } // assignment operator
+	std::list<Event *> m_events;
+	bool m_quit;
+};
 
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
 
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
 
-#endif // ENABLE_RESOLVER
+#endif // _SOCKETS_EventHandler_H
 

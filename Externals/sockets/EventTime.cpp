@@ -1,9 +1,9 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/** \file EventTime.cpp
+ **	\date  2005-12-07
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +29,79 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
+#ifdef MACOSX
+#include <stdint.h>
+#include <sys/types.h>
+#include <signal.h>
 #endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#include "EventTime.h"
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/select.h>
+#include <sys/time.h>
+#endif
+
+
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+EventTime::EventTime() : m_time(Tick())
 {
 }
 
 
-ResolvServer::~ResolvServer()
+EventTime::EventTime(mytime_t sec,long usec) : m_time(Tick())
+{
+	m_time += sec * 1000000 + usec;
+}
+
+
+EventTime::~EventTime()
 {
 }
 
 
-void ResolvServer::Run()
+mytime_t EventTime::Tick()
 {
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
+	mytime_t t;
+#ifdef _WIN32
+	FILETIME ft;
+	GetSystemTimeAsFileTime(&ft);
+	t = ft.dwHighDateTime;
+	t = t << 32;
+	t += ft.dwLowDateTime;
+	t /= 10; // us
+#else
+	struct timeval tv;
+	struct timezone tz;
+	gettimeofday(&tv, &tz);
+	t = tv.tv_sec;
+	t *= 1000000;
+	t += tv.tv_usec;
+#endif
+	return t;
 }
 
 
-void ResolvServer::Quit()
+EventTime EventTime::operator - (const EventTime& x) const
 {
-	m_quit = true;
+	EventTime t;
+	t.m_time = m_time - x.m_time;
+	return t;
 }
 
 
-bool ResolvServer::Ready()
+bool EventTime::operator < (const EventTime& x) const
 {
-	return m_ready;
+	return m_time < x.m_time;
 }
 
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
-
-#endif // ENABLE_RESOLVER
 

@@ -1,57 +1,196 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{883cbce9-dcac-41e1-99ee-5458a07171fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{8df9a711-2834-42ff-90fc-f3dcf54fac60}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Base64.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="Ipv4Address.h" />
-    <ClInclude Include="Ipv6Address.h" />
-    <ClInclude Include="ISocketHandler.h" />
-    <ClInclude Include="ListenSocket.h" />
-    <ClInclude Include="Lock.h" />
-    <ClInclude Include="Mutex.h" />
-    <ClInclude Include="Parse.h" />
-    <ClInclude Include="ResolvServer.h" />
-    <ClInclude Include="ResolvSocket.h" />
-    <ClInclude Include="SctpSocket.h" />
-    <ClInclude Include="Socket.h" />
-    <ClInclude Include="SocketAddress.h" />
-    <ClInclude Include="SocketHandler.h" />
     <ClInclude Include="sockets-config.h" />
     <ClInclude Include="socket_include.h" />
-    <ClInclude Include="StdLog.h" />
-    <ClInclude Include="StdoutLog.h" />
-    <ClInclude Include="StreamSocket.h" />
-    <ClInclude Include="TcpSocket.h" />
-    <ClInclude Include="Thread.h" />
-    <ClInclude Include="UdpSocket.h" />
-    <ClInclude Include="Utility.h" />
+    <ClInclude Include="IMutex.h" />
+    <ClInclude Include="IStream.h" />
+    <ClInclude Include="StdLog.h">
+      <Filter>Log help classes</Filter>
+    </ClInclude>
+    <ClInclude Include="StdoutLog.h">
+      <Filter>Log help classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Lock.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Mutex.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Semaphore.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>Timer Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Timer Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventTime.h">
+      <Filter>Timer Events</Filter>
+    </ClInclude>
+    <ClInclude Include="IEventHandler.h">
+      <Filter>Timer Events</Filter>
+    </ClInclude>
+    <ClInclude Include="IEventOwner.h">
+      <Filter>Timer Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Parse.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Ipv4Address.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Ipv6Address.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ISocketHandler.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenSocket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ResolvServer.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ResolvSocket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketAddress.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketHandler.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketHandlerEp.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketHandlerThread.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketStream.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketThread.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamSocket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpSocket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="UdpSocket.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Base64.cpp" />
     <ClCompile Include="Exception.cpp" />
-    <ClCompile Include="Ipv4Address.cpp" />
-    <ClCompile Include="Ipv6Address.cpp" />
-    <ClCompile Include="Lock.cpp" />
-    <ClCompile Include="Mutex.cpp" />
-    <ClCompile Include="Parse.cpp" />
-    <ClCompile Include="ResolvServer.cpp" />
-    <ClCompile Include="ResolvSocket.cpp" />
-    <ClCompile Include="Socket.cpp" />
-    <ClCompile Include="SocketHandler.cpp" />
     <ClCompile Include="socket_include.cpp" />
-    <ClCompile Include="StdoutLog.cpp" />
-    <ClCompile Include="StreamSocket.cpp" />
-    <ClCompile Include="TcpSocket.cpp" />
-    <ClCompile Include="Thread.cpp" />
-    <ClCompile Include="UdpSocket.cpp" />
-    <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="StdoutLog.cpp">
+      <Filter>Log help classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Lock.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Mutex.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Semaphore.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="EventHandler.cpp">
+      <Filter>Timer Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Timer Events</Filter>
+    </ClCompile>
+    <ClCompile Include="EventTime.cpp">
+      <Filter>Timer Events</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventOwner.cpp">
+      <Filter>Timer Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Parse.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Ipv4Address.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Ipv6Address.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ResolvServer.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ResolvSocket.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketHandler.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketHandlerEp.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketHandlerThread.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketStream.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketThread.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamSocket.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpSocket.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="UdpSocket.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Log help classes">
+      <UniqueIdentifier>{aea14975-1e1e-4c86-b356-eb1be1109d40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{92e30fd7-fffd-42a6-b123-b4d50f52e19a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer Events">
+      <UniqueIdentifier>{d161cc6e-9828-47bd-8c07-ff6dd2165cd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{e712c03e-1be6-4cd4-9e84-dc99c7815629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{7b799a35-20b5-47a7-9994-a7dc5b392181}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

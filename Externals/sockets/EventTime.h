@@ -1,9 +1,9 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/** \file EventTime.h
+ **	\date  2005-12-07
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2005-2011  Anders Hedstrom
 
 This library is made available under the terms of the GNU GPL, with
 the additional exemption that compiling, linking, and/or using OpenSSL 
@@ -29,71 +29,51 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#ifndef _SOCKETS_EventTime_H
+#define _SOCKETS_EventTime_H
 
+#include "sockets-config.h"
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+#if defined( _WIN32) && !defined(__CYGWIN__)
+typedef __int64 mytime_t;
+#else
+#include <inttypes.h> // int64_t
+typedef int64_t mytime_t;
+#endif
+
+
+/** \defgroup timer EventTimer event handling */
+
+/** EventTime primitive, returns current time as a 64-bit number.
+	\ingroup timer */
+class EventTime
 {
-}
+public:
+	EventTime();
+	EventTime(mytime_t sec,long usec);
+	~EventTime();
 
+	static mytime_t Tick();
 
-ResolvServer::~ResolvServer()
-{
-}
+	operator mytime_t () { return m_time; }
+	EventTime operator - (const EventTime& x) const;
+	bool operator < (const EventTime& x) const;
 
+private:
+	EventTime(const EventTime& ) {} // copy constructor
+	EventTime& operator=(const EventTime& ) { return *this; } // assignment operator
+	mytime_t m_time;
+};
 
-void ResolvServer::Run()
-{
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
-}
-
-
-void ResolvServer::Quit()
-{
-	m_quit = true;
-}
-
-
-bool ResolvServer::Ready()
-{
-	return m_ready;
-}
 
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
 
-#endif // ENABLE_RESOLVER
+#endif // _SOCKETS_EventTime_H
 

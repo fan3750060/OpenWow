@@ -1,11 +1,13 @@
 /** \file Thread.cpp
- ** \date  2004-10-30
- ** \author grymse@alhem.net
+ **	\date  2004-10-30
+ **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2007  Anders Hedstrom
+Copyright (C) 2004-2011  Anders Hedstrom
 
-This library is made available under the terms of the GNU GPL.
+This library is made available under the terms of the GNU GPL, with
+the additional exemption that compiling, linking, and/or using OpenSSL 
+is allowed.
 
 If you would like to use this library in a closed-source application,
 a separate license agreement is available. For information about
@@ -36,6 +38,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #include "Thread.h"
+#include "Utility.h"
 
 
 #ifdef SOCKETS_NAMESPACE
@@ -51,117 +54,124 @@ Thread::Thread(bool release)
 ,m_b_destructor(false)
 {
 #ifdef _WIN32
-//  m_thread = ::CreateThread(NULL, 0, StartThread, this, 0, &m_dwThreadId);
-    m_thread = (HANDLE)_beginthreadex(NULL, 0, &StartThread, this, 0, &m_dwThreadId);
+//	m_thread = ::CreateThread(NULL, 0, StartThread, this, 0, &m_dwThreadId);
+	m_thread = (HANDLE)_beginthreadex(NULL, 0, &StartThread, this, 0, &m_dwThreadId);
 #else
-    pthread_attr_t attr;
-
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_DETACHED);
-    if (pthread_create(&m_thread,&attr, StartThread,this) == -1)
-    {
-        perror("Thread: create failed");
-        SetRunning(false);
-    }
-//  pthread_attr_destroy(&attr);
+	pthread_attr_init(&m_attr);
+	pthread_attr_setdetachstate(&m_attr,PTHREAD_CREATE_DETACHED);
+	if (pthread_create(&m_thread,&m_attr, StartThread,this) == -1)
+	{
+		perror("Thread: create failed");
+		SetRunning(false);
+	}
 #endif
-    m_release = release;
+	m_release = release;
+	if (release)
+		m_sem.Post();
 }
 
 
 Thread::~Thread()
 {
-    m_b_destructor = true;
-    if (m_running)
-    {
-        SetRelease(true);
-        SetRunning(false);
+	m_b_destructor = true;
+	if (m_running)
+	{
+		SetRelease(true);
+		SetRunning(false);
+		/*
+			Sleep one second to give thread class Run method enough time to
+			release from run loop
+		*/
+		Utility::Sleep(1000);
+	}
 #ifdef _WIN32
-        Sleep(1000);
+	if (m_thread)
+		::CloseHandle(m_thread);
 #else
-        sleep(1);
-#endif
-    }
-#ifdef _WIN32
-    if (m_thread)
-        ::CloseHandle(m_thread);
+	pthread_attr_destroy(&m_attr);
 #endif
 }
 
 
 threadfunc_t STDPREFIX Thread::StartThread(threadparam_t zz)
 {
-    Thread *p = (Thread *)zz;
+	/*
+		Sleep here to wait for derived thread class constructor to setup
+		vtable... hurts just looking at it
+	*/
+	Utility::Sleep(5);
 
-    while (p -> m_running && !p -> m_release)
-    {
+	Thread *p = (Thread *)zz;
+
+	p -> Wait();
+	if (p -> m_running)
+	{
+		p -> Run();
+	}
+	p -> SetRunning(false); // if return
+	if (p -> DeleteOnExit() && !p -> IsDestructor())
+	{
+		delete p;
+	}
 #ifdef _WIN32
-        Sleep(1000);
-#else
-        sleep(1);
+	_endthreadex(0);
 #endif
-    }
-    if (p -> m_running)
-    {
-        p -> Run();
-    }
-    p -> SetRunning(false); // if return
-    if (p -> DeleteOnExit() && !p -> IsDestructor())
-    {
-        delete p;
-    }
-#ifdef _WIN32
-    _endthreadex(0);
-#endif
-    return (threadfunc_t)NULL;
+	return (threadfunc_t)NULL;
 }
 
 
 bool Thread::IsRunning()
 {
-    return m_running;
+ 	return m_running;
 }
 
 
 void Thread::SetRunning(bool x)
 {
-    m_running = x;
+ 	m_running = x;
 }
 
 
 bool Thread::IsReleased()
 {
-    return m_release;
+ 	return m_release;
 }
 
 
 void Thread::SetRelease(bool x)
 {
-    m_release = x;
+ 	m_release = x;
+ 	if (x)
+ 		m_sem.Post();
 }
 
 
 bool Thread::DeleteOnExit()
 {
-    return m_b_delete_on_exit;
+	return m_b_delete_on_exit;
 }
 
 
 void Thread::SetDeleteOnExit(bool x)
 {
-    m_b_delete_on_exit = x;
+	m_b_delete_on_exit = x;
 }
 
 
 bool Thread::IsDestructor()
 {
-    return m_b_destructor;
+	return m_b_destructor;
+}
+
+
+void Thread::Wait()
+{
+	m_sem.Wait();
 }
 
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
-
 
 

@@ -1,14 +1,16 @@
 /** \file socket_include.h
- ** \date  2005-04-12
- ** \author grymse@alhem.net
+ **	\date  2005-04-12
+ **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2007  Anders Hedstrom
+Copyright (C) 2004-2011  Anders Hedstrom
 
-This library is made available under the terms of the GNU GPL.
+This library is made available under the terms of the GNU GPL, with
+the additional exemption that compiling, linking, and/or using OpenSSL 
+is allowed.
 
 If you would like to use this library in a closed-source application,
-a separate license agreement is available. For information about
+a separate license agreement is available. For information about 
 the closed-source license agreement for the C++ sockets library,
 please visit http://www.alhem.net/Sockets/license.html and/or
 email license@alhem.net.
@@ -41,6 +43,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
    in read operations - helps on ECOS */
 #define SOCKETS_DYNAMIC_TEMP
 
+/** define type to uniquely identify a socket instance. */
+typedef unsigned long socketuid_t;
 
 // platform specific stuff
 #if (defined(__unix__) || defined(unix)) && !defined(USG)
@@ -50,7 +54,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // int64
 #ifdef _WIN32
+#ifndef uint64_t
 typedef unsigned __int64 uint64_t;
+#endif
+#ifndef int64_t
+typedef __int64 int64_t;
+#endif
 #else
 #include <stdlib.h>
 #ifdef SOLARIS
@@ -60,16 +69,15 @@ typedef unsigned __int64 uint64_t;
 #endif
 #endif
 
-#ifndef _WIN32
+#ifndef _WIN32 
 // ----------------------------------------
 // common unix includes / defines
-#include <unistd.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-//#include <netdb.h>
+#include <unistd.h>
 
 // all typedefs in this file will be declared outside the sockets namespace,
 // because some os's will already have one or more of the type defined.
@@ -108,7 +116,7 @@ namespace SOCKETS_NAMESPACE {
 // ----------------------------------------
 // OS specific adaptions
 
-#ifdef SOLARIS
+#ifdef SOLARIS 
 // ----------------------------------------
 // Solaris
 typedef unsigned short port_t;
@@ -133,8 +141,8 @@ namespace SOCKETS_NAMESPACE {
 #   define MSG_NOSIGNAL 0
 #  endif
 #  include <netinet/in.h>
-typedef in_addr_t ipaddr_t;
-typedef in_port_t port_t;
+typedef	in_addr_t ipaddr_t;
+typedef	in_port_t port_t;
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
@@ -150,17 +158,10 @@ namespace SOCKETS_NAMESPACE {
 #  error FreeBSD versions prior to 400014 does not support ipv6
 # endif
 
-#elif defined __NetBSD__
-#  if !defined(MSG_NOSIGNAL)
-#   define MSG_NOSIGNAL 0
-#  endif
-#  include <netinet/in.h>
-typedef in_addr_t ipaddr_t;
-typedef in_port_t port_t;
-#elif defined MACOSX
+#elif defined MACOSX 
 // ----------------------------------------
 // Mac OS X
-#include <string.h>
+//#include <string.h>
 #ifdef __DARWIN_UNIX03
 typedef unsigned short port_t;
 #else
@@ -181,13 +182,17 @@ namespace SOCKETS_NAMESPACE {
 #define IPV6_ADD_MEMBERSHIP IPV6_JOIN_GROUP
 #define IPV6_DROP_MEMBERSHIP IPV6_LEAVE_GROUP
 
-#elif defined _WIN32
+#elif defined _WIN32 
 // ----------------------------------------
 // Win32
 #ifdef _MSC_VER
 #pragma comment(lib, "wsock32.lib")
 #endif
 #define strcasecmp _stricmp
+#ifndef __CYGWIN__
+#define snprintf sprintf_s
+#define vsnprintf vsprintf_s
+#endif
 
 typedef unsigned long ipaddr_t;
 typedef unsigned short port_t;
@@ -203,7 +208,7 @@ namespace SOCKETS_NAMESPACE {
 
 // 1.8.6: define FD_SETSIZE to something bigger than 64 if there are a lot of
 // simultaneous connections (must be done before including winsock.h)
-#define FD_SETSIZE 1024
+//#define FD_SETSIZE 1024
 
 // windows 2000 with ipv6 preview installed:
 //    http://msdn.microsoft.com/downloads/sdks/platform/tpipv6.asp
@@ -238,26 +243,26 @@ namespace SOCKETS_NAMESPACE {
 class WSAInitializer // Winsock Initializer
 {
 public:
-    WSAInitializer() {
-        if (WSAStartup(0x101,&m_wsadata))
-        {
-            exit(-1);
-        }
-    }
-    ~WSAInitializer() {
-        WSACleanup();
-    }
+	WSAInitializer() {
+		if (WSAStartup(0x101,&m_wsadata)) 
+		{
+			exit(-1);
+		}
+	}
+	~WSAInitializer() {
+		WSACleanup();
+	}
 private:
-    WSADATA m_wsadata;
+	WSADATA m_wsadata;
 };
 
 #ifdef SOCKETS_NAMESPACE
 }
 #endif
 
-#else
+#else 
 // ----------------------------------------
-// LINUX
+// LINUX 
 typedef unsigned long ipaddr_t;
 typedef unsigned short port_t;
 #ifdef SOCKETS_NAMESPACE
@@ -275,8 +280,8 @@ namespace SOCKETS_NAMESPACE {
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
-    /** List type containing file descriptors. */
-    typedef std::list<SOCKET> socket_v;
+	/** List type containing file descriptors. */
+	typedef std::list<SOCKET> socket_v;
 
 
 #ifdef SOCKETS_NAMESPACE
@@ -296,5 +301,4 @@ namespace SOCKETS_NAMESPACE {
 
 
 #endif // _SOCKETS_socket_include_H
-
 

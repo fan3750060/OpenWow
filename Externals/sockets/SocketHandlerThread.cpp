@@ -1,13 +1,12 @@
-/** \file ResolvServer.cpp
- **	\date  2005-03-24
+/**
+ **	\file SocketHandlerThread.cpp
+ **	\date  2010-03-21
  **	\author grymse@alhem.net
 **/
 /*
-Copyright (C) 2004-2011  Anders Hedstrom
+Copyright (C) 2010-2011  Anders Hedstrom
 
-This library is made available under the terms of the GNU GPL, with
-the additional exemption that compiling, linking, and/or using OpenSSL 
-is allowed.
+This library is made available under the terms of the GNU GPL.
 
 If you would like to use this library in a closed-source application,
 a separate license agreement is available. For information about 
@@ -29,71 +28,54 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#ifdef _MSC_VER
-#pragma warning(disable:4786)
-#endif
-#include "ResolvServer.h"
-#ifdef ENABLE_RESOLVER
-#include "StdoutLog.h"
-#include "ListenSocket.h"
-#include "ResolvSocket.h"
-#include "SocketHandler.h"
+#include "SocketHandlerThread.h"
+#include "Mutex.h"
+#include "ISocketHandler.h"
+
 
 #ifdef SOCKETS_NAMESPACE
 namespace SOCKETS_NAMESPACE {
 #endif
 
 
-ResolvServer::ResolvServer(port_t port)
-:Thread()
-,m_quit(false)
-,m_port(port)
-,m_ready(false)
+SocketHandlerThread::SocketHandlerThread(ISocketHandler& parent) : Thread(false)
+, m_parent(parent)
+, m_handler(NULL)
 {
 }
 
 
-ResolvServer::~ResolvServer()
+SocketHandlerThread::~SocketHandlerThread()
 {
 }
 
 
-void ResolvServer::Run()
+ISocketHandler& SocketHandlerThread::Handler()
 {
-//	StdoutLog log;
-	SocketHandler h;
-	ListenSocket<ResolvSocket> l(h);
-
-	if (l.Bind("127.0.0.1", m_port))
-	{
-		return;
-	}
-	h.Add(&l);
-
-	m_ready = true;
-	while (!m_quit && IsRunning() )
-	{
-		h.Select(0, 500000);
-	}
-	SetRunning(false);
+  return *m_handler;
 }
 
 
-void ResolvServer::Quit()
+void SocketHandlerThread::Run()
 {
-	m_quit = true;
+  Mutex mutex;
+  m_handler = m_parent.Create(mutex, m_parent);
+  m_sem.Post();
+  ISocketHandler& h = *m_handler;
+  h.EnableRelease();
+  while (IsRunning())
+  {
+    h.Select(1, 0);
+  }
 }
 
 
-bool ResolvServer::Ready()
+void SocketHandlerThread::Wait()
 {
-	return m_ready;
+  m_sem.Wait();
 }
 
 
 #ifdef SOCKETS_NAMESPACE
-}
+} // namespace SOCKETS_NAMESPACE {
 #endif
-
-#endif // ENABLE_RESOLVER
-
