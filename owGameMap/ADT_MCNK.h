@@ -14,7 +14,7 @@ public:
 	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin);
 	virtual ~ADT_MCNK();
 
-	// SceneNode3D
+	// SceneNodeModel3D
 	void UpdateLocalTransform() override;
 	bool Accept(IVisitor& visitor) override;
 

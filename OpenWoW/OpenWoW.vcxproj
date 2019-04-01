@@ -53,7 +53,7 @@
     <ProjectReference Include="..\owGameMap\owGameMap.vcxproj">
       <Project>{c29c7fee-86d9-4eef-965f-68b89c516fae}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\owGameSocket\owGameSocket.vcxproj">
+    <ProjectReference Include="..\owGameClient\owGameClient.vcxproj">
       <Project>{8810fe3d-3a00-4a79-9370-69612befe04e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\owGame\owGame.vcxproj">

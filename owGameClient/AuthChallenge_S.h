@@ -16,13 +16,13 @@ struct AuthChallenge_S
 		}
 
 		reader.readBytes(B, 32);
-		reader.readBytes(&gLen);
-		reader.readBytes(g);
-		reader.readBytes(&nLen);
+		reader.readBytes(&gLen, sizeof(uint8));
+		reader.readBytes(g, sizeof(uint8));
+		reader.readBytes(&nLen, sizeof(uint8));
 		reader.readBytes(N, nLen);
 		reader.readBytes(s, 32);
 		reader.readBytes(unk3, 16);
-		reader.readBytes(&securityFlags);
+		reader.readBytes(&securityFlags, sizeof(uint8));
 	}
 
 	uint8		unk2;

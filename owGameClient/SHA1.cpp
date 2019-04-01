@@ -70,6 +70,42 @@ void SHA1Hash::Finalize(void)
     SHA1_Final(mDigest, &mC);
 }
 
+bool SHA1Hash::operator==(const SHA1Hash& Other)
+{
+    for (uint32 i = 0; i < SHA_DIGEST_LENGTH; i++)
+    {
+        if (Other.GetDigest()[i] != GetDigest()[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool SHA1Hash::operator!=(const SHA1Hash & Other)
+{
+    return !((*this) == Other);
+}
+
+bool SHA1Hash::operator==(const uint8 * Bytes)
+{
+    for (uint32 i = 0; i < SHA_DIGEST_LENGTH; i++)
+    {
+        if (Bytes[i] != GetDigest()[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool SHA1Hash::operator!=(const uint8 * Bytes)
+{
+    return !((*this) == Bytes);
+}
+
 std::string SHA1Hash::toString()
 {
 	std::string result = "";

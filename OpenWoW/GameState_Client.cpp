@@ -22,7 +22,7 @@ CGameState_Client::~CGameState_Client()
 void CGameState_Client::S_CharEnum(CByteBuffer& _buff)
 {
 	uint8 charCnt;
-	_buff.readBytes(&charCnt);
+	_buff.readBytes(&charCnt, sizeof(uint8));
 
 	CharacterTemplate* chars = new CharacterTemplate[charCnt];
 	for (uint8 i = 0; i < charCnt; i++)
@@ -94,10 +94,10 @@ bool CGameState_Client::Init()
 	// Socket controller
 	//
 
-	m_authWorldController = std::make_shared<CAuthWorldController>();
+	m_authWorldController = std::make_shared<CWoWClient>();
 	m_authWorldController->StartAuth();
 
-	m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, CByteBuffer&));
+	//m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, CByteBuffer&));
 
 
 
@@ -200,20 +200,6 @@ void CGameState_Client::Load3D()
 	//const float x = 29;
 	//const float y = 21;
 
-	// Cube Mesh
-	std::shared_ptr<IMesh> cube = renderDevice->CreateCube();
-	cube->SetType(SceneNodeTypes::SN_TYPE_DEBUG);
-	std::shared_ptr<MaterialDebug> mat = std::make_shared<MaterialDebug>(renderDevice->CreateMaterial());
-	mat->SetWrapper(mat);
-	mat->SetDiffuseColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	cube->SetMaterial(mat);
-
-	// Cube SN
-	std::shared_ptr<SceneNodeModel3D> cubeNode = std::make_shared<SceneNodeModel3D>();
-	cubeNode->AddMesh(cube);
-	cubeNode->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-	cubeNode->SetScale(vec3(15, 15, 15));
-	cubeNode->SetParent(m_3DScene->GetRootNode());
 
 	// M2 Model
 	/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
@@ -230,6 +216,14 @@ void CGameState_Client::Load3D()
 	//m_MapController->MapLoad();
 	//m_MapController->MapPostLoad();
 	//m_MapController->EnterMap(x, y);
+
+
+    // Create character
+    //std::shared_ptr<Character> character = std::make_shared<Character>();
+    //character->InitFromTemplate(charTemplate);
+    //character->CreateInstances();
+    //character->SetParent(m_3DScene->GetRootNode());
+
 
 	//m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
 

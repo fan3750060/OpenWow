@@ -29,10 +29,6 @@ private:
 private:
 	Viewport                             m_Viewport;
 
-	RenderTechnique                      m_3DTechnique;
-	RenderTechnique                      m_3DDeferredTechnique;
-	RenderUITechnique                    m_UITechnique;
-
 	std::shared_ptr<CFreeCameraController>   m_CameraController;
 
 	std::shared_ptr<Query>               m_FrameQuery;
@@ -44,9 +40,6 @@ private:
 	std::shared_ptr<CUITextNode>              m_CameraPosText;
 	std::shared_ptr<CUITextNode>              m_CameraRotText;
 
-private:
-	std::shared_ptr<CGBuffer>            m_GB;
-	
 
 private:
 	const uint16 c_WindowsWidth = 1280;

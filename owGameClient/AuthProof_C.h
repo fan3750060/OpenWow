@@ -2,14 +2,14 @@
 
 struct AuthProof_C : public ISendable
 {
-	AuthProof_C(uint8* _A, uint8* _MClient)
+	AuthProof_C(uint8* _A, const uint8* _MClient)
 	{
 		cmd = AUTH_LOGON_PROOF;
 		memcpy(A, _A, 32);
 		memcpy(M1, _MClient, SHA_DIGEST_LENGTH);
 	}
 
-	void Send(ISocket* _socket) override
+	void Send(TcpSocket* _socket) override
 	{
 		uint8 crc[20];
 
@@ -20,7 +20,8 @@ struct AuthProof_C : public ISendable
 		bb.Append(crc, 20);
 		bb << (uint8)0;
 		bb << (uint8)0;
-		_socket->SendData(bb);
+
+		_socket->SendBuf(reinterpret_cast<const char*>(bb.getData()), bb.getSize());
 	}
 
 	uint8   cmd;

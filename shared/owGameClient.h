@@ -3,10 +3,10 @@
 //---------------------------------------------------------//
 //--                    Common                           --//
 //---------------------------------------------------------//
-#include "../owGameSocket/common.h"
+#include "../owGameClient/common.h"
 
 
 //---------------------------------------------------------//
 //--               World of warcraft                     --//
 //---------------------------------------------------------//
-#include "../owGameSocket/AuthWorldController.h"
+#include "../owGameClient/Client.h"

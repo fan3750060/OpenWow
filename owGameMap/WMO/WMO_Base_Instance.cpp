@@ -85,5 +85,5 @@ bool CWMO_Base_Instance::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	return SceneNode3D::Accept(visitor);
+	return SceneNodeModel3D::Accept(visitor);
 }

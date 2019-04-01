@@ -52,10 +52,6 @@ bool CGameState_World::Init()
 
 	m_FrameQuery = renderDevice->CreateQuery(Query::QueryType::Timer, 1);
 
-	m_GB = std::make_shared<CGBuffer>(m_3DScene);
-	m_GB->Load(c_WindowsWidth, c_WindowsHeight);
-	m_GB->Load2(m_Viewport);
-
 	Load3D();
 	LoadUI();
 
@@ -94,7 +90,7 @@ void CGameState_World::OnResize(ResizeEventArgs & e)
 
     m_CameraController->GetCamera()->SetViewport(m_Viewport);
 
-    m_3DDeferredTechnique.UpdateViewport(m_Viewport);
+    m_3DTechnique.UpdateViewport(m_Viewport);
     m_UITechnique.UpdateViewport(m_Viewport);
 }
 
@@ -123,7 +119,7 @@ void CGameState_World::OnRender(Render3DEventArgs& e)
 	e.Camera = m_CameraController->GetCamera().operator->(); // TODO: Shit code. Refactor me.
 	Application::Get().GetLoader()->SetCamera(m_CameraController->GetCamera());
 
-	m_3DDeferredTechnique.Render(e);
+    m_3DTechnique.Render(e);
 }
 
 void CGameState_World::OnPostRender(Render3DEventArgs& e)
@@ -286,19 +282,19 @@ void CGameState_World::Load3D()
 	// PreRender passes
 	//
 
-	m_3DDeferredTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(m_GB->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
+    m_3DTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
 
 
 	//
 	// 3D Passes
 	//
-	AddSkyPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
-	AddWDLPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
-	AddDebugPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, m_Viewport, m_3DScene);
-	AddMCNKPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
-	AddWMOPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
-	AddLiquidPasses(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
-	AddM2Passes(renderDevice, m_GB->GetRenderTarget(), &m_3DDeferredTechnique, &m_Viewport, m_3DScene);
+	AddSkyPasses(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
+	AddWDLPasses(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
+	AddDebugPasses(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, m_Viewport, m_3DScene);
+	AddMCNKPasses(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
+	AddWMOPasses(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
+	AddLiquidPasses(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
+	AddM2Passes(renderDevice, renderWindow->GetRenderTarget(), &m_3DTechnique, &m_Viewport, m_3DScene);
 
 
 
@@ -314,8 +310,8 @@ void CGameState_World::Load3D()
 
 	UpdateLights();
 
-	m_3DDeferredTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
-	m_3DDeferredTechnique.AddPass(m_GB->GetPass());
+	//m_3DDeferredTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
+	//m_3DDeferredTechnique.AddPass(m_GB->GetPass());
 }
 
 void CGameState_World::LoadUI()

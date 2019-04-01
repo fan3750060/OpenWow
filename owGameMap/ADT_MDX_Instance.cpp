@@ -28,7 +28,7 @@ ADT_MDX_Instance::~ADT_MDX_Instance()
 
 
 //
-// SceneNode3D
+// SceneNodeModel3D
 //
 bool ADT_MDX_Instance::Accept(IVisitor& visitor)
 {

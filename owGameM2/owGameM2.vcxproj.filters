@@ -254,9 +254,6 @@
     <ClInclude Include="ParticleEmitter_Sphere.h">
       <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
     </ClInclude>
-    <ClInclude Include="M2_Animated_WotLK.h">
-      <Filter>Types</Filter>
-    </ClInclude>
     <ClInclude Include="M2_Animated.h">
       <Filter>Types</Filter>
     </ClInclude>

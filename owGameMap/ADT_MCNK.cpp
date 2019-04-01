@@ -30,7 +30,7 @@ ADT_MCNK::~ADT_MCNK()
 
 
 //
-// SceneNode3D
+// SceneNodeModel3D
 //
 
 void ADT_MCNK::UpdateLocalTransform()
@@ -99,7 +99,6 @@ bool ADT_MCNK::Load()
 
 	std::shared_ptr<IBuffer> verticesBuffer = nullptr;
 	std::shared_ptr<IBuffer> normalsBuffer = nullptr;
-	std::shared_ptr<IBuffer> mccvBuffer = nullptr;
 
 	uint8 blendbuf[64 * 64 * 4];
 	memset(blendbuf, 0, 64 * 64 * 4);
@@ -324,36 +323,6 @@ bool ADT_MCNK::Load()
 		}
 	}
 
-	// MCCV colors
-	m_File->seek(startPos + header.ofsMCCV);
-	{
-		uint32 mccvColorsUINT8[C_MapBufferSize];
-		memset(mccvColorsUINT8, 0x00, sizeof(uint32) * C_MapBufferSize);
-
-		if (header.flags.has_mccv)
-		{
-			uint32* t_mccvColorsUINT8 = mccvColorsUINT8;
-
-			for (int j = 0; j < 17; j++)
-			{
-				for (uint32 i = 0; i < ((j % 2u) ? 8u : 9u); i++)
-				{
-					uint8 nor[4];
-					m_File->readBytes(&nor, sizeof(uint32));
-
-					*t_mccvColorsUINT8++ = uint32(
-						(uint8)(nor[3]) << 24 |
-						(uint8)(nor[0]) << 16 |
-						(uint8)(nor[1]) << 8 |
-						(uint8)(nor[2])
-					);
-				}
-			}
-		}
-
-		mccvBuffer = _RenderDevice->CreateVoidVertexBuffer(mccvColorsUINT8, C_MapBufferSize, 0, sizeof(uint8));
-	}
-
 	m_File.reset();
 
 	// All chunk is holes
@@ -379,7 +348,6 @@ bool ADT_MCNK::Load()
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
-		//__geomDefault->AddVertexBuffer(BufferBinding("COLOR", 0), mccvBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
 		__geomDefault->SetIndexBuffer(__ibHigh);
@@ -397,7 +365,6 @@ bool ADT_MCNK::Load()
 		__geomDefault = _RenderDevice->CreateMesh();
 		__geomDefault->AddVertexBuffer(BufferBinding("POSITION", 0), verticesBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("NORMAL", 0), normalsBuffer);
-		//__geomDefault->AddVertexBuffer(BufferBinding("COLOR", 0), mccvBuffer);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _MapShared->BufferTextureCoordDetail);
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
 		__geomDefault->SetIndexBuffer(__ibDefault);

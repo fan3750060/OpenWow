@@ -27,7 +27,7 @@ class SHA1Hash
 {
 public:
 	SHA1Hash();
-	~SHA1Hash();
+	virtual ~SHA1Hash();
 
 	void UpdateBigNumbers(BigNumber* bn0, ...);
 
@@ -37,8 +37,14 @@ public:
 	void Initialize();
 	void Finalize();
 
-	uint8* GetDigest(void) { return mDigest; }
+	const uint8* GetDigest(void) const { return mDigest; }
 	int GetLength(void) const { return SHA_DIGEST_LENGTH; }
+
+    bool operator==(const SHA1Hash& Other);
+    bool operator!=(const SHA1Hash& Other);
+
+    bool operator==(const uint8* Bytes);
+    bool operator!=(const uint8* Bytes);
 
 	std::string toString();
 

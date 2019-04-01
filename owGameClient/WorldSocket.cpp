@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // Include
-#include "AuthWorldController.h"
+#include "Client.h"
 
 // General
 #include "WorldSocket.h"
@@ -12,22 +12,15 @@
 
 const Opcodes IgnoredOpcodes[] = 
 {
-	Opcodes::SMSG_POWER_UPDATE,
 	Opcodes::SMSG_SET_PROFICIENCY,
-	Opcodes::MSG_SET_DUNGEON_DIFFICULTY,
 	Opcodes::SMSG_LOGIN_VERIFY_WORLD,
 	Opcodes::SMSG_ACCOUNT_DATA_TIMES,
 	Opcodes::SMSG_FEATURE_SYSTEM_STATUS,
-	Opcodes::SMSG_LEARNED_DANCE_MOVES,
 	Opcodes::SMSG_BINDPOINTUPDATE,
-	Opcodes::SMSG_TALENTS_INFO,
-	Opcodes::SMSG_INSTANCE_DIFFICULTY,
 	Opcodes::SMSG_INITIAL_SPELLS,
 	Opcodes::SMSG_SEND_UNLEARN_SPELLS,
 	Opcodes::SMSG_ACTION_BUTTONS,
 	Opcodes::SMSG_INITIALIZE_FACTIONS,
-	Opcodes::SMSG_ALL_ACHIEVEMENT_DATA,
-	Opcodes::SMSG_EQUIPMENT_SET_LIST,
 	Opcodes::SMSG_LOGIN_SETTIMESPEED,
 	Opcodes::SMSG_SET_FORCED_REACTIONS,
 	Opcodes::SMSG_COMPRESSED_UPDATE_OBJECT,
@@ -39,29 +32,18 @@ const Opcodes IgnoredOpcodes[] =
 	Opcodes::SMSG_SPELL_GO
 };
 
-CWorldSocket::CWorldSocket(CAuthWorldController* _world) :
-	m_World(_world),
-	m_Realm(nullptr),
-	socketBase(nullptr),
-	currPacket(nullptr)
+CWorldSocket::CWorldSocket(ISocketHandler& SocketHandler, std::shared_ptr<CWoWClient> WoWClient)
+    : TcpSocket(SocketHandler)
+	, m_WoWClient(WoWClient)
+    , currPacket(nullptr)
 {
-	
+    InitHandlers();
 }
 
 CWorldSocket::~CWorldSocket()
 {
-	m_ThreadPromise.set_value();
-	if (m_Thread.joinable()) m_Thread.join();
 
 	Log::Info("[WorldSocket]: All threads stopped.");
-
-	delete socketBase;
-}
-
-void CWorldSocket::Create(RealmInfo* _realm)
-{
-	m_Realm = _realm;
-	socketBase = new CSocketBase(m_Realm->getIP(), m_Realm->getPort());
 }
 
 //--
@@ -74,6 +56,7 @@ void CWorldSocket::SendData(Opcodes _opcode)
 	finalBuffer << (uint8)0;
 	finalBuffer << (uint8)4;
 	finalBuffer << (uint32)command;
+
 	SendData(finalBuffer.getData(), finalBuffer.getSize());
 }
 void CWorldSocket::SendData(Opcodes _opcode, CByteBuffer& _bb)
@@ -98,46 +81,40 @@ void CWorldSocket::SendData(const uint8* _data, uint32 _count)
 	uint8 data2[4096];
 	memcpy(data2, _data, _count);
 
-	cryptUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
+    m_WoWCryptoUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
 
-	socketBase->SendData(data2, _count);
+	//socketBase->SendData(data2, _count);
 }
 
-void CWorldSocket::WorldThread(std::future<void> futureObj)
+void CWorldSocket::OnConnect()
 {
-	while (futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout)
-	{
-		if (socketBase->getReadCache()->isReady())
-		{
-			OnDataReceive(socketBase->getReadCache()->Pop());
-		}
-	}
-
-	Log::Info("[WorldSocket]: Exit thread.");
 }
+
+void CWorldSocket::OnRawData(const char * buf, size_t len)
+{
+    CByteBuffer bb;
+    bb.Allocate(len);
+    bb.CopyData(reinterpret_cast<const uint8*>(buf), len);
+
+    OnDataReceive(bb);
+}
+
 
 void CWorldSocket::InitHandlers()
 {
-	m_Handlers[SMSG_AUTH_CHALLENGE] = FUNCTION_CLASS_WA_Builder(CWorldSocket, this, S_AuthChallenge, CByteBuffer&);
-	m_Handlers[SMSG_AUTH_RESPONSE] = FUNCTION_CLASS_WA_Builder(CWorldSocket, this, S_AuthResponse, CByteBuffer&);
+	m_Handlers[SMSG_AUTH_CHALLENGE] = std::bind(&CWorldSocket::S_AuthChallenge, this, std::placeholders::_1);
+	m_Handlers[SMSG_AUTH_RESPONSE] = std::bind(&CWorldSocket::S_AuthResponse, this, std::placeholders::_1);
 	
 	// Dummy
-	m_Handlers[SMSG_POWER_UPDATE] = nullptr;
 	m_Handlers[SMSG_SET_PROFICIENCY] = nullptr;
-	m_Handlers[MSG_SET_DUNGEON_DIFFICULTY] = nullptr;
 	m_Handlers[SMSG_LOGIN_VERIFY_WORLD] = nullptr;
 	m_Handlers[SMSG_ACCOUNT_DATA_TIMES] = nullptr;
 	m_Handlers[SMSG_FEATURE_SYSTEM_STATUS] = nullptr;
-	m_Handlers[SMSG_LEARNED_DANCE_MOVES] = nullptr;
 	m_Handlers[SMSG_BINDPOINTUPDATE] = nullptr;
-	m_Handlers[SMSG_TALENTS_INFO] = nullptr;
-	m_Handlers[SMSG_INSTANCE_DIFFICULTY] = nullptr;
 	m_Handlers[SMSG_INITIAL_SPELLS] = nullptr;
 	m_Handlers[SMSG_SEND_UNLEARN_SPELLS] = nullptr;
 	m_Handlers[SMSG_ACTION_BUTTONS] = nullptr;
 	m_Handlers[SMSG_INITIALIZE_FACTIONS] = nullptr;
-	m_Handlers[SMSG_ALL_ACHIEVEMENT_DATA] = nullptr;
-	m_Handlers[SMSG_EQUIPMENT_SET_LIST] = nullptr;
 	m_Handlers[SMSG_LOGIN_SETTIMESPEED] = nullptr;
 	m_Handlers[SMSG_SET_FORCED_REACTIONS] = nullptr;
 	m_Handlers[SMSG_COMPRESSED_UPDATE_OBJECT] = nullptr;
@@ -147,14 +124,6 @@ void CWorldSocket::InitHandlers()
 	m_Handlers[Opcodes::SMSG_TIME_SYNC_REQ] = nullptr;
 	m_Handlers[Opcodes::SMSG_SPELL_START] = nullptr;
 	m_Handlers[Opcodes::SMSG_SPELL_GO] = nullptr;
-
-	// Thread
-	std::future<void> futureObj = m_ThreadPromise.get_future();
-	m_Thread = std::thread(&CWorldSocket::WorldThread, this, std::move(futureObj));
-	m_Thread.detach();
-
-	// Event
-	//socketBase->setOnReceiveCallback(FUNCTION_CLASS_WA_Builder(CWorldSocket, this, OnDataReceive, ByteBuffer));
 }
 
 void CWorldSocket::OnDataReceive(CByteBuffer _buf)
@@ -172,21 +141,21 @@ void CWorldSocket::OnDataReceive(CByteBuffer _buf)
 		uint16 command = 0;
 
 		// 1. Decrypt size
-		cryptUtils.DecryptRecv(data + 0, 1);
+        m_WoWCryptoUtils.DecryptRecv(data + 0, 1);
 		uint8 firstByte = data[0];
 
 		// 2. Decrypt other size
 		if ((firstByte & 0x80) != 0)
 		{
 			sizeCorrection = 3;
-			cryptUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
+            m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
 			packetSize = (/*((data[0] & 0x7F) << 16) |*/ (data[1] << 8) | data[2]);
 			command = ((data[4] << 8) | data[3]);
 		}
 		else
 		{
 			sizeCorrection = 2;
-			cryptUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
+            m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
 			packetSize = ((data[0] << 8) | data[1]);
 			command = ((data[3] << 8) | data[2]);
 		}
@@ -213,7 +182,7 @@ void CWorldSocket::OnDataReceive(CByteBuffer _buf)
 	}
 }
 
-void CWorldSocket::AddHandler(Opcodes _opcode, Function_WA<CByteBuffer&>* _func)
+void CWorldSocket::AddHandler(Opcodes _opcode, HandlerFuncitonType _func)
 {
 	assert1(_func != nullptr);
 	m_Handlers.insert(std::make_pair(_opcode, _func));
@@ -221,12 +190,12 @@ void CWorldSocket::AddHandler(Opcodes _opcode, Function_WA<CByteBuffer&>* _func)
 
 void CWorldSocket::ProcessHandler(Opcodes _handler, CByteBuffer _buffer)
 {
-	std::unordered_map<Opcodes, Function_WA<CByteBuffer&>*>::iterator handler = m_Handlers.find(_handler);
+	std::unordered_map<Opcodes, HandlerFuncitonType>::iterator handler = m_Handlers.find(_handler);
 	if (handler != m_Handlers.end())
 	{
 		if (handler->second != nullptr)
 		{
-			(handler->second)->operator()(_buffer);
+			(handler->second).operator()(_buffer);
 		}
 	}
 }
@@ -255,7 +224,7 @@ void CWorldSocket::Packet2(CByteBuffer& _buf)
 	assert1(_buf.getPos() + buffRead <= _buf.getSize());
 	currPacket->data.Append(_buf.getDataFromCurrent(), buffRead);
 	_buf.seekRelative(buffRead);
-	//Log::Info("Packet[%s] readed '%d' of '%d'.", OpcodesNames[currPacket->opcode].c_str(), currPacket->data.getSize(), currPacket->dataSize);
+	Log::Info("Packet[%s] readed '%d' of '%d'.", OpcodesNames[currPacket->opcode].c_str(), currPacket->data.getSize(), currPacket->dataSize);
 
 	// Final
 	if (currPacket->data.getSize() == currPacket->dataSize)
@@ -270,18 +239,16 @@ void CWorldSocket::Packet2(CByteBuffer& _buf)
 
 void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 {
-	uint32 one;
-	_buff.readBytes(&one, 4);
+    std::shared_ptr<CWoWClient> WoWClient = m_WoWClient.lock();
+    _ASSERT(WoWClient);
 
 	uint32 seed; 
 	_buff.readBytes(&seed, 4);
-
-	_buff.seekRelative(24);
 	
 	BigNumber ourSeed;
 	ourSeed.SetRand(4 * 8);
 
-	std::string upperUsername = Utils::ToUpper(m_World->getUsername());
+	std::string upperUsername = Utils::ToUpper(WoWClient->getUsername());
 	uint8 zeroBytes[] = { 0, 0, 0, 0 };
 
 	SHA1Hash uSHA;
@@ -290,12 +257,12 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 	uSHA.UpdateData(zeroBytes, 4);
 	uSHA.UpdateBigNumbers(&ourSeed, nullptr);
 	uSHA.UpdateData(&reinterpret_cast<uint8&>(seed), 4);
-	uSHA.UpdateBigNumbers(m_World->getKey(), nullptr);
+	uSHA.UpdateBigNumbers(WoWClient->getKey(), nullptr);
 	uSHA.Finalize();
 
 	//------------------
 	CByteBuffer bb;
-	bb << (uint32)12345;
+	bb << (uint32)WoWClient->getClientBuild();
 	bb.WriteDummy(4);
 	bb << upperUsername;
 	bb.WriteDummy(4);
@@ -306,7 +273,7 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 	SendData(CMSG_AUTH_SESSION, bb);
 
 	// Start encription from here
-	cryptUtils.Init(m_World->getKey());
+    m_WoWCryptoUtils.Init(WoWClient->getKey());
 }
 
 void CWorldSocket::S_AuthResponse(CByteBuffer& _buff)
@@ -319,7 +286,7 @@ void CWorldSocket::S_AuthResponse(CByteBuffer& _buff)
 	};
 
 	CommandDetail detail;
-	_buff.readBytes(&detail);
+	_buff.readBytes(&detail, sizeof(uint8));
 
 	uint32 billingTimeRemaining;
 	_buff.readBytes(&billingTimeRemaining, 4);

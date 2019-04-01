@@ -4,9 +4,6 @@
 #include "GameState_Client.h"
 #include "GameState_World.h"
 
-// Additional (Windows)
-#include <ctime>
-
 int main(int argumentCount, char* arguments[])
 {
 #ifdef _DEBUG 
@@ -63,7 +60,7 @@ int main(int argumentCount, char* arguments[])
 
 		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>(&app));
 		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>(&app));
-		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
+		app.SetGameState(GameStatesNames::GAME_STATE_CLIENT);
 		app.Run();
 	}
 

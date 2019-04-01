@@ -13,7 +13,7 @@ public:
 	virtual ~SkyManager();
 
 public:
-	// SceneNode3D
+	// SceneNodeModel3D
 	void UpdateCamera(const Camera* camera) override;
 
 	// ISkyManager

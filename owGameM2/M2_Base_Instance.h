@@ -37,13 +37,13 @@ public:
 	bool Delete() override;
 	uint32 getPriority() const override { return 3; };
 
-	// SceneNode3D
+	// SceneNodeModel3D
 	virtual bool Accept(IVisitor& visitor) override;
 
 protected:
 	void InitAnimator();
 
-	// SceneNode3D
+	// SceneNodeModel3D
 	virtual void UpdateLocalTransform() override;
 	virtual void UpdateBounds() override;
 

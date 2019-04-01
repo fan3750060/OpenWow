@@ -1,30 +1,27 @@
 #pragma once
 
-#include "SocketBase.h"
 #include "AuthCodes.h"
 
 #include "SHA1.h"
 #include "BigNumber.h"
 
 // FORWARD BEGIN
-class CAuthWorldController;
+class CWoWClient;
 // FORWARD END
 
-class CAuthSocket : public ISocket
+class CAuthSocket : public TcpSocket
 {
 	typedef bool (CAuthSocket::* HandlerFunc)(CByteBuffer&);
 public:
-	CAuthSocket(CAuthWorldController* _world);
+	CAuthSocket(ISocketHandler& SocketHandler, std::shared_ptr<CWoWClient> WoWClient);
 	~CAuthSocket();
 
-	void Stop();
+	void SendData(const IByteBuffer& _bb);
+	void SendData(const uint8* _data, uint32 _count);
 
-	void SendData(const IByteBuffer& _bb) override;
-	void SendData(const uint8* _data, uint32 _count) override;
+    virtual void OnConnect() override;
+    virtual void OnRawData(const char *buf, size_t len) override;
 
-	// Thread
-	void AuthThread(std::future<void> futureObj);
-	
 	// Handlers
 	void InitHandlers();
 	void OnDataReceive(CByteBuffer& _buf);
@@ -39,15 +36,10 @@ public:
 	bool S_Realmlist(CByteBuffer& _buff);
 
 private:
-	CAuthWorldController* m_World;
-	CSocketBase* socketBase;
-
-	// Thread
-	std::promise<void>			m_ThreadPromise;
-	std::thread					m_Thread;
+	std::weak_ptr<CWoWClient> m_WoWClient;
 
 	std::unordered_map<eAuthCmd, HandlerFunc> m_Handlers;
 
 	BigNumber Key;
-	SHA1Hash MServer;
+	SHA1Hash  MServer;
 };

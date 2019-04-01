@@ -1,4 +1,3 @@
-#include "shaders_D3D\\Liquid\\Liquid_Material.h"
 #include "IDB_SHADER_COMMON_TYPES"
 
 struct VertexShaderInput
@@ -22,7 +21,15 @@ cbuffer PerObject : register(b0)
 }
 cbuffer Material : register(b2)
 {
-    Liquid_Material Material;
+	float gShallowAlpha;
+	float gDeepAlpha;
+	float2 pad0;
+	
+	float3 gColorLight;
+	float pad1;
+	
+	float3 gColorDark;
+	float pad2;
 };
 
 // Textures and samples
@@ -42,7 +49,7 @@ PixelShaderOutput PS_main(VertexShaderOutput IN) : SV_TARGET
 {
 	float alpha = DiffuseTexture.Sample(DiffuseTextureSampler, IN.texCoord).w;
 
-	float4 resultColor = float4(Material.gColorLight, (1.0 - IN.texCoord.z) * Material.gShallowAlpha) + float4(Material.gColorDark, IN.texCoord.z * Material.gDeepAlpha);
+	float4 resultColor = float4(gColorLight, (1.0 - IN.texCoord.z) * gShallowAlpha) + float4(gColorDark, IN.texCoord.z * gDeepAlpha);
 	resultColor *= (1.0 - alpha);
 	resultColor += float4(1.0f, 1.0f, 1.0f, 1.0f) * alpha;
 

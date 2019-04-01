@@ -21,9 +21,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="AuthCodes.cpp">
-      <Filter>Authentification</Filter>
-    </ClCompile>
     <ClCompile Include="AuthSocket.cpp">
       <Filter>Authentification</Filter>
     </ClCompile>
@@ -36,18 +33,7 @@
     <ClCompile Include="AuthCrypt.cpp">
       <Filter>World</Filter>
     </ClCompile>
-    <ClCompile Include="InPacket.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="OutPacket.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldHandlers.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="AuthWorldController.cpp" />
     <ClCompile Include="RealmInfo.cpp" />
-    <ClCompile Include="SocketBase.cpp" />
     <ClCompile Include="ARC4.cpp">
       <Filter>Cryptography</Filter>
     </ClCompile>
@@ -63,6 +49,10 @@
     <ClCompile Include="SHA1.cpp">
       <Filter>Cryptography</Filter>
     </ClCompile>
+    <ClCompile Include="InPacket.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -98,23 +88,9 @@
     <ClInclude Include="AuthCrypt.h">
       <Filter>World</Filter>
     </ClInclude>
-    <ClInclude Include="OutPacket.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="InPacket.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldHandlers.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="AuthWorldController.h" />
     <ClInclude Include="RealmInfo.h" />
     <ClInclude Include="OpcodesNames.h">
       <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="SocketBase.h" />
-    <ClInclude Include="..\shared\owGameSocket.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="ARC4.h">
       <Filter>Cryptography</Filter>
@@ -130,6 +106,13 @@
     </ClInclude>
     <ClInclude Include="SHA1.h">
       <Filter>Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="InPacket.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h" />
+    <ClInclude Include="..\shared\owGameClient.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

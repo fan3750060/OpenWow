@@ -26,9 +26,6 @@ private:
 private:
 	Viewport                             m_Viewport;
 
-	RenderTechnique                      m_3DTechnique;
-	RenderUITechnique                    m_UITechnique;
-
 	std::shared_ptr<CFreeCameraController>   m_CameraController;
 
 	std::shared_ptr<Query>               m_FrameQuery;
@@ -38,7 +35,7 @@ private:
 
 
 	std::shared_ptr<MapController>       m_MapController;
-	std::shared_ptr<CAuthWorldController>m_authWorldController;
+	std::shared_ptr<CWoWClient>m_authWorldController;
 
 	std::shared_ptr<CUITextNode>              m_CameraPosText;
 	std::shared_ptr<CUITextNode>              m_CameraRotText;

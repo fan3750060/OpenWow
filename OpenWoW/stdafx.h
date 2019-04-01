@@ -32,5 +32,5 @@
 #pragma comment(lib, "owGameCharacters.lib")
 
 // Socket
-#include <owGameSocket.h>
-#pragma comment(lib, "owGameSocket.lib")
+#include <owGameClient.h>
+#pragma comment(lib, "owGameClient.lib")

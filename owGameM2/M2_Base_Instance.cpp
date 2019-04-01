@@ -141,8 +141,8 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 		//}
 	}
 
-	// SceneNode3D
-	return SceneNode3D::Accept(visitor);
+	// SceneNodeModel3D
+	return SceneNodeModel3D::Accept(visitor);
 }
 
 void CM2_Base_Instance::InitAnimator()
@@ -170,7 +170,7 @@ void CM2_Base_Instance::UpdateLocalTransform()
 	}
 	else
 	{
-		SceneNode3D::UpdateLocalTransform();
+        SceneNodeModel3D::UpdateLocalTransform();
 	}
 }
 

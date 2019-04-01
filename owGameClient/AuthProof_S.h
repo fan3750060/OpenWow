@@ -7,7 +7,7 @@ struct AuthProof_S
 	AuthProof_S(CByteBuffer& reader)
 	{
 		cmd = AUTH_LOGON_PROOF;
-		reader.readBytes(&error);
+		reader.readBytes(&error, sizeof(uint8));
 		if (error != AuthResult::WOW_SUCCESS)
 		{
 			uint16 t;
