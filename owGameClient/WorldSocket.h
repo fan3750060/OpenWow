@@ -34,11 +34,9 @@ public:
 	CWorldSocket(ISocketHandler& SocketHandler, std::shared_ptr<CWoWClient> WoWClient);
 	~CWorldSocket();
 
-
-    
     // TcpSocket
-    void OnDisconnect() override final;
     void OnConnect() override final;
+    void OnDisconnect() override final;
     void OnRawData(const char *buf, size_t len) override final;
 
 	// CWorldSocket
@@ -50,18 +48,22 @@ public:
     void Packet2(CByteBuffer& _buf);
 
 	void InitHandlers();
-	void AddHandler(Opcodes _opcode, HandlerFuncitonType _func);
+	void AddHandler(Opcodes Opcode, HandlerFuncitonType Handler);
 	void ProcessPacket(CServerPacket ServerPacket);
 
     // Handlers
 	void S_AuthChallenge(CByteBuffer& _buff);
 	void S_AuthResponse(CByteBuffer& _buff);
+    void S_CharsEnum(CByteBuffer& _buff);
+
+private:
+    void S_AuthChallenge_CreateAddonsBuffer(CByteBuffer& AddonsBuffer);
 
 private:
     std::weak_ptr<CWoWClient>                           m_WoWClient;
 	AuthCrypt                                           m_WoWCryptoUtils;
 
-    CServerPacket*                                      currPacket;
+    CServerPacket *                                     m_CurrentPacket;
 
 	std::unordered_map<Opcodes, HandlerFuncitonType>	m_Handlers;
 };

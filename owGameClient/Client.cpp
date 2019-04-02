@@ -15,7 +15,7 @@ CWoWClient::CWoWClient(const std::string& AuthServerHost, uint16 AuthServerPort)
 
 void CWoWClient::BeginConnect(const std::string& Username, const std::string& Password)
 {
-    m_Username = Username;
+    m_Username = Utils::ToUpper(Username);
     m_Password = Password;
 
     m_AuthSocket = std::make_shared<CAuthSocket>(*m_SocketsHandler, shared_from_this());

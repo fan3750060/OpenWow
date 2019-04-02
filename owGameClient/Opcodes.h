@@ -1,27 +1,9 @@
-/*
- * Copyright (C) 2008-2018 TrinityCore <https://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #ifndef _OPCODES_H
 #define _OPCODES_H
 
 enum Opcodes : uint16
 {
-    MSG_NULL_ACTION = 0x000,
+    NULL_ACTION = 0x000,
     CMSG_BOOTME = 0x001,
     CMSG_DBLOOKUP = 0x002,
     SMSG_DBLOOKUP = 0x003,

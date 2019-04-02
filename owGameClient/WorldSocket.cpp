@@ -7,6 +7,7 @@
 #include "WorldSocket.h"
 
 // Additional
+#include <zlib\\zlib.h>
 #include "OpcodesNames.h"
 #include "HMACSHA1.h"
 
@@ -34,15 +35,14 @@ const Opcodes IgnoredOpcodes[] =
 
 CWorldSocket::CWorldSocket(ISocketHandler& SocketHandler, std::shared_ptr<CWoWClient> WoWClient)
     : TcpSocket(SocketHandler)
-    , currPacket(nullptr)
 	, m_WoWClient(WoWClient)
+    , m_CurrentPacket(nullptr)
 {
     InitHandlers();
 }
 
 CWorldSocket::~CWorldSocket()
 {
-
 	Log::Info("[WorldSocket]: All threads stopped.");
 }
 
@@ -51,25 +51,25 @@ CWorldSocket::~CWorldSocket()
 //
 // TcpSocket
 //
+void CWorldSocket::OnConnect()
+{
+}
+
 void CWorldSocket::OnDisconnect()
 {
     SetErasedByHandler();
 }
 
-void CWorldSocket::OnConnect()
-{
-}
-
 void CWorldSocket::OnRawData(const char * buf, size_t len)
 {
-    Log::Info("CWorldSocket: Receive data with size=%d", len);
+    //Log::Info("CWorldSocket: Receive data with size=%d", len);
 
     CByteBuffer bufferFromServer;
     bufferFromServer.Allocate(len);
     bufferFromServer.CopyData(reinterpret_cast<const uint8*>(buf), len);
 
     // Append to current packet
-    if (currPacket != nullptr)
+    if (m_CurrentPacket != nullptr)
     {
         Packet2(bufferFromServer);
     }
@@ -126,7 +126,7 @@ void CWorldSocket::OnRawData(const char * buf, size_t len)
 
         // DEBUG
         assert1(cmd < Opcodes::COUNT);
-        Log::Info("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[cmd].c_str(), cmd, size);
+        Log::Green("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[cmd].c_str(), cmd, size);
 
         // Seek to data
         bufferFromServer.seekRelative(sizeBytes /*Size*/ + sizeof(uint16) /*Opcode*/);
@@ -168,13 +168,13 @@ void CWorldSocket::SendData(const uint8* _data, uint32 _count)
 //
 void CWorldSocket::Packet1(uint16 Size, Opcodes Opcode)
 {
-    currPacket = new CServerPacket(Size, Opcode);
+    m_CurrentPacket = new CServerPacket(Size, Opcode);
 }
 
 void CWorldSocket::Packet2(CByteBuffer& _buf)
 {
     // Determinate how much we ALREADY readed
-    uint32 needToRead = currPacket->GetPacketSize() - currPacket->getSize();
+    uint32 needToRead = m_CurrentPacket->GetPacketSize() - m_CurrentPacket->getSize();
     if (needToRead > 0)
     {
         uint32 incomingBufferSize = _buf.getSize() - _buf.getPos();
@@ -186,22 +186,22 @@ void CWorldSocket::Packet2(CByteBuffer& _buf)
 
         // Fill data
         assert1(_buf.getPos() + needToRead <= _buf.getSize());
-        currPacket->Append(_buf.getDataFromCurrent(), needToRead);
+        m_CurrentPacket->Append(_buf.getDataFromCurrent(), needToRead);
 
         _buf.seekRelative(needToRead);
-        Log::Info("Packet[%s] readed '%d' of %d'.", OpcodesNames[currPacket->GetPacketOpcode()].c_str(), currPacket->getSize(), currPacket->GetPacketSize());
+        //Log::Info("Packet[%s] readed '%d' of %d'.", OpcodesNames[m_CurrentPacket->GetPacketOpcode()].c_str(), m_CurrentPacket->getSize(), m_CurrentPacket->GetPacketSize());
     }
 
     // Check if we read full packet
-    if (currPacket->getSize() == currPacket->GetPacketSize())
+    if (m_CurrentPacket->getSize() == m_CurrentPacket->GetPacketSize())
     {
-        ProcessPacket(*currPacket);
+        ProcessPacket(*m_CurrentPacket);
 
-        SafeDelete(currPacket);
+        SafeDelete(m_CurrentPacket);
     }
     else
     {
-        Log::Info("Packet[%s] is incomplete. Size '%d' of %d'.", OpcodesNames[currPacket->GetPacketOpcode()].c_str(), currPacket->getSize(), currPacket->GetPacketSize());
+        //Log::Info("Packet[%s] is incomplete. Size '%d' of %d'.", OpcodesNames[m_CurrentPacket->GetPacketOpcode()].c_str(), m_CurrentPacket->getSize(), m_CurrentPacket->GetPacketSize());
     }
 }
 
@@ -209,7 +209,8 @@ void CWorldSocket::InitHandlers()
 {
 	m_Handlers[SMSG_AUTH_CHALLENGE] = std::bind(&CWorldSocket::S_AuthChallenge, this, std::placeholders::_1);
 	m_Handlers[SMSG_AUTH_RESPONSE] = std::bind(&CWorldSocket::S_AuthResponse, this, std::placeholders::_1);
-	
+    m_Handlers[SMSG_CHAR_ENUM] = std::bind(&CWorldSocket::S_CharsEnum, this, std::placeholders::_1);
+
 	// Dummy
 	m_Handlers[SMSG_SET_PROFICIENCY] = nullptr;
 	m_Handlers[SMSG_LOGIN_VERIFY_WORLD] = nullptr;
@@ -231,10 +232,10 @@ void CWorldSocket::InitHandlers()
 	m_Handlers[Opcodes::SMSG_SPELL_GO] = nullptr;
 }
 
-void CWorldSocket::AddHandler(Opcodes _opcode, HandlerFuncitonType _func)
+void CWorldSocket::AddHandler(Opcodes Opcode, HandlerFuncitonType Handler)
 {
-	assert1(_func != nullptr);
-	m_Handlers.insert(std::make_pair(_opcode, _func));
+	assert1(Handler != nullptr);
+	m_Handlers.insert(std::make_pair(Opcode, Handler));
 }
 
 void CWorldSocket::ProcessPacket(CServerPacket ServerPacket)
@@ -259,31 +260,36 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
     std::shared_ptr<CWoWClient> WoWClient = m_WoWClient.lock();
     _ASSERT(WoWClient);
 
-	uint32 seedFromServer; 
-	_buff.readBytes(&seedFromServer, 4);
+	uint32 serverRandomSeed; 
+	_buff.readBytes(&serverRandomSeed, 4);
 	
-	BigNumber ourSeed;
-	ourSeed.SetRand(4 * 8);
+	BigNumber clientRandomSeed;
+    clientRandomSeed.SetRand(4 * 8);
 
-	std::string upperUsername = Utils::ToUpper(WoWClient->getUsername());
 	uint8 zeroBytes[] = { 0, 0, 0, 0 };
 
 	SHA1Hash uSHA;
 	uSHA.Initialize();
-	uSHA.UpdateData((const uint8*)upperUsername.c_str(), upperUsername.size());
+	uSHA.UpdateData((const uint8*)WoWClient->getUsername().c_str(), WoWClient->getUsername().size());
 	uSHA.UpdateData(zeroBytes, 4);
-    uSHA.UpdateBigNumbers(&ourSeed, nullptr);
-	uSHA.UpdateData(&reinterpret_cast<uint8&>(seedFromServer), 4);
+    uSHA.UpdateBigNumbers(&clientRandomSeed, nullptr);
+	uSHA.UpdateData(&reinterpret_cast<uint8&>(serverRandomSeed), 4);
 	uSHA.UpdateBigNumbers(WoWClient->getKey(), nullptr);
 	uSHA.Finalize();
 
-	//------------------
+	// Send auth packet to server. 
     CClientPacket p(CMSG_AUTH_SESSION);
-    p << (uint32)WoWClient->getClientBuild();
+    p << WoWClient->getClientBuild();
     p.WriteDummy(4);
-    p << upperUsername;
-    p.Append(ourSeed.AsByteArray(4).get(), 4);
+    p << WoWClient->getUsername();
+    p.Append(clientRandomSeed.AsByteArray(4).get(), 4);
     p.Append(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
+
+    // We must pass addons to connect to private servers
+    CByteBuffer addonsBuffer;
+    S_AuthChallenge_CreateAddonsBuffer(addonsBuffer);
+    p.Append(addonsBuffer.getData(), addonsBuffer.getSize());
+
     SendPacket(p);
 
 	// Start encription from here
@@ -338,4 +344,70 @@ void CWorldSocket::S_AuthResponse(CByteBuffer& _buff)
 	{
 		Log::Warn("Auth failed");
 	}
+}
+
+
+#include "Templates\\CharacterTemplate.h"
+
+void CWorldSocket::S_CharsEnum(CByteBuffer & _buff)
+{
+    uint8 charCnt;
+    _buff >> charCnt;
+
+    std::vector<CharacterTemplate> characters;
+    for (uint8 i = 0; i < charCnt; i++)
+    {
+        CharacterTemplate character;
+        character.TemplateFill(_buff);
+        characters.push_back(character);
+    }
+
+    if (characters.empty())
+        return;
+
+    CClientPacket p(CMSG_PLAYER_LOGIN);
+    p << characters[0].GUID;
+    SendPacket(p);
+}
+
+void CWorldSocket::S_AuthChallenge_CreateAddonsBuffer(CByteBuffer& AddonsBuffer)
+{
+    // This is deafult for blizzard addons
+    uint32 blizzardCrc  = 0x1c776d01LL;
+    
+    std::vector<std::string> blizzardAddOns;
+    blizzardAddOns.push_back("Blizzard_AuctionUI");
+    blizzardAddOns.push_back("Blizzard_BattlefieldMinimap");
+    blizzardAddOns.push_back("Blizzard_BindingUI");
+    blizzardAddOns.push_back("Blizzard_CombatText");
+    blizzardAddOns.push_back("Blizzard_CraftUI");
+    blizzardAddOns.push_back("Blizzard_GMSurveyUI");
+    blizzardAddOns.push_back("Blizzard_InspectUI");
+    blizzardAddOns.push_back("Blizzard_MacroUI");
+    blizzardAddOns.push_back("Blizzard_RaidUI");
+    blizzardAddOns.push_back("Blizzard_TalentUI");
+    blizzardAddOns.push_back("Blizzard_TradeSkillUI");
+    blizzardAddOns.push_back("Blizzard_TrainerUI");
+
+    CByteBuffer addonsBuffer;
+    for (auto addonName : blizzardAddOns)
+    {
+        addonsBuffer << addonName;
+        addonsBuffer << (uint32) blizzardCrc;
+        addonsBuffer << (uint32) 0x00;
+        addonsBuffer << (uint8)  0x00;
+    }
+
+    AddonsBuffer << static_cast<uint32>(addonsBuffer.getSize());
+    AddonsBuffer.WriteDummy(addonsBuffer.getSize());
+
+    uLongf destLen = addonsBuffer.getSize();
+    if (compress(AddonsBuffer.getDataFromCurrentEx() + sizeof(uint32), &destLen, addonsBuffer.getData(), addonsBuffer.getSize()) != Z_OK)
+    {
+        Log::Error("Can't compress addons.");
+        _ASSERT(false);
+    }
+
+    //                  addonsRealSize + compressedSize
+    AddonsBuffer.Resize(sizeof(uint32) + destLen);
 }
