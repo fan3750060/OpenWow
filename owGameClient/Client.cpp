@@ -27,6 +27,9 @@ void CWoWClient::BeginConnect(const std::string& Username, const std::string& Pa
     m_LoginPasswordHash.Initialize();
     m_LoginPasswordHash.UpdateData((const uint8*)loginPasswordUpperCaseString.c_str(), loginPasswordUpperCaseString.size());
     m_LoginPasswordHash.Finalize();
+
+    memset(loginPasswordUpperCase, 0x00, sizeof(loginPasswordUpperCase));
+    loginPasswordUpperCaseString = "";
 #pragma endregion
 
     m_AuthSocket = std::make_shared<CAuthSocket>(*m_SocketsHandler, shared_from_this());

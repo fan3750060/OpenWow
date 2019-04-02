@@ -51,9 +51,12 @@ public:
 	void ProcessPacket(CServerPacket ServerPacket);
 
     // Handlers
-	void S_AuthChallenge(CByteBuffer& _buff);
-	void S_AuthResponse(CByteBuffer& _buff);
-    void S_CharsEnum(CByteBuffer& _buff);
+	void S_AuthChallenge(CByteBuffer& Buffer);
+	void S_AuthResponse(CByteBuffer& Buffer);
+    void S_CharsEnum(CByteBuffer& Buffer);
+
+    // After login
+    void S_Login_Verify_World(CByteBuffer& Buffer);
 
 private:
     void S_AuthChallenge_CreateAddonsBuffer(CByteBuffer& AddonsBuffer);

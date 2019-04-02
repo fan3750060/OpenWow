@@ -286,7 +286,7 @@ bool CAuthSocket::S_LoginProof(CByteBuffer& _buff)
             break;
 
             case eAuthResults::REALM_AUTH_NO_MATCH:
-                Log::Error("REALM_AUTH_WRONG_BUILD_NUMBER");
+                Log::Error("REALM_AUTH_NO_MATCH");
             break;
         }
 

@@ -35,9 +35,9 @@ void CGameState_Client::S_CharEnum(CByteBuffer& _buff)
 	CharacterTemplate& charTemplate = chars[0];
 	vec3 charPosition = fromGameToReal(vec3(charTemplate.Y, charTemplate.X, charTemplate.Z));
 
-	CByteBuffer bb;
-	bb << (uint64)charTemplate.GUID;
-	m_authWorldController->getWorldSocket()->SendData(CMSG_PLAYER_LOGIN, bb);
+	//CByteBuffer bb;
+	//bb << (uint64)charTemplate.GUID;
+	//m_authWorldController->getWorldSocket()->SendData(CMSG_PLAYER_LOGIN, bb);
 
 	m_CameraController->GetCamera()->SetTranslate(charPosition);
 
@@ -95,7 +95,7 @@ bool CGameState_Client::Init()
 	//
 
 	m_authWorldController = std::make_shared<CWoWClient>();
-	m_authWorldController->StartAuth();
+	//m_authWorldController->StartAuth();
 
 	//m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, CByteBuffer&));
 

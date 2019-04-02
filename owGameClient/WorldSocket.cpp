@@ -201,9 +201,11 @@ void CWorldSocket::InitHandlers()
 	m_Handlers[SMSG_AUTH_RESPONSE] = std::bind(&CWorldSocket::S_AuthResponse, this, std::placeholders::_1);
     m_Handlers[SMSG_CHAR_ENUM] = std::bind(&CWorldSocket::S_CharsEnum, this, std::placeholders::_1);
 
+
+    m_Handlers[SMSG_LOGIN_VERIFY_WORLD] = std::bind(&CWorldSocket::S_Login_Verify_World, this, std::placeholders::_1);
+
 	// Dummy
 	m_Handlers[SMSG_SET_PROFICIENCY] = nullptr;
-	m_Handlers[SMSG_LOGIN_VERIFY_WORLD] = nullptr;
 	m_Handlers[SMSG_ACCOUNT_DATA_TIMES] = nullptr;
 	m_Handlers[SMSG_FEATURE_SYSTEM_STATUS] = nullptr;
 	m_Handlers[SMSG_BINDPOINTUPDATE] = nullptr;
@@ -359,6 +361,29 @@ void CWorldSocket::S_CharsEnum(CByteBuffer & _buff)
     p << characters[0].GUID;
     SendPacket(p);
 }
+
+void CWorldSocket::S_Login_Verify_World(CByteBuffer & Buffer)
+{
+    uint32 mapID;
+    Buffer >> mapID;
+
+    float positionX;
+    Buffer >> positionX;
+
+    float positionY;
+    Buffer >> positionY;
+
+    float positionZ;
+    Buffer >> positionZ;
+
+    float orientation;
+    Buffer >> orientation;
+
+    _ASSERT(Buffer.isEof());
+}
+
+
+
 
 void CWorldSocket::S_AuthChallenge_CreateAddonsBuffer(CByteBuffer& AddonsBuffer)
 {
