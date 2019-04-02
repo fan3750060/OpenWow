@@ -24,8 +24,9 @@
     <ClCompile Include="AuthSocket.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="BigNumber.cpp" />
+    <ClCompile Include="ClientPacket.cpp" />
     <ClCompile Include="HMACSHA1.cpp" />
-    <ClCompile Include="InPacket.cpp" />
+    <ClCompile Include="ServerPacket.cpp" />
     <ClCompile Include="Opcodes.cpp" />
     <ClCompile Include="OpenSSLCrypto.cpp" />
     <ClCompile Include="RealmInfo.cpp" />
@@ -50,9 +51,10 @@
     <ClInclude Include="AuthSocket.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="BigNumber.h" />
+    <ClInclude Include="ClientPacket.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="HMACSHA1.h" />
-    <ClInclude Include="InPacket.h" />
+    <ClInclude Include="ServerPacket.h" />
     <ClInclude Include="Opcodes.h" />
     <ClInclude Include="OpcodesNames.h" />
     <ClInclude Include="OpenSSLCrypto.h" />

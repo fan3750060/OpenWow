@@ -34,8 +34,8 @@ const Opcodes IgnoredOpcodes[] =
 
 CWorldSocket::CWorldSocket(ISocketHandler& SocketHandler, std::shared_ptr<CWoWClient> WoWClient)
     : TcpSocket(SocketHandler)
-	, m_WoWClient(WoWClient)
     , currPacket(nullptr)
+	, m_WoWClient(WoWClient)
 {
     InitHandlers();
 }
@@ -46,44 +46,14 @@ CWorldSocket::~CWorldSocket()
 	Log::Info("[WorldSocket]: All threads stopped.");
 }
 
-//--
 
-void CWorldSocket::SendData(Opcodes _opcode)
+
+//
+// TcpSocket
+//
+void CWorldSocket::OnDisconnect()
 {
-	Opcodes command = (Opcodes)((&reinterpret_cast<uint8&>(_opcode))[1] << 8 | (&reinterpret_cast<uint8&>(_opcode))[0]);
-
-	CByteBuffer finalBuffer;
-	finalBuffer << (uint8)0;
-	finalBuffer << (uint8)4;
-	finalBuffer << (uint32)command;
-
-	SendData(finalBuffer.getData(), finalBuffer.getSize());
-}
-void CWorldSocket::SendData(Opcodes _opcode, CByteBuffer& _bb)
-{
-	assert1((_bb.getSize() + 4) < UINT16_MAX);
-
-	uint16 size0 = _bb.getSize() + 4 /* HEADER */;
-	uint16 sizeFinal = ((&reinterpret_cast<uint8&>(size0))[0] << 8 | (&reinterpret_cast<uint8&>(size0))[1]);
-	Opcodes command = (Opcodes)((&reinterpret_cast<uint8&>(_opcode))[1] << 8 | (&reinterpret_cast<uint8&>(_opcode))[0]);
-
-	CByteBuffer finalBuffer;
-	finalBuffer << sizeFinal;
-	finalBuffer << (uint32)command;
-	finalBuffer << _bb;
-
-	SendData(finalBuffer.getData(), finalBuffer.getSize());
-}
-void CWorldSocket::SendData(const uint8* _data, uint32 _count)
-{
-	assert1(_count < 4096);
-
-	uint8 data2[4096];
-	memcpy(data2, _data, _count);
-
-    m_WoWCryptoUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
-
-    SendBuf(reinterpret_cast<const char*>(data2), _count);
+    SetErasedByHandler();
 }
 
 void CWorldSocket::OnConnect()
@@ -92,13 +62,148 @@ void CWorldSocket::OnConnect()
 
 void CWorldSocket::OnRawData(const char * buf, size_t len)
 {
-    CByteBuffer bb;
-    bb.Allocate(len);
-    bb.CopyData(reinterpret_cast<const uint8*>(buf), len);
+    Log::Info("CWorldSocket: Receive data with size=%d", len);
 
-    OnDataReceive(bb);
+    CByteBuffer bufferFromServer;
+    bufferFromServer.Allocate(len);
+    bufferFromServer.CopyData(reinterpret_cast<const uint8*>(buf), len);
+
+    // Append to current packet
+    if (currPacket != nullptr)
+    {
+        Packet2(bufferFromServer);
+    }
+
+    while (!bufferFromServer.isEof())
+    {
+        uint8* data = bufferFromServer.getDataFromCurrentEx();
+        uint8  sizeBytes = sizeof(uint16);
+        uint16 size = 0;
+        uint16 cmd = 0;
+
+#if 0
+        // 1. Decrypt size
+        m_WoWCryptoUtils.DecryptRecv(data + 0, 1);
+        uint8 firstByte = data[0];
+
+        // 2. Decrypt other size
+        if ((firstByte & 0x80) != 0)
+        {
+            sizeBytes = 3;
+            m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeBytes);
+            size = (((data[0] & 0x7F) << 16) | (data[1] << 8) | data[2]);
+            cmd = ((data[4] << 8) | data[3]);
+        }
+        else
+        {
+            sizeBytes = 2;
+            m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeBytes);
+            size = ((data[0] << 8) | data[1]);
+            cmd = ((data[3] << 8) | data[2]);
+        }
+#else
+        // Decrypt size and header
+        m_WoWCryptoUtils.DecryptRecv(data + 0, sizeof(uint16) + sizeof(uint16));
+
+        // Check compressed packets
+        _ASSERT((data[0] & 0x80) == 0);
+
+        // Size and opcode
+        size = ((data[0] << 8) | data[1]);
+        cmd = ((data[3] << 8) | data[2]);
+#endif
+
+        //
+        bool needMess = true;
+        for (uint32 i = 0; i < OW_COUNT_ELEMENTS(IgnoredOpcodes); i++)
+        {
+            if (IgnoredOpcodes[i] == cmd)
+            {
+                needMess = false;
+                break;
+            }
+        }
+
+        // DEBUG
+        assert1(cmd < Opcodes::COUNT);
+        Log::Info("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[cmd].c_str(), cmd, size);
+
+        // Seek to data
+        bufferFromServer.seekRelative(sizeBytes /*Size*/ + sizeof(uint16) /*Opcode*/);
+
+        Packet1(size - sizeof(uint16) /*Opcode*/, static_cast<Opcodes>(cmd));
+        Packet2(bufferFromServer);
+    }
 }
 
+
+
+//
+// CWorldSocket
+//
+
+void CWorldSocket::SendPacket(CClientPacket& Packet)
+{
+    Packet.Complete();
+
+    SendData(Packet.getData(), Packet.getSize());
+}
+
+void CWorldSocket::SendData(const uint8* _data, uint32 _count)
+{
+    assert1(_count < 4096);
+
+    uint8 data2[4096];
+    memcpy(data2, _data, _count);
+
+    m_WoWCryptoUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
+
+    SendBuf(reinterpret_cast<const char*>(data2), _count);
+}
+
+
+
+//
+// Packets contructor
+//
+void CWorldSocket::Packet1(uint16 Size, Opcodes Opcode)
+{
+    currPacket = new CServerPacket(Size, Opcode);
+}
+
+void CWorldSocket::Packet2(CByteBuffer& _buf)
+{
+    // Determinate how much we ALREADY readed
+    uint32 needToRead = currPacket->GetPacketSize() - currPacket->getSize();
+    if (needToRead > 0)
+    {
+        uint32 incomingBufferSize = _buf.getSize() - _buf.getPos();
+
+        if (needToRead > incomingBufferSize)
+        {
+            needToRead = incomingBufferSize;
+        }
+
+        // Fill data
+        assert1(_buf.getPos() + needToRead <= _buf.getSize());
+        currPacket->Append(_buf.getDataFromCurrent(), needToRead);
+
+        _buf.seekRelative(needToRead);
+        Log::Info("Packet[%s] readed '%d' of %d'.", OpcodesNames[currPacket->GetPacketOpcode()].c_str(), currPacket->getSize(), currPacket->GetPacketSize());
+    }
+
+    // Check if we read full packet
+    if (currPacket->getSize() == currPacket->GetPacketSize())
+    {
+        ProcessPacket(*currPacket);
+
+        SafeDelete(currPacket);
+    }
+    else
+    {
+        Log::Info("Packet[%s] is incomplete. Size '%d' of %d'.", OpcodesNames[currPacket->GetPacketOpcode()].c_str(), currPacket->getSize(), currPacket->GetPacketSize());
+    }
+}
 
 void CWorldSocket::InitHandlers()
 {
@@ -126,125 +231,36 @@ void CWorldSocket::InitHandlers()
 	m_Handlers[Opcodes::SMSG_SPELL_GO] = nullptr;
 }
 
-void CWorldSocket::OnDataReceive(CByteBuffer _buf)
-{
-	if (currPacket != nullptr)
-	{
-		Packet2(_buf);
-	}
-
-	while (!_buf.isEof())
-	{
-		uint8* data = _buf.getDataFromCurrentEx();
-		uint32 packetSize = 0;
-		uint8 sizeCorrection = 0;
-		uint16 command = 0;
-
-		// 1. Decrypt size
-        m_WoWCryptoUtils.DecryptRecv(data + 0, 1);
-		uint8 firstByte = data[0];
-
-		// 2. Decrypt other size
-		if ((firstByte & 0x80) != 0)
-		{
-			sizeCorrection = 3;
-            m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
-			packetSize = (((data[0] & 0x7F) << 16) | (data[1] << 8) | data[2]);
-			command = ((data[4] << 8) | data[3]);
-		}
-		else
-		{
-			sizeCorrection = 2;
-            m_WoWCryptoUtils.DecryptRecv(data + 1, 1 + sizeCorrection);
-			packetSize = ((data[0] << 8) | data[1]);
-			command = ((data[3] << 8) | data[2]);
-		}
-
-		//
-		bool needMess = true;
-		for (uint32 i = 0; i < OW_COUNT_ELEMENTS(IgnoredOpcodes); i++)
-		{
-			if (IgnoredOpcodes[i] == command)
-			{
-				needMess = false;
-				break;
-			}
-		}
-
-		// DEBUG
-		assert1(command < Opcodes::COUNT);
-		Log::Info("CWorldSocket: Command '%s' (0x%X) size=%d", OpcodesNames[command].c_str(), command, packetSize - sizeCorrection);
-
-        // Seek to data
-		_buf.seekRelative(sizeCorrection + sizeof(uint16));
-
-		Packet1(command, packetSize - sizeCorrection);
-		Packet2(_buf);
-	}
-}
-
 void CWorldSocket::AddHandler(Opcodes _opcode, HandlerFuncitonType _func)
 {
 	assert1(_func != nullptr);
 	m_Handlers.insert(std::make_pair(_opcode, _func));
 }
 
-void CWorldSocket::ProcessHandler(Opcodes _handler, CByteBuffer _buffer)
+void CWorldSocket::ProcessPacket(CServerPacket ServerPacket)
 {
-	std::unordered_map<Opcodes, HandlerFuncitonType>::iterator handler = m_Handlers.find(_handler);
-	if (handler != m_Handlers.end())
-	{
-		if (handler->second != nullptr)
+	std::unordered_map<Opcodes, HandlerFuncitonType>::iterator handler = m_Handlers.find(ServerPacket.GetPacketOpcode());
+    if (handler != m_Handlers.end())
+    {
+        if (handler->second != nullptr)
 		{
-			(handler->second).operator()(_buffer);
+			(handler->second).operator()(ServerPacket);
 		}
 	}
 }
 
-//--
 
-void CWorldSocket::Packet1(uint16 _command, uint32 _size)
-{
-	CByteBuffer buff;
 
-	currPacket = new InPacket();
-	currPacket->dataSize = _size;
-	currPacket->opcode = (Opcodes)_command;
-}
-
-void CWorldSocket::Packet2(CByteBuffer& _buf)
-{
-	uint32 buffRead = currPacket->dataSize - currPacket->data.getSize();
-	uint32 buffToEnd = _buf.getSize() - _buf.getPos();
-	if (buffRead > buffToEnd)
-	{
-		buffRead = buffToEnd;
-	}
-	
-	// Fill data
-	assert1(_buf.getPos() + buffRead <= _buf.getSize());
-	currPacket->data.Append(_buf.getDataFromCurrent(), buffRead);
-	_buf.seekRelative(buffRead);
-	Log::Info("Packet[%s] readed '%d' of '%d'.", OpcodesNames[currPacket->opcode].c_str(), currPacket->data.getSize(), currPacket->dataSize);
-
-	// Final
-	if (currPacket->data.getSize() == currPacket->dataSize)
-	{
-		ProcessHandler(currPacket->opcode, currPacket->data);
-
-		SafeDelete(currPacket);
-	}
-}
-
-//--
-
+//
+// Handlers
+//
 void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 {
     std::shared_ptr<CWoWClient> WoWClient = m_WoWClient.lock();
     _ASSERT(WoWClient);
 
-	uint32 seed; 
-	_buff.readBytes(&seed, 4);
+	uint32 seedFromServer; 
+	_buff.readBytes(&seedFromServer, 4);
 	
 	BigNumber ourSeed;
 	ourSeed.SetRand(4 * 8);
@@ -256,19 +272,19 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 	uSHA.Initialize();
 	uSHA.UpdateData((const uint8*)upperUsername.c_str(), upperUsername.size());
 	uSHA.UpdateData(zeroBytes, 4);
-	uSHA.UpdateBigNumbers(&ourSeed, nullptr);
-	uSHA.UpdateData(&reinterpret_cast<uint8&>(seed), 4);
+    uSHA.UpdateBigNumbers(&ourSeed, nullptr);
+	uSHA.UpdateData(&reinterpret_cast<uint8&>(seedFromServer), 4);
 	uSHA.UpdateBigNumbers(WoWClient->getKey(), nullptr);
 	uSHA.Finalize();
 
 	//------------------
-	CByteBuffer bb;
-	bb << (uint32)WoWClient->getClientBuild();
-	bb.WriteDummy(4);
-	bb << upperUsername;
-	bb.Append(ourSeed.AsByteArray(4).get(), 4);
-	bb.Append(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
-	SendData(CMSG_AUTH_SESSION, bb);
+    CClientPacket p(CMSG_AUTH_SESSION);
+    p << (uint32)WoWClient->getClientBuild();
+    p.WriteDummy(4);
+    p << upperUsername;
+    p.Append(ourSeed.AsByteArray(4).get(), 4);
+    p.Append(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
+    SendPacket(p);
 
 	// Start encription from here
     m_WoWCryptoUtils.SetKey(WoWClient->getKey()->AsByteArray().get(), 40);
@@ -309,7 +325,9 @@ void CWorldSocket::S_AuthResponse(CByteBuffer& _buff)
 
 	if (detail == CommandDetail::AUTH_OK)
 	{
-		SendData(CMSG_CHAR_ENUM);
+        CClientPacket p(CMSG_CHAR_ENUM);
+		SendPacket(p);
+
 		Log::Green("Succes access to server!!!");
 	}
 	else if (detail == CommandDetail::AUTH_WAIT_QUEUE)

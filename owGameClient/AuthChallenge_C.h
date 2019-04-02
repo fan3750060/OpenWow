@@ -22,7 +22,7 @@ struct AuthChallenge_C : public ISendable
 		bb << build;
 		bb.Append((const uint8*)"68x", 4);   // x86
 		bb.Append((const uint8*)"niW", 4);   // Win
-		bb.Append((const uint8*)"URur", 4);  // ruRU
+		bb.Append((const uint8*)"SUne", 4);  // ruRU
 		bb << (uint32)180;
 		bb << IPv4;
 		bb << (uint8)Login.size();

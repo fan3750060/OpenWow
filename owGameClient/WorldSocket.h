@@ -2,7 +2,8 @@
 
 #include "AuthCrypt.h"
 #include "Opcodes.h"
-#include "InPacket.h"
+#include "ServerPacket.h"
+#include "ClientPacket.h"
 #include "RealmInfo.h"
 
 // FORWARD BEGIN
@@ -33,32 +34,34 @@ public:
 	CWorldSocket(ISocketHandler& SocketHandler, std::shared_ptr<CWoWClient> WoWClient);
 	~CWorldSocket();
 
-	void SendData(Opcodes _opcode);
-	void SendData(Opcodes _opcode, CByteBuffer& _bb);
-	void SendData(const uint8* _data, uint32 _count);
 
+    
+    // TcpSocket
+    void OnDisconnect() override final;
     void OnConnect() override final;
     void OnRawData(const char *buf, size_t len) override final;
 
-	// Handlers
+	// CWorldSocket
+    void SendPacket(CClientPacket& Packet);
+    void SendData(const uint8* _data, uint32 _count);
+
+    // Packets contructor
+    void Packet1(uint16 Size, Opcodes Opcode);
+    void Packet2(CByteBuffer& _buf);
+
 	void InitHandlers();
-	void OnDataReceive(CByteBuffer _buf);
-
-	// Handlers
 	void AddHandler(Opcodes _opcode, HandlerFuncitonType _func);
-	void ProcessHandler(Opcodes _handler, CByteBuffer _buffer);
+	void ProcessPacket(CServerPacket ServerPacket);
 
-	// Build packet
-	InPacket* currPacket;
-	void Packet1(uint16 _command, uint32 _size);
-	void Packet2(CByteBuffer& _buf);
-
+    // Handlers
 	void S_AuthChallenge(CByteBuffer& _buff);
 	void S_AuthResponse(CByteBuffer& _buff);
 
 private:
     std::weak_ptr<CWoWClient>                           m_WoWClient;
 	AuthCrypt                                           m_WoWCryptoUtils;
+
+    CServerPacket*                                      currPacket;
 
 	std::unordered_map<Opcodes, HandlerFuncitonType>	m_Handlers;
 };

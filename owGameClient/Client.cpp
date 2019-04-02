@@ -21,7 +21,7 @@ void CWoWClient::BeginConnect(const std::string& Username, const std::string& Pa
     m_AuthSocket = std::make_shared<CAuthSocket>(*m_SocketsHandler, shared_from_this());
     m_AuthSocket->Open(getHost(), getPort());
 
-    m_SocketsHandler->Add(m_AuthSocket.operator->());
+    m_SocketsHandler->Add(m_AuthSocket);
     m_SocketsHandler->Select(1, 0);
 
     while (m_SocketsHandler->GetCount())
@@ -42,7 +42,7 @@ void CWoWClient::OnSuccessConnect(BigNumber Key)
     m_WorldSocket = std::make_shared<CWorldSocket>(*m_SocketsHandler, shared_from_this());
     m_WorldSocket->Open(currRealm->getIP(), currRealm->getPort());
 
-    m_SocketsHandler->Add(m_WorldSocket.operator->());
+    m_SocketsHandler->Add(m_WorldSocket);
 }
 
 void CWoWClient::AddRealm(RealmInfo& _realm)
