@@ -454,44 +454,9 @@ public:
         \return true if the socket should be moved to connection pool after use */
     bool Retain();
     /** Copy connection parameters from sock. */
-    void CopyConnection(Socket *sock);
+    void CopyConnection(std::shared_ptr<Socket> sock);
     //@}
 #endif // ENABLE_POOL
-
-#ifdef ENABLE_RESOLVER
-    /** \name Asynchronous Resolver */
-    //@{
-    /** Request an asynchronous dns resolution.
-        \param host hostname to be resolved
-        \param port port number passed along for the ride
-        \return Resolve ID */
-    int Resolve(const std::string& host, port_t port = 0);
-#ifdef ENABLE_IPV6
-    int Resolve6(const std::string& host, port_t port = 0);
-#endif
-    /** Callback returning a resolved address.
-        \param id Resolve ID from Resolve call
-        \param a resolved ip address
-        \param port port number passed to Resolve */
-    virtual void OnResolved(int id, ipaddr_t a, port_t port);
-#ifdef ENABLE_IPV6
-    virtual void OnResolved(int id, in6_addr& a, port_t port);
-#endif
-    /** Request asynchronous reverse dns lookup.
-        \param a in_addr to be translated */
-    int Resolve(ipaddr_t a);
-#ifdef ENABLE_IPV6
-    int Resolve(in6_addr& a);
-#endif
-    /** Callback returning reverse resolve results.
-        \param id Resolve ID
-        \param name Resolved hostname */
-    virtual void OnReverseResolved(int id, const std::string& name);
-    /** Callback indicating failed dns lookup.
-        \param id Resolve ID */
-    virtual void OnResolveFailed(int id);
-    //@}
-#endif  // ENABLE_RESOLVER
 
 #ifdef ENABLE_DETACH
     /** \name Thread Support */

@@ -640,7 +640,7 @@ bool Socket::RetryClientConnect()
 
 
 #ifdef ENABLE_POOL
-void Socket::CopyConnection(Socket *sock)
+void Socket::CopyConnection(std::shared_ptr<Socket> sock)
 {
     Attach(sock->GetSocket());
 #ifdef ENABLE_IPV6
@@ -760,58 +760,6 @@ void Socket::SetSlaveHandler(ISocketHandler *p)
 
 
 #endif // ENABLE_DETACH
-
-
-#ifdef ENABLE_RESOLVER
-int Socket::Resolve(const std::string& host, port_t port)
-{
-    return Handler().Resolve(shared_from_this(), host, port);
-}
-
-
-#ifdef ENABLE_IPV6
-int Socket::Resolve6(const std::string& host, port_t port)
-{
-    return Handler().Resolve6(shared_from_this(), host, port);
-}
-#endif
-
-
-int Socket::Resolve(ipaddr_t a)
-{
-    return Handler().Resolve(shared_from_this(), a);
-}
-
-
-#ifdef ENABLE_IPV6
-int Socket::Resolve(in6_addr& a)
-{
-    return Handler().Resolve(shared_from_this(), a);
-}
-#endif
-
-
-void Socket::OnResolved(int, ipaddr_t, port_t)
-{
-}
-
-
-#ifdef ENABLE_IPV6
-void Socket::OnResolved(int, in6_addr&, port_t)
-{
-}
-#endif
-
-
-void Socket::OnReverseResolved(int, const std::string&)
-{
-}
-
-
-void Socket::OnResolveFailed(int)
-{
-}
-#endif // ENABLE_RESOLVER
 
 
 /* IP options */

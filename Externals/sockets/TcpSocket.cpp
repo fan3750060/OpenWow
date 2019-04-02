@@ -68,6 +68,7 @@ namespace SOCKETS_NAMESPACE {
 #ifdef _MSC_VER
 #pragma warning(disable:4355)
 #endif
+
 TcpSocket::TcpSocket(ISocketHandler& h) : StreamSocket(h)
 , ibuf(TCP_BUFSIZE_READ)
 , m_b_input_buffer_disabled(false)
@@ -83,9 +84,6 @@ TcpSocket::TcpSocket(ISocketHandler& h) : StreamSocket(h)
 , m_transfer_limit(0)
 , m_output_length(0)
 , m_repeat_length(0)
-#ifdef ENABLE_RESOLVER
-, m_resolver_id(0)
-#endif
 #ifdef ENABLE_RECONNECT
 , m_b_reconnect(false)
 , m_b_is_reconnect(false)
@@ -115,9 +113,6 @@ TcpSocket::TcpSocket(ISocketHandler& h, size_t isize, size_t osize) : StreamSock
 , m_transfer_limit(0)
 , m_output_length(0)
 , m_repeat_length(0)
-#ifdef ENABLE_RESOLVER
-, m_resolver_id(0)
-#endif
 #ifdef ENABLE_RECONNECT
 , m_b_reconnect(false)
 , m_b_is_reconnect(false)
@@ -190,11 +185,11 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
 #ifdef ENABLE_POOL
     if (Handler().PoolEnabled())
     {
-        ISocketHandler::PoolSocket *pools = Handler().FindConnection(SOCK_STREAM, "tcp", ad);
+        std::shared_ptr<ISocketHandler::PoolSocket> pools = Handler().FindConnection(SOCK_STREAM, "tcp", ad);
         if (pools)
         {
             CopyConnection(pools);
-            delete pools;
+            pools.reset();
 
             SetIsClient();
             SetCallOnConnect(); // ISocketHandler must call OnConnect
@@ -276,107 +271,28 @@ bool TcpSocket::Open(const std::string &host, port_t port)
 #ifdef IPPROTO_IPV6
     if (IsIpv6())
     {
-#ifdef ENABLE_RESOLVER
-        if (!Handler().ResolverEnabled() || Utility::isipv6(host))
-        {
-#endif
-            in6_addr a;
-            if (!Utility::u2ip(host, a))
-            {
-                SetCloseAndDelete();
-                return false;
-            }
-            Ipv6Address ad(a, port);
-            Ipv6Address local;
-            return Open(ad, local);
-#ifdef ENABLE_RESOLVER
-        }
-        m_resolver_id = Resolve6(host, port);
-        return true;
-#endif
-    }
-#endif
-#endif
-#ifdef ENABLE_RESOLVER
-    if (!Handler().ResolverEnabled() || Utility::isipv4(host))
-    {
-#endif
-        ipaddr_t l;
-        if (!Utility::u2ip(host, l))
+        in6_addr a;
+        if (!Utility::u2ip(host, a))
         {
             SetCloseAndDelete();
             return false;
         }
-        Ipv4Address ad(l, port);
-        Ipv4Address local;
-        return Open(ad, local);
-#ifdef ENABLE_RESOLVER
-    }
-    // resolve using async resolver thread
-    m_resolver_id = Resolve(host, port);
-    return true;
-#endif
-}
-
-
-#ifdef ENABLE_RESOLVER
-void TcpSocket::OnResolved(int id, ipaddr_t a, port_t port)
-{
-    DEB(fprintf(stderr, "TcpSocket::OnResolved id %d addr %x port %d\n", id, a, port);)
-        if (id == m_resolver_id)
-        {
-            if (a && port)
-            {
-                Ipv4Address ad(a, port);
-                Ipv4Address local;
-                if (Open(ad, local))
-                {
-                    if (!Handler().Valid(this))
-                    {
-                        Handler().Add(this);
-                    }
-                }
-            }
-            else
-            {
-                Handler().LogError(shared_from_this(), "OnResolved", 0, "Resolver failed", LOG_LEVEL_FATAL);
-                SetCloseAndDelete();
-            }
-        }
-        else
-        {
-            Handler().LogError(shared_from_this(), "OnResolved", id, "Resolver returned wrong job id", LOG_LEVEL_FATAL);
-            SetCloseAndDelete();
-        }
-}
-
-
-#ifdef ENABLE_IPV6
-void TcpSocket::OnResolved(int id, in6_addr& a, port_t port)
-{
-    if (id == m_resolver_id)
-    {
         Ipv6Address ad(a, port);
-        if (ad.IsValid())
-        {
-            Ipv6Address local;
-            if (Open(ad, local))
-            {
-                if (!Handler().Valid(this))
-                {
-                    Handler().Add(this);
-                }
-            }
-        }
+        Ipv6Address local;
+        return Open(ad, local);
     }
-    else
+#endif
+#endif
+    ipaddr_t l;
+    if (!Utility::u2ip(host, l))
     {
-        Handler().LogError(shared_from_this(), "OnResolved", id, "Resolver returned wrong job id", LOG_LEVEL_FATAL);
         SetCloseAndDelete();
+        return false;
     }
+    Ipv4Address ad(l, port);
+    Ipv4Address local;
+    return Open(ad, local);
 }
-#endif
-#endif
 
 
 void TcpSocket::OnRead()

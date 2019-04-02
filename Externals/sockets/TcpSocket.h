@@ -198,14 +198,6 @@ public:
     /** Get counter of number of bytes sent. */
     uint64_t GetBytesSent(bool clear = false);
 
-#ifdef ENABLE_RESOLVER
-    /** Callback executed when resolver thread has finished a resolve request. */
-    void OnResolved(int id, ipaddr_t a, port_t port);
-#ifdef ENABLE_IPV6
-    void OnResolved(int id, in6_addr& a, port_t port);
-#endif
-#endif
-
 #ifdef ENABLE_RECONNECT
     /** Flag that says a broken connection will try to reconnect. */
     void SetReconnect(bool = true);
@@ -275,10 +267,6 @@ private:
     size_t m_transfer_limit;
     size_t m_output_length;
     size_t m_repeat_length;
-
-#ifdef ENABLE_RESOLVER
-    int m_resolver_id; ///< Resolver id (if any) for current Open call
-#endif
 
 #ifdef ENABLE_RECONNECT
     bool m_b_reconnect; ///< Reconnect on lost connection flag

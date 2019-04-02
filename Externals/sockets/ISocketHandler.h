@@ -67,7 +67,7 @@ public:
         }
 
         void OnRead() {
-            Handler().LogError(this, "OnRead", 0, "data on hibernating socket", LOG_LEVEL_FATAL);
+            Handler().LogError(shared_from_this(), "OnRead", 0, "data on hibernating socket", LOG_LEVEL_FATAL);
             SetCloseAndDelete();
         }
         void OnOptions(int, int, int, SOCKET) {}
@@ -177,7 +177,7 @@ public:
     // -------------------------------------------------------------------------
 #ifdef ENABLE_POOL
     /** Find available open connection (used by connection pool). */
-    virtual ISocketHandler::PoolSocket *FindConnection(int type, const std::string& protocol, SocketAddress&) = 0;
+    virtual std::shared_ptr<ISocketHandler::PoolSocket> FindConnection(int type, const std::string& protocol, SocketAddress&) = 0;
     /** Enable connection pool (by default disabled). */
     virtual void EnablePool(bool = true) = 0;
     /** Check pool status.

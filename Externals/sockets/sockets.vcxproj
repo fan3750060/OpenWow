@@ -232,8 +232,6 @@
     <ClInclude Include="Lock.h" />
     <ClInclude Include="Mutex.h" />
     <ClInclude Include="Parse.h" />
-    <ClInclude Include="ResolvServer.h" />
-    <ClInclude Include="ResolvSocket.h" />
     <ClInclude Include="Semaphore.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketAddress.h" />
@@ -261,8 +259,6 @@
     <ClCompile Include="Lock.cpp" />
     <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="Parse.cpp" />
-    <ClCompile Include="ResolvServer.cpp" />
-    <ClCompile Include="ResolvSocket.cpp" />
     <ClCompile Include="Semaphore.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="SocketHandler.cpp" />

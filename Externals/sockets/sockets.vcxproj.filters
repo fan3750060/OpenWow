@@ -54,12 +54,6 @@
     <ClInclude Include="ListenSocket.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="ResolvServer.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="ResolvSocket.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="Socket.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -130,12 +124,6 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Ipv6Address.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="ResolvServer.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="ResolvSocket.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Socket.cpp">

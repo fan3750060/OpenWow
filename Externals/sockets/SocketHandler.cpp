@@ -40,8 +40,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "SocketHandler.h"
 #include "UdpSocket.h"
-#include "ResolvSocket.h"
-#include "ResolvServer.h"
 #include "TcpSocket.h"
 #include "IMutex.h"
 #include "Utility.h"
@@ -75,10 +73,6 @@ SocketHandler::SocketHandler(StdLog *p)
     , m_b_check_timeout(false)
     , m_b_check_retry(false)
     , m_b_check_close(false)
-#ifdef ENABLE_RESOLVER
-    , m_resolv_id(0)
-    , m_resolver(NULL)
-#endif
 #ifdef ENABLE_POOL
     , m_b_enable_pool(false)
 #endif
@@ -106,10 +100,6 @@ SocketHandler::SocketHandler(IMutex& mutex, StdLog *p)
     , m_b_check_timeout(false)
     , m_b_check_retry(false)
     , m_b_check_close(false)
-#ifdef ENABLE_RESOLVER
-    , m_resolv_id(0)
-    , m_resolver(NULL)
-#endif
 #ifdef ENABLE_POOL
     , m_b_enable_pool(false)
 #endif
@@ -138,10 +128,6 @@ SocketHandler::SocketHandler(IMutex& mutex, ISocketHandler& parent, StdLog *p)
     , m_b_check_timeout(false)
     , m_b_check_retry(false)
     , m_b_check_close(false)
-#ifdef ENABLE_RESOLVER
-    , m_resolv_id(0)
-    , m_resolver(NULL)
-#endif
 #ifdef ENABLE_POOL
     , m_b_enable_pool(false)
 #endif
@@ -163,12 +149,6 @@ SocketHandler::~SocketHandler()
         SocketHandlerThread *p = *it;
         p->Stop();
     }
-#ifdef ENABLE_RESOLVER
-    if (m_resolver)
-    {
-        m_resolver->Quit();
-    }
-#endif
     {
         while (m_sockets.size())
         {
@@ -206,12 +186,6 @@ SocketHandler::~SocketHandler()
         }
         DEB(fprintf(stderr, "/Emptying sockets list in SocketHandler destructor, %d instances\n", (int)m_sockets.size());)
     }
-#ifdef ENABLE_RESOLVER
-    if (m_resolver)
-    {
-        delete m_resolver;
-    }
-#endif
     if (m_b_use_mutex)
     {
         m_mutex.Unlock();
@@ -425,16 +399,6 @@ void SocketHandler::Set(std::shared_ptr<Socket> p, bool bRead, bool bWrite)
     }
 }
 
-
-#ifdef ENABLE_RESOLVER
-bool SocketHandler::Resolving(Socket *p0)
-{
-    std::map<socketuid_t, bool>::iterator it = m_resolve_q.find(p0->UniqueIdentifier());
-    return it != m_resolve_q.end();
-}
-#endif
-
-
 bool SocketHandler::Valid(std::shared_ptr<Socket> p0)
 {
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
@@ -470,121 +434,12 @@ size_t SocketHandler::GetCount()
     return m_sockets.size() + m_add.size() + m_delete.size();
 }
 
-#ifdef ENABLE_RESOLVER
-int SocketHandler::Resolve(Socket *p, const std::string& host, port_t port)
-{
-    // check cache
-    ResolvSocket *resolv = new ResolvSocket(*this, p, host, port);
-    resolv->SetId(++m_resolv_id);
-    resolv->SetDeleteByHandler();
-    ipaddr_t local;
-    Utility::u2ip("127.0.0.1", local);
-    if (!resolv->Open(local, m_resolver_port))
-    {
-        LogError(resolv, "Resolve", -1, "Can't connect to local resolve server", LOG_LEVEL_FATAL);
-    }
-    Add(resolv);
-    m_resolve_q[p->UniqueIdentifier()] = true;
-    DEB(fprintf(stderr, " *** Resolve '%s:%d' id#%d  m_resolve_q size: %d  p: %p\n", host.c_str(), port, resolv->GetId(), m_resolve_q.size(), p);)
-        return resolv->GetId();
-}
-
-
-#ifdef ENABLE_IPV6
-int SocketHandler::Resolve6(Socket *p, const std::string& host, port_t port)
-{
-    // check cache
-    ResolvSocket *resolv = new ResolvSocket(*this, p, host, port, true);
-    resolv->SetId(++m_resolv_id);
-    resolv->SetDeleteByHandler();
-    ipaddr_t local;
-    Utility::u2ip("127.0.0.1", local);
-    if (!resolv->Open(local, m_resolver_port))
-    {
-        LogError(resolv, "Resolve", -1, "Can't connect to local resolve server", LOG_LEVEL_FATAL);
-    }
-    Add(resolv);
-    m_resolve_q[p->UniqueIdentifier()] = true;
-    return resolv->GetId();
-}
-#endif
-
-
-int SocketHandler::Resolve(Socket *p, ipaddr_t a)
-{
-    // check cache
-    ResolvSocket *resolv = new ResolvSocket(*this, p, a);
-    resolv->SetId(++m_resolv_id);
-    resolv->SetDeleteByHandler();
-    ipaddr_t local;
-    Utility::u2ip("127.0.0.1", local);
-    if (!resolv->Open(local, m_resolver_port))
-    {
-        LogError(resolv, "Resolve", -1, "Can't connect to local resolve server", LOG_LEVEL_FATAL);
-    }
-    Add(resolv);
-    m_resolve_q[p->UniqueIdentifier()] = true;
-    return resolv->GetId();
-}
-
-
-#ifdef ENABLE_IPV6
-int SocketHandler::Resolve(Socket *p, in6_addr& a)
-{
-    // check cache
-    ResolvSocket *resolv = new ResolvSocket(*this, p, a);
-    resolv->SetId(++m_resolv_id);
-    resolv->SetDeleteByHandler();
-    ipaddr_t local;
-    Utility::u2ip("127.0.0.1", local);
-    if (!resolv->Open(local, m_resolver_port))
-    {
-        LogError(resolv, "Resolve", -1, "Can't connect to local resolve server", LOG_LEVEL_FATAL);
-    }
-    Add(resolv);
-    m_resolve_q[p->UniqueIdentifier()] = true;
-    return resolv->GetId();
-}
-#endif
-
-
-void SocketHandler::EnableResolver(port_t port)
-{
-    if (!m_resolver)
-    {
-        m_resolver_port = port;
-        m_resolver = new ResolvServer(port);
-    }
-}
-
-
-bool SocketHandler::ResolverReady()
-{
-    return m_resolver ? m_resolver->Ready() : false;
-}
-#endif // ENABLE_RESOLVER
-
-
-#ifdef ENABLE_RESOLVER
-bool SocketHandler::ResolverEnabled()
-{
-    return m_resolver ? true : false;
-}
-
-
-port_t SocketHandler::GetResolverPort()
-{
-    return m_resolver_port;
-}
-#endif // ENABLE_RESOLVER
-
-
 #ifdef ENABLE_POOL
-ISocketHandler::PoolSocket *SocketHandler::FindConnection(int type, const std::string& protocol, SocketAddress& ad)
+std::shared_ptr<ISocketHandler::PoolSocket> SocketHandler::FindConnection(int type, const std::string& protocol, SocketAddress& ad)
 {
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end() && m_sockets.size(); ++it)
     {
-        PoolSocket *pools = dynamic_cast<PoolSocket *>(it->second);
+        std::shared_ptr<PoolSocket> pools = std::dynamic_pointer_cast<PoolSocket>(it->second);
         if (pools)
         {
             if (pools->GetSocketType() == type &&
@@ -617,11 +472,6 @@ bool SocketHandler::PoolEnabled()
 
 void SocketHandler::Remove(std::shared_ptr<Socket> Sock)
 {
-#ifdef ENABLE_RESOLVER
-    std::map<socketuid_t, bool>::iterator it4 = m_resolve_q.find(p->UniqueIdentifier());
-    if (it4 != m_resolve_q.end())
-        m_resolve_q.erase(it4);
-#endif
     if (Sock->ErasedByHandler())
     {
         return;
@@ -1108,7 +958,7 @@ void SocketHandler::CheckClose()
 #ifdef ENABLE_POOL
                         if (p->Retain() && !p->Lost())
                         {
-                            PoolSocket *p2 = new PoolSocket(*this, p);
+                            std::shared_ptr<PoolSocket> p2 = std::make_shared<PoolSocket>(*this, p);
                             p2->SetDeleteByHandler();
                             Add(p2);
                             //

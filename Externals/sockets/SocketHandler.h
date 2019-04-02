@@ -45,9 +45,6 @@ namespace SOCKETS_NAMESPACE {
 
 
 class Socket;
-#ifdef ENABLE_RESOLVER
-class ResolvServer;
-#endif
 class IMutex;
 class SocketHandlerThread;
 class UdpSocket;
@@ -149,7 +146,7 @@ public:
     // Connection pool
 #ifdef ENABLE_POOL
     /** Find available open connection (used by connection pool). */
-    ISocketHandler::PoolSocket *FindConnection(int type, const std::string& protocol, SocketAddress&);
+    std::shared_ptr<ISocketHandler::PoolSocket> FindConnection(int type, const std::string& protocol, SocketAddress&);
     /** Enable connection pool (by default disabled). */
     void EnablePool(bool x = true);
     /** Check pool status.
@@ -157,33 +154,6 @@ public:
     bool PoolEnabled();
 #endif // ENABLE_POOL
 
-    // DNS resolve server
-#ifdef ENABLE_RESOLVER
-    /** Enable asynchronous DNS.
-        \param port Listen port of asynchronous dns server */
-    void EnableResolver(port_t port = 16667);
-    /** Check resolver status.
-        \return true if resolver is enabled */
-    bool ResolverEnabled();
-    /** Queue a dns request.
-        \param host Hostname to be resolved
-        \param port Port number will be echoed in Socket::OnResolved callback */
-    int Resolve(std::shared_ptr<Socket>, const std::string& host, port_t port);
-#ifdef ENABLE_IPV6
-    int Resolve6(std::shared_ptr<Socket>, const std::string& host, port_t port);
-#endif
-    /** Do a reverse dns lookup. */
-    int Resolve(std::shared_ptr<Socket>, ipaddr_t a);
-#ifdef ENABLE_IPV6
-    int Resolve(std::shared_ptr<Socket>, in6_addr& a);
-#endif
-    /** Get listen port of asynchronous dns server. */
-    port_t GetResolverPort();
-    /** Resolver thread ready for queries. */
-    bool ResolverReady();
-    /** Returns true if the socket is waiting for a resolve event. */
-    bool Resolving(std::shared_ptr<Socket>);
-#endif // ENABLE_RESOLVER
 
 #ifdef ENABLE_DETACH
     /** Indicates that the handler runs under SocketThread. */
@@ -240,12 +210,6 @@ private:
     bool m_b_check_retry;
     bool m_b_check_close;
 
-#ifdef ENABLE_RESOLVER
-    int m_resolv_id; ///< Resolver id counter
-    ResolvServer *m_resolver; ///< Resolver thread pointer
-    port_t m_resolver_port; ///< Resolver listen port
-    std::map<socketuid_t, bool> m_resolve_q; ///< resolve queue
-#endif
 #ifdef ENABLE_POOL
     bool m_b_enable_pool; ///< Connection pool enabled if true
 #endif
