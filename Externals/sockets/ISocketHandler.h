@@ -61,7 +61,7 @@ public:
     class PoolSocket : public Socket
     {
     public:
-        PoolSocket(ISocketHandler& h, Socket *src) : Socket(h) {
+        PoolSocket(ISocketHandler& h, std::shared_ptr<Socket> src) : Socket(h) {
             CopyConnection(src);
             SetIsClient();
         }
@@ -116,26 +116,26 @@ public:
     virtual void RegStdLog(StdLog *log) = 0;
 
     /** Log error to log class for print out / storage. */
-    virtual void LogError(Socket *p, const std::string& user_text, int err, const std::string& sys_err, loglevel_t t = LOG_LEVEL_WARNING) = 0;
+    virtual void LogError(std::shared_ptr<Socket> p, const std::string& user_text, int err, const std::string& sys_err, loglevel_t t = LOG_LEVEL_WARNING) = 0;
 
     // -------------------------------------------------------------------------
     // Socket stuff
     // -------------------------------------------------------------------------
     /** Add socket instance to socket map. Removal is always automatic. */
-    virtual void Add(Socket *) = 0;
+    virtual void Add(std::shared_ptr<Socket> Socket) = 0;
 
 protected:
     /** Remove socket from socket map, used by Socket class. */
-    virtual void Remove(Socket *) = 0;
+    virtual void Remove(std::shared_ptr<Socket> Socket) = 0;
 
     /** Actual call to select() */
     virtual int ISocketHandler_Select(struct timeval *) = 0;
 
 public:
     /** Set read/write/exception file descriptor sets (fd_set). */
-    virtual void ISocketHandler_Add(Socket *, bool bRead, bool bWrite) = 0;
-    virtual void ISocketHandler_Mod(Socket *, bool bRead, bool bWrite) = 0;
-    virtual void ISocketHandler_Del(Socket *) = 0;
+    virtual void ISocketHandler_Add(std::shared_ptr<Socket>, bool bRead, bool bWrite) = 0;
+    virtual void ISocketHandler_Mod(std::shared_ptr<Socket>, bool bRead, bool bWrite) = 0;
+    virtual void ISocketHandler_Del(std::shared_ptr<Socket>) = 0;
 
     /** Wait for events, generate callbacks. */
     virtual int Select(long sec, long usec) = 0;
@@ -145,7 +145,7 @@ public:
     virtual int Select(struct timeval *tsel) = 0;
 
     /** Check that a socket really is handled by this socket handler. */
-    virtual bool Valid(Socket *) = 0;
+    virtual bool Valid(std::shared_ptr<Socket>) = 0;
     /** Preferred method - Check that a socket still is handled by this socket handler. */
     virtual bool Valid(socketuid_t) = 0;
 
@@ -157,10 +157,10 @@ public:
 
     /** Override and return false to deny all incoming connections.
         \param p ListenSocket class pointer (use GetPort to identify which one) */
-    virtual bool OkToAccept(Socket *p) = 0;
+    virtual bool OkToAccept(std::shared_ptr<Socket> p) = 0;
 
     /** Use with care, always lock with h.GetMutex() if multithreaded */
-    virtual const std::map<SOCKET, Socket *>& AllSockets() = 0;
+    virtual const std::map<SOCKET, std::shared_ptr<Socket>>& AllSockets() = 0;
 
     /** Override to accept longer lines than TCP_LINE_SIZE */
     virtual size_t MaxTcpLineSize() = 0;
@@ -198,21 +198,21 @@ public:
     /** Queue a dns request.
         \param host Hostname to be resolved
         \param port Port number will be echoed in Socket::OnResolved callback */
-    virtual int Resolve(Socket *, const std::string& host, port_t port) = 0;
+    virtual int Resolve(std::shared_ptr<Socket>, const std::string& host, port_t port) = 0;
 #ifdef ENABLE_IPV6
-    virtual int Resolve6(Socket *, const std::string& host, port_t port) = 0;
+    virtual int Resolve6(std::shared_ptr<Socket>, const std::string& host, port_t port) = 0;
 #endif
     /** Do a reverse dns lookup. */
-    virtual int Resolve(Socket *, ipaddr_t a) = 0;
+    virtual int Resolve(std::shared_ptr<Socket>, ipaddr_t a) = 0;
 #ifdef ENABLE_IPV6
-    virtual int Resolve(Socket *, in6_addr& a) = 0;
+    virtual int Resolve(std::shared_ptr<Socket>, in6_addr& a) = 0;
 #endif
     /** Get listen port of asynchronous dns server. */
     virtual port_t GetResolverPort() = 0;
     /** Resolver thread ready for queries. */
     virtual bool ResolverReady() = 0;
     /** Returns true if socket waiting for a resolve event. */
-    virtual bool Resolving(Socket *) = 0;
+    virtual bool Resolving(std::shared_ptr<Socket>) = 0;
 #endif // ENABLE_RESOLVER
 
 #ifdef ENABLE_DETACH

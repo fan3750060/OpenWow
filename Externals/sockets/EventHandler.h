@@ -66,7 +66,7 @@ public:
     /** Stop event loop. */
     void SetQuit(bool = true);
 
-    void Add(Socket *);
+    void Add(std::shared_ptr<Socket>);
 
 private:
     EventHandler(const EventHandler&) {} // copy constructor

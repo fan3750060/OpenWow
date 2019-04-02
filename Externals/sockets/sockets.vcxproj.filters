@@ -69,9 +69,6 @@
     <ClInclude Include="SocketHandler.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="SocketHandlerEp.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="SocketHandlerThread.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -145,9 +142,6 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="SocketHandler.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="SocketHandlerEp.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="SocketHandlerThread.cpp">

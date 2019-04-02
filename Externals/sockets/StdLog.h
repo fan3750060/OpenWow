@@ -60,7 +60,7 @@ class StdLog
 public:
     virtual ~StdLog() {}
 
-    virtual void error(ISocketHandler *, Socket *, const std::string& user_text, int err, const std::string& sys_err, loglevel_t = LOG_LEVEL_WARNING) = 0;
+    virtual void error(ISocketHandler *, std::shared_ptr<Socket>, const std::string& user_text, int err, const std::string& sys_err, loglevel_t = LOG_LEVEL_WARNING) = 0;
 };
 
 

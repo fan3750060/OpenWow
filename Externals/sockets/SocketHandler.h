@@ -58,7 +58,7 @@ class SocketHandler : public ISocketHandler
 {
 protected:
     /** Map type for holding file descriptors/socket object pointers. */
-    typedef std::map<SOCKET, Socket *> socket_m;
+    typedef std::map<SOCKET, std::shared_ptr<Socket>> socket_m;
 
 public:
     /** SocketHandler constructor.
@@ -99,15 +99,15 @@ public:
     void RegStdLog(StdLog *log);
 
     /** Log error to log class for print out / storage. */
-    void LogError(Socket *p, const std::string& user_text, int err, const std::string& sys_err, loglevel_t t = LOG_LEVEL_WARNING);
+    void LogError(std::shared_ptr<Socket> p, const std::string& user_text, int err, const std::string& sys_err, loglevel_t t = LOG_LEVEL_WARNING);
 
     /** Add socket instance to socket map. Removal is always automatic. */
-    void Add(Socket *);
+    void Add(std::shared_ptr<Socket> Socket);
 
     /** Set read/write/exception file descriptor sets (fd_set). */
-    void ISocketHandler_Add(Socket *, bool bRead, bool bWrite);
-    void ISocketHandler_Mod(Socket *, bool bRead, bool bWrite);
-    void ISocketHandler_Del(Socket *);
+    void ISocketHandler_Add(std::shared_ptr<Socket>, bool bRead, bool bWrite);
+    void ISocketHandler_Mod(std::shared_ptr<Socket>, bool bRead, bool bWrite);
+    void ISocketHandler_Del(std::shared_ptr<Socket>);
 
     /** Wait for events, generate callbacks. */
     int Select(long sec, long usec);
@@ -119,7 +119,7 @@ public:
     int Select(struct timeval *tsel);
 
     /** Check that a socket really is handled by this socket handler. */
-    bool Valid(Socket *);
+    bool Valid(std::shared_ptr<Socket>);
     bool Valid(socketuid_t);
 
     /** Return number of sockets handled by this handler.  */
@@ -128,10 +128,10 @@ public:
 
     /** Override and return false to deny all incoming connections.
         \param p ListenSocket class pointer (use GetPort to identify which one) */
-    bool OkToAccept(Socket *p);
+    bool OkToAccept(std::shared_ptr<Socket> p);
 
     /** Use with care, always lock with h.GetMutex() if multithreaded */
-    const std::map<SOCKET, Socket *>& AllSockets() { return m_sockets; }
+    const std::map<SOCKET, std::shared_ptr<Socket>>& AllSockets() { return m_sockets; }
 
     size_t MaxTcpLineSize() { return TCP_LINE_SIZE; }
 
@@ -168,21 +168,21 @@ public:
     /** Queue a dns request.
         \param host Hostname to be resolved
         \param port Port number will be echoed in Socket::OnResolved callback */
-    int Resolve(Socket *, const std::string& host, port_t port);
+    int Resolve(std::shared_ptr<Socket>, const std::string& host, port_t port);
 #ifdef ENABLE_IPV6
-    int Resolve6(Socket *, const std::string& host, port_t port);
+    int Resolve6(std::shared_ptr<Socket>, const std::string& host, port_t port);
 #endif
     /** Do a reverse dns lookup. */
-    int Resolve(Socket *, ipaddr_t a);
+    int Resolve(std::shared_ptr<Socket>, ipaddr_t a);
 #ifdef ENABLE_IPV6
-    int Resolve(Socket *, in6_addr& a);
+    int Resolve(std::shared_ptr<Socket>, in6_addr& a);
 #endif
     /** Get listen port of asynchronous dns server. */
     port_t GetResolverPort();
     /** Resolver thread ready for queries. */
     bool ResolverReady();
     /** Returns true if the socket is waiting for a resolve event. */
-    bool Resolving(Socket *);
+    bool Resolving(std::shared_ptr<Socket>);
 #endif // ENABLE_RESOLVER
 
 #ifdef ENABLE_DETACH
@@ -194,16 +194,16 @@ public:
 
 protected:
     socket_m m_sockets; ///< Active sockets map
-    std::list<Socket *> m_add; ///< Sockets to be added to sockets map
-    std::list<Socket *> m_delete; ///< Sockets to be deleted (failed when Add)
+    std::list<std::shared_ptr<Socket>> m_add; ///< Sockets to be added to sockets map
+    std::list<std::shared_ptr<Socket>> m_delete; ///< Sockets to be deleted (failed when Add)
 
 protected:
     /** Actual call to select() */
     int ISocketHandler_Select(struct timeval *);
     /** Remove socket from socket map, used by Socket class. */
-    void Remove(Socket *);
+    void Remove(std::shared_ptr<Socket> Socket);
     /** Schedule socket for deletion */
-    void DeleteSocket(Socket *);
+    void DeleteSocket(std::shared_ptr<Socket>);
     void AddIncoming();
     void CheckErasedSockets();
     void CheckCallOnConnect();
@@ -220,10 +220,10 @@ protected:
 
 private:
     void RebuildFdset();
-    void Set(Socket *, bool, bool);
+    void Set(std::shared_ptr<Socket>, bool bRead, bool bWrite);
     //
     std::list<SocketHandlerThread *> m_threads;
-    UdpSocket *m_release;
+    std::shared_ptr<UdpSocket> m_release;
     //
     SOCKET m_maxsock; ///< Highest file descriptor + 1 in active sockets list
     fd_set m_rfds; ///< file descriptor set monitored for read events

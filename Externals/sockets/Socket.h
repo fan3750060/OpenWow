@@ -56,7 +56,7 @@ class SocketThread;
 /** \defgroup basic Basic sockets */
 /** Socket base class.
     \ingroup basic */
-class Socket
+class Socket : public std::enable_shared_from_this<Socket>
 {
 public:
     /** "Default" constructor */

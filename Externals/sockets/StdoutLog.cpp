@@ -43,7 +43,7 @@ namespace SOCKETS_NAMESPACE {
 
 
 
-void StdoutLog::error(ISocketHandler *, Socket *sock, const std::string& call, int err, const std::string& sys_err, loglevel_t lvl)
+void StdoutLog::error(ISocketHandler *, std::shared_ptr<Socket> sock, const std::string& call, int err, const std::string& sys_err, loglevel_t lvl)
 {
     if (lvl < m_min_level)
         return;

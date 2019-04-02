@@ -192,19 +192,11 @@ public:
 
     /** Callback fires when a socket in line protocol has read one full line.
         \param line Line read */
-    void OnLine(const std::string& line);
+    void OnLine(const std::string& line) override;
     /** Get counter of number of bytes received. */
     uint64_t GetBytesReceived(bool clear = false);
     /** Get counter of number of bytes sent. */
     uint64_t GetBytesSent(bool clear = false);
-
-    /** Socks4 specific callback. */
-    void OnSocks4Connect();
-    /** Socks4 specific callback. */
-    void OnSocks4ConnectFailed();
-    /** Socks4 specific callback.
-        \return 'need_more' */
-    bool OnSocks4Read();
 
 #ifdef ENABLE_RESOLVER
     /** Callback executed when resolver thread has finished a resolve request. */

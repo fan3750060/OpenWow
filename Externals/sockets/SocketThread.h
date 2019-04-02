@@ -48,8 +48,8 @@ class Socket;
 class SocketThread : public Thread
 {
 public:
-    SocketThread(Socket *p);
-    ~SocketThread();
+    SocketThread(std::shared_ptr<Socket> p);
+    virtual ~SocketThread();
 
     void Run();
 
@@ -58,7 +58,7 @@ private:
     SocketThread& operator=(const SocketThread&) { return *this; }
 
     SocketHandler m_h;
-    Socket *m_socket;
+    std::shared_ptr<Socket> m_socket;
 };
 
 #ifdef SOCKETS_NAMESPACE

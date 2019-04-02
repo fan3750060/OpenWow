@@ -174,7 +174,7 @@ SocketHandler::~SocketHandler()
         {
             DEB(fprintf(stderr, "Emptying sockets list in SocketHandler destructor, %d instances\n", (int)m_sockets.size());)
                 socket_m::iterator it = m_sockets.begin();
-            Socket *p = it->second;
+            std::shared_ptr<Socket> p = it->second;
             if (p)
             {
                 DEB(fprintf(stderr, "  fd %d\n", p->GetSocket());)
@@ -194,7 +194,7 @@ SocketHandler::~SocketHandler()
                         )
                     {
                         p->SetErasedByHandler();
-                        delete p;
+                        p.reset();
                     }
                 m_sockets.erase(it);
             }
@@ -307,7 +307,8 @@ void SocketHandler::EnableRelease()
 {
     if (m_release)
         return;
-    m_release = new UdpSocket(*this);
+
+    m_release = std::make_shared<UdpSocket>(*this);
     m_release->SetDeleteByHandler();
     port_t port = 0;
     m_release->Bind("127.0.0.1", port);
@@ -349,7 +350,7 @@ void SocketHandler::RegStdLog(StdLog *log)
 }
 
 
-void SocketHandler::LogError(Socket *p, const std::string& user_text, int err, const std::string& sys_err, loglevel_t t)
+void SocketHandler::LogError(std::shared_ptr<Socket> p, const std::string& user_text, int err, const std::string& sys_err, loglevel_t t)
 {
     if (m_stdlog)
     {
@@ -358,31 +359,31 @@ void SocketHandler::LogError(Socket *p, const std::string& user_text, int err, c
 }
 
 
-void SocketHandler::Add(Socket *p)
+void SocketHandler::Add(std::shared_ptr<Socket> p)
 {
     m_add.push_back(p); // no checks here
 }
 
 
-void SocketHandler::ISocketHandler_Add(Socket *p, bool bRead, bool bWrite)
+void SocketHandler::ISocketHandler_Add(std::shared_ptr<Socket> p, bool bRead, bool bWrite)
 {
     Set(p, bRead, bWrite);
 }
 
 
-void SocketHandler::ISocketHandler_Mod(Socket *p, bool bRead, bool bWrite)
+void SocketHandler::ISocketHandler_Mod(std::shared_ptr<Socket> p, bool bRead, bool bWrite)
 {
     Set(p, bRead, bWrite);
 }
 
 
-void SocketHandler::ISocketHandler_Del(Socket *p)
+void SocketHandler::ISocketHandler_Del(std::shared_ptr<Socket> p)
 {
     Set(p, false, false);
 }
 
 
-void SocketHandler::Set(Socket *p, bool bRead, bool bWrite)
+void SocketHandler::Set(std::shared_ptr<Socket> p, bool bRead, bool bWrite)
 {
     SOCKET s = p->GetSocket();
     if (s >= 0)
@@ -434,11 +435,11 @@ bool SocketHandler::Resolving(Socket *p0)
 #endif
 
 
-bool SocketHandler::Valid(Socket *p0)
+bool SocketHandler::Valid(std::shared_ptr<Socket> p0)
 {
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (p0 == p)
             return true;
     }
@@ -450,7 +451,7 @@ bool SocketHandler::Valid(socketuid_t uid)
 {
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (p->UniqueIdentifier() == uid)
             return true;
     }
@@ -458,7 +459,7 @@ bool SocketHandler::Valid(socketuid_t uid)
 }
 
 
-bool SocketHandler::OkToAccept(Socket *)
+bool SocketHandler::OkToAccept(std::shared_ptr<Socket>)
 {
     return true;
 }
@@ -614,40 +615,42 @@ bool SocketHandler::PoolEnabled()
 #endif
 
 
-void SocketHandler::Remove(Socket *p)
+void SocketHandler::Remove(std::shared_ptr<Socket> Sock)
 {
 #ifdef ENABLE_RESOLVER
     std::map<socketuid_t, bool>::iterator it4 = m_resolve_q.find(p->UniqueIdentifier());
     if (it4 != m_resolve_q.end())
         m_resolve_q.erase(it4);
 #endif
-    if (p->ErasedByHandler())
+    if (Sock->ErasedByHandler())
     {
         return;
     }
+
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        if (it->second == p)
+        if (it->second == Sock)
         {
-            LogError(p, "Remove", -1, "Socket destructor called while still in use", LOG_LEVEL_WARNING);
+            LogError(Sock, "Remove", -1, "Socket destructor called while still in use", LOG_LEVEL_WARNING);
             m_sockets.erase(it);
             return;
         }
     }
-    for (std::list<Socket *>::iterator it2 = m_add.begin(); it2 != m_add.end(); ++it2)
+
+    for (std::list<std::shared_ptr<Socket>>::iterator it2 = m_add.begin(); it2 != m_add.end(); ++it2)
     {
-        if (*it2 == p)
+        if (*it2 == Sock)
         {
-            LogError(p, "Remove", -2, "Socket destructor called while still in use", LOG_LEVEL_WARNING);
+            LogError(Sock, "Remove", -2, "Socket destructor called while still in use", LOG_LEVEL_WARNING);
             m_add.erase(it2);
             return;
         }
     }
-    for (std::list<Socket *>::iterator it3 = m_delete.begin(); it3 != m_delete.end(); ++it3)
+    for (std::list<std::shared_ptr<Socket>>::iterator it3 = m_delete.begin(); it3 != m_delete.end(); ++it3)
     {
-        if (*it3 == p)
+        if (*it3 == Sock)
         {
-            LogError(p, "Remove", -3, "Socket destructor called while still in use", LOG_LEVEL_WARNING);
+            LogError(Sock, "Remove", -3, "Socket destructor called while still in use", LOG_LEVEL_WARNING);
             m_delete.erase(it3);
             return;
         }
@@ -685,7 +688,7 @@ void SocketHandler::SetClose(bool x)
 }
 
 
-void SocketHandler::DeleteSocket(Socket *p)
+void SocketHandler::DeleteSocket(std::shared_ptr<Socket> p)
 {
     p->OnDelete();
     if (p->DeleteByHandler() && !p->ErasedByHandler())
@@ -708,7 +711,7 @@ void SocketHandler::RebuildFdset()
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
         SOCKET s = it->first;
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (s == p->GetSocket() && s >= 0)
         {
             fd_set fds;
@@ -759,8 +762,8 @@ void SocketHandler::AddIncoming()
             LogError(NULL, "Select", (int)m_sockets.size(), "socket limit reached", LOG_LEVEL_WARNING);
             break;
         }
-        std::list<Socket *>::iterator it = m_add.begin();
-        Socket *p = *it;
+        std::list<std::shared_ptr<Socket>>::iterator it = m_add.begin();
+        std::shared_ptr<Socket> p = *it;
         SOCKET s = p->GetSocket();
         DEB(fprintf(stderr, "Trying to add fd %d,  m_add.size() %d\n", (int)s, (int)m_add.size());)
             //
@@ -774,7 +777,7 @@ void SocketHandler::AddIncoming()
         socket_m::iterator it2;
         if ((it2 = m_sockets.find(s)) != m_sockets.end())
         {
-            Socket *found = it2->second;
+            std::shared_ptr<Socket> found = it2->second;
             if (p->UniqueIdentifier() > found->UniqueIdentifier())
             {
                 LogError(p, "Add", (int)p->GetSocket(), "Replacing socket already in controlled queue (newer uid)", LOG_LEVEL_WARNING);
@@ -831,14 +834,14 @@ void SocketHandler::AddIncoming()
                             m_b_check_retry = true;
                         }
             */
-            StreamSocket *scp = dynamic_cast<StreamSocket *>(p);
+            std::shared_ptr<StreamSocket> scp = std::dynamic_pointer_cast<StreamSocket>(p);
             if (scp && scp->Connecting()) // 'Open' called before adding socket
             {
                 ISocketHandler_Add(p, false, true);
             }
             else
             {
-                TcpSocket *tcp = dynamic_cast<TcpSocket *>(p);
+                std::shared_ptr<TcpSocket> tcp = std::dynamic_pointer_cast<TcpSocket>(p);
                 bool bWrite = tcp ? tcp->GetOutputLength() != 0 : false;
                 if (p->IsDisableRead())
                 {
@@ -868,7 +871,7 @@ void SocketHandler::CheckErasedSockets()
         socketuid_t uid = *it;
         for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
         {
-            Socket *p = it->second;
+            std::shared_ptr<Socket> p = it->second;
             if (p->UniqueIdentifier() == uid)
             {
                 /* Sometimes a SocketThread class can finish its run before the master
@@ -884,7 +887,7 @@ void SocketHandler::CheckErasedSockets()
 #endif
                     )
                 {
-                    delete p;
+                    p.reset();
                 }
                 m_sockets.erase(it);
                 break;
@@ -911,12 +914,12 @@ void SocketHandler::CheckCallOnConnect()
     m_b_check_callonconnect = false;
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (Valid(p) && Valid(p->UniqueIdentifier()) && p->CallOnConnect())
         {
             p->SetConnected(); // moved here from inside if (tcp) check below
                 {
-                    TcpSocket *tcp = dynamic_cast<TcpSocket *>(p);
+                    std::shared_ptr<TcpSocket> tcp = std::dynamic_pointer_cast<TcpSocket>(p);
                     if (tcp)
                     {
                         if (tcp->GetOutputLength())
@@ -946,7 +949,7 @@ void SocketHandler::CheckDetach()
     m_b_check_detach = false;
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (p->IsDetach())
         {
             ISocketHandler_Del(p);
@@ -961,9 +964,9 @@ void SocketHandler::CheckDetach()
             break; // 'it' is invalid
         }
     }
-    for (std::list<Socket *>::iterator it = m_add.begin(); it != m_add.end() && !m_b_check_detach; ++it)
+    for (std::list<std::shared_ptr<Socket>>::iterator it = m_add.begin(); it != m_add.end() && !m_b_check_detach; ++it)
     {
-        Socket *p = *it;
+        std::shared_ptr<Socket> p = *it;
         m_b_check_detach |= p->IsDetach();
     }
 }
@@ -975,12 +978,12 @@ void SocketHandler::CheckTimeout(time_t tnow)
     m_b_check_timeout = false;
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (Valid(p) && Valid(p->UniqueIdentifier()) && p->CheckTimeout())
         {
             if (p->Timeout(tnow))
             {
-                StreamSocket *scp = dynamic_cast<StreamSocket *>(p);
+                std::shared_ptr<StreamSocket> scp = std::dynamic_pointer_cast<StreamSocket>(p);
                 p->SetTimeout(0);
                 if (scp && scp->Connecting())
                 {
@@ -1004,10 +1007,10 @@ void SocketHandler::CheckRetry()
     m_b_check_retry = false;
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (Valid(p) && Valid(p->UniqueIdentifier()) && p->RetryClientConnect())
         {
-            TcpSocket *tcp = dynamic_cast<TcpSocket *>(p);
+            std::shared_ptr<TcpSocket> tcp = std::dynamic_pointer_cast<TcpSocket>(p);
             tcp->SetRetryClientConnect(false);
             DEB(fprintf(stderr, "Close() before retry client connect\n");)
                 p->Close(); // removes from m_fds_retry
@@ -1033,10 +1036,10 @@ void SocketHandler::CheckClose()
     m_b_check_close = false;
     for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
     {
-        Socket *p = it->second;
+        std::shared_ptr<Socket> p = it->second;
         if (Valid(p) && Valid(p->UniqueIdentifier()) && p->CloseAndDelete())
         {
-            TcpSocket *tcp = dynamic_cast<TcpSocket *>(p);
+            std::shared_ptr<TcpSocket> tcp = std::dynamic_pointer_cast<TcpSocket>(p);
 #ifdef ENABLE_RECONNECT
             if (p->Lost() && !(tcp && tcp->Reconnect()))
 #else
@@ -1223,7 +1226,7 @@ int SocketHandler::ISocketHandler_Select(struct timeval *tsel)
                 for (socket_m::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it)
                 {
                     SOCKET i = it->first;
-                    Socket *p = it->second;
+                    std::shared_ptr<Socket> p = it->second;
                     // ---------------------------------------------------------------------------------
                     if (FD_ISSET(i, &rfds))
                     {
@@ -1324,8 +1327,8 @@ int SocketHandler::Select(struct timeval *tsel)
     // remove Add's that fizzed
     while (m_delete.size())
     {
-        std::list<Socket *>::iterator it = m_delete.begin();
-        Socket *p = *it;
+        std::list<std::shared_ptr<Socket>>::iterator it = m_delete.begin();
+        std::shared_ptr<Socket> p = *it;
         p->OnDelete();
         m_delete.erase(it);
         if (p->DeleteByHandler()
@@ -1335,7 +1338,7 @@ int SocketHandler::Select(struct timeval *tsel)
             )
         {
             p->SetErasedByHandler();
-            delete p;
+            p.reset();
         }
     }
 

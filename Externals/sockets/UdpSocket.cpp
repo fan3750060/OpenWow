@@ -175,7 +175,7 @@ int UdpSocket::Bind(SocketAddress& ad, int range)
         }
         if (n == -1)
         {
-            Handler().LogError(this, "bind", Errno, StrError(Errno), LOG_LEVEL_FATAL);
+            Handler().LogError(shared_from_this(), "bind", Errno, StrError(Errno), LOG_LEVEL_FATAL);
             SetCloseAndDelete();
 #ifdef ENABLE_EXCEPTIONS
             throw Exception("bind() failed for UdpSocket, port:range: " + Utility::l2string(ad.GetPort()) + ":" + Utility::l2string(range));
@@ -244,7 +244,7 @@ bool UdpSocket::Open(SocketAddress& ad)
         SetNonblocking(true);
         if (connect(GetSocket(), ad, ad) == -1)
         {
-            Handler().LogError(this, "connect", Errno, StrError(Errno), LOG_LEVEL_FATAL);
+            Handler().LogError(shared_from_this(), "connect", Errno, StrError(Errno), LOG_LEVEL_FATAL);
             SetCloseAndDelete();
             return false;
         }
@@ -342,7 +342,7 @@ void UdpSocket::SendToBuf(SocketAddress& ad, const char *data, int len, int flag
         SetNonblocking(true);
         if ((m_last_size_written = sendto(GetSocket(), data, len, flags, ad, ad)) == -1)
         {
-            Handler().LogError(this, "sendto", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+            Handler().LogError(shared_from_this(), "sendto", Errno, StrError(Errno), LOG_LEVEL_ERROR);
         }
     }
 }
@@ -381,12 +381,12 @@ void UdpSocket::SendBuf(const char *data, size_t len, int flags)
 {
     if (!IsConnected())
     {
-        Handler().LogError(this, "SendBuf", 0, "not connected", LOG_LEVEL_ERROR);
+        Handler().LogError(shared_from_this(), "SendBuf", 0, "not connected", LOG_LEVEL_ERROR);
         return;
     }
     if ((m_last_size_written = send(GetSocket(), data, (int)len, flags)) == -1)
     {
-        Handler().LogError(this, "send", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+        Handler().LogError(shared_from_this(), "send", Errno, StrError(Errno), LOG_LEVEL_ERROR);
     }
 }
 
@@ -492,7 +492,7 @@ void UdpSocket::OnRead()
 #else
                     if (Errno != EWOULDBLOCK)
 #endif
-                        Handler().LogError(this, "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+                        Handler().LogError(shared_from_this(), "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
                 }
             return;
         }
@@ -502,7 +502,7 @@ void UdpSocket::OnRead()
         {
             if (sa_len != sizeof(sa))
             {
-                Handler().LogError(this, "recvfrom", 0, "unexpected address struct size", LOG_LEVEL_WARNING);
+                Handler().LogError(shared_from_this(), "recvfrom", 0, "unexpected address struct size", LOG_LEVEL_WARNING);
             }
             this->OnRawData(m_ibuf, n, (struct sockaddr *)&sa, sa_len);
             if (!q--)
@@ -517,7 +517,7 @@ void UdpSocket::OnRead()
 #else
             if (Errno != EWOULDBLOCK)
 #endif
-                Handler().LogError(this, "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+                Handler().LogError(shared_from_this(), "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
         }
         return;
     }
@@ -546,7 +546,7 @@ void UdpSocket::OnRead()
 #else
                 if (Errno != EWOULDBLOCK)
 #endif
-                    Handler().LogError(this, "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+                    Handler().LogError(shared_from_this(), "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
             }
         return;
     }
@@ -556,7 +556,7 @@ void UdpSocket::OnRead()
     {
         if (sa_len != sizeof(sa))
         {
-            Handler().LogError(this, "recvfrom", 0, "unexpected address struct size", LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "recvfrom", 0, "unexpected address struct size", LOG_LEVEL_WARNING);
         }
         this->OnRawData(m_ibuf, n, (struct sockaddr *)&sa, sa_len);
         if (!q--)
@@ -571,7 +571,7 @@ void UdpSocket::OnRead()
 #else
         if (Errno != EWOULDBLOCK)
 #endif
-            Handler().LogError(this, "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+            Handler().LogError(shared_from_this(), "recvfrom", Errno, StrError(Errno), LOG_LEVEL_ERROR);
     }
 }
 
@@ -589,14 +589,14 @@ void UdpSocket::SetBroadcast(bool b)
     {
         if (setsockopt(GetSocket(), SOL_SOCKET, SO_BROADCAST, (char *)&one, sizeof(one)) == -1)
         {
-            Handler().LogError(this, "SetBroadcast", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "SetBroadcast", Errno, StrError(Errno), LOG_LEVEL_WARNING);
         }
     }
     else
     {
         if (setsockopt(GetSocket(), SOL_SOCKET, SO_BROADCAST, (char *)&zero, sizeof(zero)) == -1)
         {
-            Handler().LogError(this, "SetBroadcast", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "SetBroadcast", Errno, StrError(Errno), LOG_LEVEL_WARNING);
         }
     }
 }
@@ -613,7 +613,7 @@ bool UdpSocket::IsBroadcast()
     }
     if (getsockopt(GetSocket(), SOL_SOCKET, SO_BROADCAST, (char *)&is_broadcast, &size) == -1)
     {
-        Handler().LogError(this, "IsBroadcast", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "IsBroadcast", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
     return is_broadcast != 0;
 }
@@ -627,7 +627,7 @@ void UdpSocket::SetMulticastTTL(int ttl)
     }
     if (setsockopt(GetSocket(), SOL_IP, IP_MULTICAST_TTL, (char *)&ttl, sizeof(int)) == -1)
     {
-        Handler().LogError(this, "SetMulticastTTL", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "SetMulticastTTL", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
 }
 
@@ -643,7 +643,7 @@ int UdpSocket::GetMulticastTTL()
     }
     if (getsockopt(GetSocket(), SOL_IP, IP_MULTICAST_TTL, (char *)&ttl, &size) == -1)
     {
-        Handler().LogError(this, "GetMulticastTTL", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "GetMulticastTTL", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
     return ttl;
 }
@@ -662,7 +662,7 @@ void UdpSocket::SetMulticastLoop(bool x)
         int val = x ? 1 : 0;
         if (setsockopt(GetSocket(), IPPROTO_IPV6, IPV6_MULTICAST_LOOP, (char *)&val, sizeof(int)) == -1)
         {
-            Handler().LogError(this, "SetMulticastLoop(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "SetMulticastLoop(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
         }
         return;
     }
@@ -671,7 +671,7 @@ void UdpSocket::SetMulticastLoop(bool x)
     int val = x ? 1 : 0;
     if (setsockopt(GetSocket(), SOL_IP, IP_MULTICAST_LOOP, (char *)&val, sizeof(int)) == -1)
     {
-        Handler().LogError(this, "SetMulticastLoop(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "SetMulticastLoop(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
 }
 
@@ -690,7 +690,7 @@ bool UdpSocket::IsMulticastLoop()
         socklen_t size = sizeof(int);
         if (getsockopt(GetSocket(), IPPROTO_IPV6, IPV6_MULTICAST_LOOP, (char *)&is_loop, &size) == -1)
         {
-            Handler().LogError(this, "IsMulticastLoop(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "IsMulticastLoop(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
         }
         return is_loop ? true : false;
     }
@@ -700,7 +700,7 @@ bool UdpSocket::IsMulticastLoop()
     socklen_t size = sizeof(int);
     if (getsockopt(GetSocket(), SOL_IP, IP_MULTICAST_LOOP, (char *)&is_loop, &size) == -1)
     {
-        Handler().LogError(this, "IsMulticastLoop(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "IsMulticastLoop(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
     return is_loop ? true : false;
 }
@@ -724,7 +724,7 @@ void UdpSocket::AddMulticastMembership(const std::string& group, const std::stri
             x.ipv6mr_interface = if_index;
             if (setsockopt(GetSocket(), IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, (char *)&x, sizeof(struct ipv6_mreq)) == -1)
             {
-                Handler().LogError(this, "AddMulticastMembership(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+                Handler().LogError(shared_from_this(), "AddMulticastMembership(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
             }
         }
         return;
@@ -741,7 +741,7 @@ void UdpSocket::AddMulticastMembership(const std::string& group, const std::stri
         //		x.imr_ifindex = if_index;
         if (setsockopt(GetSocket(), SOL_IP, IP_ADD_MEMBERSHIP, (char *)&x, sizeof(struct ip_mreq)) == -1)
         {
-            Handler().LogError(this, "AddMulticastMembership(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "AddMulticastMembership(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
         }
     }
 }
@@ -765,7 +765,7 @@ void UdpSocket::DropMulticastMembership(const std::string& group, const std::str
             x.ipv6mr_interface = if_index;
             if (setsockopt(GetSocket(), IPPROTO_IPV6, IPV6_DROP_MEMBERSHIP, (char *)&x, sizeof(struct ipv6_mreq)) == -1)
             {
-                Handler().LogError(this, "DropMulticastMembership(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+                Handler().LogError(shared_from_this(), "DropMulticastMembership(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
             }
         }
         return;
@@ -782,7 +782,7 @@ void UdpSocket::DropMulticastMembership(const std::string& group, const std::str
         //		x.imr_ifindex = if_index;
         if (setsockopt(GetSocket(), SOL_IP, IP_DROP_MEMBERSHIP, (char *)&x, sizeof(struct ip_mreq)) == -1)
         {
-            Handler().LogError(this, "DropMulticastMembership(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "DropMulticastMembership(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
         }
     }
 }
@@ -798,12 +798,12 @@ void UdpSocket::SetMulticastHops(int hops)
     }
     if (!IsIpv6())
     {
-        Handler().LogError(this, "SetMulticastHops", 0, "Ipv6 only", LOG_LEVEL_ERROR);
+        Handler().LogError(shared_from_this(), "SetMulticastHops", 0, "Ipv6 only", LOG_LEVEL_ERROR);
         return;
     }
     if (setsockopt(GetSocket(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (char *)&hops, sizeof(int)) == -1)
     {
-        Handler().LogError(this, "SetMulticastHops", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "SetMulticastHops", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
 }
 
@@ -816,14 +816,14 @@ int UdpSocket::GetMulticastHops()
     }
     if (!IsIpv6())
     {
-        Handler().LogError(this, "SetMulticastHops", 0, "Ipv6 only", LOG_LEVEL_ERROR);
+        Handler().LogError(shared_from_this(), "SetMulticastHops", 0, "Ipv6 only", LOG_LEVEL_ERROR);
         return -1;
     }
     int hops = 0;
     socklen_t size = sizeof(int);
     if (getsockopt(GetSocket(), IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (char *)&hops, &size) == -1)
     {
-        Handler().LogError(this, "GetMulticastHops", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "GetMulticastHops", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
     return hops;
 }
@@ -871,7 +871,7 @@ void UdpSocket::SetMulticastDefaultInterface(ipaddr_t a, int if_index)
     memcpy(&x.s_addr, &a, sizeof(x.s_addr));
     if (setsockopt(GetSocket(), IPPROTO_IP, IP_MULTICAST_IF, (char *)&x, sizeof(x)) == -1)
     {
-        Handler().LogError(this, "SetMulticastDefaultInterface(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "SetMulticastDefaultInterface(ipv4)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
 }
 
@@ -882,7 +882,7 @@ void UdpSocket::SetMulticastDefaultInterface(in6_addr a, int if_index)
 {
     if (setsockopt(GetSocket(), IPPROTO_IPV6, IPV6_MULTICAST_IF, &if_index, sizeof(if_index)) == -1)
     {
-        Handler().LogError(this, "SetMulticastDefaultInterface(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "SetMulticastDefaultInterface(ipv6)", Errno, StrError(Errno), LOG_LEVEL_WARNING);
     }
 }
 #endif

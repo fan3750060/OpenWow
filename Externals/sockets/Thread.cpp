@@ -47,7 +47,7 @@ namespace SOCKETS_NAMESPACE {
 
 
 Thread::Thread(bool release)
-    :m_thread(0)
+    : m_thread(0)
     , m_running(true)
     , m_release(false)
     , m_b_delete_on_exit(false)

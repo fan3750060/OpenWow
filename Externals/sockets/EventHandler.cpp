@@ -195,7 +195,7 @@ void EventHandler::RemoveEvent(IEventOwner *from, long eid)
 }
 
 
-void EventHandler::Add(Socket *p)
+void EventHandler::Add(std::shared_ptr<Socket> p)
 {
     SocketHandler::Add(p);
 }

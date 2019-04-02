@@ -37,8 +37,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 namespace SOCKETS_NAMESPACE {
 #endif
 
-SocketThread::SocketThread(Socket *p)
-    :Thread(false)
+SocketThread::SocketThread(std::shared_ptr<Socket> p)
+    : Thread(false)
     , m_socket(p)
 {
     // Creator will release

@@ -238,7 +238,6 @@
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketAddress.h" />
     <ClInclude Include="SocketHandler.h" />
-    <ClInclude Include="SocketHandlerEp.h" />
     <ClInclude Include="SocketHandlerThread.h" />
     <ClInclude Include="sockets-config.h" />
     <ClInclude Include="SocketThread.h" />
@@ -267,7 +266,6 @@
     <ClCompile Include="Semaphore.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="SocketHandler.cpp" />
-    <ClCompile Include="SocketHandlerEp.cpp" />
     <ClCompile Include="SocketHandlerThread.cpp" />
     <ClCompile Include="SocketThread.cpp" />
     <ClCompile Include="socket_include.cpp" />

@@ -175,13 +175,13 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
 {
     if (!ad.IsValid())
     {
-        Handler().LogError(this, "Open", 0, "Invalid SocketAddress", LOG_LEVEL_FATAL);
+        Handler().LogError(shared_from_this(), "Open", 0, "Invalid SocketAddress", LOG_LEVEL_FATAL);
         SetCloseAndDelete();
         return false;
     }
     if (Handler().GetCount() >= Handler().MaxCount())
     {
-        Handler().LogError(this, "Open", 0, "no space left for more sockets", LOG_LEVEL_FATAL);
+        Handler().LogError(shared_from_this(), "Open", 0, "no space left for more sockets", LOG_LEVEL_FATAL);
         SetCloseAndDelete();
         return false;
     }
@@ -198,7 +198,7 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
 
             SetIsClient();
             SetCallOnConnect(); // ISocketHandler must call OnConnect
-            Handler().LogError(this, "SetCallOnConnect", 0, "Found pooled connection", LOG_LEVEL_INFO);
+            Handler().LogError(shared_from_this(), "SetCallOnConnect", 0, "Found pooled connection", LOG_LEVEL_INFO);
             return true;
         }
     }
@@ -245,14 +245,14 @@ bool TcpSocket::Open(SocketAddress& ad, SocketAddress& bind_ad, bool skip_socks)
 #ifdef ENABLE_RECONNECT
                 if (Reconnect())
                 {
-                    Handler().LogError(this, "connect: failed, reconnect pending", Errno, StrError(Errno), LOG_LEVEL_INFO);
+                    Handler().LogError(shared_from_this(), "connect: failed, reconnect pending", Errno, StrError(Errno), LOG_LEVEL_INFO);
                     Attach(s);
                     SetConnecting(true); // this flag will control fd_set's
                 }
                 else
 #endif
                 {
-                    Handler().LogError(this, "connect: failed", Errno, StrError(Errno), LOG_LEVEL_FATAL);
+                    Handler().LogError(shared_from_this(), "connect: failed", Errno, StrError(Errno), LOG_LEVEL_FATAL);
                     SetCloseAndDelete();
                     closesocket(s);
                     return false;
@@ -339,13 +339,13 @@ void TcpSocket::OnResolved(int id, ipaddr_t a, port_t port)
             }
             else
             {
-                Handler().LogError(this, "OnResolved", 0, "Resolver failed", LOG_LEVEL_FATAL);
+                Handler().LogError(shared_from_this(), "OnResolved", 0, "Resolver failed", LOG_LEVEL_FATAL);
                 SetCloseAndDelete();
             }
         }
         else
         {
-            Handler().LogError(this, "OnResolved", id, "Resolver returned wrong job id", LOG_LEVEL_FATAL);
+            Handler().LogError(shared_from_this(), "OnResolved", id, "Resolver returned wrong job id", LOG_LEVEL_FATAL);
             SetCloseAndDelete();
         }
 }
@@ -371,7 +371,7 @@ void TcpSocket::OnResolved(int id, in6_addr& a, port_t port)
     }
     else
     {
-        Handler().LogError(this, "OnResolved", id, "Resolver returned wrong job id", LOG_LEVEL_FATAL);
+        Handler().LogError(shared_from_this(), "OnResolved", id, "Resolver returned wrong job id", LOG_LEVEL_FATAL);
         SetCloseAndDelete();
     }
 }
@@ -391,7 +391,7 @@ void TcpSocket::OnRead()
         n = recv(GetSocket(), buf, TCP_BUFSIZE_READ, MSG_NOSIGNAL);
         if (n == -1)
         {
-            Handler().LogError(this, "read", Errno, StrError(Errno), LOG_LEVEL_FATAL);
+            Handler().LogError(shared_from_this(), "read", Errno, StrError(Errno), LOG_LEVEL_FATAL);
             OnDisconnect();
             OnDisconnect(TCP_DISCONNECT_ERROR, Errno);
             SetCloseAndDelete(true);
@@ -416,12 +416,12 @@ void TcpSocket::OnRead()
                     m_bytes_received += n;
                     if (!m_b_input_buffer_disabled && !ibuf.Write(buf, n))
                     {
-                        Handler().LogError(this, "OnRead", 0, "ibuf overflow", LOG_LEVEL_WARNING);
+                        Handler().LogError(shared_from_this(), "OnRead", 0, "ibuf overflow", LOG_LEVEL_WARNING);
                     }
                 }
                 else
                 {
-                    Handler().LogError(this, "OnRead", n, "abnormal value from recv", LOG_LEVEL_ERROR);
+                    Handler().LogError(shared_from_this(), "OnRead", n, "abnormal value from recv", LOG_LEVEL_ERROR);
                 }
     }
     //
@@ -460,7 +460,7 @@ void TcpSocket::OnRead(char *buf, size_t n)
                         }
                         else
                         {
-                            Handler().LogError(this, "TcpSocket::OnRead", (int)(m_line_ptr + sz), "maximum tcp_line_size exceeded, connection closed", LOG_LEVEL_FATAL);
+                            Handler().LogError(shared_from_this(), "TcpSocket::OnRead", (int)(m_line_ptr + sz), "maximum tcp_line_size exceeded, connection closed", LOG_LEVEL_FATAL);
                             SetCloseAndDelete();
                         }
                     }
@@ -502,7 +502,7 @@ void TcpSocket::OnRead(char *buf, size_t n)
                     }
                     else
                     {
-                        Handler().LogError(this, "TcpSocket::OnRead", (int)(m_line_ptr + sz), "maximum tcp_line_size exceeded, connection closed", LOG_LEVEL_FATAL);
+                        Handler().LogError(shared_from_this(), "TcpSocket::OnRead", (int)(m_line_ptr + sz), "maximum tcp_line_size exceeded, connection closed", LOG_LEVEL_FATAL);
                         SetCloseAndDelete();
                     }
                 }
@@ -533,13 +533,13 @@ void TcpSocket::OnWrite()
         // don't reset connecting flag on error here, we want the OnConnectFailed timeout later on
         if (!err) // ok
         {
-            Handler().ISocketHandler_Mod(this, !IsDisableRead(), false);
+            Handler().ISocketHandler_Mod(shared_from_this(), !IsDisableRead(), false);
             SetConnecting(false);
             SetCallOnConnect();
             return;
         }
-        Handler().LogError(this, "tcp: connect failed", err, StrError(err), LOG_LEVEL_FATAL);
-        Handler().ISocketHandler_Mod(this, false, false); // no more monitoring because connection failed
+        Handler().LogError(shared_from_this(), "tcp: connect failed", err, StrError(err), LOG_LEVEL_FATAL);
+        Handler().ISocketHandler_Mod(shared_from_this(), false, false); // no more monitoring because connection failed
 
         // failed
         if (GetConnectionRetry() == -1 ||
@@ -574,7 +574,7 @@ void TcpSocket::SendFromOutputBuffer()
     {
         if (m_obuf.empty())
         {
-            Handler().LogError(this, "OnWrite", (int)m_output_length, "Empty output buffer in OnWrite", LOG_LEVEL_ERROR);
+            Handler().LogError(shared_from_this(), "OnWrite", (int)m_output_length, "Empty output buffer in OnWrite", LOG_LEVEL_ERROR);
             break;
         }
         output_l::iterator it = m_obuf.begin();
@@ -611,9 +611,9 @@ void TcpSocket::SendFromOutputBuffer()
     {
         bool br = !IsDisableRead();
         if (m_obuf.size())
-            Handler().ISocketHandler_Mod(this, br, true);
+            Handler().ISocketHandler_Mod(shared_from_this(), br, true);
         else
-            Handler().ISocketHandler_Mod(this, br, false);
+            Handler().ISocketHandler_Mod(shared_from_this(), br, false);
     }
 }
 
@@ -634,7 +634,7 @@ int TcpSocket::TryWrite(const char *buf, size_t len)
             if (Errno != EWOULDBLOCK)
 #endif
             {
-                Handler().LogError(this, "send", Errno, StrError(Errno), LOG_LEVEL_FATAL);
+                Handler().LogError(shared_from_this(), "send", Errno, StrError(Errno), LOG_LEVEL_FATAL);
                 OnDisconnect();
                 OnDisconnect(TCP_DISCONNECT_WRITE | TCP_DISCONNECT_ERROR, Errno);
                 SetCloseAndDelete(true);
@@ -694,18 +694,18 @@ void TcpSocket::SendBuf(const char *buf, size_t len, int)
 {
     if (!Ready() && !Connecting())
     {
-        Handler().LogError(this, "SendBuf", -1, "Attempt to write to a non-ready socket"); // warning
+        Handler().LogError(shared_from_this(), "SendBuf", -1, "Attempt to write to a non-ready socket"); // warning
         if (GetSocket() == INVALID_SOCKET)
-            Handler().LogError(this, "SendBuf", 0, " * GetSocket() == INVALID_SOCKET", LOG_LEVEL_INFO);
+            Handler().LogError(shared_from_this(), "SendBuf", 0, " * GetSocket() == INVALID_SOCKET", LOG_LEVEL_INFO);
         if (Connecting())
-            Handler().LogError(this, "SendBuf", 0, " * Connecting()", LOG_LEVEL_INFO);
+            Handler().LogError(shared_from_this(), "SendBuf", 0, " * Connecting()", LOG_LEVEL_INFO);
         if (CloseAndDelete())
-            Handler().LogError(this, "SendBuf", 0, " * CloseAndDelete()", LOG_LEVEL_INFO);
+            Handler().LogError(shared_from_this(), "SendBuf", 0, " * CloseAndDelete()", LOG_LEVEL_INFO);
         return;
     }
     if (!IsConnected())
     {
-        Handler().LogError(this, "SendBuf", -1, "Attempt to write to a non-connected socket, will be sent on connect"); // warning
+        Handler().LogError(shared_from_this(), "SendBuf", -1, "Attempt to write to a non-connected socket, will be sent on connect"); // warning
         Buffer(buf, len);
         return;
     }
@@ -731,9 +731,9 @@ void TcpSocket::SendBuf(const char *buf, size_t len, int)
     {
         bool br = !IsDisableRead();
         if (m_obuf.size())
-            Handler().ISocketHandler_Mod(this, br, true);
+            Handler().ISocketHandler_Mod(shared_from_this(), br, true);
         else
-            Handler().ISocketHandler_Mod(this, br, false);
+            Handler().ISocketHandler_Mod(shared_from_this(), br, false);
     }
 }
 
@@ -771,7 +771,7 @@ int TcpSocket::Close()
 {
     if (GetSocket() == INVALID_SOCKET) // this could happen
     {
-        Handler().LogError(this, "Socket::Close", 0, "file descriptor invalid", LOG_LEVEL_WARNING);
+        Handler().LogError(shared_from_this(), "Socket::Close", 0, "file descriptor invalid", LOG_LEVEL_WARNING);
         return 0;
     }
     int n;
@@ -781,7 +781,7 @@ int TcpSocket::Close()
         if (shutdown(GetSocket(), SHUT_WR) == -1)
         {
             // failed...
-            Handler().LogError(this, "shutdown", Errno, StrError(Errno), LOG_LEVEL_ERROR);
+            Handler().LogError(shared_from_this(), "shutdown", Errno, StrError(Errno), LOG_LEVEL_ERROR);
         }
     }
     //
@@ -790,7 +790,7 @@ int TcpSocket::Close()
     {
         if (n)
         {
-            Handler().LogError(this, "read() after shutdown", n, "bytes read", LOG_LEVEL_WARNING);
+            Handler().LogError(shared_from_this(), "read() after shutdown", n, "bytes read", LOG_LEVEL_WARNING);
         }
     }
     return Socket::Close();
@@ -907,12 +907,12 @@ bool TcpSocket::SetTcpNodelay(bool x)
     int optval = x ? 1 : 0;
     if (setsockopt(GetSocket(), IPPROTO_TCP, TCP_NODELAY, (char *)&optval, sizeof(optval)) == -1)
     {
-        Handler().LogError(this, "setsockopt(IPPROTO_TCP, TCP_NODELAY)", Errno, StrError(Errno), LOG_LEVEL_FATAL);
+        Handler().LogError(shared_from_this(), "setsockopt(IPPROTO_TCP, TCP_NODELAY)", Errno, StrError(Errno), LOG_LEVEL_FATAL);
         return false;
     }
     return true;
 #else
-    Handler().LogError(this, "socket option not available", 0, "TCP_NODELAY", LOG_LEVEL_INFO);
+    Handler().LogError(shared_from_this(), "socket option not available", 0, "TCP_NODELAY", LOG_LEVEL_INFO);
     return false;
 #endif
 }
@@ -1060,7 +1060,7 @@ std::string TcpSocket::CircularBuffer::ReadString(size_t l)
 
 void TcpSocket::OnConnectTimeout()
 {
-    Handler().LogError(this, "connect", -1, "connect timeout", LOG_LEVEL_FATAL);
+    Handler().LogError(shared_from_this(), "connect", -1, "connect timeout", LOG_LEVEL_FATAL);
 
         if (GetConnectionRetry() == -1 ||
             (GetConnectionRetry() && GetConnectionRetries() < GetConnectionRetry()))
@@ -1116,7 +1116,7 @@ void TcpSocket::OnException()
     // %! exception doesn't always mean something bad happened, this code should be reworked
     // errno valid here?
     int err = SoError();
-    Handler().LogError(this, "exception on select", err, StrError(err), LOG_LEVEL_FATAL);
+    Handler().LogError(shared_from_this(), "exception on select", err, StrError(err), LOG_LEVEL_FATAL);
     SetCloseAndDelete();
 }
 #endif // _WIN32
