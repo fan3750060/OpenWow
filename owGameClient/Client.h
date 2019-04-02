@@ -3,6 +3,7 @@
 #include "AuthSocket.h"
 #include "WorldSocket.h"
 
+#include "SHA1.h"
 #include "RealmInfo.h"
 
 class CWoWClient : public std::enable_shared_from_this<CWoWClient>
@@ -25,16 +26,21 @@ public:
 
 	const std::string& getHost() const { return m_Host; }
     port_t getPort() const { return m_Port; }
-	const std::string& getUsername() const { return m_Username; }
-	const std::string& getPassword() const { return m_Password; }
+
+
+	const std::string& GetLogin() const { return m_Username; }
+    const SHA1Hash&    GetLoginPasswordHash() const { return m_LoginPasswordHash; }
 
 	BigNumber* getKey() { return &m_Key; }
 
 private:
 	std::string                     m_Host;
 	port_t                          m_Port;
+
+private: // Used login data. Don't keep fucking password in string. This is secure :)
 	std::string                     m_Username;
-	std::string                     m_Password;
+    SHA1Hash                        m_LoginPasswordHash;
+
 
 	BigNumber                       m_Key;
 

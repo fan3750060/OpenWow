@@ -16,7 +16,18 @@ CWoWClient::CWoWClient(const std::string& AuthServerHost, uint16 AuthServerPort)
 void CWoWClient::BeginConnect(const std::string& Username, const std::string& Password)
 {
     m_Username = Utils::ToUpper(Username);
-    m_Password = Password;
+
+#pragma region Login and Password Sha1Hash
+    char loginPasswordUpperCase[256];
+    memset(loginPasswordUpperCase, 0x00, sizeof(loginPasswordUpperCase));
+
+    sprintf_s(loginPasswordUpperCase, "%s:%s", Username.c_str(), Password.c_str());
+    std::string loginPasswordUpperCaseString = Utils::ToUpper(loginPasswordUpperCase);
+
+    m_LoginPasswordHash.Initialize();
+    m_LoginPasswordHash.UpdateData((const uint8*)loginPasswordUpperCaseString.c_str(), loginPasswordUpperCaseString.size());
+    m_LoginPasswordHash.Finalize();
+#pragma endregion
 
     m_AuthSocket = std::make_shared<CAuthSocket>(*m_SocketsHandler, shared_from_this());
     m_AuthSocket->Open(getHost(), getPort());

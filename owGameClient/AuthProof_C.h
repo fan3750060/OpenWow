@@ -4,30 +4,23 @@ struct AuthProof_C : public ISendable
 {
 	AuthProof_C(uint8* _A, const uint8* _MClient)
 	{
-		cmd = AUTH_LOGON_PROOF;
 		memcpy(A, _A, 32);
 		memcpy(M1, _MClient, SHA_DIGEST_LENGTH);
 	}
 
 	void Send(TcpSocket* _socket) override
 	{
-		uint8 crc[20];
-
 		CByteBuffer bb;
-		bb << cmd;
+		bb << (uint8)AUTH_LOGON_PROOF;
 		bb.Append(A, 32);
 		bb.Append(M1, SHA_DIGEST_LENGTH);
-		bb.Append(crc, 20);
+        bb.WriteDummy(20);
 		bb << (uint8)0;
 		bb << (uint8)0;
 
 		_socket->SendBuf(reinterpret_cast<const char*>(bb.getData()), bb.getSize());
 	}
 
-	uint8   cmd;
 	uint8   A[32];
 	uint8   M1[SHA_DIGEST_LENGTH];
-	uint8   crc_hash[20];
-	uint8   number_of_keys;
-	uint8   securityFlags;
 };

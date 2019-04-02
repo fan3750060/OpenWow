@@ -44,11 +44,9 @@
     <ClInclude Include="..\shared\owGameClient.h" />
     <ClInclude Include="ARC4.h" />
     <ClInclude Include="AuthChallenge_C.h" />
-    <ClInclude Include="AuthChallenge_S.h" />
     <ClInclude Include="AuthCodes.h" />
     <ClInclude Include="AuthCrypt.h" />
     <ClInclude Include="AuthProof_C.h" />
-    <ClInclude Include="AuthProof_S.h" />
     <ClInclude Include="AuthSocket.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="BigNumber.h" />

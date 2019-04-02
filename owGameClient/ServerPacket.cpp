@@ -27,3 +27,8 @@ Opcodes CServerPacket::GetPacketOpcode() const
 {
     return m_Opcode;
 }
+
+bool CServerPacket::IsComplete() const
+{
+    return getSize() == static_cast<size_t>(GetPacketSize());
+}

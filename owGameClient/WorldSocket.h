@@ -41,7 +41,6 @@ public:
 
 	// CWorldSocket
     void SendPacket(CClientPacket& Packet);
-    void SendData(const uint8* _data, uint32 _count);
 
     // Packets contructor
     void Packet1(uint16 Size, Opcodes Opcode);

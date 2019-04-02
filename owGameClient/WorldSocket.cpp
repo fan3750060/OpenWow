@@ -146,19 +146,9 @@ void CWorldSocket::SendPacket(CClientPacket& Packet)
 {
     Packet.Complete();
 
-    SendData(Packet.getData(), Packet.getSize());
-}
+    m_WoWCryptoUtils.EncryptSend(Packet.getDataEx(), sizeof(uint16) /*Size*/ + sizeof(uint32) /*Opcode*/);
 
-void CWorldSocket::SendData(const uint8* _data, uint32 _count)
-{
-    assert1(_count < 4096);
-
-    uint8 data2[4096];
-    memcpy(data2, _data, _count);
-
-    m_WoWCryptoUtils.EncryptSend(data2, 6 /* size (2) + header (4)*/);
-
-    SendBuf(reinterpret_cast<const char*>(data2), _count);
+    SendBuf(reinterpret_cast<const char*>(Packet.getDataEx()), Packet.getSize());
 }
 
 
@@ -193,7 +183,7 @@ void CWorldSocket::Packet2(CByteBuffer& _buf)
     }
 
     // Check if we read full packet
-    if (m_CurrentPacket->getSize() == m_CurrentPacket->GetPacketSize())
+    if (m_CurrentPacket->IsComplete())
     {
         ProcessPacket(*m_CurrentPacket);
 
@@ -270,7 +260,7 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
 
 	SHA1Hash uSHA;
 	uSHA.Initialize();
-	uSHA.UpdateData((const uint8*)WoWClient->getUsername().c_str(), WoWClient->getUsername().size());
+	uSHA.UpdateData((const uint8*)WoWClient->GetLogin().c_str(), WoWClient->GetLogin().size());
 	uSHA.UpdateData(zeroBytes, 4);
     uSHA.UpdateBigNumbers(&clientRandomSeed, nullptr);
 	uSHA.UpdateData(&reinterpret_cast<uint8&>(serverRandomSeed), 4);
@@ -281,7 +271,7 @@ void CWorldSocket::S_AuthChallenge(CByteBuffer& _buff)
     CClientPacket p(CMSG_AUTH_SESSION);
     p << WoWClient->getClientBuild();
     p.WriteDummy(4);
-    p << WoWClient->getUsername();
+    p << WoWClient->GetLogin();
     p.Append(clientRandomSeed.AsByteArray(4).get(), 4);
     p.Append(uSHA.GetDigest(), SHA_DIGEST_LENGTH);
 

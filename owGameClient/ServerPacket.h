@@ -11,6 +11,7 @@ public:
     // CServerPacket
     uint16  GetPacketSize() const;
     Opcodes GetPacketOpcode() const;
+    bool    IsComplete() const;
 
 private:
     uint16  m_Size;
