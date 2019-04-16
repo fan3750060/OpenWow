@@ -12,6 +12,7 @@ public:
 
 	template<class T>
 	std::vector<T> OpenChunkT(const char* _name);
+
 private:
 	typedef std::pair<size_t, size_t>  ChunkInfo;
 	typedef std::vector<ChunkInfo>     Chunks;

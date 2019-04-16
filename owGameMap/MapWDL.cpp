@@ -5,14 +5,14 @@
 #include "WDL_Node_Material.h"
 
 // General
-#include "WDL.h"
+#include "MapWDL.h"
 
-WDL::WDL(std::weak_ptr<const MapController> _mapController) :
-	m_MapController(_mapController),
+CMapWDL::CMapWDL(std::weak_ptr<const CMapController> MapController) :
+	m_MapController(MapController),
 	m_Minimap(nullptr)
 {}
 
-WDL::~WDL()
+CMapWDL::~CMapWDL()
 {
 }
 
@@ -21,9 +21,9 @@ WDL::~WDL()
 //
 // ISceneNodeProvider
 //
-void WDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
+void CMapWDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 {
-	std::shared_ptr<const MapController> mapController = m_MapController.lock();
+	std::shared_ptr<const CMapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdl";
@@ -117,15 +117,15 @@ void WDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 	}
 }
 
-void WDL::UpdateCamera(const Camera * camera)
+void CMapWDL::UpdateCamera(const Camera * camera)
 {
 	//if (m_LowResilutionTileMaterial)
 	//	m_LowResilutionTileMaterial->SetDiffuseColor(vec4(GetManager<ISkyManager>()->GetColor(LightColors::LIGHT_COLOR_FOG), 1.0f));
 }
 
-void WDL::Load()
+void CMapWDL::Load()
 {
-	std::shared_ptr<const MapController> mapController = m_MapController.lock();
+	std::shared_ptr<const CMapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
 	std::string fileName = mapController->getFilenameT() + ".wdl";

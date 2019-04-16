@@ -13,7 +13,7 @@
 #include "Map_Shared.h"
 #include "ADT_MCNK_Material.h"
 
-ADT_MCNK::ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin) :
+ADT_MCNK::ADT_MCNK(std::weak_ptr<CMapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin) :
 	m_MapController(_mapController),
 	m_ParentADT(_parentTile),
 	m_FileName(_fileName),
@@ -231,7 +231,7 @@ bool ADT_MCNK::Load()
 	// Alpha
 	m_File->seek(startPos + header.ofsAlpha);
 	{
-		std::shared_ptr<MapController> mapController = m_MapController.lock();
+		std::shared_ptr<CMapController> mapController = m_MapController.lock();
 		assert1(mapController != NULL);
 
 		for (uint32 i = 1; i < header.nLayers; i++)

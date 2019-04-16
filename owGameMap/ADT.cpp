@@ -10,7 +10,7 @@
 #include "ADT_Liquid.h"
 
 ADT::ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _intexZ) :
-	m_MapController(std::dynamic_pointer_cast<MapController>(_mapController.lock())),
+	m_MapController(std::dynamic_pointer_cast<CMapController>(_mapController.lock())),
 	m_IndexX(_intexX), 
 	m_IndexZ(_intexZ),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
@@ -46,7 +46,7 @@ bool ADT::Accept(IVisitor& visitor)
 	const AbstractPass& visitorAsBasePass = reinterpret_cast<AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	std::shared_ptr<CMapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 	//if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
 	//{
@@ -64,7 +64,7 @@ bool ADT::Accept(IVisitor& visitor)
 
 bool ADT::Load()
 {
-	std::shared_ptr<MapController> mapController = m_MapController.lock();
+	std::shared_ptr<CMapController> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
 	char filename[256];

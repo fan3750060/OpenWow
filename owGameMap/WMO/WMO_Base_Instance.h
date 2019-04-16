@@ -14,8 +14,8 @@ public:
 	void CreateInstances();
 
 	// CWMO_Base_Instance
-	void setWMO(std::shared_ptr<WMO> _model);
-	std::shared_ptr<WMO> getWMO() const;
+	void setWMO(std::shared_ptr<CWMO> _model);
+	std::shared_ptr<CWMO> getWMO() const;
 
 	void AddGroupInstance(std::shared_ptr<CWMO_Group_Instance> _group) { m_GroupInstances.push_back(_group); }
 	std::vector<std::shared_ptr<CWMO_Group_Instance>>& getGroupInstances() { return m_GroupInstances; }
@@ -36,7 +36,7 @@ public:
 
 protected:
 	std::string                                        m_WMOName;
-	std::shared_ptr<WMO>                               m_WMO;
+	std::shared_ptr<CWMO>                               m_WMO;
 	//SWMO_Doodad_SetInfo                                m_DoodadSetInfo;
 
 	std::vector<vec3>                                  m_ConvertedVerts;

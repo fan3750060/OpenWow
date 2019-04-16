@@ -181,7 +181,7 @@ void CGameState_World::Load3D()
 	inst->GetLocalTransform();*/
 
 	// Map
-	m_MapController = std::make_shared<MapController>();
+	m_MapController = std::make_shared<CMapController>();
 	m_MapController->SetParent(m_3DScene->GetRootNode());
 	m_MapController->MapPreLoad(*DBC_Map[1]);
 	m_MapController->MapLoad();

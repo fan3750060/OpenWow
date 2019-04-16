@@ -4,15 +4,15 @@
 #include "ADT_WMO_Instance.h"
 
 // FORWARD BEGIN
-class MapController;
+class CMapController;
 class WDL_Node_Material;
 // FORWARD END
 
-class WDL : public ISceneNodeProvider
+class CMapWDL : public ISceneNodeProvider
 {
 public:
-	WDL(std::weak_ptr<const MapController> _mapController);
-	virtual ~WDL();
+	CMapWDL(std::weak_ptr<const CMapController> MapController);
+	virtual ~CMapWDL();
 
 	// ISceneNodeProvider
 	void CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent) override;
@@ -33,5 +33,5 @@ private:
 	std::vector<std::shared_ptr<ADT_WMO_Instance>>	m_LowResolutionWMOs;
 
 private: // PARENT
-	const std::weak_ptr<const MapController>          m_MapController;
+	const std::weak_ptr<const CMapController>          m_MapController;
 };

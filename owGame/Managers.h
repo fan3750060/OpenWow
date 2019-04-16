@@ -1,12 +1,12 @@
 #pragma once
 
 // FORWARD BEGIN
-class WMO;
+class CWMO;
 // FORWARD END
 
 struct
 	__declspec(novtable, uuid("42D47100-B825-47F1-BE2F-6F7C78443884"))
-	IWMOManager : public IRefManager<WMO>
+	IWMOManager : public IRefManager<CWMO>
 {
 	virtual ~IWMOManager() {};
 };

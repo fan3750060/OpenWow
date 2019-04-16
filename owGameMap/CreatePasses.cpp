@@ -4,10 +4,10 @@
 #include "CreatePasses.h"
 
 // Additional
-#include "Sky_Pass.h"
-#include "ADT_MCNK_Pass.h"
-#include "WDL_Node_Pass.h"
-#include "WMO\\WMO_Pass.h"
+#include "RenderPass_Sky.h"
+#include "RenderPass_ADT_MCNK.h"
+#include "RenderPass_WDL.h"
+#include "WMO\\RenderPass_WMO.h"
 
 void AddSkyPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
 {
@@ -25,7 +25,7 @@ void AddSkyPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRender
 	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	WDLPipeline->SetRenderTarget(_renderTarget);
 	WDLPipeline->GetRasterizerState().SetViewport(*viewport);
-	technique->AddPass(std::make_shared<Sky_Pass>(scene, WDLPipeline));
+	technique->AddPass(std::make_shared<CRenderPass_Sky>(scene, WDLPipeline));
 }
 
 void AddWDLPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
@@ -44,7 +44,7 @@ void AddWDLPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRender
 	WDLPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	WDLPipeline->SetRenderTarget(_renderTarget);
 	WDLPipeline->GetRasterizerState().SetViewport(*viewport);
-	technique->AddPass(std::make_shared<WDL_Node_Pass>(scene, WDLPipeline));
+	technique->AddPass(std::make_shared<CRenderPass_WDL>(scene, WDLPipeline));
 
 }
 
@@ -64,7 +64,7 @@ void AddMCNKPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRende
 	ADTPipeline->GetRasterizerState().SetFillMode(RasterizerState::FillMode::Solid);
 	ADTPipeline->SetRenderTarget(_renderTarget);
 	ADTPipeline->GetRasterizerState().SetViewport(*viewport);
-	technique->AddPass(std::make_shared<ADT_MCNK_Pass>(scene, ADTPipeline));
+	technique->AddPass(std::make_shared<CRenderPass_ADT_MCNK>(scene, ADTPipeline));
 }
 
 void AddWMOPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
@@ -83,5 +83,5 @@ void AddWMOPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRender
     WMOPipeline->SetRenderTarget(_renderTarget);
     WMOPipeline->GetRasterizerState().SetViewport(*viewport);
 
-    technique->AddPass(std::make_shared<WMO_Pass>(scene, WMOPipeline));
+    technique->AddPass(std::make_shared<CRenderPass_WMO>(scene, WMOPipeline));
 }

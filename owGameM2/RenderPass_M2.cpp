@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // General
-#include "M2_Pass.h"
+#include "RenderPass_M2.h"
 
 // Additional
 
@@ -13,14 +13,24 @@
 
 #include "M2_Skin_Batch.h"
 
-M2_Pass::M2_Pass(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
+CRenderPass_M2::CRenderPass_M2(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: BasePass(scene, pipeline)
 {}
 
-M2_Pass::~M2_Pass()
+CRenderPass_M2::~CRenderPass_M2()
 {}
 
-bool M2_Pass::Visit(IMesh& mesh)
+
+
+//
+// IVisitor
+//
+bool CRenderPass_M2::Visit(SceneNode3D & node)
+{
+    return false;
+}
+
+bool CRenderPass_M2::Visit(IMesh& mesh, UINT IndexStartLocation, UINT IndexCnt, UINT VertexStartLocation, UINT VertexCnt)
 {
 	const CM2_Skin_Batch* pMesh = dynamic_cast<const CM2_Skin_Batch*>(&mesh);
 	if (pMesh)
@@ -40,7 +50,7 @@ bool M2_Pass::Visit(IMesh& mesh)
 
 	if (mesh.GetType() == SN_TYPE_M2)
 	{
-		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer());
+		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer(), IndexStartLocation, IndexCnt, VertexStartLocation, VertexCnt);
 	}
 
 	return false;

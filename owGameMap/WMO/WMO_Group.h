@@ -10,7 +10,7 @@
 #include "WMO_Group_Part_BSP_Node.h"
 
 // FORWARD BEGIN
-class WMO;
+class CWMO;
 class CWMO_Group_Instance;
 class CWMO_Doodad_Instance;
 // FORWARD END
@@ -18,7 +18,7 @@ class CWMO_Doodad_Instance;
 class WMO_Group : public std::enable_shared_from_this<WMO_Group>
 {
 public:
-	WMO_Group(const std::weak_ptr<const WMO> _parentWMO, const uint32 m_GroupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile);
+	WMO_Group(const std::weak_ptr<const CWMO> _parentWMO, const uint32 m_GroupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile);
 
 	void CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const;
 
@@ -71,6 +71,6 @@ public:
 	std::shared_ptr<CWMO_Liquid>            m_WMOLiqiud;
 
 	// Parent
-	const std::weak_ptr<const WMO>          m_ParentWMO;
+	const std::weak_ptr<const CWMO>          m_ParentWMO;
 	const CGroupQuality&					m_Quality;
 };

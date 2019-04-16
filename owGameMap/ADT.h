@@ -7,7 +7,7 @@
 #include "Map_Headers.h"
 
 // FORWARD BEGIN
-class MapController;
+class CMapController;
 // FORWARD END
 
 class ADT : public SceneNodeModel3D
@@ -49,6 +49,6 @@ public:
 	std::vector<std::shared_ptr<ADT_MCNK>>			m_Chunks;
 
 private: // PARENT
-	const std::weak_ptr<MapController>				m_MapController;
+	const std::weak_ptr<CMapController>				m_MapController;
 	CGroupQuality&									m_QualitySettings;
 };

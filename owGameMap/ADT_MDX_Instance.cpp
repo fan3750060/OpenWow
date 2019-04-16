@@ -35,7 +35,7 @@ bool ADT_MDX_Instance::Accept(IVisitor& visitor)
 	const AbstractPass& visitorAsBasePass = reinterpret_cast<AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 	
-	const M2_Pass* passAsM2Pass = dynamic_cast<const M2_Pass*>(&visitor);
+	const CRenderPass_M2* passAsM2Pass = dynamic_cast<const CRenderPass_M2*>(&visitor);
 	if (passAsM2Pass)
 	{
 		if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())

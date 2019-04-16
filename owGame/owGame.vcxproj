@@ -22,7 +22,7 @@
     <ClCompile Include="CreatePasses.cpp" />
     <ClCompile Include="DBC\Core\DBC__Storage.cpp" />
     <ClCompile Include="LiquidLayer.cpp" />
-    <ClCompile Include="Liquid_Pass.cpp" />
+    <ClCompile Include="RenderPass_Liquid.cpp" />
     <ClCompile Include="LiquidInstance.cpp" />
     <ClCompile Include="Liquid.cpp" />
     <ClCompile Include="LiquidMaterial.cpp" />
@@ -79,7 +79,7 @@
     <ClInclude Include="FunctionSA.h" />
     <ClInclude Include="FunctionWA.h" />
     <ClInclude Include="LiquidLayer.h" />
-    <ClInclude Include="Liquid_Pass.h" />
+    <ClInclude Include="RenderPass_Liquid.h" />
     <ClInclude Include="LiquidInstance.h" />
     <ClInclude Include="Liquid.h" />
     <ClInclude Include="LiquidMaterial.h" />

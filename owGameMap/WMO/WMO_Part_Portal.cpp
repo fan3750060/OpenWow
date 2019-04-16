@@ -8,7 +8,7 @@
 // General
 #include "WMO_Part_Portal.h"
 
-CWMO_Part_Portal::CWMO_Part_Portal(const std::weak_ptr<const WMO> _parentWMO, const SWMO_PortalDef& _proto) :
+CWMO_Part_Portal::CWMO_Part_Portal(const std::weak_ptr<const CWMO> _parentWMO, const SWMO_PortalDef& _proto) :
 	m_ParentWMO(_parentWMO),
 	m_GrInner(-1),
 	m_GrOuter(-1)

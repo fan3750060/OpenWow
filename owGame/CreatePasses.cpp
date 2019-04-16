@@ -4,7 +4,7 @@
 #include "CreatePasses.h"
 
 // Additional
-#include "Liquid_Pass.h"
+#include "RenderPass_Liquid.h"
 
 void AddLiquidPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
 {
@@ -22,5 +22,5 @@ void AddLiquidPasses(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRen
 	WMOPipeline->SetRenderTarget(_renderTarget);
 	WMOPipeline->GetRasterizerState().SetViewport(*viewport);
 
-	technique->AddPass(std::make_shared<Liquid_Pass>(scene, WMOPipeline));
+	technique->AddPass(std::make_shared<CRenderPass_Liquid>(scene, WMOPipeline));
 }

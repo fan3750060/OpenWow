@@ -3,7 +3,7 @@
 #include "ADT_WMO_Instance.h"
 
 // FORWARD BEGIN
-class MapController;
+class CMapController;
 // FORWARD END
 
 struct WDT_MPHD
@@ -33,11 +33,11 @@ struct WDT_MAIN
 	uint32_t asyncId;
 };
 
-class WDT : public ISceneNodeProvider
+class CMapWDT : public ISceneNodeProvider
 {
 public:
-	WDT(std::weak_ptr<const MapController> _mapController);
-	virtual ~WDT();
+	CMapWDT(std::weak_ptr<const CMapController> _mapController);
+	virtual ~CMapWDT();
 
 	// ISceneNodeProvider
 	void CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent) override;
@@ -62,5 +62,5 @@ private:
 	std::shared_ptr<ADT_WMO_Instance>	m_GlobalWMO;
 
 private: // PARENT
-	const std::weak_ptr<const MapController>  m_MapController;
+	const std::weak_ptr<const CMapController>  m_MapController;
 };

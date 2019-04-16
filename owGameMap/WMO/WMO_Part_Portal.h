@@ -3,7 +3,7 @@
 #include "WMO_Headers.h"
 
 // FORWARD BEGIN
-class WMO;
+class CWMO;
 class WMO_Group;
 class CWMO_Base_Instance;
 // FORWARD END
@@ -11,7 +11,7 @@ class CWMO_Base_Instance;
 class CWMO_Part_Portal
 {
 public:
-	CWMO_Part_Portal(const std::weak_ptr<const WMO> _parentWMO, const SWMO_PortalDef& _proto);
+	CWMO_Part_Portal(const std::weak_ptr<const CWMO> _parentWMO, const SWMO_PortalDef& _proto);
 
 	uint16 getStartVertex() const { return m_StartVertex; }
 	uint16 getCount() const { return m_Count; }
@@ -37,5 +37,5 @@ private:
 	std::shared_ptr<IMesh>			m_Geom;
 
 private:
-	const std::weak_ptr<const WMO> m_ParentWMO;
+	const std::weak_ptr<const CWMO> m_ParentWMO;
 };

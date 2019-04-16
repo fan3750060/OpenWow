@@ -3,7 +3,7 @@
 // General
 #include "MapController.h"
 
-MapController::MapController() :
+CMapController::CMapController() :
 	m_SkyManager(nullptr),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
@@ -35,14 +35,14 @@ MapController::MapController() :
 	setLoaded();
 }
 
-MapController::~MapController()
+CMapController::~CMapController()
 {
 	SafeDelete(_MapShared);
 }
 
 // --
 
-void MapController::MapPreLoad(const DBC_MapRecord& _map)
+void CMapController::MapPreLoad(const DBC_MapRecord& _map)
 {
 	m_DBC_Map = _map;
 	m_MapFilenameT = CMapShared::getMapFolder(m_DBC_Map);
@@ -50,23 +50,23 @@ void MapController::MapPreLoad(const DBC_MapRecord& _map)
 	Log::Print("Map[%s]: Id [%d]. Preloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	m_WDL.reset();
-	m_WDL = std::make_shared<WDL>(std::static_pointer_cast<MapController, SceneNodeModel3D>(shared_from_this()));
+	m_WDL = std::make_shared<CMapWDL>(std::static_pointer_cast<CMapController, SceneNodeModel3D>(shared_from_this()));
 	m_WDL->Load();
 
 	m_WDT.reset();
-	m_WDT = std::make_shared<WDT>(std::static_pointer_cast<MapController, SceneNodeModel3D>(shared_from_this()));
+	m_WDT = std::make_shared<CMapWDT>(std::static_pointer_cast<CMapController, SceneNodeModel3D>(shared_from_this()));
 }
 
-void MapController::MapLoad()
+void CMapController::MapLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Loading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
 	DelManager<ISkyManager>();
 	m_SkyManager.reset();
 
-	//m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<MapController, SceneNodeModel3D>(shared_from_this()), m_DBC_Map);
-	//m_SkyManager->SetParent(weak_from_this());
-	//AddManager<ISkyManager>(m_SkyManager);
+	m_SkyManager = std::make_shared<SkyManager>(std::static_pointer_cast<CMapController, SceneNodeModel3D>(shared_from_this()), m_DBC_Map);
+	m_SkyManager->SetParent(weak_from_this());
+	AddManager<ISkyManager>(m_SkyManager);
 
 	m_EnvironmentManager.reset();
 	m_EnvironmentManager = std::make_shared<EnvironmentManager>();
@@ -75,7 +75,7 @@ void MapController::MapLoad()
 	m_WDT->Load();
 }
 
-void MapController::MapPostLoad()
+void CMapController::MapPostLoad()
 {
 	Log::Print("Map[%s]: Id [%d]. Postloading...", m_DBC_Map.Get_Directory(), m_DBC_Map.Get_ID());
 
@@ -83,7 +83,7 @@ void MapController::MapPostLoad()
 	m_WDL->CreateInsances(weak_from_this());
 }
 
-void MapController::Unload()
+void CMapController::Unload()
 {
 	m_WDL.reset();
 	m_WDT.reset();
@@ -108,7 +108,7 @@ void MapController::Unload()
 
 // --
 
-void MapController::UpdateCamera(const Camera* camera)
+void CMapController::UpdateCamera(const Camera* camera)
 {
 	bool loading = false;
 	int enteredTileX, enteredTileZ;
@@ -145,12 +145,12 @@ void MapController::UpdateCamera(const Camera* camera)
 
 //--
 
-void MapController::EnterMap(vec3 _cameraPosition)
+void CMapController::EnterMap(vec3 _cameraPosition)
 {
 	EnterMap(_cameraPosition.x / C_TileSize, _cameraPosition.z / C_TileSize);
 }
 
-void MapController::EnterMap(int32 x, int32 z)
+void CMapController::EnterMap(int32 x, int32 z)
 {
 	if (IsBadTileIndex(x, z) || !m_WDT->getTileFlags(x, z).Flag_HasADT)
 	{
@@ -170,7 +170,7 @@ void MapController::EnterMap(int32 x, int32 z)
 	}
 }
 
-std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
+std::shared_ptr<ADT> CMapController::LoadTile(int32 x, int32 z)
 {
 	if (IsBadTileIndex(x, z))
 	{
@@ -230,7 +230,7 @@ std::shared_ptr<ADT> MapController::LoadTile(int32 x, int32 z)
 	return m_ADTCache[firstnull];
 }
 
-void MapController::ClearCache()
+void CMapController::ClearCache()
 {
 	for (int i = 0; i < C_TilesCacheSize; i++)
 	{
@@ -241,7 +241,7 @@ void MapController::ClearCache()
 	}
 }
 
-uint32 MapController::GetAreaID(Camera* camera)
+uint32 CMapController::GetAreaID(Camera* camera)
 {
 	if (!m_WDT->MapHasTiles())
 	{
@@ -282,7 +282,27 @@ uint32 MapController::GetAreaID(Camera* camera)
 	return curChunk->header.areaid;
 }
 
-bool MapController::IsTileInCurrent(std::shared_ptr<ADT> _mapTile)
+bool CMapController::getTileIsCurrent(int x, int z) const
+{
+    int midTile = static_cast<uint32>(C_RenderedTiles / 2);
+    std::shared_ptr<ADT> currentTile = m_Current[midTile][midTile];
+    if (currentTile == nullptr)
+    {
+        return false;
+    }
+
+    int32 currentX = currentTile->m_IndexX;
+    int32 currentZ = currentTile->m_IndexZ;
+
+    return (
+        x >= (currentX - (C_RenderedTiles / 2)) &&
+        z >= (currentZ - (C_RenderedTiles / 2)) &&
+        x <= (currentX + (C_RenderedTiles / 2)) &&
+        z <= (currentZ + (C_RenderedTiles / 2))
+        );
+}
+
+bool CMapController::IsTileInCurrent(std::shared_ptr<ADT> _mapTile)
 {
 	for (int i = 0; i < C_RenderedTiles; i++)
 		for (int j = 0; j < C_RenderedTiles; j++)

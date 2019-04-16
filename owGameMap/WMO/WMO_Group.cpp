@@ -12,7 +12,7 @@
 #include "WMO_Liquid_Instance.h"
 #include "WMO_Fixes.h"
 
-WMO_Group::WMO_Group(const std::weak_ptr<const WMO> _parentWMO, const uint32 _groupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile) :
+WMO_Group::WMO_Group(const std::weak_ptr<const CWMO> _parentWMO, const uint32 _groupIndex, std::string _groupName, std::shared_ptr<IFile> _groupFile) :
 	m_ParentWMO(_parentWMO),
 	m_GroupName(_groupName),
 	m_GroupIndex(_groupIndex),
@@ -71,7 +71,7 @@ uint32 WMO_Group::to_wmo_liquid(int x)
 
 void WMO_Group::Load()
 {
-	std::shared_ptr<const WMO> ParentWMO = m_ParentWMO.lock();
+	std::shared_ptr<const CWMO> ParentWMO = m_ParentWMO.lock();
 	assert1(ParentWMO != nullptr);
 
 	// Buffer

@@ -31,14 +31,14 @@ private:
 	std::shared_ptr<Query>               m_FrameQuery;
 	double                               m_FrameTime;
 	std::shared_ptr<Scene3D>             m_3DScene;
-	std::shared_ptr<CUIScene>             m_UIScene;
+	std::shared_ptr<CUIScene>            m_UIScene;
 
 
-	std::shared_ptr<MapController>       m_MapController;
-	std::shared_ptr<CWoWClient>m_authWorldController;
+	std::shared_ptr<CMapController>       m_MapController;
+	std::shared_ptr<CWoWClient>          m_WoWClient;
 
-	std::shared_ptr<CUITextNode>              m_CameraPosText;
-	std::shared_ptr<CUITextNode>              m_CameraRotText;
+	std::shared_ptr<CUITextNode>         m_CameraPosText;
+	std::shared_ptr<CUITextNode>         m_CameraRotText;
 
 private:
 	const vec4 g_ClearColor = vec4(0.39f, 0.58f, 0.93f, 1.0f);

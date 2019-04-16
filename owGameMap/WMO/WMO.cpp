@@ -13,13 +13,13 @@ struct WMO_GroupInfoDef
 	int32			nameoffset;		// name in MOGN chunk (-1 for no name)
 };
 
-WMO::WMO(const std::string& name) :
-	m_FileName(name),
+CWMO::CWMO(const std::string& Filename) :
+	m_FileName(Filename),
 	m_TexturesNames(nullptr),
 	m_DoodadsFilenames(nullptr)
 {}
 
-WMO::~WMO()
+CWMO::~CWMO()
 {
 	Log::Info("WMO[%s]: Unloading...", m_FileName.c_str());
 
@@ -32,7 +32,7 @@ WMO::~WMO()
 //
 // ISceneNodeProvider
 //
-void WMO::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
+void CWMO::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 {
 	std::shared_ptr<CWMO_Base_Instance> parentAsWMOInstance = std::dynamic_pointer_cast<CWMO_Base_Instance, SceneNode3D>(_parent.lock());
 	assert1(parentAsWMOInstance != nullptr);
@@ -57,7 +57,7 @@ void WMO::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 	}
 }
 
-bool WMO::Load()
+bool CWMO::Load()
 {
 	WoWChunkReader reader(m_FileName);
 
@@ -266,7 +266,7 @@ bool WMO::Load()
 	return true;
 }
 
-void WMO::Render(CWMO_Base_Instance* _localContr) const
+void CWMO::Render(CWMO_Base_Instance* _localContr) const
 {
 	/*for (auto& it : m_Portals)
 	{
@@ -280,7 +280,7 @@ void WMO::Render(CWMO_Base_Instance* _localContr) const
 	}
 }
 
-bool WMO::drawSkybox()
+bool CWMO::drawSkybox()
 {
 	/*if (m_Skybox == nullptr)
 	{

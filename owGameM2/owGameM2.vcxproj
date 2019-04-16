@@ -56,7 +56,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="M2_Pass.cpp" />
+    <ClCompile Include="RenderPass_M2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameM2.h" />
@@ -100,7 +100,7 @@
     <ClInclude Include="M2_Base_Instance.h" />
     <ClInclude Include="ShaderResolver.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="M2_Pass.h" />
+    <ClInclude Include="RenderPass_M2.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\owGame\owGame.vcxproj">

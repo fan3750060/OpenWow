@@ -54,9 +54,6 @@
     <ClCompile Include="ADT_MDX_Instance.cpp">
       <Filter>Map\Instances</Filter>
     </ClCompile>
-    <ClCompile Include="WDT.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
     <ClCompile Include="EnvironmentManager.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
@@ -96,25 +93,13 @@
     <ClCompile Include="ADT_MCNK_Material.cpp">
       <Filter>Map\ADT_MCNK</Filter>
     </ClCompile>
-    <ClCompile Include="ADT_MCNK_Pass.cpp">
-      <Filter>Map\ADT_MCNK</Filter>
-    </ClCompile>
-    <ClCompile Include="WDL.cpp">
-      <Filter>Map\WDL</Filter>
-    </ClCompile>
     <ClCompile Include="WDL_LowResTile.cpp">
       <Filter>Map\WDL</Filter>
     </ClCompile>
     <ClCompile Include="WDL_Node_Material.cpp">
       <Filter>Map\WDL</Filter>
     </ClCompile>
-    <ClCompile Include="WDL_Node_Pass.cpp">
-      <Filter>Map\WDL</Filter>
-    </ClCompile>
     <ClCompile Include="Sky_Material.cpp">
-      <Filter>Skies</Filter>
-    </ClCompile>
-    <ClCompile Include="Sky_Pass.cpp">
       <Filter>Skies</Filter>
     </ClCompile>
     <ClCompile Include="WMO\WMO_Part_Fog.cpp">
@@ -150,9 +135,6 @@
     <ClCompile Include="WMO\WMO_Group_Part_BSP_Node.cpp">
       <Filter>WMO\Groups</Filter>
     </ClCompile>
-    <ClCompile Include="WMO\WMO_Pass.cpp">
-      <Filter>RenderStuff</Filter>
-    </ClCompile>
     <ClCompile Include="WMO\WMO.cpp">
       <Filter>WMO</Filter>
     </ClCompile>
@@ -164,6 +146,24 @@
     </ClCompile>
     <ClCompile Include="WMO\WMOsManager.cpp">
       <Filter>WMO</Filter>
+    </ClCompile>
+    <ClCompile Include="MapWDT.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapWDL.cpp">
+      <Filter>Map\WDL</Filter>
+    </ClCompile>
+    <ClCompile Include="WMO\RenderPass_WMO.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass_ADT_MCNK.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass_WDL.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass_Sky.cpp">
+      <Filter>RenderStuff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -183,9 +183,6 @@
       <Filter>Map\Instances</Filter>
     </ClInclude>
     <ClInclude Include="ADT.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="WDT.h">
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="common.h">
@@ -230,25 +227,13 @@
     <ClInclude Include="ADT_MCNK_Material.h">
       <Filter>Map\ADT_MCNK</Filter>
     </ClInclude>
-    <ClInclude Include="ADT_MCNK_Pass.h">
-      <Filter>Map\ADT_MCNK</Filter>
-    </ClInclude>
-    <ClInclude Include="WDL.h">
-      <Filter>Map\WDL</Filter>
-    </ClInclude>
     <ClInclude Include="WDL_LowResTile.h">
       <Filter>Map\WDL</Filter>
     </ClInclude>
     <ClInclude Include="WDL_Node_Material.h">
       <Filter>Map\WDL</Filter>
     </ClInclude>
-    <ClInclude Include="WDL_Node_Pass.h">
-      <Filter>Map\WDL</Filter>
-    </ClInclude>
     <ClInclude Include="Sky_Material.h">
-      <Filter>Skies</Filter>
-    </ClInclude>
-    <ClInclude Include="Sky_Pass.h">
       <Filter>Skies</Filter>
     </ClInclude>
     <ClInclude Include="WMO\WMO_Part_Fog.h">
@@ -290,9 +275,6 @@
     <ClInclude Include="WMO\WMO_Group_Part_BSP_Node.h">
       <Filter>WMO\Groups</Filter>
     </ClInclude>
-    <ClInclude Include="WMO\WMO_Pass.h">
-      <Filter>RenderStuff</Filter>
-    </ClInclude>
     <ClInclude Include="WMO\WMO.h">
       <Filter>WMO</Filter>
     </ClInclude>
@@ -307,6 +289,24 @@
     </ClInclude>
     <ClInclude Include="WMO\WMOsManager.h">
       <Filter>WMO</Filter>
+    </ClInclude>
+    <ClInclude Include="MapWDT.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapWDL.h">
+      <Filter>Map\WDL</Filter>
+    </ClInclude>
+    <ClInclude Include="WMO\RenderPass_WMO.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass_ADT_MCNK.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass_WDL.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass_Sky.h">
+      <Filter>RenderStuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

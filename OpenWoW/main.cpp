@@ -59,8 +59,8 @@ int main(int argumentCount, char* arguments[])
         AddManager<IFontsManager>(fontsManager);
 
 		app.AddGameState(GameStatesNames::GAME_STATE_WORLD, std::make_shared<CGameState_World>(&app));
-		app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>(&app));
-		app.SetGameState(GameStatesNames::GAME_STATE_CLIENT);
+		//app.AddGameState(GameStatesNames::GAME_STATE_CLIENT, std::make_shared<CGameState_Client>(&app));
+		app.SetGameState(GameStatesNames::GAME_STATE_WORLD);
 		app.Run();
 	}
 

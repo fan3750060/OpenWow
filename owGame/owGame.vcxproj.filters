@@ -60,9 +60,6 @@
     <ClCompile Include="CreatePasses.cpp">
       <Filter>RenderStuff</Filter>
     </ClCompile>
-    <ClCompile Include="Liquid_Pass.cpp">
-      <Filter>Liquid</Filter>
-    </ClCompile>
     <ClCompile Include="LiquidLayer.cpp">
       <Filter>Liquid</Filter>
     </ClCompile>
@@ -74,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="DBC\Core\DBC__Storage.cpp">
       <Filter>DBC</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass_Liquid.cpp">
+      <Filter>RenderStuff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="CreatePasses.h">
       <Filter>RenderStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="Liquid_Pass.h">
-      <Filter>Liquid</Filter>
     </ClInclude>
     <ClInclude Include="LiquidLayer.h">
       <Filter>Liquid</Filter>
@@ -236,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="DBC\DBC_Map_WotLK.h">
       <Filter>DBC\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass_Liquid.h">
+      <Filter>RenderStuff</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

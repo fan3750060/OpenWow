@@ -94,8 +94,8 @@ bool CGameState_Client::Init()
 	// Socket controller
 	//
 
-	m_authWorldController = std::make_shared<CWoWClient>();
-	//m_authWorldController->StartAuth();
+    m_WoWClient = std::make_shared<CWoWClient>("192.168.1.50", 3724);
+    m_WoWClient->BeginConnect("admin", "admin");
 
 	//m_authWorldController->getWorldSocket()->AddHandler(SMSG_CHAR_ENUM, FUNCTION_CLASS_WA_Builder(CGameState_Client, this, S_CharEnum, CByteBuffer&));
 
@@ -210,7 +210,7 @@ void CGameState_Client::Load3D()
 	inst->GetLocalTransform();*/
 
 	// Map
-	m_MapController = std::make_shared<MapController>();
+	m_MapController = std::make_shared<CMapController>();
 	m_MapController->SetParent(m_3DScene->GetRootNode());
 	//m_MapController->MapPreLoad(*DBC_Map[1]);
 	//m_MapController->MapLoad();

@@ -120,12 +120,6 @@
     <ClCompile Include="CreatePasses.cpp">
       <Filter>RenderStuff</Filter>
     </ClCompile>
-    <ClCompile Include="M2_Pass.cpp">
-      <Filter>RenderStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="M2_Material.cpp">
-      <Filter>RenderStuff</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleEmitters.cpp">
       <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
     </ClCompile>
@@ -134,6 +128,12 @@
     </ClCompile>
     <ClCompile Include="ParticleEmitter_Sphere.cpp">
       <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass_M2.cpp">
+      <Filter>RenderStuff</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_Material.cpp">
+      <Filter>Skins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -239,12 +239,6 @@
     <ClInclude Include="CreatePasses.h">
       <Filter>RenderStuff</Filter>
     </ClInclude>
-    <ClInclude Include="M2_Pass.h">
-      <Filter>RenderStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="M2_Material.h">
-      <Filter>RenderStuff</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleEmitters.h">
       <Filter>Components\Parts_Miscellaneous\Particle\Emitters</Filter>
     </ClInclude>
@@ -256,6 +250,12 @@
     </ClInclude>
     <ClInclude Include="M2_Animated.h">
       <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass_M2.h">
+      <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Material.h">
+      <Filter>Skins</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

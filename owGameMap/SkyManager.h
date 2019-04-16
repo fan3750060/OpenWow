@@ -3,13 +3,13 @@
 #include "Sky.h"
 
 // FORWARD BEGIN
-class MapController;
+class CMapController;
 // FORWARD END
 
 class SkyManager : public SceneNodeModel3D, public ISkyManager
 {
 public:
-	SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord);
+	SkyManager(std::weak_ptr<CMapController> _mapController, DBC_MapRecord _mapRecord);
 	virtual ~SkyManager();
 
 public:
@@ -39,6 +39,6 @@ private:
 	std::vector<std::shared_ptr<Sky>> skies;
 
 private: // PARENT
-	std::weak_ptr<MapController> m_MapController;
+	std::weak_ptr<CMapController> m_MapController;
 };
 

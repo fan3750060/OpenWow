@@ -27,9 +27,7 @@ std::shared_ptr<IByteBuffer> WoWChunkReader::OpenChunk(const char * _name)
 
 	auto chunkIterator = m_ChunksMap.find(_name);
 	if (chunkIterator == m_ChunksMap.end())
-	{
-		return nullptr;
-	}
+		return std::shared_ptr<IByteBuffer>();
 
 	const auto& chunkInfos = chunkIterator->second;
 	assert1(chunkInfos.size() == 1);

@@ -4,16 +4,16 @@
 #include "SkyManager.h"
 #include "EnvironmentManager.h"
 #include "ADT.h"
-#include "WDT.h"
-#include "WDL.h"
+#include "MapWDT.h"
+#include "MapWDL.h"
 #include "MinimapProvider.h"
 
-class MapController : public SceneNodeModel3D
+class CMapController : public SceneNodeModel3D
 {
     typedef SceneNodeModel3D base;
 public:
-	MapController();
-	virtual ~MapController();
+	CMapController();
+	virtual ~CMapController();
 
 	void MapPreLoad(const DBC_MapRecord& _map);
 	void MapLoad();
@@ -49,28 +49,9 @@ public: // Getters
 	DayNightPhase getDayNightPhase() const { return m_EnvironmentManager->dayNightCycle->getPhase(m_GameTime.GetTime()); }
 	WowTime* getTime() { return &m_GameTime; }
 
-	bool getTileIsCurrent(int x, int z) const
-	{
-		int midTile = static_cast<uint32>(C_RenderedTiles / 2);
-		std::shared_ptr<ADT> currentTile = m_Current[midTile][midTile];
-		if (currentTile == nullptr)
-		{
-			return false;
-		}
+    bool getTileIsCurrent(int x, int z) const;
+    bool IsTileInCurrent(std::shared_ptr<ADT> _mapTile);
 	
-		int32 currentX = currentTile->m_IndexX; 
-		int32 currentZ = currentTile->m_IndexZ;
-
-		return (
-				x >= (currentX - (C_RenderedTiles / 2)) &&
-				z >= (currentZ - (C_RenderedTiles / 2)) &&
-				x <= (currentX + (C_RenderedTiles / 2)) &&
-				z <= (currentZ + (C_RenderedTiles / 2))
-				);
-	}
-
-private:
-	bool IsTileInCurrent(std::shared_ptr<ADT> _mapTile);
 
 private:
 	std::string             m_MapFilenameT;
@@ -81,8 +62,8 @@ private:
 	int32					m_CurrentTileX, m_CurrentTileZ;
 	bool					m_IsOnInvalidTile;
 
-	std::shared_ptr<WDT>	m_WDT;
-	std::shared_ptr<WDL>	m_WDL;
+	std::shared_ptr<CMapWDT>	m_WDT;
+	std::shared_ptr<CMapWDL>	m_WDL;
 	std::shared_ptr<SkyManager> m_SkyManager;
 	std::shared_ptr<EnvironmentManager> m_EnvironmentManager;
 	WowTime					m_GameTime;

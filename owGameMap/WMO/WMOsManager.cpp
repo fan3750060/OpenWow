@@ -8,14 +8,14 @@ WMOsManager::WMOsManager()
 
 }
 
-std::shared_ptr<WMO> WMOsManager::CreateAction(const std::string& name)
+std::shared_ptr<CWMO> WMOsManager::CreateAction(const std::string& name)
 {
-	std::shared_ptr<WMO> _wmo = std::make_shared<WMO>(name);
+	std::shared_ptr<CWMO> _wmo = std::make_shared<CWMO>(name);
 	LoadAction(name, _wmo);
 	return _wmo;
 }
 
-void WMOsManager::LoadAction(std::string name, std::shared_ptr<WMO>& item)
+void WMOsManager::LoadAction(std::string name, std::shared_ptr<CWMO>& item)
 {
 	if (!item->Load())
 	{

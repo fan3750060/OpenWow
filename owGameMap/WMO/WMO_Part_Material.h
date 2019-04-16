@@ -3,13 +3,13 @@
 #include "WMO_Headers.h"
 
 // FORWARD BEGIN
-class WMO;
+class CWMO;
 // FORWARD END
 
 class WMO_Part_Material : public MaterialWrapper
 {
 public:
-	WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, const SWMO_MaterialDef& _proto);
+	WMO_Part_Material(const std::weak_ptr<const CWMO> _parentWMO, const SWMO_MaterialDef& _proto);
 	virtual ~WMO_Part_Material();
 	
 	uint32 getBlendMode() const { return m_Proto.blendMode; }
@@ -26,6 +26,6 @@ private:
 	MaterialProperties*            m_pProperties;
 
 	// Parent
-	const std::weak_ptr<const WMO> m_ParentWMO;
+	const std::weak_ptr<const CWMO> m_ParentWMO;
 	const CGroupQuality&           m_QualitySettings;
 };

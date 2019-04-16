@@ -24,7 +24,7 @@ void CWMO_Base_Instance::CreateInstances()
 	}
 }
 
-void CWMO_Base_Instance::setWMO(std::shared_ptr<WMO> _model)
+void CWMO_Base_Instance::setWMO(std::shared_ptr<CWMO> _model)
 {
 	assert1(m_WMO == nullptr);
 	assert1(_model != nullptr);
@@ -32,7 +32,7 @@ void CWMO_Base_Instance::setWMO(std::shared_ptr<WMO> _model)
 	m_WMO = _model;
 }
 
-std::shared_ptr<WMO> CWMO_Base_Instance::getWMO() const
+std::shared_ptr<CWMO> CWMO_Base_Instance::getWMO() const
 {
 	return m_WMO;
 }
@@ -42,7 +42,7 @@ std::shared_ptr<WMO> CWMO_Base_Instance::getWMO() const
 
 bool CWMO_Base_Instance::Load()
 {
-	std::shared_ptr<WMO> wmo = GetManager<IWMOManager>()->Add(m_WMOName);
+	std::shared_ptr<CWMO> wmo = GetManager<IWMOManager>()->Add(m_WMOName);
 	if (wmo)
 	{
 		setWMO(wmo);

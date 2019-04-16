@@ -6,7 +6,7 @@
 // General
 #include "Wmo_Part_Material.h"
 
-WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const WMO> _parentWMO, const SWMO_MaterialDef& _proto) :
+WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const CWMO> _parentWMO, const SWMO_MaterialDef& _proto) :
 	MaterialWrapper(_RenderDevice->CreateMaterial()),
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),

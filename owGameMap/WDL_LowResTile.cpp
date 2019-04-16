@@ -6,7 +6,7 @@
 // General
 #include "WDL_LowResTile.h"
 
-CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std::shared_ptr<IMesh> _mesh, uint32 _indexX, uint32 _indexZ) :
+CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const CMapController> _parent, std::shared_ptr<IMesh> _mesh, uint32 _indexX, uint32 _indexZ) :
 	MeshWrapper(SN_TYPE_WDL_NODE, _mesh),
 	m_MapController(_parent),
 	m_IndexX(_indexX),
@@ -20,7 +20,7 @@ CWDL_LowResTile::CWDL_LowResTile(std::weak_ptr<const MapController> _parent, std
 //
 bool CWDL_LowResTile::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
-	std::shared_ptr<const MapController> MapController = m_MapController.lock();
+	std::shared_ptr<const CMapController> MapController = m_MapController.lock();
 	assert1(MapController != NULL);
 
 	int32 currentX = MapController->GetCurrentX();

@@ -17,7 +17,7 @@ const float  C_SkyAngles[] = { 90.0f,                          30.0f,           
 const uint32 C_Skycolors[] = { LightColors::LIGHT_COLOR_SKY_0, LightColors::LIGHT_COLOR_SKY_1, LightColors::LIGHT_COLOR_SKY_2, LightColors::LIGHT_COLOR_SKY_3, LightColors::LIGHT_COLOR_SKY_4, LightColors::LIGHT_COLOR_FOG, LightColors::LIGHT_COLOR_FOG };
 const uint32 C_SkycolorsCount = 7;
 
-SkyManager::SkyManager(std::weak_ptr<MapController> _mapController, DBC_MapRecord _mapRecord) :
+SkyManager::SkyManager(std::weak_ptr<CMapController> _mapController, DBC_MapRecord _mapRecord) :
 	m_MapController(_mapController)
 {
 	for (auto& it : DBC_Light)

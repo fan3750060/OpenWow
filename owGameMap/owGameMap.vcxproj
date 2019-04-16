@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ADT_MCNK_Material.cpp" />
-    <ClCompile Include="ADT_MCNK_Pass.cpp" />
+    <ClCompile Include="RenderPass_ADT_MCNK.cpp" />
     <ClCompile Include="ADT_Liquid.cpp" />
     <ClCompile Include="CreatePasses.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
@@ -36,18 +36,18 @@
     <ClCompile Include="SkyManager.cpp" />
     <ClCompile Include="SkyParams.cpp" />
     <ClCompile Include="Sky_Material.cpp" />
-    <ClCompile Include="Sky_Pass.cpp" />
+    <ClCompile Include="RenderPass_Sky.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WDL.cpp" />
+    <ClCompile Include="MapWDL.cpp" />
     <ClCompile Include="WDL_LowResTile.cpp" />
     <ClCompile Include="WDL_Node_Material.cpp" />
-    <ClCompile Include="WDL_Node_Pass.cpp" />
-    <ClCompile Include="WDT.cpp" />
+    <ClCompile Include="RenderPass_WDL.cpp" />
+    <ClCompile Include="MapWDT.cpp" />
     <ClCompile Include="ADT_WMO_Instance.cpp" />
     <ClCompile Include="WMO\WMO.cpp" />
     <ClCompile Include="WMO\WMOsManager.cpp" />
@@ -63,13 +63,13 @@
     <ClCompile Include="WMO\WMO_Part_Light.cpp" />
     <ClCompile Include="WMO\WMO_Part_Material.cpp" />
     <ClCompile Include="WMO\WMO_Part_Portal.cpp" />
-    <ClCompile Include="WMO\WMO_Pass.cpp" />
+    <ClCompile Include="WMO\RenderPass_WMO.cpp" />
     <ClCompile Include="WMO\WMO_PortalsController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameMap.h" />
     <ClInclude Include="ADT_MCNK_Material.h" />
-    <ClInclude Include="ADT_MCNK_Pass.h" />
+    <ClInclude Include="RenderPass_ADT_MCNK.h" />
     <ClInclude Include="ADT_Liquid.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="CreatePasses.h" />
@@ -87,13 +87,13 @@
     <ClInclude Include="SkyManager.h" />
     <ClInclude Include="SkyParams.h" />
     <ClInclude Include="Sky_Material.h" />
-    <ClInclude Include="Sky_Pass.h" />
+    <ClInclude Include="RenderPass_Sky.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="WDL.h" />
+    <ClInclude Include="MapWDL.h" />
     <ClInclude Include="WDL_LowResTile.h" />
     <ClInclude Include="WDL_Node_Material.h" />
-    <ClInclude Include="WDL_Node_Pass.h" />
-    <ClInclude Include="WDT.h" />
+    <ClInclude Include="RenderPass_WDL.h" />
+    <ClInclude Include="MapWDT.h" />
     <ClInclude Include="ADT_WMO_Instance.h" />
     <ClInclude Include="WMO\WMO.h" />
     <ClInclude Include="WMO\WMOsManager.h" />
@@ -112,7 +112,7 @@
     <ClInclude Include="WMO\WMO_Part_Light.h" />
     <ClInclude Include="WMO\WMO_Part_Material.h" />
     <ClInclude Include="WMO\WMO_Part_Portal.h" />
-    <ClInclude Include="WMO\WMO_Pass.h" />
+    <ClInclude Include="WMO\RenderPass_WMO.h" />
     <ClInclude Include="WMO\WMO_PortalsController.h" />
   </ItemGroup>
   <ItemGroup>

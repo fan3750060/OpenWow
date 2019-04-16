@@ -4,7 +4,7 @@
 #include "CreatePasses.h"
 
 // Additional
-#include "M2_Pass.h"
+#include "RenderPass_M2.h"
 
 void AddM2Passes(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderTarget> _renderTarget, RenderTechnique * technique, Viewport * viewport, std::shared_ptr<Scene3D> scene)
 {
@@ -22,5 +22,5 @@ void AddM2Passes(std::shared_ptr<IRenderDevice> device, std::shared_ptr<IRenderT
 	WMOPipeline->SetRenderTarget(_renderTarget);
 	WMOPipeline->GetRasterizerState().SetViewport(*viewport);
 
-	technique->AddPass(std::make_shared<M2_Pass>(scene, WMOPipeline));
+	technique->AddPass(std::make_shared<CRenderPass_M2>(scene, WMOPipeline));
 }

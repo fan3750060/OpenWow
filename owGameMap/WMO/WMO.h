@@ -15,12 +15,12 @@
 class CWMO_Base_Instance;
 // FORWARD END
 
-class WMO : public ISceneNodeProvider, public std::enable_shared_from_this<WMO>
+class CWMO : public ISceneNodeProvider, public std::enable_shared_from_this<CWMO>
 {
 	friend CWMO_Part_Portal;
 public:
-	WMO(const std::string& _fileName);
-	virtual ~WMO();
+	CWMO(const std::string& FileName);
+	virtual ~CWMO();
 
 	// ISceneNodeProvider
 	void CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent) override;

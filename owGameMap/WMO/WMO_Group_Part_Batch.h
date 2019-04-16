@@ -5,14 +5,14 @@
 #include "WMO_Part_Material.h"
 
 // FORWARD BEGIN
-class WMO;
+class CWMO;
 class WMO_Group;
 // FORWARD END
 
 class WMO_Group_Part_Batch : public MeshWrapper
 {
 public:
-	WMO_Group_Part_Batch(const std::weak_ptr<const WMO> _parentWMO, std::shared_ptr<IMesh> _mesh, const SWMO_Group_BatchDef& _proto);
+	WMO_Group_Part_Batch(const std::weak_ptr<const CWMO> _parentWMO, std::shared_ptr<IMesh> _mesh, const SWMO_Group_BatchDef& _proto);
 
 	uint32 getBlendMode() const { return m_WMOMaterial->getBlendMode(); }
 
@@ -25,7 +25,7 @@ private:
 	BoundingBox                                 m_Bounds;
 
 	// Parent
-	const std::weak_ptr<const WMO>              m_ParentWMO;
+	const std::weak_ptr<const CWMO>              m_ParentWMO;
 	const std::weak_ptr<const WMO_Group>        m_ParentGroup;
 	const CGroupQuality&                        m_Quality;
 };

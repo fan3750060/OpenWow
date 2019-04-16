@@ -4,14 +4,14 @@
 
 // FORWARD BEGIN
 class ADT;
-class MapController;
+class CMapController;
 // FORWARD END
 
 class ADT_MCNK : public SceneNodeModel3D
 {
     typedef SceneNodeModel3D base;
 public:
-	ADT_MCNK(std::weak_ptr<MapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin);
+	ADT_MCNK(std::weak_ptr<CMapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin);
 	virtual ~ADT_MCNK();
 
 	// SceneNodeModel3D
@@ -43,7 +43,7 @@ public:
 	std::shared_ptr<IMesh> __geomDefault;
 
 private: // PARENT
-	const std::weak_ptr<MapController>	m_MapController;
+	const std::weak_ptr<CMapController>	m_MapController;
 	const std::weak_ptr<ADT>			m_ParentADT;
 	CGroupQuality&						m_QualitySettings;
 };

@@ -4,7 +4,7 @@
 #include "ADT_WMO_Instance.h"
 
 // Additional
-#include "WMO\\WMO_Pass.h"
+#include "WMO\\RenderPass_WMO.h"
 
 ADT_WMO_Instance::ADT_WMO_Instance(std::string _wmoName, ADT_MODF& _placementInfo) :
 	CWMO_Base_Instance(_wmoName)
@@ -37,7 +37,7 @@ ADT_WMO_Instance::~ADT_WMO_Instance()
 
 bool ADT_WMO_Instance::Accept(IVisitor& visitor)
 {
-	const WMO_Pass* passAsWMOPass = dynamic_cast<const WMO_Pass*>(&visitor);
+	const CRenderPass_WMO* passAsWMOPass = dynamic_cast<const CRenderPass_WMO*>(&visitor);
 	if (passAsWMOPass)
 	{
 		if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())

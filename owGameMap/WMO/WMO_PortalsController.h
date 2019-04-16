@@ -9,7 +9,7 @@ class CWMO_Base_Instance;
 class CWMO_PortalsController
 {
 public:
-	CWMO_PortalsController(const std::weak_ptr<const WMO> _parentWMO);
+	CWMO_PortalsController(const std::weak_ptr<const CWMO> _parentWMO);
 
 	void GetPolyFrustum(const vec3* poly, uint32 num_verts, Frustum* frustum, vec3 eye, bool _isPositive = true);
 	
@@ -18,5 +18,5 @@ public:
 
 
 private:
-	const std::weak_ptr<const WMO> m_ParentWMO;
+	const std::weak_ptr<const CWMO> m_ParentWMO;
 };

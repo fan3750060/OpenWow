@@ -10,10 +10,10 @@
 // Additional
 #include "WMO_Group_Instance.h"
 
-CWMO_PortalsController::CWMO_PortalsController(const std::weak_ptr<const WMO> _parentWMO) :
+CWMO_PortalsController::CWMO_PortalsController(const std::weak_ptr<const CWMO> _parentWMO) :
 	m_ParentWMO(_parentWMO)
 {
-	std::shared_ptr<const WMO> ParentWMO = m_ParentWMO.lock();
+	std::shared_ptr<const CWMO> ParentWMO = m_ParentWMO.lock();
 	assert1(ParentWMO != nullptr);
 
 	for (auto& it : ParentWMO->m_PortalReferences)
