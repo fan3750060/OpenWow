@@ -14,25 +14,21 @@ M2_Material::M2_Material(std::vector<std::weak_ptr<const CM2_Part_Texture>> m2Te
 
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
-		Shader::VertexShader, "shaders_D3D/M2/M2.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+		Shader::VertexShader, "shaders_D3D/M2.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
     g_pVertexShader->LoadInputLayoutFromReflector();
 
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
-		Shader::PixelShader, "shaders_D3D/M2/M2.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+		Shader::PixelShader, "shaders_D3D/M2.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
 	);
 
 	// Create samplers
 	assert1(m2Textures.size() <= 2);
 	for (uint8 i = 0; i < m2Textures.size(); i++)
 	{
-
 		std::shared_ptr<SamplerState> g_Sampler = _RenderDevice->CreateSamplerState();
 		g_Sampler->SetFilter(SamplerState::MinFilter::MinLinear, SamplerState::MagFilter::MagLinear, SamplerState::MipFilter::MipLinear);
-		g_Sampler->SetWrapMode(m2Textures[i].lock()->GetTextureWrapX(), m2Textures[i].lock()->GetTextureWrapY());
-
-		// Assign samplers
-		g_pPixelShader->GetShaderParameterByName("DiffuseTexture" + std::to_string(i) + "Sampler").Set(g_Sampler);
+        SetSampler(i, g_Sampler);
 	}
 
 	// Material

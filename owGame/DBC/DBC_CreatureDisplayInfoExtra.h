@@ -23,9 +23,7 @@ __DBC_REF_ID(DBC_ItemDisplayInfo,        Boots,             15);
 __DBC_REF_ID(DBC_ItemDisplayInfo,        Wrist,             16);
 __DBC_REF_ID(DBC_ItemDisplayInfo,        Gloves,            17);
 __DBC_REF_ID(DBC_ItemDisplayInfo,        Tabard,            18);
-__DBC_REF_ID(DBC_ItemDisplayInfo,        Cape,              19);
 
-__DBC_TVALUE(uint32,                     CanEquip,          20);
-__DBC_STRING(                            BakedSkin,         21);
+__DBC_STRING(                            BakedSkin,         19);
 
 DBC_DEF_END

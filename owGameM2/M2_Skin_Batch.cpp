@@ -89,7 +89,10 @@ bool CM2_Skin_Batch::Render(RenderEventArgs& renderEventArgs, std::shared_ptr<Co
 	// Textures
 	for (uint32 i = 0; i < m_Textures.size(); i++)
 	{
-		m_TestMaterial->SetTexture(i, m_Textures[i].lock()->GetResultTexture(sceneNodeAsM2Instance));
+        std::shared_ptr<const CM2_Part_Texture> m2Texture = m_Textures[i].lock();
+
+		m_TestMaterial->SetTexture(i, m2Texture->GetResultTexture(sceneNodeAsM2Instance));
+        m_TestMaterial->GetSampler(i)->SetWrapMode(m2Texture->GetTextureWrapX(), m2Texture->GetTextureWrapY());
 	}
 
 	// Texture alpha

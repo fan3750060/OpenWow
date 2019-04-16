@@ -21,7 +21,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getSkinTexture(const Characte
 		if (i.Get_GeneralType() == DBC_CharSections_GeneralType::Skin &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_VariationOrColor() == _character->skin)
+			i.Get_Color() == _character->skin)
 		{
 			std::string textureName = i.Get_Texture1();
 			if (textureName.empty())
@@ -43,7 +43,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getSkinExtraTexture(const Cha
 		if (i.Get_GeneralType() == DBC_CharSections_GeneralType::Skin &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_VariationOrColor() == _character->skin)
+			i.Get_Color() == _character->skin)
 		{
 			std::string textureName = i.Get_Texture2();
 			if (textureName.empty())
@@ -70,8 +70,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getFaceLowerTexture(const Cha
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Face &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_Type() == _character->face &&
-			i.Get_VariationOrColor() == _character->skin
+			i.Get_Variation() == _character->face &&
+			i.Get_Color() == _character->skin
 			)
 		{
 			std::string textureName = i.Get_Texture1();
@@ -94,8 +94,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getFaceUpperTexture(const Cha
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Face &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_Type() == _character->face &&
-			i.Get_VariationOrColor() == _character->skin
+			i.Get_Variation() == _character->face &&
+			i.Get_Color() == _character->skin
 			)
 		{
 			std::string textureName = i.Get_Texture2();
@@ -122,7 +122,7 @@ std::string Character_SectionWrapper::getFacialHairLowerTexture(const Character*
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::FacialHair &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_VariationOrColor() == _character->facialStyle
+			i.Get_Color() == _character->facialStyle
 			)
 		{
 			return i.Get_Texture1();
@@ -139,7 +139,7 @@ std::string Character_SectionWrapper::getFacialHairUpperTexture(const Character*
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::FacialHair &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_VariationOrColor() == _character->facialStyle
+			i.Get_Color() == _character->facialStyle
 			)
 		{
 			return i.Get_Texture2();
@@ -224,8 +224,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairTexture(const Characte
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_Type() == _character->hairStyle &&
-			i.Get_VariationOrColor() == _character->hairColor
+			i.Get_Variation() == _character->hairStyle &&
+			i.Get_Color() == _character->hairColor
 			)
 		{
 			std::string textureName = i.Get_Texture1();
@@ -246,8 +246,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpLowerTexture(cons
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_Type() == _character->hairStyle &&
-			i.Get_VariationOrColor() == _character->hairColor
+			i.Get_Variation() == _character->hairStyle &&
+			i.Get_Color() == _character->hairColor
 			)
 		{
 			std::string textureName = i.Get_Texture2();
@@ -257,6 +257,7 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpLowerTexture(cons
 			return _RenderDevice->CreateTexture2D(textureName);
 		}
 	}
+
 	return nullptr;
 }
 
@@ -268,8 +269,8 @@ std::shared_ptr<Texture> Character_SectionWrapper::getHairScalpUpperTexture(cons
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Hair &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_Type() == _character->hairStyle &&
-			i.Get_VariationOrColor() == _character->hairColor
+			i.Get_Variation() == _character->hairStyle &&
+			i.Get_Color() == _character->hairColor
 			)
 		{
 			std::string textureName = i.Get_Texture3();
@@ -294,7 +295,7 @@ std::string Character_SectionWrapper::getNakedPelvisTexture(const Character * _c
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Underwear &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_VariationOrColor() == _character->skin
+			i.Get_Color() == _character->skin
 			)
 		{
 			return i.Get_Texture1();
@@ -313,7 +314,7 @@ std::string Character_SectionWrapper::getNakedTorsoTexture(const Character * _ch
 			i.Get_GeneralType() == DBC_CharSections_GeneralType::Underwear &&
 			i.Get_Race() == _character->Race &&
 			i.Get_Gender() == _character->Gender &&
-			i.Get_VariationOrColor() == _character->skin
+			i.Get_Color() == _character->skin
 			)
 		{
 			return i.Get_Texture2();

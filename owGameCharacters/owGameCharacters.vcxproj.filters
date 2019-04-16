@@ -48,9 +48,6 @@
     <ClCompile Include="Item_VisualData.cpp">
       <Filter>Character\Items</Filter>
     </ClCompile>
-    <ClCompile Include="CreatureEx.cpp">
-      <Filter>Creature</Filter>
-    </ClCompile>
     <ClCompile Include="Character_SectionWrapper.cpp">
       <Filter>Character\Helpers</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
     </ClInclude>
     <ClInclude Include="Item_VisualData.h">
       <Filter>Character\Items</Filter>
-    </ClInclude>
-    <ClInclude Include="CreatureEx.h">
-      <Filter>Creature</Filter>
     </ClInclude>
     <ClInclude Include="Character_SectionWrapper.h">
       <Filter>Character\Helpers</Filter>

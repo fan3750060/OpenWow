@@ -48,7 +48,7 @@ VertexShaderOutput VS_main(VertexShaderInput IN)
 	OUT.positionWS = float4(IN.position, 1.0f);
 	OUT.normalVS = mul(ModelViewProjection, float4(IN.normal, 0.0f));
 	OUT.color = IN.color;
-	OUT.texCoord0 = IN.texCoord0;
+	OUT.texCoord0 = float2(IN.texCoord0.x, 1.0f - IN.texCoord0.y);
 	OUT.texCoord1 = IN.texCoord1;
 	
 	return OUT;

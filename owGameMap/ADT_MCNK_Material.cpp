@@ -17,7 +17,7 @@ ADT_MCNK_Material::ADT_MCNK_Material(const std::weak_ptr<ADT> _parentADT) :
 	// CreateShaders
 #ifdef  IS_DX11
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
-		Shader::VertexShader, "shaders_D3D/Map/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+		Shader::VertexShader, "shaders_D3D/MapChunk.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
     g_pVertexShader->LoadInputLayoutFromReflector();
 
@@ -25,7 +25,7 @@ ADT_MCNK_Material::ADT_MCNK_Material(const std::weak_ptr<ADT> _parentADT) :
 	macros["_IS_NORTREND"] = "0";
 
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
-		Shader::PixelShader, "shaders_D3D/Map/MapChunk.hlsl", macros, "PS_main", "latest"
+		Shader::PixelShader, "shaders_D3D/MapChunk.hlsl", macros, "PS_main", "latest"
 	);
 
 

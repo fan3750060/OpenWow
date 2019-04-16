@@ -100,7 +100,7 @@ void CGameState_World::OnPreRender(Render3DEventArgs& e)
 
 	//if (e.FrameCounter % 20 == 0)
 	//	m_MapController->getTime()->Tick();
-	UpdateLights();
+	//UpdateLights();
 
 	/*std::shared_ptr<ISkyManager> skyManager = GetManager<ISkyManager>();
 
@@ -167,18 +167,13 @@ void CGameState_World::Load3D()
 	std::shared_ptr<IRenderDevice> renderDevice = app.GetRenderDevice();
 	std::shared_ptr<RenderWindow> renderWindow = app.GetRenderWindow();
 
+    time_t programstart;
+    time(&programstart);
+
+    Random r(programstart);
+
 	const float x = 40;
 	const float y = 29;
-	//const float x = 29;
-	//const float y = 21;
-
-	// M2 Model
-	/*std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add("Creature\\ARTHASLICHKING\\ARTHASLICHKING.m2");
-	std::shared_ptr<CM2_Base_Instance> inst = std::make_shared<CM2_Base_Instance>(model);
-	inst->CreateInstances();
-	inst->SetParent(m_3DScene->GetRootNode());
-	inst->SetScale(vec3(15.0f));
-	inst->GetLocalTransform();*/
 
 	// Map
 	m_MapController = std::make_shared<CMapController>();
@@ -187,12 +182,11 @@ void CGameState_World::Load3D()
 	m_MapController->MapLoad();
 	m_MapController->MapPostLoad();
 	m_MapController->EnterMap(x, y);
-	
-	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
-	//m_CameraController->GetCamera()->SetTranslate(vec3(20873, 229, 16601));
-	//m_CameraController->GetCamera()->SetEulerAngles(vec3(-17, -36, 3));
 
-	const uint32 cnt = 10;
+	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
+    
+
+	const uint32 cnt = 5;
 	/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
 
 	std::vector<uint32> exists;
@@ -205,12 +199,12 @@ void CGameState_World::Load3D()
 
 			while (true)
 			{
-				int random = Random::GenerateMax(32000);
+				int random = static_cast<int>(r.NextFloat() * 32000.0f);
 
-				DBC_CreatureDisplayInfoRecord* rec = DBC_CreatureDisplayInfo[random];
+				std::shared_ptr<DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[random];
 				if (rec == nullptr)	continue;
 
-				const DBC_CreatureDisplayInfoExtraRecord* exRec = rec->Get_HumanoidData();
+                std::shared_ptr<DBC_CreatureDisplayInfoExtraRecord> exRec = rec->Get_HumanoidData();
 				if (exRec == nullptr) continue;
 
 				if (exRec->Get_Race()->Get_ID() > 10) continue;
@@ -244,7 +238,7 @@ void CGameState_World::Load3D()
 
 			while (true)
 			{
-				int random = Random::GenerateMax(32000);
+				int random = static_cast<int>(r.NextFloat() * 32000.0f);
 				std::shared_ptr<const DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[random];
 				if (rec == nullptr)	continue;
 
@@ -255,7 +249,7 @@ void CGameState_World::Load3D()
 				m_Char[index]->SetParent(m_3DScene->GetRootNode());
 				m_Char[index]->CreateInstances();
 				m_Char[index]->SetTranslate(vec3(i * 15.0f, 0.0f, j * 15.0f));
-				//m_Char[index]->SetScale(vec3(5.0f));
+
 				exists.push_back(random);
 				break;
 			}
@@ -306,9 +300,9 @@ void CGameState_World::Load3D()
 	dir.m_Intensity = 0.5f;
 
 	m_DirLight = std::make_shared<CLight3D>(dir);
-	m_MapController->AddLight(m_DirLight);
+	//m_MapController->AddLight(m_DirLight);
 
-	UpdateLights();
+	//UpdateLights();
 
 	//m_3DDeferredTechnique.AddPass(std::make_shared<ClearRenderTargetPass>(renderWindow->GetRenderTarget(), ClearFlags::All, g_ClearColor, 1.0f, 0));
 	//m_3DDeferredTechnique.AddPass(m_GB->GetPass());

@@ -44,16 +44,16 @@ bool CRenderPass_M2::Visit(std::shared_ptr<IMesh> Mesh, UINT IndexStartLocation,
 	std::shared_ptr<const CM2_Skin_Batch> pMesh = std::dynamic_pointer_cast<const CM2_Skin_Batch, IMesh>(Mesh);
 	if (pMesh)
 	{
-		//GetPipelineState()->GetBlendState().SetBlendMode(pMesh->GetM2Material()->GetBlendMode());
-		//GetPipelineState()->GetBlendState().Bind();
+		GetPipelineState()->GetBlendState().SetBlendMode(pMesh->GetM2Material()->GetBlendMode());
+		GetPipelineState()->GetBlendState().Bind();
 
-		//GetPipelineState()->GetDepthStencilState().SetDepthMode(pMesh->GetM2Material()->GetDepthMode());
-		//GetPipelineState()->GetDepthStencilState().Bind();
+		GetPipelineState()->GetDepthStencilState().SetDepthMode(pMesh->GetM2Material()->GetDepthMode());
+		GetPipelineState()->GetDepthStencilState().Bind();
 
-		//GetPipelineState()->GetRasterizerState().SetCullMode(pMesh->GetM2Material()->GetCullMode());
-		//GetPipelineState()->GetRasterizerState().Bind();
+		GetPipelineState()->GetRasterizerState().SetCullMode(pMesh->GetM2Material()->GetCullMode());
+		GetPipelineState()->GetRasterizerState().Bind();
 
-		//GetPipelineState()->Bind();
+		GetPipelineState()->Bind();
 	}
 
 	return Mesh->Render(GetRenderEventArgs(), GetPerObjectConstantBuffer(), IndexStartLocation, IndexCnt, VertexStartLocation, VertexCnt);

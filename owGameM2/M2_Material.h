@@ -24,7 +24,6 @@ public:
 
 	void SetBones(const std::vector<mat4>& bones);
 	
-
 protected:
 	void UpdateConstantBuffer() const override;
 

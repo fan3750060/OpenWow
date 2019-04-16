@@ -17,10 +17,15 @@ Creature::Creature() :
 	}
 }
 
+Creature::~Creature()
+{
+}
+
 void Creature::InitFromDisplayInfo(uint32 _id)
 {
 	std::shared_ptr<const DBC_CreatureDisplayInfoRecord> rec = DBC_CreatureDisplayInfo[_id];
-	assert1(rec != nullptr);
+    if (rec == nullptr)
+        throw std::exception("Not found!");
 
 	std::shared_ptr<const DBC_CreatureDisplayInfoExtraRecord> humanoidRecExtra = rec->Get_HumanoidData();
 	assert1(humanoidRecExtra == nullptr);
@@ -32,7 +37,6 @@ void Creature::InitFromDisplayInfo(uint32 _id)
 
 	// 2. Creature textures
 	{
-
 		if (strlen(rec->Get_Texture1()) != 0)
 		{
 			setSpecialTexture(SM2_Texture::Type::MONSTER_1, getM2()->getFilePath() + rec->Get_Texture1() + ".blp");

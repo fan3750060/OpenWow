@@ -10,6 +10,11 @@ Creature_M2Instance::Creature_M2Instance() :
 Creature_M2Instance::~Creature_M2Instance()
 {}
 
+
+
+//
+// Mesh & textures provider
+//
 bool Creature_M2Instance::isMeshEnabled(uint32 _index) const
 {
 	uint32 div100 = _index / 100;

@@ -6,6 +6,6 @@ public:
 	Creature_M2Instance();
 	virtual ~Creature_M2Instance();
 
-	// Mesh provider
+	// Mesh & textures provider
 	virtual bool isMeshEnabled(uint32 _index) const override;
 };

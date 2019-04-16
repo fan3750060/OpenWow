@@ -11,31 +11,31 @@ public:
 	void CreateInstances();
 
 	// CM2_Base_Instance
-	void setM2(std::shared_ptr<M2> _model);
-	std::shared_ptr<M2> getM2() const { return m_M2; }
+	void                                setM2(std::shared_ptr<M2> _model);
+	std::shared_ptr<M2>                 getM2() const { return m_M2; }
 
-	void Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment);
-	void Detach();
+	void                                Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment);
+	void                                Detach();
 
 	// Color & Alpha
-	void setColor(vec4 _color) { m_Color = _color; }
-	cvec4 getColor() const { return m_Color; }
-	void setAlpha(float _alpha) { m_Alpha = _alpha; }
-	float getAlpha() const { return m_Alpha; }
+	void                                setColor(vec4 _color) { m_Color = _color; }
+	cvec4                               getColor() const { return m_Color; }
+	void                                setAlpha(float _alpha) { m_Alpha = _alpha; }
+	float                               getAlpha() const { return m_Alpha; }
 
 	// Mesh & textures provider
-	virtual bool                          isMeshEnabled(uint32 _index) const;
-	void                                  setSpecialTexture(SM2_Texture::Type _type, const std::string& _textureName);
-	void                                  setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture);
-	std::shared_ptr<Texture>              getSpecialTexture(SM2_Texture::Type _type) const;
+	virtual bool                        isMeshEnabled(uint32 _index) const;
+	void                                setSpecialTexture(SM2_Texture::Type _type, const std::string& _textureName);
+	void                                setSpecialTexture(SM2_Texture::Type _type, std::shared_ptr<Texture> _texture);
+	std::shared_ptr<Texture>            getSpecialTexture(SM2_Texture::Type _type) const;
 
 	// Animations
-	std::shared_ptr<CM2_Animator> getAnimator() const { return m_Animator; }
+	std::shared_ptr<CM2_Animator>       getAnimator() const { return m_Animator; }
 
 	// ILoadable
-	bool Load() override;
-	bool Delete() override;
-	uint32 getPriority() const override { return 3; };
+	bool                                Load() override;
+	bool                                Delete() override;
+	uint32                              getPriority() const override { return 3; };
 
 	// SceneNodeModel3D
 	virtual bool Accept(IVisitor& visitor) override;

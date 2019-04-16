@@ -74,7 +74,7 @@ void CM2_Builder::Step1Header()
 	//assert1(m_Header.magic == "MD20");
 
 	// 2 Version is ???
-	assert1(m_Header.version == 256);
+	assert1(m_Header.version == 256 || m_Header.version == 257);
 
 	// 3 Unique name
 	if (m_Header.name.size > 0)

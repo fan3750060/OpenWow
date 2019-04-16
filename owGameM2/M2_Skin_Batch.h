@@ -41,7 +41,7 @@ private:
 	int32												newShader;
 	std::shared_ptr<M2_Material>                        m_TestMaterial;
 
-	// Parent
+private: // Parent
 	const std::weak_ptr<const M2> m_ParentM2;
 	const CGroupQuality&          m_QualitySettings;
 };

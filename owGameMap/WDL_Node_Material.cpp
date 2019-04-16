@@ -13,12 +13,12 @@ WDL_Node_Material::WDL_Node_Material() :
 #ifdef IS_DX11
 	// CreateShaders
 	std::shared_ptr<Shader> g_pVertexShader = _RenderDevice->CreateShader(
-		Shader::VertexShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
+		Shader::VertexShader, "shaders_D3D/MapWDL.hlsl", Shader::ShaderMacros(), "VS_main", "latest"
 	);
     g_pVertexShader->LoadInputLayoutFromReflector();
 
 	std::shared_ptr<Shader> g_pPixelShader = _RenderDevice->CreateShader(
-		Shader::PixelShader, "shaders_D3D/Map/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
+		Shader::PixelShader, "shaders_D3D/MapWDL.hlsl", Shader::ShaderMacros(), "PS_main", "latest"
 	);
 
 	// Material

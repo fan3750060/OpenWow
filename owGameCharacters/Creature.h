@@ -8,11 +8,12 @@ class Creature : public Creature_M2Instance
 {
 public:
 	Creature();
+    virtual ~Creature();
 
 	// Initialization
 	virtual void InitFromDisplayInfo(uint32 _id);
 
-	// Mesh provider
+    // Mesh & textures provider
 	virtual void setMeshEnabled(MeshIDType::List _type, uint32 _value);
 	virtual bool isMeshEnabled(uint32 _index) const override;
 

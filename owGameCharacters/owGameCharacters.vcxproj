@@ -24,7 +24,6 @@
     <ClCompile Include="CharacterTemplate.cpp" />
     <ClCompile Include="Character_SectionWrapper.cpp" />
     <ClCompile Include="Creature.cpp" />
-    <ClCompile Include="CreatureEx.cpp" />
     <ClCompile Include="Creature_M2Instance.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemTemplate.cpp" />
@@ -46,7 +45,6 @@
     <ClInclude Include="Character_SectionWrapper.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Creature.h" />
-    <ClInclude Include="CreatureEx.h" />
     <ClInclude Include="Creature_M2Instance.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemTemplate.h" />

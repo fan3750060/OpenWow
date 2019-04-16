@@ -18,10 +18,10 @@ struct SM2_Vertex_BoneIndex
 	uint32 indexes[4];
 };
 
-CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<const M2> _model, const uint16 _index, const SM2_SkinSection& _proto, const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes) :
+CM2_SkinSection::CM2_SkinSection(const std::weak_ptr<const M2> M2Model, const uint16 _index, const SM2_SkinSection& _proto, const std::vector<SM2_Vertex>& _vertexes, const std::vector<uint16>& _indexes) :
 	m_Index(_index),
 	m_Proto(_proto),
-	m_ParentM2(_model)
+	m_ParentM2(M2Model)
 {
 	std::vector<vec3> verts;
 	std::vector<SM2_Vertex_BoneWeight> weights;
