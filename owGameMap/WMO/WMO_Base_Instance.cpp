@@ -73,7 +73,7 @@ void CWMO_Base_Instance::UpdateCamera(const Camera* camera)
 bool CWMO_Base_Instance::Accept(IVisitor& visitor)
 {
 	const AbstractPass& visitorAsBasePass = reinterpret_cast<AbstractPass&>(visitor);
-	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
+ 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
 	//if (!checkDistance2D(m_QualitySettings.ADT_WMO_Distance))
 	//{

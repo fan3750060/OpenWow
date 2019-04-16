@@ -352,7 +352,6 @@ bool ADT_MCNK::Load()
 		__geomDefault->AddVertexBuffer(BufferBinding("TEXCOORD", 1), _MapShared->BufferTextureCoordAlpha);
 		__geomDefault->SetIndexBuffer(__ibHigh);
 		__geomDefault->SetMaterial(mat);
-		__geomDefault->SetType(SN_TYPE_ADT_CHUNK);
 
 		AddMesh(__geomDefault);
 	}

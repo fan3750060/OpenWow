@@ -8,7 +8,7 @@
 #include "WMO_Group_Part_Batch.h"
 
 WMO_Group_Part_Batch::WMO_Group_Part_Batch(const std::weak_ptr<const CWMO> _parentWMO, std::shared_ptr<IMesh> _mesh, const SWMO_Group_BatchDef& _proto) :
-	MeshWrapper(SN_TYPE_WMO, _mesh),
+	MeshWrapper(_mesh),
 	m_ParentWMO(_parentWMO),
 	m_Proto(_proto),
 	m_Quality(GetSettingsGroup<CGroupQuality>())

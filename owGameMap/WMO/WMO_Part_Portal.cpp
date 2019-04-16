@@ -21,7 +21,6 @@ CWMO_Part_Portal::CWMO_Part_Portal(const std::weak_ptr<const CWMO> _parentWMO, c
 	m_Plane.dist = _proto.plane.distance;
 
 	m_Geom = _RenderDevice->CreateMesh();
-	m_Geom->SetType(SN_TYPE_DEBUG);
 	m_Geom->AddVertexBuffer(BufferBinding("POSITION", 0), m_ParentWMO.lock()->m_PortalVB);
 }
 

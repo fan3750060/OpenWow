@@ -3,6 +3,9 @@
 // General
 #include "RenderPass_Liquid.h"
 
+// Additional
+#include "LiquidInstance.h"
+
 CRenderPass_Liquid::CRenderPass_Liquid(std::shared_ptr<Scene3D> scene, std::shared_ptr<PipelineState> pipeline)
 	: base(scene, pipeline)
 {
@@ -16,12 +19,18 @@ CRenderPass_Liquid::~CRenderPass_Liquid()
 //
 // IVisitor
 //
-bool CRenderPass_Liquid::Visit(IMesh& mesh, UINT IndexStartLocation, UINT IndexCnt, UINT VertexStartLocation, UINT VertexCnt)
+bool CRenderPass_Liquid::Visit(std::shared_ptr<SceneNode3D> node)
 {
-	if (mesh.GetType() == SN_TYPE_LQ)
-	{
-		return mesh.Render(GetRenderEventArgs(), GetPerObjectConstantBuffer(), IndexStartLocation, IndexCnt, VertexStartLocation, VertexCnt);
-	}
+    std::shared_ptr<Liquid_Instance> liquidInstance = std::dynamic_pointer_cast<Liquid_Instance, SceneNode3D>(node);
+    if (liquidInstance)
+    {
+        return base::Visit(node);
+    }
 
-	return false;
+    return false;
+}
+
+bool CRenderPass_Liquid::Visit(std::shared_ptr<IMesh> mesh, UINT IndexStartLocation, UINT IndexCnt, UINT VertexStartLocation, UINT VertexCnt)
+{
+    return mesh->Render(GetRenderEventArgs(), GetPerObjectConstantBuffer(), IndexStartLocation, IndexCnt, VertexStartLocation, VertexCnt);
 }

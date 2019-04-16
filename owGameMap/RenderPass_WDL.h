@@ -8,9 +8,6 @@ public:
 	virtual ~CRenderPass_WDL();
 
     // IVisitor
-	bool Visit(IMesh& Mesh, UINT IndexStartLocation = 0, UINT IndexCnt = 0, UINT VertexStartLocation = 0, UINT VertexCnt = 0) override final;
-
-protected:
-
-private:
+    bool Visit(std::shared_ptr<SceneNode3D> node) override final;
+	bool Visit(std::shared_ptr<IMesh> Mesh, UINT IndexStartLocation = 0, UINT IndexCnt = 0, UINT VertexStartLocation = 0, UINT VertexCnt = 0) override final;
 };

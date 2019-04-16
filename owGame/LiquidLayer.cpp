@@ -4,7 +4,7 @@
 #include "LiquidLayer.h"
 
 Liquid_Layer::Liquid_Layer(std::shared_ptr<IMesh> _mesh)
-	: MeshWrapper(SN_TYPE_LQ, _mesh)
+	: MeshWrapper(_mesh)
 	, m_SkyManager(GetManager<ISkyManager>())
 	, m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {

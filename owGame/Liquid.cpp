@@ -228,7 +228,6 @@ void Liquid::createBuffer()
 			}
 		}
 
-		layer->SetType(SN_TYPE_LQ);
 		layer->AddVertexBuffer(BufferBinding("POSITION", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesPos));
 		layer->AddVertexBuffer(BufferBinding("TEXCOORD", 0), _RenderDevice->CreateVertexBuffer(mh2oVerticesTex));
 		layer->SetIndexBuffer(_RenderDevice->CreateIndexBuffer(m_Indices));

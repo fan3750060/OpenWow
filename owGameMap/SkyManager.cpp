@@ -179,7 +179,6 @@ void SkyManager::InitBuffer()
 
 	// Geometry
 	std::shared_ptr<IMesh> __geom = _RenderDevice->CreateMesh();
-	__geom->SetType(SN_TYPE_SKY);
 	__geom->AddVertexBuffer(BufferBinding("POSITION", 0), vertexBuffer);
 	__geom->AddVertexBuffer(BufferBinding("COLOR", 0), colorsBuffer);
 

@@ -40,7 +40,7 @@ bool ADT_MDX_Instance::Accept(IVisitor& visitor)
 	{
 		if (m_AlreadyDraw.find(m_UniqueId) != m_AlreadyDraw.end())
 		{
-			return false;
+			//return false;
 		}
 	}
 
