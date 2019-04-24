@@ -5,7 +5,7 @@
 #include "WMO_Doodad_Instance.h"
 #include "WMO_Liquid_Instance.h"
 
-class CWMO_Base_Instance : public SceneNodeModel3D
+class CWMO_Base_Instance : public SceneNode3D
 {
 public:
 	CWMO_Base_Instance(std::string _wmoName);

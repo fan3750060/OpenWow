@@ -16,18 +16,22 @@ Character::Character()
 	setMeshEnabled(MeshIDType::Eyeglows, EyeglowsStyles::Racial);
 }
 
+Character::~Character()
+{
+}
+
 void Character::InitFromTemplate(const CharacterTemplate& b)
 {
 	// TODO: Move me outside construtor
 	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
 	{
-		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNodeModel3D>(shared_from_this())));
+		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNode3D>(shared_from_this())));
 	}
 	// TODO: Move me outside construtor
 
 	// 1. Template
 	{
-		TemplateSet(b);
+        m_Template.TemplateSet(b);
 	}
 
 	// 2. Load model
@@ -46,7 +50,7 @@ void Character::InitFromDisplayInfo(uint32 _id)
 	// TODO: Move me outside construtor
 	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
 	{
-		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNodeModel3D>(shared_from_this())));
+		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNode3D>(shared_from_this())));
 	}
 	// TODO: Move me outside construtor
 
@@ -60,25 +64,25 @@ void Character::InitFromDisplayInfo(uint32 _id)
 	// 1. Template
 	{
 		// 1.1 Visual params
-		Race = (Race::List)humanoidRecExtra->Get_Race()->Get_ID();
-		Gender = (Gender::List)humanoidRecExtra->Get_Gender();
-		skin = humanoidRecExtra->Get_SkinColor();
-		face = humanoidRecExtra->Get_FaceType();
-		hairStyle = humanoidRecExtra->Get_HairType();
-		hairColor = humanoidRecExtra->Get_HairStyleOrColor();
-		facialStyle = humanoidRecExtra->Get_BeardStyle();
+        m_Template.Race = (Race::List)humanoidRecExtra->Get_Race()->Get_ID();
+        m_Template.Gender = (Gender::List)humanoidRecExtra->Get_Gender();
+        m_Template.skin = humanoidRecExtra->Get_SkinColor();
+        m_Template.face = humanoidRecExtra->Get_FaceType();
+        m_Template.hairStyle = humanoidRecExtra->Get_HairType();
+        m_Template.hairColor = humanoidRecExtra->Get_HairStyleOrColor();
+        m_Template.facialStyle = humanoidRecExtra->Get_BeardStyle();
 
 		// 1.2 Items
-		ItemsTemplates[EQUIPMENT_SLOT_HEAD] = ItemTemplate(humanoidRecExtra->Get_Helm(), InventoryType::HEAD, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_SHOULDERS] = ItemTemplate(humanoidRecExtra->Get_Shoulder(), InventoryType::SHOULDERS, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_BODY] = ItemTemplate(humanoidRecExtra->Get_Shirt(), InventoryType::BODY, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_CHEST] = ItemTemplate(humanoidRecExtra->Get_Chest(), InventoryType::CHEST, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_WAIST] = ItemTemplate(humanoidRecExtra->Get_Belt(), InventoryType::WAIST, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_LEGS] = ItemTemplate(humanoidRecExtra->Get_Legs(), InventoryType::LEGS, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_FEET] = ItemTemplate(humanoidRecExtra->Get_Boots(), InventoryType::FEET, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_WRISTS] = ItemTemplate(humanoidRecExtra->Get_Wrist(), InventoryType::WRISTS, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_HANDS] = ItemTemplate(humanoidRecExtra->Get_Gloves(), InventoryType::HANDS, 0);
-		ItemsTemplates[EQUIPMENT_SLOT_TABARD] = ItemTemplate(humanoidRecExtra->Get_Tabard(), InventoryType::TABARD, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_HEAD] = ItemTemplate(humanoidRecExtra->Get_Helm(), InventoryType::HEAD, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_SHOULDERS] = ItemTemplate(humanoidRecExtra->Get_Shoulder(), InventoryType::SHOULDERS, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_BODY] = ItemTemplate(humanoidRecExtra->Get_Shirt(), InventoryType::BODY, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_CHEST] = ItemTemplate(humanoidRecExtra->Get_Chest(), InventoryType::CHEST, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_WAIST] = ItemTemplate(humanoidRecExtra->Get_Belt(), InventoryType::WAIST, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_LEGS] = ItemTemplate(humanoidRecExtra->Get_Legs(), InventoryType::LEGS, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_FEET] = ItemTemplate(humanoidRecExtra->Get_Boots(), InventoryType::FEET, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_WRISTS] = ItemTemplate(humanoidRecExtra->Get_Wrist(), InventoryType::WRISTS, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_HANDS] = ItemTemplate(humanoidRecExtra->Get_Gloves(), InventoryType::HANDS, 0);
+        m_Template.ItemsTemplates[EQUIPMENT_SLOT_TABARD] = ItemTemplate(humanoidRecExtra->Get_Tabard(), InventoryType::TABARD, 0);
 		//ItemsTemplates[EQUIPMENT_SLOT_BACK] = ItemTemplate(humanoidRecExtra->Get_Cape(), InventoryType::CLOAK, 0);
 	}
 
@@ -118,7 +122,7 @@ void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender
 	// TODO: Move me outside construtor
 	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
 	{
-		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNodeModel3D>(shared_from_this())));
+		m_VisualItems.push_back(std::make_shared<CItem_VisualData>(std::static_pointer_cast<Character, SceneNode3D>(shared_from_this())));
 	}
 	// TODO: Move me outside construtor
 
@@ -132,8 +136,8 @@ void Character::InitFromDisplayInfoCreating(uint32 _id, Race::List _race, Gender
 	// 1. Template
 	{
 		// 1.1 Visual params
-		Race = _race;
-		Gender = _gender;
+        m_Template.Race = _race;
+        m_Template.Gender = _gender;
 
 		// 1.2 Items
 		/*ItemsTemplates[EQUIPMENT_SLOT_HEAD] = ItemTemplate(humanoidRecExtra->Get_Helm(), InventoryType::HEAD, 0);
@@ -168,7 +172,7 @@ void Character::Render3D()
 
 	for (uint32 slot = 0; slot < INVENTORY_SLOT_BAG_END; slot++)
 	{
-		if (slot == EQUIPMENT_SLOT_HEAD && (Flags & CHARACTER_FLAG_HIDE_HELM))
+		if (slot == EQUIPMENT_SLOT_HEAD && (m_Template.Flags & CHARACTER_FLAG_HIDE_HELM))
 		{
 			continue;
 		}
@@ -181,8 +185,8 @@ void Character::Render3D()
 
 void Character::CreateCharacterModel()
 {
-	std::string modelClientFileString = DBC_ChrRaces[Race]->Get_ClientFileString();
-	std::string modelGender = (Gender == Gender::Male) ? "Male" : "Female";
+	std::string modelClientFileString = DBC_ChrRaces[m_Template.Race]->Get_ClientFileString();
+	std::string modelGender = (m_Template.Gender == Gender::Male) ? "Male" : "Female";
 	std::string fullModelName = "Character\\" + modelClientFileString + "\\" + modelGender + "\\" + modelClientFileString + modelGender + ".M2";
 
 	std::shared_ptr<M2> model = GetManager<IM2Manager>()->Add(fullModelName);
@@ -196,12 +200,12 @@ void Character::RefreshItemVisualData()
 	// 3. Items visual data
 	for (uint32 i = 0; i < INVENTORY_SLOT_BAG_END; i++)
 	{
-		m_VisualItems[i]->TemplateSet(ItemsTemplates[i]);
+		m_VisualItems[i]->TemplateSet(m_Template.ItemsTemplates[i]);
 		m_VisualItems[i]->Load();
 
 		if (i == EQUIPMENT_SLOT_HEAD)
 		{
-			if ((Flags & CHARACTER_FLAG_HIDE_HELM))
+			if ((m_Template.Flags & CHARACTER_FLAG_HIDE_HELM))
 			{
 				setMeshEnabled(MeshIDType::Ears, EarsStyles::Enabled);
 				continue;
@@ -213,11 +217,15 @@ void Character::RefreshItemVisualData()
 		}
 		else if (i == EQUIPMENT_SLOT_BACK)
 		{
-			if ((Flags & CHARACTER_FLAG_HIDE_CLOAK))
+			if ((m_Template.Flags & CHARACTER_FLAG_HIDE_CLOAK))
 			{
 				setMeshEnabled(MeshIDType::Cloak, 1);
 				continue;
 			}
+            else
+            {
+
+            }
 		}
 
 		for (auto& geoset : m_VisualItems[i]->getGeosetComponents())
@@ -255,4 +263,7 @@ void Character::RefreshMeshIDs()
 	setFacial1Geoset(Character_SectionWrapper::getFacial1Geoset(this));
 	setFacial2Geoset(Character_SectionWrapper::getFacial2Geoset(this));
 	setFacial3Geoset(Character_SectionWrapper::getFacial3Geoset(this));
+
+    setMeshEnabled(MeshIDType::Unk2, Character_SectionWrapper::getFacial16Geoset(this));
+    setMeshEnabled(MeshIDType::Eyeglows, Character_SectionWrapper::getFacial16Geoset(this));
 }

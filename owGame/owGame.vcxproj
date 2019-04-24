@@ -75,9 +75,6 @@
     <ClInclude Include="DBC\DBC_TerrainType.h" />
     <ClInclude Include="DBC\DBC_WMOAreaTable.h" />
     <ClInclude Include="DBC\DBC_WorldSafeLocs.h" />
-    <ClInclude Include="Function.h" />
-    <ClInclude Include="FunctionSA.h" />
-    <ClInclude Include="FunctionWA.h" />
     <ClInclude Include="LiquidLayer.h" />
     <ClInclude Include="RenderPass_Liquid.h" />
     <ClInclude Include="LiquidInstance.h" />

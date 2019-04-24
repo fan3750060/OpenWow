@@ -6,6 +6,7 @@ class WMOsManager : public IWMOManager, public CRefManager1Dim<CWMO>
 {
 public:
 	WMOsManager();
+    virtual ~WMOsManager();
 
 	// IWMOManager
 	std::shared_ptr<CWMO> Add(const std::string& name) { return CRefManager1Dim::Add(name); }

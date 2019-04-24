@@ -189,15 +189,6 @@
     <ClInclude Include="Managers.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Function.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionSA.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="FunctionWA.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="DBC\DBC_WorldSafeLocs.h">
       <Filter>DBC\Tables</Filter>
     </ClInclude>

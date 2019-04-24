@@ -19,14 +19,32 @@ CWMO_Group_Instance::~CWMO_Group_Instance()
 {
 }
 
-void CWMO_Group_Instance::SetParent(std::weak_ptr<SceneNode3D> pNode)
+void CWMO_Group_Instance::Initialize()
 {
-    SceneNodeModel3D::SetParent(pNode);
+    BoundingBox bbox = m_Object->m_Bounds;
+    bbox.calculateCenter();
+    bbox.transform(GetComponent<CTransformComponent>()->GetParentWorldTransform());
+    GetComponent<CColliderComponent>()->SetBounds(bbox);
+}
 
-	BoundingBox bbox = m_Object->m_Bounds;
-	bbox.calculateCenter();
-	bbox.transform(GetParentWorldTransform());
-	SetBounds(bbox);
+void CWMO_Group_Instance::SetPortalVisible(bool Value)
+{
+    m_PortalsVis = Value;
+}
+
+bool CWMO_Group_Instance::GetPortalVisible() const
+{
+    return m_PortalsVis;
+}
+
+void CWMO_Group_Instance::SetPortalCalculated(bool Value)
+{
+    m_Calculated = Value;
+}
+
+bool CWMO_Group_Instance::GetPortalCalculated() const
+{
+    return m_Calculated;
 }
 
 bool CWMO_Group_Instance::Accept(IVisitor& visitor)
@@ -36,5 +54,5 @@ bool CWMO_Group_Instance::Accept(IVisitor& visitor)
 		return false;
 	}
 
-	return SceneNodeModel3D::Accept(visitor);
+	return SceneNode3D::Accept(visitor);
 }

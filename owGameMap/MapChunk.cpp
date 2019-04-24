@@ -1,64 +1,66 @@
 #include "stdafx.h"
 
 // Include
-#include "ADT.h"
-#include "MapController.h"
+#include "MapTile.h"
+#include "Map.h"
 
 // General
-#include "ADT_MCNK.h"
+#include "MapChunk.h"
 
 // Additional
-#include "ADT_Liquid.h"
-#include "MapController.h"
+#include "MapLiquid.h"
 #include "Map_Shared.h"
-#include "ADT_MCNK_Material.h"
+#include "MapChunkMaterial.h"
 
-ADT_MCNK::ADT_MCNK(std::weak_ptr<CMapController> _mapController, std::weak_ptr<ADT> _parentTile, const std::string& _fileName, const ADT_MCIN& _mcin) :
+CMapChunk::CMapChunk(std::shared_ptr<CMap> _mapController, std::weak_ptr<CMapTile> _parentTile) :
 	m_MapController(_mapController),
 	m_ParentADT(_parentTile),
-	m_FileName(_fileName),
-	mcin(_mcin),
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+{}
+
+CMapChunk::~CMapChunk()
 {
-	memset(mcly, 0x00, sizeof(ADT_MCNK_MCLY) * 4);
 }
 
-ADT_MCNK::~ADT_MCNK()
+void CMapChunk::Initialize(const std::string & _fileName, const ADT_MCIN & _mcin)
 {
-	//Log::Info("ADT_MCNK Deleted");
+    m_FileName = _fileName;
+    mcin = _mcin;
+
+    memset(mcly, 0x00, sizeof(ADT_MCNK_MCLY) * 4);
+}
+
+uint32 CMapChunk::GetAreaID() const
+{
+    return header.areaid;
 }
 
 
 //
-// SceneNodeModel3D
+// SceneNode3D
 //
 
-void ADT_MCNK::UpdateLocalTransform()
-{
-	// do nothing
-}
-
-bool ADT_MCNK::Accept(IVisitor& visitor)
+bool CMapChunk::Accept(IVisitor& visitor)
 {
 	const AbstractPass& visitorAsBasePass = reinterpret_cast<const AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
-	{
-		return false;
-	}
+	//float distToCamera2D = (camera->GetTranslation() - GetComponent<CColliderComponent>()->GetBounds().getCenter()).length() - GetComponent<CColliderComponent>()->GetBounds().getRadius();
+	//if (distToCamera2D > m_QualitySettings.ADT_MCNK_Distance)
+	//{
+	//	return false;
+	//}
 
-	if (!checkFrustum(camera))
-	{
-		return false;
-	}
+	//if (!GetComponent<CColliderComponent>()->checkFrustum(camera))
+	//{
+	//	return false;
+	//}
 
 	return base::Accept(visitor);
 }
 
 
-bool ADT_MCNK::PreLoad()
+bool CMapChunk::PreLoad()
 {
 	m_File = GetManager<IFilesManager>()->Open(m_FileName);
 	if (m_File == nullptr)
@@ -77,23 +79,31 @@ bool ADT_MCNK::PreLoad()
 	// Read header
 	m_File->readBytes(&header, sizeof(ADT_MCNK_Header));
 
+    std::shared_ptr<CTransformComponent> transformComponent = GetComponent<CTransformComponent>();
+
 	// Scene node params
-	{
-		// Set translate
-		SetTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
-		// Bounds
-		BoundingBox bbox
-		(
-			vec3(GetTranslation().x, Math::MaxFloat, GetTranslation().z),
-			vec3(GetTranslation().x + C_ChunkSize, Math::MinFloat, GetTranslation().z + C_ChunkSize)
-		);
-		SetBounds(bbox);
+    {
+        // Set translate
+        transformComponent->SetTranslate(vec3(header.xpos * (-1.0f) + C_ZeroPoint, header.ypos, header.zpos * (-1.0f) + C_ZeroPoint));
+    }
+
+    {
+        vec3 translate = transformComponent->GetTranslation();
+
+        // Bounds
+        BoundingBox bbox
+        (
+            vec3(translate.x, Math::MaxFloat, translate.z),
+            vec3(translate.x + C_ChunkSize, Math::MinFloat, translate.z + C_ChunkSize)
+        );
+
+		GetComponent<CColliderComponent>()->SetBounds(bbox);
 	}
 
 	return true;
 }
 
-bool ADT_MCNK::Load()
+bool CMapChunk::Load()
 {
 	uint32_t startPos = m_File->getPos() - sizeof(ADT_MCNK_Header);
 
@@ -158,7 +168,7 @@ bool ADT_MCNK::Load()
 		vec3 tempVertexes[C_MapBufferSize];
 		vec3* ttv = tempVertexes;
 
-		BoundingBox bbox = GetBounds();
+		BoundingBox bbox = GetComponent<CColliderComponent>()->GetBounds();
 
 		for (uint32 j = 0; j < 17; j++)
 		{
@@ -174,7 +184,7 @@ bool ADT_MCNK::Load()
 					xpos += C_UnitSize * 0.5f;
 				}
 
-				vec3 v = GetTranslation() + vec3(xpos, h, zpos);
+				vec3 v = vec3(xpos, h, zpos);
 				*ttv++ = v;
 
 				bbox.setMinY(minf(v.y, bbox.getMin().y));
@@ -183,7 +193,7 @@ bool ADT_MCNK::Load()
 		}
 
 		bbox.calculateCenter();
-		SetBounds(bbox);
+        GetComponent<CColliderComponent>()->SetBounds(bbox);
 
 		verticesBuffer = _RenderDevice->CreateVertexBuffer(tempVertexes, C_MapBufferSize);
 	}
@@ -191,7 +201,7 @@ bool ADT_MCNK::Load()
 	// Textures
 	m_File->seek(startPos + header.ofsLayer);
 	{
-		std::shared_ptr<ADT> parentADT = m_ParentADT.lock();
+		std::shared_ptr<CMapTile> parentADT = m_ParentADT.lock();
 		assert1(parentADT != NULL);
 
 		for (uint32 i = 0; i < header.nLayers; i++)
@@ -231,7 +241,7 @@ bool ADT_MCNK::Load()
 	// Alpha
 	m_File->seek(startPos + header.ofsAlpha);
 	{
-		std::shared_ptr<CMapController> mapController = m_MapController.lock();
+		std::shared_ptr<CMap> mapController = m_MapController.lock();
 		assert1(mapController != NULL);
 
 		for (uint32 i = 1; i < header.nLayers; i++)
@@ -318,8 +328,10 @@ bool ADT_MCNK::Load()
 			std::shared_ptr<CADT_Liquid> m_Liquid = std::make_shared<CADT_Liquid>(8, 8);
 			m_Liquid->CreateFromMCLQ(m_File, header);
 
-			m_LiquidInstance = std::make_shared<Liquid_Instance>(m_Liquid, vec3(GetTranslation().x, 0.0f, GetTranslation().z));
-			m_LiquidInstance->SetParent(weak_from_this());
+            vec3 position = vec3(GetComponent<CTransformComponent>()->GetTranslation().x, 0.0f, GetComponent<CTransformComponent>()->GetTranslation().z);
+
+			m_LiquidInstance = CreateSceneNode<Liquid_Instance>();
+            m_LiquidInstance->Initialize(m_Liquid, position);
 		}
 	}
 
@@ -353,7 +365,7 @@ bool ADT_MCNK::Load()
 		__geomDefault->SetIndexBuffer(__ibHigh);
 		__geomDefault->SetMaterial(mat);
 
-		AddMesh(__geomDefault);
+		GetComponent<CMeshComponent>()->AddMesh(__geomDefault);
 	}
 
 
@@ -376,58 +388,14 @@ bool ADT_MCNK::Load()
 	return true;
 }
 
-bool ADT_MCNK::Delete()
+bool CMapChunk::Delete()
 {
 	return true;
 }
 
-/*
-	if (!m_QualitySettings.draw_mcnk)
-	{
-		return;
-	}
-
-	int8 layersCnt = header.nLayers - 1;
-	if (layersCnt < 0)
-	{
-		return;
-	}
-
-	float distToCamera3D = glm::length(_Render->getCamera()->Position - GetBounds().getCenter()) - GetBounds().getRadius();
-	bool isDefaultGeom = distToCamera3D > m_QualitySettings.ADT_MCNK_HighRes_Distance || m_QualitySettings.draw_mcnk_low;
-
-	{
-		CMCNK_Pass* pass = _Render->getTechniquesMgr()->MCNK_Pass.operator->();
-
-		pass->Bind();
-		{
-			pass->SetIsNortrend(truem_ParentADT->m_Header.flags.IsNortrend);
-			pass->SetIsMCCVExists(m_QualitySettings.draw_map_mccv && header.flags.has_mccv);
-			pass->SetLayersCount(header.nLayers);
-
-			// Bind shadow
-			pass->SetShadowMapExists(header.flags.has_mcsh);
-			if (header.flags.has_mcsh)
-			{
-				pass->SetShadowColor(vec3(0.0f, 0.0f, 0.0f) * 0.3f);
-			}
-
-			if (isDefaultGeom)
-			{
-				_Render->r.drawIndexed(0, m_IndexesCountDefault, 0, C_MapBufferSize, &m_StateDefault, true);
-			}
-			else
-			{
-				_Render->r.drawIndexed(0, m_IndexesCountHigh, 0, C_MapBufferSize, &m_StateHigh, true);
-			}
-		}
-		pass->Unbind();
-	}
-*/
-
 //
 
-/*void ADT_MCNK::drawPass(int anim) VERY OLD :)
+/*void CMapChunk::drawPass(int anim) VERY OLD :)
 {
 	if (anim)
 	{

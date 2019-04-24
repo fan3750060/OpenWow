@@ -78,7 +78,7 @@ bool Creature::isMeshEnabled(uint32 _index) const
 	for (uint32 i = 0; i < MeshIDType::Count; i++)
 	{
 		// Special case for skin
-		if (div100 == 0 && mod100 == 0)
+		if (div100 == MeshIDType::SkinAndHair && mod100 == 0)
 		{
 			return true;
 		}

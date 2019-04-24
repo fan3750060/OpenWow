@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 // Include
-#include "MapController.h"
+#include "Map.h"
 
 // General
 #include "MapWDT.h"
 
-CMapWDT::CMapWDT(std::weak_ptr<const CMapController> _mapController) :
+CMapWDT::CMapWDT(std::weak_ptr<const CMap> _mapController) :
 	m_IsTileBased(false),
 	m_GlobalWMO(nullptr),
 	m_MapController(_mapController)
@@ -16,23 +16,23 @@ CMapWDT::~CMapWDT()
 {
 }
 
-void CMapWDT::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
+void CMapWDT::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 {
 	Log::Green("Map_GlobalWMOs[]: Global WMO exists [%s].", !m_GlobalWMOName.empty() ? "true" : "false");
 	if (!m_GlobalWMOName.empty())
 	{
-		m_GlobalWMO = std::make_shared<ADT_WMO_Instance>(m_GlobalWMOName, m_GlobalWMOPlacementInfo);
-		m_GlobalWMO->SetParent(_parent);
+		m_GlobalWMO = _parent.lock()->CreateSceneNode<CMapWMOInstance>(m_GlobalWMOName);
+		m_GlobalWMO->Initialize(m_GlobalWMOPlacementInfo);
 		Application::Get().GetLoader()->AddToLoadQueue(m_GlobalWMO);
 	}
 }
 
 void CMapWDT::Load()
 {
-    std::shared_ptr<const CMapController> mapController = m_MapController.lock();
+    std::shared_ptr<const CMap> mapController = m_MapController.lock();
     assert1(mapController != NULL);
 
-    std::string fileName = mapController->getFilenameT() + ".wdt";
+    std::string fileName = mapController->GetMapFolder() + ".wdt";
 
     WoWChunkReader reader(fileName);
     std::shared_ptr<IByteBuffer> buffer = nullptr;
@@ -66,6 +66,7 @@ void CMapWDT::Load()
         }
     }
 
+
     {
         buffer = reader.OpenChunk("MWMO");
 
@@ -77,6 +78,7 @@ void CMapWDT::Load()
             delete[] buf;
         }
     }
+
 
     {
         buffer = reader.OpenChunk("MODF");

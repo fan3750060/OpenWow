@@ -25,9 +25,6 @@
     <Filter Include="Skies">
       <UniqueIdentifier>{3f07336f-3b76-4126-bb3b-c0516a566da3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Map\ADT_MCNK">
-      <UniqueIdentifier>{47d8efda-9ea2-4fbb-96f8-1cdf4f28a5d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="WMO">
       <UniqueIdentifier>{a344d584-e53b-42b9-b11a-3f65870f7fd2}</UniqueIdentifier>
     </Filter>
@@ -45,23 +42,11 @@
     <ClCompile Include="Map_Shared.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="MapController.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_WMO_Instance.cpp">
-      <Filter>Map\Instances</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_MDX_Instance.cpp">
-      <Filter>Map\Instances</Filter>
-    </ClCompile>
     <ClCompile Include="EnvironmentManager.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_Liquid.cpp">
-      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="MinimapProvider.cpp">
       <Filter>Minimap</Filter>
@@ -81,17 +66,8 @@
     <ClCompile Include="SkyParams.cpp">
       <Filter>Skies</Filter>
     </ClCompile>
-    <ClCompile Include="ADT.cpp">
-      <Filter>Map</Filter>
-    </ClCompile>
     <ClCompile Include="CreatePasses.cpp">
       <Filter>RenderStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_MCNK.cpp">
-      <Filter>Map\ADT_MCNK</Filter>
-    </ClCompile>
-    <ClCompile Include="ADT_MCNK_Material.cpp">
-      <Filter>Map\ADT_MCNK</Filter>
     </ClCompile>
     <ClCompile Include="WDL_LowResTile.cpp">
       <Filter>Map\WDL</Filter>
@@ -165,6 +141,27 @@
     <ClCompile Include="RenderPass_Sky.cpp">
       <Filter>RenderStuff</Filter>
     </ClCompile>
+    <ClCompile Include="MapTile.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapLiquid.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapChunk.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapChunkMaterial.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapM2Instance.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="MapWMOInstance.cpp">
+      <Filter>Map\Instances</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EnvironmentManager.h">
@@ -173,26 +170,11 @@
     <ClInclude Include="Map_Shared.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="MapController.h">
-      <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT_WMO_Instance.h">
-      <Filter>Map\Instances</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT_MDX_Instance.h">
-      <Filter>Map\Instances</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT.h">
-      <Filter>Map</Filter>
-    </ClInclude>
     <ClInclude Include="common.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT_Liquid.h">
-      <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="Map_Headers.h">
       <Filter>Map</Filter>
@@ -220,12 +202,6 @@
     </ClInclude>
     <ClInclude Include="CreatePasses.h">
       <Filter>RenderStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT_MCNK.h">
-      <Filter>Map\ADT_MCNK</Filter>
-    </ClInclude>
-    <ClInclude Include="ADT_MCNK_Material.h">
-      <Filter>Map\ADT_MCNK</Filter>
     </ClInclude>
     <ClInclude Include="WDL_LowResTile.h">
       <Filter>Map\WDL</Filter>
@@ -307,6 +283,27 @@
     </ClInclude>
     <ClInclude Include="RenderPass_Sky.h">
       <Filter>RenderStuff</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTile.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapLiquid.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapChunk.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapChunkMaterial.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapM2Instance.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="MapWMOInstance.h">
+      <Filter>Map\Instances</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

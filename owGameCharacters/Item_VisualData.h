@@ -58,5 +58,5 @@ private:
 	std::shared_ptr<Texture>      m_TextureComponents[DBC_CharComponent_Sections::ITEMS_COUNT];
 	
 private: // PARENT
-	std::weak_ptr<Character> m_ParentCharacter;
+	std::weak_ptr<Character>      m_ParentCharacter;
 };

@@ -40,6 +40,9 @@
     <Filter Include="Components\Parts_Miscellaneous\Particle\Emitters">
       <UniqueIdentifier>{3746cc1f-6189-4246-bd32-0a343d2b7c01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SceneNode &amp; Components">
+      <UniqueIdentifier>{2cd535eb-a976-4ed9-9654-2f699e597435}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="M2_Builder.cpp">
@@ -71,7 +74,6 @@
     </ClCompile>
     <ClCompile Include="M2.cpp" />
     <ClCompile Include="M2_Manager.cpp" />
-    <ClCompile Include="M2_Base_Instance.cpp" />
     <ClCompile Include="ShaderResolver.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -135,6 +137,15 @@
     <ClCompile Include="M2_Material.cpp">
       <Filter>Skins</Filter>
     </ClCompile>
+    <ClCompile Include="M2_Base_Instance.cpp">
+      <Filter>SceneNode &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_TransformComponent.cpp">
+      <Filter>SceneNode &amp; Components</Filter>
+    </ClCompile>
+    <ClCompile Include="M2_ColliderComponent.cpp">
+      <Filter>SceneNode &amp; Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="M2_SkinTypes.h">
@@ -190,7 +201,6 @@
     <ClInclude Include="..\shared\owGameM2.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="M2_Base_Instance.h" />
     <ClInclude Include="ShaderResolver.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -256,6 +266,15 @@
     </ClInclude>
     <ClInclude Include="M2_Material.h">
       <Filter>Skins</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_Base_Instance.h">
+      <Filter>SceneNode &amp; Components</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_TransformComponent.h">
+      <Filter>SceneNode &amp; Components</Filter>
+    </ClInclude>
+    <ClInclude Include="M2_ColliderComponent.h">
+      <Filter>SceneNode &amp; Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

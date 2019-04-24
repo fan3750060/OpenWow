@@ -10,7 +10,7 @@ CM2_Animator::CM2_Animator(const std::weak_ptr<const M2> _m2) :
 	m_M2(_m2),
 	m_IsLoop(false),
 	m_IsPlayed(false),
-	m_OnAnimationEnded(nullptr),
+	//m_OnAnimationEnded(nullptr),
 	animtime(0.0),
 	m_CurrentTime(0)
 {
@@ -111,10 +111,10 @@ void CM2_Animator::Update(double _time, double _dTime)
 	m_CurrentTime = m_CurrentAnimation->getEnd() - 1;
 	m_IsPlayed = true;
 
-	if (m_OnAnimationEnded != nullptr)
+	/*if (m_OnAnimationEnded != nullptr)
 	{
 		m_OnAnimationEnded->operator()();
-	}
+	}*/
 
 	if (m_IsLoop)
 	{
@@ -122,7 +122,7 @@ void CM2_Animator::Update(double _time, double _dTime)
 	}
 }
 
-void CM2_Animator::setOnEndFunction(Function* _onEnd)
+/*void CM2_Animator::setOnEndFunction(Function* _onEnd)
 {
 	if (m_OnAnimationEnded != nullptr)
 	{
@@ -131,4 +131,4 @@ void CM2_Animator::setOnEndFunction(Function* _onEnd)
 
 	assert1(_onEnd);
 	m_OnAnimationEnded = _onEnd;
-}
+}*/

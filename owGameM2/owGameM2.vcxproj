@@ -22,6 +22,7 @@
     <ClCompile Include="CreatePasses.cpp" />
     <ClCompile Include="M2_Animation.cpp" />
     <ClCompile Include="M2_Animator.cpp" />
+    <ClCompile Include="M2_ColliderComponent.cpp" />
     <ClCompile Include="M2_Comp_Materials.cpp" />
     <ClCompile Include="M2_Comp_Miscellaneous.cpp" />
     <ClCompile Include="M2_Comp_Skeleton.cpp" />
@@ -43,6 +44,7 @@
     <ClCompile Include="M2_Skin.cpp" />
     <ClCompile Include="M2_Skin_Batch.cpp" />
     <ClCompile Include="M2_Manager.cpp" />
+    <ClCompile Include="M2_TransformComponent.cpp" />
     <ClCompile Include="ParticleEmitters.cpp" />
     <ClCompile Include="ParticleEmitter_Plane.cpp" />
     <ClCompile Include="ParticleEmitter_Sphere.cpp" />
@@ -65,6 +67,7 @@
     <ClInclude Include="M2_Animated.h" />
     <ClInclude Include="M2_Animation.h" />
     <ClInclude Include="M2_Animator.h" />
+    <ClInclude Include="M2_ColliderComponent.h" />
     <ClInclude Include="M2_Comp_Materials.h" />
     <ClInclude Include="M2_Comp_Miscellaneous.h" />
     <ClInclude Include="M2_Comp_Skeleton.h" />
@@ -78,6 +81,7 @@
     <ClInclude Include="M2_SkinSection.h" />
     <ClInclude Include="M2_SkinTypes.h" />
     <ClInclude Include="M2_Skin_Builder.h" />
+    <ClInclude Include="M2_TransformComponent.h" />
     <ClInclude Include="M2_Types.h" />
     <ClInclude Include="M2_Builder.h" />
     <ClInclude Include="ParticleEmitters.h" />

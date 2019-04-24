@@ -2,10 +2,11 @@
 
 #include "LiquidLayer.h"
 
-class Liquid
+class CLiquid
 {
 public:
-	Liquid(uint32 x, uint32 y);
+	CLiquid(uint32 x, uint32 y);
+    virtual ~CLiquid();
 
 protected:
 	void createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std::shared_ptr<IFile> f);
@@ -16,7 +17,7 @@ public:
 	uint32                                                              m_TilesCount;
 	BoundingBox                                                         m_Bounds;
 
-	std::vector<std::shared_ptr<Liquid_Layer>>							m_WaterLayers;
+	std::vector<std::shared_ptr<CLiquidLayer>>							m_WaterLayers;
 
 	float                                                               ydir;
 

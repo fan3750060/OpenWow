@@ -19,11 +19,13 @@ struct ADT_MODF
 
 #include "WMO\\WMO_Base_Instance.h"
 
-class ADT_WMO_Instance : public CWMO_Base_Instance
+class CMapWMOInstance : public CWMO_Base_Instance
 {
 public:
-	ADT_WMO_Instance(std::string _wmoName, ADT_MODF& _placementInfo);
-	virtual ~ADT_WMO_Instance();
+	CMapWMOInstance(std::string _wmoName);
+	virtual ~CMapWMOInstance();
+
+    void Initialize(const ADT_MODF& _placementInfo);
 
 	// Scene node
 	bool Accept(IVisitor& visitor) override;

@@ -5,7 +5,10 @@
 
 WMOsManager::WMOsManager()
 {
+}
 
+WMOsManager::~WMOsManager()
+{
 }
 
 std::shared_ptr<CWMO> WMOsManager::CreateAction(const std::string& name)

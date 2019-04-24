@@ -1,13 +1,13 @@
 #pragma once
 
 // FORWARD BEGIN
-class ADT;
+class CMapTile;
 // FORWARD END
 
 class ADT_MCNK_Material : public MaterialWrapper
 {
 public:
-	ADT_MCNK_Material(const std::weak_ptr<ADT> _parentADT);
+	ADT_MCNK_Material(const std::weak_ptr<CMapTile> _parentADT);
 	virtual ~ADT_MCNK_Material();
 
 	void SetLayersCnt(uint32 value);

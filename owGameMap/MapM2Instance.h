@@ -15,11 +15,13 @@ struct ADT_MDXDef
     } flags;
 };
 
-class ADT_MDX_Instance : public CM2_Base_Instance
+class CMapM2Instance : public CM2_Base_Instance
 {
 public:
-	ADT_MDX_Instance(std::string _m2Name, const ADT_MDXDef& _placementInfo);
-	virtual ~ADT_MDX_Instance();
+	CMapM2Instance(std::string _m2Name);
+	virtual ~CMapM2Instance();
+
+    void Initialize(const ADT_MDXDef& _placementInfo);
 
 	// SceneNode3D
 	bool Accept(IVisitor& visitor) override;

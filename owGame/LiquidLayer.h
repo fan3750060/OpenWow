@@ -4,11 +4,11 @@
 
 #include "DBC\\Core\DBC__Storage.h"
 
-class Liquid_Layer : public MeshWrapper
+class CLiquidLayer : public MeshWrapper
 {
 public:
-	Liquid_Layer(std::shared_ptr<IMesh> _mesh);
-	virtual ~Liquid_Layer();
+	CLiquidLayer(std::shared_ptr<IMesh> _mesh);
+	virtual ~CLiquidLayer();
 
 	// IMesh
 	bool Render(RenderEventArgs& renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation = 0, UINT indexCnt = 0, UINT vertexStartLocation = 0, UINT vertexCnt = 0) override;

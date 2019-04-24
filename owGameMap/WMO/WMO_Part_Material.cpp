@@ -38,16 +38,12 @@ WMO_Part_Material::WMO_Part_Material(const std::weak_ptr<const CWMO> _parentWMO,
 		m_Proto.flags.TextureClampS ? SamplerState::WrapMode::Clamp : SamplerState::WrapMode::Repeat, 
 		m_Proto.flags.TextureClampT ? SamplerState::WrapMode::Clamp : SamplerState::WrapMode::Repeat
 	);
-
-	// Assign samplers
-	g_pPixelShader->GetShaderParameterByName("DiffuseTextureSampler").Set(g_Sampler);
+    SetSampler(0, g_Sampler);
 
 	// This
 	std::string textureName = _parentWMO.lock()->m_TexturesNames + m_Proto.diffuseNameIndex;
 	std::shared_ptr<Texture> texture = _RenderDevice->CreateTexture2D(textureName);
 	SetTexture(0, texture);
-
-
 
 	//if (m_Proto.envNameIndex)
 	//{

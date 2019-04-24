@@ -2,20 +2,21 @@
 
 #include "M2.h"
 
-class CM2_Base_Instance : public SceneNodeModel3D
+class CM2_Base_Instance : public SceneNode3D
 {
 public:
-	CM2_Base_Instance(std::string _m2Name);
-	virtual ~CM2_Base_Instance();
+	                                    CM2_Base_Instance(std::string _m2Name);
+	virtual                             ~CM2_Base_Instance();
 
-	void CreateInstances();
+	void                                CreateInstances();
 
 	// CM2_Base_Instance
 	void                                setM2(std::shared_ptr<M2> _model);
 	std::shared_ptr<M2>                 getM2() const { return m_M2; }
 
-	void                                Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment);
+	void                                Attach(std::shared_ptr<CM2_Part_Attachment> _attachment);
 	void                                Detach();
+    std::shared_ptr<CM2_Part_Attachment>GetAttachPoint() const;
 
 	// Color & Alpha
 	void                                setColor(vec4 _color) { m_Color = _color; }
@@ -32,36 +33,35 @@ public:
 	// Animations
 	std::shared_ptr<CM2_Animator>       getAnimator() const { return m_Animator; }
 
+    // Components
+    virtual void                        RegisterComponents() override;
+
 	// ILoadable
 	bool                                Load() override;
 	bool                                Delete() override;
 	uint32                              getPriority() const override { return 3; };
 
-	// SceneNodeModel3D
-	virtual bool Accept(IVisitor& visitor) override;
+	// SceneNode3D
+	virtual bool                        Accept(IVisitor& visitor) override;
 
 protected:
 	void InitAnimator();
 
-	// SceneNodeModel3D
-	virtual void UpdateLocalTransform() override;
-	virtual void UpdateBounds() override;
-
 private:
 	// Color & Alpha
-	vec4                            m_Color;
-	float                           m_Alpha;
+	vec4                                m_Color;
+	float                               m_Alpha;
 
 	// Mesh & Replaces textures
-	std::shared_ptr<Texture>		m_SpecialTextures[SM2_Texture::Type::COUNT];
+	std::shared_ptr<Texture>		    m_SpecialTextures[SM2_Texture::Type::COUNT];
 
 	// Animtion
-	std::shared_ptr<CM2_Animator>   m_Animator;
-	bool                            m_NeedRecalcAnimation;
+	std::shared_ptr<CM2_Animator>       m_Animator;
+	bool                                m_NeedRecalcAnimation;
 
 private:
-	std::shared_ptr<M2>                             m_M2;
-	std::string                                     m_M2Name;
-	std::shared_ptr<const CM2_Part_Attachment>      m_Attached;
-	const CGroupQuality&							m_QualitySettings;
+	std::shared_ptr<M2>                 m_M2;
+	std::string                         m_M2Name;
+	std::shared_ptr<CM2_Part_Attachment>m_Attached;
+	const CGroupQuality&				m_QualitySettings;
 };

@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
 // Include
-#include "MapController.h"
+#include "Map.h"
 #include "WDL_Node_Material.h"
 
 // General
 #include "MapWDL.h"
 
-CMapWDL::CMapWDL(std::weak_ptr<const CMapController> MapController) :
+CMapWDL::CMapWDL(std::weak_ptr<const CMap> MapController) :
 	m_MapController(MapController),
 	m_Minimap(nullptr)
 {}
@@ -21,12 +21,12 @@ CMapWDL::~CMapWDL()
 //
 // ISceneNodeProvider
 //
-void CMapWDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
+void CMapWDL::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 {
-	std::shared_ptr<const CMapController> mapController = m_MapController.lock();
+	std::shared_ptr<const CMap> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
-	std::string fileName = mapController->getFilenameT() + ".wdl";
+	std::string fileName = mapController->GetMapFolder() + ".wdl";
 
 	// Low-resolution tiles
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
@@ -110,8 +110,8 @@ void CMapWDL::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
 	Log::Green("Map_GlobalWMOs[]: Low WMOs count [%d].", m_LowResolutionWMOsPlacementInfo.size());
 	for (auto it : m_LowResolutionWMOsPlacementInfo)
 	{
-		std::shared_ptr<ADT_WMO_Instance> wmoInstance = std::make_shared<ADT_WMO_Instance>(m_LowResolutionWMOsNames[it.nameIndex], it);
-		wmoInstance->SetParent(_parent);
+		std::shared_ptr<CMapWMOInstance> wmoInstance = _parent.lock()->CreateSceneNode<CMapWMOInstance>(m_LowResolutionWMOsNames[it.nameIndex]);
+		wmoInstance->Initialize(it);
 		Application::Get().GetLoader()->AddToLoadQueue(wmoInstance);
 		m_LowResolutionWMOs.push_back(wmoInstance);
 	}
@@ -125,10 +125,10 @@ void CMapWDL::UpdateCamera(const Camera * camera)
 
 void CMapWDL::Load()
 {
-	std::shared_ptr<const CMapController> mapController = m_MapController.lock();
+	std::shared_ptr<const CMap> mapController = m_MapController.lock();
 	assert1(mapController != NULL);
 
-	std::string fileName = mapController->getFilenameT() + ".wdl";
+	std::string fileName = mapController->GetMapFolder() + ".wdl";
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(fileName);
 	if (f == nullptr)

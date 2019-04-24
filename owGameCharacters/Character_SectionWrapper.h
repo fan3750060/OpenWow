@@ -21,6 +21,8 @@ public:
 	static uint32 getFacial1Geoset(const Character* _character);
 	static uint32 getFacial2Geoset(const Character* _character);
 	static uint32 getFacial3Geoset(const Character* _character);
+    static uint32 getFacial16Geoset(const Character* _character);
+    static uint32 getFacial17Geoset(const Character* _character);
 
 	// Hair
 	static uint32     getHairGeoset(const Character* _character);

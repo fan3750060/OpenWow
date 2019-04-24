@@ -1,54 +1,62 @@
 #include "stdafx.h"
 
 // Include
-#include "MapController.h"
+#include "Map.h"
 
 // General
-#include "ADT.h"
+#include "MapTile.h"
 
-// Additional
-#include "ADT_Liquid.h"
-
-ADT::ADT(std::weak_ptr<SceneNode3D> _mapController, uint32 _intexX, uint32 _intexZ) :
-	m_MapController(std::dynamic_pointer_cast<CMapController>(_mapController.lock())),
-	m_IndexX(_intexX), 
-	m_IndexZ(_intexZ),
-	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
+CMapTile::CMapTile() 
+    : m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {
-	// Scene node params
-	{
-		SetTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
-
-		BoundingBox bbox
-		(
-			vec3(GetTranslation().x,              Math::MaxFloat, GetTranslation().z),
-			vec3(GetTranslation().x + C_TileSize, Math::MinFloat, GetTranslation().z + C_TileSize)
-		);
-		SetBounds(bbox);
-	}
 }
 
-ADT::~ADT()
+CMapTile::~CMapTile()
+{}
+
+void CMapTile::Initialize(uint32 _intexX, uint32 _intexZ)
 {
-	//Log::Info("ADT Deleted");
+    m_IndexX = _intexX;
+    m_IndexZ = _intexZ;
+
+    // CTransformComponent
+    std::shared_ptr<CTransformComponent> transformComponent = GetComponent<CTransformComponent>();
+    {
+        //transformComponent->SetTranslate(vec3(_intexX * C_TileSize, 0.0f, _intexZ * C_TileSize));
+    }
+
+    // CColliderComponent
+    {
+        std::shared_ptr<CColliderComponent> colliderComponent = GetComponent<CColliderComponent>();
+        vec3 translate = transformComponent->GetTranslation();
+
+        BoundingBox bbox
+        (
+            vec3(translate.x, Math::MaxFloat, translate.z),
+            vec3(translate.x + C_TileSize, Math::MinFloat, translate.z + C_TileSize)
+        );
+        colliderComponent->SetBounds(bbox);
+    }
+}
+
+std::shared_ptr<CMapChunk> CMapTile::getChunk(int32 x, int32 z)
+{
+    if (x < 0 || x >= C_ChunksInTile || z < 0 || z >= C_ChunksInTile)
+        return nullptr;
+
+    return m_Chunks[x * C_ChunksInTile + z];
 }
 
 //
 // SceneNode3D
 //
-void ADT::UpdateLocalTransform()
-{
-	// do nothing
-}
 
-bool ADT::Accept(IVisitor& visitor)
+bool CMapTile::Accept(IVisitor& visitor)
 {
 	const AbstractPass& visitorAsBasePass = reinterpret_cast<AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	std::shared_ptr<CMapController> mapController = m_MapController.lock();
-	assert1(mapController != NULL);
-	//if (!mapController->getTileIsCurrent(m_IndexX, m_IndexZ))
+	//if (!GetMapController()->getTileIsCurrent(m_IndexX, m_IndexZ))
 	//{
 	//	return false;
 	//}
@@ -62,13 +70,10 @@ bool ADT::Accept(IVisitor& visitor)
 	return SceneNode3D::Accept(visitor);
 }
 
-bool ADT::Load()
+bool CMapTile::Load()
 {
-	std::shared_ptr<CMapController> mapController = m_MapController.lock();
-	assert1(mapController != NULL);
-
 	char filename[256];
-	sprintf_s(filename, "%s_%d_%d.adt", mapController->getFilenameT().c_str(), m_IndexX, m_IndexZ);
+	sprintf_s(filename, "%s_%d_%d.adt", GetMapController()->GetMapFolder().c_str(), m_IndexX, m_IndexZ);
 
 	std::shared_ptr<IFile> f = GetManager<IFilesManager>()->Open(filename);
 	uint32_t startPos = f->getPos() + 20;
@@ -229,8 +234,8 @@ bool ADT::Load()
 
 	for (uint32_t i = 0; i < C_ChunksInTileGlobal; i++)
 	{
-		std::shared_ptr<ADT_MCNK> chunk = std::make_shared<ADT_MCNK>(m_MapController, std::static_pointer_cast<ADT, SceneNode3D>(shared_from_this()), f->Path_Name(), chunks[i]);
-		chunk->SetParent(m_MapController);
+		std::shared_ptr<CMapChunk> chunk = GetMapController()->CreateSceneNode<CMapChunk>(GetMapController(), std::static_pointer_cast<CMapTile, SceneNode3D>(shared_from_this()));
+        chunk->Initialize(f->Path_Name(), chunks[i]);
 		Application::Get().GetLoader()->AddToLoadQueue(chunk);
 		m_Chunks.push_back(chunk);
 
@@ -244,10 +249,10 @@ bool ADT::Load()
 
 	for (auto& it : m_WMOsPlacementInfo)
 	{
-		std::shared_ptr<ADT_WMO_Instance> inst = std::make_shared<ADT_WMO_Instance>(m_WMOsNames[it.nameIndex], it);
-		inst->SetParent(shared_from_this());
-		Application::Get().GetLoader()->AddToLoadQueue(inst);
-		m_WMOsInstances.push_back(inst);
+		//std::shared_ptr<CMapWMOInstance> inst = CreateSceneNode<CMapWMOInstance>(m_WMOsNames[it.nameIndex]);
+        //inst->Initialize(it);
+		//Application::Get().GetLoader()->AddToLoadQueue(inst);
+		//m_WMOsInstances.push_back(inst);
 
 		// Update THIS bounds
 		//BoundingBox bbox = GetBounds();
@@ -258,10 +263,10 @@ bool ADT::Load()
 	//-- MDXs -------------------------------------------------------------------------
 	for (auto& it : m_MDXsPlacementInfo)
 	{
-		std::shared_ptr<ADT_MDX_Instance> inst = std::make_shared<ADT_MDX_Instance>(m_MDXsNames[it.nameIndex], it);
-		inst->SetParent(shared_from_this());
-		Application::Get().GetLoader()->AddToLoadQueue(inst);
-		m_MDXsInstances.push_back(inst);
+		//std::shared_ptr<CMapM2Instance> inst = CreateSceneNode<CMapM2Instance>(m_MDXsNames[it.nameIndex]);
+        //inst->Initialize(it);
+		//Application::Get().GetLoader()->AddToLoadQueue(inst);
+		//m_MDXsInstances.push_back(inst);
 
 		// Update THIS bounds
 		//BoundingBox bbox = GetBounds();
@@ -270,12 +275,22 @@ bool ADT::Load()
 	}
 	//---------------------------------------------------------------------------------
 
-	Log::Green("ADT[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
+	Log::Green("CMapTile[%d, %d, %s]: Loaded!", m_IndexX, m_IndexZ, filename);
 
 	return true;
 }
 
-bool ADT::Delete()
+bool CMapTile::Delete()
 {
 	return true;
+}
+
+
+
+//
+// Protected
+//
+std::shared_ptr<CMap> CMapTile::GetMapController() const
+{
+    return std::dynamic_pointer_cast<CMap, SceneNode3D>(GetParent());
 }

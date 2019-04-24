@@ -35,7 +35,7 @@ private:
 	double                               m_FrameTime;
 
 	std::shared_ptr<CLight3D>            m_DirLight;
-	std::shared_ptr<CMapController>       m_MapController;
+	std::shared_ptr<CMap>       m_MapController;
 
 	std::shared_ptr<CUITextNode>              m_CameraPosText;
 	std::shared_ptr<CUITextNode>              m_CameraRotText;

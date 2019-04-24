@@ -3,7 +3,7 @@
 // General
 #include "LiquidLayer.h"
 
-Liquid_Layer::Liquid_Layer(std::shared_ptr<IMesh> _mesh)
+CLiquidLayer::CLiquidLayer(std::shared_ptr<IMesh> _mesh)
 	: MeshWrapper(_mesh)
 	, m_SkyManager(GetManager<ISkyManager>())
 	, m_QualitySettings(GetSettingsGroup<CGroupQuality>())
@@ -13,11 +13,11 @@ Liquid_Layer::Liquid_Layer(std::shared_ptr<IMesh> _mesh)
 	SetMaterial(m_Material);
 }
 
-Liquid_Layer::~Liquid_Layer()
+CLiquidLayer::~CLiquidLayer()
 {
 }
 
-bool Liquid_Layer::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
+bool CLiquidLayer::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<ConstantBuffer> perObject, UINT indexStartLocation, UINT indexCnt, UINT vertexStartLocation, UINT vertexCnt)
 {
 	uint32_t texidx = (uint32_t)(EngineTime::GetTotalTime() * 1000.0f / 60.0f) % m_Textures.size();
 	m_Material->SetTexture(0, m_Textures[texidx]);
@@ -42,7 +42,7 @@ bool Liquid_Layer::Render(RenderEventArgs & renderEventArgs, std::shared_ptr<Con
 	return MeshWrapper::Render(renderEventArgs, perObject, indexStartLocation, indexCnt, vertexStartLocation, vertexCnt);
 }
 
-void Liquid_Layer::InitTextures(DBC_LIQUIDTYPE_Type::List _liquidType)
+void CLiquidLayer::InitTextures(DBC_LIQUIDTYPE_Type::List _liquidType)
 {
     std::string baseName;
 

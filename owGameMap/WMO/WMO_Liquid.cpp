@@ -4,7 +4,7 @@
 #include "WMO_Liquid.h"
 
 CWMO_Liquid::CWMO_Liquid(uint32 _x, uint32 _y) :
-	Liquid(_x, _y)
+	CLiquid(_x, _y)
 {}
 
 void CWMO_Liquid::CreateFromWMO(std::shared_ptr<IFile> f, std::shared_ptr<const WMO_Part_Material> _material, std::shared_ptr<const DBC_LiquidTypeRecord> _liquidType, bool _indoor)

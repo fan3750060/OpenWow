@@ -129,7 +129,7 @@ void CItem_VisualData::InitObjectComponents()
 		if (InventoryType == InventoryType::HEAD)
 		{
 			char modelPostfix[64];
-			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_ParentCharacter.lock()->Race]->Get_ClientPrefix(), getGenderLetter(m_ParentCharacter.lock()->Gender));
+			sprintf_s(modelPostfix, "_%s%c", DBC_ChrRaces[m_ParentCharacter.lock()->GetTemplate().Race]->Get_ClientPrefix(), getGenderLetter(m_ParentCharacter.lock()->GetTemplate().Gender));
 
 			int dotPosition = objectFileName.find_last_of('.');
 			assert1(dotPosition != -1);
@@ -145,11 +145,10 @@ void CItem_VisualData::InitObjectComponents()
 		// Fill data
 		std::string modelName = GetObjectModelName(InventoryType, objectFileName);
 		std::shared_ptr<Texture> itemObjectTexture = LoadObjectTexture(InventoryType, objectTextureName);
-		std::shared_ptr<const CM2_Part_Attachment> itemObjectAttach = m_ParentCharacter.lock()->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
+		std::shared_ptr<CM2_Part_Attachment> itemObjectAttach = m_ParentCharacter.lock()->getM2()->getMiscellaneous()->getAttachment(ItemObjectComponents[InventoryType].attach[i]);
 
 		// Create instance
-		std::shared_ptr<CItem_M2Instance> itemObjectInstance = std::make_shared<CItem_M2Instance>(modelName);
-		itemObjectInstance->SetParent(m_ParentCharacter);
+		std::shared_ptr<CItem_M2Instance> itemObjectInstance = m_ParentCharacter.lock()->CreateSceneNode<CItem_M2Instance>(modelName);
 		Application::Get().GetLoader()->AddToLoadQueue(itemObjectInstance);
 		itemObjectInstance->Attach(itemObjectAttach);
 		itemObjectInstance->setSpecialTexture(SM2_Texture::Type::OBJECT_SKIN, itemObjectTexture);
@@ -173,11 +172,10 @@ void CItem_VisualData::InitObjectComponents()
 					continue;
 				}
 
-				std::shared_ptr<CM2_Base_Instance> visInstance = std::make_shared<CM2_Base_Instance>(visEffectModelName);
-				visInstance->SetParent(itemObjectInstance);
+				std::shared_ptr<CM2_Base_Instance> visInstance = itemObjectInstance->CreateSceneNode<CM2_Base_Instance>(visEffectModelName);
 				Application::Get().GetLoader()->AddToLoadQueue(visInstance);
 
-				std::shared_ptr<const CM2_Part_Attachment> visAttach = nullptr;
+				std::shared_ptr<CM2_Part_Attachment> visAttach = nullptr;
 
 				if (itemObjectInstance->getM2()->getMiscellaneous()->isAttachmentExists((M2_AttachmentType::List)j))
 				{

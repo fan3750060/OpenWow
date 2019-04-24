@@ -2,13 +2,15 @@
 
 #include "Liquid.h"
 
-class Liquid_Instance : public SceneNodeModel3D
+class Liquid_Instance : public SceneNode3D
 {
 public:
-	Liquid_Instance(std::shared_ptr<Liquid> _liquidObject, vec3 _position);
-	virtual ~Liquid_Instance() {};
+	Liquid_Instance();
+	virtual ~Liquid_Instance();
 
-	// SceneNodeModel3D
+    void Initialize(std::shared_ptr<CLiquid> _liquidObject, vec3 _position);
+
+	// SceneNode3D
 	bool Accept(IVisitor& visitor) override;
 
 private:

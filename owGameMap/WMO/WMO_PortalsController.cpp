@@ -34,6 +34,10 @@ CWMO_PortalsController::CWMO_PortalsController(const std::weak_ptr<const CWMO> _
 	}
 }
 
+CWMO_PortalsController::~CWMO_PortalsController()
+{
+}
+
 void CWMO_PortalsController::GetPolyFrustum(const vec3* poly, uint32 num_verts, Frustum* _frustum, vec3 eye, bool _isPositive)
 {
 	assert1(_frustum != nullptr);
@@ -64,8 +68,8 @@ void CWMO_PortalsController::Update(std::shared_ptr<CWMO_Base_Instance> _localCo
 	// Reset all flags
 	for (auto& group : _localContr->getGroupInstances())
 	{
-		group->m_PortalsVis = false;
-		group->m_Calculated = false;
+		group->SetPortalVisible(false);
+		group->SetPortalCalculated(false);
 
 		for (auto& doodad : group->getDoodadsInstances())
 		{
@@ -76,7 +80,7 @@ void CWMO_PortalsController::Update(std::shared_ptr<CWMO_Base_Instance> _localCo
 		}
 	}
 
-	vec3 _InvWorldCamera = _localContr->GetInverseWorldTransform() * vec4(_camera.GetTranslation(), 1.0f);
+	vec3 _InvWorldCamera = _localContr->GetComponent<CTransformComponent>()-> GetInverseWorldTransform() * vec4(_camera.GetTranslation(), 1.0f);
 
 	bool insideIndoor = false;
 
@@ -84,7 +88,7 @@ void CWMO_PortalsController::Update(std::shared_ptr<CWMO_Base_Instance> _localCo
 	{
 		for (auto& group : _localContr->getGroupInstances())
 		{
-			if (!(group->GetBounds().isPointInside(_camera.GetTranslation())))
+			if (!(group->GetComponent<CColliderComponent>()->GetBounds().isPointInside(_camera.GetTranslation())))
 			{
 				continue;
 			}
@@ -126,22 +130,22 @@ void CWMO_PortalsController::Update(std::shared_ptr<CWMO_Base_Instance> _localCo
 
 bool CWMO_PortalsController::Recur(std::shared_ptr<CWMO_Base_Instance> _localContr, std::shared_ptr<CWMO_Group_Instance> _group, const Camera& _camera, cvec3 _InvWorldCamera, const Frustum& _frustum, bool _isFirstIteration)
 {
-	if (_group == nullptr || _group->m_Calculated)
+	if (_group == nullptr || _group->GetPortalCalculated())
 	{
 		return false;
 	}
 
-	if (_camera.GetFrustum().cullBox(_group->GetBounds()))
+	if (_camera.GetFrustum().cullBox(_group->GetComponent<CColliderComponent>()->GetBounds()))
 	{
 		return false;
 	}
 
 	// Set visible for current
-	_group->m_PortalsVis = true;
-	_group->m_Calculated = true;
+	_group->SetPortalVisible(true);
+	_group->SetPortalCalculated(true);
 	for (auto& doodad : _group->getDoodadsInstances())
 	{
-		if (doodad && (_isFirstIteration || !_frustum.cullBox(doodad->GetBounds())))
+		if (doodad && (_isFirstIteration || !_frustum.cullBox(doodad->GetComponent<CColliderComponent>()->GetBounds())))
 		{
 			doodad->setPortalVisibility(true);
 		}

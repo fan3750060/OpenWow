@@ -27,7 +27,7 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 {
 	for (const auto& batch : m_WMOBatchIndexes)
 	{
-		_parent.lock()->AddMesh(batch);
+		_parent.lock()->GetComponent<CMeshComponent>()->AddMesh(batch);
 	}
 
 	if (m_WMOLiqiud != nullptr)
@@ -35,8 +35,8 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 		vec3 realPos = Fix_XZmY(m_LiquidHeader.pos);
 		realPos.y = 0.0f; // why they do this???
 
-		std::shared_ptr<CWMO_Liquid_Instance> liquid = std::make_shared<CWMO_Liquid_Instance>(m_WMOLiqiud, realPos, weak_from_this());
-		liquid->SetParent(_parent);
+		std::shared_ptr<CWMO_Liquid_Instance> liquid = _parent.lock()->CreateSceneNode<CWMO_Liquid_Instance>(weak_from_this());
+        liquid->Initialize(m_WMOLiqiud, realPos);
 		_parent.lock()->addLiquidInstance(liquid);
 	}
 
@@ -44,8 +44,8 @@ void WMO_Group::CreateInsances(std::weak_ptr<CWMO_Group_Instance> _parent) const
 	{
 		const SWMO_Doodad_PlacementInfo& placement = m_ParentWMO.lock()->m_DoodadsPlacementInfos[index];
 
-		std::shared_ptr<CWMO_Doodad_Instance> inst = std::make_shared<CWMO_Doodad_Instance>(m_ParentWMO.lock()->m_DoodadsFilenames + placement.flags.nameIndex, weak_from_this(), index, placement);
-		inst->SetParent(_parent);
+		std::shared_ptr<CWMO_Doodad_Instance> inst = _parent.lock()->CreateSceneNode<CWMO_Doodad_Instance>(m_ParentWMO.lock()->m_DoodadsFilenames + placement.flags.nameIndex, weak_from_this(), index);
+        inst->Initialize(placement);
 		Application::Get().GetLoader()->AddToLoadQueue(inst);
 		_parent.lock()->addDoodadInstance(inst);
 	}

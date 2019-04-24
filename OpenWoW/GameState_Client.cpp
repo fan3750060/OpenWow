@@ -48,9 +48,9 @@ void CGameState_Client::S_CharEnum(CByteBuffer& _buff)
 	character->InitFromTemplate(charTemplate);
 	character->CreateInstances();
 	character->SetParent(m_3DScene->GetRootNode());
-	character->SetTranslate(charPosition);
+	character->GetComponent<CTransformComponent>()->SetTranslate(charPosition);
 
-	m_MapController->MapPreLoad(*DBC_Map[charTemplate.MapId]);
+	m_MapController->MapPreLoad(DBC_Map[charTemplate.MapId]);
 	m_MapController->MapLoad();
 	m_MapController->MapPostLoad();
 	m_MapController->EnterMap(charPosition);
@@ -140,8 +140,8 @@ void CGameState_Client::OnPreRender(Render3DEventArgs& e)
 {
 	m_FrameQuery->Begin(e.FrameCounter);
 
-	ADT_WMO_Instance::reset();
-	ADT_MDX_Instance::reset();
+	CMapWMOInstance::reset();
+	CMapM2Instance::reset();
 }
 
 void CGameState_Client::OnRender(Render3DEventArgs& e)
@@ -210,7 +210,7 @@ void CGameState_Client::Load3D()
 	inst->GetLocalTransform();*/
 
 	// Map
-	m_MapController = std::make_shared<CMapController>();
+	m_MapController = std::make_shared<CMap>();
 	m_MapController->SetParent(m_3DScene->GetRootNode());
 	//m_MapController->MapPreLoad(*DBC_Map[1]);
 	//m_MapController->MapLoad();

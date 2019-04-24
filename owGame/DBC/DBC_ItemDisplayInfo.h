@@ -8,12 +8,10 @@ __DBC_STRARR(ObjectModelName, 2, 2);
 __DBC_STRARR(ObjectTextureName, 4, 2);
 
 __DBC_STRING(Icon, 6);				
-__DBC_STRING(IconUnused, 7);
 
 __DBC_TARRAY(uint32, GeosetGroups, 8, 3);
 
-__DBC_TVALUE(uint32, Flags, 11);
-__DBC_TVALUE(uint32, SpellVisualID, 12);
+__DBC_TVALUE(uint32, SpellVisualID, 11);
 __DBC_TVALUE(uint32, GroupSoundID, 13);
 
 __DBC_TVALUE(uint32, HelmetGeosetMale, 14);
@@ -30,6 +28,5 @@ __DBC_STRING(LowerLegTexture, 22);
 __DBC_STRING(FootTexture, 23);
 
 __DBC_REF_ID(DBC_ItemVisuals, ItemVisualID, 24);
-__DBC_TVALUE(uint32, ParticleColorID, 25);
 
 DBC_DEF_END

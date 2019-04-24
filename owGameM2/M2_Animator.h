@@ -20,7 +20,7 @@ public:
 	uint32 getStart() const { return m_CurrentAnimation->getStart(); }
 	uint32 getEnd() const { return m_CurrentAnimation->getEnd(); }
 
-	void setOnEndFunction(Function* _onEnd);
+	//void setOnEndFunction(Function* _onEnd);
 
 private:
 	const std::weak_ptr<const M2>					m_M2;
@@ -29,7 +29,7 @@ private:
 	bool						m_IsLoop;
 	bool						m_IsPlayed;
 
-	Function*					m_OnAnimationEnded;
+	//Function*					m_OnAnimationEnded;
 
 	double						animtime;
 	uint32						m_CurrentTime;

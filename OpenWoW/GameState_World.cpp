@@ -110,8 +110,8 @@ void CGameState_World::OnPreRender(Render3DEventArgs& e)
 		skyManager->GetFog(LightFogs::LIGHT_FOG_DISTANCE)
 	);*/
 
-	ADT_WMO_Instance::reset();
-	ADT_MDX_Instance::reset();
+	CMapWMOInstance::reset();
+	CMapM2Instance::reset();
 }
 
 void CGameState_World::OnRender(Render3DEventArgs& e)
@@ -175,10 +175,10 @@ void CGameState_World::Load3D()
 	const float x = 40;
 	const float y = 29;
 
-	// Map
-	m_MapController = std::make_shared<CMapController>();
-	m_MapController->SetParent(m_3DScene->GetRootNode());
-	m_MapController->MapPreLoad(*DBC_Map[1]);
+	// Mapý
+    
+	m_MapController = m_3DScene->GetRootNode()->CreateSceneNode<CMap>();
+	m_MapController->MapPreLoad(DBC_Map[1]);
 	m_MapController->MapLoad();
 	m_MapController->MapPostLoad();
 	m_MapController->EnterMap(x, y);
@@ -186,7 +186,7 @@ void CGameState_World::Load3D()
 	m_CameraController->GetCamera()->SetTranslate(vec3(x * C_TileSize, 200, y * C_TileSize));
     
 
-	const uint32 cnt = 5;
+	const uint32 cnt = 10;
 	/*std::shared_ptr<Character> m_CharExtra[cnt * cnt];
 
 	std::vector<uint32> exists;
@@ -195,7 +195,7 @@ void CGameState_World::Load3D()
 		for (int j = 0; j < cnt; j++)
 		{
 			int index = i + j * cnt;
-			m_CharExtra[index] = std::make_shared<Character>();
+			m_CharExtra[index] = m_3DScene->CreateSceneNode<Character>(m_3DScene->GetRootNode());
 
 			while (true)
 			{
@@ -207,22 +207,23 @@ void CGameState_World::Load3D()
                 std::shared_ptr<DBC_CreatureDisplayInfoExtraRecord> exRec = rec->Get_HumanoidData();
 				if (exRec == nullptr) continue;
 
-				if (exRec->Get_Race()->Get_ID() > 10) continue;
+                //if (exRec->Get_Race()->Get_ID() != 1) continue;
+
+				//if (exRec->Get_Race()->Get_ID() > 10) continue;
 
 
 				if (std::find(exists.begin(), exists.end(), random) != exists.end()) continue;
 
 
 				m_CharExtra[index]->InitFromDisplayInfo(random);
-				m_CharExtra[index]->SetParent(m_3DScene->GetRootNode());
 				m_CharExtra[index]->CreateInstances();
-				m_CharExtra[index]->SetScale(vec3(5.0f));
+				m_CharExtra[index]->GetComponent<CTransformComponent>()->SetScale(vec3(5.0f));
 
 				exists.push_back(random);
 				break;
 			}
 
-			m_CharExtra[index]->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
+			m_CharExtra[index]->GetComponent<CTransformComponent>()->SetTranslate(vec3(i * 10.0f, 0.0f, j * 10.0f));
 		}
 	}*/
 

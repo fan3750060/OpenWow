@@ -2,7 +2,7 @@
 
 #include "WMO_Part_Material.h"
 
-class CWMO_Liquid : public Liquid
+class CWMO_Liquid : public CLiquid
 {
 public:
 	CWMO_Liquid(uint32 _x, uint32 _y);

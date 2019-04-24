@@ -34,7 +34,7 @@ private:
 	std::shared_ptr<CUIScene>            m_UIScene;
 
 
-	std::shared_ptr<CMapController>       m_MapController;
+	std::shared_ptr<CMap>       m_MapController;
 	std::shared_ptr<CWoWClient>          m_WoWClient;
 
 	std::shared_ptr<CUITextNode>         m_CameraPosText;

@@ -3,7 +3,7 @@
 // General
 #include "WMO_Doodad_Instance.h"
 
-CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::string _m2Name, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index, const SWMO_Doodad_PlacementInfo& _placement) :
+CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::string _m2Name, const std::weak_ptr<const WMO_Group> _parentGroup, uint32 _index) :
 	CM2_Base_Instance(_m2Name),
 	m_ParentGroup(_parentGroup),
 	m_Index(_index),
@@ -24,17 +24,21 @@ CWMO_Doodad_Instance::CWMO_Doodad_Instance(std::string _m2Name, const std::weak_
 	}
 	//m_Object->setDoodadColor(_placement.getColor());
 
-	// Scene node params
-	{
-		SetTranslate(Fix_XZmY(_placement.position));
-		SetRotationQuaternion(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y));
-		SetScale(vec3(_placement.scale, -_placement.scale, -_placement.scale));
-	}
+
 }
 
 CWMO_Doodad_Instance::~CWMO_Doodad_Instance()
+{}
+
+void CWMO_Doodad_Instance::Initialize(const SWMO_Doodad_PlacementInfo & _placement)
 {
-	//Log::Info("ADT_MDX Deleted");
+    // CTransformComponent
+    std::shared_ptr<CTransformComponent> transformComponent = GetComponent<CTransformComponent>();
+    {
+        transformComponent->SetTranslate(Fix_XZmY(_placement.position));
+        transformComponent->SetRotationQuaternion(quat(_placement.orientation.w, -_placement.orientation.z, _placement.orientation.x, _placement.orientation.y));
+        transformComponent->SetScale(vec3(_placement.scale, -_placement.scale, -_placement.scale));
+    }
 }
 
 bool CWMO_Doodad_Instance::Accept(IVisitor& visitor)
@@ -45,37 +49,4 @@ bool CWMO_Doodad_Instance::Accept(IVisitor& visitor)
 	}
 
 	return CM2_Base_Instance::Accept(visitor);
-}
-
-bool CWMO_Doodad_Instance::PreRender3D()
-{
-	if (!m_PortalVis)
-	{
-		return false;
-	}
-
-	// Check distance to camera
-	//float distToCamera = glm::length(_Render->getCamera()->Position - GetBounds().getCenter()) - GetBounds().getRadius();
-	//if (distToCamera > m_QualitySettings.WMO_MODD_Distance)
-	//{
-	//	return false;
-	//}
-
-	// Frustrum culling
-	//if (!CM2_Base_Instance::PreRender3D())
-	//{
-	//	return false;
-	//}
-
-	return true;
-}
-
-void CWMO_Doodad_Instance::Render3D()
-{
-	//if (!m_QualitySettings.draw_wmo_doodads)
-	//{
-	//	return;
-	//}
-
-	//CM2_Base_Instance::Render3D();
 }

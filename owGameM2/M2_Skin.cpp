@@ -16,10 +16,10 @@ CM2_Skin::CM2_Skin(const std::weak_ptr<const M2> _model) :
 	m_QualitySettings(GetSettingsGroup<CGroupQuality>())
 {}
 
-void CM2_Skin::CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent)
+void CM2_Skin::CreateInsances(std::weak_ptr<SceneNode3D> _parent)
 {
 	for (const auto& batch : m_Batches)
 	{
-		_parent.lock()->AddMesh(batch);
+		_parent.lock()->GetComponent<CMeshComponent>()->AddMesh(batch);
 	}
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // Include
-#include "MapController.h"
+#include "Map.h"
 
 // General
 #include "SkyManager.h"
@@ -17,54 +17,57 @@ const float  C_SkyAngles[] = { 90.0f,                          30.0f,           
 const uint32 C_Skycolors[] = { LightColors::LIGHT_COLOR_SKY_0, LightColors::LIGHT_COLOR_SKY_1, LightColors::LIGHT_COLOR_SKY_2, LightColors::LIGHT_COLOR_SKY_3, LightColors::LIGHT_COLOR_SKY_4, LightColors::LIGHT_COLOR_FOG, LightColors::LIGHT_COLOR_FOG };
 const uint32 C_SkycolorsCount = 7;
 
-SkyManager::SkyManager(std::weak_ptr<CMapController> _mapController, DBC_MapRecord _mapRecord) :
-	m_MapController(_mapController)
-{
-	for (auto& it : DBC_Light)
-	{
-		if (_mapRecord.Get_ID() == it.Get_MapID()->Get_ID())
-		{
-			std::shared_ptr<Sky> sky = std::make_shared<Sky>(it);
-			skies.push_back(sky);
-		}
-	}
-
-	std::sort(skies.begin(), skies.end(), [](const std::shared_ptr<Sky>& lhs, const std::shared_ptr<Sky>& rhs)
-	{
-		if (lhs->m_IsGlobalSky)
-			return false;
-		else if (rhs->m_IsGlobalSky)
-			return true;
-		else
-			return lhs->m_Range.max < rhs->m_Range.max;
-	});
-
-	if (skies.size() > 0 && !skies.back()->m_IsGlobalSky)
-	{
-		Log::Error("Sky for maps [%d] size [%d] don't have global sky!!!", _mapRecord.Get_ID(), skies.size());
-		skies.back()->m_IsGlobalSky = true;
-	}
-
-	InitBuffer();
-
-	setLoaded();
-}
+SkyManager::SkyManager()
+{}
 
 SkyManager::~SkyManager()
-{
-}
+{}
 
 //
-// SceneNodeModel3D
+// SceneNode3D
 //
 void SkyManager::UpdateCamera(const Camera* camera)
 {
 	if (skies.empty())
 		return;
 
-	Calculate(camera, m_MapController.lock()->getTime()->GetTime());
+	Calculate(camera, GetMapController()->getTime()->GetTime());
 
-	SetTranslate(camera->GetTranslation());
+	GetComponent<CTransformComponent>()->SetTranslate(camera->GetTranslation());
+}
+
+bool SkyManager::Load()
+{
+    for (auto& it : DBC_Light)
+    {
+        if (GetMapController()->GetMapDBCRecord()->Get_ID() == it.Get_MapID()->Get_ID())
+        {
+            std::shared_ptr<Sky> sky = std::make_shared<Sky>(it);
+            skies.push_back(sky);
+        }
+    }
+
+    std::sort(skies.begin(), skies.end(), [](const std::shared_ptr<Sky>& lhs, const std::shared_ptr<Sky>& rhs)
+    {
+        if (lhs->m_IsGlobalSky)
+            return false;
+        else if (rhs->m_IsGlobalSky)
+            return true;
+        else
+            return lhs->m_Range.max < rhs->m_Range.max;
+    });
+
+    if (skies.size() > 0 && !skies.back()->m_IsGlobalSky)
+    {
+        Log::Error("Sky for maps [%d] size [%d] don't have global sky!!!", GetMapController()->GetMapDBCRecord()->Get_ID(), skies.size());
+        skies.back()->m_IsGlobalSky = true;
+    }
+
+    InitBuffer();
+
+    setLoaded();
+
+    return true;
 }
 
 
@@ -143,6 +146,11 @@ void SkyManager::Calculate(const Camera* camera, uint32 _time)
 }*/
 
 
+std::shared_ptr<CMap> SkyManager::GetMapController() const
+{
+    return std::dynamic_pointer_cast<CMap, SceneNode3D>(GetParent());
+}
+
 void SkyManager::InitBuffer()
 {
 	vec3 basepos1[C_SkycolorsCount];
@@ -187,7 +195,7 @@ void SkyManager::InitBuffer()
 	material->SetWrapper(material);
 	__geom->SetMaterial(material);
 
-	AddMesh(__geom);
+	GetComponent<CMeshComponent>()->AddMesh(__geom);
 }
 
 void SkyManager::CalculateSkiesWeights(cvec3 pos)

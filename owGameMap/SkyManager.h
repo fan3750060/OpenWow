@@ -3,18 +3,20 @@
 #include "Sky.h"
 
 // FORWARD BEGIN
-class CMapController;
+class CMap;
 // FORWARD END
 
-class SkyManager : public SceneNodeModel3D, public ISkyManager
+class SkyManager : public SceneNode3D, public ISkyManager
 {
 public:
-	SkyManager(std::weak_ptr<CMapController> _mapController, DBC_MapRecord _mapRecord);
+	SkyManager();
 	virtual ~SkyManager();
 
-public:
-	// SceneNodeModel3D
+	// SceneNode3D
 	void UpdateCamera(const Camera* camera) override;
+
+    // ILoadableObject
+    bool Load() override;
 
 	// ISkyManager
 	void Calculate(const Camera* camera, uint32 _time) override;
@@ -27,6 +29,9 @@ public:
 	float GetOceanShallowAlpha() const override { return m_Interpolated.m_oceanShallowAlpha; }
 	float GetOceanDarkAlpha() const override { return m_Interpolated.m_oceanDeepAlpha; }
 
+protected:
+    std::shared_ptr<CMap>                 GetMapController() const;
+
 private:
 	void InitBuffer();
 	void CalculateSkiesWeights(cvec3 pos);
@@ -37,8 +42,5 @@ private:
 	std::shared_ptr<IBuffer> colorsBuffer;
 
 	std::vector<std::shared_ptr<Sky>> skies;
-
-private: // PARENT
-	std::weak_ptr<CMapController> m_MapController;
 };
 

@@ -19,18 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ADT_MCNK_Material.cpp" />
+    <ClCompile Include="MapChunkMaterial.cpp" />
     <ClCompile Include="RenderPass_ADT_MCNK.cpp" />
-    <ClCompile Include="ADT_Liquid.cpp" />
+    <ClCompile Include="MapLiquid.cpp" />
     <ClCompile Include="CreatePasses.cpp" />
     <ClCompile Include="DayNightCycle.cpp" />
     <ClCompile Include="DayNightPhase.cpp" />
     <ClCompile Include="EnvironmentManager.cpp" />
-    <ClCompile Include="MapController.cpp" />
-    <ClCompile Include="ADT_MCNK.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapChunk.cpp" />
     <ClCompile Include="Map_Shared.cpp" />
-    <ClCompile Include="ADT.cpp" />
-    <ClCompile Include="ADT_MDX_Instance.cpp" />
+    <ClCompile Include="MapTile.cpp" />
+    <ClCompile Include="MapM2Instance.cpp" />
     <ClCompile Include="MinimapProvider.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SkyManager.cpp" />
@@ -48,7 +48,7 @@
     <ClCompile Include="WDL_Node_Material.cpp" />
     <ClCompile Include="RenderPass_WDL.cpp" />
     <ClCompile Include="MapWDT.cpp" />
-    <ClCompile Include="ADT_WMO_Instance.cpp" />
+    <ClCompile Include="MapWMOInstance.cpp" />
     <ClCompile Include="WMO\WMO.cpp" />
     <ClCompile Include="WMO\WMOsManager.cpp" />
     <ClCompile Include="WMO\WMO_Base_Instance.cpp" />
@@ -68,20 +68,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shared\owGameMap.h" />
-    <ClInclude Include="ADT_MCNK_Material.h" />
+    <ClInclude Include="MapChunkMaterial.h" />
     <ClInclude Include="RenderPass_ADT_MCNK.h" />
-    <ClInclude Include="ADT_Liquid.h" />
+    <ClInclude Include="MapLiquid.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="CreatePasses.h" />
     <ClInclude Include="DayNightCycle.h" />
     <ClInclude Include="DayNightPhase.h" />
     <ClInclude Include="EnvironmentManager.h" />
-    <ClInclude Include="MapController.h" />
-    <ClInclude Include="ADT_MCNK.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="MapChunk.h" />
     <ClInclude Include="Map_Headers.h" />
     <ClInclude Include="Map_Shared.h" />
-    <ClInclude Include="ADT.h" />
-    <ClInclude Include="ADT_MDX_Instance.h" />
+    <ClInclude Include="MapTile.h" />
+    <ClInclude Include="MapM2Instance.h" />
     <ClInclude Include="MinimapProvider.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SkyManager.h" />
@@ -94,7 +94,7 @@
     <ClInclude Include="WDL_Node_Material.h" />
     <ClInclude Include="RenderPass_WDL.h" />
     <ClInclude Include="MapWDT.h" />
-    <ClInclude Include="ADT_WMO_Instance.h" />
+    <ClInclude Include="MapWMOInstance.h" />
     <ClInclude Include="WMO\WMO.h" />
     <ClInclude Include="WMO\WMOsManager.h" />
     <ClInclude Include="WMO\WMO_Base_Instance.h" />

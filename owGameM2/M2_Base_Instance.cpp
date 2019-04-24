@@ -3,6 +3,10 @@
 // General
 #include "M2_Base_Instance.h"
 
+// Additional
+#include "M2_TransformComponent.h"
+#include "M2_ColliderComponent.h"
+
 CM2_Base_Instance::CM2_Base_Instance(std::string _m2Name) :
 	m_M2(nullptr),
 	m_M2Name(_m2Name),
@@ -31,10 +35,10 @@ CM2_Base_Instance::~CM2_Base_Instance()
 
 void CM2_Base_Instance::CreateInstances()
 {
-	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNodeModel3D>(shared_from_this()));
+	m_M2->CreateInsances(std::static_pointer_cast<CM2_Base_Instance, SceneNode3D>(shared_from_this()));
 }
 
-void CM2_Base_Instance::Attach(std::shared_ptr<const CM2_Part_Attachment> _attachment)
+void CM2_Base_Instance::Attach(std::shared_ptr<CM2_Part_Attachment> _attachment)
 {
 	assert1(_attachment != nullptr);
 	m_Attached = _attachment;
@@ -42,6 +46,11 @@ void CM2_Base_Instance::Attach(std::shared_ptr<const CM2_Part_Attachment> _attac
 void CM2_Base_Instance::Detach()
 {
 	m_Attached = nullptr;
+}
+
+std::shared_ptr<CM2_Part_Attachment> CM2_Base_Instance::GetAttachPoint() const
+{
+    return m_Attached;
 }
 
 void CM2_Base_Instance::setM2(std::shared_ptr<M2> _model)
@@ -83,7 +92,9 @@ bool CM2_Base_Instance::Load()
 	if (m2)
 	{
 		setM2(m2);
-		UpdateBounds();
+
+
+
 		CreateInstances();
 		return true;
 	}
@@ -106,21 +117,21 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 	const AbstractPass& visitorAsBasePass = reinterpret_cast<AbstractPass&>(visitor);
 	const Camera* camera = visitorAsBasePass.GetRenderEventArgs().Camera;
 
-	float distToCamera2D = (camera->GetTranslation() - GetBounds().getCenter()).length() - GetBounds().getRadius();
-	if (distToCamera2D > m_QualitySettings.ADT_MDX_Distance)
-	{
-		return false;
-	}
+	//float distToCamera2D = (camera->GetTranslation() - GetComponent<CColliderComponent>()->GetBounds().getCenter()).length() - GetComponent<CColliderComponent>()->GetBounds().getRadius();
+	//if (distToCamera2D > m_QualitySettings.ADT_MDX_Distance)
+	//{
+	//	return false;
+	//}
 
 	// Check frustrum
-	if (!checkFrustum(camera))
-	{
-		return false;
-	}
+	//if (!GetComponent<CColliderComponent>()->checkFrustum(camera))
+	//{
+	//	return false;
+	//}
 
 	if (m_Attached != nullptr)
 	{
-		UpdateLocalTransform();
+        GetComponent<CTransformComponent>()->ForceRecalculateLocalTransform();
 	}
 
 	if (m_M2->isAnimated())
@@ -135,14 +146,14 @@ bool CM2_Base_Instance::Accept(IVisitor& visitor)
 		//{
 		//if (!m_NeedRecalcAnimation)
 		//{
-		m_M2->calc(m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(visitorAsBasePass.GetRenderEventArgs().TotalTime), camera->GetViewMatrix(), GetWorldTransfom());
+		m_M2->calc(m_Animator->getSequenceIndex(), m_Animator->getCurrentTime(), static_cast<uint32>(visitorAsBasePass.GetRenderEventArgs().TotalTime), camera->GetViewMatrix(), GetComponent<CTransformComponent>()->GetWorldTransfom());
 		//	m_NeedRecalcAnimation = true;
 		//}
 		//}
 	}
 
-	// SceneNodeModel3D
-	return SceneNodeModel3D::Accept(visitor);
+	// SceneNode3D
+	return SceneNode3D::Accept(visitor);
 }
 
 void CM2_Base_Instance::InitAnimator()
@@ -154,38 +165,12 @@ void CM2_Base_Instance::InitAnimator()
 	}
 }
 
-void CM2_Base_Instance::UpdateLocalTransform()
+void CM2_Base_Instance::RegisterComponents()
 {
-	if (m_Attached)
-	{
-		std::shared_ptr<const CM2_Part_Bone> bone = m_Attached->getBone().lock();
-		assert1(bone != nullptr);
-
-		mat4 relMatrix;
-		relMatrix = glm::translate(relMatrix, bone->getPivot());
-
-		mat4 absMatrix;
-		absMatrix = GetParentWorldTransform() * bone->getTransformMatrix() * relMatrix;
-		SetWorldTransform(absMatrix);
-	}
-	else
-	{
-        SceneNodeModel3D::UpdateLocalTransform();
-	}
+    SetTransformComponent(AddComponent(std::make_shared<CM2_TransformComponent>(shared_from_this())));
+    AddComponent(std::make_shared<CMeshComponent>(shared_from_this()));
+    SetColliderComponent(AddComponent(std::make_shared<CM2_ColliderComponent>(shared_from_this())));
+    AddComponent(std::make_shared<CLightComponent>(shared_from_this()));
 }
 
-void CM2_Base_Instance::UpdateBounds()
-{
-	if (m_M2)
-	{
-		BoundingBox bbox = m_M2->GetBounds();
-		bbox.transform(GetWorldTransfom());
-		SetBounds(bbox);
-	}
-	else
-	{
-		BoundingBox bbox;
-		bbox.calculateCenter();
-		SetBounds(bbox);
-	}
-}
+

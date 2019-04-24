@@ -6,10 +6,13 @@
 
 #include "Item_VisualData.h"
 
-class Character : public Creature, public CharacterTemplate
+class Character : public Creature
 {
 public:
-	Character();
+    Character();
+    virtual ~Character();
+
+    const CharacterTemplate& GetTemplate() const { return m_Template; }
 
 	// Initialization
 	void InitFromTemplate(const CharacterTemplate& b);
@@ -37,6 +40,6 @@ private:
 	void RefreshMeshIDs();
 
 private:
-	CharacterTemplate			m_Template;
-	std::vector<std::shared_ptr<CItem_VisualData>>   m_VisualItems;
+	CharacterTemplate			                    m_Template;
+	std::vector<std::shared_ptr<CItem_VisualData>>  m_VisualItems;
 };

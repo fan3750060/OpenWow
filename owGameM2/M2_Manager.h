@@ -6,7 +6,7 @@ class CM2_Manager : public IM2Manager, public CRefManager1Dim<M2>
 {
 public:
 	CM2_Manager();
-	~CM2_Manager();
+	virtual ~CM2_Manager();
 
 	// IM2Manager
 	std::shared_ptr<M2> Add(const std::string& name) { return CRefManager1Dim::Add(name); }

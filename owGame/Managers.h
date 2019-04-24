@@ -2,6 +2,7 @@
 
 // FORWARD BEGIN
 class CWMO;
+class M2;
 // FORWARD END
 
 struct
@@ -10,11 +11,6 @@ struct
 {
 	virtual ~IWMOManager() {};
 };
-
-
-// FORWARD BEGIN
-class M2;
-// FORWARD END
 
 struct
 	__declspec(novtable, uuid("B14D922C-BE9E-44CA-9448-5400E3CB573A"))

@@ -10,7 +10,7 @@
 //---------------------------------------------------------//
 
 // Map
-#include "../owGameMap/MapController.h"
+#include "../owGameMap/Map.h"
 
 // Environment
 #include "../owGameMap/DayNightCycle.h"

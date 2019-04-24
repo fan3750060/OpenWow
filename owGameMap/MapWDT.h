@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ADT_WMO_Instance.h"
+#include "MapWMOInstance.h"
 
 // FORWARD BEGIN
-class CMapController;
+class CMap;
 // FORWARD END
 
 struct WDT_MPHD
@@ -36,11 +36,11 @@ struct WDT_MAIN
 class CMapWDT : public ISceneNodeProvider
 {
 public:
-	CMapWDT(std::weak_ptr<const CMapController> _mapController);
+	CMapWDT(std::weak_ptr<const CMap> _mapController);
 	virtual ~CMapWDT();
 
 	// ISceneNodeProvider
-	void CreateInsances(std::weak_ptr<SceneNodeModel3D> _parent) override;
+	void CreateInsances(std::weak_ptr<SceneNode3D> _parent) override;
 
 	void Load();
 
@@ -49,7 +49,7 @@ public:
 
 	bool MapHasTiles() { return m_IsTileBased; }
 	bool MapHasGlobalWMO() { return !m_GlobalWMOName.empty(); }
-	const std::shared_ptr<ADT_WMO_Instance> GetGlobalWMOInstance() const { return m_GlobalWMO; }
+	const std::shared_ptr<CMapWMOInstance> GetGlobalWMOInstance() const { return m_GlobalWMO; }
 
 private:
 	WDT_MPHD						    m_MPHD;
@@ -59,8 +59,8 @@ private:
 private:
 	std::string							m_GlobalWMOName;
 	ADT_MODF							m_GlobalWMOPlacementInfo;
-	std::shared_ptr<ADT_WMO_Instance>	m_GlobalWMO;
+	std::shared_ptr<CMapWMOInstance>	m_GlobalWMO;
 
 private: // PARENT
-	const std::weak_ptr<const CMapController>  m_MapController;
+	const std::weak_ptr<const CMap>  m_MapController;
 };

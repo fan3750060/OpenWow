@@ -4,12 +4,16 @@
 #include "liquid.h"
 
 
-Liquid::Liquid(uint32 x, uint32 y) 
+CLiquid::CLiquid(uint32 x, uint32 y) 
 	: m_TilesX(x)
 	, m_TilesY(y)
 	, ydir(1.0f)
 {
 	m_TilesCount = (m_TilesX + 1) * (m_TilesY + 1);
+}
+
+CLiquid::~CLiquid()
+{
 }
 
 #pragma region Types
@@ -53,12 +57,12 @@ struct SLiquidFlag
 #include __PACK_END
 #pragma endregion
 
-void Liquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std::shared_ptr<IFile> f)
+void CLiquid::createLayers(std::shared_ptr<const DBC_LiquidTypeRecord> _type, std::shared_ptr<IFile> f)
 {
 	SLiquidVertex* map = (SLiquidVertex*)(f->getDataFromCurrent());
 	SLiquidFlag* flags = (SLiquidFlag*)(f->getDataFromCurrent() + m_TilesCount * sizeof(SLiquidVertex));
 
-	std::shared_ptr<Liquid_Layer> layer = std::make_shared<Liquid_Layer>(_RenderDevice->CreateMesh());
+	std::shared_ptr<CLiquidLayer> layer = std::make_shared<CLiquidLayer>(_RenderDevice->CreateMesh());
 	layer->LiquidType = _type;
 	layer->InitTextures(_type->Get_Type());
 
@@ -135,7 +139,7 @@ struct SLiquidVertexData
 #include __PACK_END
 #pragma endregion
 
-void Liquid::createBuffer()
+void CLiquid::createBuffer()
 {
 	for (auto& layer : m_WaterLayers)
 	{
